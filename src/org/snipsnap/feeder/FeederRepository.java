@@ -23,44 +23,24 @@
  * --LICENSE NOTICE--
  */
 
-package org.snipsnap.semanticweb.rss;
+package org.snipsnap.feeder;
 
-import org.snipsnap.snip.Blog;
-import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.feeder.Feeder;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.radeox.api.engine.context.InitialRenderContext;
+import org.radeox.macro.PluginRepository;
+import org.radeox.macro.Repository;
 
-import java.util.List;
+import java.util.*;
 
-/*
- * Generates a feed of snips from a blog which can then be
- * serialized to RSS, RDF, Atom, ...
+/**
+ * Repository interface for feeders
  *
- * @author stephan
- * @team sonicteam
+ * @author Stephan J. Schmidt
  * @version $Id$
  */
 
-public class BlogFeeder implements Feeder {
-  private Blog blog;
-
-  public BlogFeeder() {
-    blog = SnipSpaceFactory.getInstance().getBlog();
-  }
-
-  public BlogFeeder(String blogName) {
-    blog = SnipSpaceFactory.getInstance().getBlog(blogName);
-  }
-
-  public String getName() {
-    return "blog";
-  }
-
-  public List getFeed() {
-      return blog.getFlatPosts();
-  };
-
-  public Snip getContextSnip() {
-    return blog.getSnip();
-  }
+public interface FeederRepository extends Repository {
+  public void addLoader(FeederLoader loader);
+  public Object get(String name);
 }

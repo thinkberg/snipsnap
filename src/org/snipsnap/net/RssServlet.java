@@ -31,6 +31,10 @@ import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.semanticweb.rss.*;
+import org.snipsnap.feeder.Feeder;
+import org.snipsnap.feeder.FeederRepository;
+import org.snipsnap.container.Components;
+import org.snipsnap.render.PlainTextRenderEngine;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -68,20 +72,21 @@ public class RssServlet extends HttpServlet {
       String type = request.getParameter("type");
       String sourceSnipName = request.getParameter("snip");
 
-      if(null == sourceSnipName) {
+      if (null == sourceSnipName) {
         sourceSnipName = config.getStartSnip();
       }
 
       Snip sourceSnip = space.load(sourceSnipName);
 
-      Feeder feeder = null;
-      if ("recentlychanged".equals(type)) {
-        feeder = new RecentlySnipChangedFeeder();
-      } else if ("comments".equals(type)) {
-        feeder = new NewCommentFeeder();
-      } else if ("newsnipsonly".equals(type)) {
-        feeder = new NewSnipFeeder();
-      } else {
+      Object object =  Components.getComponent(PlainTextRenderEngine.class);
+      System.err.println("object = "+object.getClass());
+
+      FeederRepository repository = (FeederRepository) Components.getComponent(FeederRepository.class);
+
+      Feeder feeder = (Feeder) repository.get(type);
+
+      System.out.println("Feeder repository: "+repository.getPlugins());
+      if (null == feeder || "blog".equals(feeder.getName())) {
         if (sourceSnip.isWeblog()) {
           feeder = new BlogFeeder(sourceSnipName);
         } else {
@@ -103,9 +108,12 @@ public class RssServlet extends HttpServlet {
         dispatcher = request.getRequestDispatcher("/rdf.jsp");
       } else if ("0.92".equals(version)) {
         dispatcher = request.getRequestDispatcher("/rss.jsp");
+      } else if ("plain".equals(version)) {
+        dispatcher = request.getRequestDispatcher("/plain.jsp");
       } else {
         dispatcher = request.getRequestDispatcher("/rss2.jsp");
       }
+
       dispatcher.forward(request, response);
     }
   }

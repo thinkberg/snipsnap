@@ -53,6 +53,8 @@ import org.snipsnap.user.*;
 import org.snipsnap.versioning.*;
 import org.snipsnap.versioning.cookbook.CookbookDifferenceService;
 import org.snipsnap.xmlrpc.*;
+import org.snipsnap.feeder.FeederRepository;
+import org.snipsnap.feeder.BasicFeederRepository;
 
 import javax.sql.DataSource;
 import java.util.Iterator;
@@ -117,6 +119,9 @@ public class Components {
         nc.registerComponentImplementation(MessageService.class);
         nc.registerComponentImplementation(ApplicationManager.class);
         nc.registerComponentImplementation(LabelManager.class);
+
+        // Feeders
+        nc.registerComponentImplementation(FeederRepository.class, BasicFeederRepository.class);
 
         // Versioning
         nc.registerComponentImplementation(VersionManager.class, DefaultVersionManager.class);

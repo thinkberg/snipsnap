@@ -24,7 +24,6 @@
  */
 package org.snipsnap.render.macro.list;
 
-import org.radeox.macro.list.ListFormatter;
 import org.radeox.util.Linkable;
 import org.radeox.util.Nameable;
 import org.snipsnap.snip.Snip;

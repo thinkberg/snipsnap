@@ -33,6 +33,7 @@ import org.snipsnap.snip.storage.query.QueryKit;
 import org.snipsnap.snip.storage.query.Query;
 import org.snipsnap.snip.storage.query.SnipQuery;
 import org.snipsnap.app.Application;
+import org.snipsnap.feeder.Feeder;
 
 import java.util.List;
 
@@ -61,6 +62,10 @@ public class NewSnipFeeder implements Feeder {
   private NewSnipFeeder(String snipName) {
     this.snipName = snipName;
     space = SnipSpaceFactory.getInstance();
+  }
+
+  public String getName() {
+    return "newsnipsonly";
   }
 
   public List getFeed() {

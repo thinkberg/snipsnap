@@ -1,3 +1,4 @@
+
 /*
  * This file is part of "SnipSnap Radeox Rendering Engine".
  *
@@ -23,44 +24,30 @@
  * --LICENSE NOTICE--
  */
 
-package org.snipsnap.semanticweb.rss;
+package org.snipsnap.test.render.macro.list;
 
-import org.snipsnap.snip.Blog;
-import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.feeder.Feeder;
+import junit.framework.TestCase;
+import org.radeox.util.Linkable;
+import org.snipsnap.render.macro.list.ListFormatter;
 
-import java.util.List;
+import java.io.Writer;
+import java.io.StringWriter;
 
-/*
- * Generates a feed of snips from a blog which can then be
- * serialized to RSS, RDF, Atom, ...
- *
- * @author stephan
- * @team sonicteam
- * @version $Id$
- */
-
-public class BlogFeeder implements Feeder {
-  private Blog blog;
-
-  public BlogFeeder() {
-    blog = SnipSpaceFactory.getInstance().getBlog();
-  }
-
-  public BlogFeeder(String blogName) {
-    blog = SnipSpaceFactory.getInstance().getBlog(blogName);
-  }
-
-  public String getName() {
-    return "blog";
-  }
-
-  public List getFeed() {
-      return blog.getFlatPosts();
+public class ListFormatterSupport extends TestCase {
+  protected ListFormatter formatter;
+  protected Writer writer;
+  protected Linkable emptyLinkable = new Linkable() {
+    public String getLink() {
+      return "";
+    }
   };
 
-  public Snip getContextSnip() {
-    return blog.getSnip();
+  public ListFormatterSupport(String name) {
+    super(name);
+  }
+
+  protected void setUp() throws Exception {
+    super.setUp();
+    writer = new StringWriter();
   }
 }

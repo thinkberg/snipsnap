@@ -23,44 +23,39 @@
  * --LICENSE NOTICE--
  */
 
-package org.snipsnap.semanticweb.rss;
+package org.snipsnap.feeder;
 
-import org.snipsnap.snip.Blog;
-import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.feeder.Feeder;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.radeox.macro.PluginLoader;
+import org.radeox.macro.Repository;
 
-import java.util.List;
-
-/*
- * Generates a feed of snips from a blog which can then be
- * serialized to RSS, RDF, Atom, ...
+/**
+ * Plugin loader for feeder
  *
- * @author stephan
- * @team sonicteam
+ * @author Stephan J. Schmidt
  * @version $Id$
  */
 
-public class BlogFeeder implements Feeder {
-  private Blog blog;
+public class FeederLoader extends PluginLoader {
+  private static Log log = LogFactory.getLog(FeederLoader.class);
 
-  public BlogFeeder() {
-    blog = SnipSpaceFactory.getInstance().getBlog();
+  public Class getLoadClass() {
+    return Feeder.class;
   }
 
-  public BlogFeeder(String blogName) {
-    blog = SnipSpaceFactory.getInstance().getBlog(blogName);
+  /**
+   * Add a plugin to the known plugin map
+   *
+   * @param repository the repository to add the feeder to
+   * @param plugin a feeder to add to the repository
+   */
+  public void add(Repository repository, Object plugin) {
+    if (plugin instanceof Feeder) {
+      repository.put(((Feeder) plugin).getName(), plugin);
+    } else {
+      log.debug("Feeder Loader: " + plugin.getClass() + " not of Type " + getLoadClass());
+    }
   }
 
-  public String getName() {
-    return "blog";
-  }
-
-  public List getFeed() {
-      return blog.getFlatPosts();
-  };
-
-  public Snip getContextSnip() {
-    return blog.getSnip();
-  }
 }

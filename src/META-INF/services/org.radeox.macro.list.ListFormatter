@@ -1,2 +1,6 @@
 # default list formatter
 org.snipsnap.render.macro.list.VerticalListFormatter
+org.snipsnap.render.macro.list.SimpleList
+org.snipsnap.render.macro.list.AtoZListFormatter
+org.snipsnap.render.macro.list.ExampleListFormatter
+org.snipsnap.render.macro.list.CollationListFormatter

@@ -33,7 +33,7 @@ import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.User;
 import org.snipsnap.user.AuthenticationService;
 import org.snipsnap.semanticweb.rss.BlogFeeder;
-import org.snipsnap.semanticweb.rss.Feeder;
+import org.snipsnap.feeder.Feeder;
 
 import java.util.Hashtable;
 import java.util.Iterator;

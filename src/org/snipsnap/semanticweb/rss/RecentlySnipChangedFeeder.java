@@ -30,6 +30,7 @@ import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.app.Application;
+import org.snipsnap.feeder.Feeder;
 
 import java.util.List;
 
@@ -47,6 +48,10 @@ public class RecentlySnipChangedFeeder implements Feeder {
 
   public RecentlySnipChangedFeeder() {
     space = SnipSpaceFactory.getInstance();
+  }
+
+  public String getName() {
+    return "recentlychanged";
   }
 
   public List getFeed() {

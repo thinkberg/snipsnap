@@ -22,45 +22,38 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * --LICENSE NOTICE--
  */
+package org.snipsnap.render.macro.list;
 
-package org.snipsnap.semanticweb.rss;
+import org.radeox.util.Linkable;
 
-import org.snipsnap.snip.Blog;
-import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.feeder.Feeder;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Collection;
 
-import java.util.List;
-
-/*
- * Generates a feed of snips from a blog which can then be
- * serialized to RSS, RDF, Atom, ...
+/**
+ * List formatter interface. List formatters are loaded via the plugin mechanism.
  *
- * @author stephan
- * @team sonicteam
+ * @author Matthias L. Jugel
  * @version $Id$
  */
+public interface ListFormatter {
+  public String getName();
 
-public class BlogFeeder implements Feeder {
-  private Blog blog;
-
-  public BlogFeeder() {
-    blog = SnipSpaceFactory.getInstance().getBlog();
-  }
-
-  public BlogFeeder(String blogName) {
-    blog = SnipSpaceFactory.getInstance().getBlog(blogName);
-  }
-
-  public String getName() {
-    return "blog";
-  }
-
-  public List getFeed() {
-      return blog.getFlatPosts();
-  };
-
-  public Snip getContextSnip() {
-    return blog.getSnip();
-  }
+  /**
+   * Display a simple vertical list.
+   *
+   * @param writer Writer to write the list output to
+   * @param current the current linkable
+   * @param listComment String to display before the list
+   * @param c Collection of Linkables, Snips or Nameables to display
+   * @param emptyText Text to display if collection is empty
+   * @param showSize If showSize is true then the size of the collection is displayed
+   */
+  public void format(Writer writer,
+                     Linkable current,
+                     String listComment,
+                     Collection c,
+                     String emptyText,
+                     boolean showSize)
+      throws IOException;
 }

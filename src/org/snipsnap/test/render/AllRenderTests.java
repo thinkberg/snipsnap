@@ -23,44 +23,21 @@
  * --LICENSE NOTICE--
  */
 
-package org.snipsnap.semanticweb.rss;
+package org.snipsnap.test.render;
 
-import org.snipsnap.snip.Blog;
-import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.feeder.Feeder;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+import org.snipsnap.test.render.macro.AllMacroTests;
 
-import java.util.List;
-
-/*
- * Generates a feed of snips from a blog which can then be
- * serialized to RSS, RDF, Atom, ...
- *
- * @author stephan
- * @team sonicteam
- * @version $Id$
- */
-
-public class BlogFeeder implements Feeder {
-  private Blog blog;
-
-  public BlogFeeder() {
-    blog = SnipSpaceFactory.getInstance().getBlog();
+public class AllRenderTests extends TestCase {
+  public AllRenderTests(String name) {
+    super(name);
   }
 
-  public BlogFeeder(String blogName) {
-    blog = SnipSpaceFactory.getInstance().getBlog(blogName);
-  }
-
-  public String getName() {
-    return "blog";
-  }
-
-  public List getFeed() {
-      return blog.getFlatPosts();
-  };
-
-  public Snip getContextSnip() {
-    return blog.getSnip();
+  public static Test suite() {
+    TestSuite s = new TestSuite();
+    s.addTestSuite(AllMacroTests.class);
+    return s;
   }
 }

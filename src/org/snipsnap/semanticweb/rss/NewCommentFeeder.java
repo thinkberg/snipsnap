@@ -32,6 +32,7 @@ import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.storage.query.QueryKit;
 import org.snipsnap.snip.storage.query.Query;
 import org.snipsnap.app.Application;
+import org.snipsnap.feeder.Feeder;
 
 import java.util.List;
 
@@ -60,6 +61,10 @@ public class NewCommentFeeder implements Feeder {
   public NewCommentFeeder(String snipName) {
     this.snipName = snipName;
     space = SnipSpaceFactory.getInstance();
+  }
+
+  public String getName() {
+    return "comments";
   }
 
   public List getFeed() {
