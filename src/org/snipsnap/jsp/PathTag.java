@@ -20,14 +20,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- * --LICENSE NOTICE--
+ * --LICENSE NOTICE--  ÷
  */
 package org.snipsnap.jsp;
 
 import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
-import org.jdom.output.XMLOutputter;
-import org.radeox.filter.Filter;
-import org.radeox.filter.HtmlRemoveFilter;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpaceFactory;

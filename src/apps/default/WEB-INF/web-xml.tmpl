@@ -11,6 +11,13 @@
 <web-app>
   <display-name>SnipSnap</display-name>
 
+  <context-param>
+    <param-name>javax.servlet.jsp.jstl.fmt.fallbackLocale</param-name>
+    <param-value>en</param-value>
+    <param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
+    <param-value>messages_en</param-value>
+  </context-param>
+
   <filter>
     <filter-name>org.snipsnap.net.filter.InitFilter</filter-name>
     <filter-class>org.snipsnap.net.filter.InitFilter</filter-class>

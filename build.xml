@@ -112,6 +112,7 @@
         <include name="conf/db.conf"/>
         <include name="conf/jetty.conf"/>
         <include name="conf/romaji.properties"/>
+        <include name="conf/messages_*.properties"/>
         <include name="conf/intermap.txt"/>
         <include name="conf/bookservices.txt"/>
         <include name="conf/apidocs.txt"/>
@@ -234,20 +235,6 @@
         </pmd>
     </target>
 
-<!--
-     <taskdef name="jcsc" classname="rj.tools.jcsc.ant.JCSCTask"/>
-     <jcsc rules="./conf/snipsnap.jcsc"
-	resultsformatter="rj.tools.jcsc.ConsoleResultsFormatter" 
-        destdir="./tmp"
-        startpackage="org"
-        worstcount="20"
-        failvalue="0.05">
-     <fileset dir="./src"
-        includes="**/*.java"/>
-    </jcsc>
-  </target>
--->
-
   <target depends="generate" description="compile test code" name="compile-test">
     <mkdir dir="${target}/test"/>
     <javac deprecation="${deprecation}" debug="${debug}"
@@ -336,6 +323,13 @@
     </copy>
 
     <copy file="${src}/apps/default/index.jsp" tofile="${target}/webapp/index.jsp"/>
+
+    <copy todir="${target}/webapp/WEB-INF/classes">
+      <fileset dir="conf">
+        <include name="messages_*.properties"/>
+     </fileset>
+    </copy>
+
     <copy todir="${target}/webapp/WEB-INF/lib">
       <fileset dir="${jar}">
         <include name="radeox.jar"/>
