@@ -293,7 +293,12 @@ public class Installer extends HttpServlet {
     config.store();
 
     writeMessage(out, "Starting application ...");
+    // for starting the application make sure we do not use the class loader
+    // of the installer, we remember our current class loader and replace it later
+    Thread thread = Thread.currentThread();
+    ClassLoader currentClassLoader = thread.getContextClassLoader();
     try {
+      thread.setContextClassLoader(currentClassLoader.getParent());
       ApplicationLoader.loadApplication(config);
     } catch (Exception e) {
       System.err.println("Installer: unable to start application: " + e);
@@ -301,6 +306,9 @@ public class Installer extends HttpServlet {
       errors.put("fatal", "Cannot start application: " + e);
       sendError(session, errors, request, response);
       return;
+    } finally {
+      // reset back to the default classloader
+      thread.setContextClassLoader(currentClassLoader);
     }
 
 
