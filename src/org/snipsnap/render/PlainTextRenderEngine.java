@@ -25,15 +25,16 @@
 
 package org.snipsnap.render;
 
-import org.radeox.engine.RenderEngine;
+import org.radeox.api.engine.RenderEngine;
 import org.radeox.engine.context.BaseInitialRenderContext;
-import org.radeox.engine.context.InitialRenderContext;
-import org.radeox.engine.context.RenderContext;
+import org.radeox.api.engine.context.InitialRenderContext;
+import org.radeox.api.engine.context.RenderContext;
 import org.radeox.filter.EscapeFilter;
 import org.radeox.filter.FilterPipe;
 import org.radeox.filter.UrlFilter;
 import org.radeox.filter.context.BaseFilterContext;
 import org.radeox.filter.context.FilterContext;
+
 
 import java.io.IOException;
 import java.io.Writer;

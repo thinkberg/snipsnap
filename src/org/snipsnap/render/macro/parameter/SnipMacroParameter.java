@@ -25,7 +25,7 @@
 
 package org.snipsnap.render.macro.parameter;
 
-import org.radeox.engine.context.RenderContext;
+import org.radeox.api.engine.context.RenderContext;
 import org.radeox.macro.parameter.BaseMacroParameter;
 import org.snipsnap.snip.Snip;
 

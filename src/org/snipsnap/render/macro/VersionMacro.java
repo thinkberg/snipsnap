@@ -27,6 +27,7 @@
 package org.snipsnap.render.macro;
 
 import org.radeox.macro.Macro;
+import org.radeox.macro.BaseMacro;
 import org.radeox.macro.parameter.MacroParameter;
 import org.snipsnap.app.Application;
 
@@ -40,7 +41,7 @@ import java.io.Writer;
  * @version $Id$
  */
 
-public class VersionMacro extends Macro {
+public class VersionMacro extends BaseMacro {
   private String version;
 
   private String[] paramDescription =

@@ -25,6 +25,7 @@
 package org.snipsnap.render.macro;
 
 import org.radeox.macro.Macro;
+import org.radeox.macro.BaseMacro;
 import org.radeox.macro.parameter.MacroParameter;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.date.Month;
@@ -39,7 +40,7 @@ import java.io.Writer;
  * @version $Id$
  */
 
-public class CalendarMacro extends Macro {
+public class CalendarMacro extends BaseMacro {
   public String getName() {
     return "calendar";
   }

@@ -26,6 +26,7 @@
 package org.snipsnap.render.macro;
 
 import org.radeox.macro.Macro;
+import org.radeox.macro.BaseMacro;
 import org.radeox.macro.parameter.MacroParameter;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.user.UserManagerFactory;
@@ -40,7 +41,7 @@ import java.io.Writer;
  * @version $Id$
  */
 
-public class UserCountMacro extends Macro {
+public class UserCountMacro extends BaseMacro {
   private String[] paramDescription =
      {"none"};
 

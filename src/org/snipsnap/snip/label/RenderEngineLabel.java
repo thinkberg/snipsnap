@@ -28,7 +28,7 @@ package org.snipsnap.snip.label;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.snipsnap.container.Components;
-import org.radeox.engine.RenderEngine;
+import org.radeox.api.engine.RenderEngine;
 
 import java.util.Map;
 

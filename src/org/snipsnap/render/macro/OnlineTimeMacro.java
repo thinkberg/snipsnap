@@ -26,6 +26,7 @@
 package org.snipsnap.render.macro;
 
 import org.radeox.macro.Macro;
+import org.radeox.macro.BaseMacro;
 import org.radeox.macro.parameter.MacroParameter;
 import org.snipsnap.app.Application;
 import org.snipsnap.snip.Modified;
@@ -43,7 +44,7 @@ import java.io.Writer;
  * @version $Id$
  */
 
-public class OnlineTimeMacro extends Macro {
+public class OnlineTimeMacro extends BaseMacro {
   private String[] paramDescription =
       {"none"};
 

@@ -25,8 +25,9 @@
 
 package org.snipsnap.render.macro;
 
-import org.radeox.engine.context.RenderContext;
+import org.radeox.api.engine.context.RenderContext;
 import org.radeox.macro.Macro;
+import org.radeox.macro.BaseMacro;
 import org.radeox.macro.parameter.MacroParameter;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.render.context.SnipRenderContext;
@@ -46,7 +47,7 @@ import java.util.Iterator;
  * @version $Id$
  */
 
-public class HotSnipMacro extends Macro {
+public class HotSnipMacro extends BaseMacro {
   private String[] paramDescription =
       {"?1: number of snips to show, defaults to 10"};
 

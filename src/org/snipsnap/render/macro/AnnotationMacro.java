@@ -33,12 +33,13 @@
 package org.snipsnap.render.macro;
 
 import org.radeox.macro.Macro;
+import org.radeox.macro.BaseMacro;
 import org.radeox.macro.parameter.MacroParameter;
 
 import java.io.IOException;
 import java.io.Writer;
 
-public class AnnotationMacro extends Macro {
+public class AnnotationMacro extends BaseMacro {
   public String getName() {
     return "note";
   }

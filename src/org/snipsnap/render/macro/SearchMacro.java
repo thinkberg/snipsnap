@@ -28,6 +28,7 @@ package org.snipsnap.render.macro;
 
 import org.apache.lucene.search.Hits;
 import org.radeox.macro.Macro;
+import org.radeox.macro.BaseMacro;
 import org.radeox.macro.parameter.MacroParameter;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
@@ -52,7 +53,7 @@ import java.io.Writer;
  * @version $Id$
  */
 
-public class SearchMacro extends Macro {
+public class SearchMacro extends BaseMacro {
   private SnipSpace space;
 
   private String[] paramDescription =

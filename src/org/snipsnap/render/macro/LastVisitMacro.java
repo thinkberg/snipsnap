@@ -26,6 +26,7 @@
 package org.snipsnap.render.macro;
 
 import org.radeox.macro.Macro;
+import org.radeox.macro.BaseMacro;
 import org.radeox.macro.parameter.MacroParameter;
 import org.snipsnap.snip.Modified;
 import org.snipsnap.user.User;
@@ -42,7 +43,7 @@ import java.io.Writer;
  * @version $Id$
  */
 
-public class LastVisitMacro extends Macro {
+public class LastVisitMacro extends BaseMacro {
   private String[] paramDescription =
      {"1: login name"};
 

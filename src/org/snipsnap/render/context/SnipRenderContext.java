@@ -26,7 +26,7 @@
 package org.snipsnap.render.context;
 
 import org.radeox.engine.context.BaseRenderContext;
-import org.radeox.engine.context.RenderContext;
+import org.radeox.api.engine.context.RenderContext;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.app.Application;

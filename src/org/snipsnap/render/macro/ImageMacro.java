@@ -24,8 +24,8 @@
  */
 package org.snipsnap.render.macro;
 
-import org.radeox.engine.ImageRenderEngine;
-import org.radeox.engine.RenderEngine;
+import org.radeox.api.engine.ImageRenderEngine;
+import org.radeox.api.engine.RenderEngine;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;

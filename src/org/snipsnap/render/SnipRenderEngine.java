@@ -26,10 +26,10 @@
 package org.snipsnap.render;
 
 import org.radeox.engine.BaseRenderEngine;
-import org.radeox.engine.ImageRenderEngine;
-import org.radeox.engine.IncludeRenderEngine;
-import org.radeox.engine.WikiRenderEngine;
-import org.radeox.engine.context.RenderContext;
+import org.radeox.api.engine.ImageRenderEngine;
+import org.radeox.api.engine.IncludeRenderEngine;
+import org.radeox.api.engine.WikiRenderEngine;
+import org.radeox.api.engine.context.RenderContext;
 import org.radeox.filter.context.FilterContext;
 import org.snipsnap.app.Application;
 import org.snipsnap.render.context.SnipRenderContext;
@@ -73,7 +73,6 @@ public class SnipRenderEngine extends BaseRenderEngine
   }
 
   public boolean showCreate() {
-    //@TODO this could become a component
     return authService.isAuthenticated(Application.get().getUser());
   }
 

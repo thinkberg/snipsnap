@@ -37,7 +37,6 @@ import org.snipsnap.config.ServerConfiguration;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.config.ConfigurationProxy;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.FileInputStream;
 import java.util.StringTokenizer;

@@ -24,11 +24,12 @@
  */
 package org.snipsnap.snip;
 
-import org.radeox.engine.RenderEngine;
-import org.radeox.engine.context.RenderContext;
+
 import org.snipsnap.app.Application;
 import org.snipsnap.container.Components;
 import org.snipsnap.render.context.SnipRenderContext;
+import org.radeox.api.engine.RenderEngine;
+import org.radeox.api.engine.context.RenderContext;
 
 /**
  * SnipFormatter supplies some methods for handling Snip Content.

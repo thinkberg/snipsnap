@@ -26,8 +26,8 @@ package org.snipsnap.jsp;
 
 import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
 import org.jdom.output.XMLOutputter;
-import org.radeox.filter.Filter;
 import org.radeox.filter.HtmlRemoveFilter;
+import org.radeox.filter.Filter;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.snip.Snip;
 

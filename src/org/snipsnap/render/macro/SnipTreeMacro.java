@@ -27,6 +27,7 @@
 package org.snipsnap.render.macro;
 
 import org.radeox.macro.Macro;
+import org.radeox.macro.BaseMacro;
 import org.radeox.macro.parameter.MacroParameter;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
@@ -47,7 +48,7 @@ import java.io.Writer;
  * @version $Id$
  */
 
-public class SnipTreeMacro extends Macro {
+public class SnipTreeMacro extends BaseMacro {
   private SnipSpace space;
 
   private String[] paramDescription =

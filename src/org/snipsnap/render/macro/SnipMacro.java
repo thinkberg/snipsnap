@@ -27,6 +27,7 @@ package org.snipsnap.render.macro;
 
 import org.radeox.macro.parameter.MacroParameter;
 import org.radeox.macro.Macro;
+import org.radeox.macro.BaseMacro;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 
 import java.io.IOException;
@@ -41,7 +42,7 @@ import java.io.Writer;
  * @version $Id$
  */
 
-public abstract class SnipMacro extends Macro {
+public abstract class SnipMacro extends BaseMacro {
   public abstract void execute(Writer writer, SnipMacroParameter params) throws IllegalArgumentException, IOException;
 
   public void execute(Writer writer, MacroParameter params) throws IllegalArgumentException, IOException {

@@ -24,8 +24,8 @@
  */
 package org.snipsnap.snip;
 
-import org.radeox.engine.RenderEngine;
-import org.radeox.engine.context.RenderContext;
+import org.radeox.api.engine.RenderEngine;
+import org.radeox.api.engine.context.RenderContext;
 import org.radeox.util.logging.Logger;
 import org.radeox.EngineManager;
 import org.snipsnap.app.Application;

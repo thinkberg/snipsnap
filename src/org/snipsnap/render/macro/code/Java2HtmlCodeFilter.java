@@ -29,9 +29,9 @@ import de.java2html.converter.JavaSource;
 import de.java2html.converter.JavaSource2HTMLConverter;
 import de.java2html.converter.JavaSourceType;
 import de.java2html.util.HTMLTools;
-import org.radeox.filter.context.FilterContext;
 import org.radeox.macro.code.SourceCodeFormatter;
 import org.radeox.util.logging.Logger;
+import org.radeox.filter.context.FilterContext;
 
 import java.io.IOException;
 import java.io.StringWriter;
