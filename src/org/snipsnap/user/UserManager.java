@@ -88,7 +88,6 @@ public class UserManager {
     return null;
   }
 
-
   public User authenticate(String login, String passwd) {
     User user = storageLoad(login);
     if (null != user && user.getPasswd().equals(passwd)) {
@@ -96,6 +95,10 @@ public class UserManager {
     } else {
       return null;
     }
+  }
+
+  public boolean isAuthenticated(User user) {
+    return user != null && !"Guest".equals(user.getLogin());
   }
 
   public User create(String login, String passwd, String email) {

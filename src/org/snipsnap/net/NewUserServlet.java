@@ -81,6 +81,6 @@ public class NewUserServlet extends HttpServlet {
     }
 
     String referer = request.getParameter("referer");
-    response.sendRedirect(referer != null ? referer : "/space/about");
+    response.sendRedirect(referer != null ? referer : "/space/start");
   }
 }

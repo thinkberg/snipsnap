@@ -22,6 +22,16 @@
   </servlet>
 
   <servlet>
+    <servlet-name>com.neotis.net.PostStoreServlet</servlet-name>
+    <servlet-class>com.neotis.net.PostStoreServlet</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>com.neotis.net.CommentStoreServlet</servlet-name>
+    <servlet-class>com.neotis.net.CommentStoreServlet</servlet-class>
+  </servlet>
+
+  <servlet>
     <servlet-name>com.neotis.net.NewUserServlet</servlet-name>
     <servlet-class>com.neotis.net.NewUserServlet</servlet-class>
   </servlet>
@@ -47,6 +57,16 @@
   </servlet-mapping>
 
   <servlet-mapping>
+    <servlet-name>com.neotis.net.PostStoreServlet</servlet-name>
+    <url-pattern>/exec/storepost</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>com.neotis.net.CommentStoreServlet</servlet-name>
+    <url-pattern>/exec/storecomment</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
     <servlet-name>com.neotis.net.NewUserServlet</servlet-name>
     <url-pattern>/exec/newuser</url-pattern>
   </servlet-mapping>
@@ -56,5 +76,27 @@
     <url-pattern>/exec/authenticate</url-pattern>
   </servlet-mapping>
 
+  <!--
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>auth</web-resource-name>
+      <url-pattern>/exec/edit</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>user</role-name>
+    </auth-constraint>
+  </security-constraint>
 
+  <login-config>
+    <auth-method>FORM</auth-method>
+    <form-login-config>
+      <form-login-page>/exec/login</form-login-page>
+      <form-error-page>/exec/login</form-error-page>
+    </form-login-config>
+  </login-config>
+
+  <security-role>
+    <role-name>user</role-name>
+  </security-role>
+  -->
 </web-app>

@@ -4,4 +4,4 @@
   ** @version $Id$
   -->
 
-<% response.sendRedirect("/space/about"); return; %>
+<% response.sendRedirect("/space/start"); return; %>

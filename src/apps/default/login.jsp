@@ -25,7 +25,7 @@
 
 <form method="POST" action="/exec/authenticate">
  <input name="referer" type="hidden" value="<%= request.getHeader("REFERER") %>">
- <table width="100%" border="0" cellspacing="2" cellpadding="2">
+ <table border="0" cellspacing="2" cellpadding="2">
   <tr><td>User name: </td><td><input name="login" type="text" size="20" value="<%= login != null ? login : "" %>"></td></tr>
   <tr><td>Password: </td><td><input name="password" type="password" size="20" value=""></td></tr>
   <tr><td colspan="2">

@@ -53,7 +53,6 @@ public class SnipBean {
   }
 
   public void setName(String name) {
-    System.err.println("setName(" + name + ")");
     this.name = name;
     snip = SnipSpace.getInstance().load(name);
   }
@@ -79,7 +78,6 @@ public class SnipBean {
 
 
   public String getXMLContent() {
-    System.err.println("getXMLContent()");
     if (snip != null) {
       return snip.toXML();
     }

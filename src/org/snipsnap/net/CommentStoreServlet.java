@@ -38,15 +38,15 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
- * Servlet to store snips into the database after they have been edited.
+ * Servlet to store comments.
  * @author Matthias L. Jugel
  * @version $Id$
  */
-public class SnipStoreServlet extends HttpServlet {
+public class CommentStoreServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
 
-    String name = request.getParameter("name");
+    String name = request.getParameter("comment");
     SnipSpace space = SnipSpace.getInstance();
     Snip snip = space.load(name);
 
@@ -58,13 +58,8 @@ public class SnipStoreServlet extends HttpServlet {
       if (session != null) {
         app = (Application) session.getAttribute("app");
         User user = app.getUser();
-        if (UserManager.getInstance().isAuthenticated(user)) {
-          if (snip != null) {
-            snip.setContent(content);
-            space.store(snip, app);
-          } else {
-            snip = space.create(name, content, app);
-          }
+        if (snip != null && UserManager.getInstance().isAuthenticated(user)) {
+          snip.getComments().postComment(content, app);
         } else {
           response.sendError(HttpServletResponse.SC_FORBIDDEN);
         }

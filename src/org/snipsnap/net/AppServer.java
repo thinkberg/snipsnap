@@ -24,13 +24,20 @@
  */
 package com.neotis.net;
 
+import com.neotis.app.Application;
+import com.neotis.user.User;
+import com.neotis.user.UserManager;
+import org.mortbay.http.HttpRequest;
+import org.mortbay.http.HttpResponse;
+import org.mortbay.http.SecurityConstraint;
+import org.mortbay.http.UserPrincipal;
+import org.mortbay.http.UserRealm;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.WebApplicationContext;
 import org.mortbay.util.MultiException;
-import org.mortbay.http.HttpContext;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.io.File;
 
 /**
  * Application Server
@@ -44,7 +51,7 @@ public class AppServer {
   public static void main(String args[]) {
     System.out.println("SnipSnap $Revision$");
     System.out.println("Copyright (c) 2002 Stephan J. Schmidt, Matthias L. Jugel. "
-	              +"All Rights Reserved.");
+                       + "All Rights Reserved.");
     System.out.println("See License Agreement for terms and conditions of use.");
     startServer();
   }

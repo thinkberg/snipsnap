@@ -69,7 +69,7 @@ public class LoginServlet extends HttpServlet {
       session.setAttribute("app", app);
     }
 
-    response.sendRedirect(referer != null ? referer : "/space/about");
+    response.sendRedirect(referer != null ? referer : "/space/start");
   }
 
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -83,6 +83,6 @@ public class LoginServlet extends HttpServlet {
       response.addCookie(new Cookie("userName", "Guest"));
     }
 
-    response.sendRedirect(referer != null ? referer : "/space/about");
+    response.sendRedirect(referer != null ? referer : "/space/start");
   }
 }
