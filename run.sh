@@ -31,7 +31,8 @@ CLASSPATH=$CLASSPATH:lib/jython.jar
 CLASSPATH=$CLASSPATH:lib/muse-jabber-0.8a1.jar:lib/aspectjrt.jar:lib/jdom-b8.jar
 
 if [ "$1" = "admin" ]; then
-  cmdline="-admin $2 $3"
+  java -jar lib/snipsnap.jar -admin "$2" "$3" 
+  exit
 fi
 
 if [ "$1" = "-debug" ]; then
