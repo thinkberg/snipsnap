@@ -45,6 +45,7 @@ import org.snipsnap.render.PlainTextRenderEngine;
 import org.snipsnap.render.SnipRenderEngine;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipSpaceImpl;
+import org.snipsnap.snip.label.LabelManager;
 import org.snipsnap.snip.storage.*;
 import org.snipsnap.user.*;
 import org.snipsnap.versioning.*;
@@ -112,6 +113,7 @@ public class Components {
         //nc.registerComponentImplementation(RegexService.class);
         nc.registerComponentImplementation(MessageService.class);
         nc.registerComponentImplementation(ApplicationManager.class);
+        nc.registerComponentImplementation(LabelManager.class);
 
         // Versioning
         nc.registerComponentImplementation(VersionManager.class, DefaultVersionManager.class);

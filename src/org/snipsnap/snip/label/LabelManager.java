@@ -27,6 +27,7 @@ package org.snipsnap.snip.label;
 
 import org.radeox.util.logging.Logger;
 import org.radeox.util.Service;
+import org.snipsnap.container.Components;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -45,7 +46,7 @@ public class LabelManager {
   private static LabelManager instance = null;
   private static String labelClassName = "org.snipsnap.snip.label.Label";
 
-  private LabelManager() {
+  public LabelManager() {
     typeMap = new HashMap();
     defaultName = "DefaultLabel";
     try {
@@ -59,11 +60,13 @@ public class LabelManager {
     }
   }
 
+  /**
+   * @deprecated
+   * @return
+   */
+
   public synchronized static LabelManager getInstance() {
-    if (null == instance) {
-      instance = new LabelManager();
-    }
-    return instance;
+    return (LabelManager) Components.getComponent(LabelManager.class);
   }
 
   private void addLabelType(String name, String className) {

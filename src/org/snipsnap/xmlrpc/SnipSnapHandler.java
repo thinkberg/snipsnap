@@ -37,9 +37,13 @@ import org.snipsnap.container.Components;
 import org.snipsnap.snip.XMLSnipExport;
 import org.snipsnap.snip.XMLSnipImport;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.storage.SnipSerializer;
 import org.snipsnap.user.AuthenticationService;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
+import org.dom4j.io.XMLWriter;
+import org.dom4j.io.OutputFormat;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -72,10 +76,19 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
 
   public static final String API_PREFIX = "snipSnap";
 
+  private SnipSpace space;
   private AuthenticationService authenticationService;
+  private UserManager um;
+  private ApplicationManager applicationManager;
 
-  public SnipSnapHandler(AuthenticationService authenticationService) {
+  public SnipSnapHandler(AuthenticationService authenticationService,
+                         SnipSpace space,
+                         UserManager manager,
+                         ApplicationManager applicationManager) {
     this.authenticationService = authenticationService;
+    this.um = manager;
+    this.space = space;
+    this.applicationManager = applicationManager;
   }
 
   protected boolean authenticate(String username, String password) {
@@ -97,9 +110,8 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
     if (FREE_METHODS.contains(method)) {
       return super.execute(method, vector);
     } else if (PREFIX_METHODS.contains(method)) {
-      ApplicationManager appManager = (ApplicationManager) Components.getComponent(ApplicationManager.class);
       String prefix = "/";
-      String appOid = appManager.getApplication(prefix);
+      String appOid = applicationManager.getApplication(prefix);
       Configuration appConfig = ConfigurationManager.getInstance().getConfiguration(appOid);
       if (appConfig != null) {
         vector.remove(0);
@@ -114,6 +126,35 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
 
   public String getName() {
     return API_PREFIX;
+  }
+
+  public String getSnipAsXml(String name) {
+    Snip snip = space.load(name);
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    OutputFormat outputFormat = OutputFormat.createCompactFormat();
+    outputFormat.setEncoding("UTF-8");
+    try {
+      XMLWriter writer = new XMLWriter(out, outputFormat);
+      writer.write(SnipSerializer.getInstance().serialize(snip));
+      writer.flush();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return out.toString();
+  }
+
+  public String getSnip(String name) {
+    Snip snip = space.load(name);
+    return snip.getContent();
+  }
+
+  public void createSnip(String name, String content) {
+    Snip snip = space.create(name, content);
+  }
+
+  public void removeSnip(String name) {
+    Snip snip = space.load(name);
+    space.remove(snip);
   }
 
   /**
@@ -150,8 +191,6 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
   public byte[] dumpXml() throws IOException {
     Configuration config = Application.get().getConfiguration();
     ByteArrayOutputStream exportStream = new ByteArrayOutputStream();
-    UserManager um = (UserManager) Components.getComponent(UserManager.class);
-    SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
     XMLSnipExport.store(exportStream, space.getAll(), um.getAll(), config.getFilePath());
     return exportStream.toByteArray();
   }
@@ -159,7 +198,6 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
   public byte[] dumpXml(String match) throws IOException {
     Configuration config = Application.get().getConfiguration();
     ByteArrayOutputStream exportStream = new ByteArrayOutputStream();
-    SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
     XMLSnipExport.store(exportStream, Arrays.asList(space.match(match)), null, config.getFilePath());
     return exportStream.toByteArray();
   }

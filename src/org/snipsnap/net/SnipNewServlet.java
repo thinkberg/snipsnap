@@ -69,7 +69,7 @@ public class SnipNewServlet extends HttpServlet {
     String name = request.getParameter("name");
     String template = request.getParameter("template");
     if (template != null) {
-      SnipSpace space = (SnipSpace)Components.getComponent(SnipSpace.class);
+      SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
       Snip snip = space.load(template);
       content = snip.getContent();
     }

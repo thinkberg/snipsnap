@@ -29,6 +29,8 @@ import org.snipsnap.config.ConfigurationProxy;
 import org.snipsnap.snip.Blog;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpaceFactory;
+import org.snipsnap.semanticweb.rss.BlogFeeder;
+import org.snipsnap.semanticweb.rss.Feeder;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -61,11 +63,14 @@ public class RssServlet extends HttpServlet {
       return;
     } else {
       String version = request.getParameter("version");
+
+      Feeder feeder = new BlogFeeder();
+
       Blog blog = SnipSpaceFactory.getInstance().getBlog();
       Snip snip = blog.getSnip();
 
       request.setAttribute("snip", snip);
-      request.setAttribute("rsssnips", blog.getFlatPosts());
+      request.setAttribute("rsssnips", feeder.getFeed());
       request.setAttribute("space", SnipSpaceFactory.getInstance());
       request.setAttribute("config", config);
 
