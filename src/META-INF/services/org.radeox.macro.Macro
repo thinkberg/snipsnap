@@ -17,6 +17,7 @@ org.snipsnap.render.macro.SearchMacro
 org.snipsnap.render.macro.SinceLastVisitMacro
 org.snipsnap.render.macro.SnipCountMacro
 org.snipsnap.render.macro.SnipLinkMacro
+org.snipsnap.render.macro.SnipTreeMacro
 org.snipsnap.render.macro.UserCountMacro
 org.snipsnap.render.macro.UserMacro
 org.snipsnap.render.macro.UserSnipMacro

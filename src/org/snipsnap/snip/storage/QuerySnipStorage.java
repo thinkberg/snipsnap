@@ -84,6 +84,11 @@ public class QuerySnipStorage implements SnipStorage {
   }
 
   // Basic manipulation methods Load,Store,Create,Remove
+  // Basic manipulation methods Load,Store,Create,Remove
+  public Snip[] match(String pattern) {
+    return storage.match(pattern);
+  }
+
   public Snip storageLoad(String name) {
     return storage.storageLoad(name);
   }

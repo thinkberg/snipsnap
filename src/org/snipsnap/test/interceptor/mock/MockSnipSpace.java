@@ -14,6 +14,10 @@ public class MockSnipSpace extends MockObject implements SnipSpace {
   }
 
   // A snip is changed by the user (created, stored)
+  public Snip[] match(String pattern) {
+    return new Snip[0];
+  }
+
   public void changed(Snip snip) {
   }
 

@@ -39,6 +39,8 @@ import java.util.List;
 
 public interface SnipStorage {
   // Basic manipulation methods Load,Store,Create,Remove
+  public Snip[] match(String pattern);
+
   public Snip storageLoad(String name);
 
   public void storageStore(Snip snip);

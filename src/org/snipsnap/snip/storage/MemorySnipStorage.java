@@ -26,6 +26,7 @@
 package org.snipsnap.snip.storage;
 
 import org.snipsnap.snip.Snip;
+import org.snipsnap.util.PartialSearcher;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -50,31 +51,40 @@ public class MemorySnipStorage implements SnipStorage {
   private SnipStorage storage;
 
   // Use LinkedHashMap in 1.4
-  private Map cacheMap;
+  private PartialSearcher cacheMap;
 
   // @TODO Keep list sorted with comparator
   private List allList;
 
   public MemorySnipStorage(SnipStorage storage) {
     this.storage = storage;
-    cacheMap = new HashMap();
 
-    if (storage instanceof CacheableStorage) {
-      ((CacheableStorage) storage).setCache(cacheMap);
-    }
-    allList = storage.storageAll();
+    Map map = new HashMap();
 
     if (! (storage instanceof CacheableStorage)) {
       //@TODO optimize with array
       Iterator iterator = allList.iterator();
       while (iterator.hasNext()) {
         Snip snip = (Snip) iterator.next();
-        cacheMap.put(snip.getName(), snip);
+        map.put(snip.getName(), snip);
       }
     }
+
+    cacheMap = new PartialSearcher(map);
+    if (storage instanceof CacheableStorage) {
+      ((CacheableStorage) storage).setCache(cacheMap);
+    }
+
+    allList = storage.storageAll();
   }
 
+
   // Basic manipulation methods Load,Store,Create,Remove
+  public Snip[] match(String pattern) {
+    System.out.println("found classes="+cacheMap.match(pattern).getClass());
+   return  cacheMap.match(pattern);
+  }
+
   public Snip storageLoad(String name) {
     return (Snip) cacheMap.get(name);
   }

@@ -88,6 +88,8 @@ public interface SnipSpace  {
 
   public boolean exists(String name);
 
+  public Snip[] match(String pattern);
+
   public Snip load(String name);
 
   public void store(Snip snip);
