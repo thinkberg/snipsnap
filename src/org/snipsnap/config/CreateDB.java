@@ -153,6 +153,12 @@ public class CreateDB {
     }
 
     snip = space.create("start", "{weblog}", app);
+    snip.addPermission(Permissions.EDIT, Roles.EDITOR);
+    space.store(snip);
+
+    snip = space.create("snipsnap-index", "{index}", app);
+    snip.addPermission(Permissions.EDIT, Roles.EDITOR);
+    space.store(snip);
 
     String rolling = "__Blogrolling:__\\\\ \n" +
       "{link:Langreiter|http://www.langreiter.com}\\\\ \n" +

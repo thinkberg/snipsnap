@@ -336,8 +336,6 @@ public class SnipSpace implements LinkTester, Loader {
         statement.setString(8, comment.getName());
       }
       statement.setString(9, snip.getPermissions().toString());
-      System.err.println("Name="+snip.getName());
-      System.err.println("Permissions="+snip.getPermissions().toString());
       statement.setString(10, snip.getName());
       statement.execute();
     } catch (SQLException e) {
