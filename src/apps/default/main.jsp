@@ -36,10 +36,7 @@
   <div id="page-wrapper">
    <div id="page-content">
     <c:import url="${page}"/>
-    <div id="page-bottom">
-     <a href="<c:out value='${app.configuration.url}'/>"><c:out value="${app.configuration.name}"/></a> | <span id="copyright"></span><br/>
-     <a href="http://snipsnap.org/"><s:image name="logo_small"/></a>
-    </div>
+    <div id="page-bottom"><s:snip name="snipsnap-copyright"/></div>
     <s:debug/>
    </div>
    <% for(int i = 1; SnipSpace.getInstance().exists("snipsnap-portlet-"+i); i++) { %>

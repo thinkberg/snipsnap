@@ -24,10 +24,10 @@
  */
 package org.snipsnap.snip.filter.macro;
 
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipLink;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.AppConfiguration;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipLink;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -39,6 +39,7 @@ import java.io.Writer;
  * @team sonicteam
  * @version $Id$
  */
+
 public class ImageMacro extends Macro {
   AppConfiguration config;
 
@@ -51,24 +52,39 @@ public class ImageMacro extends Macro {
   }
 
   public void execute(Writer writer, MacroParameter params)
-      throws IllegalArgumentException, IOException {
+    throws IllegalArgumentException, IOException {
 
     StringBuffer buffer = new StringBuffer();
     Snip snip = params.getSnip();
-    if(params.getLength() > 0) {
-      if (params.get("0").startsWith("http://")) {
-        if (config.allowExternalImages()) {
-          SnipLink.appendExternalImage(buffer, params.get("0"), params.getLength() > 1 ? params.get("1") : null);
-        }
-      } else if(params.getLength() == 3) {
-        SnipLink.appendImage(buffer, snip.getName()+"-image-"+params.get("0"), params.get("1"), null, params.get("2"));
-      } else if (params.getLength() == 2) {
-        SnipLink.appendImage(buffer, snip.getName()+"-image-"+params.get("0"), params.get("1"));
+    if (params.getLength() > 0) {
+      String img = params.get("img");
+      String alt = null, ext = null, align = null;
+      boolean qualifiedParams = img != null;
+      if (qualifiedParams) {
+        alt = params.get("alt");
+        ext = params.get("ext");
+        align = params.get("align");
       } else {
-        SnipLink.appendImage(buffer, snip.getName()+"-image-"+params.get("0"), "default");
+        img = params.get(0);
+        alt = params.get(1);
+        ext = params.get(2);
+        align = params.get(3);
+      }
+
+      if (img.startsWith("http://")) {
+        if (config.allowExternalImages()) {
+          SnipLink.appendExternalImage(buffer, img, align);
+        }
+      } else {
+        SnipLink.appendImage(buffer, "image-" + snip.getName() + "-" + img, alt, ext, align);
       }
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
+    }
+    String link = params.get("link");
+    if (link != null) {
+      buffer.insert(0, "<a href=\"" + link + "\">");
+      buffer.append("</a>");
     }
     writer.write(buffer.toString());
     return;

@@ -1,5 +1,8 @@
 0.2.8
 
+- Changed logo/validation images
+- Introduced snipsnap-copyright snip for page bottom
+- Changed semantics of {image} macro, expect images as image-name-id
 - Added Feature: import/export from web interface
 - Fixed bug: list detection
 - Changed macro interface: User Writer instead of StringBuffer and Refactoring

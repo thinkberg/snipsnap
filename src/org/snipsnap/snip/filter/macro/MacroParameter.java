@@ -80,13 +80,20 @@ public class MacroParameter {
     return size;
   }
 
+  public String get(String index, int idx) {
+    String result = get(index);
+    if(result == null) {
+      result = get(idx);
+    }
+    return result;
+  }
+
   public String get(String index) {
     return (String) params.get(index);
   }
 
   public String get(int index) {
     return get(""+index);
-
   }
 
   /**
@@ -100,7 +107,6 @@ public class MacroParameter {
    */
 
   public Map split(String aString, String delimiter) {
-    Map globals = Application.get().getParameters();
     StringTokenizer st = new StringTokenizer(aString, delimiter);
     Map result = new HashMap();
     int i = 0;
@@ -108,26 +114,35 @@ public class MacroParameter {
     while (st.hasMoreTokens()) {
       String value = st.nextToken();
       String key = ""+i;
-      if (value.startsWith("$")) {
-        value = value.substring(1);
-        if (globals.containsKey(value)) {
-          result.put(key, (String) globals.get(value));
-        } else {
-          result.put(key, "");
-        }
-      } else if (value.indexOf("=") != -1) {
+      if (value.indexOf("=") != -1) {
         // Store this for
-        result.put(key, value);
+        result.put(key, insertValue(value));
         int index = value.indexOf("=");
         key = value.substring(0, index);
         value = value.substring(index+1);
-        result.put(key, value);
+
+        result.put(key, insertValue(value));
       } else {
-        result.put(key, value);
+        result.put(key, insertValue(value));
       }
       i++;
     }
 
     return result;
+  }
+
+  private String insertValue(String s) {
+    int idx = s.indexOf('$');
+    StringBuffer tmp = new StringBuffer();
+    if(idx != -1) {
+      Map globals = Application.get().getParameters();
+      String var = s.substring(idx+1);
+      if(idx > 0) tmp.append(s.substring(0, idx));
+      if(globals.containsKey(var)) {
+        tmp.append(globals.get(var));
+      }
+      return tmp.toString();
+    }
+    return s;
   }
 }

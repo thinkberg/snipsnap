@@ -57,6 +57,14 @@ public class Layouter extends SnipSnapServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
     throws IOException, ServletException {
 
+
+    // page attribute overrides pathinfo
+    String layout = (String)request.getAttribute(ATT_PAGE);
+    if(null == layout) {
+      layout = SnipLink.decode(request.getPathInfo());
+    }
+
+    // why copy? because, getParamMap returns an unmodifyable map
     Map params = request.getParameterMap();
     Iterator iterator = params.keySet().iterator();
     Map paramMap = new HashMap();
@@ -67,11 +75,16 @@ public class Layouter extends SnipSnapServlet {
     }
     Application.get().setParameters(paramMap);
 
-    // page attribute overrides pathinfo
-    String layout = (String)request.getAttribute(ATT_PAGE);
-    if(null == layout) {
-      layout = SnipLink.decode(request.getPathInfo());
+    String uri = (String)request.getAttribute("URI");
+    AppConfiguration config = Application.get().getConfiguration();
+    if(uri != null) {
+      paramMap.put("URI", config.getUrl(uri));
+    } else {
+      paramMap.put("URI", config.getUrl(layout));
     }
+    paramMap.put("RSS", config.getUrl("/exec/rss"));
+    Application.get().setParameters(paramMap);
+
 
     if (null == layout || "/".equals(layout)) {
       response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));

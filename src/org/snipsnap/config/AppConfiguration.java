@@ -191,7 +191,7 @@ public class AppConfiguration extends Configuration {
 
   public String getLogoImage() {
     String image = getProperty(APP_LOGO);
-    return image != null ? image : "snip";
+    return image != null ? image : "snipsnap-logo";
   }
 
   public void setJDBCURL(String url) {

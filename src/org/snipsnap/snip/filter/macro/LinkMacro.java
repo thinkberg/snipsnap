@@ -39,7 +39,7 @@ import java.io.Writer;
  */
 
 public class LinkMacro extends Macro {
-  private final static String img = SnipLink.createImage("arrow.right", "&gt;&gt;", "gif");
+  private final static String linkImage = SnipLink.createImage("external-link", "&gt;&gt;");
 
   public String getName() {
     return "link";
@@ -48,18 +48,24 @@ public class LinkMacro extends Macro {
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
 
-    if (params.getLength() >= 2) {
+    String text = params.get("text", 0);
+    String url = params.get("url", 1);
+    String img = params.get("img", 2);
+
+    if (url != null && text != null) {
       writer.write("<span class=\"nobr\">");
-      writer.write(img);
+      if(!"none".equals(img)) {
+        writer.write(linkImage);
+      }
       writer.write("<a href=\"");
-      writer.write(params.get("1"));
+      writer.write(url);
       writer.write("\">");
-      writer.write(params.get("0"));
+      writer.write(text);
       writer.write("</a>");
       writer.write("</span>");
     } else if (params.getLength() >= 1) {
       // will be catched by UrlFilter
-      writer.write(params.get("0"));
+      writer.write(text);
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

@@ -69,7 +69,7 @@ public class CommentViewServlet extends SnipSnapServlet {
     }
 
     request.setAttribute("snip", snip);
-
+    request.setAttribute("URI", request.getRequestURI());
     RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/comment.jsp");
     dispatcher.forward(request, response);
   }

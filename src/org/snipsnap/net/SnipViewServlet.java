@@ -70,6 +70,7 @@ public class SnipViewServlet extends SnipSnapServlet {
     }
     snip.getAccess().handle(request);
     request.setAttribute("snip", snip);
+    request.setAttribute("URI", request.getRequestURI());
     RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/snip.jsp");
     dispatcher.forward(request, response);
   }
