@@ -42,12 +42,13 @@ public class AppConfiguration extends Configuration {
   private final static String APP_HOST = "app.host";
   private final static String APP_PORT = "app.port";
   private final static String APP_PATH = "app.path";
-  private final static String APP_PERM = "app.perm";
+  public final static String APP_PERM = "app.perm";
   private final static String APP_DOMAIN = "app.domain";
   private final static String APP_TAGLINE = "app.tagline";
   private final static String APP_LOGGER = "app.logger";
   private final static String APP_JDBC_URL = "app.jdbc.url";
   private final static String APP_JDBC_DRIVER = "app.jdbc.driver";
+  public final static String PERM_NOTIFICATION = "notification";
   public final static String PERM_WEBLOGS_PING = "weblogsPing";
   public final static String PERM_EXTERNAL_IMAGES = "externalImages";
 
