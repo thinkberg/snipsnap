@@ -210,7 +210,7 @@ public class UserManager implements Loader {
   }
 
   public boolean isAuthenticated(User user) {
-    return user != null && !user.isGuest();
+    return user != null && !user.isGuest() && !user.isNonUser();
   }
 
   public Object createObject(ResultSet result) throws SQLException {
