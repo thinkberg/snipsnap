@@ -52,20 +52,18 @@ public class RecentChangesMacro extends ListOutputMacro {
     String type = "Vertical";
     boolean showSize = false;
     int length = 10;
-    if (params != null) {
-      if (params.getLength() > 0) {
-        try {
-          length = Integer.parseInt(params.get("0"));
-        } catch (NumberFormatException e) {
-          System.err.println("RecentChangesMacro: illegal parameter count='" + params.get("1") + "'");
-        }
-      }
-      if (params.getLength() > 1) {
-        type = params.get("1");
+    if (params.getLength() > 0) {
+      try {
+        length = Integer.parseInt(params.get("0"));
+      } catch (NumberFormatException e) {
+        System.err.println("RecentChangesMacro: illegal parameter count='" + params.get("1") + "'");
       }
     }
+    if (params.getLength() > 1) {
+      type = params.get("1");
+    }
 
-    if (params == null || params.getLength() <= 3) {
+    if (params.getLength() <= 3) {
       List changed = SnipSpace.getInstance().getChanged(length);
       output(writer, "Recently Changed:", changed, "No changes yet.", type, showSize);
     } else {

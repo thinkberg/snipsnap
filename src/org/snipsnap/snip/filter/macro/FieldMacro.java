@@ -52,7 +52,7 @@ public class FieldMacro extends Macro {
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
 
-    if (params != null && params.getLength() > 0) {
+    if (params.getLength() > 0) {
       writer.write("<form class=\"form\" action=\"");
       if (params.getLength() >= 3) {
         SnipLink.appendUrl(writer, params.get("2"));

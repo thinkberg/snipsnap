@@ -88,7 +88,7 @@ public class CodeMacro extends Preserved {
 
     Filter filter = null;
 
-    if (params == null || params.getLength() == 0 || !filters.containsKey(params.get("0"))) {
+    if (params.getLength() == 0 || !filters.containsKey(params.get("0"))) {
       filter = (Filter) filters.get("java");
     } else {
       filter = (Filter) filters.get(params.get("0"));

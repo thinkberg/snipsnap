@@ -48,7 +48,7 @@ public class SnipCountMacro extends Macro {
 
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
-    if (params == null || params.getLength() == 0) {
+    if (params.getLength() == 0) {
       writer.write(Integer.toString(SnipSpace.getInstance().getSnipCount()));
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");

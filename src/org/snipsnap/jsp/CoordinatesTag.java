@@ -22,37 +22,35 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-package org.snipsnap.snip.filter.macro;
+package org.snipsnap.jsp;
 
-import org.snipsnap.snip.filter.links.SnipLinks;
+import org.snipsnap.app.Application;
+import org.snipsnap.snip.Snip;
 
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.tagext.TagSupport;
 import java.io.IOException;
-import java.io.Writer;
+import java.util.Iterator;
+import java.util.List;
 
-/*
- * Macro that displays a list of the backlinks for the snip
- *
- * @author Stephan J. Schmidt
- * @version $Id$
- */
+public class CoordinatesTag extends TagSupport {
+  Snip snip = null;
 
-public class SnipLinkMacro extends ListOutputMacro {
-  public String getName() {
-    return "sniplinks";
-  }
-
-  public String getDescription() {
-    return "Renders a table of sniplinks for the snip.";
-  }
-
-  public void execute(Writer writer, MacroParameter params)
-      throws IllegalArgumentException, IOException {
-    String start = "#ffffff";
-    String end = "#b0b0b0";
-    int width = 4;
-    if (params.getLength() >= 1) {
-      width = Integer.parseInt(params.get("0"));
+  public int doStartTag() throws JspException {
+    try {
+      JspWriter out = pageContext.getOut();
+      Application app = Application.get();
+      String coordinates = app.getConfiguration().getCoordinates();
+      System.err.println("Coordinates="+coordinates);
+      if (null != coordinates) {
+        out.print("<meta name=\"ICBM\" content=\"");
+        out.print(coordinates);
+        out.print("\">");
+      }
+    } catch (IOException e) {
+      System.err.println("CoordinatesTag: unable print to JSP writer: " + e);
     }
-    SnipLinks.appendTo(writer, params.getSnip().getAccess().getBackLinks(), width, start, end);
+    return super.doStartTag();
   }
 }

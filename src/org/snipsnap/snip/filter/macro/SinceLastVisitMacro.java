@@ -56,13 +56,11 @@ public class SinceLastVisitMacro extends ListOutputMacro {
     String type = null;
     boolean showSize = true;
     String userName = null;
-    if (params != null) {
-      if (params.getLength() > 0) {
-        userName = params.get("0");
-      }
-      if (params.getLength() > 1) {
-        type = params.get("1");
-      }
+    if (params.getLength() > 0) {
+      userName = params.get("0");
+    }
+    if (params.getLength() > 1) {
+      type = params.get("1");
     }
 
     if (params.getLength() > 0) {

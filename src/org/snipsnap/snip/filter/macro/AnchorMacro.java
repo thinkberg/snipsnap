@@ -58,7 +58,7 @@ public class AnchorMacro extends Preserved {
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
 
-    if (null != params && params.getLength() == 1) {
+    if (params.getLength() == 1) {
       String anchor = params.get("0").replace(' ', '_');
       writer.write("<a name=\"");
       writer.write(anchor);

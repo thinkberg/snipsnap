@@ -53,13 +53,11 @@ public class IndexSnipMacro extends ListOutputMacro {
       throws IllegalArgumentException, IOException {
     String type = null;
     boolean showSize = true;
-    if (params != null) {
       if (params.getLength() > 0) {
         type = params.get("0");
       }
-    }
 
-    if (params == null || params.getLength() <= 2) {
+    if (params.getLength() <= 2) {
       output(writer, "All Snips:",
           Collections.filter(SnipSpace.getInstance().getAll(),
               new Filterator() {

@@ -55,7 +55,7 @@ public class FilePathMacro extends Preserved {
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
 
-    if (null != params && params.getLength() == 1) {
+    if (params.getLength() == 1) {
       String path = params.get("0").replace('/', '\\');
       writer.write(path);
     }

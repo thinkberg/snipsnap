@@ -50,12 +50,10 @@ public class LoginsMacro extends ListOutputMacro {
       throws IllegalArgumentException, IOException {
     String type = "Vertical";
     boolean showSize = true;
-    if (params != null) {
-      if (params.getLength() > 0) {
+    if (params.getLength() > 0) {
         type = params.get("0");
-      }
     }
-    if (params == null || params.getLength() <= 2) {
+    if (params.getLength() <= 2) {
       List users = Application.getCurrentUsers();
       users.addAll(Application.getCurrentNonUsers());
 

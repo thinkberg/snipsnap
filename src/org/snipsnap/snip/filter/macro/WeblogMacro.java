@@ -60,9 +60,9 @@ public class WeblogMacro extends Macro {
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
 
-    if (params == null || params.getLength() < 2) {
+    if (params.getLength() < 2) {
       int count = 0;
-      if (params != null && params.getLength() == 1) {
+      if (params.getLength() == 1) {
         count = Integer.parseInt(params.get("0"));
       } else {
         count = 10;
@@ -93,8 +93,6 @@ public class WeblogMacro extends Macro {
         BackLinks.appendTo(writer, entry.getAccess().getBackLinks(), 5);
         writer.write("</div>");
       }
-
-      return;
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

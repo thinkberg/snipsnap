@@ -49,13 +49,11 @@ public class UserMacro extends ListOutputMacro {
       throws IllegalArgumentException, IOException {
     String type = null;
     boolean showSize = true;
-    if (params != null) {
-      if (params.getLength() > 0) {
-        type = params.get("0");
-      }
-      showSize = !(params.getLength() > 1 && "nosize".equals(params.get("1")));
+    if (params.getLength() > 0) {
+       type = params.get("0");
     }
-    if (params == null || params.getLength() <= 2) {
+    showSize = !(params.getLength() > 1 && "nosize".equals(params.get("1")));
+    if (params.getLength() <= 2) {
       output(writer, "All Users:", UserManager.getInstance().getAll(), "no users. not very popular ;-)", type, showSize);
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");

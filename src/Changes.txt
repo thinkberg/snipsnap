@@ -1,5 +1,6 @@
 0.3.2
 
+- Fixed bug: XML feeds (RSD, RSS) should no be legal UTF-8
 - Developer: Refactored Snip to use interface and introduced interceptors (AOP)
 - Fixed bug: RSD <api> was not closed
 - Added feature: /raw/<snip-name> displays the raw content of a snip

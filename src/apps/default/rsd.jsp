@@ -1,8 +1,9 @@
-<%@ page import="org.snipsnap.snip.SnipSpace"%><%--
+<%@ page pageEncoding="iso-8859-1" %><%--
+--%><%@ page contentType="text/xml; charset=UTF-8"%><%--
+--%><%@ page import="org.snipsnap.snip.SnipSpace"%><%--
 --%><?xml version="1.0" encoding="utf-8"?>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %><%-- hack to remove linefeed
 --%><%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %><%--
---%><%@ page contentType="text/xml"%><%--
 --%><!-- name="generator" content="SnipSnap/<c:out value="${config.version}"/>" -->
 <rsd version="1.0" xmlns="http://archipelago.phrasewise.com/rsd" >
 <service>

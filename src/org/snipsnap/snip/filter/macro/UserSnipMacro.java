@@ -50,10 +50,8 @@ public class UserSnipMacro extends ListOutputMacro {
       throws IllegalArgumentException, IOException {
     String type = null;
     boolean showSize = true;
-    if (params != null) {
-      if (params.getLength() > 1) {
+    if (params.getLength() > 1) {
         type = params.get("1");
-      }
     }
 
     if (params.getLength() > 0) {

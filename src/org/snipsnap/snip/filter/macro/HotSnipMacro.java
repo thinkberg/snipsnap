@@ -61,17 +61,15 @@ public class HotSnipMacro extends Macro {
 
     int length = 10;
     boolean showSize = false;
-    if (params != null) {
-      if (params.getLength() > 0) {
-        try {
-          length = Integer.parseInt(params.get("0"));
-        } catch (NumberFormatException e) {
-          System.err.println("RecentChangesMacro: illegal parameter count='" + params.get("0") + "'");
-        }
+    if (params.getLength() > 0) {
+      try {
+        length = Integer.parseInt(params.get("0"));
+      } catch (NumberFormatException e) {
+        System.err.println("RecentChangesMacro: illegal parameter count='" + params.get("0") + "'");
       }
     }
 
-    if (params == null || params.getLength() <= 3) {
+    if (params.getLength() <= 3) {
       Collection c = space.getHot(length);
       Iterator iterator = c.iterator();
       writer.write("<div class=\"list\"><div class=\"list-title\">Most viewed:");

@@ -8,9 +8,14 @@
   <short-name>SnipSnap</short-name>
   <uri>http://snipsnap.com/snipsnap.tld</uri>
 
-    <tag>
+   <tag>
     <name>debug</name>
     <tag-class>org.snipsnap.jsp.DebugTag</tag-class>
+   </tag>
+
+   <tag>
+    <name>geoUrl</name>
+    <tag-class>org.snipsnap.jsp.CoordinatesTag</tag-class>
    </tag>
 
    <tag>

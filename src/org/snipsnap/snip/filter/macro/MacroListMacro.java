@@ -50,7 +50,7 @@ public class MacroListMacro extends ListOutputMacro {
 
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
-    if (params == null || params.getLength() == 0) {
+    if (params.getLength() == 0) {
       appendTo(writer);
     } else {
       throw new IllegalArgumentException("MacroListMacro: number of arguments does not match");

@@ -46,7 +46,7 @@ public class HelloWorldMacro extends Macro {
 
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
-    if (params != null && params.getLength() == 1) {
+    if (params.getLength() == 1) {
       writer.write("Hello <b>");
       writer.write(params.get("0"));
       writer.write("</b>");

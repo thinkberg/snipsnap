@@ -56,7 +56,7 @@ public class QuoteMacro extends Preserved {
 
     writer.write("<blockquote class=\"quote\">");
     writer.write(params.getContent());
-    if (null != params && params.getLength() == 1) {
+    if (params.getLength() == 1) {
       writer.write(params.get("0"));
     }
     writer.write("</blockquote>");

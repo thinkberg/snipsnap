@@ -48,13 +48,9 @@ public class BackLinkMacro extends ListOutputMacro {
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
     int count = 10;
-    if (params == null || params.getLength() > 1) {
-      if (params.getLength() == 1) {
-        count = Integer.parseInt(params.get("0"));
-      }
-      BackLinks.appendTo(writer, params.getSnip().getAccess().getBackLinks(), count);
-    } else {
-      throw new IllegalArgumentException("BackLinkMacro: number of arguments does not match");
+    if (params.getLength() == 1) {
+      count = Integer.parseInt(params.get("0"));
     }
+    BackLinks.appendTo(writer, params.getSnip().getAccess().getBackLinks(), count);
   }
 }

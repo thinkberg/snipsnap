@@ -1,4 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+<%@ page pageEncoding="iso-8859-1" %><%--
+--%><%@ page contentType="text/xml; charset=UTF-8"%><%--
+--%><?xml version="1.0" encoding="utf-8"?>
 <rdf:RDF
   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
   xmlns="http://purl.org/rss/1.0/"
@@ -7,7 +9,6 @@
 
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %>
-<%@ page contentType="text/xml"%>
 
 <%--
   ** RSS display template.

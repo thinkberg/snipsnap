@@ -49,7 +49,7 @@ public class CalendarMacro extends Macro {
       throws IllegalArgumentException, IOException {
     int year = -1;
     int month = -1;
-    if (params != null && params.getLength() == 2) {
+    if (params.getLength() == 2) {
       try {
         year = Integer.parseInt(params.get("0"));
       } catch (NumberFormatException e) {
@@ -60,7 +60,7 @@ public class CalendarMacro extends Macro {
       } catch (NumberFormatException e) {
         System.err.println("CalendarMacro: month is not a number: " + params.get("1"));
       }
-    } else if (params != null && params.getLength() > 0) {
+    } else if (params.getLength() > 0) {
       System.err.println("CalendarMacro: illegal number of arguments: " + params.getLength());
     }
 

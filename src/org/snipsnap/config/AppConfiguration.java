@@ -54,6 +54,7 @@ public class AppConfiguration extends Configuration {
   public final static String APP_LOCALE = "app.locale";
   public final static String APP_JDBC_URL = "app.jdbc.url";
   public final static String APP_JDBC_DRIVER = "app.jdbc.driver";
+  public final static String APP_COORDINATES = "app.geoCoordinates";
 
   public final static String PERM_NOTIFICATION = "notification";
   public final static String PERM_WEBLOGS_PING = "weblogsPing";
@@ -257,6 +258,10 @@ public class AppConfiguration extends Configuration {
   public String getEncoding() {
     String encoding = getProperty(AppConfiguration.APP_ENCODING);
     return encoding == null ? "UTF-8" : encoding;
+  }
+
+  public String getCoordinates() {
+    return getProperty(AppConfiguration.APP_COORDINATES);
   }
 
   public boolean allow(String action) {

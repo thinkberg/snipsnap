@@ -157,11 +157,6 @@ public class MemorySnipStorage implements SnipStorage {
   public List storageByParentNameOrder(final Snip parent, int count) {
     return cache.querySorted(new SnipQuery() {
       public boolean fit(Snip snip) {
-        if (snip.getParent() != null) {
-        System.err.println("parent="+parent.getClass()+" -> "+snip.getParent().getClass());
-        } else {
-          System.err.println("parent= is null");
-        }
         return (parent == snip.getParent());
       }
     }, nameComparatorDesc, count, type);
