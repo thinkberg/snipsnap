@@ -3,6 +3,7 @@ package org.snipsnap.util;
 import org.snipsnap.config.AppConfiguration;
 
 import java.sql.*;
+import java.util.StringTokenizer;
 import java.util.Properties;
 import java.io.File;
 import java.io.IOException;
@@ -14,7 +15,7 @@ public class DBDump {
     Connection connection;
     AppConfiguration config = null;
 
-    if("-config".equals(args[0])) {
+    if(args.length > 0 && "-config".equals(args[0])) {
       if(args.length > 1) {
         try {
           config = new AppConfiguration(new File(args[1]));
@@ -25,15 +26,24 @@ public class DBDump {
       }
     }
 
+
+    if(args.length > 0 && "-db".equals(args[0])) {
+      config = new AppConfiguration();
+      config.setJDBCDriver("org.snipsnap.util.MckoiEmbeddedJDBCDriver");
+      config.setJDBCURL("jdbc:mckoi:local://"+args[1]);
+      config.setAdminLogin(args[2]);
+      config.setAdminPassword(args[3]);
+    }
+
     if(config == null) {
-      System.err.println("usage: DBDump [-config file]");
+      System.err.println("usage: DBDump [-config file] [-db dbconf user pass]");
       System.exit(-1);
     }
 
     String URL = config.getJDBCURL();
 
     String username = config.getAdminLogin();
-    String password = config.getAdminEmail();
+    String password = config.getAdminPassword();
 
     String driverClass = config.getJDBCDriver();
     try {
@@ -62,9 +72,10 @@ public class DBDump {
 
     ResultSet results = null;
 
+    System.out.println("<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>");
     System.out.println("<snipspace>");
-    toXml("Snip", "snip", connection);
     toXml("User", "user", connection);
+    toXml("Snip", "snip", connection);
 
     System.out.println("</snipspace>");
   }
@@ -96,12 +107,26 @@ public class DBDump {
             Timestamp time = (Timestamp) object;
             System.out.print(time.getTime());
           } else {
-            System.out.print(object.toString());
+            System.out.print(escape(object.toString()));
           }
           System.out.println("</" + name + ">");
         }
       }
-      System.out.println("<"+objectName+">");
+      System.out.println("</"+objectName+">");
     }
+  }
+
+  private static String escape(String in) {
+    StringBuffer out = new StringBuffer();
+    StringTokenizer t = new StringTokenizer(in, "<>&", true);
+    while(t.hasMoreTokens()) {
+      String token = t.nextToken();
+      if("<".equals(token) || ">".equals(token) || "&".equals(token)) {
+	out.append("&#x").append(Integer.toHexString(token.charAt(0))).append(";");
+      } else {
+	out.append(token);
+      }
+    }
+    return out.toString();
   }
 }

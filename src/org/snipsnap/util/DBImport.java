@@ -32,6 +32,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.snipsnap.user.User;
+import org.snipsnap.user.Roles;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.config.Configuration;
@@ -47,6 +48,10 @@ import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.Map;
+import java.util.HashMap;
 
 public class DBImport {
   public static void main(String args[]) {
@@ -92,9 +97,16 @@ public class DBImport {
       NodeList children = document.getChildNodes().item(0).getChildNodes();
       for(int i = 0; i < children.getLength(); i++) {
         Node node = children.item(i);
-        if(node.getNodeName().equals("snip")) {
+	if("user".equals(node.getNodeName())) {
+	  insertUser(node);
+	}
+      }
+
+      for(int i = 0; i < children.getLength(); i++) {
+        Node node = children.item(i);
+        if("snip".equals(node.getNodeName())) {
           insertSnip(node);
-        }
+        } 
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -102,44 +114,111 @@ public class DBImport {
     }
     System.exit(0);
   }
-
-  private static void insertSnip(Node snipNode) throws SAXException {
-    SnipSpace space = SnipSpace.getInstance();
+  private static void insertUser(Node snipNode) throws SAXException {
+    UserManager um = UserManager.getInstance();
     NodeList children = snipNode.getChildNodes();
 
-    String name = null;
-    String content = null;
+    Map elements = new HashMap();
 
     for(int i = 0; i < children.getLength(); i++) {
       Node node = children.item(i);
-      if(node.getNodeName().equals("name")) {
-        NodeList cl = node.getChildNodes();
-        for(int c = 0; c < cl.getLength(); c++) {
-          if(cl.item(c).getNodeType() == Node.TEXT_NODE) {
-            name = cl.item(c).getNodeValue();
-          }
-        }
-      } else if(node.getNodeName().equals("content")) {
-        NodeList cl = node.getChildNodes();
-        for(int c = 0; c < cl.getLength(); c++) {
-          if(cl.item(c).getNodeType() == Node.TEXT_NODE) {
-            content = cl.item(c).getNodeValue();
-          }
+      String name = node.getNodeName();
+      String value = null;
+      NodeList cl = node.getChildNodes();
+      for(int c = 0; c < cl.getLength(); c++) {
+        if(cl.item(c).getNodeType() == Node.TEXT_NODE) {
+          value = cl.item(c).getNodeValue();
         }
       }
+      elements.put(name, value);
     }
 
-    if(name != null && content != null) {
+    String login = (String)elements.get("login");
+    String passwd = (String)elements.get("passwd");
+    String email = (String)elements.get("email");
+    String status = (String)elements.get("status");
+    String roles = (String)elements.get("roles");
+
+    User user = um.load(login);
+    if(user == null) {
+      System.err.println("creating user '"+login+"'");
+      user = um.create(login, passwd, email);
+      if(status != null) user.setStatus(status);
+      if(roles != null) user.setRoles(new Roles(roles));
+    } else {
+      System.err.println("modifying user '"+login+"'");
+      if(passwd != null) user.setPasswd(passwd);
+      if(email != null) user.setEmail(email);
+      if(status != null) user.setStatus(status);
+      if(roles != null) user.setRoles(new Roles(roles));
+    }
+    um.store(user);
+  }
+
+  private static void insertSnip(Node snipNode) throws SAXException {
+    SnipSpace space = SnipSpace.getInstance();
+    UserManager um = UserManager.getInstance();
+    NodeList children = snipNode.getChildNodes();
+
+    Map elements = new HashMap();
+
+    for(int i = 0; i < children.getLength(); i++) {
+      Node node = children.item(i);
+      String name = node.getNodeName();
+      String value = null;
+      NodeList cl = node.getChildNodes();
+      for(int c = 0; c < cl.getLength(); c++) {
+        if(cl.item(c).getNodeType() == Node.TEXT_NODE) {
+          value = cl.item(c).getNodeValue();
+        }
+      }
+      elements.put(name, value);
+    }
+
+    String name = (String)elements.get("name");
+    if(name != null) {
+      // load content
       Snip snip = null;
       if(space.exists(name)) {
         System.out.println("appending to '"+name+"'");
         snip = space.load(name);
-        snip.setContent(snip.getContent()+"\n"+content);
       } else {
         System.out.println("creating node '"+name+"'");
-        snip = space.create(name, content);
+        snip = space.create(name, "");
       }
+      // add snip info and content
+      String tmp;
+      if((tmp = (String)elements.get("content")) != null) {
+	String content = snip.getContent();
+	if(content != null && content.length() > 0) {
+	  content += "\n"+tmp;
+	} else content = tmp;
+        snip.setContent(content);
+      }
+      if((tmp = (String)elements.get("cTime")) != null) {
+	snip.setCTime(getTimestamp(tmp));
+      }
+      if((tmp = (String)elements.get("mTime")) != null) {
+	snip.setMTime(getTimestamp(tmp));
+      }
+      if((tmp = (String)elements.get("cUser")) != null) {
+	User user = um.load(tmp);
+	if(user != null) {
+	  snip.setCUser(user);
+	}
+      }
+      if((tmp = (String)elements.get("mUser")) != null) {
+	User user = um.load(tmp);
+	if(user != null) {
+	  snip.setMUser(user);
+	}
+      }
+
       space.store(snip);
     }
+  }
+
+  private static Timestamp getTimestamp(String t) {
+    return new Timestamp(new Date(Long.parseLong(t)).getTime());
   }
 }
