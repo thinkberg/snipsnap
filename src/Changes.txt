@@ -1,5 +1,6 @@
 0.5
 
+- New Installer (first time run installs a basic SnipSnap applicaton)
 - Fixed Bug: cyclic dependency temp. fixed for component loading
 - Added Feature: Snips can be displayed as RDF
 - Developer: Added interfaces for XML-RPC webservices (MetaWeblog, ...) and stuffed this in Pico
