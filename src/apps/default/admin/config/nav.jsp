@@ -8,6 +8,7 @@
 <%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
 
 <input type="hidden" name="step" value="<c:out value='${step}'/>"/>
+<input type="hidden" name="prefix" value="<c:out value="${prefix}"/>"/>
 <c:choose>
   <c:when test="${not empty configuser && configuser.admin}">
     <c:if test="${not(step == 'import' || step == 'export' || step == 'users' || step == 'search')}">

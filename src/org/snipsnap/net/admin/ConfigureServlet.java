@@ -197,6 +197,8 @@ public class ConfigureServlet extends HttpServlet {
       }
     }
 
+    request.setAttribute(ATT_PREFIX, prefix);
+
     // If this is not a multipart/form-data request continue
     String type = request.getHeader("Content-Type");
     if (type != null && type.startsWith("multipart/form-data")) {
@@ -208,26 +210,28 @@ public class ConfigureServlet extends HttpServlet {
     }
 
     // TODO same as in InitFilter
+    Application app = Application.get();
     String xForwardedHost = request.getHeader("X-Forwarded-Host");
     if (xForwardedHost != null) {
+      String protocol = config.get(Configuration.APP_REAL_PROTOCOL, "http");
+      String contextPath = config.get(Configuration.APP_REAL_PATH, "");
+
       int colonIndex = xForwardedHost.indexOf(':');
       String host = xForwardedHost;
-      String port = null;
       if (colonIndex != -1) {
         host = host.substring(0, colonIndex);
-        port = xForwardedHost.substring(colonIndex + 1);
+        int port = Integer.parseInt(xForwardedHost.substring(colonIndex + 1));
+        app.storeObject(Application.URL, new URL(protocol, host, port, contextPath));
+      } else {
+        app.storeObject(Application.URL, new URL(protocol, host, contextPath));
       }
-      config.set(Configuration.APP_REAL_HOST, host);
-      config.set(Configuration.APP_REAL_PORT, port == null ? "80" : port);
     } else {
       String protocol = new URL(request.getRequestURL().toString()).getProtocol();
       String host = request.getServerName();
-      String port = "" + request.getServerPort();
+      int port = request.getServerPort();
+      String contextPath = request.getContextPath() + ("/".equals(prefix) ? "" : prefix);
 
-      config.set(Configuration.APP_REAL_PROTOCOL, protocol);
-      config.set(Configuration.APP_REAL_HOST, host);
-      config.set(Configuration.APP_REAL_PORT, port);
-      config.set(Configuration.APP_REAL_PATH, request.getContextPath());
+      app.storeObject(Application.URL, new URL(protocol, host, port, contextPath));
     }
 
     Application.get().setConfiguration(config);
