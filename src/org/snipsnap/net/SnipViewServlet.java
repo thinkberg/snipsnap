@@ -113,7 +113,7 @@ public class SnipViewServlet extends HttpServlet {
 
     // stop special processing for HEAD requests
     if("HEAD".equals(request.getMethod())) {
-      super.doHead(request, response);
+      response.setStatus(HttpServletResponse.SC_OK);
       return;
     }
 
