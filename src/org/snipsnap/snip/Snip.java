@@ -25,6 +25,9 @@
 package org.snipsnap.snip;
 
 import org.snipsnap.snip.filter.SnipFormatter;
+import org.snipsnap.snip.filter.Filter;
+import org.snipsnap.snip.filter.regex.RegexFilter;
+import org.snipsnap.snip.filter.regex.RegexReplaceFilter;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.User;
 import org.snipsnap.util.Nameable;

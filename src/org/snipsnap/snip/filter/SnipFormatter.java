@@ -46,6 +46,7 @@ public class SnipFormatter {
         fp.addFilter("org.snipsnap.snip.filter.ParamFilter");
         fp.addFilter("org.snipsnap.snip.filter.MacroFilter");
         fp.addFilter(MacroFilter.getInstance());
+        fp.addFilter("org.snipsnap.snip.filter.CalendarFilter");
         fp.addFilter("org.snipsnap.snip.filter.HeadingFilter");
         fp.addFilter("org.snipsnap.snip.filter.StrikeThroughFilter");
         fp.addFilter("org.snipsnap.snip.filter.ListFilter");

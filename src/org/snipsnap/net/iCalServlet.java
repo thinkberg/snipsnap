@@ -57,6 +57,9 @@ public class iCalServlet extends HttpServlet {
     HttpSession session = request.getSession(true);
     UserManager um = UserManager.getInstance();
 
+    String method = request.getMethod();
+    String pathInfo = request.getPathInfo();
+
     // make sure the user is authorized
     String auth = request.getHeader("Authorization");
     String login = "", password = "";
@@ -76,12 +79,10 @@ public class iCalServlet extends HttpServlet {
       Application.get().setUser(user);
     }
 
-    String method = request.getMethod();
-    String pathInfo = request.getPathInfo();
 
     String name = user.getLogin();
     String file = pathInfo.substring(1);
- /*   try {
+    try {
       int slashIdx = pathInfo.indexOf('/', 1);
       if (slashIdx > -1) {
         name = pathInfo.substring(1, slashIdx);
@@ -90,12 +91,11 @@ public class iCalServlet extends HttpServlet {
     } catch (Exception e) {
       // ignore and let the if below handle
     }
- */
 
     System.err.println("iCalServlet: " + method + "(" + user.getLogin() + "," + file + ")");
 
     // check that we have a name and a file
-    if (null == name || null == file) {
+    if (!user.getLogin().equals(name) || null == name || null == file) {
       response.setStatus(WD_BAD_REQUEST);
       return;
     }
