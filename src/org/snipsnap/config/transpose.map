@@ -1,0 +1,18 @@
+# Property transposition file for migration of old properties to new names.
+#
+# $Id$
+# Admin entry changes
+admin.login    = app.admin.login
+admin.password = app.admin.password
+admin.email    = app.admin.email
+
+# changes in other configuration parts (2003-05-20)
+app.url                  = @DEPRECATED Split into app.real.host, app.real.port, app.real.path
+app.domain               = @DEPRECATED Split into app.real.host, app.real.port, app.real.path
+
+app.url.auto             = app.real.autodetect
+app.mailblog.password    = app.mail.blog.password
+app.pop3.host            = app.mail.pop3.host
+app.pop3.user            = app.mail.pop3.user
+app.pop3.password        = app.mail.pop3.password
+app.locale               = app.language
