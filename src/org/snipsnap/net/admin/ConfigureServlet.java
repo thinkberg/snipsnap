@@ -46,6 +46,7 @@ import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.util.ConnectionManager;
 import org.snipsnap.versioning.JDBCVersionStorage;
+import org.radeox.util.logging.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -163,6 +164,16 @@ public class ConfigureServlet extends HttpServlet {
           prefix = "/" + prefix;
         }
         config.setPrefix(prefix);
+      }
+    }
+
+    // If this is not a multipart/form-data request continue
+    String type = request.getHeader("Content-Type");
+    if (type != null && type.startsWith("multipart/form-data")) {
+      try {
+        request = new MultipartWrapper(request, config.getEncoding() != null ? config.getEncoding() : "UTF-8");
+      } catch (IllegalArgumentException e) {
+        Logger.warn("ConfigureServlet: multipart/form-data wrapper:" + e.getMessage());
       }
     }
 
@@ -403,8 +414,8 @@ public class ConfigureServlet extends HttpServlet {
         if (config.isConfigured()) {
           SnipSpace space = SnipSpaceFactory.getInstance();
           Snip snip = space.load(Configuration.SNIPSNAP_CONFIG);
-          uploader.uploadFile(request, snip, config.getFilePath());
-          config.setLogo(((MultipartWrapper) request).getFileName("file"));
+          String logoName = uploader.uploadFile(request, snip, config.getFilePath());
+          config.setLogo(logoName);
         } else {
           MultipartWrapper mpRequest = (MultipartWrapper) request;
           String fileName = mpRequest.getFileName("file");
@@ -423,7 +434,7 @@ public class ConfigureServlet extends HttpServlet {
               }
               imageOut.close();
               logoFileIs.close();
-              config.setLogo(logoFileName);
+              config.setLogo(uploader.getCanonicalFileName(logoFileName));
               config.set(InitializeDatabase.LOGO_FILE, logoFile.getPath());
               config.set(InitializeDatabase.LOGO_FILE_TYPE, logoFileType);
             } else {
@@ -459,7 +470,6 @@ public class ConfigureServlet extends HttpServlet {
       errors.put(Configuration.APP_NAME, Configuration.APP_NAME);
     }
   }
-
 
   private void setupTheme(HttpServletRequest request, HttpServletResponse response, Configuration config, Map errors) {
     config.setTheme(request.getParameter(Configuration.APP_THEME));

@@ -72,8 +72,19 @@ public class FileUploadServlet extends HttpServlet {
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-    String snipName = request.getParameter("name");
     Configuration config = Application.get().getConfiguration();
+
+    // If this is not a multipart/form-data request continue
+    String type = request.getHeader("Content-Type");
+    if (type != null && type.startsWith("multipart/form-data")) {
+      try {
+        request = new MultipartWrapper(request, config.getEncoding() != null ? config.getEncoding() : "UTF-8");
+      } catch (IllegalArgumentException e) {
+        Logger.warn("FileUploadServlet: multipart/form-data wrapper:" + e.getMessage());
+      }
+    }
+
+    String snipName = request.getParameter("name");
 
     if (null == snipName) {
       response.sendRedirect(config.getUrl());
@@ -126,7 +137,7 @@ public class FileUploadServlet extends HttpServlet {
     dispatcher.forward(request, response);
   }
 
-  public void uploadFile(HttpServletRequest request, Snip snip, File filePath) throws IOException {
+  public String uploadFile(HttpServletRequest request, Snip snip, File filePath) throws IOException {
     MultipartWrapper wrapper = (MultipartWrapper) request;
     String fileName = wrapper.getParameter("filename");
     String contentType = wrapper.getParameter("mimetype");
@@ -154,11 +165,13 @@ public class FileUploadServlet extends HttpServlet {
       snip.getAttachments().addAttachment(relativeFileLocation.getName(),
                                           contentType, size, relativeFileLocation.getPath());
       SnipSpaceFactory.getInstance().store(snip);
+      return fileName;
     }
+    return null;
   }
 
   // make file name pure without the path
-  private String getCanonicalFileName(String fileName) throws IOException {
+  public String getCanonicalFileName(String fileName) throws IOException {
     int slashIndex = fileName.lastIndexOf('\\');
     if (slashIndex >= 0) {
       Logger.log(Logger.WARN, "Windows path detected, cutting off: " + fileName);

@@ -66,9 +66,11 @@
        }
        pageContext.setAttribute("snip", snip);
    %>
-    <div id="page-portlet-<%=i%>"><s:snip snip="${snip}"/></div>
+    <div id="page-portlet-<%=i%>-wrapper">
+     <div id="page-portlet-<%=i%>"><s:snip snip="${snip}"/></div>
+    </div>
    <% } %>
- </div>
-   <div id="page-bottom"><s:snip name="snipsnap-copyright"/></div>
+  </div>
+  <div id="page-bottom"><s:snip name="snipsnap-copyright"/></div>
  </body>
 </html>
