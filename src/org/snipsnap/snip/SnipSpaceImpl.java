@@ -345,17 +345,6 @@ public class SnipSpaceImpl implements SnipSpace {
     return snip;
   }
 
-  public Snip copy(Snip snip, String newName) {
-    SnipSerializer serializer = SnipSerializer.getInstance();
-    Map snipMap = serializer.createSnipMap(snip);
-    snipMap.remove(SnipSerializer.SNIP_CUSER);
-    snipMap.remove(SnipSerializer.SNIP_CTIME);
-    Snip newSnip = create(newName, snip.getContent());
-    newSnip = serializer.deserialize(snipMap, newSnip);
-
-    return newSnip;
-  }
-
   public void remove(Snip snip) {
     synchronized(delayed) {
       if (!delayed.contains(snip)) {

@@ -35,6 +35,8 @@ import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.Security;
 import org.snipsnap.user.User;
+import org.snipsnap.net.filter.MultipartWrapper;
+import org.radeox.util.logging.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -60,6 +62,16 @@ public class PostStoreServlet extends HttpServlet {
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+    Configuration config = Application.get().getConfiguration();
+    // If this is not a multipart/form-data request continue
+    String type = request.getHeader("Content-Type");
+    if (type != null && type.startsWith("multipart/form-data")) {
+      try {
+        request = new MultipartWrapper(request, config.getEncoding() != null ? config.getEncoding() : "UTF-8");
+      } catch (IllegalArgumentException e) {
+        Logger.warn("SnipCopyServlet: multipart/form-data wrapper:" + e.getMessage());
+      }
+    }
 
     String title = request.getParameter("title");
     String content = request.getParameter("content");
@@ -100,7 +112,6 @@ public class PostStoreServlet extends HttpServlet {
       }
     }
 
-    Configuration config = Application.get().getConfiguration();
     response.sendRedirect(config.getUrl("/space/" + SnipLink.encode(snipName)));
   }
 }

@@ -24,14 +24,14 @@
         <tr>
           <td>
             <fmt:message key="snip.copy.name"/><br>
-            <input name="new" value="<c:out value="${name}" escapeXml="true" />" type="text"/>
+            <input name="name" value="<c:out value="${name}" escapeXml="true" />" type="text"/>
           </td>
         </tr>
         <c:if test="${not empty subsnips}">
           <tr>
             <td>
               <fmt:message key="snip.copy.subsnips"/><br/>
-              <select name="subsnips" size="10">
+              <select multiple="multiple" name="subsnips" size="10">
                 <c:forEach items="${subsnips}" var="snip">
                   <option selected="selected" value="<c:out value='${snip.name}' escapeXml='true'/>"><c:out value="${snip.name}" escapeXml="true"/></option>
                 </c:forEach>

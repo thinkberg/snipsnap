@@ -122,14 +122,14 @@ public class SnipSerializer extends SerializerSupport {
   }
 
   private Element addXMLContent(String content, String elementName) {
-    if(null != content && !"".equals(content)) {
+    if (null != content && !"".equals(content)) {
       try {
         StringReader stringReader = new StringReader(content);
         SAXReader saxReader = new SAXReader();
         Document doc = saxReader.read(stringReader);
         return doc.getRootElement();
       } catch (Exception e) {
-        Logger.warn("SnipSerializer: unable to add xml content: "+e);
+        Logger.warn("SnipSerializer: unable to add xml content: " + e);
         e.printStackTrace();
       }
     }
@@ -152,8 +152,8 @@ public class SnipSerializer extends SerializerSupport {
     while (elementIt.hasNext()) {
       String element = (String) elementIt.next();
       String value = "";
-      Object elementValue= snipMap.get(element);
-      if(elementValue instanceof String) {
+      Object elementValue = snipMap.get(element);
+      if (elementValue instanceof String) {
         value = notNull((String) snipMap.get(element));
       }
 
@@ -171,8 +171,10 @@ public class SnipSerializer extends SerializerSupport {
         snip.setCUser(value);
       } else if (SNIP_MUSER.equals(element)) {
         snip.setMUser(value);
-      } else if (SNIP_OUSER.equals(element) && !"".equals(value)) {
-        snip.setOUser(value);
+      } else if (SNIP_OUSER.equals(element)) {
+        if (!"".equals(value)) {
+          snip.setOUser(value);
+        }
       } else if (SNIP_PARENT.equals(element)) {
         if (value.trim().length() != 0) {
           snip.setParentName(value);
@@ -190,8 +192,8 @@ public class SnipSerializer extends SerializerSupport {
       } else if (SNIP_LABELS.equals(element)) {
         snip.setLabels(new Labels(snip, value));
       } else if (SNIP_ATTACHMENTS.equals(element)) {
-        if(elementValue instanceof Element) {
-          snip.setAttachments(new Attachments((Element)elementValue));
+        if (elementValue instanceof Element) {
+          snip.setAttachments(new Attachments((Element) elementValue));
         } else {
           snip.setAttachments(new Attachments(value));
         }
@@ -204,7 +206,7 @@ public class SnipSerializer extends SerializerSupport {
       } else if (SNIP_APPLICATION.equals(element)) {
         snip.setApplication(value);
       } else {
-        Logger.warn("unknown entry in serialized snip: "+element+"='"+value+"'");
+        Logger.warn("unknown entry in serialized snip: " + element + "='" + value + "'");
       }
     }
     return snip;

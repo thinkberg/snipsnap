@@ -531,18 +531,15 @@ public class SnipImpl implements Snip {
 
   public Snip copy(String newName) {
     SnipSpace space = (SnipSpace)Components.getComponent(SnipSpace.class);
-    SnipSerializer serializer = SnipSerializer.getInstance();
-    Map snipMap = serializer.createSnipMap(this);
-    snipMap.remove(SnipSerializer.SNIP_CUSER);
-    snipMap.remove(SnipSerializer.SNIP_CTIME);
     Snip newSnip = space.create(newName, getContent());
-    newSnip = serializer.deserialize(snipMap, newSnip);
-
-    List atts = newSnip.getAttachments().getAll();
+    newSnip.setLabels(getLabels());
+    
+    List atts = getAttachments().getAll();
     Iterator attsIt = atts.iterator();
     File fileStorePath = new File(Application.get().getConfiguration().getFileStore(), "snips");
     while(attsIt.hasNext()) {
-      Attachment att = (Attachment)attsIt.next();
+      Attachment oldAtt = (Attachment)attsIt.next();
+      Attachment att = new Attachment(oldAtt.getName(), oldAtt.getContentType(), oldAtt.getSize(), oldAtt.getDate(), oldAtt.getLocation());
       String location = att.getLocation();
       File attFile = new File(fileStorePath, location);
       if(attFile.exists()) {

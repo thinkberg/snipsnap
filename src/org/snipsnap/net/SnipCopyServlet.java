@@ -24,14 +24,14 @@
  */
 package org.snipsnap.net;
 
+import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.storage.SnipSerializer;
 import org.snipsnap.container.Components;
-import org.radeox.util.logging.Logger;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.net.filter.MultipartWrapper;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -39,9 +39,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 import java.util.Arrays;
-import java.util.Map;
 
 /**
  * Copy Snips
@@ -58,13 +56,22 @@ public class SnipCopyServlet extends HttpServlet {
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
     throws IOException, ServletException {
-
     Configuration config = Application.get().getConfiguration();
+    // If this is not a multipart/form-data request continue
+    String type = request.getHeader("Content-Type");
+    if (type != null && type.startsWith("multipart/form-data")) {
+      try {
+        request = new MultipartWrapper(request, config.getEncoding() != null ? config.getEncoding() : "UTF-8");
+      } catch (IllegalArgumentException e) {
+        Logger.warn("SnipCopyServlet: multipart/form-data wrapper:" + e.getMessage());
+      }
+    }
+
     String name = request.getParameter("snip");
     SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
-    Snip snip = space.load(name);
 
-    if (null != name && snip != null) {
+    if (null != name && space.exists(name)) {
+      Snip snip = space.load(name);
       if (request.getParameter("copy") != null) {
         String newName = request.getParameter("name");
         if(newName != null && newName.endsWith("/")) {
@@ -72,14 +79,14 @@ public class SnipCopyServlet extends HttpServlet {
         }
         String[] subsnips = request.getParameterValues("subsnips");
 
-        Snip newSnip = space.copy(snip, newName);
+        Snip newSnip = snip.copy(newName);
         Logger.log("SnipCopyServlet: copied " + snip.getName() + " to " + newSnip.getName());
-        for(int s = 0; s < subsnips.length; s++) {
+        for(int s = 0; subsnips != null && s < subsnips.length; s++) {
           String subSnipName = subsnips[s];
           Snip subSnip = space.load(subSnipName);
           if(subSnip != null && subSnipName.startsWith(name)) {
-            String newSubSnipName = newName + "/" + subsnips[s].substring(newName.length()+1);
-            Snip newSubSnip = space.copy(subSnip, newSubSnipName);
+            String newSubSnipName = newName + "/" + subsnips[s].substring(name.length()+1);
+            Snip newSubSnip = subSnip.copy(newSubSnipName);
             Logger.log("SnipCopyServlet: copied "+subSnip.getName()+" to "+newSubSnip.getName());
           } else {
             Logger.warn("SnipCopyServlet: snip does not exist: "+subsnips[s]);
