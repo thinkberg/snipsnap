@@ -38,7 +38,7 @@ import java.util.*;
  * @version $Id$
  */
 
-public class DefaultUserManager {
+public class DefaultUserManager implements UserManager {
   private List delayed;
   private UserStorage storage;
   public static final int MILISECS_PER_MINUTE = 60 * 1000;

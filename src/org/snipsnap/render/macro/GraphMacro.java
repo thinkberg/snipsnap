@@ -40,9 +40,7 @@ import java.util.Map;
  * @version $Id$
  */
 
-public class GraphMacro extends SnipPreserved {
-  private Map filters;
-
+public class GraphMacro extends SnipMacro {
   public GraphMacro() {
   }
 
@@ -56,5 +54,14 @@ public class GraphMacro extends SnipPreserved {
 
   public void execute(Writer writer, SnipMacroParameter params)
       throws IllegalArgumentException, IOException {
+      writer.write("<img src=\"");
+      writer.write("?start=");
+      // Remove {graph} from start and end offset
+      int start = params.getStart() + getName().length() + 2;
+      int end = params.getEnd() + getName().length() - 2;
+      writer.write(start);
+      writer.write("&end=");
+      writer.write(end);
+      writer.write("\"/>");
   }
 }
