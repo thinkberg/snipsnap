@@ -20,17 +20,18 @@
    <s:check roles="Authenticated" permission="Edit" >
      <div class="snip-input">
       <form class="form" name="f" method="post" action="exec/store" enctype="multipart/form-data">
-       <table>
-        <tr><td><textarea name="content" type="text" cols="80" rows="20"><c:out value="${content}" escapeXml="true"/></textarea></td></tr>
-        <tr><td class="form-buttons">
-         <input value="<fmt:message key="snip.edit.help"/>" onClick="showHide('help'); return false;" type="submit">
-         <input value="<fmt:message key='dialog.preview'/>" name="preview" type="submit"/>
-         <input value="<fmt:message key='dialog.save'/>" name="save" type="submit"/>
-         <input value="<fmt:message key='dialog.cancel'/>" name="cancel" type="submit"/>
-        </td></tr>
-       </table>
-       <input name="name" type="hidden" value="<c:out value="${snip_name}"/>"/>
-       <input name="referer" type="hidden" value="<%= Encoder.escape(request.getHeader("REFERER")) %>"/>
+        <c:choose>
+          <c:when test="${not empty(edit_page)}">
+            <c:import url="${edit_page}"/>
+          </c:when>
+          <c:otherwise>
+            <c:import url="/util/edit_default.jsp"/>
+          </c:otherwise>
+        </c:choose>
+        <input name="mime_type" type="hidden" value="<c:out value="${mime_type}"/>"/>
+        <input name="edit_handler" type="hidden" value="<c:out value="${edit_handler}"/>"/>
+        <input name="snip_name" type="hidden" value="<c:out value="${snip_name}"/>"/>
+        <input name="referer" type="hidden" value="<%= Encoder.escape(request.getHeader("REFERER")) %>"/>
       </form>
      </div>
      <script language="Javascript" type="text/javascript">

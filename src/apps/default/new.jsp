@@ -1,4 +1,5 @@
-<%--
+<%@ page import="org.radeox.util.Encoder"%>
+ <%--
   ** Template for creating new Snips.
   ** @author Stephan J. Schmidt
   ** @version $Id$
@@ -44,8 +45,11 @@
           <input value="<fmt:message key="dialog.cancel"/>" name="cancel" type="submit"/>
         </td></tr>
        </table>
-       <input name="referer" type="hidden" value="<%= request.getHeader("REFERER") %>"/>
-     </div>
+       <input name="mime_type" type="hidden" value="<c:out value="${mime_type}"/>"/>
+       <input name="edit_handler" type="hidden" value="<c:out value="${edit_handler}"/>"/>
+       <input name="name_name" type="hidden" value="<c:out value="${snip_name}"/>"/>
+       <input name="referer" type="hidden" value="<%= Encoder.escape(request.getHeader("REFERER")) %>"/>
+      </div>
     </div>
     <script language="Javascript" type="text/javascript">
      <!--

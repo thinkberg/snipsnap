@@ -66,9 +66,29 @@ public class SnipStoreServlet extends HttpServlet {
       }
     }
 
-    String name = request.getParameter("name");
-
+    String name = request.getParameter("snip_name");
     String parent = request.getParameter("parent");
+
+    // handle requests that store using their own handler and forward (plugin)
+    String storeHandler = request.getParameter("store_handler");
+    if (null != storeHandler) {
+      RequestDispatcher dispatcher = request.getRequestDispatcher("/plugin/" + storeHandler);
+      try {
+        dispatcher.forward(request, response);
+      } catch (Exception e) {
+        Logger.warn("error while forwarding to store handler", e);
+        request.setAttribute("error", "snip.store.handler.error");
+        if (parent != null) {
+          // We have been called from new
+          dispatcher = request.getRequestDispatcher("/exec/new");
+        } else {
+          dispatcher = request.getRequestDispatcher("/exec/edit");
+        }
+        dispatcher.forward(request, response);
+      }
+      return;
+    }
+
     if (parent != null && ! "".equals(parent)) {
       name = parent + "/" + name;
     }
@@ -76,7 +96,6 @@ public class SnipStoreServlet extends HttpServlet {
     Snip snip = space.load(name);
 
     String content = request.getParameter("content");
-
     // if the name is empty show an error
     if (null == name || "".equals(name)) {
       RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/new");

@@ -29,6 +29,7 @@ import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpaceFactory;
+import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.label.MIMETypeLabel;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
@@ -62,13 +63,15 @@ public class SnipEditServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
     throws IOException, ServletException {
 
-    final String name = request.getParameter("name");
+    String name = request.getParameter("name");
     if (null == name) {
       Configuration config = Application.get().getConfiguration();
       response.sendRedirect(config.getUrl("/space/" + config.getStartSnip()));
       return;
     }
 
+    // try to load the snip and set the snip_name property in case it is a new
+    // snip, so the target store servlet knows how to name the new snip
     Snip snip = SnipSpaceFactory.getInstance().load(name);
     request.setAttribute("snip", snip);
     request.setAttribute("snip_name", name);
@@ -80,28 +83,39 @@ public class SnipEditServlet extends HttpServlet {
       request.setAttribute("content", snip != null ? snip.getContent() : "");
     }
 
+    String mimeType = request.getParameter("mime");
+    String editHandler = request.getParameter("handler");
+
     if (null != snip) {
       // get all mime types associated with the snip
       Collection mimeTypes = snip.getLabels().getLabels("mime-type");
       if (!mimeTypes.isEmpty()) {
         Iterator handlerIt = mimeTypes.iterator();
         while (handlerIt.hasNext()) {
-          MIMETypeLabel mimeType = (MIMETypeLabel) handlerIt.next();
-          String editHandler = mimeType.getEditHandler();
+          MIMETypeLabel mimeTypeLabel = (MIMETypeLabel) handlerIt.next();
+          editHandler = mimeTypeLabel.getEditHandler();
           // check that an edit handler is set
           if (null != editHandler && !"".equals(editHandler)) {
             if (Security.checkPermission(Permissions.EDIT_SNIP, Application.get().getUser(), snip) &&
               Security.hasRoles(Application.get().getUser(), snip, authRoles)) {
               Logger.log("SnipEditServlet: calling " + editHandler);
-              RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/" + editHandler);
-              dispatcher.forward(request, response);
-              return;
+              mimeType = mimeTypeLabel.getMIMEType();
+            } else {
+              editHandler = null;
             }
             break;
           }
         }
       }
     }
+
+    if(null != editHandler && !"".equals(editHandler)) {
+      if(Security.hasRoles(Application.get().getUser(), snip, authRoles)) {
+        request.setAttribute("edit_page", "/exec/" + editHandler);
+        request.setAttribute("mime_type", mimeType);
+      }
+    }
+
     RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/edit.jsp");
     dispatcher.forward(request, response);
   }

@@ -24,36 +24,34 @@
  */
 package org.snipsnap.net;
 
+import groovy.text.SimpleTemplateEngine;
+import groovy.text.Template;
 import org.radeox.util.Service;
 import org.radeox.util.logging.Logger;
+import org.snipsnap.app.Application;
 import org.snipsnap.container.Components;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.label.MIMETypeLabel;
-import org.snipsnap.app.Application;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.Writer;
-import java.io.BufferedWriter;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import groovy.text.Template;
-import groovy.text.SimpleTemplateEngine;
-
 public class PluginServlet extends HttpServlet {
   private Map extTypeMap = new HashMap();
   private Map pluginServlets = new HashMap();
+  private Map servletCache = new HashMap();
 
   SimpleTemplateEngine templateEngine = new SimpleTemplateEngine();
 
@@ -65,14 +63,15 @@ public class PluginServlet extends HttpServlet {
     extTypeMap.put(".groovy", "text/groovy");
 
     // load plugins from services api
-    Iterator pluginServletNames = Service.providerNames(PluginServlet.class);
+    Iterator pluginServletNames = Service.providerNames(ServletPlugin.class);
     while (pluginServletNames.hasNext()) {
       String pluginLine = (String) pluginServletNames.next();
       String[] pluginInfo = pluginLine.split("\\p{Space}");
-      if (pluginInfo.length > 2) {
-        pluginServlets.put(pluginInfo[0], pluginInfo[1]);
+      if (pluginInfo.length > 0) {
+        pluginServlets.put(pluginInfo[0], pluginInfo.length > 1 ?  pluginInfo[1] : null);
+        Logger.log("found plugin: "+pluginInfo[0]);
       } else {
-        Logger.warn("ignoring plugin servlet '" + pluginLine + "': missing type or servlet");
+        Logger.warn("ignoring servlet plugin '" + pluginLine + "': missing type or servlet");
       }
     }
   }
@@ -107,7 +106,7 @@ public class PluginServlet extends HttpServlet {
       }
     }
 
-    if(null == handlerMIMEType) {
+    if (null == handlerMIMEType) {
       int extIndex = pluginName.indexOf(".");
       if (extIndex != -1) {
         handlerMIMEType = (String) extTypeMap.get(pluginName.substring(extIndex));
@@ -118,12 +117,36 @@ public class PluginServlet extends HttpServlet {
       try {
         writer.write(handleGroovyTemplate(getTemplateSource(pluginName)));
       } catch (IOException e) {
-        writer.write("<span class=\"error\">"+e.getLocalizedMessage()+"</span>");
+        writer.write("<span class=\"error\">" + e.getLocalizedMessage() + "</span>");
       }
     } else {
-      writer.write("<span class=\"error\">unknown plugin: '"+pluginName+"'</span>");
+      ServletPlugin servletPlugin = (ServletPlugin) servletCache.get(pluginName);
+      if (null == servletPlugin) {
+        try {
+          servletPlugin = getServletPlugin(pluginName);
+        } catch (Exception e) {
+          writer.write("<span class=\"error\">plugin error: '" + e.getLocalizedMessage() + "'</span>");
+          Logger.warn("unable to load servlet plugin", e);
+        }
+        servletCache.put(pluginName, servletPlugin);
+      }
+
+      if (null != servletPlugin) {
+        try {
+          servletPlugin.service(request, response);
+        } catch (Exception e) {
+          writer.write("<span class=\"error\">plugin error: '" + e.getLocalizedMessage() + "'</span>");
+        }
+      } else {
+
+      }
     }
     writer.flush();
+  }
+
+  private ServletPlugin getServletPlugin(String pluginName) throws Exception {
+    Class pluginClass = Class.forName(pluginName);
+    return (ServletPlugin) pluginClass.newInstance();
   }
 
   private String getMIMEType(Snip snip) {
