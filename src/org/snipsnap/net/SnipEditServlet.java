@@ -29,6 +29,7 @@ import com.neotis.user.UserManager;
 import com.neotis.user.User;
 import com.neotis.snip.SnipSpace;
 import com.neotis.snip.Snip;
+import com.neotis.snip.SnipLink;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -53,14 +54,14 @@ public class SnipEditServlet extends HttpServlet {
 
     String name = request.getParameter("name");
     if(null == name) {
-      response.sendRedirect("/space/start");
+      response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));
       return;
     }
 
     Snip snip = SnipSpace.getInstance().load(name);
     request.setAttribute("snip", snip);
     request.setAttribute("snip_name", name);
-    RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/edit.jsp");
+    RequestDispatcher dispatcher = request.getRequestDispatcher(SnipLink.absoluteLink(request, "/exec/edit.jsp"));
     dispatcher.forward(request, response);
   }
 

@@ -27,6 +27,7 @@ package com.neotis.net;
 import com.neotis.app.Application;
 import com.neotis.user.User;
 import com.neotis.user.UserManager;
+import com.neotis.snip.SnipLink;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -55,7 +56,7 @@ public class LoginServlet extends HttpServlet {
       UserManager um = UserManager.getInstance();
       User user = um.authenticate(login, password);
       if (user == null) {
-        response.sendRedirect("/exec/login.jsp?login=" + login + "&message=" + ERR_PASSWORD);
+        response.sendRedirect(SnipLink.absoluteLink(request, "/exec/login.jsp?login=" + login + "&message=" + ERR_PASSWORD));
         return;
       }
       HttpSession session = request.getSession(true);
@@ -69,7 +70,7 @@ public class LoginServlet extends HttpServlet {
       session.setAttribute("app", app);
     }
 
-    response.sendRedirect(referer != null ? referer : "/space/start");
+    response.sendRedirect(referer != null ? referer : SnipLink.absoluteLink(request, "/space/start"));
   }
 
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -80,11 +81,11 @@ public class LoginServlet extends HttpServlet {
       System.out.println("LoginServlet: Logging user off");
       HttpSession session = request.getSession(true);
       response.addCookie(new Cookie("userName", "Guest"));
-      response.sendRedirect(referer != null ? referer : "/space/start");
+      response.sendRedirect(referer != null ? referer : SnipLink.absoluteLink(request, "/space/start"));
       session.invalidate();
       return;
     }
 
-    response.sendRedirect(referer != null ? referer : "/space/start");
+    response.sendRedirect(referer != null ? referer : SnipLink.absoluteLink(request, "/space/start"));
   }
 }

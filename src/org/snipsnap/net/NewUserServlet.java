@@ -26,6 +26,7 @@ package com.neotis.net;
 
 import com.neotis.app.Application;
 import com.neotis.snip.HomePage;
+import com.neotis.snip.SnipLink;
 import com.neotis.user.User;
 import com.neotis.user.UserManager;
 
@@ -36,6 +37,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Servlet to register a new user.
@@ -57,33 +60,50 @@ public class NewUserServlet extends HttpServlet {
     login = login != null ? login : "";
     email = email != null ? email : "";
 
+
+    HttpSession session = request.getSession(true);
+    session.removeAttribute("errors");
+    Map errors = new HashMap();
+
+    Map register = new HashMap();
+    register.put("login", login);
+    register.put("email", email);
+    session.setAttribute("register", register);
+
     if (request.getParameter("cancel") == null) {
       UserManager um = UserManager.getInstance();
       User user = um.load(login);
       // check whether user exists or not
       if (user != null) {
-        response.sendRedirect("/exec/register.jsp?login=" + login + "&email=" + email + "&message=" + ERR_EXISTS);
+        errors.put("login", ERR_EXISTS);
+        sendError(session, errors, request, response);
         return;
       }
       // check whether the password is correctly typed
       if (!password.equals(password2)) {
-        response.sendRedirect("/exec/register.jsp?login=" + login + "&email=" + email + "&message=" + ERR_PASSWORD);
+        errors.put("password", ERR_PASSWORD);
+        sendError(session, errors, request, response);
         return;
       }
       user = um.create(login, password, email);
 
-      HttpSession session = request.getSession(true);
       Application app = (Application) session.getAttribute("app");
       app.setUser(user);
       HomePage.create(login, app);
       // store user name and app in cookie and session
       response.addCookie(new Cookie("userName", user.getLogin()));
       session.setAttribute("app", app);
-      response.sendRedirect("/space/" + login);
+      response.sendRedirect(SnipLink.absoluteLink(request, "/space/" + login));
       return;
     }
 
     String referer = request.getParameter("referer");
-    response.sendRedirect(referer != null ? referer : "/space/start");
+    response.sendRedirect(referer != null ? referer : SnipLink.absoluteLink(request, "/space/start"));
+  }
+
+  private void sendError(HttpSession session, Map errors, HttpServletRequest request, HttpServletResponse response)
+    throws IOException {
+    session.setAttribute("errors", errors);
+    response.sendRedirect(SnipLink.absoluteLink(request, "/exec/register.jsp"));
   }
 }

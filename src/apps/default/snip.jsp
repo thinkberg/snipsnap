@@ -13,7 +13,7 @@
    <tr><td><span class="snip-name"><c:out value="${snip.name}"/></span></td>
    <td>
    <s:check roles="Authenticated" permission="Edit" snip="${snip}">
-     [<a href="/exec/edit?name=<c:out value='${snip.name}'/>">edit</a>]
+     [<a href="../exec/edit?name=<c:out value='${snip.name}'/>">edit</a>]
    </s:check>
    <s:check roles="Authenticated" permission="Edit" snip="${snip}" invert="true">
      <span class="inactive">[edit]</span>

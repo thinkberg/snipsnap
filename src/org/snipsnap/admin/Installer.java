@@ -24,32 +24,29 @@
  */
 package com.neotis.admin;
 
-import com.neotis.config.CreateDB;
 import com.neotis.config.Configuration;
-import com.neotis.user.UserManager;
+import com.neotis.config.CreateDB;
+import com.neotis.snip.SnipLink;
 import com.neotis.util.JarExtractor;
+import org.mortbay.http.SocketListener;
+import org.mortbay.jetty.Server;
+import org.mortbay.jetty.servlet.WebApplicationContext;
+import org.mortbay.util.InetAddrPort;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.zip.ZipFile;
-import java.util.jar.JarFile;
 import java.net.UnknownHostException;
-
-import org.mortbay.http.HttpServer;
-import org.mortbay.http.SocketListener;
-import org.mortbay.jetty.Server;
-import org.mortbay.util.InetAddrPort;
-import org.mortbay.jetty.servlet.WebApplicationContext;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.jar.JarFile;
 
 /**
  * Installs an unpacks the default application
@@ -67,7 +64,7 @@ public class Installer extends HttpServlet {
     // get or create session and application object
     HttpSession session = request.getSession(false);
     if (null == session) {
-      response.sendRedirect("/admin/");
+      response.sendRedirect(SnipLink.absoluteLink(request, "/"));
       return;
     }
     Map errors = new HashMap();
@@ -75,8 +72,8 @@ public class Installer extends HttpServlet {
 
     // get config from session
     Configuration config = (Configuration) session.getAttribute("config");
-    if(null == config) {
-      sendError(session, null, response);
+    if (null == config) {
+      sendError(session, null, request, response);
       return;
     }
 
@@ -107,14 +104,14 @@ public class Installer extends HttpServlet {
     config.setContextPath(request.getParameter("context"));
 
     if (errors.size() != 0) {
-      sendError(session, errors, response);
+      sendError(session, errors, request, response);
       return;
     }
 
     InetAddrPort addrPort = new InetAddrPort();
     try {
       String host = config.getHost();
-      if(host != null && host.length() > 0) {
+      if (host != null && host.length() > 0) {
         addrPort.setHost(host);
       } else {
         addrPort.setHost(InetAddrPort.__0_0_0_0);
@@ -122,24 +119,24 @@ public class Installer extends HttpServlet {
       addrPort.setPort(config.getPort());
     } catch (UnknownHostException e) {
       errors.put("host", "The host you entered is unknown, leave blank to bind server to the default host name.");
-      sendError(session, errors, response);
+      sendError(session, errors, request, response);
       return;
     }
 
     Collection servers = Server.getHttpServers();
     Iterator it = servers.iterator();
     Server server = null;
-    if(it.hasNext()) {
-      server = (Server)it.next();
-      System.out.println("servers host map: "+server.getHostMap());
+    if (it.hasNext()) {
+      server = (Server) it.next();
+      System.out.println("servers host map: " + server.getHostMap());
 
       try {
         server.addListener(new SocketListener(addrPort));
       } catch (Exception e) {
-        System.err.println("Installer: error configuring socket listener: "+e);
+        System.err.println("Installer: error configuring socket listener: " + e);
         errors.put("host", "Unable to configure web server. Either you cannot run the web server on port "
-                           +config.getPort()+" or there is something wrong with your host name.");
-        sendError(session, errors, response);
+                           + config.getPort() + " or there is something wrong with your host name.");
+        sendError(session, errors, request, response);
         return;
       }
     }
@@ -149,7 +146,7 @@ public class Installer extends HttpServlet {
       JarExtractor.extract(new JarFile("./lib/SnipSnap-template.war", true), new File("./app/"), out);
     } catch (IOException e) {
       errors.put("fatal", "Unable to extract default application, please see server.log for details!");
-      sendError(session, errors, response);
+      sendError(session, errors, request, response);
       return;
     }
 
@@ -163,8 +160,8 @@ public class Installer extends HttpServlet {
       CreateDB.createDB(config.getUserName(), password, config.getEmail());
     } catch (Exception e) {
       e.printStackTrace();
-      errors.put("fatal", "Unable to create database: "+e);
-      sendError(session, errors, response);
+      errors.put("fatal", "Unable to create database: " + e);
+      sendError(session, errors, request, response);
       return;
     }
 
@@ -173,10 +170,10 @@ public class Installer extends HttpServlet {
       WebApplicationContext context =
         server.addWebApplication(config.getContextPath(), "./app/");
       context.start();
-    } catch(Exception e) {
-      System.err.println("Installer: unable to start application: "+e);
-      errors.put("fatal", "Cannot start application: "+e);
-      sendError(session, errors, response);
+    } catch (Exception e) {
+      System.err.println("Installer: unable to start application: " + e);
+      errors.put("fatal", "Cannot start application: " + e);
+      sendError(session, errors, request, response);
       return;
     }
 
@@ -184,12 +181,13 @@ public class Installer extends HttpServlet {
     config.save("./conf/local.conf");
 
     writeMessage(out, "Installation finished.");
-    response.sendRedirect("/admin/exec/finished.jsp");
+    response.sendRedirect(SnipLink.absoluteLink(request, "/exec/finished.jsp"));
   }
 
-  private void sendError(HttpSession session, Map errors, HttpServletResponse response) throws IOException {
+  private void sendError(HttpSession session, Map errors, HttpServletRequest request, HttpServletResponse response)
+    throws IOException {
     session.setAttribute("errors", errors);
-    response.sendRedirect("/admin/exec/install.jsp");
+    response.sendRedirect(SnipLink.absoluteLink(request, "/exec/install.jsp"));
   }
 
   private void writeMessage(PrintWriter out, String message) {

@@ -49,7 +49,7 @@ public class SnipViewServlet extends HttpServlet {
     throws IOException, ServletException {
 
     String name = request.getPathInfo();
-    if(null == name) {
+    if(null == name || "/".equals(name)) {
       name = "start";
     } else {
       name = name.substring(1);

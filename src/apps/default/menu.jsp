@@ -13,14 +13,14 @@
 <table class="menu" width="100%" border="0" cellpadding="4" cellspacing="1">
  <tr><td>
   <s:check roles="Authenticated">
-    <a href="/exec/post.jsp">post blog</a>
+    <a href="../exec/post.jsp">post blog</a>
   </s:check>
   </td></tr>
  <tr><td>
   <b>Recent Changes:</b><br>
   <!-- replace this with a JSTL tag ala  s:recent/> -->
   <c:forEach var="snip" items="${space.changed}">
-   <a href="/space/<c:out value='${snip.name}'/>"><c:out value="${snip.name}"/></a><br/>
+   <a href="../space/<c:out value='${snip.name}'/>"><c:out value="${snip.name}"/></a><br/>
   </c:forEach>
  </td></tr>
  <tr><td>

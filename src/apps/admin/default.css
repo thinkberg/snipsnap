@@ -12,6 +12,7 @@
 }
 
 .menuitem {
+  background-color: #eeeeee;
   font-weight: bold;
   font-size: 13px;
 }
@@ -20,8 +21,7 @@
 .table-header {
   font-size: 12px;
   font-weight: bold;
-  color: #ffffff;
-  background-color: #aaaaaa;
+  background-color: #eeeeee;
 }
 
 

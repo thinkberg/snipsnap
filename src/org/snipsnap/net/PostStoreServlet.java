@@ -27,6 +27,7 @@ package com.neotis.net;
 import com.neotis.app.Application;
 import com.neotis.snip.Snip;
 import com.neotis.snip.SnipSpace;
+import com.neotis.snip.SnipLink;
 import com.neotis.user.User;
 import com.neotis.user.UserManager;
 
@@ -63,6 +64,6 @@ public class PostStoreServlet extends HttpServlet {
       }
     }
 
-    response.sendRedirect("/space/start");
+    response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));
   }
 }

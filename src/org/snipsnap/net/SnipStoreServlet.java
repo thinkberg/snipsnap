@@ -27,6 +27,7 @@ package com.neotis.net;
 import com.neotis.app.Application;
 import com.neotis.snip.Snip;
 import com.neotis.snip.SnipSpace;
+import com.neotis.snip.SnipLink;
 import com.neotis.user.User;
 import com.neotis.user.UserManager;
 
@@ -75,6 +76,6 @@ public class SnipStoreServlet extends HttpServlet {
       return;
     }
 
-    response.sendRedirect("/space/" + name);
+    response.sendRedirect(SnipLink.absoluteLink(request, "/space/" + name));
   }
 }

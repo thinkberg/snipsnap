@@ -17,15 +17,15 @@
  <body>
    <table width="800" border="0" cellpadding="0" cellspacing="0"><tr><td valign="top">
    <table border="0" cellpadding="4" cellspacing="1">
-    <tr><td colspan="2"><img src="/images/snip.png"/></td></tr>
+    <tr><td colspan="2"><img src="images/snip.png"/></td></tr>
     <tr><td colspan="2">
      <div id="Header">Bigger. Better. Faster. More.
-      <font size="2">[ <a href="/space/start">start</a> |
+      <font size="2">[ <a href="../space/start">start</a> |
        <s:check roles="Authenticated">
-          logged in as <a href="/space/<c:out value='${app.user.login}'/>"><c:out value="${app.user.login}"/></a> | <a href="/exec/authenticate?logoff=true">logoff</a>
+          logged in as <a href="../space/<c:out value='${app.user.login}'/>"><c:out value="${app.user.login}"/></a> | <a href="../exec/authenticate?logoff=true">logoff</a>
        </s:check>
        <s:check roles="Authenticated" invert="true">
-        <a href="/exec/login.jsp">login</a> or <a href="/exec/register.jsp">register</a>
+        <a href="../exec/login.jsp">login</a> or <a href="../exec/register.jsp">register</a>
        </s:check> ]</font>
      </div>
      </td>

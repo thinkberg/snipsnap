@@ -25,6 +25,8 @@
 
 package com.neotis.snip;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  *  Generates links for snips
  *
@@ -43,7 +45,7 @@ public class SnipLink {
   }
 
   public static StringBuffer appendLink(StringBuffer buffer, String name, String view) {
-    return appendLink(buffer, "/space", name, view);
+    return appendLink(buffer, "../space", name, view);
   }
 
   public static StringBuffer appendLink(StringBuffer buffer, String root, String name, String view) {
@@ -55,5 +57,9 @@ public class SnipLink {
     buffer.append(view);
     buffer.append("</a>");
     return buffer;
+  }
+
+  public static String absoluteLink(HttpServletRequest request, String path) {
+    return request.getContextPath()+path;
   }
 }

@@ -14,16 +14,16 @@
  <div class="error"><%= request.getParameter("message") %></div>
  <table border="0" width="100%" cellpadding="0" cellspacing="2">
  <tr><td>
-  <b>Forgot your password? <a href="/exec/passreminder?login=<%= login != null ? login : "" %>">Mail it back!<a/></b>
+  <b>Forgot your password? <a href="../exec/passreminder?login=<%= login != null ? login : "" %>">Mail it back!<a/></b>
  </td></tr>
  <tr><td>
-  <b>Not registered? <a href="/exec/register.jsp?login=<%= login != null ? login : "" %>">Register!<a/></b>
+  <b>Not registered? <a href="../exec/register.jsp?login=<%= login != null ? login : "" %>">Register!<a/></b>
  </td></tr>
  </table>
  <br>
 <% } %>
 
-<form method="POST" action="/exec/authenticate">
+<form method="POST" action="../exec/authenticate">
  <input name="referer" type="hidden" value="<%= request.getHeader("REFERER") %>">
  <table border="0" cellspacing="2" cellpadding="2">
   <tr><td>User name: </td><td><input name="login" type="text" size="20" value="<%= login != null ? login : "" %>"></td></tr>

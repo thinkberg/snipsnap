@@ -28,6 +28,7 @@ import com.neotis.app.Application;
 import com.neotis.user.UserManager;
 import com.neotis.user.User;
 import com.neotis.snip.SnipSpace;
+import com.neotis.snip.SnipLink;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -68,13 +69,16 @@ public class Layouter extends HttpServlet {
 
     String layout = request.getPathInfo();
     if(null == layout || "/".equals(layout)) {
-      response.sendRedirect("/");
+      System.err.println("redirecting: "+layout);
+      response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));
       return;
     }
 
     request.setAttribute("page", layout);
-    RequestDispatcher dispatcher = request.getRequestDispatcher("/main.jsp");
-    if(null == dispatcher) {
+    RequestDispatcher dispatcher = null;
+    if(layout.endsWith(".jsp")) {
+      dispatcher = request.getRequestDispatcher("/main.jsp");
+    } else {
       dispatcher = request.getRequestDispatcher(layout);
     }
     dispatcher.forward(request, response);

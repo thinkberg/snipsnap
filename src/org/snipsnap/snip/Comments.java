@@ -110,13 +110,13 @@ public class Comments {
     StringBuffer buffer = new StringBuffer();
 
     if (getCount() > 0) {
-      SnipLink.appendLink(buffer, "/comments", snip.getName(), StringUtil.plural(getCount(), "comment"));
+      SnipLink.appendLink(buffer, "../comments", snip.getName(), StringUtil.plural(getCount(), "comment"));
       buffer.append(" (by ");
       appendUserString(buffer);
       buffer.append(") | ");
     }
 
-    buffer.append("<a href=\"/exec/editcomment.jsp?name=");
+    buffer.append("<a href=\"../exec/editcomment.jsp?name=");
     buffer.append(snip.getName());
     buffer.append("\">post comment</a>");
     return buffer.toString();

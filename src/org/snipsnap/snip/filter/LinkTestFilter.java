@@ -95,7 +95,7 @@ public class LinkTestFilter extends Filter {
       if(key != null) {
         if(linkTester.exists(key)) {
           buffer.append("<a href=\"");
-          buffer.append("/space/");
+          buffer.append("../space/");
           try {
             buffer.append(URLEncoder.encode(key, "iso-8859-1"));
           } catch (UnsupportedEncodingException e) {
@@ -104,7 +104,7 @@ public class LinkTestFilter extends Filter {
           buffer.append("\">").append(result.group(1)).append("</a>");
         } else {
           buffer.append("[create <a href=\"");
-          buffer.append("/exec/edit?name=");
+          buffer.append("../exec/edit?name=");
           try {
             buffer.append(URLEncoder.encode(key, "iso-8859-1"));
           } catch (UnsupportedEncodingException e) {

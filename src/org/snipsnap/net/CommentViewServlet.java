@@ -28,6 +28,7 @@ import com.neotis.app.Application;
 import com.neotis.user.UserManager;
 import com.neotis.user.User;
 import com.neotis.snip.SnipSpace;
+import com.neotis.snip.SnipLink;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -50,7 +51,7 @@ public class CommentViewServlet extends HttpServlet {
 
     String name = request.getPathInfo();
     if(null == name) {
-      response.sendRedirect("/space/start");
+      response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));
       return;
     } else {
       name = name.substring(1);

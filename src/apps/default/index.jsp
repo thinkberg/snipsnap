@@ -4,4 +4,4 @@
   ** @version $Id$
   -->
 
-<% response.sendRedirect("/space/start"); return; %>
+<% response.sendRedirect(request.getContextPath()+"/space/start"); return; %>

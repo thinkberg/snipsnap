@@ -20,11 +20,11 @@
     <table width="100%" border="0" cellspacing="2" cellpadding="1">
       <c:forEach items="${snip.comments.comments}" var="comment" >
         <tr>
-          <td><img src="/images/comment.png"/></td>
+          <td><img src="../images/comment.png"/></td>
           <td>
             <span class="comment-author"><c:out value="${comment.modified.short}" escapeXml="false" /></span>
             <s:check roles="Owner" permission="Edit" snip="${comment}">
-              [<a href="/exec/edit?name=<c:out value='${comment.name}'/>">edit</a>]
+              [<a href="../exec/edit?name=<c:out value='${comment.name}'/>">edit</a>]
             </s:check>
           </td>
         </tr>

@@ -33,6 +33,7 @@ package com.neotis.snip.filter.macro;
 
 import com.neotis.snip.Snip;
 import com.neotis.snip.SnipSpace;
+import com.neotis.snip.SnipLink;
 
 import java.util.Iterator;
 import java.util.List;
@@ -58,11 +59,7 @@ public class UserSnipMacro extends Macro {
         Iterator snipsIterator = snips.iterator();
         while (snipsIterator.hasNext()) {
           Snip aSnip = (Snip) snipsIterator.next();
-          buffer.append("<a href=\"/space/");
-          buffer.append(aSnip.getName());
-          buffer.append("\">");
-          buffer.append(aSnip.getName());
-          buffer.append("</a>");
+          SnipLink.appendLink(buffer, aSnip.getName());
           if (snipsIterator.hasNext()) {
             buffer.append(", ");
           }
