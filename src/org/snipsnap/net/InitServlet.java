@@ -59,7 +59,7 @@ public class InitServlet extends GenericServlet {
 
     // check servlet context and then local servlet parameter or assume WEB-INF
     String configParam = (String) context.getAttribute(ServerConfiguration.INIT_PARAM);
-    if(null != configParam) {
+    if (null == configParam) {
       BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/defaults/copyright.txt")));
       try {
         String line;
@@ -73,8 +73,7 @@ public class InitServlet extends GenericServlet {
         System.out.println("Fraunhofer Institute for Computer Architecture and Software Technology");
         System.out.println("All Rights Reserved. See License Agreement for terms and conditions of use.");
       }
-    }
-    if (null == configParam) {
+
       configParam = context.getRealPath(context.getInitParameter(ServerConfiguration.INIT_PARAM));
     }
     if (null == configParam) {

@@ -233,7 +233,7 @@ public class ApplicationLoader {
   private static HttpServer findHost(Collection servers, String host, String port) {
     host = (host == null ? "" : host);
 
-    System.out.println("{" + host + ":" + port + "}");
+    //System.out.println("{" + host + ":" + port + "}");
 
     Iterator it = servers.iterator();
     while (it.hasNext()) {
@@ -244,19 +244,19 @@ public class ApplicationLoader {
         listenerHost = (listenerHost == null || listenerHost.equals(InetAddrPort.__0_0_0_0) ? "" : listenerHost);
         String listenerPort = "" + listener[i].getPort();
         if (port != null) {
-          System.out.print("[" + listenerHost + ":" + listenerPort);
+          //System.out.print("[" + listenerHost + ":" + listenerPort);
           if (listenerHost.equals(host) && listenerPort.equals(port)) {
-            System.out.println("!]");
+            //System.out.println("!]");
             return server;
           }
         } else {
-          System.out.print("[" + listenerHost);
+          //System.out.print("[" + listenerHost);
           if (listenerHost.equals(host)) {
             System.out.print("!]");
             return server;
           }
         }
-        System.out.print("]");
+        //System.out.print("]");
       }
     }
     return null;

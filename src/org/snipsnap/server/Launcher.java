@@ -69,12 +69,7 @@ public class Launcher {
       parentClassLoader = ClassLoader.getSystemClassLoader();
     }
     ClassLoader classLoader = new URLClassLoader(initClassPath(System.getProperty(CLASSPATH)),
-                                                 parentClassLoader) {
-      public Class loadClass(String s) throws ClassNotFoundException {
-        System.out.println("loadClass("+s+")");
-        return super.loadClass(s);
-      }
-    };
+                                                 parentClassLoader);
     Thread.currentThread().setContextClassLoader(classLoader);
 
     try {
@@ -83,16 +78,8 @@ public class Launcher {
       e.printStackTrace();
     }
 
-    System.out.println("Thread.currentClassLoader: " + Thread.currentThread().getContextClassLoader());
-    System.out.println("java.class.path=" + System.getProperty("java.class.path"));
-    System.out.println("jetty.home=" + System.getProperty("jetty.home"));
-    System.out.println("java.io.tmpdir=" + System.getProperty("java.io.tmpdir"));
-    System.out.println("classloader=" + classLoader);
-    System.out.println("classloader.parent=" + classLoader.getParent());
-
     // load and start main class
     Class mainClass = classLoader.loadClass(mainClassName);
-    System.out.println("==> "+mainClass.getClassLoader());
     Method main = mainClass.getDeclaredMethod("main", new Class[]{String[].class});
     main.invoke(null, new Object[]{args});
   }
@@ -120,7 +107,9 @@ public class Launcher {
       Manifest launcherManifest = new JarInputStream(location.openStream()).getManifest();
       Attributes launcherAttribs = launcherManifest.getMainAttributes();
       String mainJar = launcherAttribs.getValue("Launcher-Main-Jar");
-
+      if(System.getProperty("launcher.main.jar") != null) {
+        mainJar = System.getProperty("launcher.main.jar");
+      }
       URL mainJarUrl = new URL(location, mainJar);
       Manifest mainManifest = new JarInputStream(mainJarUrl.openStream()).getManifest();
       Attributes mainAttributes = mainManifest.getMainAttributes();
@@ -146,9 +135,8 @@ public class Launcher {
       }
       System.setProperty("java.class.path", classPath.toString());
     } catch (IOException e) {
-      System.err.println("Warning: not running from a jar: make sure your CLASSPATH is set correctly.");
+      System.err.println("Error: Set the system property launcher.main.jar to specify the jar file to start.");
     }
-    System.out.println("class path: " + urlArray);
     return (URL[]) urlArray.toArray(new URL[0]);
   }
 }

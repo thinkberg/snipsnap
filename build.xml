@@ -197,10 +197,10 @@
         <filter  token="VERSION" value="${snipsnap.server.version}"/>
       </filterset>
     </copy>
-    <jar destfile="${jar}/${appname}-launcher.jar" excludesfile="**/CVS" manifest="conf/launcher.manifest">
+    <jar destfile="${jar}/${appname}.jar" excludes="**/CVS" manifest="conf/launcher.manifest">
       <fileset dir="${target}/server" includes="org/snipsnap/server/*Launcher*"/>
     </jar>
-    <jar destfile="${jar}/${appname}.jar" excludes="**/CVS" manifest="conf/manifest">
+    <jar destfile="${jar}/${appname}-server.jar" excludes="**/CVS, org/snipsnap/server/*Launcher*" manifest="conf/manifest">
       <fileset dir="${target}/server" includes="**"/>
       <fileset dir=".">
         <include name="conf/snipsnap.conf"/>
@@ -240,7 +240,7 @@
 
   <target name="checkstyle">
         <taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask"/>
-        <pmd rulesetfiles="${check_rules}" shortFilenames="true" printToConsole="true"> 
+        <pmd rulesetfiles="${check_rules}" shortFilenames="true" printToConsole="true">
         <!-- <pmd rulesetfiles="rulesets/coupling.xml,rulesets/unusedcode.xml,rulesets/basic.xml,rulesets/imports.xml" shortFilenames="true" printToConsole="true"> -->
             <formatter type="html" toFile="pmd_report.html"/>
             <fileset dir="./src">
@@ -487,7 +487,7 @@
       <fileset dir="${jar}">
         <include name="radeox.jar"/>
         <include name="jena.jar"/>
-        <include name="commons-logging.jar"/> 
+        <include name="commons-logging.jar"/>
         <include name="jakarta-oro.jar"/>
         <include name="lucene-1.2.jar"/>
         <include name="xmlrpc-1.1.jar"/>
@@ -510,7 +510,7 @@
 
 
   <target name="test" depends="compile-server, compile-servlets, compile-util, compile-test">
-    <mkdir dir="./cls/test/org/snipsnap/config"/> 
+    <mkdir dir="./cls/test/org/snipsnap/config"/>
     <copy file="src/org/snipsnap/config/defaults.conf" tofile="./cls/test/org/snipsnap/config/defaults.conf"/>
     <copy file="src/org/snipsnap/config/transpose.map" tofile="./cls/test/org/snipsnap/config/transpose.map"/>
     <junit printsummary="true">

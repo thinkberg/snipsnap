@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
 Created-By: SnipSnap Project (http://snipsnap.org)
 Main-Class: org.snipsnap.server.SnipSnapLauncher
-Launcher-Main-Jar: snipsnap.jar
+Launcher-Main-Jar: snipsnap-server.jar
