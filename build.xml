@@ -20,7 +20,7 @@
 
   <!-- the overall class path -->
   <path id="app.classpath">
-    <pathelement location="${jar}/snipsnap-graph.jar"/>
+    <pathelement location="${jar}/graph-snipsnap.jar"/>
     <pathelement location="${jar}/radeox.jar"/>
     <pathelement location="${jar}/jena.jar"/>
     <pathelement location="${jar}/commons-logging.jar"/>
