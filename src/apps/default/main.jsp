@@ -11,7 +11,7 @@
 <html>
  <head>
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-  <title>Weblog/Wiki</title>
+  <title><c:out value="${snip.name} | " default=""/>SnipSnap</title>
   <link type="text/css" href="../default.css" rel="STYLESHEET"/>
   <script>
   <!--
