@@ -126,8 +126,8 @@ public class InitializeDatabase {
       createConfigSnipFromFile(Configuration.SNIPSNAP_CONFIG_ROBOTS_TXT, "/defaults/robots.txt", space);
       createConfigSnipFromFile(Configuration.SNIPSNAP_CONFIG_WIKI, "/defaults/intermap.txt", space);
 
-      File themeTemplateDir = new File(config.getWebInfDir(), "themes");
-      importTheme("blue", new JarFile(new File(themeTemplateDir, "snipsnap-theme-blue.jar")), space);
+      //File themeTemplateDir = new File(config.getWebInfDir(), "themes");
+      //importTheme("blue", new JarFile(new File(themeTemplateDir, "snipsnap-theme-blue.jar")), space);
 
       // last, but not least store to file and configuration snip
       storeConfiguration(config, space);
