@@ -55,6 +55,6 @@ public class SnipLinkMacro extends ListOutputMacro {
     if (params.getLength() >= 1) {
       width = Integer.parseInt(params.get("0"));
     }
-    SnipLinks.appendTo(writer, params.getSnip().getAccess().getBackLinks(), width, start, end);
+    SnipLinks.appendTo(writer, params.getSnipRenderContext().getSnip().getAccess().getBackLinks(), width, start, end);
   }
 }

@@ -33,6 +33,8 @@ import org.snipsnap.app.Application;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * SnipRenderContext implements RenderContext and is used to
@@ -48,6 +50,7 @@ public class SnipRenderContext extends BaseRenderContext {
 
   private Snip snip;
   private SnipSpace space;
+  private Map attributes;
 
   public SnipRenderContext(Snip snip, SnipSpace space) {
     super();
@@ -69,12 +72,19 @@ public class SnipRenderContext extends BaseRenderContext {
   }
 
   public SnipSpace getSpace() {
-     return space;
+    return space;
   }
 
   public void setSpace(SnipSpace space) {
     this.space = space;
   }
 
-  // public Map getAttributes();
+  public Map getAttributes() {
+    if (null == attributes) {
+      attributes = new HashMap();
+      attributes.put("snip", snip);
+      attributes.put("user", Application.get().getUser());
+    }
+    return attributes;
+  }
 }

@@ -51,7 +51,7 @@ public class SnipFilterContext extends BaseFilterContext {
   }
 
   public MacroParameter getMacroParameter() {
-    return new SnipMacroParameter(this.snip, this.context);
+    return new SnipMacroParameter(this.context);
   }
 
 }

@@ -43,25 +43,14 @@ import java.util.HashMap;
  */
 
 public class SnipMacroParameter extends BaseMacroParameter  {
-  private Snip snip;
 
-  public SnipMacroParameter(Snip snip, RenderContext context) {
+  public SnipMacroParameter(RenderContext context) {
     params = new HashMap();
     this.context = context;
-    this.snip = snip;
   }
 
   public SnipMacroParameter(String stringParams) {
     setParams(stringParams);
-  }
-
-  /**
-   * Gets the current snip from which the macro was called.
-   *
-   * @return snip Snip from which the macro was called
-   */
-  public Snip getSnip() {
-    return snip;
   }
 
   public SnipRenderContext getSnipRenderContext() {
