@@ -33,11 +33,11 @@ import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
+import org.snipsnap.container.Components;
+import org.snipsnap.snip.attachment.storage.AttachmentStorage;
+import org.snipsnap.snip.SnipLink;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -212,6 +212,44 @@ public class Attachments {
     } catch (UnsupportedEncodingException e) {
       return out.toString();
     }
+  }
+
+  public String getLinks(String name) {
+    AttachmentStorage storage = (AttachmentStorage) Components.getComponent(AttachmentStorage.class);
+
+    StringBuffer tmp = new StringBuffer();
+    Iterator it = iterator();
+    while (it.hasNext()) {
+      Attachment att = (Attachment) it.next();
+      if (storage.exists(att)) {
+        tmp.append(SnipLink.createLink(SnipLink.getSpaceRoot() + "/" + SnipLink.encode(name), att.getName(), att.getName()));
+        tmp.append(" (").append(att.getSize()).append(")");
+        if (it.hasNext()) {
+          tmp.append("<br/> ");
+        }
+      } else {
+        Logger.log(Logger.WARN, att.getLocation() + " is missing");
+      }
+    }
+    return tmp.toString();
+  }
+
+  public Attachments copy(String name) {
+    AttachmentStorage storage = (AttachmentStorage) Components.getComponent(AttachmentStorage.class);
+    Attachments copy = new Attachments();
+    List atts = getAll();
+    Iterator attsIt = atts.iterator();
+    while (attsIt.hasNext()) {
+      Attachment oldAtt = (Attachment) attsIt.next();
+      Attachment att = copy.addAttachment(oldAtt.getName(), oldAtt.getContentType(), oldAtt.getSize(), oldAtt.getLocation());
+
+      try {
+        storage.copy(oldAtt, att);
+      } catch (IOException e) {
+        copy.removeAttachment(att);
+      }
+    }
+    return copy;
   }
 
   public String toString() {

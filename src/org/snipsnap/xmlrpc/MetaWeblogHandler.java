@@ -284,11 +284,10 @@ public class MetaWeblogHandler extends XmlRpcSupport implements MetaWeblogAPI {
             fileName = FileUploadServlet.getCanonicalFileName(fileName);
             if (snipId != null && snipId.length() > 0 &&
                     mime != null && mime.length() > 0) {
-                File relativeFileLocation = new File(snip.getName(), fileName);
                 Attachment attachment =
-                        new Attachment(relativeFileLocation.getName(),
+                        new Attachment(fileName,
                                 mime, 0, new Date(),
-                                relativeFileLocation.getPath());
+                                snip.getName());
                 OutputStream out = attachmentStorage.getOutputStream(attachment);
                 out.write(data);
                 out.flush();
@@ -299,6 +298,7 @@ public class MetaWeblogHandler extends XmlRpcSupport implements MetaWeblogAPI {
 
                 SnipSpaceFactory.getInstance().store(snip);
                 Hashtable result = new Hashtable(1);
+                // this most probably does not return an url
                 result.put("url", attachment.getLocation());//does this return a url?
                 //todo: find out what else one can return
                 return result;

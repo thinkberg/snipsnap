@@ -65,6 +65,15 @@ public interface AttachmentStorage {
    * @throws IOException if the data cannot be deleted
    */
   public void delete(Attachment attachment) throws IOException;
+
+  /**
+   * Copy one attachment to another
+   *
+   * @param from the source attachment
+   * @param to the destination attachment
+   * @throws IOException
+   */
+  public void copy(Attachment from, Attachment to) throws IOException;
   /**
    * Verify the meta data of the attachment. An implementation should check
    * all available information about the attachment, like size, modification

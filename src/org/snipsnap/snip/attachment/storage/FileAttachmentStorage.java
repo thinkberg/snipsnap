@@ -28,6 +28,7 @@ package org.snipsnap.snip.attachment.storage;
 import org.snipsnap.snip.attachment.Attachment;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.app.Application;
+import org.radeox.util.logging.Logger;
 
 import java.io.*;
 
@@ -39,6 +40,7 @@ import java.io.*;
  */
 
 public class FileAttachmentStorage implements AttachmentStorage {
+
   private File getFile(Attachment attachment) {
     Configuration config = Application.get().getConfiguration();
     File filePath = config.getFilePath();
@@ -82,5 +84,32 @@ public class FileAttachmentStorage implements AttachmentStorage {
 
     // throw file not found exception if it does not exist
     throw new FileNotFoundException(getFile(attachment).getCanonicalPath());
+  }
+
+  /**
+   * Copy one attachment to another
+   *
+   * @param from the source attachment
+   * @param to   the destination attachment
+   * @throws java.io.IOException
+   */
+  public void copy(Attachment from, Attachment to) throws IOException {
+    to.setDate(from.getDate());
+
+    if (exists(from)) {
+        BufferedOutputStream out = new BufferedOutputStream(getOutputStream(to));
+        BufferedInputStream in = new BufferedInputStream(getInputStream(from));
+        byte buf[] = new byte[4096];
+        int length = -1;
+        while ((length = in.read(buf)) != -1) {
+          out.write(buf, 0, length);
+        }
+        out.flush();
+        out.close();
+        in.close();
+        to.setLocation(getFile(to).getPath());
+    } else {
+      throw new IOException("Cannot find source file for copy");
+    }
   }
 }

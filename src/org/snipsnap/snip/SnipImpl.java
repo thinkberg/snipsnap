@@ -34,7 +34,6 @@ import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.container.Components;
 import org.snipsnap.render.context.SnipRenderContext;
-import org.snipsnap.snip.attachment.Attachment;
 import org.snipsnap.snip.attachment.Attachments;
 import org.snipsnap.snip.label.Labels;
 import org.snipsnap.snip.label.RenderEngineLabel;
@@ -45,15 +44,10 @@ import org.snipsnap.user.Permissions;
 import org.snipsnap.user.User;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+// import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.sql.Timestamp;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -66,6 +60,7 @@ import java.util.List;
  */
 public class SnipImpl implements Snip, ProxyAware {
   private Snip proxy;
+  private Content content;
 
   private NameFormatter nameFormatter;
   private String applicationOid;
@@ -75,7 +70,7 @@ public class SnipImpl implements Snip, ProxyAware {
   private List children;
   private Snip comment;
   private Comments comments;
-  private String name, content;
+  private String name;
   private String oUser;
 
   // @TODO: Composite Object
@@ -102,9 +97,10 @@ public class SnipImpl implements Snip, ProxyAware {
 
   public SnipImpl(String name, String content) {
     this.name = name;
-    this.content = content;
     this.modified = new Modified();
     this.access = new Access();
+    this.content = new Content();
+    this.content.setText(content);
   }
 
   public void handle(HttpServletRequest request) {
@@ -144,7 +140,7 @@ public class SnipImpl implements Snip, ProxyAware {
    * @return true, if the snip is a weblog
    */
   public boolean isWeblog() {
-    return content.indexOf("{weblog") != -1;
+    return getContent().indexOf("{weblog") != -1;
   }
 
   /**
@@ -381,6 +377,7 @@ public class SnipImpl implements Snip, ProxyAware {
     return this.parent == null ? commentedName : this.comment.getName();
   }
 
+  // REMOVE!
   public void setParent(Snip parentSnip) {
     if (parentSnip == this.parent) {
       return;
@@ -428,11 +425,11 @@ public class SnipImpl implements Snip, ProxyAware {
   }
 
   public String getContent() {
-    return content;
+    return content.getText();
   }
 
   public void setContent(String content) {
-    this.content = content;
+    this.content.setText(content);
   }
 
   public String getLink() {
@@ -440,34 +437,13 @@ public class SnipImpl implements Snip, ProxyAware {
   }
 
   public String getAttachmentString() {
-    StringBuffer tmp = new StringBuffer();
-    Iterator it = attachments.iterator();
-    File fileStorePath = new File(Application.get().getConfiguration().getFileStore(), "snips");
-    while (it.hasNext()) {
-      Attachment att = (Attachment) it.next();
-      File file = new File(fileStorePath, att.getLocation());
-      if (file.exists()) {
-        tmp.append(SnipLink.createLink(SnipLink.getSpaceRoot() + "/" + SnipLink.encode(name), att.getName(), att.getName()));
-        tmp.append(" (").append(att.getSize()).append(")");
-        if (it.hasNext()) {
-          tmp.append("<br/> ");
-        }
-      } else {
-        Logger.log(Logger.WARN, file.getAbsolutePath() + " is missing");
-      }
-    }
-    return tmp.toString();
+    // THIS IS FILE DEPENDENT!
+    // ABSTRACT TO ATTACHMENT STORAGE      \
+    return attachments.getLinks(name);
   }
 
   public String toXML() {
-    //long start = Application.get().start();
     PicoContainer container = Components.getContainer();
-
-//    Label typeLabel = getLabels().getLabel("Type");
-//    if(typeLabel instanceof TypeLabel) {
-//      String viewHandler = ((TypeLabel)typeLabel).getViewHandler();
-//
-//    }
 
     RenderEngineLabel reLabel =
             (RenderEngineLabel) getLabels().getLabel("RenderEngine");
@@ -490,18 +466,10 @@ public class SnipImpl implements Snip, ProxyAware {
                                                   (SnipSpace) container.getComponentInstance(SnipSpace.class));
     context.setParameters(Application.get().getParameters());
 
-    String xml = "";
-    // should the engine be set by the engine to the context?
-//    System.out.println("RENDERING: " + getName());
-//    System.out.flush();
-
-    xml = engine.render(content, context);
-    //Logger.debug(getName() + " is cacheable: " + context.isCacheable());
-    //String xml = SnipFormatter.toXML(this, getContent());
-    //Application.get().stop(start, "Formatting " + name);
-    return xml;
+    return engine.render(getContent(), context);
   }
 
+  // ERRORS SHOULD NOT BE HANDLED IN SNIP
   public String getXMLContent() {
     String tmp = null;
     try {
@@ -539,10 +507,6 @@ public class SnipImpl implements Snip, ProxyAware {
     return name.hashCode();
   }
 
-//  public String toString() {
-//    return "{name="+getName()+", parent="+parent+", @"+hashCode()+"}";
-//  }
-
   public boolean equals(Object obj) {
     if (!(obj instanceof Snip)) {
       return false;
@@ -561,38 +525,8 @@ public class SnipImpl implements Snip, ProxyAware {
     newSnip.setLabels(new Labels(newSnip, getLabels().toString()));
     newSnip.setPermissions(getPermissions());
 
-    List atts = getAttachments().getAll();
-    Iterator attsIt = atts.iterator();
-    File fileStorePath = new File(Application.get().getConfiguration().getFileStore(), "snips");
-    while (attsIt.hasNext()) {
-      Attachment oldAtt = (Attachment) attsIt.next();
-      Attachment att = newSnip.getAttachments().addAttachment(oldAtt.getName(), oldAtt.getContentType(), oldAtt.getSize(), oldAtt.getLocation());
-      att.setDate(oldAtt.getDate());
-      String location = att.getLocation();
-      File attFile = new File(fileStorePath, location);
-      if (attFile.exists()) {
-        try {
-          File newLocation = new File(newSnip.getName(), attFile.getName());
-          File newAttFile = new File(fileStorePath, newLocation.getPath());
-          newAttFile.getParentFile().mkdirs();
-          BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(newAttFile));
-          BufferedInputStream in = new BufferedInputStream(new FileInputStream(attFile));
-          byte buf[] = new byte[4096];
-          int length = -1;
-          while ((length = in.read(buf)) != -1) {
-            out.write(buf, 0, length);
-          }
-          out.flush();
-          out.close();
-          in.close();
-          att.setLocation(newLocation.getPath());
-        } catch (IOException e) {
-          Logger.warn("SnipImpl: unable to copy attachment: " + attFile, e);
-        }
-      } else {
-        newSnip.getAttachments().removeAttachment(att);
-      }
-    }
+    Attachments copy = getAttachments().copy(newSnip.getName());
+    newSnip.setAttachments(copy);
     space.store(newSnip);
     return newSnip;
   }
