@@ -31,13 +31,13 @@ import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
 import org.radeox.util.logging.Logger;
+import org.snipsnap.container.Components;
 import org.snipsnap.snip.storage.SnipSerializer;
 import org.snipsnap.snip.storage.UserSerializer;
 import org.snipsnap.user.User;
-import org.snipsnap.versioning.VersionManager;
 import org.snipsnap.versioning.VersionInfo;
-import org.snipsnap.container.Components;
-import org.snipsnap.app.Application;
+import org.snipsnap.versioning.VersionManager;
+import org.snipsnap.jdbc.IntHolder;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -45,9 +45,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Helper class for exporting Snips and users as XML document.
@@ -58,9 +59,13 @@ public class XMLSnipExport {
 
   private static ThreadLocal instance = new ThreadLocal() {
     protected synchronized Object initialValue() {
-      return new HashMap();
+      return new IntHolder(0);
     }
   };
+
+  public static IntHolder getStatus() {
+    return (IntHolder) instance.get();
+  }
 
   private static void store(OutputStream out, Document exportDocument) {
     try {
@@ -130,6 +135,7 @@ public class XMLSnipExport {
       while (userListIterator.hasNext()) {
         User user = (User) userListIterator.next();
         root.add(userSerializer.serialize(user));
+        getStatus().inc();
       }
     }
   }
@@ -156,6 +162,7 @@ public class XMLSnipExport {
           storeVersions(snipEl, snip);
           root.add(snipEl);
         }
+        getStatus().inc();
       }
     }
   }

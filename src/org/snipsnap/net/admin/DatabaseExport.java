@@ -30,9 +30,12 @@ import org.snipsnap.container.Components;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.XMLSnipExport;
 import org.snipsnap.user.UserManager;
+import org.snipsnap.app.Application;
+import org.snipsnap.jdbc.IntHolder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -42,13 +45,28 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 public class DatabaseExport implements SetupHandler {
+  private HashMap workerThreads = new HashMap();
+
   public String getName() {
     return "export";
   }
 
   public Map setup(HttpServletRequest request, HttpServletResponse response, Configuration config, Map errors) {
+    String appOid = (String) Application.get().getObject(Application.OID);
+    ExportThread workerThread = (ExportThread) workerThreads.get(appOid);
+    if (workerThread != null && workerThread.isAlive()) {
+      setRunning(workerThread, request.getSession());
+      return errors;
+    } else if(workerThread != null) {
+      workerThreads.remove(appOid);
+      request.getSession().removeAttribute("running");
+      errors.put("message", "export.okay");
+      return errors;
+    }
+
     String output = request.getParameter("export.file");
     request.setAttribute("exportFile", output);
     String exportTypes[] = request.getParameterValues("export.types");
@@ -98,7 +116,12 @@ public class DatabaseExport implements SetupHandler {
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
         File outFile = new File(config.getWebInfDir(),
                                 config.getName() + "-" + df.format(new Date()) + ".snip");
-        out = new FileOutputStream(outFile);
+        workerThread = new ExportThread(new FileOutputStream(outFile), snips, users, exportIgnore, config.getFilePath());
+        workerThread.start();
+        workerThreads.put(appOid, workerThread);
+        setRunning(workerThread, request.getSession());
+        return errors;
+
       } else if ("download".equals(output)) {
         response.setContentType("text/xml");
         out = response.getOutputStream();
@@ -108,9 +131,6 @@ public class DatabaseExport implements SetupHandler {
       }
 
       XMLSnipExport.store(out, snips, users, exportIgnore, config.getFilePath());
-      if ("webinf".equals(output)) {
-        errors.put("message", "export.okay");
-      }
     } catch (IOException e) {
       errors.put("message", "export.failed");
     }
@@ -119,5 +139,52 @@ public class DatabaseExport implements SetupHandler {
       return null;
     }
     return errors;
+  }
+
+  private void setRunning(ExportThread workerThread, HttpSession session) {
+    Map statusMap = (Map) session.getAttribute("running");
+    if (null == statusMap) {
+      statusMap = new HashMap();
+    }
+    statusMap.put("max", new Integer(workerThread.getMax()));
+    statusMap.put("current", new Integer(workerThread.getCurrent()));
+    statusMap.put("export", "true");
+    session.setAttribute("running", statusMap);
+
+  }
+
+  class ExportThread extends Thread {
+    private OutputStream out;
+    private List snips, users;
+    private String exportIgnore;
+    private File filePath;
+
+    private int maxValue = 0;
+    private IntHolder status;
+
+    public int getMax() {
+      return maxValue;
+    }
+
+    public int getCurrent() {
+      if(null == status) {
+        return 0;
+      }
+      return status.getValue();
+    }
+
+    public ExportThread(OutputStream out, List snips, List users, String ignore, File filePath) {
+      this.out = out;
+      this.snips = snips;
+      this.users = users;
+      this.exportIgnore = ignore;
+      this.filePath = filePath;
+      maxValue = snips.size() + users.size();
+    }
+
+    public void run() {
+      status = XMLSnipExport.getStatus();
+      XMLSnipExport.store(out, snips, users, exportIgnore, filePath);
+    }
   }
 }

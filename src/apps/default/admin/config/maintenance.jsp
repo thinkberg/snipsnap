@@ -18,9 +18,9 @@
 
 <table>
   <c:choose>
-    <c:when test="${not empty running && not empty running.key}">
+    <c:when test="${not empty running && not empty running.maint}">
       <tr>
-        <td><fmt:message key="config.maint.${running.key}"/></td>
+        <td><fmt:message key="config.maint.${running.maint}"/></td>
         <td>
           <c:import url="config/statusbar.jsp">
             <c:param name="statusMessage" value="config.maint.status"/>
