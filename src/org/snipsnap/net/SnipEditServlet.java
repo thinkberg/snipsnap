@@ -57,6 +57,14 @@ public class SnipEditServlet extends HttpServlet {
         Snip snip = SnipSpace.getInstance().load(name);
         request.setAttribute("snip", snip);
         request.setAttribute("snip_name", name);
+
+        String content = (String) request.getParameter("content");
+        if (null != content) {
+            request.setAttribute("content", content);
+        } else {
+            request.setAttribute("content", snip.getContent());
+        }
+
         RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/edit.jsp");
         dispatcher.forward(request, response);
     }
