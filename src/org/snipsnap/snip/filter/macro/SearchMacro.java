@@ -87,7 +87,7 @@ public class SearchMacro extends Macro {
               writer.write(", ");
             }
           }
-          writer.write("</blockquote>");
+          writer.write("</blockquote></div>");
         } catch (IOException e) {
           System.err.println("I/O error while iterating over search results.");
         }

@@ -46,18 +46,17 @@ table {
 /************************************************/
 /* input tag                                    */
 
-/*
 input[type=submit] {
-  color: inherit;
-	font-family: inherit;
+  margin-top: 2px;
+  border: 1px solid #003366;
+  padding: 1px;
+  font-family: verdana, arial, sans-serif;
 }
 
 input, select, textarea {
-  line-height: inherit;
-  /*vertical-align: middle; a bug in IE5.2-mac crashes with this*/
-  font-size: inherit;
+  border: 1px solid #003366;
+  padding: 1px;
   font-family: courier, courier new, monospaced;
 }
-*/
 
 
