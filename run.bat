@@ -28,7 +28,7 @@ exit
 :ok_snipsnap_jar
 
 rem put classpath together
-set CLASSPATH=%CLASSPATH%;lib/org.mortbay.jetty.jar;lib/javax.servlet.jar;lib/org.apache.crimson.jar;lib/org.apache.jasper.jar;lib/jdbcpool.jar;lib/mckoidb.jar;%JAVA_HOME%/lib/tools.jar
+set CLASSPATH=%CLASSPATH%;lib/jdom-b8.jar;lib/org.mortbay.jetty.jar;lib/javax.servlet.jar;lib/org.apache.crimson.jar;lib/org.apache.jasper.jar;lib/jdbcpool.jar;lib/mckoidb.jar;%JAVA_HOME%/lib/tools.jar
 
 if $1 == "admin" set cmdline="-admin $1 $2"
 

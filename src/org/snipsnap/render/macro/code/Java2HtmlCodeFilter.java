@@ -54,7 +54,7 @@ public class Java2HtmlCodeFilter extends JavaSource2HTMLConverter implements Sou
   }
 
   public String getName() {
-    return "java";
+    return "njava";
   }
 
   public String filter(String content, FilterContext context) {

@@ -37,8 +37,6 @@ public class AllTests extends TestCase {
 
   public static Test suite() {
     TestSuite s = new TestSuite();
-    s.addTestSuite(FilterTest.class);
-    s.addTestSuite(AllSnips.class);
     return s;
   }
 }

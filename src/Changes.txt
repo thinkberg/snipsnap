@@ -2,6 +2,8 @@
 
 0.3.4 - 2003-02-21
 
+- Added feature: use Java2Html instead of regex [by Zohar], currently additional as "njava"
+- Fixed bug: implemented getPost in BloggerAPI
 - Security: Added warning when weblogs ping is on
 - Fixed bug: SnipSnap install has now a SnipSnap snip
 - Fixed bug: relative Images and Links in RSS feeds
@@ -11,7 +13,7 @@
 - Fixed bug: Mail-To-Weblog didn't work because user "stephan" was used, now admin is used
 - Added feature: Configurable weblogs ping. Configuration is read from conf/weblogsping.txt
 - Fixed bug: better logging
-- Fixed bug: implemented getUserBlogs, getRecentPosts [by Calvin Yu]
+- Fixed bug: implemented getUserBlogs, getRecentPosts [by Calvin Yu] in BloggerAPI
 - Added Feature: Attachments for snips
 - WAR: introduced configuration properties for indexer and config files
 - Developer: Refactored the rendering engine to form sub-project Radeox

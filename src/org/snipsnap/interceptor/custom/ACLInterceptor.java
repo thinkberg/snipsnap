@@ -37,15 +37,25 @@ import org.radeox.util.logging.Logger;
 import java.security.GeneralSecurityException;
 
 public class ACLInterceptor extends InterceptorSupport {
+  private Roles roles;
+
+  public ACLInterceptor() {
+    super();
+    roles = new Roles();
+    roles.add("Editor");
+  }
+
   public Object invoke(Invocation invocation) throws Throwable {
-    if (invocation.getMethod().getName().startsWith("setContent")) {
+    if (invocation.getMethod().getName().startsWith("set")) {
       Snip snip = (Snip) invocation.getTarget();
-      Roles roles = new Roles();
-      roles.add("Editor");
       User user = Application.get().getUser();
-      if (!(Security.checkPermission("Edit", user, snip)
+      Logger.debug("ACLInterceptor: Method="+invocation.getMethod().getName());
+      Logger.debug("ACLInterceptor: User = "+user);
+      Logger.debug("ACLInterceptor: Snip = "+snip);
+     if (!(Security.checkPermission("Edit", user, snip)
           && Security.hasRoles(user, snip, roles))) {
-        throw new GeneralSecurityException("Not allowed to modify object.");
+          Logger.debug("SECURITY EXCEPTION");
+//        throw new GeneralSecurityException("Not allowed to modify object.");
       }
     }
     return invocation.next();

@@ -50,12 +50,14 @@ public class SnipLink {
 
   public static void appendUrl(Writer writer, String name) throws IOException {
     writer.write(getSpaceRoot());
+    writer.write("/");
     writer.write(name);
     return;
   }
 
   public static void appendUrl(StringBuffer buffer, String name) {
     buffer.append(getSpaceRoot());
+    buffer.append("/");
     buffer.append(name);
     return;
   }

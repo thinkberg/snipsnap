@@ -40,6 +40,7 @@ import java.util.List;
 
 /**
  * Handles XML-RPC calls for the Blogger API
+ * http://xmlrpc.free-conversant.com/docs/bloggerAPI
  * http://plant.blogger.com/api/index.html
  *
  * @author Stephan J. Schmidt
@@ -153,6 +154,37 @@ public class BloggerHandler extends XmlRpcSupport {
       posts.add(data);
     }
     return posts;
+  }
+
+  /**
+  blogger.getPost
+
+  Parameters:
+
+      * appkey : currently ignored
+      * postId : postId is a unique identifier for the post created. It is the value returned by blogger.newPost. postId will look like..."zoneId|convId|pathToWeblog|msgNum".
+      * username : the email address you use as a username for the site. This user must have privileges to post to the weblog as either the weblog owner, or a member of the owner group.
+      * password : the password you use for the site
+
+   Returns:
+
+      * struct containing values content ( message body ), userId, postId and dateCreated.
+  **/
+
+  public Hashtable getPost(String appkey,
+                           String postId,
+                           String username,
+                           String password) throws XmlRpcException {
+    Logger.debug("XML-RPC call to getRecentPosts()");
+
+    User user = authenticate(username, password);
+    Snip snip = SnipSpace.getInstance().load(postId);
+    Hashtable post = new Hashtable();
+    post.put("content", snip.getXMLContent());
+    post.put("userid", snip.getOUser());
+    post.put("postid", snip.getName());
+    post.put("dateCreated", snip.getCTime());
+    return post;
   }
 
   /**

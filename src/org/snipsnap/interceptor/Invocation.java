@@ -26,6 +26,7 @@
 package org.snipsnap.interceptor;
 
 import org.snipsnap.interceptor.custom.LogInterceptor;
+import org.snipsnap.interceptor.custom.ACLInterceptor;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class Invocation {
     List interceptors = new ArrayList();
     //Interceptor log = new LogInterceptor();
     //log.setName("Logging");
-    //interceptors.add(log);
+    //interceptors.add(new ACLInterceptor());
     chain = interceptors.iterator();
   }
 

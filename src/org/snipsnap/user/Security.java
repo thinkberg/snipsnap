@@ -104,6 +104,10 @@ public class Security {
    */
   public static boolean checkPermission(String permission, User user, Snip object) {
     Permissions permissions = object.getPermissions();
-    return permissions.check(permission, getRoles(user, object));
+    if (null == permissions) {
+      return true;
+    } else {
+      return permissions.check(permission, getRoles(user, object));
+    }
   }
 }
