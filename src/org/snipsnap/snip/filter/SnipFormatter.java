@@ -24,7 +24,6 @@
  */
 package com.neotis.snip.filter;
 
-import com.neotis.snip.filter.macro.MacroFilter;
 import com.neotis.snip.SnipSpace;
 import com.neotis.snip.Snip;
 

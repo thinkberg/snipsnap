@@ -37,39 +37,16 @@ import com.neotis.snip.SnipLink;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Collection;
 
-public class IndexSnipMacro extends Macro {
-  StringBuffer buffer;
-  SnipSpace space;
-
-  public IndexSnipMacro() {
-    buffer = new StringBuffer();
-    space = SnipSpace.getInstance();
+public class IndexSnipMacro extends ListoutputMacro {
+  public String getName() {
+    return "index";
   }
 
   public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {
     if (params.length == 0) {
-      buffer.setLength(0);
-      buffer.append("<b>all snips: (");
-      List snips = space.getAll();
-
-      buffer.append(snips.size());
-      buffer.append(") </b><br/>");
-      if (snips.size() > 0) {
-        buffer.append("<blockquote>");
-        Iterator snipsIterator = snips.iterator();
-        while (snipsIterator.hasNext()) {
-          Snip aSnip = (Snip) snipsIterator.next();
-          SnipLink.appendLink(buffer, aSnip.getName());
-          if (snipsIterator.hasNext()) {
-            buffer.append(", ");
-          }
-        }
-        buffer.append("</blockquote>");
-      } else {
-        buffer.append("none written yet.");
-      }
-      return buffer.toString();
+      return output("all snips", space.getAll(), "none written yet.");
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

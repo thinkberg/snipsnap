@@ -36,6 +36,10 @@ import com.neotis.snip.Snip;
 
 
 public class ApiMacro extends Macro {
+  public String getName() {
+    return "api";
+  }
+
   public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {
     String mode;
 

@@ -38,6 +38,10 @@ import com.neotis.snip.SnipLink;
 public class LinkMacro extends Macro {
   private final static String img = SnipLink.createImage("arrow.right", ">>", "gif");
 
+  public String getName() {
+    return "link";
+  }
+
   public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {
     StringBuffer buffer = new StringBuffer();
     if (params.length == 2) {

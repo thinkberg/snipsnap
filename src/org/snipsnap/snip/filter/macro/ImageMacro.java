@@ -35,6 +35,10 @@ import com.neotis.snip.SnipLink;
  * @version $Id$
  */
 public class ImageMacro extends Macro {
+  public String getName() {
+    return "image";
+  }
+
   public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {
     StringBuffer buffer = new StringBuffer();
     if(params.length > 0) {

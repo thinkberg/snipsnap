@@ -37,38 +37,17 @@ import com.neotis.snip.SnipLink;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Collection;
 
-public class UserSnipMacro extends Macro {
-  StringBuffer buffer;
-  SnipSpace space;
-
-  public UserSnipMacro() {
-    buffer = new StringBuffer();
-    space = SnipSpace.getInstance();
+public class UserSnipMacro extends ListoutputMacro {
+  public String getName() {
+    return "snips-by-user";
   }
 
   public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {
     if (params.length == 1) {
-      buffer.setLength(0);
-      buffer.append("<b>this user's snips: (");
-      List snips = space.getByUser(params[0]);
-      buffer.append(snips.size());
-      buffer.append(") </b><br/>");
-      if (snips.size() > 0) {
-        buffer.append("<blockquote>");
-        Iterator snipsIterator = snips.iterator();
-        while (snipsIterator.hasNext()) {
-          Snip aSnip = (Snip) snipsIterator.next();
-          SnipLink.appendLink(buffer, aSnip.getName());
-          if (snipsIterator.hasNext()) {
-            buffer.append(", ");
-          }
-        }
-        buffer.append("</blockquote>");
-      } else {
-        buffer.append("none written yet.");
-      }
-      return buffer.toString();
+      Collection c =  space.getByUser(params[0]);
+      return output("this user's snips", c, "none written yet.");
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

@@ -39,17 +39,19 @@ import org.apache.lucene.search.Hits;
 import java.io.IOException;
 
 public class SearchMacro extends Macro {
-  StringBuffer buffer;
   SnipSpace space;
 
   public SearchMacro() {
-    buffer = new StringBuffer();
     space = SnipSpace.getInstance();
+  }
+
+  public String getName() {
+    return "search";
   }
 
   public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {
     if (params.length == 1) {
-      buffer.setLength(0);
+      StringBuffer buffer = new StringBuffer();
       buffer.append("<b>snips with ");
       buffer.append(params[0]);
       buffer.append(": (");

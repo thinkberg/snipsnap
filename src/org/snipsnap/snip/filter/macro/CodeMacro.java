@@ -32,11 +32,11 @@
 
 package com.neotis.snip.filter.macro;
 
+import com.neotis.snip.Snip;
 import com.neotis.snip.filter.Filter;
 import com.neotis.snip.filter.JavaCodeFilter;
 import com.neotis.snip.filter.SqlCodeFilter;
 import com.neotis.snip.filter.XmlCodeFilter;
-import com.neotis.snip.Snip;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,6 +54,10 @@ public class CodeMacro extends Preserved {
     addSpecial("]", "&#x005d;");
     addSpecial("{", "&#x007b;");
     addSpecial("}", "&#x007d;");
+  }
+
+  public String getName() {
+    return "code";
   }
 
   public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {

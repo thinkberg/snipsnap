@@ -37,17 +37,19 @@ import java.util.Iterator;
 import java.util.List;
 
 public class WeblogMacro extends Macro {
-  StringBuffer buffer;
   SnipSpace space;
 
   public WeblogMacro() {
-    buffer = new StringBuffer();
     space = SnipSpace.getInstance();
+  }
+
+  public String getName() {
+    return "weblog";
   }
 
   public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {
     if (params.length == 0) {
-      buffer.setLength(0);
+      StringBuffer buffer = new StringBuffer();
       List snips = SnipSpace.getInstance().getChildrenDateOrder(snip, 10);
       Iterator iterator = snips.iterator();
       while (iterator.hasNext()) {

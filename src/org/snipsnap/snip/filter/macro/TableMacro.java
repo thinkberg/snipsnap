@@ -38,6 +38,10 @@ import java.util.StringTokenizer;
 
 public class TableMacro extends Macro {
 
+  public String getName() {
+    return "table";
+  }
+
   public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {
     content = content.trim()+"\n";
 

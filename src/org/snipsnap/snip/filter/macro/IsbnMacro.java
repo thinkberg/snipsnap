@@ -36,14 +36,13 @@ import com.neotis.snip.Snip;
 import com.neotis.snip.SnipLink;
 
 public class IsbnMacro extends Macro {
-  StringBuffer buffer;
-
-  public IsbnMacro() {
-    buffer = new StringBuffer();
+  public String getName() {
+    return "isbn";
   }
+
   public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {
     if (params.length== 1) {
-      buffer.setLength(0);
+      StringBuffer buffer = new StringBuffer();
       SnipLink.appendImage(buffer, "arrow.right", ">>", "gif");
       buffer.append(" (<a href=\"http://www.amazon.de/exec/obidos/ASIN/");
       buffer.append(params[0]);

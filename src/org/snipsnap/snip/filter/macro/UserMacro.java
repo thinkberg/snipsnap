@@ -40,35 +40,14 @@ import com.neotis.user.User;
 import java.util.Iterator;
 import java.util.List;
 
-public class UserMacro extends Macro {
-  StringBuffer buffer;
-
-  public UserMacro() {
-    buffer = new StringBuffer();
+public class UserMacro extends ListoutputMacro {
+  public String getName() {
+    return "list-of-users";
   }
 
   public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {
     if (params.length == 0) {
-      buffer.setLength(0);
-      buffer.append("<b>user: (");
-      List users = UserManager.getInstance().getAll();
-      buffer.append(users.size());
-      buffer.append(") </b><br/>");
-      if (users.size() > 0) {
-        buffer.append("<blockquote>");
-        Iterator userIterator = users.iterator();
-        while (userIterator.hasNext()) {
-          User user = (User) userIterator.next();
-          SnipLink.appendLink(buffer, user.getLogin());
-          if (userIterator.hasNext()) {
-            buffer.append(", ");
-          }
-        }
-        buffer.append("</blockquote>");
-      } else {
-        buffer.append("no users. not very popular ;-)");
-      }
-      return buffer.toString();
+      return output("users", UserManager.getInstance().getAll(), "no users. not very popular ;-)");
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

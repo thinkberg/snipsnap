@@ -28,6 +28,7 @@ import com.neotis.app.Application;
 import com.neotis.snip.Snip;
 import com.neotis.user.Security;
 import com.neotis.user.User;
+import com.neotis.user.Roles;
 
 import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.JspException;
@@ -38,7 +39,7 @@ import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
 
 
 public class UserAuth extends ConditionalTagSupport {
-  protected Set roles;
+  protected Roles roles;
   protected Snip snip;
 
   protected boolean invertCheck = false;
@@ -53,7 +54,7 @@ public class UserAuth extends ConditionalTagSupport {
 
   public void setRoles(String roles) {
     StringTokenizer tok = new StringTokenizer(roles, ":,");
-    this.roles = new HashSet();
+    this.roles = new Roles();
     while (tok.hasMoreTokens()) {
       String token = tok.nextToken();
       this.roles.add(token);

@@ -32,43 +32,19 @@
 package com.neotis.snip.filter.macro;
 
 import com.neotis.snip.Snip;
-import com.neotis.snip.SnipSpace;
-import com.neotis.snip.SnipLink;
 
-import java.util.Iterator;
-import java.util.List;
+import java.util.Collection;
 
-public class RecentSnipMacro extends Macro {
-  StringBuffer buffer;
-  SnipSpace space;
 
-  public RecentSnipMacro() {
-    buffer = new StringBuffer();
-    space = SnipSpace.getInstance();
+public class RecentSnipMacro extends ListoutputMacro {
+  public String getName() {
+    return "snips-by-recent";
   }
 
   public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {
     if (params.length == 1) {
-      buffer.setLength(0);
-      buffer.append("<b>recently changed snips: (");
-      List snips = space.getChanged(Integer.parseInt(params[0]));
-      buffer.append(snips.size());
-      buffer.append(") </b><br/>");
-      if (snips.size() > 0) {
-        buffer.append("<blockquote>");
-        Iterator snipsIterator = snips.iterator();
-        while (snipsIterator.hasNext()) {
-          Snip aSnip = (Snip) snipsIterator.next();
-          SnipLink.appendLink(buffer, aSnip.getName());
-          if (snipsIterator.hasNext()) {
-            buffer.append(", ");
-          }
-        }
-        buffer.append("</blockquote>");
-      } else {
-        buffer.append("no recently changes snips.");
-      }
-      return buffer.toString();
+      Collection c = space.getChanged(Integer.parseInt(params[0]));
+      return output("recently changed snips", c, "no recently changes.");
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

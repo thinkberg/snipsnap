@@ -25,15 +25,10 @@
 package com.neotis.jsp;
 
 import com.neotis.app.Application;
-import com.neotis.snip.Snip;
 import com.neotis.user.Security;
 import com.neotis.user.User;
 
 import javax.servlet.jsp.JspTagException;
-import javax.servlet.jsp.jstl.core.ConditionalTagSupport;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
 
 
 public class CheckPermission extends UserAuth {
