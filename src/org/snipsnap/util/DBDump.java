@@ -127,21 +127,15 @@ public class DBDump {
     while (results.next()) {
       out.println("<" + objectName + ">");
       for (int i = 1; i <= size; i++) {
-        Object object = null;
-        String value = null;
-        try {
-          value = results.getString(i);
-        } catch (Exception e) {
-          object = results.getObject(i);
-        }
+        Object object = results.getObject(i);
         String name = meta.getColumnName(i);
-        if (null != value || null != object) {
+        if (null != object) {
           out.print("  <" + name + ">");
           if (object instanceof Timestamp) {
             Timestamp time = (Timestamp) object;
             out.print(time.getTime());
           } else {
-            out.print(escape(value));
+            out.print(escape((String)object));
           }
           out.println("</" + name + ">");
         }
