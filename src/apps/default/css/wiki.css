@@ -218,6 +218,5 @@ ol.KATAKANA { list-style-type: katakana-iroha; }
 }
 
 #calendar .today {
-  color: inherit;
-  background-color: #aaaaaa;
+  border: 1px solid black;
 }
