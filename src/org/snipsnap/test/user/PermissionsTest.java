@@ -24,11 +24,13 @@
  */
 package com.neotis.test.user;
 
-import com.neotis.user.Permissions;
+import com.neotis.user.*;
+import com.neotis.app.Application;
+import com.neotis.snip.Snip;
+import com.neotis.snip.SnipSpace;
 import junit.framework.*;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class PermissionsTest extends TestCase {
   public PermissionsTest(String name) {
@@ -81,6 +83,31 @@ public class PermissionsTest extends TestCase {
     roles.add("role x");
     assertTrue("User with roles has Edit permission", perms.check("Edit", roles2));
 
+  }
+
+  public void testOwner() {
+    User user1 = new User("user1 1", "password 1","user1@user1.de");
+    User user2 = new User("user1 2","password 2","user1@user1.de");
+
+    Application app = new Application();
+    app.setUser(user1);
+
+    // create with user1 1
+    Snip snip1 = SnipSpace.getInstance().create("A","A Content", app);
+
+    // modify with user1 2
+    app.setUser(user2);
+    snip1.setContent("B content");
+    SnipSpace.getInstance().store(snip1, app);
+
+    List roles = new ArrayList();
+    roles.add(Security.OWNER);
+    // user1 2 is not owner of snip
+    assertTrue(! Security.hasRoles(user2, snip1, roles));
+    // user1 1 is owner of snip
+    assertTrue(Security.hasRoles(user1, snip1, roles));
+
+    SnipSpace.getInstance().remove(snip1);
   }
 
   public void testNoRoles() {

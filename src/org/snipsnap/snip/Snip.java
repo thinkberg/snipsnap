@@ -89,7 +89,7 @@ public class Snip implements Ownable {
   }
 
   public String getOwner() {
-    return getMUser();
+    return getCUser();
   }
 
   public boolean isOwner(User user) {

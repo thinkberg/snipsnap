@@ -66,7 +66,11 @@ public class Security {
     Set roles = getRoles(user);
     if (object instanceof Ownable) {
       Ownable o = (Ownable) object;
+      System.err.println("Owner: " + user.getLogin());
+      System.err.println("Owner: " + object.getName());
+      System.err.println("Owner: " + object.getOwner());
       if (o.isOwner(user)) {
+        System.err.println("Adding OWNER");
         roles.add(OWNER);
       }
     }

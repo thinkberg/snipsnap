@@ -48,6 +48,7 @@ public class CheckPermission extends UserAuth {
     User user = app.getUser();
     if (snip != null) {
       boolean isTrue = Security.checkPermission(permission, user, snip) && Security.hasRoles(user, snip, roles);
+      // invert result if necessary
       return (invertCheck ? !isTrue : isTrue);
     } else {
       return (invertCheck ? !Security.hasRoles(user, roles) : Security.hasRoles(user, roles));

@@ -26,9 +26,6 @@
             <s:check roles="Owner" permission="Edit" snip="${comment}">
               [<a href="/exec/edit?name=<c:out value='${comment.name}'/>">edit</a>]
             </s:check>
-            <s:check roles="Owner" permission="Edit" snip="${comment}" invert="true">
-              <span class="inactive">[edit]</span>
-            </s:check>
           </td>
         </tr>
         <tr>
