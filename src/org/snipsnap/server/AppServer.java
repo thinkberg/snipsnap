@@ -224,7 +224,7 @@ public class AppServer {
    */
   private static void usage(String message) {
     System.out.println(message);
-    System.out.println("usage: " + AppServer.class.getName() + " [-root <dir>]");
+    System.out.println("usage: " + AppServer.class.getName() + " [-root <dir>] [-url <url>]");
     System.out.println("  -root   directory, where to find the applications for this server");
     System.out.println("  -url    URL, admin server URL (http://host:port/)");
     System.out.println("  -help   this help text");
