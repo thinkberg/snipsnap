@@ -10,6 +10,7 @@
 /************************************************/
 /* image positioning                            */
 img {
+  border: 1px solid black;
   padding-top: 2px;
   padding-bottom: 1px;
   padding-left: 1px;
@@ -131,18 +132,18 @@ img.float-right {
 }
 
 .wiki-table td {
-  border-top: 1px solid #003366;
+  border-top: 1px solid #5b5b5b;
   padding: 4px 4px 4px 4px;
 }
 
 .wiki-table th {
-  border-top: 1px solid #003366;
+  border-top: 1px solid #5b5b5b;
   text-align: left;
   color: inherit;
   font-weight: bold;
   /* background-color: #DDEEFF; */
   color: #fff;
-  background-color: #001133;
+  background-color: transparent;
 }
 
 .wiki-table .table-odd {
