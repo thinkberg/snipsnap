@@ -25,10 +25,13 @@
 
 package org.snipsnap.render;
 
+import org.radeox.engine.BaseRenderEngine;
 import org.radeox.engine.ImageRenderEngine;
 import org.radeox.engine.IncludeRenderEngine;
-import org.radeox.engine.BaseRenderEngine;
-import org.radeox.EngineManager;
+import org.radeox.engine.context.RenderContext;
+import org.radeox.filter.context.FilterContext;
+import org.snipsnap.render.context.SnipRenderContext;
+import org.snipsnap.render.filter.context.SnipFilterContext;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
@@ -66,5 +69,12 @@ public class SnipRenderEngine extends BaseRenderEngine implements IncludeRenderE
 
   public String getExternalImageLink() {
     return SnipLink.createImage("external-link", "&gt;&gt;");
+  }
+
+  public String render(String content, RenderContext context) {
+    init();
+    FilterContext filterContext = new SnipFilterContext(((SnipRenderContext) context).getSnip());
+    filterContext.setRenderContext(context);
+    return fp.filter(content, filterContext);
   }
 }

@@ -343,7 +343,4 @@ public class SnipSpace implements LinkTester {
     indexer.removeIndex(snip);
     return;
   }
-
-// SnipStorage System dependend Methods
-
 }

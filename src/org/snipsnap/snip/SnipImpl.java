@@ -26,6 +26,7 @@ package org.snipsnap.snip;
 
 import org.snipsnap.app.Application;
 import org.radeox.EngineManager;
+import org.radeox.engine.context.RenderContext;
 import org.radeox.util.logging.Logger;
 import org.radeox.filter.context.FilterContext;
 import org.snipsnap.snip.label.Labels;
@@ -35,6 +36,7 @@ import org.snipsnap.user.User;
 import org.snipsnap.interceptor.Aspects;
 import org.snipsnap.render.filter.context.SnipFilterContext;
 import org.snipsnap.render.SnipRenderEngine;
+import org.snipsnap.render.context.SnipRenderContext;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -363,9 +365,9 @@ public class SnipImpl implements Snip {
   }
 
   public String toXML() {
-
     long start = Application.get().start();
-    FilterContext context = new SnipFilterContext((Snip) Aspects.getThis());
+    RenderContext context = new SnipRenderContext((Snip) Aspects.getThis());
+    context.setParameters(Application.get().getParameters());
     String xml = EngineManager.getInstance("snipsnap").render(content, context);
 
     //String xml = SnipFormatter.toXML(this, getContent());

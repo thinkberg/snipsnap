@@ -122,7 +122,7 @@ public class LateMacroFilter extends RegexTokenFilter {
           macro.execute(writer, mParams);
         } else if (command.startsWith("!")) {
 // @TODO including of other snips
-          RenderEngine engine = context.getRenderEngine();
+          RenderEngine engine = context.getRenderContext().getRenderEngine();
           if (engine instanceof IncludeRenderEngine) {
             String include = ((IncludeRenderEngine) engine).include(command.substring(1));
             if (null != include) {

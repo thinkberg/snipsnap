@@ -49,6 +49,7 @@ public class Application {
   private AppConfiguration config;
   private List log = new ArrayList();
   private NotificationService notification;
+  private Map params;
 
   private static ThreadLocal instance = new ThreadLocal() {
     protected synchronized Object initValue() {
@@ -123,11 +124,11 @@ public class Application {
   }
 
   public Map getParameters() {
-    return MacroFilter.getParameters();
+    return params;
   }
 
   public void setParameters(Map parameters) {
-    MacroFilter.setParameters(parameters);
+    this.params = parameters;
   }
 
   public void setUser(User user, HttpSession session) {
