@@ -76,7 +76,7 @@ public class ConfigurationMap {
   public ConfigurationMap() {
     initDefaults();
     // instantiate properties with defaults
-    initialize(new Properties(defaults));
+    initialize((Properties)defaults.clone());
   }
 
   private void initDefaults() {
@@ -87,6 +87,7 @@ public class ConfigurationMap {
       System.err.println("Configuration: unable to load defaults: " + e.getMessage());
     }
   }
+
   private void initialize(Properties initProperties) {
     properties = initProperties;
 

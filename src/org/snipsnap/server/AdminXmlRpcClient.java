@@ -45,7 +45,7 @@ public class AdminXmlRpcClient {
     String xmlRpcUrl = "http://" + host + (port != 80 ? ":" + port : "") + "/RPC2";
     xmlRpcClient = new XmlRpcClient(xmlRpcUrl);
     xmlRpcClient.setBasicAuthentication("admin", password);
-    System.err.println("AdminXmlRpcClient: new client for "+xmlRpcUrl);
+    //System.err.println("AdminXmlRpcClient: new client for "+xmlRpcUrl);
   }
 
   public Hashtable getApplications() throws XmlRpcException, IOException {
@@ -54,7 +54,7 @@ public class AdminXmlRpcClient {
   }
 
   public URL install(String name, String host, String port, String path) throws XmlRpcException, IOException {
-    System.out.println("install("+name+","+host+","+port+","+path+")");
+    //System.out.println("install("+name+","+host+","+port+","+path+")");
     Vector args = new Vector();
     args.addElement(name);
     args.addElement(host);
@@ -64,7 +64,7 @@ public class AdminXmlRpcClient {
   }
 
   public void delete(String name, boolean backup) throws XmlRpcException, IOException {
-    System.out.println("delete(" + name + "," + backup +")");
+    //System.out.println("delete(" + name + "," + backup +")");
     Vector args = new Vector();
     args.addElement(name);
     args.addElement(new Boolean(backup));

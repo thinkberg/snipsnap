@@ -87,13 +87,13 @@ public class ConfigureServlet extends HttpServlet {
   protected final static String STEP_FINISH = "finish";
 
   private final static List BASIC_STEPS = Arrays.asList(new String[]{
-    STEP_APPLICATION,
-    /*STEP_THEME,*/
     STEP_ADMINISTRATOR,
     STEP_FINISH,
   });
 
   private final static List EXPERT_STEPS = Arrays.asList(new String[]{
+    STEP_APPLICATION,
+    /*STEP_THEME,*/
     STEP_LOCALIZATION,
     STEP_PERMISSIONS,
     STEP_MAIL,

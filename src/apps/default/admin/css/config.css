@@ -152,6 +152,19 @@ li.current-step {
   padding: 5px;
 }
 
+.finish .start {
+  margin-left: 40px;
+  width: 60%;
+  text-alignment: center;
+}
+
+.start {
+  font-size: 130%;
+  padding: 5px;
+  background-color: #999999;
+  color: green;
+}
+
 .advanced {
   margin-left: 40px;
   margin-top: 10px;

@@ -11,6 +11,7 @@
 
 <div class="finish">
   <div><fmt:message key="config.finish"/></div>
+  <div class="start"><center><input type="submit" name="finish" value="<fmt:message key="config.nav.finish"/>"></center></div>
   <c:choose>
     <c:when test="${empty advanced}">
       <script type="text/javascript" language="Javascript">
@@ -30,6 +31,16 @@
       <div class="advanced">
         <fmt:message key="config.advanced"/>
         <ul>
+          <li>
+            <input onClick="enableOnCheck(this);" id="advanced.application" type="checkbox" name="advanced.step.application">
+            <fmt:message key="config.advanced.application"/>
+          </li>
+          <%--
+          <li>
+            <input onClick="enableOnCheck(this);" id="advanced.theme" type="checkbox" name="advanced.step.theme">
+            <fmt:message key="config.advanced.theme"/>
+          </li>
+          --%>
           <li>
             <input onClick="enableOnCheck(this);" id="advanced.localization" type="checkbox" name="advanced.step.localization">
             <fmt:message key="config.advanced.localization"/>

@@ -66,7 +66,6 @@ public class AdminInitFilter implements Filter {
   private Properties serverConfig = new Properties();
 
   public void init(FilterConfig config) throws ServletException {
-    System.out.println("init()");
     try {
       serverConfig.load(new FileInputStream("conf/server.conf"));
     } catch (IOException e) {

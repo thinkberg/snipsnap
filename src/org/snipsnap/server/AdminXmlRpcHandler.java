@@ -78,7 +78,7 @@ public class AdminXmlRpcHandler extends AuthXmlRpcHandler {
   }
 
   public String install(String name, String host, String port, String path) throws XmlRpcException {
-    System.out.println("AdminXmlRpcHandler: install("+name+","+port+","+path+")");
+    //System.err.println("AdminXmlRpcHandler: install("+name+","+port+","+path+")");
     File root = new File(serverConfig.getProperty(ServerConfiguration.WEBAPP_ROOT));
     File webAppDir = new File(root, name + "/webapp");;
     File webInf = new File(webAppDir, "WEB-INF");
@@ -112,7 +112,7 @@ public class AdminXmlRpcHandler extends AuthXmlRpcHandler {
    * @return
    */
   public Boolean delete(String name, Boolean backup) throws XmlRpcException {
-    System.err.println("AdminXmlRpcHandler: delete(" + name+")");
+    //System.err.println("AdminXmlRpcHandler: delete(" + name+")");
     File root = new File(serverConfig.getProperty(ServerConfiguration.WEBAPP_ROOT));
     File app = new File(root, name);
     if(app.exists()) {

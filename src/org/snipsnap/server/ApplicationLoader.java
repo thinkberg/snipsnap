@@ -53,6 +53,8 @@ public class ApplicationLoader {
   protected static Map applications = new HashMap();
   protected static int errors = 0;
 
+  private final static String APPLICATION_NAME = "__internal.name";
+
   /**
    * Create a new application load that uses the given jetty server and searches for applications in
    * the root directory specified.
@@ -105,6 +107,7 @@ public class ApplicationLoader {
     Configuration config = ConfigurationProxy.newInstance();
     config.setWebInfDir(configFile.getParentFile());
     config.load(new FileInputStream(configFile));
+    config.getProperties().setProperty(APPLICATION_NAME, configFile.getName());
     return config;
   }
 
@@ -143,8 +146,8 @@ public class ApplicationLoader {
     return applications.size();
   }
 
-  public static WebApplicationContext loadApplication(Configuration config) throws Exception {
-    String appName = config.getName();
+  private static WebApplicationContext loadApplication(Configuration config) throws Exception {
+    String appName = config.getProperties().getProperty(APPLICATION_NAME);
     if (applications.get(appName) != null) {
       WebApplicationContext context = (WebApplicationContext) applications.get(appName);
       if (context.isStarted()) {
@@ -179,13 +182,13 @@ public class ApplicationLoader {
     context.start();
 
     applications.put(appName, context);
-    System.out.println("Started application '" + appName + "' " + config.getUrl());
+    System.out.println("Started application '" + config.getName() + "' " + config.getUrl());
 
     return context;
   }
 
-  public static void unloadApplication(Configuration config) {
-    String appName = config.getName();
+  private static void unloadApplication(Configuration config) {
+    String appName = config.getProperties().getProperty(APPLICATION_NAME);
     try {
       WebApplicationContext context = (WebApplicationContext) applications.get(appName);
       context.stop();

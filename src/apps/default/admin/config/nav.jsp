@@ -13,7 +13,6 @@
 </c:if>
 <c:choose>
   <c:when test="${step == 'finish'}">
-    <input type="submit" name="finish" value="<fmt:message key="config.nav.finish"/>">
     <c:if test="${empty advanced}">
       <input type="hidden" name="advanced" value="true">
       <input disabled="disabled" id="submit.advanced" type="submit" name="next" value="<fmt:message key="config.nav.advanced"/>">
