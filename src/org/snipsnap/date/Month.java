@@ -84,6 +84,11 @@ public class Month {
     return days;
   }
 
+  public String getView() {
+    Calendar today = new GregorianCalendar();
+    today.setTime(new java.util.Date());
+    return getView(today.get(Calendar.MONTH), today.get(Calendar.YEAR));
+  }
 
   // @TODO: convert to use month=1,2,... instead of 0,1,....
   public String getView(int month, int year) {

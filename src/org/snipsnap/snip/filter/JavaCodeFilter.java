@@ -37,7 +37,7 @@ public class JavaCodeFilter extends RegexReplaceFilter {
 
   private static final String KEYWORDS =
       "\\b(abstract|break|byvalue|case|cast|catch|" +
-      "class|const|continue|default|do|else|extends|" +
+      "const|continue|default|do|else|extends|" +
       "false|final|finally|for|future|generic|goto|if|" +
       "implements|import|inner|instanceof|interface|" +
       "native|new|null|operator|outer|package|private|" +
@@ -57,7 +57,7 @@ public class JavaCodeFilter extends RegexReplaceFilter {
 
   public JavaCodeFilter() {
     super(QUOTES, "<span class=\"java-quote\">\"$1\"</span>");
-    addRegex(OBJECTS, "<span class=\"java-object\">$1</span>");
     addRegex(KEYWORDS, "<span class=\"java-keyword\">$1</span>");
+    addRegex(OBJECTS, "<span class=\"java-object\">$1</span>");
   };
 }

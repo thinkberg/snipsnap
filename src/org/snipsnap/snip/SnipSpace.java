@@ -36,7 +36,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -304,7 +303,7 @@ public class SnipSpace implements LinkTester {
     List children = null;
 
     try {
-      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip FROM Snip WHERE name>=? and name<=? and parentSnip=?");
+      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip FROM Snip WHERE name>=? and name<=? and parentSnip=? ORDER BY name DESC");
       statement.setString(1, start);
       statement.setString(2, end);
       statement.setString(3, "start");

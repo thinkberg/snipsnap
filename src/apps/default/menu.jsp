@@ -56,7 +56,7 @@
   <p>
   <!-- replace this with a JSTL tag ala <s:calendar/> -->
   <% Month m = new Month(); %>
-  <%= m.getView(05,2002) %>
+  <%= m.getView() %>
   </p>
 
   <p>

@@ -40,6 +40,7 @@ public class SnipFormatter {
     FilterPipe fp = new FilterPipe();
     fp.addFilter(new EscapeFilter());
     fp.addFilter(new MacroFilter());
+    fp.addFilter(new MacroFilter());
     fp.addFilter(new HeadingFilter());
     fp.addFilter(new ListFilter());
     fp.addFilter(new NewlineFilter());

@@ -14,12 +14,15 @@
 
 <table width="100%" border="0" cellspacing="2" cellpadding="1">
  <tr><td><span class="snip-name"><jsp:getProperty name="snip" property="name" /></span></td></tr>
- <% if(user.isAuthenticated()) { %>
-  <tr><td>[<a href="/exec/edit?name=<%= snip.getName() %>">edit</a>]</td></tr>
- <% } else { %>
-  <tr><td><span class="inactive">[edit]</span></td></tr>
+ <% if (! "start".equals(snip.getName())) { %>
+   <% if(user.isAuthenticated()) { %>
+     <tr><td>[<a href="/exec/edit?name=<%= snip.getName() %>">edit</a>]</td></tr>
+   <% } else { %>
+     <tr><td><span class="inactive">[edit]</span></td></tr>
+   <% } %>
+   <tr width="100%"><td><%= snip.getModified() %></td></tr>
  <% } %>
- <tr width="100%"><td><%= snip.getModified() %></td></tr>
+
  <tr>
   <td width="100%">
    <jsp:getProperty name="snip" property="XMLContent" />
@@ -28,7 +31,7 @@
   <tr><td>
    <!-- do not display comments on start page, only on posted
         entries -->
-   <% if (! snip.getName().equals("start")) { %>
+ <% if (! "start".equals(snip.getName())) { %>
     <jsp:getProperty name="snip" property="comments" /> |
     <a href="/exec/post?name=<%= snip.getName() %>">post comment</a>
    <% } %>
