@@ -23,14 +23,14 @@
    <%-- content --%>
    <div class="comment-content"><c:out value="${comment.XMLContent}" escapeXml="false" /></div>
   </c:forEach>
-  <div class="preview"><div class="comment-content"><c:out value="${preview}" escapeXml="false"/></div></div>
   <%-- input field --%>
   <s:check roles="Authenticated">
    <div class="comment-input">
     <a name="post"></a>
-    <form class="form" name="f" method="post" action="../exec/storecomment">
+    <div class="preview"><div class="comment-content"><c:out value="${preview}" escapeXml="false"/></div></div>
+    <form class="form" name="f" method="post" action="../exec/storecomment#post">
      <table>
-      <tr><td><textarea name="content" type="text" cols="80" rows="20" tabindex="0"></textarea></td></tr>
+      <tr><td><textarea name="content" type="text" cols="80" rows="20" tabindex="0"><c:out value="${content}" escapeXml="false"/></textarea></td></tr>
       <tr><td class="form-buttons">
        <input value="Preview" name="preview" type="submit"/>
        <input value="Comment" name="save" type="submit"/>

@@ -5,19 +5,19 @@
   --%>
 
 <%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 
 <div class="snip-wrapper">
  <div class="snip-title"><h1 class="snip-name">Post To Weblog</h1></div>
  <div class="snip-content">
   <s:check roles="Editor">
   <c:if test="${not empty preview}">
-   Preview:
    <div class="preview"><div class="snip-content"><c:out value="${preview}" escapeXml="false"/></div></div>
   </c:if>
    <form class="form" method="post" action="../exec/storepost">
     <table>
-     <tr><td>Title:<br><input name="title"/></td></tr>
-     <tr><td><textarea name="content" type="text" cols="80" rows="20"></textarea></td></tr>
+     <tr><td>Title<br><input name="title" value="<c:out value="${title}" escapeXml="false"/>"/></td></tr>
+     <tr><td><textarea name="content" type="text" cols="80" rows="20"><c:out value="${content}" escapeXml="false"/></textarea></td></tr>
      <tr><td class="form-buttons">
       <input value="Preview" name="preview" type="submit"/>
       <input value="Post" name="save" type="submit"/>

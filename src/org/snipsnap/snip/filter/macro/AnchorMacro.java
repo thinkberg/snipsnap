@@ -26,6 +26,7 @@
 package org.snipsnap.snip.filter.macro;
 
 import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.Snip;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -63,7 +64,12 @@ public class AnchorMacro extends Preserved {
       writer.write(anchor);
       writer.write("\"/>");
       writer.write("<a href=\"");
-      SnipLink.appendUrl(writer, params.getSnip().getName() + "#" + anchor);
+      Snip snip = params.getSnip();
+      if (null != snip) {
+        SnipLink.appendUrl(writer, snip.getName() + "#" + anchor);
+      } else {
+        SnipLink.appendUrl(writer, "#" + anchor);
+      }
       writer.write("\" title=\"Permalink to ");
       writer.write(anchor);
       writer.write("\">");

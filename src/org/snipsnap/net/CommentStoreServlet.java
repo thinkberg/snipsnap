@@ -28,10 +28,12 @@ import org.snipsnap.app.Application;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.filter.SnipFormatter;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 
 import javax.servlet.ServletException;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -48,11 +50,18 @@ public class CommentStoreServlet extends SnipSnapServlet {
     throws ServletException, IOException {
 
     String name = request.getParameter("comment");
-    SnipSpace space = SnipSpace.getInstance();
-    Snip snip = space.load(name);
+    String content = request.getParameter("content");
+    Snip snip = SnipSpace.getInstance().load(name);
 
-    if (request.getParameter("cancel") == null) {
-      String content = request.getParameter("content");
+    if (request.getParameter("preview") != null) {
+      request.setAttribute("snip", snip);
+      request.setAttribute("preview", SnipFormatter.toXML(snip, content));
+      request.setAttribute("content", content);
+      request.setAttribute("comment", name);
+      RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/comment.jsp");
+      dispatcher.forward(request, response);
+      return;
+    } else  if (request.getParameter("cancel") == null) {
 
       HttpSession session = request.getSession();
       Application app = null;

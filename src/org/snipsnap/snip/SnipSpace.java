@@ -216,10 +216,12 @@ public class SnipSpace implements LinkTester {
     return indexer.search(queryString);
   }
 
+  public String getContent(String title, String content) {
+    return content = "1 " + title + " {anchor:" + title + "}\n" + content;
+  }
+
   public Snip post(String content, String title) {
-    Date date = new Date(new java.util.Date().getTime());
-    content = "1 " + title + " {anchor:" + title + "}\n" + content;
-    return post(content);
+    return post(getContent(title,content));
   }
 
   public Snip post(String content) {

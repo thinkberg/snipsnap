@@ -95,14 +95,14 @@ public class Cache {
 
   public List getCache(Class type) {
     //@TODO optimize to use value list, too
-    Map m = (Map) caches.get(type);
+ /*   Map m = (Map) caches.get(type);
     Iterator iterator = m.keySet().iterator();
     while (iterator.hasNext()) {
       String name = (String) iterator.next();
       Snip snip = (Snip) m.get(name);
       System.err.println(name+"="+snip.getName());
     }
-
+*/
     return new ArrayList(((Map) caches.get(type)).values());
   }
 

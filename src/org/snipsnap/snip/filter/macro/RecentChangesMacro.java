@@ -59,14 +59,14 @@ public class RecentChangesMacro extends ListOutputMacro {
     int length = 10;
     if(params != null) {
       if(params.getLength() > 0) {
-        type = params.get("0");
-      }
-      if(params.getLength() > 1) {
         try {
-          length = Integer.parseInt(params.get("1"));
+          length = Integer.parseInt(params.get("0"));
         } catch (NumberFormatException e) {
           System.err.println("RecentChangesMacro: illegal parameter count='"+params.get("1")+"'");
         }
+      }
+      if(params.getLength() > 1) {
+        type = params.get("1");
       }
     }
 

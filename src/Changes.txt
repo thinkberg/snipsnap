@@ -6,8 +6,8 @@
 - Fixed bug: Preview in comments
 - Added feature: Preview in post blog
 - Fixed some smaler bugs
-- Refactored heavily backend to use in memory queries instead of SQL queries. This
-  should allow us to move to Prevalyer
+- Refactored heavily the backend to use in-memory queries instead of SQL queries. This
+  should allow us to move to Prevalyer easier
 
 0.3
 
