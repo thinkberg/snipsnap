@@ -43,8 +43,11 @@ import java.util.Vector;
 public class ExtendedPingHandler implements PingHandler {
   private String url;
 
-  public ExtendedPingHandler(String url) {
-    this.url = url;
+  public ExtendedPingHandler() {
+  }
+
+  public void setPingUrl(String pingUrl) {
+    this.url = pingUrl;
   }
 
   public void ping(Snip weblog) {
@@ -65,7 +68,7 @@ public class ExtendedPingHandler implements PingHandler {
       Object result = blo_gs.execute("weblogUpdates.extendedPing", params);
       //Logger.warn("weblogs.ping received: " + result);
     } catch (Exception e) {
-      Logger.warn("Unable to ping " + url, e);
+      Logger.warn("ExtendedPingHandler: Unable to ping " + url, e);
     }
   }
 }

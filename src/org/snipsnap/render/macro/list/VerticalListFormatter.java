@@ -36,7 +36,9 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
- * Simple list formatter.
+ * Vertical list formatter. If the collections contains snips then
+ * the formatter renders comments snips different.
+ *
  * @author Matthias L. Jugel
  * @version $Id$
  */
@@ -47,6 +49,12 @@ public class VerticalListFormatter implements ListFormatter {
 
   /**
    * Display a simple vertical list.
+   *
+   * @param writer Writer to write the list output to
+   * @param listComment String to display before the list
+   * @param c Collection of Linkables, Snips or Nameables to display
+   * @param emptyText Text to display if collection is empty
+   * @param showSize If showSize is true then the size of the collection is displayed
    */
   public void format(Writer writer, String listComment, Collection c, String emptyText, boolean showSize)
       throws IOException {
@@ -64,9 +72,7 @@ public class VerticalListFormatter implements ListFormatter {
       while (nameIterator.hasNext()) {
         Object object = nameIterator.next();
         writer.write("<li>");
-        if (object instanceof Linkable) {
-          writer.write(((Linkable) object).getLink());
-        } else if (object instanceof Snip) {
+        if (object instanceof Snip) {
           Snip snip = (Snip) object;
           String name = snip.getName();
           String realName = name;
@@ -83,6 +89,9 @@ public class VerticalListFormatter implements ListFormatter {
           } else {
             SnipLink.appendLink(writer, name, realName);
           }
+        } else if (object instanceof Linkable) {
+            writer.write(((Linkable) object).getLink());
+
         } else if (object instanceof Nameable) {
           SnipLink.appendLink(writer, ((Nameable) object).getName());
         } else {

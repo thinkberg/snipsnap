@@ -35,5 +35,6 @@ import org.snipsnap.snip.Snip;
  */
 
 public interface PingHandler {
+  public void setPingUrl(String pingUrl);
   public void ping(Snip weblog);
 }

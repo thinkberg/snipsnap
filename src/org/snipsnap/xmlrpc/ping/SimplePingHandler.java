@@ -43,8 +43,11 @@ import java.util.Vector;
 public class SimplePingHandler implements PingHandler {
   private String url;
 
-  public SimplePingHandler(String url) {
-    this.url = url;
+  public SimplePingHandler() {
+  }
+
+  public void setPingUrl(String pingUrl) {
+    this.url = pingUrl;
   }
 
   public void ping(Snip weblog) {
@@ -61,7 +64,7 @@ public class SimplePingHandler implements PingHandler {
       Object result = weblogs_com.execute("weblogUpdates.ping", params);
       //Logger.warn("weblogs.ping received: " + result);
     } catch (Exception e) {
-      Logger.warn("Unable to ping " + url, e);
+      Logger.warn("SimplePingHandler: Unable to ping " + url, e);
     }
 
   }

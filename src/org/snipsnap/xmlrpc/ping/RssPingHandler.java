@@ -43,8 +43,11 @@ import java.util.Vector;
 public class RssPingHandler implements PingHandler {
   private String url;
 
-  public RssPingHandler(String url) {
-    this.url = url;
+  public RssPingHandler() {
+  }
+
+  public void setPingUrl(String pingUrl) {
+    this.url = pingUrl;
   }
 
   public void ping(Snip weblog) {
@@ -62,7 +65,7 @@ public class RssPingHandler implements PingHandler {
       Object result = weblogs_com.execute("rssUpdate.ping", params);
       //Logger.warn("weblogs.ping received: " + result);
     } catch (Exception e) {
-      Logger.warn("Unable to ping RSS weblogs.com ", e);
+      Logger.warn("RssPingHandler: Unable to ping RSS weblogs.com ", e);
     }
   }
 }

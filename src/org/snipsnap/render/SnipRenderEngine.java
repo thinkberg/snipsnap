@@ -48,7 +48,9 @@ public class SnipRenderEngine extends BaseRenderEngine implements IncludeRenderE
     return "snipsnap";
   }
 
-  // Register this EngineManager with the EngineManager manager
+  // Register this RenderEngine with the EngineManager manager
+  // This enables the use without services file just by
+  // calling Class.forName("org.snipsnap.render.SnipRenderEngine")
   static {
     org.radeox.EngineManager.registerEngine(new SnipRenderEngine());
   }

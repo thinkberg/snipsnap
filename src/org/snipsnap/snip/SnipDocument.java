@@ -29,18 +29,36 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 
 /**
- * Prepares a snip for indexing by lucene
+ * Prepares a snip for indexing by lucene. Lucene needs
+ * data stored in "documents" to index them. SnipDocument
+ * gets information from a Snip and sets the corresponding
+ * fields in a document, e.g. "author", "content", "title" etc.
  *
  * @author stephan
  * @version $Id$
  */
 
 public class SnipDocument {
+  /**
+   * Get the information of a snip wrapped in a Lucene
+   * document. Lucene can only index documents.
+   *
+   * @param snip Snip to wrap
+   * @return document Document that Lucene can index
+   */
   public static Document Document(Snip snip) {
     Document doc = new Document();
+    // We need this ID to correctly remove documents from
+    // the index. This is done with hashCode because
+    // lucene has problems with Unicode in id's
+    // (at least the version used when this was written)
     doc.add(Field.Text("id", Integer.toHexString(snip.getName().hashCode())));
     doc.add(Field.Text("content", snip.getContent()));
     doc.add(Field.Text("title", snip.getName()));
+    // author instead of CUser is clearer to the user
+    doc.add(Field.Text("author", snip.getCUser()));
+    doc.add(Field.Text("muser", snip.getMUser()));
+    doc.add(Field.Text("owner", snip.getOwner()));
     return doc;
   }
 }

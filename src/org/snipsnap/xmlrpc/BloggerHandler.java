@@ -23,7 +23,6 @@
  * --LICENSE NOTICE--
  */
 
-
 package org.snipsnap.xmlrpc;
 
 import org.snipsnap.app.Application;
@@ -32,6 +31,12 @@ import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 import org.radeox.util.logging.Logger;
+import org.apache.xmlrpc.XmlRpcException;
+
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Vector;
+import java.util.List;
 
 /**
  * Handles XML-RPC calls for the Blogger API
@@ -41,42 +46,119 @@ import org.radeox.util.logging.Logger;
  * @version $Id$
  */
 
-public class BloggerHandler {
+public class BloggerHandler extends XmlRpcSupport {
   /**
    * From the spec:
    * blogger.newPost(): Makes a new post to a designated blog. Optionally, will publish the blog after making the post.
+   *
    * appkey (string): Unique identifier/passcode of the application sending the post. (See access info.)
    * blogid (string): Unique identifier of the blog the post will be added to.
    * username (string): Login for a Blogger user who has permission to post to the blog.
    * password (string): Password for said username.
    * content (string): Contents of the post.
    * publish (boolean): If true, the blog will be published immediately after the post is made.
-   **/
-  public String newPost(String appkesy,
+   *
+   * @param appkey Application key, currently not used by SnipSnap
+   * @param blogid Identifaction for the blog, currenty SnipSnap supports only one weblog
+   * @param username Login of a SnipSnap user whit permission to post to weblog
+   * @param password Password credential
+   * @param content Content of the post, currently no HTML
+   * @param publish SnipSnap currently does not support post drafts
+   *
+   * @return name Name of the post
+   */
+  public String newPost(String appkey,
                         String blogid,
                         String username,
                         String password,
                         String content,
-                        boolean publish) {
+                        boolean publish) throws XmlRpcException {
     Logger.debug("XML-RPC call to newPost()");
 
-    UserManager um = UserManager.getInstance();
     SnipSpace space = SnipSpace.getInstance();
 
-    User user = um.authenticate(username, password);
-    if (user == null) {
-      return "";
-    } else {
-      Application.get().setUser(user);
-    }
+    User user = authenticate(username, password);
 
     Snip snip = space.post(content);
-    return "";
+    return snip.getName();
+  }
+
+  /**
+   * From the spec:
+   * blogger.getUsersBlogs: Returns information on all the blogs a given user is a member of.
+   * appkey (string): Unique identifier/passcode of the application sending the post. (See access info.)
+   * username (string): Login for a Blogger user who has permission to post to the blog.
+   * password (string): Password for said username.
+   *
+   * @param appkey Application key, currently not used by SnipSnap
+   * @param username Login of a SnipSnap user whit permission to post to weblog
+   * @param password Password credential
+   *
+   * @return bloglist List of Blogs, currently SnipSnap has only one weblog
+   **/
+  public Vector getUsersBlogs(String appkey,
+                              String username,
+                              String password) throws XmlRpcException {
+    Logger.debug("XML-RPC call to getUserBlogs()");
+
+    User user = authenticate(username, password);
+
+    Hashtable blog = new Hashtable(3);
+    blog.put("url", Application.get().getConfiguration().getUrl());
+    blog.put("blogid", "0");
+    blog.put("blogName", Application.get().getConfiguration().getName());
+    Vector vector = new Vector(1);
+    vector.add(blog);
+    return vector;
+  }
+
+  /**
+   * From the spec:
+   * Returns an array of structs containing the latest n posts to a given blog, newest first.
+   * appkey (string): Unique identifier/passcode of the application sending the post. (See access info.)
+   * blogid (string): Unique identifier of the blog the post will be added to.
+   * username (string): Login for a Blogger user who has permission to post to the blog.
+   * password (string): Password for said username.
+   * numberOfPosts (int): Number of posts to retrieve.
+   *
+   * @param appkey Application key, currently not used by SnipSnap
+   * @param blogid Identifaction for the blog, currenty SnipSnap supports only one weblog
+   * @param username Login of a SnipSnap user whit permission to post to weblog
+   * @param password Password credential
+   * @param numberOfPosts Number of the posts to retrieve
+   *
+   * @return recentPosts List of recents weblog posts
+   **/
+  public Vector getRecentPosts(String appkey,
+                               String blogid,
+                               String username,
+                               String password,
+                               int numberOfPosts) throws XmlRpcException {
+    Logger.debug("XML-RPC call to getRecentPosts()");
+
+    User user = authenticate(username, password);
+    Snip snip = SnipSpace.getInstance().load("start");
+
+    List children =
+        SnipSpace.getInstance().getChildrenDateOrder(snip, numberOfPosts);
+
+    Vector posts = new Vector(children.size());
+    for (Iterator i = children.iterator(); i.hasNext();) {
+      Snip each = (Snip) i.next();
+      Hashtable data = new Hashtable();
+      data.put("userid", each.getOUser() == null ? "" : each.getOUser());
+      data.put("dateCreated", each.getCTime());
+      data.put("content", each.getContent());
+      data.put("postid", each.getName());
+      posts.add(data);
+    }
+    return posts;
   }
 
   /**
    blogger.editPost: Edits a given post. Optionally, will publish the blog after making the edit.
-   blogger.getUsersBlogs: Returns information on all the blogs a given user is a member of.
+
+   Blogger specific:
    blogger.getUserInfo: Authenticates a user and returns basic user info (name, email, userid, etc.).
    blogger.getTemplate: Returns the main or archive index template of a given blog.
    blogger.setTemplate: Edits the main or archive index template of a given blog.

@@ -212,7 +212,7 @@ public class Application {
   }
 
   public AppConfiguration getConfiguration() {
-    if (config == null) {
+    if (null == config) {
       config = AppConfiguration.getInstance();
     }
     return config;

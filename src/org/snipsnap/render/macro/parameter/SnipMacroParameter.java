@@ -46,7 +46,7 @@ import java.util.StringTokenizer;
  * @version $Id$
  */
 
-public class SnipMacroParameter extends BaseMacroParameter implements MacroParameter {
+public class SnipMacroParameter extends BaseMacroParameter  {
   private Snip snip;
 
   public SnipMacroParameter(FilterContext context) {

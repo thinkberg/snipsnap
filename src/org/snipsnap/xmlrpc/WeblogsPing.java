@@ -32,10 +32,16 @@ import org.snipsnap.xmlrpc.ping.ExtendedPingHandler;
 import org.snipsnap.xmlrpc.ping.PingHandler;
 import org.snipsnap.xmlrpc.ping.RssPingHandler;
 import org.snipsnap.xmlrpc.ping.SimplePingHandler;
+import org.radeox.util.logging.Logger;
+import org.radeox.util.Encoder;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.FileInputStream;
 
 /**
  * Pings weblogs.com
@@ -47,16 +53,58 @@ import java.util.List;
 public class WeblogsPing extends Thread {
   private AppConfiguration config;
   private Snip weblog;
-  private List handlers;
+  private static List handlers;
 
   public WeblogsPing(AppConfiguration configuration, Snip weblog) {
     this.config = configuration;
     this.weblog = weblog;
-    handlers = new ArrayList();
-    handlers.add(new SimplePingHandler("http://rpc.weblogs.com/RPC2"));
-    handlers.add(new SimplePingHandler("http://www.snipsnap.org/RPC2"));
-    handlers.add(new RssPingHandler("http://rssrpc.weblogs.com/RPC2"));
-    handlers.add(new ExtendedPingHandler("http://ping.blo.gs/"));
+
+    if (null == handlers) {
+      handlers = new ArrayList();
+      boolean fileNotFound = false;
+      try {
+        BufferedReader br = new BufferedReader(
+            new InputStreamReader(
+                new FileInputStream(getFileName())));
+        addHandler(br);
+      } catch (IOException e) {
+        Logger.warn("Unable to read " + getFileName(), e);
+        fileNotFound = true;
+      }
+
+      if (fileNotFound) {
+        BufferedReader br = null;
+        try {
+          br = new BufferedReader(
+              new InputStreamReader(
+                  WeblogsPing.class.getResourceAsStream(getFileName())));
+          addHandler(br);
+        } catch (Exception e) {
+          Logger.warn("Unable to read " + getFileName() + " from jar", e);
+        }
+      }
+    }
+  }
+
+  private String getFileName() {
+    return "conf/weblogsping.txt";
+  }
+
+  public void addHandler(BufferedReader reader) throws IOException {
+    String line;
+    while ((line = reader.readLine()) != null) {
+      if (!line.startsWith("#")) {
+        int index = line.indexOf(" ");
+        String type = line.substring(0, index);
+        try {
+          PingHandler handler = (PingHandler) Class.forName(type).newInstance();
+          handler.setPingUrl(line.substring(index + 1));
+          handlers.add(handler);
+        } catch (Exception e) {
+          Logger.warn("WeblogsPing: Unable to add handler for: " + line, e);
+        }
+      }
+    }
   }
 
   public void run() {

@@ -1,9 +1,14 @@
 0.3.4
 
+- Added feature: {table} understands SUM, AVG, MAX, MIN, e.g. =SUM(A1:A3)
+- Fixed bug: Mail-To-Weblog didn't work because user "stephan" was used, now admin is used
+- Added feature: Configurable weblogs ping. Configuration is read from conf/weblogsping.txt
+- Fixed bug: better logging
+- Fixed bug: implemented getUserBlogs, getRecentPosts [by Calvin Yu]
 - Added Feature: Attachments for snips
 - WAR: introduced configuration properties for indexer and config files
 - Developer: Refactored the rendering engine to form sub-project Radeox
-- Added Service class for plugin loading (instead of undocumented sun class)
+- Developer: Added Service class for plugin loading (instead of undocumented sun class)
 - Removed Transliterate in favour of UTF-8
 - Developer: Added getParamDescription() to MacroParameter
 - Fixed bug: RSS would display to many items

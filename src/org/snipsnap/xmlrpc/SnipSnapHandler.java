@@ -37,10 +37,24 @@ import org.snipsnap.user.UserManager;
  */
 
 public class SnipSnapHandler {
+  /**
+   * Returns the SnipSnap version of this running instance
+   *
+   * @return version Version number of this running instance
+   */
   public String getVersion() {
     return Application.get().getConfiguration().getVersion();
   }
 
+  /**
+   * Authenticate a user. This can be used for single sign on
+   * (e.g. the #java.de bot)
+   *
+   * @param login Login string to test
+   * @param passwd Password credential for the given login
+   *
+   * @return isAuthenticated True when the user can be authenticated
+   */
   public boolean authenticate(String login, String passwd) {
      User user = UserManager.getInstance().authenticate(login, passwd);
      return (null != user);

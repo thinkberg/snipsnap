@@ -22,12 +22,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-/*
- * Macro that displays all Snips by user
- *
- * @author stephan
- * @version $Id$
- */
 
 package org.snipsnap.render.macro;
 
@@ -43,6 +37,12 @@ import java.io.Writer;
 import java.util.Collection;
 import java.util.Iterator;
 
+/*
+ * Macro that displays the hottest snips, currently the most viewed.
+ *
+ * @author stephan
+ * @version $Id$
+ */
 
 public class HotSnipMacro extends Macro {
   private SnipSpace space;

@@ -127,7 +127,9 @@ public class PostDaemon {
                 processMultipart(writer, (Multipart) message[i].getContent(), name);
               }
 
-              Application.get().setUser(UserManager.getInstance().load("stephan"));
+              // BUG
+              String user = Application.get().getConfiguration().getAdminLogin();
+              Application.get().setUser(UserManager.getInstance().load(user));
               SnipSpace.getInstance().post(writer.getBuffer().toString(), title);
             } catch (Exception e) {
               Logger.warn("PostDaemon Error:", e);

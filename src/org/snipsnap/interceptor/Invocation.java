@@ -57,6 +57,10 @@ public class Invocation {
     return method;
   }
 
+  public Object getTarget() {
+    return target;
+  }
+
   public Object next() throws Throwable {
     if (chain.hasNext()) {
       Interceptor i = (Interceptor) chain.next();
