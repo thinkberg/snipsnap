@@ -119,7 +119,7 @@ public class SnipViewServlet extends HttpServlet {
     // Snip does not exist
     if (null == snip) {
       if (config.allow(Configuration.APP_PERM_CREATESNIP)) {
-        response.sendRedirect("/exec/edit?name=" + URLEncoderDecoder.encode(name, config.getEncoding()));
+        response.sendRedirect(config.getUrl("/exec/edit?name=" + URLEncoderDecoder.encode(name, config.getEncoding())));
       } else {
         if ("snipsnap-notfound".equals(name)) {
           response.sendError(HttpServletResponse.SC_NOT_FOUND,

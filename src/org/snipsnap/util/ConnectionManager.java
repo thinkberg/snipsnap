@@ -83,10 +83,14 @@ public class ConnectionManager {
       } else {
         jdbcUrl = jdbcUrl.concat("?");
       }
-      jdbcUrl = jdbcUrl.concat("user="+config.getJdbcUser()).concat("&password="+config.getJdbcPassword());
+      String jdbcPassword = config.getJdbcPassword();
+      if (null != jdbcPassword) {
+        jdbcPassword = "";
+      }
+      jdbcUrl = jdbcUrl.concat("user="+config.getJdbcUser()).concat("&password="+jdbcPassword);
       //System.err.println("ConnectionManager: using: "+ jdbcUrl);
       ObjectPool connectionPool = new GenericObjectPool(null);
-      ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(jdbcUrl, config.getJdbcUser(), config.getJdbcPassword());
+      ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(jdbcUrl, config.getJdbcUser(), jdbcPassword);
       PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory, connectionPool, null, null, false, true);
       dataSource = new PoolingDataSource(connectionPool);
     }
