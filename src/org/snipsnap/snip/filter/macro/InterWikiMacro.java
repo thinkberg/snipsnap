@@ -43,6 +43,10 @@ public class InterWikiMacro extends Macro {
     return "inter-wiki";
   }
 
+  public String getDescription() {
+    return "Displays a list of known InterWikis.";
+  }
+
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
     InterWiki interWiki = InterWiki.getInstance();

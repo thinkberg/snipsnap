@@ -44,8 +44,7 @@ public class ApiMacro extends Macro {
   }
 
   public String getDescription() {
-    return "Generates links to Java or Ruby API documentation, e.g. \\{api:java.lang.String\\} generates " +
-    " {api:java.lang.String}";
+    return "Generates links to Java or Ruby API documentation.";
   }
 
   public void execute(Writer writer, MacroParameter params)

@@ -47,6 +47,10 @@ public class MacroListMacro extends ListoutputMacro {
     return "list-of-macros";
   }
 
+  public String getDescription() {
+    return "Displays a list of available macros.";
+  }
+
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException
   {
