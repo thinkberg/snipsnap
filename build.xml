@@ -48,9 +48,9 @@
         <include name="${jar}/javax.servlet.jar"/>
         <include name="${jar}/org.apache.jasper.jar"/>
         <include name="${jar}/org.mortbay.jetty.jar"/>
+        <include name="${jar}/xmlrpc-1.1.jar"/>
         <include name="conf/server.conf"/>
         <include name="conf/db.conf"/>
-        <include name="db"/>
         <include name="app/**"/>
         <exclude name="**/CVS"/>
       </tarfileset>
