@@ -155,11 +155,11 @@ public class SnipSerializer extends SnipDataSerializer {
     snipMap.put(SNIP_MUSER, notNull(snip.getMUser()));
     snipMap.put(SNIP_CTIME, getStringTimestamp(snip.getCTime()));
     snipMap.put(SNIP_MTIME, getStringTimestamp(snip.getMTime()));
-    snipMap.put(SNIP_PERMISSIONS, snip.getPermissions().toString());
-    snipMap.put(SNIP_BACKLINKS, snip.getBackLinks().toString());
-    snipMap.put(SNIP_SNIPLINKS, snip.getSnipLinks().toString());
-    snipMap.put(SNIP_LABELS, snip.getLabels().toString());
-    snipMap.put(SNIP_ATTACHMENTS, snip.getAttachments().toString());
+    snipMap.put(SNIP_PERMISSIONS, notNull(snip.getPermissions()));
+    snipMap.put(SNIP_BACKLINKS, notNull(snip.getBackLinks()));
+    snipMap.put(SNIP_SNIPLINKS, notNull(snip.getSnipLinks()));
+    snipMap.put(SNIP_LABELS, notNull(snip.getLabels()));
+    snipMap.put(SNIP_ATTACHMENTS, notNull(snip.getAttachments()));
     snipMap.put(SNIP_VIEWCOUNT, "" + snip.getViewCount());
     snipMap.put(SNIP_CONTENT, notNull(snip.getContent()));
     snipMap.put(SNIP_VERSION, "" + snip.getVersion());
