@@ -24,3 +24,4 @@ org.snipsnap.render.macro.UserSnipMacro
 org.snipsnap.render.macro.UserSnipCountMacro
 org.snipsnap.render.macro.VersionMacro
 org.snipsnap.render.macro.WeblogMacro
+org.snipsnap.render.macro.GraphMacro
