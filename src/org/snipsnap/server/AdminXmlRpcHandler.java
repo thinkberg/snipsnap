@@ -59,9 +59,9 @@ public class AdminXmlRpcHandler extends AuthXmlRpcHandler {
     Iterator appIt = ApplicationLoader.applications.keySet().iterator();
     while (appIt.hasNext()) {
       String appName = (String) appIt.next();
-      WebApplicationContext context = (WebApplicationContext)ApplicationLoader.applications.get(appName);
+      WebApplicationContext context = (WebApplicationContext) ApplicationLoader.applications.get(appName);
       String[] hosts = context.getHosts();
-      if(hosts == null) {
+      if (hosts == null) {
         hosts = new String[1];
         try {
           hosts[0] = InetAddress.getLocalHost().getHostName();
@@ -70,7 +70,7 @@ public class AdminXmlRpcHandler extends AuthXmlRpcHandler {
         }
       }
       int port = context.getHttpServer().getListeners()[0].getPort();
-      String url = "http://" + hosts[0] + (port != 80 ? ":"+port : "") + context.getContextPath();
+      String url = "http://" + hosts[0] + (port != 80 ? ":" + port : "") + context.getContextPath();
       appList.put(appName, url);
     }
     return appList;
@@ -79,7 +79,7 @@ public class AdminXmlRpcHandler extends AuthXmlRpcHandler {
   public String shutdown() {
     System.out.println("INFO: received remote shutdown request (waiting 1s) ...");
     new Thread() {
-      public void run() {
+      public synchronized void run() {
         System.err.println("AdminXmlRpcHandler: shutdown waiting for 1s ...");
         try {
           Thread.sleep(1000);
@@ -100,7 +100,7 @@ public class AdminXmlRpcHandler extends AuthXmlRpcHandler {
     webInf.mkdirs();
 
     File applicationConf = new File(webInf, "application.conf");
-    if(!applicationConf.exists()) {
+    if (!applicationConf.exists()) {
       Properties installConfig = new Properties();
       installConfig.setProperty(Globals.APP_HOST, host);
       installConfig.setProperty(Globals.APP_PORT, port);
@@ -109,14 +109,14 @@ public class AdminXmlRpcHandler extends AuthXmlRpcHandler {
         installConfig.store(new FileOutputStream(applicationConf), " Bootstrap Configuration");
         ApplicationLoader.loadApplication(root.getPath(), name);
         installConfig.load(new FileInputStream(applicationConf));
-        return ApplicationLoader.getUrl(installConfig) + "?key="+installConfig.getProperty(Globals.APP_INSTALL_KEY);
+        return ApplicationLoader.getUrl(installConfig) + "?key=" + installConfig.getProperty(Globals.APP_INSTALL_KEY);
       } catch (Exception e) {
         applicationConf.delete();
         e.printStackTrace();
         throw e;
       }
     } else {
-      throw new Exception("'"+applicationConf.getPath()+"' exists, delete application first");
+      throw new Exception("'" + applicationConf.getPath() + "' exists, delete application first");
     }
   }
 
@@ -124,6 +124,7 @@ public class AdminXmlRpcHandler extends AuthXmlRpcHandler {
    * Remove a web application from the server. Handle with care, because this deletes
    * all the data you might have stored in that web application including snips and
    * attachments.
+   *
    * @param name
    * @return
    */
@@ -131,14 +132,14 @@ public class AdminXmlRpcHandler extends AuthXmlRpcHandler {
     //System.err.println("AdminXmlRpcHandler: delete(" + name+")");
     File root = new File(serverConfig.getProperty(ServerConfiguration.WEBAPP_ROOT));
     File app = new File(root, name);
-    if(app.exists()) {
+    if (app.exists()) {
       try {
         ApplicationLoader.unloadApplication(root.getPath(), name);
       } catch (Exception e) {
-        System.err.println("AdminXmlRpcHandler: unload failed: "+e);
+        System.err.println("AdminXmlRpcHandler: unload failed: " + e);
       }
-      if(backup.booleanValue()) {
-        createBackupJar(name+".backup.jar", app);
+      if (backup.booleanValue()) {
+        createBackupJar(name + ".backup.jar", app);
       }
       return new Boolean(app.delete());
     }
@@ -148,7 +149,7 @@ public class AdminXmlRpcHandler extends AuthXmlRpcHandler {
   private void createBackupJar(String jarName, File file) throws IOException {
     JarOutputStream jar = new JarOutputStream(new FileOutputStream(jarName),
                                               new Manifest());
-    System.err.println("Jar: created '"+jarName + "'");
+    System.err.println("Jar: created '" + jarName + "'");
     try {
       addToJarFile(jar, file);
     } finally {
@@ -159,9 +160,9 @@ public class AdminXmlRpcHandler extends AuthXmlRpcHandler {
   private void addToJarFile(JarOutputStream jar, File file) throws IOException {
     JarEntry entry = new JarEntry(file.getPath());
     jar.putNextEntry(entry);
-    if(file.isDirectory()) {
+    if (file.isDirectory()) {
       File[] fileList = file.listFiles();
-      for(int fileNo = 0; fileNo < fileList.length; fileNo++) {
+      for (int fileNo = 0; fileNo < fileList.length; fileNo++) {
         addToJarFile(jar, fileList[fileNo]);
       }
     } else {
@@ -172,9 +173,9 @@ public class AdminXmlRpcHandler extends AuthXmlRpcHandler {
         while ((bytesRead = fileStream.read(buffer)) != -1) {
           jar.write(buffer, 0, bytesRead);
         }
-        System.err.println("Jar: added '"+file.getPath()+"'");
+        System.err.println("Jar: added '" + file.getPath() + "'");
       } catch (IOException e) {
-        System.err.println("Jar: error adding '"+file.getPath()+"': "+e);
+        System.err.println("Jar: error adding '" + file.getPath() + "': " + e);
       } finally {
         fileStream.close();
       }
