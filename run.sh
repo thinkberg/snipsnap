@@ -7,4 +7,3 @@ if [ "$1" = "-admin" ]; then
   DBG="-Dlauncher.errlog=admin.log"
 fi
 java -Xmx128m -server $DBG -jar lib/snipsnap.jar $*
-

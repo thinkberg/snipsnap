@@ -120,10 +120,10 @@ public class InitFilter implements Filter {
     String path = request.getServletPath();
     // make sure we do not enter the default web application unless it's fully installed
     if (!config.isInstalled()) {
-      if (path == null || !path.startsWith("/install")) {
+      if (path == null || !(path.startsWith("/admin") || path.startsWith("/images"))) {
         String name = config.getName();
-        System.out.println((name == null ? "SnipSnap" : name ) + " is not (fully) configured, redirecting to installer");
-        ((HttpServletResponse) response).sendRedirect(request.getContextPath() + "/install/installer");
+        System.out.println((name == null ? "SnipSnap" : name ) + " is not (fully) configured, redirecting to configuration");
+        ((HttpServletResponse) response).sendRedirect(request.getContextPath() + "/admin/configure");
         return;
       }
     }

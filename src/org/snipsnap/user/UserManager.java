@@ -80,7 +80,6 @@ public class UserManager {
   }
 
   public User create(String login, String passwd, String email) {
-    passwd = Digest.getDigest(passwd);
     User user = storage.storageCreate(login, passwd, email);
     return user;
   }

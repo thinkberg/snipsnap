@@ -1,11 +1,18 @@
 #! /bin/sh
 base=`pwd`
-app=$base/applications/$1
-theme=$2
-if [ "$1" = "" -o ! -d $app ]; then
+name=$1
+app=$base/applications/$name
+if [ "$name" = "" -o ! -d $app ]; then
   echo "Create links to jsp and theme into your application."
   echo "usage: $0 AppName [theme]"
   exit
+fi
+
+if [ "$2" = "-jsp" ]; then
+  jsp=true
+  theme=$3
+else
+  theme=$2
 fi
 
 if [ -d $app ]; then
@@ -24,10 +31,12 @@ if [ -d $app ]; then
   ln -sf $base/lib/activation.jar $app/WEB-INF/lib
   ln -sf $base/lib/xmlrpc-1.1.jar $app/WEB-INF/lib
   ln -sf $base/lib/j2h.jar $app/WEB-INF/lib
-#  echo Linking JSPs ...
-#  ln -sf $base/src/apps/default/*.jsp $app/
-#  ln -sf $base/src/apps/default/util/*.jsp $app/util/
-#  ln -sf $base/src/apps/default/admin/*.jsp $app/admin/
+  if [ "$jsp" = "true" ]; then
+  echo Linking JSPs ...
+    ln -sf $base/src/apps/default/*.jsp $app/
+    ln -sf $base/src/apps/default/util/*.jsp $app/util/
+    ln -sf $base/src/apps/default/admin/*.jsp $app/admin/
+  fi
   if [ ! "$theme" = "" -a -d $base/src/theme/$theme ]; then
     echo Linking theme $theme ...
     ln -sf $base/src/theme/$theme/css/*.css $app/css/

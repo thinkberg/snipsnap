@@ -35,6 +35,7 @@ import java.net.MalformedURLException;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * Implementation of a configuration map which is used as storage for configuration parameters.
@@ -52,15 +53,15 @@ public class ConfigurationMap {
   private Properties transposeMap = null;
 
   public ConfigurationMap() {
-    Properties defaults = new Properties();
+    properties = new Properties();
     try {
-      defaults.load(Configuration.class.getResourceAsStream(DEFAULTS_CONF));
+      properties.load(Configuration.class.getResourceAsStream(DEFAULTS_CONF));
     } catch (Exception e) {
       System.err.println("Configuration: unable to load defaults: " + e.getMessage());
     }
 
     // instantiate properties with defaults
-    properties = new Properties(defaults);
+    //properties = new Properties(defaults);
 
     try {
       transposeMap = new Properties();
@@ -239,6 +240,10 @@ public class ConfigurationMap {
       return defaultValue;
     }
     return value;
+  }
+
+  public Properties getProperties() {
+    return properties;
   }
 
   /**

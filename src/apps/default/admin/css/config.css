@@ -1,0 +1,102 @@
+/**
+ * Design of the configurator.
+ * @author Matthias L. Jugel
+ * @version $Id$
+ */
+
+body {
+  background-color: #ffffff;
+  color: #4c4c4c;
+  font-size: 100%;
+  font-family: "Lucida Grande", "Trebuchet MS", Verdana, Geneva, Lucida, Helvetica, sans-serif;
+  margin: 0px;
+  padding: 0px;
+}
+
+.header {
+  padding: 5px;
+}
+
+.info {
+  float: right;
+  color: #999999;
+  font-size: x-small;
+}
+
+.info ul {
+  list-style-type: none;
+}
+
+.configuration {
+  padding: 0px;
+  border-bottom: 1px solid #999999;
+  border-top: 1px solid #999999;
+}
+
+.guide {
+  width: 30%;
+  padding: 10px 5px 5px 5px;
+  border-right: 1px solid #999999;
+  vertical-align: top;
+}
+
+.guide ul {
+  list-style-type: decimal;
+}
+
+li.current-step {
+  font-weight: bold;
+}
+
+.step-info {
+  border: 1px dashed #999999;
+  color: black;
+  padding: 5px;
+  font-size: 90%;
+}
+
+.edit {
+  width: 70%;
+  background: white;
+  color: black;
+  padding-left: 10px;
+  padding-right: 0px;
+  padding-bottom: 5px;
+  margin: 0px;
+}
+
+.navigation {
+  vertical-align: bottom;
+  text-align: right;
+  width: 100%;
+}
+
+.edit table {
+  border-collapse: collapse;
+  border-spacing: 0px;
+  border: 0px;
+  padding: 0px;
+  width: 100%;
+}
+
+.edit th {
+  text-align: left;
+  color: #000000;
+  padding: 10px;
+}
+
+.edit td {
+  margin: 0px;
+  vertical-align: top;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.edit td:first-child {
+  background: #eeeeee;
+  text-align: right;
+  width: 40%;
+  font-size: small;
+}

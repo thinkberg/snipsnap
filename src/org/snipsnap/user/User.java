@@ -53,8 +53,8 @@ public class User implements Linkable {
 
   public User(String login, String passwd, String email) {
     this.login = login;
-    this.passwd = passwd;
-    this.email = email;
+    setPasswd(passwd);
+    setEmail(email);
   }
 
   public Timestamp getCTime() {

@@ -134,9 +134,9 @@ public class JDBCUserStorage implements UserStorage {
           " (login, passwd, email, status, roles, " +
           " cTime, mTime, lastLogin, lastAccess, lastLogout) " +
           " VALUES (?,?,?,?,?,?,?,?,?,?)");
-      statement.setString(1, login);
-      statement.setString(2, passwd);
-      statement.setString(3, email);
+      statement.setString(1, user.getLogin());
+      statement.setString(2, user.getPasswd());
+      statement.setString(3, user.getEmail());
       statement.setString(4, "");
       statement.setString(5, "");
       statement.setTimestamp(6, cTime);
