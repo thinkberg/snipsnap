@@ -9,6 +9,7 @@ else
   JAVA=java
 fi
 if [ "$1" = "-admin" ]; then
-  $JAVA -jar lib/snipsna-utils.jar $2 $3 $4 $5 $6 $7 $8
+  $JAVA -jar lib/snipsnap-utils.jar $2 $3 $4 $5 $6 $7 $8
+  exit;
 fi
 $JAVA -Xmx128m -server $DBG -jar lib/snipsnap.jar $*
