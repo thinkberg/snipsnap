@@ -25,14 +25,12 @@
 
 package org.snipsnap.snip;
 
-import org.snipsnap.util.StringUtil;
-import org.snipsnap.user.UserManager;
-import org.snipsnap.container.Components;
 import org.radeox.util.i18n.ResourceManager;
+import org.snipsnap.container.Components;
+import org.snipsnap.user.UserManager;
 
 import java.sql.Timestamp;
 import java.text.MessageFormat;
-import java.util.Calendar;
 
 /**
  *  Object with modified information, e.g. for snips
@@ -143,7 +141,9 @@ public class Modified {
     long hours = mins / 60;
     int hour = (int) hours % 24;
     int days = (int) hours / 24;
-    //int years = days / 365;
+    int day = (int) hours % 24;
+    int years = days / 365;
+    int year = days % 365;
 
     StringBuffer nice = new StringBuffer();
     if (mins < 60) {
@@ -157,10 +157,14 @@ public class Modified {
         MessageFormat mf = new MessageFormat(ResourceManager.getString("i18n.messages", "modified.time.hours"),
                                              ResourceManager.getLocale("i18n.messages"));
         mf.format(new Object[]{new Long(hour), new Long(min)}, nice, null);
-      } else {
+      } else if(years == 0) {
         MessageFormat mf = new MessageFormat(ResourceManager.getString("i18n.messages", "modified.time.days"),
                                              ResourceManager.getLocale("i18n.messages"));
-        mf.format(new Object[]{new Long(days)}, nice, null);
+        mf.format(new Object[]{new Long(day)}, nice, null);
+      } else {
+        MessageFormat mf = new MessageFormat(ResourceManager.getString("i18n.messages", "modified.time.years"),
+                                             ResourceManager.getLocale("i18n.messages"));
+        mf.format(new Object[]{new Long(year), new Long(day)}, nice, null);
       }
     }
     return nice.toString();

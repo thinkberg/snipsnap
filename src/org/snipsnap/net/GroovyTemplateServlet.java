@@ -26,12 +26,10 @@ package org.snipsnap.net;
 
 import groovy.text.SimpleTemplateEngine;
 import groovy.text.Template;
-import org.codehaus.groovy.control.CompilationFailedException;
 import org.snipsnap.app.Application;
 import org.snipsnap.container.Components;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.label.Label;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -55,30 +53,19 @@ public class GroovyTemplateServlet extends HttpServlet {
       groovyFile = groovyFile.substring(1);
     }
 
-    if(groovyFile.endsWith(".gsp") || groovyFile.endsWith(".groovy")) {
+    if(groovyFile.endsWith(".gsp")) {
       groovyFile = groovyFile.substring(0, groovyFile.lastIndexOf("."));
     }
 
     Snip templateSnip = space.load(groovyFile);
     if(null != templateSnip) {
-      Label mimeType = templateSnip.getLabels().getLabel("Type");
-      if(mimeType != null) {
-        if("text/gsp".equals(mimeType.getValue())) {
-          String templateSource = templateSnip.getContent();
-          try {
-            Template groovyTemplate = templateEngine.createTemplate(templateSource);
-            groovyTemplate.setBinding(Application.get().getParameters());
-            response.getWriter().write(groovyTemplate.toString());
-          } catch (CompilationFailedException e) {
-            e.printStackTrace();
-          } catch (IOException e) {
-            e.printStackTrace();
-          } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-          }
-        } else if("text/groovy".equals(mimeType.getValue())) {
-          throw new ServletException("not imlemented");
-        }
+      String templateSource = templateSnip.getContent();
+      try {
+        Template groovyTemplate = templateEngine.createTemplate(templateSource);
+        groovyTemplate.setBinding(Application.get().getParameters());
+        response.getWriter().write(groovyTemplate.toString());
+      } catch (Exception e) {
+        e.printStackTrace();
       }
     }
   }
