@@ -82,7 +82,7 @@ public class JabberBot {
   }
 
   public void send(String user, String message) {
-    if(session.getConnection() == null) {
+    if(!session.getConnection().isConnected()) {
       reconnect();
     }
 
