@@ -1,0 +1,5 @@
+# default list formatter
+org.snipsnap.snip.filter.macro.list.SimpleList
+org.snipsnap.snip.filter.macro.list.VerticalListFormatter
+org.snipsnap.snip.filter.macro.list.AtoZListFormatter
+
