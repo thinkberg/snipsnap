@@ -32,7 +32,7 @@ import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.label.Label;
 import org.snipsnap.snip.label.Labels;
-import org.snipsnap.snip.label.MIMETypeLabel;
+import org.snipsnap.snip.label.TypeLabel;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.Security;
@@ -69,7 +69,7 @@ public class SnipEditServlet extends HttpServlet {
 
     String name = request.getParameter("name");
     String content = request.getParameter("content");
-    String mimeType = request.getParameter("mime");
+    String type = request.getParameter("type");
     String editHandler = request.getParameter("handler");
 
     SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
@@ -77,18 +77,21 @@ public class SnipEditServlet extends HttpServlet {
     if (name != null && space.exists(name)) {
       snip = space.load(name);
       // get all mime types associated with the snip
-      Collection mimeTypes = snip.getLabels().getLabels("mime-type");
+      Collection mimeTypes = snip.getLabels().getLabels("TypeLabel");
       if (!mimeTypes.isEmpty()) {
         Iterator handlerIt = mimeTypes.iterator();
         while (handlerIt.hasNext()) {
-          MIMETypeLabel mimeTypeLabel = (MIMETypeLabel) handlerIt.next();
-          editHandler = mimeTypeLabel.getEditHandler();
+          TypeLabel typeLabel = (TypeLabel) handlerIt.next();
+          editHandler = typeLabel.getEditHandler();
+          if(null == editHandler) {
+            editHandler = TypeLabel.getEditHandler(typeLabel.getTypeValue());
+          }
           // check that an edit handler is set
           if (null != editHandler && !"".equals(editHandler)) {
             if (Security.checkPermission(Permissions.EDIT_SNIP, Application.get().getUser(), snip) &&
               Security.hasRoles(Application.get().getUser(), snip, authRoles)) {
               Logger.log("SnipEditServlet: using edit handler '" + editHandler+"'");
-              mimeType = mimeTypeLabel.getMIMEType();
+              type = typeLabel.getTypeValue();
             } else {
               editHandler = null;
             }
@@ -130,7 +133,7 @@ public class SnipEditServlet extends HttpServlet {
     if(null != editHandler && !"".equals(editHandler)) {
       if(Security.hasRoles(Application.get().getUser(), snip, authRoles)) {
         request.setAttribute("edit_handler", editHandler);
-        request.setAttribute("mime_type", mimeType);
+        request.setAttribute("mime_type", type);
       }
     }
 
