@@ -146,11 +146,11 @@ public class TypeLabel extends BaseLabel {
   }
 
   public String getViewHandler() {
-    return viewHandler;
+    return "".equals(viewHandler) ? null : viewHandler;
   }
 
   public String getEditHandler() {
-    return editHandler;
+    return "".equals(editHandler) ? null : editHandler;
   }
 
   public String getInputProxy() {
