@@ -163,10 +163,10 @@ public class AppServer {
         }
         // an administrative command to be sent to the server
       } else if ("-admin".equals(args[i])) {
-        if (args.length >= i + 1) {
+        if (args.length > i + 1) {
           try {
             if (!AdminServer.execute(Integer.parseInt(serverConfig.getProperty(Configuration.SERVER_ADMIN_PORT).trim()),
-                                     args[i + 1], args.length > i + 1 ? args[i + 2] : null)) {
+                                     args[i + 1], args.length > i + 2 ? args[i + 2] : null)) {
               System.exit(-1);
             }
             System.exit(0);
