@@ -233,7 +233,7 @@
 
   <target name="compile-jsp" description="compile jsp files">
     <mkdir dir="${target}/jsp"/>
-    <!-- <jspc destdir="${target}/jsp" 
+    <!-- <jspc destdir="${target}/jsp"
           verbose="1" srcdir="${src}/apps/default"
           package="org.snipsnap.jsp.pages" classpathref="all.classpath">
       <include name="**/*.jsp" />
@@ -242,6 +242,7 @@
   </target>
 
   <target depends="compile-jsp" description="compile template application code" name="compile-app">
+    <mkdir dir="${target}/default/WEB-INF/classes"/>
     <javac deprecation="${deprecation}" debug="${debug}"
       srcdir="${src}"
       classpathref="all.classpath"
