@@ -54,7 +54,7 @@ public class ListFilter extends RegexTokenFilter {
   private final static Map closeList = new HashMap();
 
   public ListFilter() {
-    super("^[[:space:]]*([-*][[:space:]]+|[iIaA1ghHkK]\\.[[:space:]]+)(\r?\n[[:space:]]*(?:[-*][[:space:]]+|[iIaA1ghHkK]\\.[[:space:]]+)|.)*$", MULTILINE);
+    super("^[[:space:]]*([-*][[:space:]]+|[iIaA1ghHkKj]\\.[[:space:]]+)(\r?\n[[:space:]]*(?:[-*][[:space:]]+|[iIaA1ghHkKj]\\.[[:space:]]+)|.)*$", MULTILINE);
     openList.put("-", "<ul class=\"minus\">");
     openList.put("*", "<ul class=\"star\">");
     openList.put("i", "<ol class=\"roman\">");
@@ -66,6 +66,7 @@ public class ListFilter extends RegexTokenFilter {
     openList.put("H", "<ol class=\"HIRAGANA\">");
     openList.put("k", "<ol class=\"katakana\">");
     openList.put("K", "<ol class=\"KATAKANA\">");
+    openList.put("j", "<ol class=\"HEBREW\">");
     openList.put("1", "<ol>");
     closeList.put("-", "</ul>");
     closeList.put("*", "</ul>");
@@ -80,6 +81,7 @@ public class ListFilter extends RegexTokenFilter {
     closeList.put("H", "</ol>");
     closeList.put("k", "</ol>");
     closeList.put("K", "</ol>");
+    closeList.put("j", "</ol>");
   };
 
   public void handleMatch(StringBuffer buffer, MatchResult result, Snip snip) {

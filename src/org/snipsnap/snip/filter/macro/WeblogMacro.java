@@ -71,7 +71,7 @@ public class WeblogMacro extends Macro {
         writer.write("\" title=\"Permalink to ");
         writer.write(entry.getName());
         writer.write("\">");
-        SnipLink.appendImage(writer,"pl","");
+        SnipLink.appendImage(writer,"permalink","");
         writer.write("</a>");
         writer.write("</div>");
         writer.write(entry.getXMLContent());

@@ -89,6 +89,8 @@
         <include name="conf/db.conf"/>
         <include name="conf/jetty.conf"/>
         <include name="conf/romaji.properties"/>
+        <include name="conf/intermap.txt"/>
+        <include name="conf/bookservices.txt"/>
         <include name="conf/snipsnap.snip"/>
         <include name="license.txt"/>
         <include name="validate.xsl"/>

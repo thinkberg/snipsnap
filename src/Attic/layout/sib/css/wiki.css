@@ -148,10 +148,6 @@ img.float-right {
 #wiki-table .table-even {
 }
 
-.sniplinks {
-  table-layout: auto;
-}
-
 /************************************************/
 /* list formatting                              */
 
@@ -184,10 +180,22 @@ ol.hiragana { list-style-type: hiragana; }
 ol.HIRAGANA { list-style-type: hiragana-iroha; }
 ol.katakana { list-style-type: katakana; }
 ol.KATAKANA { list-style-type: katakana-iroha; }
+ol.HEBREW { list-style-type: hebrew; }
 
 
 /************************************************/
 /* index formatting                             */
+#index-top {
+}
+
+#index-top th {
+  padding: 1px 1px 1px 1px;
+  text-align: left;
+  color: inherit;
+  font-weight: bold;
+  background-color: #d9e4f9;
+}
+
 #index {
 }
 

@@ -44,14 +44,15 @@ body {
 }
 
 #page-wrapper {
+
+}
+
+#page-content {
   float: right;
   width: 580px;
   max-width: 580px;
   padding-top: 10px;
   height: auto;
-}
-
-#page-content {
 }
 
 #page-portlet-1 {

@@ -17,7 +17,7 @@
 
 .snip-name {
   width: 100%;
-  font-family: georgia, verdana, arial, sans-serif;
+  font-family: georgia, times new roman, times, serif;
 	font-size: 15px;
 	color: #000000;
 	text-transform: none;
@@ -65,7 +65,7 @@
 }
 
 #snip-sniplinks table {
-  width: 100%;
+  table-layout: fixed;
 }
 
 #snip-sniplinks caption {

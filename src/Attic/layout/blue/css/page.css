@@ -5,15 +5,21 @@
  */
 
 body {
-  margin:20px 20px 20px 20px;
-	background:#EEE;
+  font-family: verdana, arial, sans-serif;
+  color: #666;
+  font-size:11px;
+  font-weight:normal;
+  line-height:16px;
+
+  margin: 20px 20px 20px 20px;
+	background: #EEE;
 }
 
 #page-logo {
-  font-family:georgia, verdana, arial, sans-serif;
+  font-family: georgia, times new roman, times, serif;
   color:#FFF;
-  font-size:24px;
-  font-weight:bold;
+  font-size: 24px;
+  font-weight: normal;
   border-left:1px solid #FFF;
   border-right:1px solid #FFF;
   border-top:1px solid #FFF;
@@ -24,8 +30,8 @@ body {
 }
 
 #page-logo * {
-  font-family: georgia, verdana, arial, sans-serif;
-  font-size:24px;
+  font-family: georgia, times new roman, times, serif;
+  font-size: 24px;
   font-weight:normal;
   color: #ffffff;
 }
@@ -55,29 +61,42 @@ body {
 }
 
 #page-wrapper {
-  display: table-cell;
   width: 100%;
+  display: table-row;
+  table-layout: fixed;
+	background:#FFF;
+}
+
+#page-content {
+  display: table-cell;
+  float: left;
   padding-left: 15px;
   padding-right: 15px;
   padding-bottom: 15px;
   margin-bottom:15px;
 	background:#FFF;
+  width: 60%;
+  voice-family: "\"}\""; /* IE hack */
+  voice-family:inherit;
 }
 
-#page-content {
+html>body #page-content {
+  width:100%;
 }
+
 
 #page-portlet-1 {
   display: table-cell;
-  width: 200px;
+  float: right;
+  top: 0px;
+  width: 30%;
   padding-left:15px;
-  padding-right;
   margin-bottom:15px;
 	background:#FFF;
   border-left: 1px solid #003366;
 
   font-family: verdana, arial, sans-serif;
-  color:#666;
+  color: #666;
   font-size:11px;
   font-weight:normal;
   line-height:16px;
