@@ -31,6 +31,7 @@ import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
+import org.radeox.util.logging.Logger;
 
 /**
  * Handles XML-RPC calls for the Blogger API
@@ -57,7 +58,7 @@ public class BloggerHandler {
                         String password,
                         String content,
                         boolean publish) {
-    System.out.println("XML-RPC call to newPost()");
+    Logger.debug("XML-RPC call to newPost()");
 
     UserManager um = UserManager.getInstance();
     SnipSpace space = SnipSpace.getInstance();

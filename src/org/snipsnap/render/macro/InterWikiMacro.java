@@ -33,7 +33,8 @@
 package org.snipsnap.render.macro;
 
 import org.snipsnap.render.filter.interwiki.InterWiki;
-import org.snipsnap.render.macro.parameter.MacroParameter;
+import org.radeox.macro.parameter.MacroParameter;
+import org.radeox.macro.Macro;
 
 import java.io.IOException;
 import java.io.Writer;

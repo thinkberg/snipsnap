@@ -25,11 +25,12 @@
 
 package org.snipsnap.render.macro;
 
-import org.snipsnap.render.macro.list.ListFormatter;
-import org.snipsnap.render.macro.list.SimpleList;
-import org.snipsnap.render.macro.parameter.MacroParameter;
+import org.radeox.macro.list.ListFormatter;
+import org.radeox.macro.list.SimpleList;
+import org.radeox.macro.parameter.MacroParameter;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
-import org.snipsnap.util.Service;
+import org.radeox.util.Service;
+import org.radeox.util.logging.Logger;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -56,10 +57,9 @@ public abstract class ListOutputMacro extends SnipMacro {
       try {
         ListFormatter formatter = (ListFormatter) macroIt.next();
         formatterMap.put(formatter.getName().toLowerCase(), formatter);
-        System.err.println("Loaded list formatter: " + formatter.getName());
+        Logger.debug("Loaded list formatter: " + formatter.getName());
       } catch (Exception e) {
-        System.err.println("ListOutputMacro: unable to load list formatter: " + e);
-        e.printStackTrace();
+        Logger.warn("ListOutputMacro: unable to load list formatter", e);
       }
     }
 

@@ -32,7 +32,8 @@
 package org.snipsnap.render.macro;
 
 import org.snipsnap.xmlrpc.SnipSnapPing;
-import org.snipsnap.render.macro.parameter.MacroParameter;
+import org.radeox.macro.parameter.MacroParameter;
+import org.radeox.util.logging.Logger;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 
 import java.io.IOException;
@@ -69,7 +70,7 @@ public class RecentWeblogMacro extends ListOutputMacro {
         try {
           length = Integer.parseInt(params.get("1"));
         } catch (NumberFormatException e) {
-          System.err.println("RecentWeblogMacro: illegal parameter count='" + params.get("1") + "'");
+          Logger.warn("RecentWeblogMacro: illegal parameter count='" + params.get("1") + "'");
         }
       }
     }

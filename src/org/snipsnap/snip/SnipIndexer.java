@@ -34,6 +34,7 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Searcher;
 import org.snipsnap.app.Application;
+import org.radeox.util.logging.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -62,10 +63,9 @@ public class SnipIndexer {
     try {
       reader = IndexReader.open(indexFile());
       int count = reader.delete(new Term("id", Integer.toHexString(snip.getName().hashCode())));
-      // System.err.println("Deleted: "+ count );
+      // Logger.debug("Deleted: "+ count );
     } catch (IOException e) {
-      System.err.println("Unable to delete snip " + snip.getName() + " from index.");
-      e.printStackTrace();
+      Logger.warn("Unable to delete snip " + snip.getName() + " from index", e);
     } finally {
       close(reader);
     }
@@ -104,8 +104,7 @@ public class SnipIndexer {
       writer.addDocument(SnipDocument.Document(snip));
       writer.optimize();
     } catch (IOException e) {
-      System.err.println("Unable to index snip.");
-      e.printStackTrace();
+      Logger.warn("Unable to index snip", e);
     } finally {
       close(writer);
     }
@@ -116,8 +115,7 @@ public class SnipIndexer {
     try {
       searcher = new IndexSearcher(indexFile().getAbsolutePath());
     } catch (IOException e) {
-      System.err.println("Unable to open index file: " + indexFile());
-      e.printStackTrace();
+      Logger.warn("Unable to open index file: " + indexFile(), e);
     }
 
     // When there is only one term, then add '*' to
@@ -132,7 +130,7 @@ public class SnipIndexer {
       query = MultiFieldQueryParser.parse(queryString, searchFields, new SnipAnalyzer());
     } catch (org.apache.lucene.queryParser.ParseException e1) {
       close(searcher);
-      System.err.println("Unable to parse: '" + queryString + "'");
+      Logger.warn("Unable to parse: '" + queryString + "'");
     }
 
     // get the hits from the searcher for
@@ -142,7 +140,7 @@ public class SnipIndexer {
       hits = searcher.search(query);
     } catch (IOException e) {
       close(searcher);
-      e.printStackTrace();
+      Logger.warn("SnipIndexer: unable to get hits", e);
     }
     return hits;
   }

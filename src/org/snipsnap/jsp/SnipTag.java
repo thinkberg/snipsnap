@@ -27,6 +27,7 @@ package org.snipsnap.jsp;
 import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
+import org.radeox.util.logging.Logger;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.jstl.core.ConditionalTagSupport;
@@ -41,7 +42,7 @@ public class SnipTag extends TagSupport {
       try {
         snip.appendTo(pageContext.getOut());
       } catch (IOException e) {
-        System.err.println("SnipTag: unable to write snip xml content: " + snip);
+        Logger.warn("SnipTag: unable to write snip xml content: " + snip);
       }
     }
     return super.doStartTag();
@@ -51,7 +52,7 @@ public class SnipTag extends TagSupport {
     try {
       this.snip = (Snip) ExpressionEvaluatorManager.evaluate("snip", snip, Snip.class, this, pageContext);
     } catch (JspException e) {
-      System.err.println("unable to evaluate expression: " + e);
+      Logger.warn("unable to evaluate expression", e);
     }
   }
 
@@ -62,7 +63,7 @@ public class SnipTag extends TagSupport {
         snip = SnipSpace.getInstance().load(snipName);
       }
     } catch (JspException e) {
-      System.err.println("unable to evaluate expression: " + e);
+      Logger.warn("unable to evaluate expression", e);
     }
   }
 }

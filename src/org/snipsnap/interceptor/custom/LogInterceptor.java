@@ -27,19 +27,20 @@ package org.snipsnap.interceptor.custom;
 
 import org.snipsnap.interceptor.InterceptorSupport;
 import org.snipsnap.interceptor.Invocation;
+import org.radeox.util.logging.Logger;
 
 public class LogInterceptor extends InterceptorSupport {
   public Object invoke(Invocation invocation) throws Throwable {
     // before
-    System.out.print(name + ": before " + invocation.getMethod().getName() + " ");
+    Logger.debug(name + ": before " + invocation.getMethod().getName() + " ");
     print(invocation.getArgs());
     Object result = invocation.next();
     // after
-    System.out.print(name + ": after " + invocation.getMethod().getName());
+    Logger.debug(name + ": after " + invocation.getMethod().getName());
     if (null == result) {
       System.out.println();
     } else {
-      System.out.println(" = "+result.toString());
+      Logger.debug(" = "+result.toString());
     }
     return result;
   }

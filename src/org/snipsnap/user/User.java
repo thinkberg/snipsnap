@@ -27,7 +27,7 @@ package org.snipsnap.user;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.snip.SnipLink;
-import org.snipsnap.util.Linkable;
+import org.radeox.util.Linkable;
 
 import java.sql.Timestamp;
 
@@ -73,8 +73,8 @@ public class User implements Linkable {
 
   public void lastAccess() {
     this.lastAccess = new Timestamp(new java.util.Date().getTime());
-    //System.err.println(this.login+" hashcode: "+((Object) this).hashCode());
-    //System.err.println("Set lastAccess() "+this.login+" "+lastAccess);
+    //Logger.debug(this.login+" hashcode: "+((Object) this).hashCode());
+    //Logger.debug("Set lastAccess() "+this.login+" "+lastAccess);
   }
 
   public Timestamp getLastLogout() {
@@ -82,8 +82,8 @@ public class User implements Linkable {
   }
 
   public void setLastLogout(Timestamp lastLogout) {
-    //System.err.println(this.login+" hashcode: "+((Object) this).hashCode());
-    //System.err.println("Set LastLogout() "+this.login+" "+lastLogout+" old: "+this.lastLogout);
+    //Logger.debug(this.login+" hashcode: "+((Object) this).hashCode());
+    //Logger.debug("Set LastLogout() "+this.login+" "+lastLogout+" old: "+this.lastLogout);
     this.lastLogout = lastLogout;
   }
 

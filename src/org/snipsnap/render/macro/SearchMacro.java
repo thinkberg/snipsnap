@@ -35,7 +35,9 @@ import org.apache.lucene.search.Hits;
 import org.snipsnap.app.Application;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.render.macro.parameter.MacroParameter;
+import org.radeox.macro.parameter.MacroParameter;
+import org.radeox.macro.Macro;
+import org.radeox.util.logging.Logger;
 import org.snipsnap.user.UserManager;
 
 import java.io.IOException;
@@ -78,7 +80,7 @@ public class SearchMacro extends Macro {
       try {
         hits = space.search(searchString);
       } catch (Exception e) {
-        System.err.println("SearchMacro: exception while searching: " + e);
+        Logger.warn("SearchMacro: exception while searching: " + e);
       }
 
 
@@ -101,7 +103,7 @@ public class SearchMacro extends Macro {
           }
           writer.write("</blockquote></div>");
         } catch (IOException e) {
-          System.err.println("I/O error while iterating over search results.");
+          Logger.warn("I/O error while iterating over search results.");
         }
       } else {
         writer.write("Nothing found.");

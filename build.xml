@@ -9,6 +9,7 @@
   <property file="conf/snipsnap.conf"/>
 
   <path id="server.classpath">
+    <pathelement location="${jar}/radeox.jar"/>
     <pathelement location="${jar}/javax.servlet.jar"/>
     <pathelement location="${jar}/org.apache.jasper.jar"/>
     <pathelement location="${jar}/org.apache.crimson.jar"/>
@@ -19,6 +20,7 @@
 
   <!-- the overall class path -->
   <path id="app.classpath">
+    <pathelement location="${jar}/radeox.jar"/>
     <pathelement location="${jar}/jakarta-oro.jar"/>
     <pathelement location="${jar}/xmlrpc-1.1.jar"/>
     <pathelement location="${jar}/lucene-1.2.jar"/>
@@ -101,6 +103,7 @@
         <include name="${jar}/lucene-1.2.jar"/>
         <include name="${jar}/mail.jar"/>
         <include name="${jar}/activation.jar"/>
+        <include name="${jar}/radeox.jar"/>
         <include name="${jar}/${appname}-template.war"/>
         <include name="${jar}/${appname}-theme-*.jar"/>
         <include name="${jar}/${appname}-installer.war"/>
@@ -190,6 +193,7 @@
       <fileset dir="${src}/apps/default" includes="**"/>
       <fileset dir="${src}/theme/blue" includes="**"/>
       <zipfileset dir="${jar}" prefix="WEB-INF/lib">
+        <include name="radeox.jar"/>
         <include name="jakarta-oro.jar"/>
         <include name="lucene-1.2.jar"/>
         <include name="xmlrpc-1.1.jar"/>
@@ -250,6 +254,7 @@
     <jar destfile="${jar}/${appname}-installer.war" excludes="**/CVS">
       <fileset dir="${src}/apps/installer" includes="**"/>
       <zipfileset dir="${jar}" prefix="WEB-INF/lib">
+        <include name="radeox.jar"/>
         <include name="mail.jar"/>
         <include name="activation.jar"/>
         <include name="mckoidb.jar"/>

@@ -31,7 +31,7 @@ import org.snipsnap.jdbc.Finder;
 import org.snipsnap.jdbc.FinderFactory;
 import org.snipsnap.jdbc.JDBCCreator;
 import org.snipsnap.notification.Notification;
-import org.snipsnap.render.filter.LinkTester;
+import org.radeox.filter.LinkTester;
 import org.snipsnap.snip.storage.JDBCSnipStorage;
 import org.snipsnap.snip.storage.MemorySnipStorage;
 import org.snipsnap.snip.storage.SnipStorage;
@@ -41,7 +41,7 @@ import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
 import org.snipsnap.util.Queue;
 import org.snipsnap.util.mail.PostDaemon;
-import org.snipsnap.util.log.Logger;
+import org.radeox.util.logging.Logger;
 import org.snipsnap.xmlrpc.WeblogsPing;
 
 import java.sql.Date;
@@ -102,7 +102,7 @@ public class SnipSpace implements LinkTester {
       // If we keep all snips in memory we can use queries directly on the snip list
       storage = new MemorySnipStorage(storage, cache);
       cache.setLoader(Snip.class, (Storage) storage);
-      System.err.println("Cache strategy is: keep full, using MemorySnipStorage");
+      Logger.debug("Cache strategy is: keep full, using MemorySnipStorage");
     }
 
     indexer = new SnipIndexer();
@@ -294,7 +294,7 @@ public class SnipSpace implements LinkTester {
    * @param snip The snip to store
    */
   public void systemStore(Snip snip) {
-    //System.err.println("systemStore - "+snip.getName());
+    //Logger.debug("systemStore - "+snip.getName());
     Application app = Application.get();
     long start = app.start();
     storage.storageStore(snip);
@@ -314,7 +314,7 @@ public class SnipSpace implements LinkTester {
    * @param snip Snip to delay for storage
    */
   public void delayedStrore(Snip snip) {
-    //System.err.println("delayedStore - "+snip.getName());
+    //Logger.debug("delayedStore - "+snip.getName());
     Logger.log(Logger.DEBUG, "delayedStore");
     synchronized (delayed) {
       if (!delayed.contains(snip)) {

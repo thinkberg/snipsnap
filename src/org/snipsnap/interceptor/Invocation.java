@@ -65,7 +65,7 @@ public class Invocation {
       // interceptor
       return i.invoke(this);
     }
-    //System.err.println("Calling target proxy.");
+    //Logger.debug("Calling target proxy.");
     return method.invoke(target, args);
   }
 }

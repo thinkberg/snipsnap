@@ -25,6 +25,8 @@
 
 package org.snipsnap.util.mail;
 
+import org.radeox.util.logging.Logger;
+
 import javax.mail.*;
 import java.util.Properties;
 
@@ -60,7 +62,7 @@ public class ReadMail {
       Message message[] = folder.getMessages();
 
       for (int i = 0, n = message.length; i < n; i++) {
-        System.out.println(i + ": " + message[i].getFrom()[0]
+        Logger.debug(i + ": " + message[i].getFrom()[0]
             + "\t" + message[i].getSubject());
       }
 
@@ -68,8 +70,7 @@ public class ReadMail {
       folder.close(false);
       store.close();
     } catch (MessagingException e) {
-      System.err.println("Error:"+e.getMessage());
-      e.printStackTrace();
+      Logger.warn("Error reading message", e);
     }
   }
 }

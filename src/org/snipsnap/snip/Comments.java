@@ -27,6 +27,7 @@ package org.snipsnap.snip;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
 import org.snipsnap.util.StringUtil;
+import org.radeox.util.logging.Logger;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -88,7 +89,7 @@ public class Comments {
     init();
     String name = "comment-" + snip.getName() + "-" + (getCount() + 1);
     Snip comment = space.create(name, content);
-    System.err.println(comment);
+    Logger.debug(comment.toString());
     comment.setCommentedSnip(this.snip);
     comment.addPermission(Permissions.EDIT, Roles.OWNER);
     space.store(comment);

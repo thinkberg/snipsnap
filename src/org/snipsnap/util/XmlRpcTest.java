@@ -27,6 +27,7 @@ package org.snipsnap.util;
 
 import org.apache.xmlrpc.XmlRpcClient;
 import org.apache.xmlrpc.XmlRpcException;
+import org.radeox.util.logging.Logger;
 
 import java.util.Vector;
 import java.io.IOException;
@@ -48,9 +49,9 @@ public class XmlRpcTest {
       //params.addElement(config.getName());
       // Url of the weblog
       Object result = test.execute("generator.version", params);
-      System.out.println("result="+result);
+      Logger.debug("result="+result);
     } catch (Exception e) {
-      e.printStackTrace();
+      Logger.warn("XmlRpcTest: unable to call XML-RPC", e);
     }
 
   }

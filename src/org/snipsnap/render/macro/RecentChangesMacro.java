@@ -25,7 +25,8 @@
 package org.snipsnap.render.macro;
 
 import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.render.macro.parameter.MacroParameter;
+import org.radeox.macro.parameter.MacroParameter;
+import org.radeox.util.logging.Logger;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 
 import java.io.IOException;
@@ -65,7 +66,7 @@ public class RecentChangesMacro extends ListOutputMacro {
       try {
         length = Integer.parseInt(params.get("0"));
       } catch (NumberFormatException e) {
-        System.err.println("RecentChangesMacro: illegal parameter count='" + params.get("1") + "'");
+        Logger.warn("RecentChangesMacro: illegal parameter count='" + params.get("1") + "'");
       }
     }
     if (params.getLength() > 1) {

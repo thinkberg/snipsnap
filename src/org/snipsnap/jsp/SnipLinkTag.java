@@ -28,6 +28,7 @@ import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
 import org.snipsnap.snip.Links;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.render.filter.links.SnipLinks;
+import org.radeox.util.logging.Logger;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
@@ -69,7 +70,7 @@ public class SnipLinkTag extends TagSupport {
     try {
       this.snip = (Snip) ExpressionEvaluatorManager.evaluate("snip", snip, Snip.class, this, pageContext);
     } catch (JspException e) {
-      System.err.println("unable to evaluate expression: " + e);
+      Logger.warn("unable to evaluate expression", e);
     }
   }
 }

@@ -25,6 +25,8 @@
 
 package org.snipsnap.snip.label;
 
+import org.radeox.util.logging.Logger;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -55,7 +57,7 @@ public class LabelManager {
       Class labelClass = Class.forName(className);
       typeMap.put(name, labelClass);
     } catch (ClassNotFoundException e) {
-      System.err.println("LabelManager: label " + className + " not found " + e.getMessage());
+      Logger.warn("LabelManager: label " + className + " not found", e);
     }
     return;
   }

@@ -27,6 +27,7 @@ package org.snipsnap.util.mail;
 
 import org.snipsnap.app.Application;
 import org.snipsnap.config.AppConfiguration;
+import org.radeox.util.logging.Logger;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -69,14 +70,14 @@ public class Mail {
     try {
       addr = InetAddress.getByName(mailhost);
     } catch (UnknownHostException e) {
-      System.err.println("Mail: '" + mailhost + "': unknown host address");
+      Logger.debug("Mail: '" + mailhost + "': unknown host address");
       try {
         addr = InetAddress.getByName("mailhost");
       } catch (UnknownHostException e1) {
         try {
           addr = InetAddress.getByName("mail");
         } catch (UnknownHostException e2) {
-          System.err.println("Mail: unable to detect mail host automatically, please configure by hand");
+          Logger.debug("Mail: unable to detect mail host automatically, please configure by hand");
         }
       }
     }
@@ -143,7 +144,7 @@ public class Mail {
 
     } catch (MessagingException ex) {
       while ((ex = (MessagingException) ex.getNextException()) != null) {
-        ex.printStackTrace();
+        Logger.warn(ex.getMessage(), ex);
       }
     }
     return;

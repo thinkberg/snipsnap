@@ -26,6 +26,7 @@ package org.snipsnap.jsp;
 
 import org.snipsnap.app.Application;
 import org.snipsnap.snip.Snip;
+import org.radeox.util.logging.Logger;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
@@ -42,14 +43,14 @@ public class CoordinatesTag extends TagSupport {
       JspWriter out = pageContext.getOut();
       Application app = Application.get();
       String coordinates = app.getConfiguration().getCoordinates();
-      //System.err.println("Coordinates="+coordinates);
+      //Logger.debug("Coordinates="+coordinates);
       if (null != coordinates) {
         out.print("<meta name=\"ICBM\" content=\"");
         out.print(coordinates);
         out.print("\"/>");
       }
     } catch (IOException e) {
-      System.err.println("CoordinatesTag: unable print to JSP writer: " + e);
+      Logger.warn("CoordinatesTag: unable print to JSP writer", e);
     }
     return super.doStartTag();
   }

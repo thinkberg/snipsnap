@@ -25,6 +25,7 @@
 package org.snipsnap.net.filter;
 
 import org.snipsnap.util.mail.InputStreamDataSource;
+import org.radeox.util.logging.Logger;
 
 import javax.mail.BodyPart;
 import javax.mail.MessagingException;
@@ -81,7 +82,7 @@ public class MultipartWrapper extends HttpServletRequestWrapper {
         }
       }
     } catch (MessagingException e) {
-      e.printStackTrace();
+      Logger.warn("Error parsing request (not multipart/form-data)", e);
       throw new IllegalArgumentException("Error parsing request (not multipart/form-data?)");
     }
   }

@@ -35,16 +35,17 @@
 package org.snipsnap.render.filter;
 
 import org.apache.oro.text.regex.MatchResult;
-import org.snipsnap.serialization.StringBufferWriter;
+import org.radeox.filter.context.FilterContext;
+import org.radeox.filter.regex.RegexTokenFilter;
+import org.radeox.filter.Filter;
+import org.radeox.macro.Macro;
+import org.radeox.macro.parameter.MacroParameter;
+import org.snipsnap.render.macro.WeblogMacro;
+import org.radeox.util.StringBufferWriter;
+import org.radeox.util.logging.Logger;
+import org.radeox.RenderEngine;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.render.macro.Macro;
-import org.snipsnap.render.macro.parameter.MacroParameter;
-import org.snipsnap.render.macro.parameter.SnipMacroParameter;
-import org.snipsnap.render.macro.WeblogMacro;
-import org.snipsnap.render.filter.context.SnipFilterContext;
-import org.snipsnap.render.filter.context.FilterContext;
-import org.snipsnap.render.filter.regex.RegexTokenFilter;
 
 import java.io.Writer;
 import java.util.HashMap;
@@ -80,19 +81,18 @@ public class LateMacroFilter extends RegexTokenFilter {
   }
 
   public void handleMatch(StringBuffer buffer, MatchResult result, FilterContext context) {
-    Snip snip = ((SnipFilterContext) context).getSnip();
-
     String command = result.group(1);
 
-// System.out.println("Parameter block:" + Application.get().getParameters() );
+// Logger.debug("Parameter block:" + Application.get().getParameters() );
 
 // {$peng} are variables not macros.
     if (!command.startsWith("$")) {
 //      for (int i=0; i<result.groups(); i++) {
-//        System.err.println(i+" "+result.group(i));
+//        Logger.debug(i+" "+result.group(i));
 //      }
 
-      MacroParameter mParams = new SnipMacroParameter(snip);
+      MacroParameter mParams = context.getMacroParameter();
+
 // {tag} ... {tag}
       if (result.group(1).equals(result.group(result.groups() - 1))) {
 // {tag:1|2} ... {tag}
@@ -120,11 +120,11 @@ public class LateMacroFilter extends RegexTokenFilter {
           macro.execute(writer, mParams);
         } else if (command.startsWith("!")) {
 // @TODO including of other snips
-          Snip includeSnip = SnipSpace.getInstance().load(command.substring(1));
-          if (null != includeSnip) {
-            String included = includeSnip.getContent();
+          String include = RenderEngine.getInstance().include(command.substring(1));
+          if (null != include) {
             //Filter paramFilter = new ParamFilter(params);
             //buffer.append(paramFilter.filter(included, null));
+            buffer.append(include);
           } else {
             buffer.append(command.substring(1) + " not found.");
           }
@@ -136,9 +136,8 @@ public class LateMacroFilter extends RegexTokenFilter {
       } catch (IllegalArgumentException e) {
         buffer.append("<div class=\"error\">" + command + ": " + e.getMessage() + "</div>");
       } catch (Exception e) {
-        System.err.println("unable to format macro: " + result.group(1));
+        Logger.warn("unable to format macro: " + result.group(1), e);
         buffer.append("<div class=\"error\">" + command + "</div>");
-        e.printStackTrace();
         return;
       }
     } else {

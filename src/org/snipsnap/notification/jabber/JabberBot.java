@@ -29,6 +29,7 @@ package org.snipsnap.notification.jabber;
 import com.echomine.common.SendMessageFailedException;
 import com.echomine.jabber.*;
 import org.snipsnap.app.Application;
+import org.radeox.util.logging.Logger;
 
 /**
  * Bot which communicates via Jabber IM. This Bot can
@@ -64,8 +65,7 @@ public class JabberBot {
 
       // session.getPresenceService().setToAvailable(null,null);
     } catch (Exception e) {
-      System.err.println("Unable to start JabberBot: " + e);
-      e.printStackTrace();
+      Logger.warn("Unable to start JabberBot", e);
     }
   }
 
@@ -74,8 +74,7 @@ public class JabberBot {
       session.connect("snipsnap.org", 5222);
       session.getUserService().login();
     } catch (Exception e) {
-      System.err.println("JabberBot: unable to connect: " + e);
-      e.printStackTrace();
+      Logger.warn("JabberBot: unable to connect", e);
     }
   }
 
@@ -85,16 +84,15 @@ public class JabberBot {
     }
 
     try {
-      System.err.print("Sending '" + message + "' to '" + user + "' ...");
+      Logger.debug("Sending '" + message + "' to '" + user + "' ...");
       JabberChatMessage msg = new JabberChatMessage(JabberChatMessage.TYPE_HEADLINE);
       msg.setSubject(Application.get().getConfiguration().getName());
       msg.setBody(message);
       msg.setTo(user);
       session.sendMessage(msg);
-      System.err.println("Sent.");
+      Logger.debug("Sent.");
     } catch (SendMessageFailedException e) {
-      System.err.println("Unable to send message to " + user + " " + e);
-      e.printStackTrace();
+      Logger.warn("Unable to send message to " + user, e);
     }
   }
 }

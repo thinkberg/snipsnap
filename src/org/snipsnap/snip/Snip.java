@@ -29,7 +29,8 @@ import org.snipsnap.serialization.Appendable;
 import org.snipsnap.snip.label.Labels;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.User;
-import org.snipsnap.util.Nameable;
+import org.radeox.util.Nameable;
+import org.radeox.util.Linkable;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -44,7 +45,7 @@ import java.util.List;
  * @version $Id$
  */
 
-public interface Snip extends Ownable, Nameable, Appendable {
+public interface Snip extends Linkable, Ownable, Nameable, Appendable {
   public void handle(HttpServletRequest request);
 
   public Access getAccess();

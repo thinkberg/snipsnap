@@ -27,6 +27,7 @@ package org.snipsnap.jdbc;
 
 import org.snipsnap.cache.Cache;
 import org.snipsnap.util.ConnectionManager;
+import org.radeox.util.logging.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -62,7 +63,7 @@ public class Finder {
       this.type = type;
       this.creator = creator;
     } catch (SQLException e) {
-      System.out.println("Unable to prepare statement: " + statementString);
+      Logger.warn("Unable to prepare statement: " + statementString);
     }
     this.cache = cache;
   }
@@ -71,7 +72,7 @@ public class Finder {
     try {
       statement.setTimestamp(column, date);
     } catch (SQLException e) {
-      System.out.println("Unable to set Timestamp value: " + statementString);
+      Logger.warn("Unable to set Timestamp value: " + statementString);
     }
   }
 
@@ -79,7 +80,7 @@ public class Finder {
     try {
       statement.setString(column, value);
     } catch (SQLException e) {
-      System.out.println("Unable to set String value: " + statementString);
+      Logger.warn("Unable to set String value: " + statementString);
     }
   }
 
@@ -102,7 +103,7 @@ public class Finder {
   public List find(PreparedStatement statement, int count, List resultList) {
     ResultSet result = null;
 
-    //System.err.println("execute("+statementString+")");
+    //Logger.debug("execute("+statementString+")");
     try {
       result = statement.executeQuery();
       Object object = null;
@@ -119,7 +120,7 @@ public class Finder {
         resultList.add(object);
       }
     } catch (SQLException e) {
-      e.printStackTrace();
+      Logger.warn("Finder: SQL Error", e);
     } finally {
       ConnectionManager.close(result);
       ConnectionManager.close(statement);

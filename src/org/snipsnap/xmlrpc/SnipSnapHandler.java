@@ -26,6 +26,8 @@
 package org.snipsnap.xmlrpc;
 
 import org.snipsnap.app.Application;
+import org.snipsnap.user.User;
+import org.snipsnap.user.UserManager;
 
 /**
  * Handles XML-RPC calls for the SnbipSnap API
@@ -37,5 +39,10 @@ import org.snipsnap.app.Application;
 public class SnipSnapHandler {
   public String getVersion() {
     return Application.get().getConfiguration().getVersion();
+  }
+
+  public boolean authenticate(String login, String passwd) {
+     User user = UserManager.getInstance().authenticate(login, passwd);
+     return (null != user);
   }
 }

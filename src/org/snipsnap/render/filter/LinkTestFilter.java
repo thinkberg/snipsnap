@@ -35,14 +35,17 @@ package org.snipsnap.render.filter;
 
 import org.apache.oro.text.regex.*;
 import org.snipsnap.app.Application;
-import org.snipsnap.serialization.StringBufferWriter;
+import org.radeox.util.StringBufferWriter;
+import org.radeox.util.logging.Logger;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.render.filter.interwiki.InterWiki;
-import org.snipsnap.render.filter.context.FilterContext;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.util.Transliterate;
+import org.radeox.filter.Filter;
+import org.radeox.filter.LinkTester;
+import org.radeox.filter.context.FilterContext;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -65,7 +68,7 @@ public class LinkTestFilter extends Filter {
     try {
       pattern = compiler.compile("\\[(.*?)\\]");
     } catch (MalformedPatternException e) {
-      System.err.println("error compiling pattern: " + e);
+      Logger.warn("error compiling pattern", e);
     }
     // super("\\[(.*?)\\]", "<link href=\"$1\"/>");
   }
@@ -140,7 +143,7 @@ public class LinkTestFilter extends Filter {
         lastmatch = result.endOffset(0);
       }
     } catch (IOException e) {
-      System.err.println("Unable to write LinkTestFilter " + e);
+      Logger.warn("Unable to write LinkTestFilter", e);
     }
     buffer.append(input.substring(lastmatch));
     return buffer.toString();

@@ -33,7 +33,6 @@
 package org.snipsnap.render.macro;
 
 import org.python.util.PythonInterpreter;
-import org.snipsnap.render.macro.parameter.MacroParameter;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 
 import java.io.IOException;

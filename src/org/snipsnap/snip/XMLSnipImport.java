@@ -34,6 +34,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import org.radeox.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -66,9 +67,9 @@ public class XMLSnipImport {
       DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
       documentBuilder = documentBuilderFactory.newDocumentBuilder();
     } catch (FactoryConfigurationError error) {
-      System.err.println("Unable to create document builder factory: " + error);
+      Logger.warn("Unable to create document builder factory: " + error);
     } catch (ParserConfigurationException e) {
-      System.err.println("Unable to create document builder: " + e);
+      Logger.warn("Unable to create document builder", e);
     }
 
     Document document = null;
@@ -76,7 +77,7 @@ public class XMLSnipImport {
       document = documentBuilder.parse(in);
       load(document, flags);
     } catch (SAXException e) {
-      e.printStackTrace();
+      Logger.warn("XMLSnipImport: unable to parse document", e);
       throw new IOException("Error parsing document: " + e);
     }
   }
@@ -180,14 +181,14 @@ public class XMLSnipImport {
 
     User user = um.load(login);
     if (user == null) {
-      System.err.println("creating user '" + login + "'");
+      Logger.debug("creating user '" + login + "'");
       user = um.create(login, passwd, email);
     } else {
       if (passwd != null) user.setPasswd(passwd);
       if (email != null) user.setEmail(email);
     }
 
-    System.err.println("modifying user properties for '" + login + "'");
+    Logger.debug("modifying user properties for '" + login + "'");
     if (status != null) user.setStatus(status);
     if (roles != null) user.setRoles(new Roles(roles));
     if (cTime != null) user.setCTime(getTimestamp(cTime));
@@ -315,7 +316,7 @@ public class XMLSnipImport {
         try {
           snip.setViewCount(Integer.parseInt(tmp));
         } catch (NumberFormatException e) {
-          System.err.println("error: viewcount '" + tmp + "' for snip '" + name + "' is not a number");
+          Logger.warn("error: viewcount '" + tmp + "' for snip '" + name + "' is not a number");
         }
       }
 

@@ -25,13 +25,14 @@
 package org.snipsnap.snip;
 
 import org.snipsnap.app.Application;
-import org.snipsnap.render.RenderEngine;
-import org.snipsnap.render.filter.context.SnipFilterContext;
-import org.snipsnap.render.filter.context.FilterContext;
+import org.radeox.RenderEngine;
+import org.radeox.util.logging.Logger;
+import org.radeox.filter.context.FilterContext;
 import org.snipsnap.snip.label.Labels;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.User;
 import org.snipsnap.interceptor.Aspects;
+import org.snipsnap.render.filter.context.SnipFilterContext;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -355,6 +356,10 @@ public class SnipImpl implements Snip {
     this.content = content;
   }
 
+  public String getLink() {
+    return SnipLink.createLink(this.name);
+  }
+
   public String toXML() {
 
     long start = Application.get().start();
@@ -373,7 +378,7 @@ public class SnipImpl implements Snip {
       tmp = toXML();
     } catch (Exception e) {
       tmp = "<span class=\"error\">" + e + "</span>";
-      e.printStackTrace();
+      Logger.warn("SnipImpl: unable to get XMLContent", e);
     } catch (Error err) {
       err.printStackTrace();
       tmp = "<span class=\"error\">" + err + "</span>";

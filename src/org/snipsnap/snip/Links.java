@@ -25,6 +25,8 @@
 
 package org.snipsnap.snip;
 
+import org.radeox.util.logging.Logger;
+
 import java.util.*;
 
 /**
@@ -126,7 +128,7 @@ public class Links {
         String url = getUrl(urlString);
         linkcounts.put(url, count);
       } catch (Exception e) {
-        System.err.println("ignoring '" + urlString + "' while deserializing: " + e);
+        Logger.warn("ignoring '" + urlString + "' while deserializing", e);
       }
     }
     return linkcounts;

@@ -34,6 +34,8 @@ import org.snipsnap.snip.*;
 import org.snipsnap.snip.label.Labels;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.util.ConnectionManager;
+import org.snipsnap.util.log.SQLLogger;
+import org.radeox.util.logging.Logger;
 
 import java.sql.*;
 import java.util.List;
@@ -97,7 +99,7 @@ public class JDBCSnipStorage implements SnipStorage, JDBCCreator {
         count = result.getInt(1);
       }
     } catch (SQLException e) {
-      e.printStackTrace();
+      SQLLogger.warn("JDBCSnipStorage: unable to get count",e);
     } finally {
       ConnectionManager.close(result);
       ConnectionManager.close(statement);
@@ -186,7 +188,7 @@ public class JDBCSnipStorage implements SnipStorage, JDBCCreator {
         snip = storageCreateSnip(result);
       }
     } catch (SQLException e) {
-      e.printStackTrace();
+      SQLLogger.warn("JDBCSnipStorage: unable to load snip "+name, e);
     } finally {
       ConnectionManager.close(result);
       ConnectionManager.close(statement);
@@ -233,7 +235,8 @@ public class JDBCSnipStorage implements SnipStorage, JDBCCreator {
       statement.setString(16, snip.getName());
       statement.execute();
     } catch (SQLException e) {
-      e.printStackTrace();
+      SQLLogger.warn("JDBCSnipStorage: unable to store snip "+snip.getName(), e);
+
     } finally {
       ConnectionManager.close(statement);
       ConnectionManager.close(connection);
@@ -296,7 +299,7 @@ public class JDBCSnipStorage implements SnipStorage, JDBCCreator {
       statement.setInt(15, snip.getViewCount());
       statement.execute();
     } catch (SQLException e) {
-      e.printStackTrace();
+      SQLLogger.warn("JDBCSnipStorage: unable to get create snip "+name, e);
     } finally {
       ConnectionManager.close(result);
       ConnectionManager.close(statement);
@@ -317,7 +320,7 @@ public class JDBCSnipStorage implements SnipStorage, JDBCCreator {
 
       statement.execute();
     } catch (SQLException e) {
-      e.printStackTrace();
+      SQLLogger.warn("JDBCSnipStorage: unable to remove "+snip.getName(), e);
     } finally {
       ConnectionManager.close(statement);
       ConnectionManager.close(connection);

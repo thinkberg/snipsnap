@@ -26,6 +26,7 @@ package org.snipsnap.net.filter;
 
 import org.snipsnap.app.Application;
 import org.snipsnap.config.AppConfiguration;
+import org.radeox.util.logging.Logger;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -79,7 +80,7 @@ public class MultipartFilter implements Filter {
       try {
         chain.doFilter(new MultipartWrapper(req), response);
       } catch (IllegalArgumentException e) {
-        System.err.println("MultipartFilter: "+e.getMessage());
+        Logger.warn("MultipartFilter: "+e.getMessage());
       }
     }
   }

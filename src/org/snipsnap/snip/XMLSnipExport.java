@@ -25,6 +25,7 @@
 package org.snipsnap.snip;
 
 import org.snipsnap.util.ConnectionManager;
+import org.radeox.util.logging.Logger;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -66,8 +67,7 @@ public class XMLSnipExport {
       pw.flush();
       pw.close();
     } catch (Exception e) {
-      System.err.println("error writing output");
-      e.printStackTrace();
+      Logger.warn("error writing output", e);
     }
   }
 
@@ -82,8 +82,7 @@ public class XMLSnipExport {
       results = prepStmt.executeQuery();
       toXml(export, results, out);
     } catch (SQLException e) {
-      System.err.println("Problems with query ");
-      e.printStackTrace();
+      Logger.warn("Problems with query", e);
     }
   }
 
@@ -114,7 +113,7 @@ public class XMLSnipExport {
   }
 
   /**
-   * Escape special characters in output.
+   * Encoder special characters in output.
    */
   private static String escape(String in) {
     StringBuffer out = new StringBuffer();

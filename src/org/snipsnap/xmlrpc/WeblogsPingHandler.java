@@ -26,6 +26,8 @@
 
 package org.snipsnap.xmlrpc;
 
+import org.radeox.util.logging.Logger;
+
 
 /**
  * Handles XML-RPC calls for the Weblogs Ping API
@@ -41,7 +43,7 @@ public class WeblogsPingHandler {
    * weblogUpdates.ping()
    **/
   public String ping(String weblogName, String weblogUrl) {
-    System.out.println("XML-RPC call to ping() from " + weblogName);
+    Logger.debug("XML-RPC call to ping() from " + weblogName);
     SnipSnapPing.getInstance().addChangedWeblog(weblogName, weblogUrl);
     return "";
   }

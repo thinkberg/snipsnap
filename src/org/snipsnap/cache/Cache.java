@@ -96,7 +96,7 @@ public class Cache {
     while (iterator.hasNext()) {
       String name = (String) iterator.next();
       Snip snip = (Snip) m.get(name);
-      System.err.println(name+"="+snip.getName());
+      Logger.debug(name+"="+snip.getName());
     }
 */
     return new ArrayList(((Map) caches.get(type)).values());

@@ -3,6 +3,7 @@ package org.snipsnap.util;
 import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.app.Application;
 import org.snipsnap.snip.XMLSnipExport;
+import org.radeox.util.logging.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -67,8 +68,7 @@ public class DBDump {
     try {
       XMLSnipExport.store(System.out);
     } catch (IOException e) {
-      System.err.println("DBDump: unable to dump database: "+e);
-      e.printStackTrace();
+      Logger.warn("DBDump: unable to dump database", e);
     }
     System.exit(0);
   }

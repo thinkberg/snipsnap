@@ -29,6 +29,7 @@ import org.apache.xmlrpc.XmlRpcClient;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.snip.Snip;
+import org.radeox.util.logging.Logger;
 
 import java.util.Vector;
 
@@ -62,9 +63,9 @@ public class ExtendedPingHandler implements PingHandler {
       // RSS feed
       params.addElement(config.getUrl() + "/exec/rss");
       Object result = blo_gs.execute("weblogUpdates.extendedPing", params);
-      //System.err.println("weblogs.ping received: " + result);
+      //Logger.warn("weblogs.ping received: " + result);
     } catch (Exception e) {
-      System.err.println("Unable to ping " + url + " " + e);
+      Logger.warn("Unable to ping " + url, e);
     }
   }
 }

@@ -24,6 +24,8 @@
  */
 package org.snipsnap.user;
 
+import org.radeox.util.logging.Logger;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -39,7 +41,7 @@ public class Digest {
     try {
       digest = MessageDigest.getInstance("SHA1");
     } catch (NoSuchAlgorithmException e) {
-      System.err.println("UserManager: unable to load digest algorithm: " + e);
+      Logger.warn("UserManager: unable to load digest algorithm", e);
       digest = null;
     }
   }

@@ -28,6 +28,7 @@ import org.snipsnap.app.Application;
 import org.snipsnap.cache.Cache;
 import org.snipsnap.jdbc.FinderFactory;
 import org.snipsnap.snip.storage.JDBCUserStorage;
+import org.radeox.util.logging.Logger;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -115,14 +116,12 @@ public class UserManager {
               robotIds.put(id, url);
             }
           } catch (Exception e) {
-            System.err.println("UserManager: conf/robotdetect.txt line " + ln + ": syntax error");
-            e.printStackTrace();
+            Logger.warn("UserManager: conf/robotdetect.txt line " + ln + ": syntax error", e);
           }
         }
       }
     } catch (IOException e) {
-      System.err.println("UserManager: unable to read conf/robotdetect.txt: " + e);
-      e.printStackTrace();
+      Logger.warn("UserManager: unable to read conf/robotdetect.txt", e);
     }
   }
 
@@ -163,7 +162,7 @@ public class UserManager {
           user = authenticate(user.getLogin(), user.getPasswd());
           setCookie(request, response, user);
         } else {
-          System.err.println("UserManager: invalid hash: " + auth);
+          Logger.warn("UserManager: invalid hash: " + auth);
         }
       }
 
@@ -184,9 +183,9 @@ public class UserManager {
         }
 
         if (user != null) {
-          System.err.println("Found robot: " + user);
+          Logger.debug("Found robot: " + user);
         } else {
-          System.err.println("User agent of unknown user: '" + agent + "'");
+          Logger.debug("User agent of unknown user: '" + agent + "'");
           user = new User("Guest", "Guest", "");
           user.setGuest(true);
         }
@@ -232,7 +231,7 @@ public class UserManager {
         path = "/";
       }
     } catch (MalformedURLException e) {
-      System.err.println("Malformed URL: " + e);
+      Logger.warn("Malformed URL", e);
       path = "/";
     }
     return path;
@@ -289,6 +288,7 @@ public class UserManager {
     System.out.println(passwd+"-"+Digest.getDigest(passwd)+"-"+user.getPasswd());
     System.out.println("check: encrypted: "+Digest.authenticate(passwd, user.getPasswd()));
 */
+    //@TODO split authenticate and lastLogin
     if (null != user &&
         (user.getPasswd().equals(passwd) ||
         Digest.authenticate(passwd, user.getPasswd()))) {
@@ -316,7 +316,7 @@ public class UserManager {
     passwd = Digest.getDigest(passwd);
     User user = storage.storageCreate(login, passwd, email);
     cache.put(User.class, login, user);
-    // System.err.println("createUser login="+login+" hashcode="+((Object) user).hashCode());
+    // Logger.debug("createUser login="+login+" hashcode="+((Object) user).hashCode());
     return user;
   }
 
@@ -335,7 +335,7 @@ public class UserManager {
   }
 
   public void systemStore(User user) {
-    // System.err.println("SystemStore User="+user.getLogin());
+    // Logger.debug("SystemStore User="+user.getLogin());
     storage.storageStore(user);
     return;
   }

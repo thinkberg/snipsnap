@@ -27,6 +27,7 @@ package org.snipsnap.util;
 import com.bitmechanic.sql.ConnectionPoolManager;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.AppConfiguration;
+import org.radeox.util.logging.Logger;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -97,8 +98,7 @@ public class ConnectionManager {
                      false); // specifies whether to cache statements
         names.add(config.getName());
       } catch (Exception e) {
-        System.out.println("Unable to add connection alias.");
-        e.printStackTrace();
+        Logger.warn("Unable to add connection alias", e);
       }
     }
   }
@@ -111,8 +111,7 @@ public class ConnectionManager {
     try {
       return DriverManager.getConnection(ConnectionPoolManager.URL_PREFIX + config.getName());
     } catch (SQLException e) {
-      e.printStackTrace();
-      System.out.println("Unable to get connection.");
+      Logger.warn("Unable to get connection", e);
       return null;
     }
   }

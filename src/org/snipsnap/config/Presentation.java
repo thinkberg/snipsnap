@@ -27,10 +27,11 @@ package org.snipsnap.config;
 import org.snipsnap.app.Application;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.render.filter.FilterPipe;
-import org.snipsnap.render.filter.ListFilter;
 import org.snipsnap.render.filter.context.SnipFilterContext;
-import org.snipsnap.render.filter.context.FilterContext;
+import org.radeox.filter.FilterPipe;
+import org.radeox.filter.ListFilter;
+import org.radeox.filter.context.FilterContext;
+import org.radeox.util.logging.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,24 +46,24 @@ public class Presentation {
   public static void main(String[] args) {
     String name = args[1];
 
-    System.err.println("Loading server config.");
+    Logger.debug("Loading server config.");
     Configuration serverConfig = null;
     try {
       serverConfig = new Configuration("./conf/server.conf");
     } catch (IOException e) {
-      System.out.println("Unable to load server config: " + e);
+      Logger.warn("Unable to load server config: " + e);
       System.exit(-1);
     }
 
     Application app = Application.get();
 
-    System.err.println("Loading application config.");
+    Logger.debug("Loading application config.");
     AppConfiguration config = null;
     try {
       config = new AppConfiguration(
           new File(serverConfig.getProperty(Configuration.SERVER_WEBAPP_ROOT) + args[0] + "/application.conf"));
     } catch (IOException e) {
-      System.out.println("Unable to load application config: " + e);
+      Logger.warn("Unable to load application config: " + e);
       System.exit(-1);
     }
     app.setConfiguration(config);

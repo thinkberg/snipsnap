@@ -24,6 +24,8 @@
  */
 package org.snipsnap.util;
 
+import org.radeox.util.logging.Logger;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -78,8 +80,7 @@ public class FileUtil {
       Checksum checksum = checksumDirectory(new File(args[0]));
       checksum.store(new File("./CHECKSUMS"));
     } catch (IOException e) {
-      e.printStackTrace();
-      System.err.println("JarUtil: usage: FileUtil jarfile");
+      Logger.warn("FileUtil: usage: FileUtil jarfile", e);
     }
   }
 

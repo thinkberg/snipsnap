@@ -38,9 +38,9 @@ import org.apache.oro.text.regex.MatchResult;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.snip.Snip;
-import org.snipsnap.render.filter.regex.RegexTokenFilter;
-import org.snipsnap.render.filter.context.FilterContext;
+import org.radeox.filter.regex.RegexTokenFilter;
 import org.snipsnap.render.filter.context.SnipFilterContext;
+import org.radeox.filter.context.FilterContext;
 
 public class CalendarFilter extends RegexTokenFilter {
 

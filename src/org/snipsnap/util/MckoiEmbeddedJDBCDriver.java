@@ -40,6 +40,9 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.Iterator;
 
+import org.radeox.util.logging.Logger;
+import org.snipsnap.util.log.SQLLogger;
+
 /**
  * Adaption of the Mckoi JDBC Driver for embedded-only database drivers.
  * Created with help from toby@mckoi.com
@@ -56,8 +59,7 @@ public class MckoiEmbeddedJDBCDriver implements Driver {
         try {
           deregister();
         } catch (SQLException e) {
-          System.err.println("MckoiEmbeddedJDBCDriver: unable to deregister driver: "+e);
-          e.printStackTrace();
+          SQLLogger.warn("MckoiEmbeddedJDBCDriver: unable to deregister driver", e);
         }
       }
     });
@@ -69,13 +71,13 @@ public class MckoiEmbeddedJDBCDriver implements Driver {
       try {
         java.sql.DriverManager.registerDriver(driver = new MckoiEmbeddedJDBCDriver());
       } catch (SQLException e) {
-        e.printStackTrace();
+        SQLLogger.warn("MckoiEmbeddedJDBCDriver: unable to register driver", e);
       }
     }
   }
 
   public static void deregister() throws SQLException {
-    System.err.println("Deregistering JDBC Driver");
+    Logger.debug("Deregistering JDBC Driver");
     Iterator it = databases.values().iterator();
     while(it.hasNext()) {
       ((DBSystem)it.next()).close();
@@ -146,7 +148,7 @@ public class MckoiEmbeddedJDBCDriver implements Driver {
           // Put the key/value pair in the 'info' object.
           info.put(key, value);
         } else {
-          System.err.println("Ignoring url variable: '" + token + "'");
+          Logger.warn("Ignoring url variable: '" + token + "'");
         }
       } // while (tok.hasMoreTokens())
     }
@@ -160,7 +162,7 @@ public class MckoiEmbeddedJDBCDriver implements Driver {
         DBSystem dbsystem = MckoiEmbeddedJDBCDriver.getDatabase(url, info);
         return dbsystem.getConnection(info.getProperty("user", ""), info.getProperty("password", ""));
       } catch (IOException e) {
-        e.printStackTrace();
+        Logger.warn("MckoiEmbeddedJDBCDriver: unable to connect", e);
         throw new SQLException("MckoiEmbeddedJDBCDriver: unable to get connection: " + e);
       }
     }

@@ -25,7 +25,9 @@
 package org.snipsnap.render.macro;
 
 import org.snipsnap.date.Month;
-import org.snipsnap.render.macro.parameter.MacroParameter;
+import org.radeox.macro.parameter.MacroParameter;
+import org.radeox.macro.Macro;
+import org.radeox.util.logging.Logger;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -56,15 +58,15 @@ public class CalendarMacro extends Macro {
       try {
         year = Integer.parseInt(params.get("0"));
       } catch (NumberFormatException e) {
-        //System.err.println("CalendarMacro: year is not a number: " + params.get("0"));
+        //Logger.warn("CalendarMacro: year is not a number: " + params.get("0"));
       }
       try {
         month = Integer.parseInt(params.get("1"));
       } catch (NumberFormatException e) {
-        //System.err.println("CalendarMacro: month is not a number: " + params.get("1"));
+        //Logger.warn("CalendarMacro: month is not a number: " + params.get("1"));
       }
     } else if (params.getLength() > 0) {
-      System.err.println("CalendarMacro: illegal number of arguments: " + params.getLength());
+      Logger.warn("CalendarMacro: illegal number of arguments: " + params.getLength());
     }
 
     Month m = new Month();

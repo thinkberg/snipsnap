@@ -27,7 +27,7 @@ package org.snipsnap.net;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.snip.SnipLink;
-import org.snipsnap.util.log.Logger;
+import org.radeox.util.logging.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;

@@ -34,7 +34,9 @@ package org.snipsnap.render.macro;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.render.macro.parameter.MacroParameter;
+import org.radeox.macro.parameter.MacroParameter;
+import org.radeox.macro.Macro;
+import org.radeox.util.logging.Logger;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -73,7 +75,7 @@ public class HotSnipMacro extends Macro {
       try {
         length = Integer.parseInt(params.get("0"));
       } catch (NumberFormatException e) {
-        System.err.println("HotnessMacro: illegal parameter count='" + params.get("0") + "'");
+        Logger.warn("HotnessMacro: illegal parameter count='" + params.get("0") + "'");
       }
     }
 

@@ -8,6 +8,8 @@
  */
 package org.snipsnap.util;
 
+import org.radeox.util.logging.Logger;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -108,8 +110,7 @@ public class JarUtil {
       Checksum checksum = checksumJar(file);
       checksum.store(new File("./CHECKSUMS"));
     } catch (IOException e) {
-      e.printStackTrace();
-      System.err.println("JarUtil: usage: JarUtil jarfile");
+      Logger.warn("JarUtil: usage: JarUtil jarfile", e);
     }
   }
 }

@@ -2,6 +2,7 @@ package org.snipsnap.config;
 
 import org.apache.xmlrpc.XmlRpcClient;
 import org.apache.xmlrpc.XmlRpcException;
+import org.radeox.util.logging.Logger;
 
 import java.io.IOException;
 import java.util.Vector;
@@ -19,11 +20,11 @@ public class XmlRpcPost {
       params.add("boing");
       params.add(new Boolean(true));
       String result = (String) xmlrpc.execute("blogger.newPost", params);
-      System.out.println("result=" + result);
+      Logger.debug("result=" + result);
     } catch (IOException e) {
-      System.err.println("IOException " + e.getMessage());
+      Logger.warn("IOException ", e);
     } catch (XmlRpcException e) {
-      System.err.println("XmlRpcException " + e.getMessage());
+      Logger.warn("XmlRpcException ", e);
     }
   }
 }

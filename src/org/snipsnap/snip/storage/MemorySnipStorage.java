@@ -173,12 +173,12 @@ public class MemorySnipStorage implements SnipStorage {
       public boolean fit(Snip snip) {
         String name = snip.getName();
         Snip parent = snip.getParent();
-        //System.err.print(" name="+name);
+        //Logger.debug(" name="+name);
         //if (parent != null) {
-        // System.err.print(" parent="+parent.getName());
+        // Logger.debug(" parent="+parent.getName());
         //}
-        //System.err.print(" start="+start);
-        //System.err.print(" end="+end);
+        //Logger.debug(" start="+start);
+        //Logger.debug(" end="+end);
         return (start.compareTo(name) <= 0 && end.compareTo(name) >= 0 &&
             null != parent && "start".equals(parent.getName()));
       }

@@ -24,6 +24,8 @@
  */
 package org.snipsnap.util;
 
+import org.radeox.util.logging.Logger;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Enumeration;
@@ -64,7 +66,7 @@ public class Transliterate {
         }
       }
     } catch (IOException e) {
-      System.err.println("Transliterate: unable to load database: " + e);
+      Logger.debug("Transliterate: unable to load database: " + e);
     }
   }
 

@@ -26,7 +26,8 @@
 package org.snipsnap.render.filter.context;
 
 import org.snipsnap.snip.Snip;
-import org.snipsnap.render.macro.parameter.MacroParameter;
+import org.radeox.macro.parameter.MacroParameter;
+import org.radeox.filter.context.FilterContext;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 
 /**

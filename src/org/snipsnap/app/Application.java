@@ -29,7 +29,8 @@ import org.snipsnap.notification.NotificationService;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
-import org.snipsnap.util.log.Logger;
+import org.radeox.util.logging.Logger;
+import org.radeox.filter.MacroFilter;
 
 import javax.servlet.http.HttpSession;
 import java.util.*;
@@ -46,13 +47,12 @@ public class Application {
 
   private User user;
   private AppConfiguration config;
-  private Map parameters;
   private List log = new ArrayList();
   private NotificationService notification;
 
   private static ThreadLocal instance = new ThreadLocal() {
     protected synchronized Object initValue() {
-      System.out.println("Reading init value.");
+      Logger.debug("Reading init value.");
       return new Application();
     }
   };
@@ -70,7 +70,7 @@ public class Application {
   }
 
   public void notify(int type, Snip snip) {
-    //System.err.println("Application - notify() "+type);
+    //Logger.debug("Application - notify() "+type);
     if (notification == null &&
         config != null && config.allow(AppConfiguration.PERM_NOTIFICATION)) {
       notification = NotificationService.getInstance();
@@ -123,11 +123,11 @@ public class Application {
   }
 
   public Map getParameters() {
-    return parameters;
+    return MacroFilter.getParameters();
   }
 
   public void setParameters(Map parameters) {
-    this.parameters = parameters;
+    MacroFilter.setParameters(parameters);
   }
 
   public void setUser(User user, HttpSession session) {
@@ -190,7 +190,7 @@ public class Application {
       UserManager um = UserManager.getInstance();
       User user = (User) currentUsers.get(session);
       if (um.isAuthenticated(user)) {
-        System.err.println("Removing user: " + user.getLogin());
+        Logger.debug("Removing user: " + user.getLogin());
         user.setLastLogout(user.getLastAccess());
         UserManager.getInstance().systemStore(user);
       }

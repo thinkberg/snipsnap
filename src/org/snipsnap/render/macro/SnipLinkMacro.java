@@ -25,7 +25,7 @@
 package org.snipsnap.render.macro;
 
 import org.snipsnap.render.filter.links.SnipLinks;
-import org.snipsnap.render.macro.parameter.MacroParameter;
+import org.radeox.macro.parameter.MacroParameter;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 
 import java.io.IOException;

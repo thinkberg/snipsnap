@@ -24,9 +24,9 @@
  */
 package org.snipsnap.snip;
 
+import org.radeox.filter.context.FilterContext;
+import org.radeox.RenderEngine;
 import org.snipsnap.render.filter.context.SnipFilterContext;
-import org.snipsnap.render.filter.context.FilterContext;
-import org.snipsnap.render.RenderEngine;
 
 /**
  * SnipFormatter supplies some methods for handling Snip Content.

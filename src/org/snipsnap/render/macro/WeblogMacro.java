@@ -36,7 +36,7 @@ import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipUtil;
 import org.snipsnap.render.filter.links.BackLinks;
-import org.snipsnap.render.macro.parameter.MacroParameter;
+import org.radeox.macro.parameter.MacroParameter;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 
 import java.io.IOException;

@@ -25,6 +25,8 @@
 
 package org.snipsnap.user;
 
+import org.radeox.util.logging.Logger;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -72,10 +74,10 @@ public class Permissions {
       roles.remove(role);
       // remove permission if there are no more roles
       if (roles.isEmpty()) {
-        System.err.println("Empty.");
+        Logger.debug("Empty.");
         permissions.remove(permission);
       } else {
-        System.err.println("not Empty." + permissions.toString());
+        Logger.debug("not Empty." + permissions.toString());
       }
     }
   }
@@ -116,11 +118,11 @@ public class Permissions {
     // Policy: If no permission is set, everything is allowed
     if (null == permissions || !permissions.containsKey(permission)) return true;
     Roles permRoles = (Roles) permissions.get(permission);
-//    System.err.println("--check");
-//    System.err.println("permission="+ permission);
-//    System.err.println("roles="+roles);
-//    System.err.println("object roles="+permRoles);
-//    System.err.println("result=" + permRoles.containsAny(roles));
+//    Logger.debug("--check");
+//    Logger.debug("permission="+ permission);
+//    Logger.debug("roles="+roles);
+//    Logger.debug("object roles="+permRoles);
+//    Logger.debug("result=" + permRoles.containsAny(roles));
     return permRoles.containsAny(roles);
   }
 

@@ -27,10 +27,10 @@ package org.snipsnap.snip;
 
 import org.snipsnap.app.Application;
 import org.snipsnap.config.AppConfiguration;
-import org.snipsnap.serialization.StringBufferWriter;
-import org.snipsnap.render.filter.EscapeFilter;
+import org.radeox.util.StringBufferWriter;
+import org.radeox.filter.EscapeFilter;
 import org.snipsnap.util.URLEncoderDecoder;
-import org.snipsnap.util.log.Logger;
+import org.radeox.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -307,21 +307,4 @@ public class SnipLink {
     return url;
   }
 
-  /**
-   * Escape special characters that may occur in a URL.
-   * @param url the original url string
-   * @return the escaped string
-   */
-  public static String escape(String url) {
-    StringTokenizer t = new StringTokenizer(url, "&", true);
-    String result = "";
-    while (t.hasMoreTokens()) {
-      String tmp = t.nextToken();
-      if ("&".equals(tmp)) {
-        tmp = "&amp;";
-      }
-      result += tmp;
-    }
-    return result;
-  }
 }

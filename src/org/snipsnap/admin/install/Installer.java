@@ -279,7 +279,7 @@ public class Installer extends HttpServlet {
       config.setLogoImage(logo);
     }
 
-    config.setLogger("org.snipsnap.util.log.NullLogger");
+    config.setLogger("org.radeox.util.logging.NullLogger");
     config.setProperty(AppConfiguration.APP_CACHE, "full");
     config.setProperty(AppConfiguration.APP_TIMEZONE, "+1.00");
     config.setProperty(AppConfiguration.APP_WEBLOG_DATE_FORMAT, "EEEE, dd. MMMM yyyy");

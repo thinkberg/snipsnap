@@ -32,6 +32,7 @@ import org.snipsnap.jdbc.JDBCCreator;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.User;
 import org.snipsnap.util.ConnectionManager;
+import org.radeox.util.logging.Logger;
 
 import java.sql.*;
 import java.util.List;
@@ -100,7 +101,7 @@ public class JDBCUserStorage implements UserStorage, JDBCCreator {
 
       statement.execute();
     } catch (SQLException e) {
-      e.printStackTrace();
+      Logger.warn("JDBCUserStorage: unable to get store user "+user.getLogin(), e);
     } finally {
       ConnectionManager.close(statement);
       ConnectionManager.close(connection);
@@ -139,7 +140,7 @@ public class JDBCUserStorage implements UserStorage, JDBCCreator {
 
       statement.execute();
     } catch (SQLException e) {
-      e.printStackTrace();
+      Logger.warn("JDBCUserStorage: unable to get create user "+login, e);
     } finally {
       ConnectionManager.close(result);
       ConnectionManager.close(statement);
@@ -159,7 +160,7 @@ public class JDBCUserStorage implements UserStorage, JDBCCreator {
       statement.setString(1, user.getLogin());
       statement.execute();
     } catch (SQLException e) {
-      e.printStackTrace();
+      Logger.warn("JDBCUserStorage: unable to get remove user "+user.getLogin(), e);
     } finally {
       ConnectionManager.close(statement);
       ConnectionManager.close(connection);
@@ -180,7 +181,7 @@ public class JDBCUserStorage implements UserStorage, JDBCCreator {
         count = result.getInt(1);
       }
     } catch (SQLException e) {
-      e.printStackTrace();
+      Logger.warn("JDBCUserStorage: unable to get user count", e);
     } finally {
       ConnectionManager.close(result);
       ConnectionManager.close(statement);
@@ -190,7 +191,7 @@ public class JDBCUserStorage implements UserStorage, JDBCCreator {
   }
 
   public User storageLoad(String login) {
-    System.err.println("storageLoad() User=" + login);
+    Logger.debug("storageLoad() User=" + login);
     User user = null;
     PreparedStatement statement = null;
     ResultSet result = null;
@@ -207,7 +208,7 @@ public class JDBCUserStorage implements UserStorage, JDBCCreator {
         user = createUser(result);
       }
     } catch (SQLException e) {
-      e.printStackTrace();
+      Logger.warn("JDBCUserStorage: unable to get load user "+login,e);
     } finally {
       ConnectionManager.close(result);
       ConnectionManager.close(statement);

@@ -26,6 +26,7 @@ package org.snipsnap.jsp;
 
 import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
 import org.snipsnap.snip.SnipLink;
+import org.radeox.util.logging.Logger;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
@@ -47,14 +48,14 @@ public class ImageTag extends TagSupport {
         ext = (String) ExpressionEvaluatorManager.evaluate("ext", ext, String.class, this, pageContext);
       }
     } catch (JspException e) {
-      System.err.println("unable to evaluate expression: " + e);
+      Logger.warn("unable to evaluate expression", e);
     }
 
     JspWriter out = pageContext.getOut();
     try {
       out.print(SnipLink.createImage(name, alt != null ? alt : name, ext != null ? ext : "png"));
     } catch (IOException e) {
-      System.err.println("ImageTag: error writing image tag for " + name);
+      Logger.warn("ImageTag: error writing image tag for " + name);
     }
     return SKIP_BODY;
   }

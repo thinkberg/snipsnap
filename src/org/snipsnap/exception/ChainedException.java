@@ -24,6 +24,8 @@
  */
 package org.snipsnap.exception;
 
+import org.radeox.util.logging.Logger;
+
 /**
  * ChainedException is a base class for Exception and support wrapping original exceptions
  *
@@ -53,7 +55,7 @@ public class ChainedException extends Exception {
   public void printStackTrace() {
     super.printStackTrace();
     if (cause != null) {
-      System.err.println("Caused by:");
+      Logger.debug("Caused by:");
       cause.printStackTrace();
     }
   }

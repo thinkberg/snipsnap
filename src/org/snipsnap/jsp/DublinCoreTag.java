@@ -27,6 +27,7 @@ package org.snipsnap.jsp;
 import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
 import org.snipsnap.semanticweb.DublinCore;
 import org.snipsnap.snip.Snip;
+import org.radeox.util.logging.Logger;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
@@ -78,7 +79,7 @@ public class DublinCoreTag extends TagSupport {
           }
         }
       } catch (IOException e) {
-        System.err.println("doStartTag in DublinCore: " + e);
+        Logger.warn("doStartTag in DublinCore", e);
       }
     }
     return super.doStartTag();
@@ -93,7 +94,7 @@ public class DublinCoreTag extends TagSupport {
     try {
       this.snip = (Snip) ExpressionEvaluatorManager.evaluate("snip", snip, Snip.class, this, pageContext);
     } catch (JspException e) {
-      System.err.println("unable to evaluate expression: " + e);
+      Logger.warn("unable to evaluate expression", e);
     }
   }
 }

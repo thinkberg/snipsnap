@@ -26,6 +26,7 @@
 package org.snipsnap.util;
 
 import org.snipsnap.serialization.Appendable;
+import org.radeox.util.Linkable;
 
 import java.io.Writer;
 import java.io.IOException;

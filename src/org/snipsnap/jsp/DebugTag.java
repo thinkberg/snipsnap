@@ -26,6 +26,7 @@ package org.snipsnap.jsp;
 
 import org.snipsnap.app.Application;
 import org.snipsnap.snip.Snip;
+import org.radeox.util.logging.Logger;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
@@ -55,7 +56,7 @@ public class DebugTag extends TagSupport {
         }
         out.println("</div>");
       } catch (IOException e) {
-        System.err.println("unable print to JSP writer: " + e);
+        Logger.warn("unable print to JSP writer", e);
       }
     }
     return super.doStartTag();

@@ -56,7 +56,7 @@ public class XmlRpcServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
 
-    //System.out.println("XMLRPC call received.");
+    //Logger.debug("XMLRPC call received.");
     XmlRpcServer xmlrpc = new XmlRpcServer();
 
     xmlrpc.addHandler("snipSnap", new SnipSnapHandler());

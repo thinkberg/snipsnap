@@ -26,8 +26,9 @@ package org.snipsnap.jsp;
 
 import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
 import org.snipsnap.snip.Snip;
-import org.snipsnap.render.filter.Filter;
-import org.snipsnap.render.filter.HtmlRemoveFilter;
+import org.radeox.filter.Filter;
+import org.radeox.filter.HtmlRemoveFilter;
+import org.radeox.util.logging.Logger;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
@@ -74,7 +75,7 @@ public class ContentTag extends TagSupport {
         JspWriter out = pageContext.getOut();
         out.print(content);
       } catch (IOException e) {
-        System.err.println("doStartTag in ContentTag: " + e);
+        Logger.warn("doStartTag in ContentTag", e);
       }
     }
     return super.doStartTag();
@@ -96,7 +97,7 @@ public class ContentTag extends TagSupport {
     try {
       this.snip = (Snip) ExpressionEvaluatorManager.evaluate("snip", snip, Snip.class, this, pageContext);
     } catch (JspException e) {
-      System.err.println("unable to evaluate expression: " + e);
+      Logger.warn("unable to evaluate expression", e);
     }
   }
 }

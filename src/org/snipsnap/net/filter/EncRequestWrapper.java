@@ -8,6 +8,8 @@
  */
 package org.snipsnap.net.filter;
 
+import org.radeox.util.logging.Logger;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.UnsupportedEncodingException;
@@ -30,7 +32,7 @@ public class EncRequestWrapper extends HttpServletRequestWrapper {
       try {
         return new String(src.getBytes("iso-8859-1"), encoding);
       } catch (UnsupportedEncodingException e) {
-        System.err.println("Error: illegal encoding: " + e);
+        Logger.warn("Error: illegal encoding: " + e);
       }
     }
     return src;

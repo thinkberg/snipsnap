@@ -29,6 +29,7 @@ import org.snipsnap.app.Application;
 import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.user.UserManager;
+import org.radeox.util.logging.Logger;
 
 import javax.mail.*;
 import java.io.*;
@@ -66,10 +67,10 @@ public class PostDaemon {
     mailPassword = conf.getMailBlogPassword();
     if (null == host || null == username || null == password || null == mailPassword) {
       active = false;
-      System.err.println("PostDaemon: not started");
+      Logger.warn("PostDaemon: not started");
     } else {
       active = true;
-      System.err.println("PostDaemon: started");
+      Logger.warn("PostDaemon: started");
       pop3Timer = new Timer();
       pop3Timer.schedule(new TimerTask() {
         public void run() {
@@ -104,9 +105,9 @@ public class PostDaemon {
         for (int i = 0, n = message.length; i < n; i++) {
           StringWriter writer = new StringWriter();
 
-          System.err.println(i + ": " + message[i].getFrom()[0]
+          Logger.debug(i + ": " + message[i].getFrom()[0]
               + "\t" + message[i].getSubject());
-          System.err.println(message[i].getContentType());
+          Logger.debug(message[i].getContentType());
 
           Address sender = message[i].getFrom()[0];
           String title = message[i].getSubject();
@@ -129,23 +130,21 @@ public class PostDaemon {
               Application.get().setUser(UserManager.getInstance().load("stephan"));
               SnipSpace.getInstance().post(writer.getBuffer().toString(), title);
             } catch (Exception e) {
-              System.err.println("PostDaemon Error:" + e.getMessage());
-              e.printStackTrace();
+              Logger.warn("PostDaemon Error:", e);
             } finally {
               // Delete message, either because we processed it or we couldn't
               // process it
               message[i].setFlag(Flags.Flag.DELETED, true);
             }
           } else {
-            System.err.println("PostDaemon: Wrong password.");
+            Logger.warn("PostDaemon: Wrong password.");
           }
         }
 // Close connection
         folder.close(true);
         store.close();
       } catch (Exception e) {
-        System.err.println("PostDaemon Error:" + e.getMessage());
-        e.printStackTrace();
+        Logger.warn("PostDaemon Error", e);
       }
     }
   }
@@ -161,10 +160,10 @@ public class PostDaemon {
     for (int j = 0; j < mp.getCount(); j++) {
       try {
       Part part = mp.getBodyPart(j);
-      System.err.println("Disposition=" + part.getDisposition());
+      Logger.debug("Disposition=" + part.getDisposition());
       String contentType = part.getContentType();
-      System.err.println("content-type=" + contentType);
-      System.err.println("Object=" + part);
+      Logger.debug("content-type=" + contentType);
+      Logger.debug("Object=" + part);
         if (contentType.startsWith("text/plain")) {
           writer.write((String) part.getContent());
         } else if (contentType.startsWith("image/")) {
@@ -173,8 +172,7 @@ public class PostDaemon {
           processMultipart(writer, (Multipart) part.getContent(), name);
         }
       } catch (Exception e) {
-        System.err.println("PostDaemon: Error reading message: " + e.getMessage());
-        e.printStackTrace();
+        Logger.warn("PostDaemon: Error reading message", e);
       }
     }
   }
@@ -185,7 +183,7 @@ public class PostDaemon {
         AppConfiguration config = Application.get().getConfiguration();
         File imageDir = new File(config.getFile().getParentFile().getParentFile(), "images");
         File file = new File(imageDir, "image-" + name + "-" + part.getFileName());
-        System.err.println("Uploading '" + part.getFileName() + "' to '" + file.getAbsolutePath() + "'");
+        Logger.debug("Uploading '" + part.getFileName() + "' to '" + file.getAbsolutePath() + "'");
         FileOutputStream out = new FileOutputStream(file);
         InputStream in = part.getInputStream();
         byte[] buf = new byte[4096];
@@ -196,14 +194,12 @@ public class PostDaemon {
         out.close();
         in.close();
       } else {
-        System.err.println("PostDaemon: Error processing mail.");
+        Logger.warn("PostDaemon: Error processing mail");
       }
     } catch (IOException e) {
-      System.err.println("PostDaemon: Error processing mail.");
-      e.printStackTrace();
+      Logger.warn("PostDaemon: Error processing mail", e);
     } catch (MessagingException e) {
-      System.err.println("PostDaemon: Error processing mail.");
-      e.printStackTrace();
+      Logger.warn("PostDaemon: Error processing mail", e);
     }
 
   }
