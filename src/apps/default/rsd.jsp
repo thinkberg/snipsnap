@@ -4,7 +4,6 @@
 --%><%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %><%--
 --%><%@ page contentType="text/xml"%><%--
 --%><!-- name="generator" content="SnipSnap/<c:out value="${config.version}"/>" -->
-<?xml version="1.0" ?>
 <rsd version="0.2">
 <service>
 <title><c:out value="${config.name}"/></title>
@@ -18,7 +17,7 @@
 		<value>Blogger API</value>
 	</member>
   </struct>
-  <url><c:out value="${url}"/></url>
+  <url><c:out value="${baseurl}"/></url>
   <siteidentifier></siteidentifier>
   <pathtoservice>/RPC2</pathtoservice>
   <notes>Additional explanation here.</notes>
