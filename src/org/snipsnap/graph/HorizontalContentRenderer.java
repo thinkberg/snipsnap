@@ -30,10 +30,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletOutputStream;
 import java.io.IOException;
 
-public class MindMapContentRenderer implements ContentRenderer {
+public class HorizontalContentRenderer implements ContentRenderer {
 
   public String getName() {
-    return "mindmap";
+    return "horizontal";
   }
 
   public void render(HttpServletRequest request, HttpServletResponse response, String content) throws IOException {
@@ -42,7 +42,7 @@ public class MindMapContentRenderer implements ContentRenderer {
     ServletOutputStream out = response.getOutputStream();
 
     TreeBuilder builder = new StringTreeBuilder(content);
-    Renderer renderer = new MindMapRenderer();
+    Renderer renderer = new HorizontalRenderer();
     DrawTree drawTree = new DrawTree();
     drawTree.draw(builder.build(), renderer, out);
   }
