@@ -26,15 +26,14 @@
 package org.snipsnap.test.user;
 
 import junit.framework.Test;
-import junit.framework.TestSuite;
 import junit.framework.TestCase;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipImpl;
-import org.snipsnap.test.mock.MockSnipSpace;
-import org.snipsnap.user.*;
-
-import java.io.StringWriter;
-import java.io.IOException;
+import junit.framework.TestSuite;
+import org.snipsnap.user.AuthenticationService;
+import org.snipsnap.user.DefaultPermissionManager;
+import org.snipsnap.user.Permission;
+import org.snipsnap.user.PermissionManager;
+import org.snipsnap.user.Roles;
+import org.snipsnap.user.User;
 
 public class DefaultPermissionManagerTest extends TestCase {
 
@@ -52,6 +51,10 @@ public class DefaultPermissionManagerTest extends TestCase {
   protected void setUp() throws Exception {
     service = new AuthenticationService() {
       public User authenticate(String login, String passwd) {
+        return null;
+      }
+
+      public User authenticate(String login, String passwd, boolean encrypted) {
         return null;
       }
 

@@ -28,6 +28,9 @@ import org.snipsnap.snip.storage.UserStorage;
  */
 
 public interface AuthenticationService {
+  public final static boolean ENCRYPTED = true;
+
+  public User authenticate(String login, String passwd, boolean encrypted);
   public User authenticate(String login, String passwd);
   public boolean isAuthenticated(User user);
 }

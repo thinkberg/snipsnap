@@ -35,6 +35,10 @@ public class DefaultAuthenticationService implements AuthenticationService {
   }
 
   public User authenticate(String login, String passwd) {
+    return authenticate(login, passwd, !ENCRYPTED);
+  }
+
+  public User authenticate(String login, String passwd, boolean encrypted) {
     User user = storage.storageLoad(login);
 
 //     System.out.println("user: "+user);
@@ -44,7 +48,7 @@ public class DefaultAuthenticationService implements AuthenticationService {
 
     //@TODO split authenticate and lastLogin
     if (null != user &&
-      (user.getPasswd().equals(passwd) || Digest.authenticate(passwd, user.getPasswd()))) {
+      (encrypted ? user.getPasswd().equals(passwd) : Digest.authenticate(passwd, user.getPasswd()))) {
       user.lastLogin();
       storage.storageStore(user);
       return user;
@@ -56,5 +60,4 @@ public class DefaultAuthenticationService implements AuthenticationService {
   public boolean isAuthenticated(User user) {
     return user != null && !(user.isGuest() || user.isNonUser());
   }
-
 }

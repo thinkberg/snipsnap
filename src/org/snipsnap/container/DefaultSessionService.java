@@ -137,7 +137,7 @@ public class DefaultSessionService implements SessionService {
 
         user = (User) authHash.get(auth);
         if (user != null && appOid.equals(user.getApplication())) {
-          user = authService.authenticate(user.getLogin(), user.getPasswd());
+          user = authService.authenticate(user.getLogin(), user.getPasswd(), AuthenticationService.ENCRYPTED);
           setCookie(request, response, user);
         } else {
           Logger.warn("SessionService: invalid hash: " + auth);

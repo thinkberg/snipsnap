@@ -51,21 +51,21 @@ public class ImageTest extends SnipTestSupport {
     StringWriter writer = new StringWriter();
     SnipLink.appendImage(writer, "test", null);
     assertEquals("Image without alt is rendered",
-        "<img src=\"images/test.png\" alt=\"test\" border=\"0\"/>", writer.toString());
+        "<img src=\"theme/images/test.png\" alt=\"test\" border=\"0\"/>", writer.toString());
   }
 
   public void testImageAlt() throws IOException {
     StringWriter writer = new StringWriter();
     SnipLink.appendImage(writer, "test", "alttext");
     assertEquals("Image with alt is rendered",
-        "<img src=\"images/test.png\" alt=\"alttext\" border=\"0\"/>", writer.toString());
+        "<img src=\"theme/images/test.png\" alt=\"alttext\" border=\"0\"/>", writer.toString());
   }
 
   public void testImageAltExtension() throws IOException {
     StringWriter writer = new StringWriter();
     SnipLink.appendImage(writer, "test", "alttext", "jpg");
     assertEquals("Image with alt and extension is rendered",
-        "<img src=\"images/test.jpg\" alt=\"alttext\" border=\"0\"/>", writer.toString());
+        "<img src=\"theme/images/test.jpg\" alt=\"alttext\" border=\"0\"/>", writer.toString());
   }
 
   public void testSnipAttachedImage() throws IOException {
