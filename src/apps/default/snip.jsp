@@ -4,13 +4,14 @@
   ** @version $Id$
   -->
 
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+
 <jsp:useBean id="snip" scope="request" class="com.neotis.jsp.SnipBean" >
   <jsp:setProperty name="snip" property="*"/>
 </jsp:useBean>
 <jsp:useBean id="user" scope="request" class="com.neotis.jsp.UserBean" >
   <jsp:setProperty name="user" property="session" value="<%= session %>"/>
 </jsp:useBean>
-
 
 <table width="100%" border="0" cellspacing="2" cellpadding="1">
  <% if (! "start".equals(snip.getName())) { %>
