@@ -118,7 +118,7 @@ public class SnipImpl implements Snip {
    * @return true, if the snip is a weblog
    */
   public boolean isWeblog() {
-    return Application.get().getConfiguration().getStartSnip().equals(name);
+    return content.indexOf("{weblog}") != -1;
   }
 
   /**

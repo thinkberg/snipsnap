@@ -73,7 +73,7 @@ public class Month {
 
   public static String toKey(Calendar calendar) {
     return toKey(calendar.get(Calendar.YEAR),
-          calendar.get(Calendar.MONTH),
+          calendar.get(Calendar.MONTH) + 1,
           calendar.get(Calendar.DAY_OF_MONTH));
   }
 

@@ -132,7 +132,8 @@ public class FileSnipStorage implements SnipStorage, CacheableStorage {
         return snipA.getViewCount() - snipB.getViewCount();
       }
     });
-    return all.subList(0, size);
+    int actualSize = all.size();
+    return all.subList(0, actualSize < size ? actualSize : size);
   }
 
   public List storageByUser(final String login) {
@@ -160,7 +161,8 @@ public class FileSnipStorage implements SnipStorage, CacheableStorage {
         return (int) (snipA.getMTime().getTime() - snipB.getMTime().getTime());
       }
     });
-    return all.subList(0, size);
+    int actualSize = all.size();
+    return all.subList(0, actualSize < size ? actualSize : size);
   }
 
   public List storageByComments(final Snip parent) {

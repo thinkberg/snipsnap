@@ -81,11 +81,11 @@ public class MemorySnipStorage implements SnipStorage {
 
   // Basic manipulation methods Load,Store,Create,Remove
   public Snip[] match(String pattern) {
-    return cacheMap.match(pattern);
+    return cacheMap.match(pattern.toUpperCase());
   }
 
   public Snip[] match(String start, String end) {
-    return cacheMap.match(start, end);
+    return cacheMap.match(start.toUpperCase(), end.toUpperCase());
   }
 
   public Snip storageLoad(String name) {

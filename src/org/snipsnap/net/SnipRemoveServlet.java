@@ -24,11 +24,11 @@
  */
 package org.snipsnap.net;
 
+import org.snipsnap.app.Application;
+import org.snipsnap.container.Components;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.app.Application;
 import org.snipsnap.user.User;
 
 import javax.servlet.ServletException;
@@ -50,10 +50,11 @@ public class SnipRemoveServlet extends HttpServlet {
     String name = request.getParameter("name");
     // TODO include check for current snip (see Access)
     if(user != null && user.isAdmin()) {
-      SnipSpace space = SnipSpaceFactory.getInstance();
+      SnipSpace space = (SnipSpace)Components.getComponent(SnipSpace.class);
       Snip snip = space.load(name);
       space.remove(snip);
       response.sendRedirect(SnipLink.absoluteLink("/space/"+app.getConfiguration().getStartSnip()));
+      return;
     }
     response.sendRedirect(SnipLink.absoluteLink("/space/"+name));
   }

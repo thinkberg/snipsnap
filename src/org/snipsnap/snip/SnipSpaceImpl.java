@@ -75,14 +75,14 @@ public class SnipSpaceImpl implements SnipSpace {
       // If we keep all snips in memory we can use queries directly on the snip list
       // Wrap the real storage with the memory storage wrapper and an in-memory
       // query class
-      storage = new QuerySnipStorage(new MemorySnipStorage(storage));
+      this.storage = new QuerySnipStorage(new MemorySnipStorage(storage));
     } else if ("cache".equals(Application.get().getConfiguration().getCache())
         && storage instanceof CacheableStorage) {
       Logger.debug("Cache strategy is: cache, using CacheSnipStorage");
       // Otherwise at least wrap the persistence store
       // with a cache that does not need to load and create objects
       CacheableStorage old = (CacheableStorage) storage;
-      storage = new CacheSnipStorage(storage);
+      this.storage = new CacheSnipStorage(storage);
       // We have to tell CacheStorage (JDBCSnipStorage) where to get
       // it's cache from for checking
       old.setCache(((CacheStorage) storage).getCache());
@@ -234,7 +234,7 @@ public class SnipSpaceImpl implements SnipSpace {
   }
 
   public Snip[] match(String pattern) {
-    return storage.match(pattern.toUpperCase());
+    return storage.match(pattern);
   }
 
   public Snip[] match(String start, String end) {

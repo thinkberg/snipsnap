@@ -26,10 +26,16 @@ package org.snipsnap.net;
  */
 
 import org.snipsnap.app.Application;
-import org.snipsnap.snip.*;
-import org.snipsnap.user.User;
-import org.snipsnap.user.AuthenticationService;
 import org.snipsnap.container.Components;
+import org.snipsnap.snip.Blog;
+import org.snipsnap.snip.BlogKit;
+import org.snipsnap.snip.SnipFormatter;
+import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.SnipSpaceFactory;
+import org.snipsnap.user.AuthenticationService;
+import org.snipsnap.user.Roles;
+import org.snipsnap.user.Security;
+import org.snipsnap.user.User;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -45,14 +51,26 @@ import java.io.IOException;
  * @version $Id$
  */
 public class PostStoreServlet extends HttpServlet {
+  private static Roles REQUIRED_ROLES;
+
+  static {
+    REQUIRED_ROLES = new Roles();
+    REQUIRED_ROLES.add(Roles.OWNER);
+    REQUIRED_ROLES.add(Roles.EDITOR);
+  }
+
   public void doPost(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
+    throws ServletException, IOException {
 
     String title = request.getParameter("title");
     String content = request.getParameter("content");
+    String snipName = request.getParameter("name");
+    if (null == snipName || "".equals(snipName)) {
+      snipName = Application.get().getConfiguration().getStartSnip();
+    }
 
     if (request.getParameter("preview") != null) {
-      // If there is a title, generate preview of snip with title + content
+      // If there is a title, generate preview of snipName with title + content
       if (null != title && !"".equals(title)) {
         request.setAttribute("preview", SnipFormatter.toXML(null, BlogKit.getContent(title, content)));
       } else {
@@ -60,6 +78,7 @@ public class PostStoreServlet extends HttpServlet {
       }
       request.setAttribute("content", content);
       request.setAttribute("title", title);
+      request.setAttribute("param.name", snipName);
       RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/post.jsp");
       dispatcher.forward(request, response);
       return;
@@ -69,10 +88,10 @@ public class PostStoreServlet extends HttpServlet {
       if (session != null) {
         app = Application.getInstance(session);
         User user = app.getUser();
-        AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
+//        AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
+        Blog blog = SnipSpaceFactory.getInstance().getBlog(snipName);
 
-        if (service.isAuthenticated(user)) {
-          Blog blog = SnipSpaceFactory.getInstance().getBlog();
+        if (Security.hasRoles(user, blog.getSnip(), REQUIRED_ROLES)) {
           if (null == title || "".equals(title)) {
             blog.post(content);
           } else {
@@ -84,6 +103,6 @@ public class PostStoreServlet extends HttpServlet {
       }
     }
 
-    response.sendRedirect(SnipLink.absoluteLink("/space/"+Application.get().getConfiguration().getStartSnip()));
+    response.sendRedirect(SnipLink.absoluteLink("/space/" + snipName));
   }
 }

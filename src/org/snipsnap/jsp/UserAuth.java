@@ -28,6 +28,7 @@ import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.Security;
 import org.snipsnap.user.User;
@@ -43,6 +44,15 @@ public class UserAuth extends ConditionalTagSupport {
   protected Snip snip;
 
   protected boolean invertCheck = false;
+
+  public void setName(String snip) {
+    try {
+      String snipName = (String) ExpressionEvaluatorManager.evaluate("snip", snip, String.class, this, pageContext);
+      this.snip = SnipSpaceFactory.getInstance().load(snipName);
+    } catch (JspException e) {
+      Logger.warn("unable to evaluate expression", e);
+    }
+  }
 
   public void setSnip(String snip) {
     try {

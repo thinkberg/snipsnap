@@ -8,9 +8,9 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 
 <div class="snip-wrapper">
- <div class="snip-title"><h1 class="snip-name">Post To Weblog</h1></div>
+ <div class="snip-title"><h1 class="snip-name">Post To Weblog: <c:out value="${snip.name}"/></h1></div>
  <div class="snip-content">
-  <s:check roles="Editor">
+  <s:check name="${param.snip}" roles="Owner:Editor">
   <c:if test="${not empty preview}">
    <div class="preview"><div class="snip-content"><c:out value="${preview}" escapeXml="false"/></div></div>
   </c:if>
@@ -24,11 +24,12 @@
       <input value="Cancel" name="cancel" type="submit"/>
      </td></tr>
     </table>
+    <input name="name" type="hidden" value="<c:out value='${param.name}'/>"/>
     <input name="post" type="hidden" value="weblog"/>
     <input name="referer" type="hidden" value="<%= request.getHeader("REFERER") %>"/>
    </form>
   </s:check>
-  <s:check roles="Editor" invert="true">
+  <s:check roles="Owner:Editor" invert="true">
    Please <a href="<c:out value='${app.configuration.path}'/>/exec/login.jsp">login!</a> as editor.
   </s:check>
  </div>

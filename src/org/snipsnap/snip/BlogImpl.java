@@ -25,20 +25,18 @@
 
 package org.snipsnap.snip;
 
+import org.snipsnap.app.Application;
+import org.snipsnap.date.Month;
 import org.snipsnap.semanticweb.rss.Rssify;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
 import org.snipsnap.xmlrpc.WeblogsPing;
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
-import org.snipsnap.date.Month;
 
 import java.sql.Date;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * BlogImpl for Blog.
@@ -51,7 +49,6 @@ public class BlogImpl implements Blog {
   private String name;
   private Snip blog;
   private SnipSpace space;
-  private Snip snip;
 
   public BlogImpl(SnipSpace space, String blogName) {
     this.space = space;
@@ -144,8 +141,11 @@ public class BlogImpl implements Blog {
     startC.setTime(new java.util.Date());
     Calendar endC = (Calendar) startC.clone();
     endC.add(Calendar.DAY_OF_MONTH, count-1);
-    String start = name + "/" + Month.toKey(startC);
-    String end = name+ "/" + Month.toKey(endC);
+//    String start = name + "/" + Month.toKey(startC);
+//    String end = name+ "/" + Month.toKey(endC);
+
+    String start = name + "/" + Month.toKey(startC) + "/";
+    String end = name + "/" + Month.toKey(endC) + "/";
 
     //@TODO: reduce number of posts to count;
     //@TODO: reorder snips

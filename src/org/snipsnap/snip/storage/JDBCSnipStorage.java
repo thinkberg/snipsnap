@@ -66,27 +66,27 @@ public class JDBCSnipStorage implements SnipStorage, CacheableStorage {
 
       // Create a Person table,
       statement.executeQuery(
-          "    CREATE TABLE Snip ( " +
-          "       name        VARCHAR(100) NOT NULL, " +
-          "       content     TEXT, " +
-          "       cTime       TIMESTAMP, " +
-          "       mTime       TIMESTAMP, " +
-          "       cUser       VARCHAR(55), " +
-          "       mUser       VARCHAR(55), " +
-          "       oUser       VARCHAR(55), " +
-          "       parentSnip  VARCHAR(100), " +
-          "       commentSnip VARCHAR(100), " +
-          "       backLinks   TEXT, " +
-          "       snipLinks   TEXT, " +
-          "       labels      TEXT, " +
-          "       attachments TEXT, " +
-          "       viewCount   INTEGER, " +
-          "       permissions VARCHAR(200) )");
+        "    CREATE TABLE Snip ( " +
+        "       name        VARCHAR(100) NOT NULL, " +
+        "       content     TEXT, " +
+        "       cTime       TIMESTAMP, " +
+        "       mTime       TIMESTAMP, " +
+        "       cUser       VARCHAR(55), " +
+        "       mUser       VARCHAR(55), " +
+        "       oUser       VARCHAR(55), " +
+        "       parentSnip  VARCHAR(100), " +
+        "       commentSnip VARCHAR(100), " +
+        "       backLinks   TEXT, " +
+        "       snipLinks   TEXT, " +
+        "       labels      TEXT, " +
+        "       attachments TEXT, " +
+        "       viewCount   INTEGER, " +
+        "       permissions VARCHAR(200) )");
       statement.close();
     } catch (SQLException e) {
       System.out.println(
-          "An error occured\n" +
-          "The SQLException message is: " + e.getMessage());
+        "An error occured\n" +
+        "The SQLException message is: " + e.getMessage());
     } finally {
       try {
         connection.close();
@@ -98,8 +98,8 @@ public class JDBCSnipStorage implements SnipStorage, CacheableStorage {
 
   public JDBCSnipStorage() {
     this.finders = new FinderFactory("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions, " +
-        " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
-        " FROM Snip ");
+                                     " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
+                                     " FROM Snip ");
   }
 
   public void setCache(Map cache) {
@@ -113,7 +113,7 @@ public class JDBCSnipStorage implements SnipStorage, CacheableStorage {
     int count = -1;
     try {
       statement = connection.prepareStatement("SELECT count(*) " +
-          " FROM Snip ");
+                                              " FROM Snip ");
       result = statement.executeQuery();
       if (result.next()) {
         count = result.getInt(1);
@@ -144,7 +144,7 @@ public class JDBCSnipStorage implements SnipStorage, CacheableStorage {
 
   public List storageByUser(String login) {
     Finder finder = finders.getFinder("WHERE cUser=?")
-           .setString(1, login);
+      .setString(1, login);
     List list = createObjects(finder.execute());
     finder.close();
     return list;
@@ -152,7 +152,7 @@ public class JDBCSnipStorage implements SnipStorage, CacheableStorage {
 
   public List storageByDateSince(Timestamp date) {
     Finder finder = finders.getFinder("WHERE mTime>=?")
-           .setDate(1, date);
+      .setDate(1, date);
     List list = createObjects(finder.execute());
     finder.close();
     return list;
@@ -167,7 +167,7 @@ public class JDBCSnipStorage implements SnipStorage, CacheableStorage {
 
   public List storageByComments(Snip parent) {
     Finder finder = finders.getFinder("WHERE commentSnip=? ORDER BY cTime")
-           .setString(1, parent.getName());
+      .setString(1, parent.getName());
     List list = createObjects(finder.execute());
     finder.close();
     return list;
@@ -175,7 +175,7 @@ public class JDBCSnipStorage implements SnipStorage, CacheableStorage {
 
   public List storageByParent(Snip parent) {
     Finder finder = finders.getFinder("WHERE parentSnip=?")
-          .setString(1, parent.getName());
+      .setString(1, parent.getName());
     List list = createObjects(finder.execute());
     finder.close();
     return list;
@@ -183,7 +183,7 @@ public class JDBCSnipStorage implements SnipStorage, CacheableStorage {
 
   public List storageByParentNameOrder(Snip parent, int count) {
     Finder finder = finders.getFinder("WHERE parentSnip=? ORDER BY name DESC ")
-           .setString(1, parent.getName());
+      .setString(1, parent.getName());
     List list = createObjects(finder.execute(), count);
     finder.close();
     return list;
@@ -191,7 +191,7 @@ public class JDBCSnipStorage implements SnipStorage, CacheableStorage {
 
   public List storageByParentModifiedOrder(Snip parent, int count) {
     Finder finder = finders.getFinder("WHERE parentSnip=? ORDER BY mTime DESC ")
-           .setString(1, parent.getName());
+      .setString(1, parent.getName());
     List list = createObjects(finder.execute(), count);
     finder.close();
     return list;
@@ -199,10 +199,10 @@ public class JDBCSnipStorage implements SnipStorage, CacheableStorage {
 
   public List storageByDateInName(String start, String end) {
     Finder finder = finders.getFinder("WHERE name>=? and name<=? and parentSnip=? " +
-        " ORDER BY name")
-          .setString(1, start)
-          .setString(2, end)
-          .setString(3, Application.get().getConfiguration().getStartSnip());
+                                      " ORDER BY name")
+      .setString(1, start)
+      .setString(2, end)
+      .setString(3, Application.get().getConfiguration().getStartSnip());
     List list = createObjects(finder.execute());
     finder.close();
     return list;
@@ -211,12 +211,23 @@ public class JDBCSnipStorage implements SnipStorage, CacheableStorage {
   // Basic manipulation methods Load,Store,Create,Remove
   public Snip[] match(String pattern) {
     //@TODO implement this with LIKE
-    return new Snip[]{};
+    Finder finder = finders.getFinder("WHERE name LIKE ? " +
+                                      " ORDER BY name")
+      .setString(1, pattern.toUpperCase() + "%");
+    List list = createObjects(finder.execute());
+    finder.close();
+    return (Snip[]) list.toArray(new Snip[list.size()]);
   }
 
   public Snip[] match(String start, String end) {
     //@TODO implement this with LIKE
-    return new Snip[]{};
+    Finder finder = finders.getFinder("WHERE name>=? and name<=? " +
+                                      " ORDER BY name")
+      .setString(1, start.toUpperCase())
+      .setString(2, end.toUpperCase());
+    List list = createObjects(finder.execute());
+    finder.close();
+    return (Snip[]) list.toArray(new Snip[list.size()]);
   }
 
   public Snip storageLoad(String name) {
@@ -235,9 +246,9 @@ public class JDBCSnipStorage implements SnipStorage, CacheableStorage {
 
     try {
       statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions, " +
-          " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
-          " FROM Snip " +
-          " WHERE UPPER(name)=?");
+                                              " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
+                                              " FROM Snip " +
+                                              " WHERE UPPER(name)=?");
       statement.setString(1, name.toUpperCase());
 
       result = statement.executeQuery();
@@ -261,9 +272,9 @@ public class JDBCSnipStorage implements SnipStorage, CacheableStorage {
 
     try {
       statement = connection.prepareStatement("UPDATE Snip SET name=?, content=?, cTime=?, mTime=?, " +
-          " cUser=?, mUser=?, parentSnip=?, commentSnip=?, permissions=?, " +
-          " oUser=?, backLinks=?, snipLinks=?, labels=?, attachments=?, viewCount=? " +
-          " WHERE name=?");
+                                              " cUser=?, mUser=?, parentSnip=?, commentSnip=?, permissions=?, " +
+                                              " oUser=?, backLinks=?, snipLinks=?, labels=?, attachments=?, viewCount=? " +
+                                              " WHERE name=?");
       statement.setString(1, snip.getName());
       statement.setString(2, snip.getContent());
       statement.setTimestamp(3, snip.getCTime());
@@ -324,11 +335,11 @@ public class JDBCSnipStorage implements SnipStorage, CacheableStorage {
 
     try {
       statement = connection.prepareStatement("INSERT INTO Snip (name, content, cTime, mTime, " +
-          " cUser, mUser, parentSnip, commentSnip, permissions, " +
-          " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
-          " ) VALUES (?,?,?,?,?," +
-          "?,?,?,?,?," +
-          "?,?,?,?,?)");
+                                              " cUser, mUser, parentSnip, commentSnip, permissions, " +
+                                              " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
+                                              " ) VALUES (?,?,?,?,?," +
+                                              "?,?,?,?,?," +
+                                              "?,?,?,?,?)");
       statement.setString(1, name);
       statement.setString(2, content);
       statement.setTimestamp(3, cTime);

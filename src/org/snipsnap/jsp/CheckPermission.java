@@ -41,12 +41,13 @@ public class CheckPermission extends UserAuth {
   protected boolean condition() throws JspTagException {
     Application app = Application.get();
     User user = app.getUser();
+    boolean isTrue = false;
     if (snip != null) {
-      boolean isTrue = Security.checkPermission(permission, user, snip) && Security.hasRoles(user, snip, roles);
-      // invert result if necessary
-      return (invertCheck ? !isTrue : isTrue);
+      isTrue = Security.checkPermission(permission, user, snip) && Security.hasRoles(user, snip, roles);
     } else {
-      return (invertCheck ? !Security.hasRoles(user, roles) : Security.hasRoles(user, roles));
+      isTrue = Security.hasRoles(user, roles);
     }
+    // invert result if necessary
+    return (invertCheck ? !isTrue : isTrue);
   }
 }

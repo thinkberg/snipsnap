@@ -115,6 +115,11 @@
       <description>snip to check roles against</description>
     </attribute>
     <attribute>
+      <name>name</name>
+      <type>java.lang.String</type>
+      <description>name of snip to check roles against</description>
+    </attribute>
+    <attribute>
       <name>invert</name>
       <type>java.lang.Boolean</type>
       <description>invert the check</description>
@@ -139,6 +144,11 @@
       <description>snip to check roles against</description>
     </attribute>
     <attribute>
+      <name>name</name>
+      <type>java.lang.String</type>
+      <description>name of snip to check roles against</description>
+    </attribute>
+    <attribute>
       <name>invert</name>
       <type>java.lang.Boolean</type>
       <description>invert the check</description>
@@ -153,6 +163,11 @@
       <description>permission to check</description>
     </attribute>
     <attribute>
+      <name>name</name>
+      <type>java.lang.String</type>
+      <description>name of snip to check roles against</description>
+    </attribute>
+    <attribute>
       <name>roles</name>
       <required>true</required>
       <description>roles to check user against</description>
@@ -161,6 +176,11 @@
       <name>snip</name>
       <type>org.snipsnap.snip.Snip</type>
       <description>snip to check roles against</description>
+    </attribute>
+    <attribute>
+      <name>name</name>
+      <type>java.lang.String</type>
+      <description>name of snip to check roles against</description>
     </attribute>
     <attribute>
       <name>invert</name>
