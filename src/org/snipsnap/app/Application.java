@@ -79,7 +79,8 @@ public class Application {
     if(notification == null &&
        config != null && config.allow(AppConfiguration.PERM_NOTIFICATION)) {
       notification = NotificationService.getInstance();
-    } else {
+    }
+    if(notification != null) {
       notification.notify(type, snip);
     }
   }
