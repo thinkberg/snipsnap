@@ -1,5 +1,7 @@
 0.2.7
 
+- Fixed bug: Editing users failed when email field was empty
+- Fixed bug: wrong manifest for snipsnap.jar
 - Added feature: a installed blog pings to SnipSnap.org and is featured on SnipSnap.org
 - Added feature: ping blog.gs with extendedPing
 - Added feature: weblogs.ping is now asynchron, so posting is faster with the ping on
