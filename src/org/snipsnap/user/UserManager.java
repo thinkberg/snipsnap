@@ -123,7 +123,11 @@ public class UserManager implements Loader {
           try {
             String id = line.substring(0, line.indexOf(' '));
             String url = line.substring(line.indexOf(' ')+1);
-            robotIds.put(id, url);
+            if(url.indexOf("IGNORE") != -1) {
+              robotIds.put(id, "IGNORE");
+            } else {
+              robotIds.put(id, url);
+            }
           } catch (Exception e) {
             System.err.println("UserManager: conf/robotdetect.txt line "+ln+": syntax error");
             e.printStackTrace();
@@ -175,11 +179,9 @@ public class UserManager implements Loader {
 
       if (null == user) {
         String agent = request.getHeader("User-Agent");
-        System.err.println("User agent of unknown user: '"+agent+"'");
         Iterator it = robotIds.keySet().iterator();
         while(agent != null && user == null && it.hasNext()) {
           String key = (String)it.next();
-
           if(agent.toLowerCase().indexOf(key.toLowerCase()) != -1) {
             user = (User)robots.get(key);
             if(null == user) {
@@ -194,6 +196,7 @@ public class UserManager implements Loader {
         if(user != null) {
           System.err.println("Found robot: "+user);
         } else {
+          System.err.println("User agent of unknown user: '"+agent+"'");
           user = new User("Guest", "Guest", "");
           user.setGuest(true);
         }

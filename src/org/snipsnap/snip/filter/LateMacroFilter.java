@@ -41,6 +41,7 @@ import org.snipsnap.snip.filter.macro.*;
 import org.snipsnap.snip.filter.regex.RegexTokenFilter;
 import org.snipsnap.app.Application;
 import org.snipsnap.serialization.StringBufferWriter;
+import org.snipsnap.util.log.Logger;
 
 import java.util.*;
 import java.io.Writer;
@@ -104,7 +105,6 @@ public class LateMacroFilter extends RegexTokenFilter {
 
 // @DANGER: recursive calls may replace macros in included source code
       try {
-        System.err.println("Macro found:" + command);
         if (macros.containsKey(command)) {
           Macro macro = (Macro) macros.get(command);
 // recursively filter macros within macros
@@ -128,12 +128,13 @@ public class LateMacroFilter extends RegexTokenFilter {
           buffer.append(result.group(0));
           return;
         }
+      } catch(IllegalArgumentException e) {
+        buffer.append("<div class=\"error\">" + command + ": "+e.getMessage()+"</div>");
       } catch (Exception e) {
         System.err.println("unable to format macro: " + result.group(1));
+        buffer.append("<div class=\"error\">" + command + "</div>");
         e.printStackTrace();
-        buffer.append("?" + command + (result.length() > 1 ? ":" + result.group(2) : "") + "?");
         return;
-
       }
     } else {
       buffer.append("<");

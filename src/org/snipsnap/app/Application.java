@@ -169,7 +169,7 @@ public class Application {
     Iterator iterator = currentUsers.values().iterator();
     while (iterator.hasNext()) {
       User user  = (User) iterator.next();
-      if (user.isNonUser() && !users.contains(user)) {
+      if (user.isNonUser() && !users.contains(user) && !"IGNORE".equals(user.getEmail())) {
         users.add(user);
       }
     }

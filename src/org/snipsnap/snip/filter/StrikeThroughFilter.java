@@ -22,6 +22,11 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
+
+package org.snipsnap.snip.filter;
+
+import org.snipsnap.snip.filter.regex.RegexReplaceFilter;
+
 /*
  * StrikeThrough finds --text-- in its input and transforms this
  * striked through text.
@@ -30,13 +35,9 @@
  * @team sonicteam
  * @version $Id$
  */
-package org.snipsnap.snip.filter;
-
-import org.snipsnap.snip.filter.regex.RegexReplaceFilter;
-
 public class StrikeThroughFilter extends RegexReplaceFilter {
 
   public StrikeThroughFilter() {
-    super("([^-]|^)--([^-]+)--([^-]|$)", "$1<strike class=\"strike\">$2</strike>$3");
+    super("(?:[^-]|^)--([^-]+)--", "<strike class=\"strike\">$1</strike>");
   };
 }
