@@ -99,9 +99,9 @@ public class AppServer {
         }
       }
     }
+
     try {
       adminContext = addApplication("/admin", "./lib/snipsnap-admin.war");
-      adminContext.setAttribute(AppServer.class.toString(), AppServer.class);
     } catch (Exception e) {
       System.err.println("AppServer: unable to load servlet class: " + e);
     }

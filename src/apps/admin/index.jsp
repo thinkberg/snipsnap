@@ -1,7 +1,8 @@
-<!--
+<%@ page import="com.neotis.snip.SnipLink"%>
+ <!--
   ** Template for redirection the root page to the start page
   ** @author Matthias L. Jugel
   ** @version $Id$
   -->
 
-<% response.sendRedirect("/admin/exec/"); return; %>
+<% response.sendRedirect(SnipLink.absoluteLink(request, "/exec/")); return; %>

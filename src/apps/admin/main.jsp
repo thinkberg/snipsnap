@@ -11,13 +11,14 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
     <title>SnipSnap Admin</title>
-    <link type="text/css" href="default.css" rel="STYLESHEET"/>
+    <link type="text/css" href="../default.css" rel="STYLESHEET"/>
   </head>
   <body>
+    <% request.getMethod(); %>
     <table width="800" border="0" cellpadding="0" cellspacing="0">
       <tr>
         <td valign="top" width="100%">
-          <img src="images/snip.png"/>
+          <img src="../images/snip.png"/>
         </td>
       </tr>
       <tr><td width="100%" class="menu"><c:import url="/menu.jsp"/></td></tr>

@@ -41,6 +41,12 @@
     <servlet-class>com.neotis.admin.UserManager</servlet-class>
   </servlet>
 
+  <servlet>
+    <servlet-name>com.neotis.admin.UserEdit</servlet-name>
+    <servlet-class>com.neotis.admin.UserEdit</servlet-class>
+  </servlet>
+
+
   <servlet-mapping>
     <servlet-name>com.neotis.admin.AdminServlet</servlet-name>
     <url-pattern>/exec/*</url-pattern>
@@ -69,6 +75,11 @@
   <servlet-mapping>
     <servlet-name>com.neotis.admin.UserManager</servlet-name>
     <url-pattern>/exec/user</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>com.neotis.admin.UserEdit</servlet-name>
+    <url-pattern>/exec/user/edit</url-pattern>
   </servlet-mapping>
 
   <!-- TAGLIBS -->

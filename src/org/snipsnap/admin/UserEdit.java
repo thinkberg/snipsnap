@@ -33,27 +33,28 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Map;
 
 /**
- * User Manager.
+ * User Management, Edit a user.
  * @author Matthias L. Jugel
  * @version $Id$
  */
-public class UserManager extends HttpServlet {
+public class UserEdit extends HttpServlet {
   /**
-   * User management. Prepares the data ...
+   * send request to the actual user manager ...
    */
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     HttpSession session = request.getSession(false);
     if (session != null) {
-      if(request.getParameter("context") != null) {
-        session.setAttribute("context", request.getParameter("context"));
-      } else if(session.getAttribute("context") == null) {
-        Map usermanagers = (Map)session.getAttribute("usermanagers");
-        session.setAttribute("context", usermanagers.isEmpty() ? "/" : usermanagers.keySet().iterator().next());
+      // return to user manager on cancel
+      if(request.getParameter("cancel") != null) {
+        response.sendRedirect(SnipLink.absoluteLink(request, "/exec/user"));
+        return;
       }
-      RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/usermanager.jsp");
+      String context = request.getParameter("context");
+      RequestDispatcher dispatcher = getServletContext().getContext(context).getNamedDispatcher("com.neotis.net.UserManagerServlet");
+      dispatcher.forward(request, response);
+      dispatcher = request.getRequestDispatcher("/exec/user.jsp");
       dispatcher.forward(request, response);
       return;
     }

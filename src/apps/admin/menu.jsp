@@ -7,7 +7,6 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 
 <c:if test="${config.configured && admin != null}">
-  (<i>You need to select an application to enable the <b>User Management</b>!</i>)
   <table class="menu" border="0" cellpadding="8" cellspacing="0">
     <tr>
       <!-- overview -->
@@ -26,7 +25,7 @@
 
       <!-- user management -->
       <c:choose>
-        <c:when test="${admin != null && page != '/user.jsp' && usermanager != null}">
+        <c:when test="${admin != null && !(page == '/usermanager.jsp' || page == '/user.jsp')}">
           <td align="center" width="32%" class="menuitem-inactive">
             <a href="../exec/user">User Management</a>
           </td>

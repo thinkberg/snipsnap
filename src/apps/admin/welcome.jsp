@@ -8,62 +8,59 @@
 
 <h1 class="header">Server / Application Overview</h1>
 
-(<i>Handle with care, don't stop the /admin context or you will have to kill your server to stop!</i>)
 <table border="0" cellpadding="3" cellspacing="0">
   <c:forEach items="${servers}" var="server">
     <tr bgcolor="#aaaaaa"><td colspan="8"><c:out value="${server}"/></td></tr>
     <tr class="table-header">
       <td bgcolor="#aaaaaa"></td><td>Application</td><td>Hosts</td><td colspan="4">Action</td>
     </tr>
-    <c:forEach items="${server.contexts}" var="context">
-      <c:if test="${context.resourceBase != null}">
-        <tr>
-          <td bgcolor="#aaaaaa"></td>
-          <td width="100%"><c:out value="${context.contextPath}"/></td>
-          <td>
-            <c:forEach items="${context.virtualHosts}" var="host">
-              <c:out value="${host}" default="any"/>
-            </c:forEach>
-          </td>
-          <td>
-            <c:if test="${context.started && context.contextPath != '/admin'}">
-              <form method="POST" action="../exec/user">
-                <input type="hidden" name="server" value="<c:out value='${server}'/>">
-                <input type="hidden" name="context" value="<c:out value='${context.contextPath}'/>">
-                <input type="submit" name="user" value="Manage User">
-              </form>
-            </c:if>
-          </td>
-          <form method="POST" action="../exec/application">
-            <input type="hidden" name="server" value="<c:out value='${server}'/>">
-            <input type="hidden" name="context" value="<c:out value='${context.contextPath}'/>">
-            <td>
-              <c:if test="${context.contextPath != '/admin'}">
-                <c:choose>
-                  <c:when test="${context.started}">
-                    <input style="color: red" type="submit" name="command" value="Stop">
-                  </c:when>
-                  <c:otherwise>
-                    <input style="color: green" type="submit" name="command" value="Start">
-                  </c:otherwise>
-                </c:choose>
-              </c:if>
-            </td>
-            <td>
-              <c:if test="${context.contextPath != '/admin'}">
-                <input style="color: red" type="submit" name="command" value="Remove">
-              </c:if>
-            </td>
-          </form>
-          <td>
-            <form method="POST" action="../exec/update">
+    <c:forEach items="${server.contexts}" var="context" varStatus="idx" >
+      <tr class="table-<c:out value='${idx.count mod 2}'/>">
+        <td bgcolor="#aaaaaa"></td>
+        <td width="100%"><c:out value="${context.contextPath}"/></td>
+        <td>
+          <c:forEach items="${context.virtualHosts}" var="host">
+            <c:out value="${host}" default="any"/>
+          </c:forEach>
+        </td>
+        <td>
+          <c:if test="${context.started && context.contextPath != '/admin' && usermanagers[context.contextPath] != null}">
+            <form method="POST" action="../exec/user">
               <input type="hidden" name="server" value="<c:out value='${server}'/>">
               <input type="hidden" name="context" value="<c:out value='${context.contextPath}'/>">
-              <input type="submit" name="user" value="Update">
+              <input type="submit" name="user" value="Manage User">
             </form>
+          </c:if>
+        </td>
+        <form method="POST" action="../exec/application">
+          <input type="hidden" name="server" value="<c:out value='${server}'/>">
+          <input type="hidden" name="context" value="<c:out value='${context.contextPath}'/>">
+          <td>
+            <c:if test="${context.contextPath != '/admin'}">
+              <c:choose>
+                <c:when test="${context.started}">
+                  <input style="color: red" type="submit" name="command" value="Stop">
+                </c:when>
+                <c:otherwise>
+                  <input style="color: green" type="submit" name="command" value="Start">
+                </c:otherwise>
+              </c:choose>
+            </c:if>
           </td>
-        </tr>
-      </c:if>
+          <td>
+            <c:if test="${context.contextPath != '/admin'}">
+              <input style="color: red" type="submit" name="command" value="Remove">
+            </c:if>
+          </td>
+        </form>
+        <td>
+          <form method="POST" action="../exec/update">
+            <input type="hidden" name="server" value="<c:out value='${server}'/>">
+            <input type="hidden" name="context" value="<c:out value='${context.contextPath}'/>">
+            <input type="submit" name="user" value="Update">
+          </form>
+        </td>
+      </tr>
     </c:forEach>
   </c:forEach>
   <form method="POST" action="../exec/shutdown">

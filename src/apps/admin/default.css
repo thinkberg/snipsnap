@@ -7,6 +7,7 @@
 /************************************************/
 
 .error { color: #ff0000; font-weight: bold; }
+.error-position { border: 1px solid #ff0000; }
 .menu {
   border-bottom: 2px solid #cccccc;
 }
@@ -19,7 +20,7 @@
 }
 
 .menuitem-inactive {
-  background-color: #eeeeee;
+  background-color: #dddddd;
   color: #000000;
   font-weight: bold;
   font-size: 14px;
@@ -30,6 +31,13 @@
 .table-header {
   font-size: 12px;
   font-weight: bold;
+  background-color: #dddddd;
+}
+
+.table-0 {
+}
+
+.table-1 {
   background-color: #eeeeee;
 }
 

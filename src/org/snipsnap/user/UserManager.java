@@ -50,11 +50,19 @@ public class UserManager {
     return instance;
   }
 
+  private Set ROLES = new HashSet();
+
   private UserManager() {
+    ROLES.add("Editor");
+    ROLES.add("NoComment");
   }
 
   public List getAll() {
     return storageAll();
+  }
+
+  public Set getAllRoles() {
+    return ROLES;
   }
 
   public User getUser(HttpServletRequest request) {
@@ -136,7 +144,7 @@ public class UserManager {
   }
 
   private Set deserialize(String roleString) {
-    if ("".equals(roleString)) return new HashSet();
+    if (null == roleString || "".equals(roleString)) return new HashSet();
 
     StringTokenizer st = new StringTokenizer(roleString, ":");
     Set roles = new HashSet();

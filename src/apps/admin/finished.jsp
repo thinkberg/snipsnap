@@ -18,6 +18,6 @@
     <b>Enjoy your SnipSnap!</b>
   </c:when>
   <c:otherwise>
-    Your SnipSnap Installation is not configured, please <a href="/admin">do so</a>!
+    Your SnipSnap Installation is not configured, please <a href="../">do so</a>!
   </c:otherwise>
 </c:choose>
