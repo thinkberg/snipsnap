@@ -50,7 +50,7 @@ import java.util.Map;
  * @author Matthias L. Jugel
  * @version $Id$
  */
-public class Layouter extends HttpServlet {
+public class Layouter extends SnipSnapServlet {
 
   public final static String ATT_PAGE = "page";
 
