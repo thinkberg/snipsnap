@@ -11,7 +11,6 @@
 <web-app>
   <display-name>SnipSnap</display-name>
 
-
   <servlet>
     <servlet-name>com.neotis.net.Layouter</servlet-name>
     <servlet-class>com.neotis.net.Layouter</servlet-class>

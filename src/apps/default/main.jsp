@@ -11,7 +11,7 @@
  <head>
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
   <title>Weblog/Wiki</title>
-  <link type="text/css" href="/default.css" rel="STYLESHEET"/>
+  <link type="text/css" href="default.css" rel="STYLESHEET"/>
  </head>
  <body>
    <table width="800" border="0" cellpadding="0" cellspacing="0"><tr><td valign="top">
