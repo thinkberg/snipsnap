@@ -52,6 +52,7 @@ public class PostDaemon {
   private String mailPassword;
   private Timer pop3Timer;
   private boolean active;
+  private int minutes;
 
   public static synchronized PostDaemon getInstance() {
     if (null == instance) {
@@ -62,6 +63,12 @@ public class PostDaemon {
 
   public PostDaemon() {
     Configuration conf = Application.get().getConfiguration();
+    try {
+      minutes = Integer.parseInt(conf.getMailPop3Interval());
+    } catch (NumberFormatException e) {
+      minutes = 15;
+      Logger.warn("PostDaemon: interval config not correct, using default "+minutes+" minutes.");
+    }
     host = conf.getMailPop3Host();
     username = conf.getMailPop3User();
     password = conf.getMailPop3Password();
@@ -71,13 +78,13 @@ public class PostDaemon {
       Logger.warn("PostDaemon: not started");
     } else {
       active = true;
-      Logger.warn("PostDaemon: started");
+      Logger.warn("PostDaemon: started, getting mail every "+minutes+" minutes.");
       pop3Timer = new Timer();
       pop3Timer.schedule(new TimerTask() {
         public void run() {
           process();
         }
-      }, 1 * 10 * 1000, 1 * 10 * 1000);
+      }, minutes * 60 * 1000, minutes * 60 * 1000);
     }
   }
 
