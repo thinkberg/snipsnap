@@ -156,7 +156,12 @@ public class SnipLink {
     return request.getContextPath() + path;
   }
 
-  private final static String IMAGES_ROOT = "../images";
+  //private final static String IMAGES_ROOT = "../images";
+  private static String getImagesRoot() {
+    // return "../images";
+    return Application.get().getConfiguration().getUrl("/images");
+  }
+
   private static List extensions = Arrays.asList(new String[]{"png", "jpg", "jpeg", "gif"});
 
   /**
@@ -182,7 +187,7 @@ public class SnipLink {
 
   public static String createImage(String name, String alt, String ext) {
     StringBuffer buffer = new StringBuffer();
-    return appendImageWithRoot(buffer, SnipLink.IMAGES_ROOT, name, alt, ext, null).toString();
+    return appendImageWithRoot(buffer, getImagesRoot(), name, alt, ext, null).toString();
   }
 
   public static StringBuffer appendExternalImage(StringBuffer buffer, String url, String position) {
@@ -207,19 +212,19 @@ public class SnipLink {
    * @return the string buffer
    */
   public static StringBuffer appendImage(StringBuffer buffer, String name, String alt) {
-    return appendImageWithRoot(buffer, SnipLink.IMAGES_ROOT, name, alt, "png", null);
+    return appendImageWithRoot(buffer, getImagesRoot(), name, alt, "png", null);
   }
 
   public static Writer appendImage(Writer writer, String name, String alt, String ext) throws IOException {
-    return appendImageWithRoot(writer, SnipLink.IMAGES_ROOT, name, alt, ext, null);
+    return appendImageWithRoot(writer, getImagesRoot(), name, alt, ext, null);
   }
 
   public static Writer appendImage(Writer writer, String name, String alt) throws IOException {
-    return appendImageWithRoot(writer, SnipLink.IMAGES_ROOT, name, alt, "png", null);
+    return appendImageWithRoot(writer, getImagesRoot(), name, alt, "png", null);
   }
 
   public static StringBuffer appendImage(StringBuffer buffer, String name, String alt, String ext, String position) {
-    return appendImageWithRoot(buffer, SnipLink.IMAGES_ROOT, name, alt, ext, position);
+    return appendImageWithRoot(buffer, getImagesRoot(), name, alt, ext, position);
   }
 
   /**

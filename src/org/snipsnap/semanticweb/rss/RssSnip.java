@@ -60,6 +60,7 @@ public class RssSnip implements Snip {
     this.title = snip.getName();
     this.content = snip.getContent();
     this.snip = snip;
+    this.url="";
   }
 
   public RssSnip(Snip snip, String content) {
@@ -72,6 +73,11 @@ public class RssSnip implements Snip {
     this.title = title;
   }
 
+  public RssSnip(Snip snip, String content, String title, String url) {
+    this(snip, content, title);
+    this.url = "#"+url.replace(' ', '_');
+  }
+
   public String getName() {
     return title;
   }
@@ -81,7 +87,7 @@ public class RssSnip implements Snip {
   }
 
   public String getNameEncoded() {
-    return snip.getNameEncoded();
+    return snip.getNameEncoded()+url;
   }
 
   public String toXML() {

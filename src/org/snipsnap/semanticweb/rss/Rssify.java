@@ -77,17 +77,23 @@ public class Rssify {
         matchResult = matcher.getMatch();
         String post = content.substring(start, input.getMatchBeginOffset()).trim();
         if (!("".equals(title) && "".equals(post))) {
-          result.add(createSnip(snip, post, title));
+           add(result, snip, post, title);
         }
         start = input.getMatchEndOffset();
         title = matchResult.group(3).trim();
         // Perform whatever processing on the result you want.
       }
 
-      result.add(createSnip(snip, content.substring(start).trim(), title));
+      add(result, snip, content.substring(start).trim(), title);
 
     }
     return result;
+  }
+
+  private static void add(List list, Snip snip, String content, String title) {
+    if (list.size() < 10) {
+      list.add(createSnip(snip, content, title));
+    }
   }
 
   private static Snip createSnip(Snip snip, String content, String title) {
@@ -100,8 +106,10 @@ public class Rssify {
       if (anchorIndex != -1) {
         String url = title.substring(anchorIndex + 8, title.indexOf('}', anchorIndex));
         title = title.substring(0, anchorIndex).trim();
+        rssSnip = new RssSnip(snip, content, title, url);
+      } else {
+        rssSnip = new RssSnip(snip, content, title);
       }
-      rssSnip = new RssSnip(snip, content, title);
     }
     return rssSnip;
   }
