@@ -49,10 +49,18 @@ public class NewUserServlet extends HttpServlet {
   private final static String ERR_ILLEGAL = "Illegal user name! Should only contain letters, numbers, underscore and a dot.";
   private final static String ERR_PASSWORD = "Password does not match!";
   private final static String ERR_PASSWORD_TOO_SHORT = "Password must be at least 3 characters long!";
+  private final static String ERR_NOT_ALLOWED = "Not allowed to register new users!";
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
+    HttpSession session = request.getSession(true);
+    session.removeAttribute("errors");
+    Map errors = new HashMap();
+
+    Application app = Application.getInstance(session);
+
+    if (app.getConfiguration().allowRegister()) {
     String login = request.getParameter("login");
     String email = request.getParameter("email");
     String password = request.getParameter("password");
@@ -61,9 +69,6 @@ public class NewUserServlet extends HttpServlet {
     login = login != null ? login : "";
     email = email != null ? email : "";
 
-    HttpSession session = request.getSession(true);
-    session.removeAttribute("errors");
-    Map errors = new HashMap();
 
     if (request.getParameter("cancel") == null) {
       UserManager um = UserManager.getInstance();
@@ -103,7 +108,6 @@ public class NewUserServlet extends HttpServlet {
       }
 
       // create user ...
-      Application app = Application.getInstance(session);
       user = um.create(login, password, email);
       app.setUser(user, session);
       HomePage.create(login);
@@ -120,6 +124,10 @@ public class NewUserServlet extends HttpServlet {
 
     String referer = request.getParameter("referer");
     response.sendRedirect(referer != null ? referer : SnipLink.absoluteLink(request, "/space/start"));
+  } else {
+      errors.put("Fatal", ERR_NOT_ALLOWED);
+      sendError(session, errors, request, response);
+    }
   }
 
   private void sendError(HttpSession session, Map errors, HttpServletRequest request, HttpServletResponse response)

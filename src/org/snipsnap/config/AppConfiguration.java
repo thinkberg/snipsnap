@@ -73,6 +73,7 @@ public class AppConfiguration extends Configuration {
   public final static String PERM_NOTIFICATION = "notification";
   public final static String PERM_WEBLOGS_PING = "weblogsPing";
   public final static String PERM_EXTERNAL_IMAGES = "externalImages";
+  public final static String PERM_REGISTER = "register";
 
   protected static AppConfiguration instance;
 
@@ -373,6 +374,14 @@ public class AppConfiguration extends Configuration {
 
   public boolean allowExternalImages() {
     return allow(AppConfiguration.PERM_EXTERNAL_IMAGES);
+  }
+
+  public boolean allowRegister() {
+    return (!deny(AppConfiguration.PERM_REGISTER));
+  }
+
+  public boolean getAllowRegister() {
+    return allowRegister();
   }
 
   public boolean isInstalled() {

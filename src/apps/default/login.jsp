@@ -15,7 +15,9 @@
    <c:if test="${error != null}">
     <div class="error"><c:out value="${error}"/></div>
     <div><b>Forgot your password? <a href="../exec/forgot.jsp?login=<c:out value='${tmpLogin}'/>">Reset your password!</a></b></div>
-    <div><b>Not registered? <a href="../exec/register.jsp?login=<c:out value='${tmpLogin}'/>">Register now!</a></b></div>
+    <c:if test="${app.configuration.allowRegister}">
+      <div><b>Not registered? <a href="../exec/register.jsp?login=<c:out value='${tmpLogin}'/>">Register now!</a></b></div>
+    </c:if>
     <p/>
    </c:if>
    <%-- the login form --%>
