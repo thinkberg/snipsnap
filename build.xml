@@ -350,7 +350,7 @@
 
     <copy todir="${target}/webapp/WEB-INF/lib">
       <fileset dir="${jar}">
-        <include name="snipsnap-graph.jar"/>
+        <include name="graph-snipsnap.jar"/>
         <include name="radeox.jar"/>
         <include name="jena.jar"/>
         <include name="commons-logging.jar"/>
