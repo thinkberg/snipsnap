@@ -38,7 +38,7 @@ import org.snipsnap.snip.SnipLink;
 public class UrlFilter extends RegexReplaceFilter {
 
   public UrlFilter() {
-    super("(?:[^\"]|^)((http|ftp)s?://(%[[:digit:]A-Fa-f][[:digit:]A-Fa-f]|[-_.!~*';/?:@#&=+$,[:alnum:]])+)",
-             "<span class=\"nobr\">"+SnipLink.createImage("arrow.right", ">>", "gif")+"<a href=\"$1\">$1</a></span>");
+    super("([^\"]|^)((http|ftp)s?://(%[[:digit:]A-Fa-f][[:digit:]A-Fa-f]|[-_.!~*';/?:@#&=+$,[:alnum:]])+)",
+             "$1<span class=\"nobr\">"+SnipLink.createImage("arrow.right", ">>", "gif")+"<a href=\"$2\">$2</a></span>");
   };
 }
