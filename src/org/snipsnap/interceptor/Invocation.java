@@ -41,14 +41,10 @@ public class Invocation {
   private Method method;
   private Object[] args;
 
-  public Invocation(Object target, Method method, Object[] args) {
+  public Invocation(Object target, Method method, Object[] args, List interceptors) {
     this.target = target;
     this.method = method;
     this.args = args;
-    List interceptors = new ArrayList();
-    //Interceptor log = new LogInterceptor();
-    //log.setName("Logging");
-    interceptors.add(new ACLInterceptor());
     chain = interceptors.iterator();
   }
 
