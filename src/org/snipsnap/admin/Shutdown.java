@@ -43,15 +43,48 @@ import java.util.Iterator;
  * @author Matthias L. Jugel
  * @version $Id$
  */
-public class Application extends HttpServlet {
+public class Shutdown extends HttpServlet {
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
 
-  }
+    String user = request.getParameter("login");
+    String pass = request.getParameter("password");
 
-  protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+    Configuration config = new Configuration("./conf/local.conf");
+
+    if (config.isConfigured() &&
+      config.getUserName().equals(user) &&
+      config.getPassword().equals(pass)) {
+      // shut down server ...
+      new Thread(new Runnable() {
+        public void run() {
+          try {
+            Thread.sleep(1000);
+          } catch (Exception e) {
+            Code.ignore(e);
+          }
+          Log.event("Application: stopping all servers");
+          System.out.println("INFO: Stopping all servers ...");
+          Iterator s = HttpServer.getHttpServers().iterator();
+          while (s.hasNext()) {
+            HttpServer server = (HttpServer) s.next();
+            try {
+              System.out.println("INFO: stopping " + server);
+              server.stop();
+            } catch (Exception e) {
+              Code.ignore(e);
+            }
+          }
+          System.out.println("Shutting down Java VM (it ends here)!");
+          Log.event("Application: exiting Java VM");
+          System.exit(1);
+        }
+      }).start();
+      response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE, "Shutting down server ...");
+      return;
+    }
+
     response.sendRedirect(SnipLink.absoluteLink(request, "/"));
   }
 
