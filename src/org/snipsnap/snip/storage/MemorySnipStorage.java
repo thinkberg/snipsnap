@@ -172,8 +172,15 @@ public class MemorySnipStorage implements SnipStorage {
     return cache.querySorted(new SnipQuery() {
       public boolean fit(Snip snip) {
         String name = snip.getName();
-        return (name.compareTo(start) <= 0 && name.compareTo(end) >=0
-                && snip.getParent().getName().equals("start"));
+        Snip parent = snip.getParent();
+        //System.err.print(" name="+name);
+        //if (parent != null) {
+        // System.err.print(" parent="+parent.getName());
+        //}
+        //System.err.print(" start="+start);
+        //System.err.print(" end="+end);
+        return (start.compareTo(name) <= 0 && end.compareTo(name) >=0 &&
+            null != parent && "start".equals(parent.getName()));
       }
     }, nameComparator, type);
   }

@@ -137,6 +137,7 @@ public class UserManager {
   public List getAll() {
     return storage.storageAll();
   }
+
   // update the auth hash by removing all entries and updating from the database
   private void updateAuthHash() {
     authHash.clear();

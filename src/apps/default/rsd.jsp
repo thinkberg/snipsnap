@@ -4,13 +4,13 @@
 --%><%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %><%--
 --%><%@ page contentType="text/xml"%><%--
 --%><!-- name="generator" content="SnipSnap/<c:out value="${config.version}"/>" -->
-<rsd version="0.6" xmlns:rsd="http://archipelago.phrasewise.com/rsd" >
+<rsd version="1.0" xmlns="http://archipelago.phrasewise.com/rsd" >
 <service>
   <engineName>SnipSnap</engineName>
   <engineLink>http://snipsnap.org</engineLink>
   <homePageLink><c:out value="${url}/${snip.nameEncoded}"/></homePageLink>
   <apis>
-   <api name="Blogger" preferred="true" rpcLink="<c:out value="${baseurl}"/>/RPC2" blogID="">
+   <api name="Blogger" preferred="true" apiLink="<c:out value="${baseurl}"/>/RPC2" blogID="">
    <settings>
     <docs>http://api.blogger.com/api/</docs>
     <notes>SnipSnap partially supports Blogger API. SnipSnap will support other XML-RPC and SOAP APIs in the future.</notes>

@@ -74,13 +74,30 @@ public class ImageMacro extends Macro {
         ext = params.get(2);
         align = params.get(3);
       }
+      // Does the name contain an extension?
+      int dotIndex = img.indexOf('.');
+      if (-1 != dotIndex) {
+        ext = img.substring(dotIndex + 1);
+        img = img.substring(0,dotIndex);
+      }
 
       if (img.startsWith("http://")) {
         if (config.allowExternalImages()) {
           SnipLink.appendExternalImage(buffer, img, align);
         }
       } else {
-        SnipLink.appendImage(buffer, "image-" + snip.getName() + "-" + img, alt, ext, align);
+        String imageName =  "image-" + snip.getName() + "-" + img;
+        if ("svg".equals(ext)) {
+          // SVG cannot be used with <image>
+          buffer.append("<object data=\"");
+          buffer.append("../images/");
+          buffer.append(imageName);
+          buffer.append(".");
+          buffer.append(ext);
+          buffer.append("\" type=\"image/svg+xml\" width=\"400\" height=\"400\"></object>");
+        } else {
+           SnipLink.appendImage(buffer, imageName, alt, ext, align);
+        }
       }
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");

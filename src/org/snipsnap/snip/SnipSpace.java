@@ -319,6 +319,7 @@ public class SnipSpace implements LinkTester {
   }
 
   public Snip create(String name, String content) {
+    name = name.trim();
     Snip snip = storage.storageCreate(name, content);
     cache.put(Snip.class, name, snip);
     if (missing.containsKey(name)) {

@@ -87,7 +87,7 @@ public class LinkTestFilter extends Filter {
         // Since we're still in the loop, fetch match that was found.
         result = matcher.getMatch();
         buffer.append(input.substring(lastmatch, result.beginOffset(0)));
-        String targetSnip = result.group(1);
+        String targetSnip = result.group(1).trim();
         if (targetSnip.startsWith("&#")) {
           targetSnip = trans.nativeToAscii(targetSnip);
         }
@@ -95,6 +95,7 @@ public class LinkTestFilter extends Filter {
         if (targetSnip != null) {
           int colonIndex = targetSnip.indexOf(':');
           int atIndex = targetSnip.indexOf('@');
+          int hashIndex = targetSnip.indexOf('#');
           // typed link ?
           if (-1 != colonIndex) {
             // for now throw away the type information
@@ -102,6 +103,7 @@ public class LinkTestFilter extends Filter {
           }
           // external link ?
           if (-1 != atIndex) {
+            // We do not support # in external spaces
             String extSpace = targetSnip.substring(atIndex + 1);
             // known extarnal space ?
             InterWiki interWiki = InterWiki.getInstance();
@@ -113,9 +115,19 @@ public class LinkTestFilter extends Filter {
             }
             // internal link
           } else {
+            String hash = "";
+            if (-1 != hashIndex) {
+              hash = targetSnip.substring(hashIndex + 1);
+              targetSnip = targetSnip.substring(0, hashIndex);
+            }
             Application app = Application.get();
+
             if (linkTester.exists(targetSnip)) {
-              SnipLink.appendLink(buffer, targetSnip, result.group(1));
+              if (-1 != hashIndex) {
+                SnipLink.appendLink(buffer, targetSnip, result.group(1), hash);
+              } else {
+                SnipLink.appendLink(buffer, targetSnip, result.group(1));
+              }
             } else if(UserManager.getInstance().isAuthenticated(app.getUser())) {
               SnipLink.createCreateLink(buffer, targetSnip);
             } else {

@@ -114,6 +114,10 @@ public class SnipLink {
     return appendLinkWithRoot(writer, "../space", encode(name), view);
   }
 
+  public static StringBuffer appendLink(StringBuffer buffer, String name, String view, String target) {
+    return appendLinkWithRoot(buffer, "../space", encode(name) + "#" + target, view);
+  }
+
   public static StringBuffer appendLink(StringBuffer buffer, String name, String view) {
     return appendLinkWithRoot(buffer, "../space", encode(name), view);
   }
