@@ -29,6 +29,7 @@ import org.snipsnap.snip.SnipLink;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * AppConfiguration Object that contains local installation information.
@@ -119,13 +120,16 @@ public class AppConfiguration extends Configuration {
   public String getUrl(String target) {
     StringBuffer url = new StringBuffer();
     url.append("http://");
-    url.append(getHost() == null ? InetAddress.getLocalHost().getHostName());
+    try {
+      url.append(getHost() == null ? InetAddress.getLocalHost().getHostName() : getHost());
+    } catch (UnknownHostException e) {
+      url.append(System.getProperty("host", "localhost"));
+    }
     int port = getPort();
     if (port != 80) {
       url.append(":");
       url.append(port);
     }
-    url.append("/");
     url.append(getContextPath());
     url.append(target);
     return url.toString();

@@ -13,7 +13,7 @@
 </c:forEach>
 <br/>
 
-<c:if test="${admin == null}">
+<c:if test="${serverAdmin == null}">
   <b>
     <i>Attention:</i> The user name and password you use here will be used for securing the installer. Next time
     you use it you must authenticate using the information entered here.
