@@ -71,7 +71,7 @@ public class LocaleComparator {
     System.exit(0);
   }
 
-  private static Properties[] compareBundles(Properties bundle, Properties refBundle) {
+  public static Properties[] compareBundles(Properties bundle, Properties refBundle) {
     Properties missingKeys = new Properties();
     Properties nonTranslatedKeys = new Properties();
 

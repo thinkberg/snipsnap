@@ -26,6 +26,7 @@ package org.snipsnap.server;
 
 import org.snipsnap.config.ServerConfiguration;
 import org.snipsnap.util.XMLSnipRepair;
+import org.snipsnap.util.LocaleComparator;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -35,11 +36,14 @@ import java.io.InputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.TreeSet;
 import java.text.NumberFormat;
 
 public class AdminClient {
@@ -100,6 +104,32 @@ public class AdminClient {
           in = new File((String) commands.get(1));
       }
       XMLSnipRepair.repair(in, out, webapp);
+    } else if ("checklocale".equals(commands.get(0))) {
+      boolean show = false;
+      switch (commands.size()) {
+        case 1:
+          System.err.println("checklocale needs at least one argument: [-show] <locale to check>");
+          System.exit(0);
+          break;
+        case 3:
+          show = "-show".equals(commands.get(1));
+          commands.remove(1);
+        case 2:
+          File[] localefiles = new File("src/apps/default/WEB-INF/classes/i18n").listFiles(new FilenameFilter() {
+            public boolean accept(File dir, String name) {
+              return name.endsWith("_en.properties");
+            }
+          });
+          String locale = (String) commands.get(1);
+          checkLocaleFiles(localefiles, locale, show);
+          localefiles = new File("src/apps/installer/WEB-INF/classes/i18n").listFiles(new FilenameFilter() {
+            public boolean accept(File dir, String name) {
+              return name.endsWith("_en.properties");
+            }
+          });
+          checkLocaleFiles(localefiles, locale, show);
+          break;
+      }
     } else {
       try {
         System.err.println("Contacting Remote Server ...");
@@ -122,6 +152,44 @@ public class AdminClient {
         }
       } catch (Exception e) {
         System.err.println("AdminClient: error executing command: " + e.getMessage());
+      }
+    }
+  }
+
+  private static void checkLocaleFiles(File[] localefiles, String locale, boolean show) {
+    for (int i = 0; i < localefiles.length; i++) {
+      Properties defaultBundle = new Properties();
+      Properties compareBundle = new Properties();
+      try {
+        defaultBundle.load(new FileInputStream(localefiles[i]));
+        String bundleName = localefiles[i].getName();
+        bundleName = bundleName.substring(0, bundleName.length() - "_en.properties".length());
+        File bundleFile = new File(localefiles[i].getParentFile(), bundleName + "_" + locale + ".properties");
+        compareBundle.load(new FileInputStream(bundleFile));
+        System.out.println("== Checking bundle " + bundleFile.getName());
+        Properties problems[] = LocaleComparator.compareBundles(compareBundle, defaultBundle);
+        if (!problems[0].isEmpty()) {
+          System.out.println("== "+bundleFile.getName() + ": " + problems[0].size() + " missing properties.");
+          if (show) {
+            Iterator it = new TreeSet(problems[0].keySet()).iterator();
+            while (it.hasNext()) {
+              String key = (String) it.next();
+              System.out.println(key + "\t=\t" + problems[0].getProperty(key));
+            }
+          }
+        }
+        if (!problems[1].isEmpty()) {
+          System.out.println("== "+bundleFile.getName() + ": " + problems[1].size() + " not translated.");
+          if (show) {
+            Iterator it = new TreeSet(problems[1].keySet()).iterator();
+            while (it.hasNext()) {
+              String key = (String) it.next();
+              System.out.println(key + "\t=\t" + problems[1].getProperty(key));
+            }
+          }
+        }
+      } catch (IOException e) {
+        System.err.println("can't find bundle: " + e.getMessage());
       }
     }
   }
@@ -197,4 +265,6 @@ public class AdminClient {
       System.err.print(NumberFormat.getIntegerInstance().format(percentage) + "%");
     }
   }
+
+
 }
