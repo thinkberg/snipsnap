@@ -66,7 +66,7 @@ body {
   margin: 0px;
   padding: 0px;
   background: #FFF;
-  border: 1px solid red;
+  /*border: 1px solid red;*/
 }
 
 #page-content {
@@ -75,7 +75,7 @@ body {
   padding-left: 15px;
   padding-right: 15px;
   background: #FFF;
-  border: 1px solid brown;
+  /*border: 1px solid brown;*/
 }
 
 #page-portlet-1 {
@@ -102,7 +102,7 @@ body {
   width: 100%;
   background:#FFF;
   text-align: center;
-  border: 1px solid green;
+  /*border: 1px solid green;*/
 }
 
 /* Remove the comments around the section below to move the menu to the left side */
@@ -125,7 +125,7 @@ body {
   left: 0px;
   top: 0px;
   border-left: 0px;
-  border-right: 1px solid #003366;
+  /*border-right: 1px solid #003366;*/
 }
  END OF LEFT SIDE MENU */
 
