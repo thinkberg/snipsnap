@@ -121,7 +121,9 @@ public class DBImport {
           Snip snip = (Snip)it.next();
           String parentName = (String) missingParent.get(snip);
           if(space.exists(parentName)) {
+            System.out.println("setting parent of '"+snip.getName()+"' to '"+parentName+"'");
             snip.setParent(space.load(parentName));
+            space.systemStore(snip);
           } else {
             System.out.println("parent '"+parentName+"' for snip '"+snip.getName()+"' missing");
           }
@@ -130,12 +132,15 @@ public class DBImport {
 
       if(!missingCommentSnip.isEmpty()) {
         System.out.println("Inserting previously missing commented snips ...");
-        Iterator it = missingParent.keySet().iterator();
+        Iterator it = missingCommentSnip.keySet().iterator();
         while(it.hasNext()) {
           Snip snip = (Snip)it.next();
-          String parentName = (String) missingParent.get(snip);
+          String parentName = (String) missingCommentSnip.get(snip);
+          System.out.println("snip: "+snip+", "+parentName);
           if(space.exists(parentName)) {
+            System.out.println("setting commented snip of '"+snip.getName()+"' to '"+parentName+"'");
             snip.setCommentedSnip(space.load(parentName));
+            space.systemStore(snip);
           } else {
             System.out.println("snip '"+parentName+"' for comment '"+snip.getName()+"' missing");
           }
@@ -285,6 +290,7 @@ public class DBImport {
       }
 
       if ((tmp = (String) elements.get("commentSnip")) != null) {
+        System.out.println("'"+name+"' is a comment to '"+tmp+"' exists? "+space.exists(tmp));
         if(space.exists(tmp)) {
           snip.setCommentedSnip(space.load(tmp));
         } else {
