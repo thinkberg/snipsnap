@@ -21,8 +21,9 @@
         <fmt:message key="config.guide.setup"/>
       </c:when>
       <c:otherwise>
+        <c:set var="stepsize"><%= ((List) pageContext.findAttribute("steps")).size() %></c:set>
         <fmt:message key="config.guide.title">
-          <fmt:param value='<%= ((List) pageContext.findAttribute("steps")).size() %>'/>
+          <fmt:param value="${stepsize}"/>
         </fmt:message>
       </c:otherwise>
     </c:choose>

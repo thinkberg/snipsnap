@@ -84,6 +84,7 @@ li.current-step {
   color: black;
   padding: 5px;
   font-size: 90%;
+  text-align: justify;
 }
 
 .edit {
@@ -94,6 +95,7 @@ li.current-step {
   padding-right: 0px;
   padding-bottom: 5px;
   margin: 0px;
+  vertical-align: top;
 }
 
 .edit .step {
