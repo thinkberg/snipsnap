@@ -100,7 +100,7 @@ img.float-right {
 }
 
 /* weblog formatting */
-.blog-date {
+#blog-date {
   display: block;
   background-color: #f8f8f8;
   color: black;
@@ -110,15 +110,6 @@ img.float-right {
   margin-bottom: 10px;
   width: 100%;
 }
-
-.comment {
-  color: black;
-  background-color: inherit;
-  font-family: verdana, sans-serif;
-  margin-top: 10px;
-  margin-bottom: 25px;
-}
-
 
 /* special formatting of a wiki table */
 #wiki-table {

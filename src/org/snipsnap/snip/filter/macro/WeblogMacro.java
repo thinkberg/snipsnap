@@ -64,11 +64,11 @@ public class WeblogMacro extends Macro {
       Iterator iterator = snips.iterator();
       while (iterator.hasNext()) {
         Snip entry = (Snip) iterator.next();
-        writer.write("<div class=\"blog-date\">");
+        writer.write("<div id=\"blog-date\">");
         writer.write(Snip.toDate(entry.getName()));
         writer.write("</div>");
         writer.write(entry.getXMLContent());
-        writer.write("<div class=\"comment\">");
+        writer.write("<div id=\"snip-post-comments\">");
         SnipLink.appendLink(writer, entry.getName(), "Permalink");
         writer.write(" | ");
         writer.write(entry.getComments().getCommentString());

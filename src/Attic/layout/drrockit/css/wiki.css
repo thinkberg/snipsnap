@@ -100,7 +100,7 @@ img.float-right {
 }
 
 /* weblog formatting */
-.blog-date {
+#blog-date {
   display: block;
   color: white;
   font-family: verdana, sans-serif;
@@ -108,14 +108,6 @@ img.float-right {
   font-weight: bold;
   margin-bottom: 10px;
   width: 100%;
-}
-
-.comment {
-  color: inherit;
-  background-color: inherit;
-  font-family: verdana, sans-serif;
-  margin-top: 10px;
-  margin-bottom: 25px;
 }
 
 

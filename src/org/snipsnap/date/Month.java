@@ -106,7 +106,7 @@ public class Month {
     Set days = getDays(month+1, year);
 
     StringBuffer view = new StringBuffer();
-    view.append("<table id=\"calendar\" summary=\"Monthly calendar with links to each day's posts\">");
+    view.append("<div id=\"calendar\"><table summary=\"Monthly calendar with links to each day's posts\">");
     view.append("<caption>");
     view.append(months[month]);
     view.append(" ");
@@ -171,7 +171,7 @@ public class Month {
     view.append("<tr>");
     view.append(week);
     view.append("</tr>");
-    view.append("</table>");
+    view.append("</table></div>");
     return view.toString();
   }
 
