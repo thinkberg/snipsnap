@@ -22,9 +22,12 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-package org.snipsnap.admin;
+package org.snipsnap.net;
 
+import org.snipsnap.app.Application;
 import org.snipsnap.snip.SnipLink;
+import org.snipsnap.user.User;
+import org.snipsnap.user.UserManager;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -35,34 +38,41 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
- * User Management, Edit a user.
+ * Servlet used for interfacing to external user management. Sets the current user manager
+ * into the session as usermanager:/contextPath.
  * @author Matthias L. Jugel
  * @version $Id$
  */
-public class UserEdit extends HttpServlet {
-  /**
-   * send request to the actual user manager ...
-   */
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    HttpSession session = request.getSession(false);
-    if (session != null) {
-      // return to user manager on cancel
-      if(request.getParameter("cancel") != null) {
-        response.sendRedirect(SnipLink.absoluteLink(request, "/exec/user"));
-        return;
+public class AdminServlet extends HttpServlet {
+
+  private final static String ATT_USERMANAGER = "usermanager";
+  private final static String ATT_CONFIG = "config";
+  private final static String ATT_ADMIN = "admin";
+
+  public void doGet(HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException {
+    // get user manager and store in session
+    UserManager um = UserManager.getInstance();
+    HttpSession session = request.getSession();
+    Application app = Application.getInstance(session);
+    User user = app.getUser();
+    if (user == null) {
+      user = UserManager.getInstance().getUser(request);
+    }
+
+    if (um.isAuthenticated(user) && user.isAdmin()) {
+      session.setAttribute(ATT_USERMANAGER, um);
+      session.setAttribute(ATT_CONFIG, app.getConfiguration());
+      session.setAttribute(ATT_ADMIN, user);
+
+      String command = request.getPathInfo();
+      if(null == command || "/".equals(command)) {
+        command = "/application.jsp";
       }
-      String context = request.getParameter("context");
-      RequestDispatcher dispatcher = getServletContext().getContext(context).getNamedDispatcher("org.snipsnap.net.UserManagerServlet");
+      request.setAttribute("page", command);
+      RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/main.jsp");
+
       dispatcher.forward(request, response);
-      session.setAttribute("user", request.getAttribute("user"));
-      session.setAttribute("errors", request.getAttribute("errors"));
-      if(request.getAttribute("user") != null) {
-        dispatcher = request.getRequestDispatcher("/exec/user.jsp");
-        dispatcher.forward(request, response);
-        session.removeAttribute("errors");
-      } else {
-        response.sendRedirect(SnipLink.absoluteLink(request, "/exec/user"));
-      }
       return;
     }
     response.sendRedirect(SnipLink.absoluteLink(request, "/"));
@@ -72,4 +82,3 @@ public class UserEdit extends HttpServlet {
     doGet(request, response);
   }
 }
-

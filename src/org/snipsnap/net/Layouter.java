@@ -100,6 +100,7 @@ public class Layouter extends HttpServlet {
     } else {
       dispatcher = request.getRequestDispatcher(layout);
     }
+
     if (dispatcher != null) {
       dispatcher.forward(request, response);
       Application.set(null);

@@ -27,7 +27,7 @@ package org.snipsnap.admin.install;
 import org.mortbay.http.SocketListener;
 import org.mortbay.jetty.Server;
 import org.mortbay.util.InetAddrPort;
-import org.snipsnap.admin.CommandHandler;
+import org.snipsnap.admin.util.CommandHandler;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.config.Configuration;
@@ -260,7 +260,7 @@ public class Installer extends HttpServlet {
   private void sendError(HttpSession session, Map errors, HttpServletRequest request, HttpServletResponse response)
     throws IOException {
     session.setAttribute("errors", errors);
-    response.sendRedirect(SnipLink.absoluteLink(request, "/"));
+    response.sendRedirect(SnipLink.absoluteLink(request, "/exec/install.jsp"));
   }
 
   private void writeMessage(PrintWriter out, String message) {

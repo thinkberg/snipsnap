@@ -8,7 +8,6 @@
   <property file="conf/build.properties"/>
   <property file="conf/server.conf"/>
 
-
   <!-- the overall class path -->
   <path id="classpath">
     <pathelement location="${jar}/jdbcpool.jar"/>
@@ -28,7 +27,7 @@
   <target depends="clean" description="build binary package" name="src-tar">
     <tstamp/>
     <tar destfile="../${appname}-${server.version}-${DSTAMP}${TSTAMP}-src.tgz" compression="gzip">
-      <tarfileset dir="." prefix="${appname}-${server.version}" mode="566">
+      <tarfileset dir="." prefix="${appname}-${server.version}" mode="755">
         <include name="run.sh"/>
         <include name="db.sh"/>
       </tarfileset>
@@ -42,11 +41,11 @@
   <target depends="clean, jar" description="build source package" name="bin-tar">
     <tstamp/>
     <tar destfile="../${appname}-${server.version}-${DSTAMP}${TSTAMP}.tgz" compression="gzip">
-      <tarfileset dir="." prefix="${appname}-${server.version}" mode="566">
+      <tarfileset dir="." prefix="${appname}-${server.version}" mode="755">
         <include name="run.sh"/>
         <include name="db.sh"/>
       </tarfileset>
-      <tarfileset dir="." prefix="${appname}-${server.version}" mode="666">
+      <tarfileset dir="." prefix="${appname}-${server.version}" mode="555">
         <include name="${jar}/${appname}.jar"/>
         <include name="${jar}/jdbcpool.jar"/>
         <include name="${jar}/jakarta.jar"/>

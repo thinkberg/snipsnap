@@ -12,8 +12,8 @@
   <display-name>SnipSnap Installer</display-name>
 
   <servlet>
-    <servlet-name>org.snipsnap.admin.CommandHandler</servlet-name>
-    <servlet-class>org.snipsnap.admin.CommandHandler</servlet-class>
+    <servlet-name>org.snipsnap.admin.util.CommandHandler</servlet-name>
+    <servlet-class>org.snipsnap.admin.util.CommandHandler</servlet-class>
     <init-param>
       <param-name>config-file</param-name>
       <param-value>conf/server.conf</param-value>
@@ -29,8 +29,8 @@
   </servlet>
 
   <servlet>
-    <servlet-name>org.snipsnap.admin.Authenticate</servlet-name>
-    <servlet-class>org.snipsnap.admin.Authenticate</servlet-class>
+    <servlet-name>org.snipsnap.admin.install.Authenticate</servlet-name>
+    <servlet-class>org.snipsnap.admin.install.Authenticate</servlet-class>
   </servlet>
 
   <servlet>
@@ -49,12 +49,12 @@
   </servlet>
 
   <servlet-mapping>
-    <servlet-name>org.snipsnap.admin.CommandHandler</servlet-name>
+    <servlet-name>org.snipsnap.admin.util.CommandHandler</servlet-name>
     <url-pattern>/exec/*</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
-    <servlet-name>org.snipsnap.admin.Authenticate</servlet-name>
+    <servlet-name>org.snipsnap.admin.install.Authenticate</servlet-name>
     <url-pattern>/exec/authenticate</url-pattern>
   </servlet-mapping>
 

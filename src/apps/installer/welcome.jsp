@@ -15,15 +15,16 @@
 <table border="0" cellpadding="3" cellspacing="0">
   <tr class="table-header"><td>Application</td><td>Host</td><td>Path</td><td>Database</td><td>Admin</td></tr>
   <c:forEach items="${serverApplications}" var="config" varStatus="idx" >
+    <c:set value="${config.value}" var="cfg"/>
     <tr class="table-<c:out value='${idx.count mod 2}'/>">
       <td>
-        <a href="http://<c:out value='${config.value.host}' default='localhost'/><c:out value=':${config.value.port}' default=''/><c:out value='${config.value.contextPath}'/>"><c:out value="${config.key}"/></a>
+        <a href="http://<c:out value='${cfg.host}' default='localhost'/><c:out value=':${cfg.port}' default=''/><c:out value='${cfg.contextPath}'/>"><c:out value="${config.key}"/></a>
       </td>
-      <td><c:out value="${config.value.host}" default="*" /><c:out value=":${config.value.port}" default=""/></td>
-      <td><c:out value="${config.value.contextPath}"/></td>
-      <td><c:out value="${config.value.JDBCURL}"/></td>
+      <td><c:out value="${cfg.host}" default="*" /><c:out value=":${cfg.port}" default=""/></td>
+      <td><c:out value="${cfg.contextPath}"/></td>
+      <td><c:out value="${cfg.JDBCURL}"/></td>
       <td>
-        <a href="http://<c:out value='${config.value.host}' default='localhost'/><c:out value=':${config.value.port}' default=''/><c:out value='${config.value.contextPath}'/>space/<c:out value='${config.value.adminLogin}'/>"><c:out value="${config.value.adminLogin}"/></a> (<c:out value="${config.value.adminEmail}" default="no email"/>)</td>
+        <a href="http://<c:out value='${cfg.host}' default='localhost'/><c:out value=':${cfg.port}' default=''/><c:out value='${cfg.contextPath}'/>space/<c:out value='${cfg.adminLogin}'/>"><c:out value="${cfg.adminLogin}"/></a> (<c:out value="${cfg.adminEmail}" default="no email"/>)</td>
     </tr>
   </c:forEach>
   <tr><td colspan="5">

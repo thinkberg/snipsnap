@@ -27,7 +27,7 @@ package org.snipsnap.admin.install;
 import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.snip.SnipLink;
-import org.snipsnap.admin.CommandHandler;
+import org.snipsnap.admin.util.CommandHandler;
 import org.mortbay.http.HttpServer;
 import org.mortbay.util.Code;
 import org.mortbay.util.Log;

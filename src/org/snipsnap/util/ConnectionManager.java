@@ -84,7 +84,6 @@ public class ConnectionManager {
       String name = config.getName();
 
       try {
-        System.out.println("Creating alias: " + name + ": " + config.getJDBCDriver() + ", config=" + config);
         mgr.addAlias(name, config.getJDBCDriver(),
                      url,
                      config.getAdminLogin(), config.getAdminPassword(),

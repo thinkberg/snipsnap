@@ -7,15 +7,12 @@
 
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 
-<h1 class="header">Edit User (<c:out value="${user.login}"/>)</h1>
-
 <c:forEach items="${errors}" var="error">
   <div class="error"><c:out value="${error.value}"/></div>
 </c:forEach>
 
-<form method="POST" action="../user/edit">
+<form method="POST" action="<c:url value='/exec/admin/user'/>">
  <input type="hidden" name="command" value="update">
- <input type="hidden" name="context" value="<c:out value='${context}'/>">
  <table border="0" cellspacing="2" cellpadding="2">
   <tr><td class="table-header" colspan="2">User Information</td></tr>
   <tr>

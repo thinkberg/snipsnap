@@ -10,5 +10,8 @@
  </s:check>
  <s:check roles="Editor">
      | <a href="../exec/post.jsp">post blog</a>
- </s:check> ]
+ </s:check>
+ <c:if test="${app.user.admin}">
+     | <a href="../exec/admin">admin</a>
+ </c:if> ]
 </font>

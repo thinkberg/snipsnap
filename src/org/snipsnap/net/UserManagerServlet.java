@@ -28,6 +28,7 @@ import org.snipsnap.user.Roles;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -46,11 +47,13 @@ import java.util.Set;
  */
 public class UserManagerServlet extends HttpServlet {
 
+  public final static String EDIT = "edit";
   public final static String UPDATE = "update";
   public final static String REMOVE = "remove";
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+    String command = request.getParameter("command");
     // get user manager and store in session
     UserManager um = UserManager.getInstance();
     request.setAttribute("usermanager", um);
@@ -60,17 +63,22 @@ public class UserManagerServlet extends HttpServlet {
     User user = um.load(login);
     request.setAttribute("user", user);
 
-    if (request.getAttribute("prepare") == null && request.getParameter("ok") != null) {
-      String command = request.getParameter("command");
-      if (UPDATE.equals(command)) {
-        update(request);
-      } else if (REMOVE.equals(command)) {
+    if (request.getParameter("ok") != null) {
+      if (REMOVE.equals(command)) {
         um.remove(user);
         request.removeAttribute("user");
       } else {
-        System.err.println("UserManagerServlet: unknown command '" + command + "'");
+        if (UPDATE.equals(command)) {
+          update(request);
+        }
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/admin/user.jsp");
+        dispatcher.forward(request, response);
+        return;
       }
     }
+
+    RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/admin/usermanager.jsp");
+    dispatcher.forward(request, response);
   }
 
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

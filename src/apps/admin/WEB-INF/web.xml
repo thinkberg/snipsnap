@@ -17,8 +17,8 @@
   </servlet>
 
   <servlet>
-    <servlet-name>org.snipsnap.admin.Authenticate</servlet-name>
-    <servlet-class>org.snipsnap.admin.Authenticate</servlet-class>
+    <servlet-name>org.snipsnap.admin.install.Authenticate</servlet-name>
+    <servlet-class>org.snipsnap.admin.install.Authenticate</servlet-class>
   </servlet>
 
   <servlet>
@@ -27,8 +27,8 @@
   </servlet>
 
   <servlet>
-    <servlet-name>org.snipsnap.admin.Update</servlet-name>
-    <servlet-class>org.snipsnap.admin.Update</servlet-class>
+    <servlet-name>org.snipsnap.admin.install.Update</servlet-name>
+    <servlet-class>org.snipsnap.admin.install.Update</servlet-class>
   </servlet>
 
   <servlet>
@@ -48,7 +48,7 @@
   </servlet-mapping>
 
   <servlet-mapping>
-    <servlet-name>org.snipsnap.admin.Authenticate</servlet-name>
+    <servlet-name>org.snipsnap.admin.install.Authenticate</servlet-name>
     <url-pattern>/exec/authenticate</url-pattern>
   </servlet-mapping>
 
@@ -58,7 +58,7 @@
   </servlet-mapping>
 
   <servlet-mapping>
-    <servlet-name>org.snipsnap.admin.Update</servlet-name>
+    <servlet-name>org.snipsnap.admin.install.Update</servlet-name>
     <url-pattern>/exec/app/update</url-pattern>
   </servlet-mapping>
 

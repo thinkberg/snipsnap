@@ -173,7 +173,6 @@ public class Application {
   public AppConfiguration getConfiguration() {
     if (config == null) {
       config = AppConfiguration.getInstance();
-      System.out.println("get new config: " + config);
     }
     return config;
   }

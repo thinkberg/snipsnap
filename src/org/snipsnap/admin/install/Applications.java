@@ -27,7 +27,7 @@ package org.snipsnap.admin.install;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.config.AppConfiguration;
-import org.snipsnap.admin.CommandHandler;
+import org.snipsnap.admin.util.CommandHandler;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

@@ -25,6 +25,8 @@
 package org.snipsnap.user;
 
 import org.snipsnap.util.Nameable;
+import org.snipsnap.app.Application;
+import org.snipsnap.config.AppConfiguration;
 
 import java.sql.Timestamp;
 
@@ -121,6 +123,12 @@ public class User implements Nameable {
       roles = new Roles();
     }
     return roles;
+  }
+
+  public boolean isAdmin() {
+    Application app = Application.get();
+    AppConfiguration config = app.getConfiguration();
+    return config.getAdminLogin().equals(login) && config.getAdminPassword().equals(passwd);
   }
 
   public String toString() {
