@@ -67,7 +67,6 @@ public class iCalServlet extends HttpServlet {
       password = auth.substring(auth.indexOf(':')+1);
     }
 
-    System.out.println("user="+login+", pass="+password);
     User user = um.authenticate(login, password);
     if (user == null) {
       response.setHeader("WWW-Authenticate", "Basic realm=\"SnipSnap\"");
@@ -80,9 +79,9 @@ public class iCalServlet extends HttpServlet {
     String method = request.getMethod();
     String pathInfo = request.getPathInfo();
 
-    String name = null;
-    String file = null;
-    try {
+    String name = user.getLogin();
+    String file = pathInfo.substring(1);
+ /*   try {
       int slashIdx = pathInfo.indexOf('/', 1);
       if (slashIdx > -1) {
         name = pathInfo.substring(1, slashIdx);
@@ -91,8 +90,9 @@ public class iCalServlet extends HttpServlet {
     } catch (Exception e) {
       // ignore and let the if below handle
     }
+ */
 
-    System.err.println("iCalServlet: " + method + "(" + name + "," + file + ")");
+    System.err.println("iCalServlet: " + method + "(" + user.getLogin() + "," + file + ")");
 
     // check that we have a name and a file
     if (null == name || null == file) {
@@ -120,7 +120,7 @@ public class iCalServlet extends HttpServlet {
       Iterator it = userSnip.getChildren().iterator();
       while (it.hasNext()) {
         Snip snip = (Snip) it.next();
-        if (file.equals(snip.getName())) {
+        if (snip.getName().equals("calendar-"+name+"-"+file)) {
           space.remove(snip);
         }
       }
@@ -142,7 +142,7 @@ public class iCalServlet extends HttpServlet {
       while ((l = r.read(buffer)) != -1) {
         content.append(buffer, 0, l);
       }
-      Snip snip = space.create(file, content.toString());
+      Snip snip = space.create("calendar-"+name+"-"+file, content.toString());
       userSnip.addSnip(snip);
     }
   }
@@ -156,7 +156,7 @@ public class iCalServlet extends HttpServlet {
       Iterator it = userSnip.getChildren().iterator();
       while (it.hasNext()) {
         Snip snip = (Snip) it.next();
-        if (file.equals(snip.getName())) {
+        if (snip.getName().equals("calendar-"+name+"-"+file)) {
           String content = snip.getContent();
           response.setContentLength(content.length());
           response.setContentType("application/octet-stream");
