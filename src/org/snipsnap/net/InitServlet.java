@@ -26,6 +26,8 @@ package org.snipsnap.net;
 
 import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.config.Configuration;
+import org.snipsnap.util.log.Logger;
+import org.snipsnap.util.log.LogHandler;
 
 import javax.servlet.GenericServlet;
 import javax.servlet.ServletConfig;
@@ -46,9 +48,12 @@ public class InitServlet extends GenericServlet {
       configFile = servletConfig.getServletContext().getRealPath("../application.conf");
     }
     try {
-      System.out.println("classloader: "+getClass().getClassLoader());
-      System.out.println("Loading Config: " + configFile);
-      Configuration config = AppConfiguration.getInstance(configFile);
+      AppConfiguration config = AppConfiguration.getInstance(configFile);
+      try {
+        Logger.setHandler((LogHandler)Class.forName(config.getLogger()).newInstance());
+      } catch (Exception e) {
+        System.err.println("InitServlet: LogHandler not found: "+config.getLogger());
+      }
     } catch (IOException e) {
       e.printStackTrace();
       System.err.println("InitServlet: Unable to load configuration for this application: " + e);

@@ -38,6 +38,7 @@ public class AppConfiguration extends Configuration {
   private final static String APP_HOST = "app.host";
   private final static String APP_PORT = "app.port";
   private final static String APP_PATH = "app.path";
+  private final static String APP_LOGGER = "app.logger";
   private final static String APP_JDBC_URL = "app.jdbc.url";
   private final static String APP_JDBC_DRIVER = "app.jdbc.driver";
 
@@ -124,4 +125,11 @@ public class AppConfiguration extends Configuration {
     return getProperty(AppConfiguration.APP_JDBC_DRIVER);
   }
 
+  public void setLogger(String logger) {
+    setProperty(AppConfiguration.APP_LOGGER, logger);
+  }
+
+  public String getLogger() {
+    return getProperty(AppConfiguration.APP_LOGGER);
+  }
 }

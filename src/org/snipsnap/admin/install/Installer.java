@@ -79,7 +79,7 @@ public class Installer extends HttpServlet {
     // get config from session
     Configuration serverConfig = (Configuration) session.getAttribute(CommandHandler.ATT_CONFIG);
     User admin = (User) session.getAttribute(CommandHandler.ATT_ADMIN);
-    if (null == serverConfig || admin == null) {
+    if (null == serverConfig || (serverConfig.getAdminLogin() != null && admin == null)) {
       response.sendRedirect(SnipLink.absoluteLink(request, "/"));
       return;
     }
@@ -239,6 +239,7 @@ public class Installer extends HttpServlet {
       CreateDB.insertData(config);
     }
 
+    config.setLogger("org.snipsnap.util.log.NullLogger");
     config.store();
 
     writeMessage(out, "Starting application ...");
@@ -252,9 +253,20 @@ public class Installer extends HttpServlet {
       return;
     }
 
+
+    if (serverConfig.getAdminLogin() == null && serverConfig.getAdminPassword() == null) {
+      System.out.println("Installer: Creating System Installer Account using " + config.getAdminLogin());
+      serverConfig.setAdminLogin(config.getAdminLogin());
+      serverConfig.setAdminPassword(config.getAdminPassword());
+      serverConfig.setAdminEmail(config.getAdminEmail());
+      serverConfig.store();
+    }
+
     writeMessage(out, "Installation finished.");
     session.removeAttribute("config");
-    response.sendRedirect(SnipLink.absoluteLink(request, "/"));
+    String host = config.getHost();
+    host = host == null || host.length() == 0 ? "localhost" : host;
+    response.sendRedirect("http://" + host + ":" + config.getPort() + config.getContextPath());
   }
 
   private void sendError(HttpSession session, Map errors, HttpServletRequest request, HttpServletResponse response)

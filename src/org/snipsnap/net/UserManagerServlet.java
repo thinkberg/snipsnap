@@ -76,12 +76,17 @@ public class UserManagerServlet extends HttpServlet {
       } else {
         RequestDispatcher dispatcher = null;
 
-        if (UPDATE.equals(command)) {
+        if(EDIT.equals(command)) {
+          dispatcher = request.getRequestDispatcher("/exec/admin/user.jsp");
+        } else if (UPDATE.equals(command)) {
           if(update(request, errors, user)) {
             um.store(user);
             errors.put("", OK_USER_UPDATED);
+            response.sendRedirect(SnipLink.absoluteLink(request, "/exec/admin/usermanager.jsp"));
+            return;
+          } else {
+            dispatcher = request.getRequestDispatcher("/exec/admin/user.jsp");
           }
-          dispatcher = request.getRequestDispatcher("/exec/admin/user.jsp");
         } else if(CREATE.equals(command)) {
           User tmp = new User(login, "", "");
           if(user != null || !update(request, errors, tmp)) {

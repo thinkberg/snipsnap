@@ -50,7 +50,7 @@
   </tr>
   <tr><td colspan="2">
    <input value="Update User" name="ok" type="submit" tabindex="0">
-   <input value="Cancel/Back" name="cancel" type="submit" tabindex="0">
+   <input value="Cancel" name="cancel" type="submit" tabindex="0">
   </td></tr>
  </table>
 </form>

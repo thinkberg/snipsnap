@@ -11,9 +11,17 @@
 <c:forEach items="${errors}" var="error">
   <span class="error"><c:out value="${error.value}"/></span><br>
 </c:forEach>
+<br>
+<c:if test="${admin == null}">
+  <span class="error">
+    <i>Attention:</i> The user name and password you use here will be used for securing the installer. Next time
+    you use it you must authenticate using the information entered here.
+  </span>
+</c:if>
 
+<br>
 <form method="POST" action="../exec/install">
-  <table border="0" cellpadding="2" cellspacing="0">
+  <table border="0" cellpadding="2" cellspacing="2">
     <tr>
       <td colspan="2" class="table-header">Application Name</td>
     </tr>
@@ -54,7 +62,7 @@
     </tr>
     <tr <c:if test="${errors['port'] != null}">class="error-position"</c:if>>
       <td valign="top">Port Number:</td>
-      <td valign="top"><input name="port" type="text" value="<c:out value='${config.port}' default='80'/>"></td>
+      <td valign="top"><input name="port" type="text" value="<c:out value='${config.port}' default='8778'/>"></td>
       <td valign="top">(optional)</td>
     </tr>
     <tr>
@@ -67,6 +75,12 @@
         default if this is a standalone server.
       </td>
     </tr>
+
+    <input name="usemckoi" type="hidden" value="checked">
+    <input name="jdbc" type="hidden" value="">
+    <input name="driver" type="hidden" value="">
+
+    <%-- DEACTIVATED
     <tr>
       <td valign="top">Use Mckoi Database:</td>
       <td valign="top"><input name="usemckoi" type="checkbox" checked="checked"></td>
@@ -88,6 +102,7 @@
         The JDBC Driver to use for this database connection.
       </td>
     </tr>
+    --%>
     <tr>
       <td colspan="2">
         <input type="submit" value="Install SnipSnap"/>

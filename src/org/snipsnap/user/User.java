@@ -128,7 +128,7 @@ public class User implements Nameable {
   public boolean isAdmin() {
     Application app = Application.get();
     AppConfiguration config = app.getConfiguration();
-    return config.getAdminLogin().equals(login) && config.getAdminPassword().equals(passwd);
+    return config.getAdminLogin().equals(login);
   }
 
   public String toString() {

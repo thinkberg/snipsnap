@@ -11,13 +11,13 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
     <title>SnipSnap Installer</title>
-    <link type="text/css" href="../default.css" rel="STYLESHEET"/>
+    <link type="text/css" href="<c:url value='/default.css'/>" rel="STYLESHEET"/>
   </head>
   <body>
     <table width="800" border="0" cellpadding="0" cellspacing="0">
       <tr>
         <td valign="top" width="100%">
-          <img src="../images/snip.png"/>
+          <img src="<c:url value='/images/snip.png'/>"/>
         </td>
       </tr>
       <tr><td valign="top">
