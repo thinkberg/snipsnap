@@ -181,8 +181,7 @@ public class AppConfiguration extends Configuration {
   }
 
   public String getTagLine() {
-    String tagline = getProperty(APP_TAGLINE);
-    return tagline != null ? tagline : "The easy Weblog and Wiki Software.";
+    return getProperty(APP_TAGLINE);
   }
 
   public void setLogoImage(String image) {
@@ -190,8 +189,7 @@ public class AppConfiguration extends Configuration {
   }
 
   public String getLogoImage() {
-    String image = getProperty(APP_LOGO);
-    return image != null ? image : "snipsnap-logo";
+    return getProperty(APP_LOGO);
   }
 
   public void setJDBCURL(String url) {

@@ -66,8 +66,11 @@ public abstract class RegexTokenFilter extends RegexFilter implements ActionMatc
       try {
         result = Util.substitute(matcher, p, new ActionSubstitution(s, this, snip), result, limit);
       } catch (Exception e) {
-        Logger.log("Error: "+this+": "+e);
+        Logger.log("Exception: "+this+": "+e);
         e.printStackTrace();
+      } catch(Error err) {
+        Logger.log("<span class=\"error\">Error</span>: "+this+": "+err);
+        err.printStackTrace();
       }
     }
     return result;

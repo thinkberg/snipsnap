@@ -33,12 +33,19 @@ package org.snipsnap.snip.filter;
 
 import org.snipsnap.snip.filter.regex.RegexTokenFilter;
 import org.snipsnap.snip.Snip;
+import org.snipsnap.util.log.Logger;
+import org.snipsnap.util.log.SystemOutLogger;
 import org.apache.oro.text.regex.MatchResult;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class HeadingFilter extends RegexTokenFilter {
 
   public HeadingFilter() {
-    super("^[[:space:]]*(1(\\.1)*)[[:space:]](.*?)[[:space:]]*$");
+    super("^[[:space:]]*(1(\\.1)*)[[:space:]]+(.*?)$");
   }
 
   public void handleMatch(StringBuffer buffer, MatchResult result, Snip snip) {
@@ -49,4 +56,29 @@ public class HeadingFilter extends RegexTokenFilter {
     String indent = result.group(1).replace('.', '-');
     return "<h3 class=\"heading-"+indent+"\">" + result.group(3) + "</h3>";
   }
+/*
+  public static void main(String args[]) {
+    Logger.setHandler(new SystemOutLogger());
+    BufferedReader reader = null;
+    try {
+      reader = new BufferedReader(new FileReader(args[0]));
+    } catch (FileNotFoundException e) {
+      System.err.println("can't read file: "+args[0]);
+      System.exit(-1);
+    }
+    String buf = "", line = null;
+    try {
+      while(null != (line = reader.readLine())) {
+        buf += line + "\n";
+      }
+    } catch (IOException e) {
+      System.err.println("can't read input");
+      System.exit(-1);
+    }
+
+    Filter filter = new HeadingFilter();
+    System.out.println(filter.filter(buf, null));
+
+  }
+*/
 }

@@ -54,7 +54,7 @@ public class ListFilter extends RegexTokenFilter {
   private final static Map closeList = new HashMap();
 
   public ListFilter() {
-    super("^[[:space:]]*([-*]|[iIaA1ghHkK]\\.)(?:[^-]*)[[:space:]]+(\r?\n[[:space:]]*(?:[-*]|[iIaA1ghHkK]\\.)|.)*$", MULTILINE);
+    super("^[[:space:]]*([-*][[:space:]]+|[iIaA1ghHkK]\\.[[:space:]]+)(\r?\n[[:space:]]*(?:[-*][[:space:]]+|[iIaA1ghHkK]\\.[[:space:]]+)|.)*$", MULTILINE);
     openList.put("-", "<ul class=\"minus\">");
     openList.put("*", "<ul class=\"star\">");
     openList.put("i", "<ol class=\"roman\">");
@@ -84,10 +84,12 @@ public class ListFilter extends RegexTokenFilter {
 
   public void handleMatch(StringBuffer buffer, MatchResult result, Snip snip) {
     try {
+      Logger.log("ListFilter: "+result.groups());
       BufferedReader reader = new BufferedReader(new StringReader(result.group(0)));
       addList(buffer, reader);
     } catch (Exception e) {
-      System.err.println("ListFilter: cannot read list: "+e);
+      Logger.log("ListFilter: cannot read list: "+e);
+      e.printStackTrace();
     }
   }
 
@@ -95,11 +97,14 @@ public class ListFilter extends RegexTokenFilter {
     String lastBullet = null;
     String line = null;
     while((line = reader.readLine()) != null) {
+      Logger.log("'"+line+"'");
       // no nested list handling, trim lines:
       line = line.trim();
+      if(line.length() == 0) {
+        continue;
+      }
       String bullet = line.substring(0,1);
 
-      Logger.log("'"+line+"'");
       Logger.log("found bullet: ('"+lastBullet+"') '"+bullet+"'");
       // check whether we find a new list
       if(!bullet.equals(lastBullet)) {
