@@ -35,11 +35,11 @@ import org.snipsnap.snip.label.Labels;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.text.MessageFormat;
 
 /*
  * Macro that displays all Snips with a certain label
@@ -62,7 +62,7 @@ public class LabelSearchMacro extends ListOutputMacro {
   }
 
   public void execute(Writer writer, SnipMacroParameter params)
-      throws IllegalArgumentException, IOException {
+          throws IllegalArgumentException, IOException {
 
     // {label-search:Category=Snip}
     // Map pairs = params.getParams();
@@ -84,8 +84,8 @@ public class LabelSearchMacro extends ListOutputMacro {
       if (!noLabelsAll) {
         Collection LabelsCat;
 // Search for all type labels
-        Label label = labels.getLabel(name);
-        if (label != null && label.getValue().equals(value)) {
+        Label label = labels.getLabel(name, value);
+        if (label != null) {
           result.add(snip);
         }
       }
@@ -101,7 +101,7 @@ public class LabelSearchMacro extends ListOutputMacro {
       MessageFormat mf = new MessageFormat(ResourceManager.getString("i18n.messages", "macro.labelsearch.title"),
                                            ResourceManager.getLocale("i18n.messages"));
       output(writer, params.getSnipRenderContext().getSnip(),
-             mf.format(new Object[] { name, value }), result,
+             mf.format(new Object[]{name, value}), result,
              ResourceManager.getString("i18n.messages", "macro.labelsearch.notfound"), type, true);
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
