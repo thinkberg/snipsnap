@@ -59,7 +59,7 @@ public class CommentViewServlet extends SnipSnapServlet {
       name = name.substring(1);
     }
 
-    Snip snip = SnipSpace.getInstance().load(name.replace('+', ' ')));
+    Snip snip = SnipSpace.getInstance().load(name.replace('+', ' '));
     // Snip does not exist
     if (null == snip) {
       System.err.println("Snip does not exist: name=" + name);

@@ -63,7 +63,7 @@ public class SnipViewServlet extends SnipSnapServlet {
     } else {
       name = name.substring(1);
     }
-
+    Logger.log("snip: "+name+" '"+name.replace('+', ' ')+"'");
     Snip snip = SnipSpace.getInstance().load(name.replace('+', ' '));
     // Snip does not exist
     if (null == snip) {
