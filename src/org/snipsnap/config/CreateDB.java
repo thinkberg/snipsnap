@@ -26,23 +26,18 @@ package org.snipsnap.config;
 
 import org.snipsnap.app.Application;
 import org.snipsnap.snip.HomePage;
-import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.XMLSnipImport;
-import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.util.ConnectionManager;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Driver;
-import java.io.InputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
 
 /**
  * Create initial database and example snips.
@@ -156,7 +151,19 @@ public class CreateDB {
       System.out.println("CreateDB: import failed!");
     }
 
-    space.post("Welcome to [SnipSnap]. You can now login and add/edit your first post");
+
     System.out.println("CreateDB: Complete");
+  }
+
+  public static void postFirst(AppConfiguration config) {
+    System.out.println("CreateDB: Posting first entry");
+    SnipSpace.removeInstance();
+    UserManager.removeInstance();
+
+    User admin = UserManager.getInstance().authenticate(config.getAdminLogin(), config.getAdminPassword());
+    Application app = Application.get();
+    app.setUser(admin);
+
+    SnipSpace.getInstance().post("Welcome to [SnipSnap]. You can now login and add/edit your first post");
   }
 }

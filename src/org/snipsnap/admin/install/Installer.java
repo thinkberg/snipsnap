@@ -270,6 +270,7 @@ public class Installer extends HttpServlet {
     writeMessage(out, "Inserting inital data into database ...");
     CreateDB.createAdmin(config);
     CreateDB.insertData(config, new FileInputStream("conf/snipsnap.snip"));
+    CreateDB.postFirst(config);
     File themeSnip = new File(webInf, theme+".snip");
     if(themeSnip.exists()) {
       writeMessage(out, "Adding additional data from theme "+theme);
