@@ -1,0 +1,1 @@
+@TODO: Add Timezone, e.g. +1.00 to Appconfiguration. Needed e.g. for RSS, DublinCore.
