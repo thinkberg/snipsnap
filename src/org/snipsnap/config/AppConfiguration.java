@@ -38,6 +38,10 @@ import java.util.Locale;
  */
 public class AppConfiguration extends Configuration {
 
+  public final static String APP_ADMIN_PASSWORD = "admin.password";
+  public final static String APP_ADMIN_LOGIN = "admin.login";
+  public final static String APP_ADMIN_EMAIL = "admin.email";
+
   public final static String APP_CACHE = "app.cache";
   public final static String APP_WEBLOG_DATE_FORMAT = "app.weblogDateFormat";
   public final static String APP_TIMEZONE = "app.timezone";
@@ -97,6 +101,30 @@ public class AppConfiguration extends Configuration {
 
   public AppConfiguration(File file) throws IOException {
     super(file);
+  }
+
+  public void setAdminLogin(String login) {
+    setProperty(APP_ADMIN_LOGIN, login);
+  }
+
+  public String getAdminLogin() {
+    return getProperty(APP_ADMIN_LOGIN);
+  }
+
+  public void setAdminPassword(String password) {
+    setProperty(APP_ADMIN_PASSWORD, password);
+  }
+
+  public String getAdminPassword() {
+    return getProperty(APP_ADMIN_PASSWORD);
+  }
+
+  public void setAdminEmail(String email) {
+    setProperty(APP_ADMIN_EMAIL, email);
+  }
+
+  public String getAdminEmail() {
+    return getProperty(APP_ADMIN_EMAIL);
   }
 
   public void setName(String name) {

@@ -24,15 +24,19 @@
  */
 package org.snipsnap.net;
 
-import org.snipsnap.config.AppConfiguration;
-import org.snipsnap.config.Configuration;
 import org.radeox.util.logging.LogHandler;
 import org.radeox.util.logging.Logger;
+import org.snipsnap.config.AppConfiguration;
+import org.snipsnap.config.Configuration;
 
-import javax.servlet.*;
-import javax.naming.InitialContext;
-import java.io.IOException;
+import javax.servlet.GenericServlet;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Only used to initialize configuration. The configuration file may either be set using
@@ -50,7 +54,7 @@ public class InitServlet extends GenericServlet {
     if (null == config) {
       config = context.getRealPath(context.getInitParameter(Configuration.INIT_PARAM));
     }
-    if(null == config) {
+    if (null == config) {
       config = context.getRealPath("/WEB-INF/application.conf");
     }
     File configFile = new File(config);
@@ -58,7 +62,7 @@ public class InitServlet extends GenericServlet {
     // create new configuration instance
     try {
       AppConfiguration appConfiguration = AppConfiguration.getInstance();
-      if(configFile.exists()) {
+      if (configFile.exists()) {
         appConfiguration.load(configFile);
       } else {
         appConfiguration.setFile(configFile);
@@ -70,17 +74,15 @@ public class InitServlet extends GenericServlet {
       }
 
       if (appConfiguration.allow(AppConfiguration.PERM_WEBLOGS_PING)) {
-        System.out.println("WARNING: " + appConfiguration.getName() + ": Weblogs ping is enabled.\n"+
-                           "This means that SnipSnap sends notifications to hosts on the internet\n"+
-                           "when your weblog changes. To turn this off take a look at the FAQ at\n"+
+        System.out.println("WARNING: " + appConfiguration.getName() + ": Weblogs ping is enabled.\n" +
+                           "This means that SnipSnap sends notifications to hosts on the internet\n" +
+                           "when your weblog changes. To turn this off take a look at the FAQ at\n" +
                            ">> http://snipsnap.org/space/faq <<\n");
       }
     } catch (IOException e) {
       e.printStackTrace();
       System.err.println("InitServlet: Unable to load configuration for this application: " + e);
     }
-
-
   }
 
   public void service(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {

@@ -78,7 +78,9 @@ public class MckoiEmbeddedJDBCDriver implements Driver {
     //System.err.println("Deregistering JDBC Driver: "+MckoiEmbeddedJDBCDriver.class.getClassLoader());
     Iterator it = databases.values().iterator();
     while (it.hasNext()) {
-      ((DBSystem) it.next()).close();
+      DBSystem dbSystem = (DBSystem)it.next();
+      System.err.println("MckoiEmbeddedJDBCDriver: closing database: "+dbSystem);
+      dbSystem.close();
     }
     databases.clear();
 
