@@ -16,9 +16,9 @@
   <body>
     <table width="800" border="0" cellpadding="0" cellspacing="0">
       <tr><td valign="top">
-        <table border="0" cellpadding="4" cellspacing="1">
+        <table width="100%"border="0" cellpadding="4" cellspacing="1">
          <tr>
-           <td valign="top">
+           <td valign="top" width="100%">
              <img src="images/snip.png"/>
            </td>
          </tr>

@@ -59,6 +59,7 @@ public class AdminServlet extends HttpServlet {
     if(null == config) {
       config = new Configuration("./conf/local.conf");
     }
+    System.err.println("servers:"+((HttpServer)servers.iterator().next()).getContexts().length);
 
     session.setAttribute("um", um);
     session.setAttribute("servers", servers);
@@ -67,7 +68,11 @@ public class AdminServlet extends HttpServlet {
     String command = request.getPathInfo();
     if (null == command || "/".equals(command)) {
       if(config.isConfigured()) {
-        command = "/welcome.jsp";
+        if(session.getAttribute("admin") != null) {
+          command = "/welcome.jsp";
+        } else {
+          command = "/login.jsp";
+        }
       } else {
         command = "/install.jsp";
       }
@@ -80,6 +85,8 @@ public class AdminServlet extends HttpServlet {
     } else {
       dispatcher = request.getRequestDispatcher(command);
     }
+    response.addHeader("Pragma", "no-cache");
+    response.addHeader("Cache-Control", "no-cache, no-store");
     dispatcher.forward(request, response);
   }
 

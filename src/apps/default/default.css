@@ -24,6 +24,17 @@
   font-size: 20px;
 }
 
+.heading-1 {
+  font-weight: bold;
+  font-size: 12px;
+  font-variant: small-caps;
+}
+
+.heading-1-1 {
+  font-size: 12px;
+  font-variant: small-caps;
+}
+
 /************************************************/
 /* code formatting */
 .code {

@@ -26,6 +26,16 @@
     <servlet-class>com.neotis.admin.Shutdown</servlet-class>
   </servlet>
 
+  <servlet>
+    <servlet-name>com.neotis.admin.Authenticate</servlet-name>
+    <servlet-class>com.neotis.admin.Authenticate</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>com.neotis.admin.Application</servlet-name>
+    <servlet-class>com.neotis.admin.Application</servlet-class>
+  </servlet>
+
   <servlet-mapping>
     <servlet-name>com.neotis.admin.AdminServlet</servlet-name>
     <url-pattern>/exec/*</url-pattern>
@@ -39,6 +49,16 @@
   <servlet-mapping>
     <servlet-name>com.neotis.admin.Shutdown</servlet-name>
     <url-pattern>/exec/shutdown</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>com.neotis.admin.Authenticate</servlet-name>
+    <url-pattern>/exec/authenticate</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>com.neotis.admin.Application</servlet-name>
+    <url-pattern>/exec/application</url-pattern>
   </servlet-mapping>
 
   <!-- TAGLIBS -->

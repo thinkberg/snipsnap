@@ -47,6 +47,8 @@ import java.util.HashMap;
  */
 public class NewUserServlet extends HttpServlet {
   private final static String ERR_EXISTS = "User exists, please user another login name!";
+  private final static String ERR_TOO_SHORT = "User name too short (min. 3 characters)!";
+  private final static String ERR_ILLEGAL = "Illegal user name! Should only contain letters, numbers and a dot.";
   private final static String ERR_PASSWORD = "Password does not match!";
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -59,7 +61,6 @@ public class NewUserServlet extends HttpServlet {
 
     login = login != null ? login : "";
     email = email != null ? email : "";
-
 
     HttpSession session = request.getSession(true);
     session.removeAttribute("errors");
@@ -79,6 +80,19 @@ public class NewUserServlet extends HttpServlet {
         sendError(session, errors, request, response);
         return;
       }
+
+      if(login.length() < 3) {
+        errors.put("login", ERR_TOO_SHORT);
+        sendError(session, errors, request, response);
+        return;
+      }
+
+      if(!login.matches("[A-Za-z0-9.][A-Za-z0-9 .]+")) {
+        errors.put("login", ERR_ILLEGAL);
+        sendError(session, errors, request, response);
+        return;
+      }
+
       // check whether the password is correctly typed
       if (!password.equals(password2)) {
         errors.put("password", ERR_PASSWORD);

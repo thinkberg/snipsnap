@@ -32,9 +32,9 @@ import org.mortbay.jetty.servlet.WebApplicationContext;
 import org.mortbay.util.InetAddrPort;
 
 import java.io.IOException;
-import java.util.Properties;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Properties;
 
 /**
  * Application Server
@@ -77,17 +77,17 @@ public class AppServer {
       try {
         jettyServer.addListener(new SocketListener(new InetAddrPort(config.getPort())));
       } catch (IllegalArgumentException e) {
-        System.err.println("AppServer: illegal number for port: "+config.getPort());
+        System.err.println("AppServer: illegal number for port: " + config.getPort());
       } catch (IOException e) {
-        System.err.println("AppServer: unable to configure server on port "+config.getPort());
-        System.err.println("AppServer: error caused by: "+e);
+        System.err.println("AppServer: unable to configure server on port " + config.getPort());
+        System.err.println("AppServer: error caused by: " + e);
       }
       try {
-        WebApplicationContext context = addApplication(config.getContextPath(), "./app"+config.getContextPath());
-        System.out.println("INFO: starting application "+context);
+        WebApplicationContext context = addApplication(config.getContextPath(), "./app" + config.getContextPath());
+        System.out.println("INFO: starting application " + context);
         context.start();
       } catch (Exception e) {
-        System.out.println("WARNING: unable to start your application: "+e);
+        System.out.println("WARNING: unable to start your application: " + e);
       }
     } else {
       System.out.println("INFO: Server is still unconfigured!");
@@ -96,13 +96,6 @@ public class AppServer {
       String host = listener.getHost();
       if (InetAddrPort.__0_0_0_0.equals(host)) {
         host = "localhost";
-        try {
-          InetAddress addr[] = InetAddress.getAllByName(host);
-          for(int i = 0; i < addr.length; i++)
-          System.out.println(addr[i].toString());
-        } catch (UnknownHostException e) {
-          System.err.println("AppServer: unknown host: "+e);
-        }
       }
       System.out.println("INFO: http://" + host + ":" + listener.getPort() + "/admin");
     }

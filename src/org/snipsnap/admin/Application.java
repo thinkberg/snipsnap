@@ -24,18 +24,17 @@
  */
 package com.neotis.admin;
 
-import com.neotis.config.Configuration;
 import com.neotis.snip.SnipLink;
+import org.mortbay.http.HttpContext;
 import org.mortbay.http.HttpServer;
-import org.mortbay.util.Code;
-import org.mortbay.util.Log;
+import org.mortbay.jetty.Server;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Iterator;
 
 /**
@@ -45,20 +44,58 @@ import java.util.Iterator;
  */
 public class Application extends HttpServlet {
 
-  public void doPost(HttpServletRequest request, HttpServletResponse response)
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-
-  }
-
-  protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+    HttpSession session = request.getSession();
+    if (session != null && session.getAttribute("admin") != null) {
+      String srv = request.getParameter("server");
+      String ctx = request.getParameter("context");
+      String start = request.getParameter("start");
+      String stop = request.getParameter("stop");
+      String remove = request.getParameter("remove");
+      if (start != null) {
+        startStop(srv, ctx, Application.CMD_APPLICATION_START);
+      } else if (stop != null) {
+        startStop(srv, ctx, Application.CMD_APPLICATION_STOP);
+      } else if (remove != null) {
+        startStop(srv, ctx, Application.CMD_APPLICATION_REMOVE);
+      }
+    }
     response.sendRedirect(SnipLink.absoluteLink(request, "/"));
   }
 
-  private void writeMessage(PrintWriter out, String message) {
-    out.println(message);
-    out.flush();
-  }
+  private final static String CMD_APPLICATION_START = "start";
+  private final static String CMD_APPLICATION_STOP = "stop";
+  private final static String CMD_APPLICATION_REMOVE = "stop";
 
+  private void startStop(String srv, String ctx, String command) {
+    System.err.println("srv=" + srv + " ctx=" + ctx);
+    Iterator it = Server.getHttpServers().iterator();
+    while (it.hasNext()) {
+      HttpServer server = (HttpServer) it.next();
+      if (server.toString().equals(srv)) {
+        HttpContext contexts[] = server.getContexts();
+        for (int c = 0; c < contexts.length; c++) {
+          HttpContext context = contexts[c];
+          if (context.getContextPath().equals(ctx)) {
+            try {
+              if (Application.CMD_APPLICATION_START.equals(command)) {
+                context.start();
+              } else if (Application.CMD_APPLICATION_STOP.equals(command)) {
+                context.stop();
+              } else if(Application.CMD_APPLICATION_REMOVE.equals(command)) {
+                server.removeContext(context);
+              } else {
+                System.err.println("Application: unknown or illegal command: " + command);
+              }
+            } catch (Exception e) {
+              System.err.println("Application: unable to " + command + " server=" + server + ", context=" + context);
+            }
+            return;
+          }
+        }
+      }
+    }
+  }
 }
 
