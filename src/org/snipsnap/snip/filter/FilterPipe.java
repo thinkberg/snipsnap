@@ -37,10 +37,13 @@ import org.snipsnap.snip.Snip;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
 
 public class FilterPipe {
 
-  Collection filterList = null;
+  private Collection filterList = null;
+  private static Object[] noArguments =  new Object[]{};
 
   public FilterPipe() {
     filterList = new ArrayList();
@@ -50,17 +53,35 @@ public class FilterPipe {
     filterList.add(filter);
   }
 
+  public void addFilter(String name) {
+    try {
+      Class filterClass = Class.forName(name);
+      Filter filter;
+      try {
+        Method getInstanceMethod = null;
+        getInstanceMethod = filterClass.getMethod("getInstance",null);
+        filter = (Filter) getInstanceMethod.invoke(null, noArguments);
+      } catch (NoSuchMethodException e) {
+        filter = (Filter) filterClass.newInstance();
+      }
+      System.err.println("FilterPipe: added "+name);
+      addFilter(filter);
+    } catch (Exception e) {
+      System.err.println("FilterPipe: unable to load '" + name + "' filter "+e);
+    }
+  }
+
   public String filter(String input, Snip snip) {
 
     String output = input;
     Iterator filterIterator = filterList.iterator();
 
     // Apply every filter in _filterList to input string
-    while(filterIterator.hasNext()) {
+    while (filterIterator.hasNext()) {
       Filter f = (Filter) filterIterator.next();
       String tmp = f.filter(output, snip);
-      if(null == tmp) {
-        System.err.println("error while filtering: "+f);
+      if (null == tmp) {
+        System.err.println("error while filtering: " + f);
       } else {
         output = tmp;
       }

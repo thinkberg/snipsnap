@@ -363,7 +363,6 @@ public class UserManager {
   }
 
   private User storageLoad(String login) {
-    System.err.println("User storageLoad() "+login);
     User user = null;
     PreparedStatement statement = null;
     ResultSet result = null;
@@ -390,7 +389,6 @@ public class UserManager {
   }
 
   private List storageAll() {
-    System.err.println("User storageAll()");
     List users = new ArrayList();
 
     ResultSet result = null;

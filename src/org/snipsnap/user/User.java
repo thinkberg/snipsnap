@@ -78,8 +78,8 @@ public class User implements Nameable {
   }
 
   public void setLastLogout(Timestamp lastLogout) {
-    System.err.println(((Object) this).hashCode());
-    System.err.println("Set LastLogout() "+this.login+" "+lastLogout+" old: "+this.lastLogout);
+    //System.err.println(((Object) this).hashCode());
+    //System.err.println("Set LastLogout() "+this.login+" "+lastLogout+" old: "+this.lastLogout);
     this.lastLogout = lastLogout;
   }
 

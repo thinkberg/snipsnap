@@ -35,25 +35,32 @@ import org.snipsnap.snip.Snip;
  **/
 public class SnipFormatter {
 
-  public static String toXML(Snip snip, String content) {
-    FilterPipe fp = new FilterPipe();
-    fp.addFilter(new EscapeFilter());
-    fp.addFilter(new ParamFilter());
-    fp.addFilter(new MacroFilter());
-    fp.addFilter(new MacroFilter());
-    fp.addFilter(new HeadingFilter());
-    fp.addFilter(new StrikeThroughFilter());
-    fp.addFilter(new ListFilter());
-    fp.addFilter(new NewlineFilter());
-    fp.addFilter(new ParagraphFilter());
-    fp.addFilter(new LineFilter());
-    fp.addFilter(new BoldFilter());
-    fp.addFilter(new ItalicFilter());
-    fp.addFilter(new UrlFilter());
-    fp.addFilter(new LinkTestFilter(SnipSpace.getInstance()));
-    fp.addFilter(new MarkFilter());
-    fp.addFilter(new KeyFilter());
+  static public FilterPipe fp;
+  private static Object monitor = new Object();
 
+  public static String toXML(Snip snip, String content) {
+    synchronized (monitor) {
+      if (null == fp) {
+        fp = new FilterPipe();
+        fp.addFilter("org.snipsnap.snip.filter.EscapeFilter");
+        fp.addFilter("org.snipsnap.snip.filter.ParamFilter");
+        fp.addFilter("org.snipsnap.snip.filter.MacroFilter");
+        fp.addFilter(MacroFilter.getInstance());
+        fp.addFilter("org.snipsnap.snip.filter.HeadingFilter");
+        fp.addFilter("org.snipsnap.snip.filter.StrikeThroughFilter");
+        fp.addFilter("org.snipsnap.snip.filter.ListFilter");
+        fp.addFilter("org.snipsnap.snip.filter.NewlineFilter");
+        fp.addFilter("org.snipsnap.snip.filter.ParagraphFilter");
+        fp.addFilter("org.snipsnap.snip.filter.LineFilter");
+        fp.addFilter("org.snipsnap.snip.filter.BoldFilter");
+        fp.addFilter("org.snipsnap.snip.filter.ItalicFilter");
+        fp.addFilter("org.snipsnap.snip.filter.UrlFilter");
+        fp.addFilter("org.snipsnap.snip.filter.LinkTestFilter");
+        fp.addFilter("org.snipsnap.snip.filter.MarkFilter");
+        fp.addFilter("org.snipsnap.snip.filter.KeyFilter");
+        fp.addFilter("org.snipsnap.snip.filter.LateMacroFilter");
+      }
+    }
     return fp.filter(content, snip);
   }
 }

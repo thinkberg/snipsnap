@@ -43,42 +43,26 @@ import org.snipsnap.app.Application;
 
 import java.util.*;
 
-public class MacroFilter extends RegexTokenFilter {
+public class LateMacroFilter extends RegexTokenFilter {
 
-  private static MacroFilter instance;
+  private static LateMacroFilter instance;
 
   private Map macros;
   private static Object monitor = new Object();
 
-  public MacroFilter() {
+  public LateMacroFilter() {
     super("\\{([^:}]*):?(.*?)\\}(.*?)\\{(\\1)\\}", SINGLELINE);
     addRegex("\\{([^:}]*):?(.*?)\\}", "", MULTILINE);
 
     macros = new HashMap();
-    add(new FieldMacro());
-    add(new LinkMacro());
-    add(new AnnotationMacro());
-    add(new CodeMacro());
-    add(new ScriptMacro());
-    add(new IsbnMacro());
-    add(new ApiMacro());
-    add(new TableMacro());
-    add(new UserSnipMacro());
-    add(new RecentSnipMacro());
-    add(new UserMacro());
-    add(new SearchMacro());
-    add(new IndexSnipMacro());
-    add(new ImageMacro());
-    add(new LastLoginMacro());
-    add(new SinceLastVisitMacro());
-    add(new LastVisitMacro());
-    add(new HotSnipMacro());
+
+    add(new WeblogMacro());
   }
 
   public static Filter getInstance() {
     synchronized (monitor) {
       if (null == instance) {
-        instance = new MacroFilter();
+        instance = new LateMacroFilter();
       }
     }
     return instance;
@@ -150,6 +134,7 @@ public class MacroFilter extends RegexTokenFilter {
 
 // @DANGER: recursive calls may replace macros in included source code
       try {
+        System.err.println("Macro found:" + command);
         if (macros.containsKey(command)) {
           Macro macro = (Macro) macros.get(command);
 // recursively filter macros within macros

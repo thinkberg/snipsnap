@@ -36,6 +36,7 @@ package org.snipsnap.snip.filter;
 import org.apache.oro.text.regex.*;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.util.Transliterate;
 import org.snipsnap.app.Application;
 import org.snipsnap.user.User;
@@ -46,18 +47,18 @@ import java.util.Map;
 
 public class LinkTestFilter extends Filter {
 
-  LinkTester linkTester;
-  int limit = Util.SUBSTITUTE_ALL;
-  int interps = Perl5Substitution.INTERPOLATE_ALL;
-  PatternMatcher matcher = new Perl5Matcher();
-  Pattern pattern = null;
-  PatternCompiler compiler = new Perl5Compiler();
-  String _substitute;
-  Transliterate trans;
-  Map wikiSpaces = new HashMap();
+  private LinkTester linkTester;
+  private int limit = Util.SUBSTITUTE_ALL;
+  private int interps = Perl5Substitution.INTERPOLATE_ALL;
+  private PatternMatcher matcher = new Perl5Matcher();
+  private Pattern pattern = null;
+  private PatternCompiler compiler = new Perl5Compiler();
+  private String _substitute;
+  private Transliterate trans;
+  private Map wikiSpaces = new HashMap();
 
-  public LinkTestFilter(LinkTester linkTester) {
-    this.linkTester = linkTester;
+  public LinkTestFilter() {
+    linkTester = SnipSpace.getInstance();
     trans = new Transliterate("romaji.properties");
 
     try {
