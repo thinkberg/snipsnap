@@ -1,5 +1,7 @@
 0.5.2 
 
+- Added Stream based import/export
+- Added Referrer SPAM blacklist
 - Merged multi-instance SnipSnap changes into Trunk
 - Added version information to database dump
 - Fixed compatibility with tomcat (use connector attribute URIEncoding="UTF-8")

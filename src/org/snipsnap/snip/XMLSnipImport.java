@@ -28,28 +28,31 @@ import org.apache.xmlrpc.Base64;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
+import org.dom4j.ElementHandler;
+import org.dom4j.ElementPath;
 import org.dom4j.io.SAXReader;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.container.Components;
+import org.snipsnap.jdbc.IntHolder;
 import org.snipsnap.snip.storage.SnipSerializer;
 import org.snipsnap.snip.storage.UserSerializer;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.versioning.VersionManager;
-import org.snipsnap.jdbc.IntHolder;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.FilterInputStream;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.List;
+import java.io.InputStreamReader;
+import java.io.FileInputStream;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Helper class for importing serialized database backups.
@@ -68,34 +71,87 @@ public class XMLSnipImport {
   };
 
   public static IntHolder getStatus() {
-    IntHolder current = (IntHolder) ((Map)instance.get()).get("current");
-    if(null == current) {
+    IntHolder current = (IntHolder) ((Map) instance.get()).get("current");
+    if (null == current) {
       current = new IntHolder(0);
       ((Map) instance.get()).put("current", current);
     }
     return current;
   }
 
-  public static IntHolder getMax() {
-    IntHolder max = (IntHolder) ((Map) instance.get()).get("max");
-    if (null == max) {
-      max = new IntHolder(0);
-      ((Map) instance.get()).put("max", max);
-    }
-    return max;
-  }
-
+  private static long charErrCount = 0;
   /**
    * Load snips and users into the SnipSpace from an xml document out of a stream.
    * @param in  the input stream to load from
    * @param flags whether or not to overwrite existing content
    */
-  public static void load(InputStream in, int flags) throws IOException {
+  public static void load(InputStream in, final int flags) throws IOException {
     SAXReader saxReader = new SAXReader();
     try {
-      Document document = saxReader.read(in);
-      getMax().setValue(document.getRootElement().elements().size());
-      load(document, flags);
+      saxReader.addHandler("/snipspace/user", new ElementHandler() {
+        public void onStart(ElementPath elementPath) {
+          // nothing to do here ...
+        }
+
+        public void onEnd(ElementPath elementPath) {
+          Element userElement = elementPath.getCurrent();
+          if ((flags & IMPORT_USERS) != 0) {
+            XMLSnipImport.loadUser(elementPath.getCurrent(), flags);
+            getStatus().inc();
+          }
+          // prune the element to save memory
+          userElement.detach();
+        }
+      });
+
+      saxReader.addHandler("/snipspace/snip", new ElementHandler() {
+        public void onStart(ElementPath elementPath) {
+          // nothing to do here ...
+        }
+
+        public void onEnd(ElementPath elementPath) {
+          Element snipElement = elementPath.getCurrent();
+          if ((flags & IMPORT_SNIPS) != 0) {
+            XMLSnipImport.loadSnip(snipElement, flags);
+            getStatus().inc();
+          }
+          // prune the element to save memory
+          snipElement.detach();
+        }
+      });
+
+
+      // add a reader wrapper to remove illegal characters from input stream
+      // it looks like the database export (XMLWriter) allows these to get through
+      InputStreamReader reader = new InputStreamReader(in, "UTF-8") {
+        public int read(char[] chars) throws IOException {
+          int n = super.read(chars);
+          for (int i = 0; i < n; i++) {
+            chars[i] = replaceIfIllegal(chars[i]);
+          }
+          return n;
+        }
+
+        public int read(char[] chars, int start, int length) throws IOException {
+          int n = super.read(chars, start, length);
+          for (int i = 0; i < n; i++) {
+            chars[i] = replaceIfIllegal(chars[i]);
+          }
+          return n;
+        }
+
+        private char replaceIfIllegal(char c) {
+          if (c < 0x20 && !(c == 0x09 || c == 0x0a || c == 0x0d)) {
+            charErrCount++;
+            return (char) 0x20;
+          }
+          return c;
+        }
+      };
+
+      saxReader.read(reader);
+      Logger.warn("XMLSnipImport: corrected " + charErrCount + " characters in input");
+      Logger.log("XMLSnipImport: imported "+getStatus().getValue() +" data records");
     } catch (DocumentException e) {
       Logger.warn("XMLSnipImport: unable to parse document", e);
       throw new IOException("Error parsing document: " + e);
@@ -103,98 +159,82 @@ public class XMLSnipImport {
   }
 
   /**
-   * Load snips and users into the SnipSpace from an xml document.
-   * @param document the document to load from
-   * @param flags whether or not to overwrite existing content
+   * Load a user object from a serialized xml element
+   * @param userElement the xml user element
+   * @param flags flags indicating overwriting any existing users or not
    */
-  public static void load(Document document, int flags) {
-    Element root = document.getRootElement();
+  public static void loadUser(Element userElement, int flags) {
+    Map userMap = UserSerializer.getInstance().getElementMap(userElement);
+    userMap.remove(UserSerializer.USER_APPLICATION);
 
-    if ((flags & IMPORT_USERS) != 0) {
-      UserSerializer userSerializer = UserSerializer.getInstance();
-      UserManager userManager = (UserManager)Components.getComponent(UserManager.class);
-      Iterator userIt = root.elementIterator("user");
-      while (userIt.hasNext()) {
-        Element userElement = (Element) userIt.next();
-        Map userMap = userSerializer.getElementMap(userElement);
-        userMap.remove(UserSerializer.USER_APPLICATION);
+    String login = (String) userMap.get(UserSerializer.USER_NAME);
+    String passwd = (String) userMap.get(UserSerializer.USER_PASSWORD);
+    String email = (String) userMap.get(UserSerializer.USER_EMAIL);
 
-        String login = (String)userMap.get(UserSerializer.USER_NAME);
-        String passwd = (String) userMap.get(UserSerializer.USER_PASSWORD);
-        String email = (String) userMap.get(UserSerializer.USER_EMAIL);
-
-        User user = null;
-        if(userManager.exists(login)) {
-          if ((flags & OVERWRITE) == 0) {
-            Logger.log("ignoring to import user '"+login+"'");
-            continue;
-          }
-          Logger.log("loading existing user '" + login + "'");
-          user = userManager.load(login);
-        } else {
-          Logger.log("creating user '"+login+"'");
-          user = userManager.create(login, passwd, email);
-        }
-
-        user = userSerializer.deserialize(userMap, user);
-        userManager.systemStore(user);
-        getStatus().inc();
+    UserManager userManager = (UserManager) Components.getComponent(UserManager.class);
+    User user = null;
+    if (userManager.exists(login)) {
+      if ((flags & OVERWRITE) == 0) {
+        Logger.log("ignoring to import user '" + login + "'");
+        return;
       }
+      Logger.log("loading existing user '" + login + "'");
+      user = userManager.load(login);
+    } else {
+      Logger.log("creating user '" + login + "'");
+      user = userManager.create(login, passwd, email);
     }
 
-    if ((flags & IMPORT_SNIPS) != 0) {
-      SnipSerializer snipSerializer = SnipSerializer.getInstance();
-      SnipSpace space = (SnipSpace)Components.getComponent(SnipSpace.class);
+    user = UserSerializer.getInstance().deserialize(userMap, user);
+    userManager.systemStore(user);
+  }
 
-      User importUser = Application.get().getUser();
-      UserManager um = (UserManager) Components.getComponent(UserManager.class);
+  public static void loadSnip(Element snipElement, int flags) {
+    Map snipMap = SnipSerializer.getInstance().getElementMap(snipElement);
+    snipMap.remove(SnipSerializer.SNIP_APPLICATION);
 
-      Iterator snipIt = root.elementIterator("snip");
-      while (snipIt.hasNext()) {
-        Element snipElement = (Element) snipIt.next();
-        Map snipMap = snipSerializer.getElementMap(snipElement);
-        snipMap.remove(SnipSerializer.SNIP_APPLICATION);
+    String name = (String) snipMap.get(SnipSerializer.SNIP_NAME);
+    String content = (String) snipMap.get(SnipSerializer.SNIP_CONTENT);
 
-        String name = (String) snipMap.get(SnipSerializer.SNIP_NAME);
-        String content = (String) snipMap.get(SnipSerializer.SNIP_CONTENT);
-        Snip snip = null;
-        if (space.exists(name)) {
-          Logger.log("loading existing snip '" + name + "'");
-          snip = space.load(name);
-          if ((flags & OVERWRITE) == 0) {
-            snip.setContent(snip.getContent() + content);
-            snipMap.remove(SnipSerializer.SNIP_CONTENT);
-          }
-        } else {
-          Logger.log("creating snip '" + name + "'");
-          snip = space.create(name, content);
-        }
-
-        // check existing users
-        if(!um.exists((String)snipMap.get(SnipSerializer.SNIP_CUSER))) {
-          snipMap.put(SnipSerializer.SNIP_CUSER, importUser.getLogin());
-        }
-        if (!um.exists((String) snipMap.get(SnipSerializer.SNIP_MUSER))) {
-          snipMap.put(SnipSerializer.SNIP_MUSER, importUser.getLogin());
-        }
-        if (!um.exists((String) snipMap.get(SnipSerializer.SNIP_OUSER))) {
-          snipMap.put(SnipSerializer.SNIP_OUSER, importUser.getLogin());
-        }
-
-        // first restore attached files, then remove the data element
-        restoreAttachments(snipElement);
-        snip = snipSerializer.deserialize(snipMap, snip);
-        restoreVersions(snipElement, snip, (flags & OVERWRITE) != 0);
-        snip.getBackLinks().getSize();
-        // ensure that the configuration snip is stored normally
-        // so the configuration is updated
-        if(Configuration.SNIPSNAP_CONFIG.equals(snip.getName())) {
-          space.store(snip);
-        } else {
-          space.systemStore(snip);
-        }
-        getStatus().inc();
+    SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
+    Snip snip = null;
+    if (space.exists(name)) {
+      Logger.log("loading existing snip '" + name + "'");
+      snip = space.load(name);
+      if ((flags & OVERWRITE) == 0) {
+        snip.setContent(snip.getContent() + content);
+        snipMap.remove(SnipSerializer.SNIP_CONTENT);
       }
+    } else {
+      Logger.log("creating snip '" + name + "'");
+      snip = space.create(name, content);
+    }
+
+    UserManager um = (UserManager) Components.getComponent(UserManager.class);
+    User importUser = Application.get().getUser();
+
+    // check existing users
+    if (!um.exists((String) snipMap.get(SnipSerializer.SNIP_CUSER))) {
+      snipMap.put(SnipSerializer.SNIP_CUSER, importUser.getLogin());
+    }
+    if (!um.exists((String) snipMap.get(SnipSerializer.SNIP_MUSER))) {
+      snipMap.put(SnipSerializer.SNIP_MUSER, importUser.getLogin());
+    }
+    if (!um.exists((String) snipMap.get(SnipSerializer.SNIP_OUSER))) {
+      snipMap.put(SnipSerializer.SNIP_OUSER, importUser.getLogin());
+    }
+
+    // first restore attached files, then remove the data element
+    restoreAttachments(snipElement);
+    snip = SnipSerializer.getInstance().deserialize(snipMap, snip);
+    restoreVersions(snipElement, snip, (flags & OVERWRITE) != 0);
+    snip.getBackLinks().getSize();
+    // ensure that the configuration snip is stored normally
+    // so the configuration is updated
+    if (Configuration.SNIPSNAP_CONFIG.equals(snip.getName())) {
+      space.store(snip);
+    } else {
+      space.systemStore(snip);
     }
   }
 
@@ -202,11 +242,11 @@ public class XMLSnipImport {
     Configuration config = Application.get().getConfiguration();
     File attRoot = config.getFilePath();
     Element attachmentsEl = snipEl.element("attachments");
-    if(null != attachmentsEl) {
+    if (null != attachmentsEl) {
       Iterator attIt = attachmentsEl.elements("attachment").iterator();
       while (attIt.hasNext()) {
         Element att = (Element) attIt.next();
-        if(att.element("data") != null) {
+        if (att.element("data") != null) {
           File attFile = new File(attRoot, att.elementText("location"));
           try {
             // make sure the directory hierarchy exists
@@ -217,7 +257,7 @@ public class XMLSnipImport {
             os.flush();
             os.close();
           } catch (Exception e) {
-            Logger.fatal("unable to store attachment: "+e);
+            Logger.fatal("unable to store attachment: " + e);
             e.printStackTrace();
           }
           att.element("data").detach();
@@ -227,9 +267,9 @@ public class XMLSnipImport {
   }
 
   private static void restoreVersions(Element snipEl, Snip snip, boolean overwrite) {
-    VersionManager versionManager = (VersionManager)Components.getComponent(VersionManager.class);
+    VersionManager versionManager = (VersionManager) Components.getComponent(VersionManager.class);
     List currentVersions = versionManager.getHistory(snip);
-    if(currentVersions.size() > 0 && overwrite) {
+    if (currentVersions.size() > 0 && overwrite) {
       // TODO missing in version manager
       // versionManager.removeHistory();
     }
@@ -239,12 +279,12 @@ public class XMLSnipImport {
 
     SnipSerializer serializer = SnipSerializer.getInstance();
     Element versionsEl = snipEl.element("versions");
-    if(versionsEl != null) {
+    if (versionsEl != null) {
       Iterator versionsElIt = versionsEl.elementIterator("snip");
       while (versionsElIt.hasNext()) {
         Element versionSnipEl = (Element) versionsElIt.next();
         Snip versionSnip = serializer.deserialize(versionSnipEl, SnipFactory.createSnip("", ""));
-        if(versionNo > 0) {
+        if (versionNo > 0) {
           versionSnip.setVersion(versionNo++);
         }
         versionManager.storeVersion(versionSnip);

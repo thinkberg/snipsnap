@@ -109,7 +109,6 @@ public class DatabaseImport implements SetupHandler {
     if (null == statusMap) {
       statusMap = new HashMap();
     }
-    statusMap.put("max", new Long(workerThread.getMax()));
     statusMap.put("current", new Long(workerThread.getCurrent()));
     statusMap.put("import", "true");
     session.setAttribute("running", statusMap);
@@ -121,20 +120,12 @@ public class DatabaseImport implements SetupHandler {
     private InputStream file;
     private int mask;
 
-    private IntHolder maxValue;
     private IntHolder status;
 
     private Map errors = null;
 
     public Map getErrors() {
       return errors;
-    }
-
-    public int getMax() {
-      if(null == maxValue) {
-        return 0;
-      }
-      return maxValue.getValue();
     }
 
     public int getCurrent() {
@@ -163,7 +154,6 @@ public class DatabaseImport implements SetupHandler {
       config.set(Configuration.APP_PERM_WEBLOGSPING, "deny");
       config.set(Configuration.APP_PERM_NOTIFICATION, "deny");
 
-      maxValue = XMLSnipImport.getMax();
       status = XMLSnipImport.getStatus();
 
       try {

@@ -18,11 +18,9 @@
           <fmt:message key="config.refresh.text"/>
         </td>
         <td>
-          <c:import url="config/statusbar.jsp">
-            <c:param name="statusMessage" value="config.status"/>
-            <c:param name="statusMax" value="${running.max}"/>
-            <c:param name="statusCurrent" value="${running.current}"/>
-          </c:import>
+          <fmt:message key="config.import.status">
+            <fmt:param value="${running.current}" />
+          </fmt:message>
           <br/>
           <a href="configure?step=import"><fmt:message key="config.refresh"/></a>
         </td>
