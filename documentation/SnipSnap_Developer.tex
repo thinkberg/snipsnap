@@ -28,9 +28,9 @@
 
   %\setcounter{page}{0}  %% Titelseite nicht mitzaehlen
   {\raggedleft\vspace{15cm}{
-   \huge\bfseries\sffamily{SnipSnap Developer Guide}\\\vspace{0.5cm}
+   \huge\bfseries\sffamily{SnipSnap Developer Guide DRAFT\#2}\\\vspace{0.5cm}
   \normalsize\itshape Fraunhofer FIRST\\
-  February 2004\\\vspace{16cm}}
+  March 2004\\\vspace{16cm}}
  
    \fbox{\parbox{\textwidth}{
    \textbf{Contact:} \\
@@ -50,10 +50,15 @@
   \pagestyle{fancy}
   %%\setcounter{page}{1}  %% Titelseite nicht mitzaehlen
 
+\section{Credits}
+
+Thanks to all contributors on snipsnap.org and all developers. Especially thanks to Hans Gerwitz for his contributions.
+
 \section{Introduction}
 
+\section{Obtaining and building}
 
-\section{SnipSnap CVS access}
+\subsection{Getting the SnipSnap source}
 
 While there are source code releases of SnipSnap, which you should normally use,
 the latest source code can be accessed through CVS. CVS is a source code revision
@@ -66,7 +71,45 @@ Password: press <Return> when asked for a password
 cvs -d :pserver:anonymous@cvs.first.fraunhofer.de:/var/cvs checkout snip
 \end{verbatim}
 
-\section{Naming conventions}
+\subsection{Building with ant}
+
+SnipSnap uses Ant\cite{Ant} to build from source. 
+
+\begin{verbatim}
+> ant
+\end{verbatim}
+
+Some of the more important Ant targets are
+\begin{itemize}
+\item \textbf{dist} Builds the SnipSnap distribution
+\item \textbf{test} Runs Unit tests
+\item \textbf{clean} Removes old build artefacts
+\item \textbf{javadoc} Builds JavaDoc HTML pages
+\item \textbf{test-complex} Unit test which take longer to run, like database tests
+\item \textbf{compile-jsp} Compile the JSP files
+\item \textbf{generate} Generate some Java classes from the configuration
+\end{itemize}
+
+\subsection{Dependencies}
+
+SnipSnap depends on serveral open source projects:
+
+\begin{itemize}
+\item Jetty \cite{Jetty}
+\item PicoContainer\cite{PicoContainer}
+\item Groovy\cite{Groovy}
+\item Lucene \cite{Lucene}
+\item Apache XML-RPC \cite{ApacheXmlRpc}
+\item Jakarta Commons DBCP \cite{JakartaDBCP}
+\item Dom4j \cite{Dom4j}
+\item JUnit \cite{JUnit}
+\item Smack \cite{Smack}
+\item Radeox \cite{Radeox}
+\end{itemize}
+
+% Key targets
+
+\subsection{Naming conventions}
 
 The naming of classes in SnipSnap follows some conventions, beside the standard naming conventions
 in Java.
@@ -82,7 +125,7 @@ in Java.
 
 SnipSnap uses the Radeox\cite{Radeox} render engine for rendering the text markup to HTML.
 Radeox knows macros and filters to do the rendering job. Some macros and filters, like the BoldFilter
-are part of Radeox. Others, which are specific to SnipSnap, are part of SnipSnap (Picture \ref{Architecture}).
+are part of Radeox. Others, which are specific to SnipSnap, are part of SnipSnap (Figure \ref{Architecture}).
 
 \begin{figure}[ht]
   \centering
@@ -91,13 +134,97 @@ are part of Radeox. Others, which are specific to SnipSnap, are part of SnipSnap
      \label{Architecture}
 \end{figure}
 
+There are several ways to extend and customize SnipSnap with your own ideas.
+The easiest and most powerful way to extend SnipSnap is to write macros. Macros
+are implemented as a filter (MacroFilter). A macro in SnipSnap is a command
+that does something, like show the number of users, search for a string, display
+a list of recently changed wiki pages, render source code or change the
+font color. Macros have the form {macroname} and can have none or several
+arguments. For example {user-count} will display the number of registered
+readers in SnipSnap. 
+
+While Macros are commands, filters instead replace special text markup with
+XHTML, for example the BoldFilter replaces \_\_bold\_\_ with <b>bold</b>.
+
+\subsection{Rendering life cyle}
+
+Communication within a request is accomplished via three mechanisms:
+\begin{itemize}
+\item \textit{Application} is a thread singleton used to store a lot of state
+\item \textit{Context value objects} are used as explicit parameters to rendering methods
+\item \textit{Request scope} is used for a few items
+\end{itemize}
+
+\subsubsection{InitFilter}
+A Servlet API filter, \textit{org.snipsnap.net.filter.InitFilter}, intercepts all requests and, 
+among other things, sets up \textit{Application} (a thread singleton).  
+Of interest, Application has a property "user" that is set to the currently authenticated user 
+and a "parameters" property given a map with request parameters (from the browser) 
+and two magic keys: "URI" (the requested URL) and "RSS" (URL to the RSS servlet). 
+Both "parameters" and "user" are copied to the SnipRenderContext and do not need
+to be accessed through Application though.
+
+\subsubsection{SnipViewServlet}
+HTTP requests are handled by \textit{org.snipsnap.net.SnipViewServlet} which is
+mapped to /space in the default application.  The URL is parsed to extract the snip name and
+the SnipSpace is retrieved via \textit{org.snipsnap.container.Components} which stores
+all components in a PicoContainer. Then the snip is loaded by name  and 
+placed in request scope.
+
+SnipViewServlet also adds this "viewed" snip to the Application parameter map.  
+Authorization is delegated to the snip itself. Authorization is done with AOP interceptors
+which wrap SnipSpace, Blog and Snip implementation objects.
+
+\subsubsection{JSPs}
+The request is then forwarded to snip.jsp, which uses JSTL\cite{JSTL} to
+import util/snip-base.jsp, which calls  <core:out> with Snip.getXMLContent() 
+for XHTML.
+
+\subsubsection{SnipImpl}
+SnipImpl is a implementation of the Snip interface. In \textit{org.snipsnap.snip.SnipImpl}, 
+getXMLContent() calls toXML(),  which in turn looks up a RenderEngine (honoring any RenderEngine labels).  
+This will usually be \textit{SnipRenderEngine}.
+
+SnipImpl.toXML() then creates a \textit{SnipRenderContext}, 
+passing in "this" snip and the SnipSpace (via PicoContainer again). 
+The parameter map on the context is loaded from the Application configured by InitFilter.
+RenderEngine.render() is then called with the snip content and the SnipRenderContext.
+
+\subsubsection{SnipRenderEngine}
+
+SnipRenderEngine.render() wraps the RenderContext in a new SnipFilterContext
+and sends it through the filter pipe (Figure \ref{RenderContext}). 
+As an aside, the render engine assumes it is safe to cache any output that runs through a filter unmodified. 
+See the Radeox Developer Guide for caching of filter and macro output.
+
+\begin{figure}[ht]
+  \centering
+    \includegraphics[keepaspectratio,width=10cm]{images/SnipRenderEngineContext}
+     \caption{\small\textsf Flow of RenderContext}
+     \label{RenderContext}
+\end{figure}
+
+\subsubsection{Radeox FilterPipe}
+The filter pipe is initialized by \textit{org.radeox.engine.BaseRenderEngine }with all available filters registered 
+with the services loader.  Each individual filter is then invoked (in an order determined by the dependancies 
+each reports via before()) by calling filter(), with the text so far and the FilterContext.
+
+A notable filter is \textit{org.radeox.filter.MacroFilter}, which applies registered macros.  These macros are 
+passed an \textbf{org.radeox.macro.parameter.MacroParameter}, which is provided by the FilterContext.
+In SnipSnap both this is of type SnipMacroParamater.
+
+\subsubsection{Back to the browser}
+The final XML string is returned by SnipRenderEngine.render(), 
+returned by SnipImpl.toXML(), returned by SnipImpl.getXMLContent(), 
+and written to the XHTML response by the JSTL <core:out> in snip-base.jsp.
+
 \subsection{Writing Macros}
 
-For writing  Macros you should take a look at the Radeox Developer Guide. This Guide explains in 
+For writing  Macros you should take a look at the Radeox Developer Guide\cite{RadeoxDeveloperGuide}. This Guide explains in 
 detail how to write Macros. The section here will explain how to write macros that interact with
 SnipSnap. Radeox is the render engine behind SnipSnap. But Radeox macros don't know about SnipSnap. 
 So it's not possible in Radeox macros to get the current Snip etc. So there are new classes in SnipSnap,
-inherited from their Radeox counterparts, which get the information about the SnipSnap context.
+inherited from their Radeox counterparts, which contain information about the SnipSnap context.
 
 \subsubsection{Getting the snip from which the macro is rendered}
 
@@ -113,7 +240,8 @@ public class HelloSnipMacro extends SnipMacro {
     throws IllegalArgumentException, IOException {
 
     SnipRenderContext context = params.getSnipRenderContext();
-    Snip snip = (Snip) context.getAttribute("snip");
+    Snip snip = (Snip)
+        context.getAttribute(SnipRenderContext.SNIP);
     writer.write("hello, my name is "+snip.getName());
   }
 
@@ -144,9 +272,10 @@ public class MessageSendMacro extends SnipMacro {
     throws IllegalArgumentException, IOException {
 
     SnipRenderContext context = params.getSnipRenderContext();
-    Snip snip = (Snip) context.getAttribute("snip");
+    Snip snip = (Snip)
+        context.getAttribute(SnipRenderContext.SNIP);
     PicoContainer container = (PicoContainer)
-      context.getAttribute("container");
+      context.getAttribute(SnipRenderContext.CONTAINER);
 
     MessageService service = (MessageService)
       container.getComponentInstance(MessageService.class);
@@ -163,15 +292,22 @@ public class MessageSendMacro extends SnipMacro {
 \end{Verbatim}
 %!END
 
-\subsubsection{Getting access to displayed snip}
+\subsubsection{Getting access to the currently displayed snip}
 
 As mentioned before, the snip from which a macro is rendered might not
-be the displayed snip. There are a lot of snip used on one SnipSnap page, 
+be the displayed snip. There are a lot of snips used on one SnipSnap page, 
 for example every portlet is a snip. If your macro is called from whithin a
 portlet, the displayed snip differes from the snip from which your macro
 was called. SnipRenderContext has an attribute for the currently displayed
 snip. With this it's easy to write for example a menu macro.
 
+\begin{Verbatim}[gobble=0,frame=single,numbers=left,fontsize=\small]
+SnipRenderContext renderContext =
+  ((SnipFilterContext) context).getSnipRenderContext();
+Snip snip = (Snip) 
+  renderContext.getAttribute(SnipRenderContext.VIEWED);
+\end{Verbatim}
+    
 \subsubsection{Getting access to the loggend in user}
 
 If you want to get access to the logged in user, there is an user attribute
@@ -187,7 +323,8 @@ public class GreetUserMacro extends SnipMacro {
     throws IllegalArgumentException, IOException {
 
     SnipRenderContext context = params.getSnipRenderContext();
-    User user = (User) context.getAttribute("user");
+    User user = (User)
+        context.getAttribute(SnipRenderContext.USER);
     // Users which are not logged in are guests
     if (user.isGuest()) {
       writer.write("Hello, unknown friend.");
@@ -206,16 +343,18 @@ public class GreetUserMacro extends SnipMacro {
 User has some other interesting properties, like his last login time, last logout time or
 his email adress.
 
+%\subsection{Groovy}
+
 \subsection{Writing Filters}
 
-Filters replace som input with some output. For more information on filters
+Filters transform text portions. For more information on filters
 read the Radeox Developer Guide\cite{RadeoxDeveloper}. As with macros,
 filters in SnipSnap are slightly different to give you the context of the filter
-call. The FilterContext which is given to filter is of type SnipFilterContext.
+call. The FilterContext  is of type SnipFilterContext.
 After casting you have acces to the SnipRenderContext, which is the same
 as for macros.
 
-This example writes over every snip who last modified the snip,
+The following example writes at the top of every snip who last modified this snip,
  e.g. \textit{stephan wrote: ...}.
 
 %!SRC|examples/UserFilter.java|start-1|end-1|
@@ -225,21 +364,23 @@ public class UserFilter extends FilterSupport {
     //! Refactor to context like SnipRenderContext
     SnipRenderContext renderContext =
       ((SnipFilterContext) context).getSnipRenderContext();
-    Snip snip = (Snip) renderContext.getAttribute("snip");
+    Snip snip = (Snip)
+        renderContext.getAttribute(SnipRenderContext.SNIP);
     return snip.getMUser()+" wrote:\n\n";
   }
 }
 \end{Verbatim}
 %!END
 
-\section{Attachments}
+\section{Snips}
+\subsection{Attachments}
 
 Every snip can store attachments. In the basic implementation, snips are stored
 in the file system. You can read, write and manipulate attachments from
-e.g your macros. If you want to store attachments with another backend,
+i.e. your macros. If you want to store attachments with another backend,
 you have to implement an AttachmentStorage.
 
-\subsection{Accessing Attachments}
+\subsubsection{Accessing Attachments}
 
 The first example reads all attachments from a snip and then prints them
 to a writer.
@@ -262,9 +403,9 @@ The Attachments object stores a collection of attachments, while the attachment 
 represents a single attachment. Beside the name, each attachment has a size, content type, 
 storage date and a physical location.
 
-\subsection{Reading Attachments}
+\subsubsection{Reading Attachments}
 
-If you need to read an attachment from  the storage for example to display it or store it in another place, you need physical I/O access to the attachment. The attachment I/O is done by the AttachmentStorage component.
+If you need to read an attachment from  the storage i.e.to display it or store it in another place, you need physical I/O access to the attachment. The attachment I/O is done by the AttachmentStorage component.
 
 %!SRC|examples/AttachmentTest.java|start-1|end-1|
 \begin{Verbatim}[gobble=6,frame=single,numbers=left,fontsize=\small]
@@ -277,7 +418,7 @@ If you need to read an attachment from  the storage for example to display it or
 \end{Verbatim}
 %!END
 
-\subsection{Writing Attachments}
+\subsubsection{Writing Attachments}
 
 Writing Attachments is the same as reading attachment. You first create an attachment object,
 then get the OutputStream from the AttachmentStorage and write your attachment data to the
@@ -292,19 +433,19 @@ backend.
 \end{Verbatim}
 %!END
 
-\subsection{Writing an AttachmentStorage}
+\subsubsection{Writing an AttachmentStorage}
 
-To change the storage backend for attachment to something you need, e.g. JDBC, WebDAV, CVS or Subversion
+To change the storage backend for attachment to something you need, i.e. JDBC, WebDAV, CVS or Subversion
 you have to implement the AttachmentStorage interface. The I/O methods all throw IOExceptions.
 
-\begin{verbatim}
+\begin{Verbatim}[gobble=0,frame=single,numbers=left,fontsize=\small]
 public interface AttachmentStorage {
   public boolean exists(Attachment attachment);
   public OutputStream getOutputStream(Attachment attachment);
   public InputStream getInputStream(Attachment attachment);
   public void delete(Attachment attachment);
 }
-\end{verbatim}
+\end{Verbatim}
 
 For an example we write a MapAttachmentStorage which stores the attachment in memory in a Map object.
 
@@ -339,14 +480,93 @@ public class MapAttachmentStorage
     return new ByteArrayInputStream(data);
   }
 
-  public void delete(Attachment attachment) throws IOException {
+  public void delete(Attachment attachment)
+      throws IOException {
     storage.remove(attachment.getLocation());
 
   }
 \end{Verbatim}
 %!END
 
-\section{Storage Architecture and SnipSpace}
+%\subsection{Labels}
+
+\subsection{Feeder}
+
+Feeder is an interface which returns a feed of snips. This is used in serveral parts of SnipSnap.
+
+\begin{Verbatim}[gobble=0,frame=single,numbers=left,fontsize=\small]
+public interface Feeder {
+  public List getFeed();
+  public Snip getContextSnip();
+}
+\end{Verbatim}
+
+The getFeed method returns a list of snips. There are Feeder for snips from blogs, new comments, new snips and
+a Feeder fr recently changed snips.
+
+\begin{itemize}
+\item BlogFeeder
+\item NewCommentFeeder
+\item NewSnipFeeder
+\item RecentlySnipChangedFeeder
+\end{itemize}
+
+\begin{figure}[ht]
+  \centering
+    \includegraphics[keepaspectratio,width=8cm]{images/Feeder}
+     \caption{\small\textsf Feeders return a, sometimes sorted, selection of snips}
+     \label{Feeder}
+\end{figure}
+
+If you deal with a the concept of a feed of snips, a list of snip that changes over time, implement the
+Feeder interface. Then your feeder can be used by others in different enviroments.
+Feeders are used by the RSS servlet or the Blogger APIs to get a list of snips from SnipSnap.
+
+\section{User management and authentication}
+
+SnipSnap contains three components for user management and authentication (Figure \ref{UserManagement}).
+The Facade for user management is the UserManager component. It loads, stores, creates and removes users.
+SnipSnap uses a DefaultUserManager for this. 
+
+\begin{figure}[ht]
+  \centering
+    \includegraphics[keepaspectratio,width=8cm]{images/UserManager}
+     \caption{\small\textsf User Management Architecture}
+     \label{UserManagement}
+\end{figure}
+
+The UserManager depends on a storage backend for user storage.
+The UserStorage component handles this. The basic SnipSnap  distribution supplies a PropertyFileUserStorage and a
+JDBCUserStorage (Figure \ref{UserStorage}).
+
+\begin{figure}[ht]
+  \centering
+    \includegraphics[keepaspectratio,width=6cm]{images/UserStorage}
+     \caption{\small\textsf User Storage Architecture}
+     \label{UserStorage}
+\end{figure}
+
+%\subsection{Writing a custom UserStorage}
+
+\subsection{Authentication}
+
+There is a AuthenticationService component which handles authentication. 
+
+\begin{Verbatim}[gobble=0,frame=single,numbers=left,fontsize=\small]
+public interface AuthenticationService {
+  public final static boolean ENCRYPTED = true;
+
+  public User authenticate(String login, String passwd, 
+                          boolean encrypted);
+  public User authenticate(String login, String passwd);
+  public boolean isAuthenticated(User user);
+}
+\end{Verbatim}
+
+The default implementation uses MD5 digest for password storage and depends
+on an UserStorage for user and password retrieval.
+
+\section{SnipSpace}
 
 SnipSpace is a facade component to access all snips.
 
@@ -364,10 +584,12 @@ SnipSpace provides
      \label{Backend}
 \end{figure}
 
+%\section{Search engine}
+
 SnipSpace also handles delayed storage and some statistic information about the 
 snips of the space.
 
-\section{Writing a Snip storage backend}
+\subsection{SnipSnap storage}
 
 Snips can be stored in different locations. All storage functionality
 is encapsulated in SnipStorage components. The SnipStorage component is used
@@ -377,11 +599,11 @@ The JDBC storage stores snips in a JDBC source, the property storage and the XML
 store snips in the file system. While property storage uses one property file for metadata and
 a text file for the snip content, the XML storage persists snips in XML files.
 
-\subsection{FileSnipStorage}
+\subsubsection{FileSnipStorage}
 
 FileSnipStorage is a base class for storing snips in a file system.
 You can extend FileSnipStorage but it's recommended to implement
-the bases classes for FileSnipStorage in SnipSnap. There are also two bases 
+the base classes for FileSnipStorage in SnipSnap. There are also two bases 
 classes for FileStorage
 
 \begin{description}
@@ -392,7 +614,7 @@ classes for FileStorage
 They both handle creation and deletion of files and directories as necessary.
 You only need to implement the serialization and deserialization from and to
 streams. Both storages also implement the VersionStorage for versioning
-information, which usually is stored in sub directories and uses your
+information, which is usually stored in sub directories and uses your
 persisting methods.
 
 \subsubsection{OneFileSnipStorage}
@@ -407,14 +629,14 @@ protected abstract String getFileName();
 protected abstract void storeSnip(Snip snip, OutputStream out);
 \end{Verbatim}
 
-The loadSnip method gets an input stream, reads the snip data from the stream
+The loadSnip method is supplied an input stream, reads the snip data from the stream
 and creates a new snip. getFileName returns the file name, which could be based
 on the snip name. storeSnip gets a snip and an output stream and persists the
 snip into that stream. Which format to serialize or deserialize a snip is up to you.
 XMLFileSnipStorage is an example of OneFileStorage which stores snip data 
 in XML.
  
-\subsubsection{TwoFileSnopStorage}
+\subsubsection{TwoFileSnipStorage}
 
 TwoFileSnipStorage is the same as OneFileSnipStorage. The only difference
 is that the two file version assumes you want to store the metadata and the
@@ -458,16 +680,25 @@ public interface VersionStorage {
 getVersionHistory returns a List of VersionInfo objects for the snip. loadVersion loads the given
 version from the backend, while storeVersion stores the newest version.
 
-%\section{Writing a UserManager}
-
 %\section{Writing components}
+
+% \section{Labels}
 
 %\section{Customizing JSP code}
 
 \begin{thebibliography}{}
+\bibitem{JSTL} JavaServer Pages Standard Tag Library JSTL, http://java.sun.com/products/jsp/jstl/
+\bibitem{Ant} Ant Java build tool, http://ant.apache.org/
+\bibitem{JUnit} JUnit testing framework, http://www.junit.org
+\bibitem{JakartaDBCP} Jakarta DBCP database connection pooling, http://jakarta.apache.org/commons/dbcp/
+\bibitem{Dom4j} Dom4j XML framework, http://dom4j.org/
+\bibitem{ApacheXmlRpc}Apache XML-RPC library, http://ws.apache.org/xmlrpc
+\bibitem{Lucene}Lucene fulltext search engine, http://jakarta.apache.org/lucene/
+\bibitem{Jetty}Jetty servlet container, http://jetty.mortbay.org
+\bibitem{Smack} Smack Jabber API, http://www.jivesoftware.com/xmpp/smack/
 \bibitem{Radeox} Radeox,  http://radeox.org
 \bibitem{RadeoxDeveloper} Radeox Developer Guide, http://radeox.org/space/Developer
-\bibitem{CVS} CVS Revision Control System
+\bibitem{CVS} CVS Revision Control System, http://www.cvshome.org/
 \bibitem{Groovy} Groovy programming language, http://groovy.codehaus.org
 \bibitem{PicoContainer} Component container, http://www.picocontainer.org/
 \bibitem{Friedl} Jeffrey E. F. Friedl, Mastering Regular Expressions, ISBN: 0596002890

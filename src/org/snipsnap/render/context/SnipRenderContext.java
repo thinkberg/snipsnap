@@ -52,6 +52,7 @@ public class SnipRenderContext extends BaseRenderContext {
   public static final String HTTP_PARAMS = "SnipRenderContext.params";
   public static final String USER = "SnipRenderContext.user";
   public static final String SNIP = "SnipRenderContext.snip";
+  public static final String VIEWED = "SnipRenderContext.viewed_snip";
   public static final String CONTAINER = "SnipRenderContext.container";
 
   private Snip snip;
@@ -94,6 +95,7 @@ public class SnipRenderContext extends BaseRenderContext {
     attributes = new HashMap();
     attributes.put(SNIP, snip);
     attributes.put(USER, Application.get().getUser());
+    attributes.put(VIEWED, Application.get().getParameters().get("viewed"));
     attributes.put(CONTAINER, Components.getContainer());
     attributes.put(HTTP_REQUEST, Application.get().getParameters().get("request"));
     attributes.put(HTTP_PARAMS, Application.get().getParameters());

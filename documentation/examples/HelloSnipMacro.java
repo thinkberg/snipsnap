@@ -47,7 +47,8 @@ public class HelloSnipMacro extends SnipMacro {
     throws IllegalArgumentException, IOException {
 
     SnipRenderContext context = params.getSnipRenderContext();
-    Snip snip = (Snip) context.getAttribute(SnipRenderContext.SNIP);
+    Snip snip = (Snip)
+        context.getAttribute(SnipRenderContext.SNIP);
     writer.write("hello, my name is "+snip.getName());
   }
 

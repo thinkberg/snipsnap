@@ -27,19 +27,13 @@ package org.snipsnap.render.macro;
 
 import org.snipsnap.render.filter.links.BackLinks;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
-import org.snipsnap.snip.Blog;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.snip.SnipUtil;
+import org.snipsnap.snip.*;
 import org.snipsnap.util.StringUtil;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Arrays;
 
 /*
  * Macro that displays a weblog. All subsnips are read and

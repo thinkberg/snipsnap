@@ -44,7 +44,8 @@ public class UserFilter extends FilterSupport {
     //! Refactor to context like SnipRenderContext
     SnipRenderContext renderContext =
       ((SnipFilterContext) context).getSnipRenderContext();
-    Snip snip = (Snip) renderContext.getAttribute(SnipRenderContext.SNIP);
+    Snip snip = (Snip)
+        renderContext.getAttribute(SnipRenderContext.SNIP);
     return snip.getMUser()+" wrote:\n\n";
   }
 }

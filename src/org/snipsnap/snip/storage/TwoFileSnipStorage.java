@@ -191,7 +191,12 @@ public abstract class TwoFileSnipStorage extends FileSnipStorage {
       return null;
     }
 
-    return createSnipFromFile(new FileInputStream(metadataFile), new FileInputStream(contentFile));
+    FileInputStream metaIn = new FileInputStream(metadataFile);
+    FileInputStream contentIn = new FileInputStream(contentFile);
+    Map map = createSnipFromFile(metaIn, contentIn);
+    contentIn.close();
+    metaIn.close();
+    return map;
   }
 
   /**
@@ -208,15 +213,19 @@ public abstract class TwoFileSnipStorage extends FileSnipStorage {
 
     File metadataFile = new File(versionDir, getMetadataFileName() + "-" + snip.getVersion());
     try {
-      storeMetadata(snip, new FileOutputStream(metadataFile));
-    } catch (FileNotFoundException e) {
+      FileOutputStream out = new FileOutputStream(metadataFile);
+      storeMetadata(snip, out);
+      out.close();
+    } catch (IOException e) {
       Logger.log("TwoFileSnipStorage: unable to store version snip metadata" + snip.getName(), e);
     }
 
     File contentFile = new File(versionDir, getContentFileName() + "-" + snip.getVersion());
     try {
-      storeContent(snip, new FileOutputStream(contentFile));
-    } catch (FileNotFoundException e) {
+      FileOutputStream out = new FileOutputStream(contentFile);
+      storeContent(snip, out);
+      out.close();
+    } catch (IOException e) {
       Logger.log("TwoFileSnipStorage: unable to store version snip content" + snip.getName(), e);
     }
   }
@@ -243,8 +252,10 @@ public abstract class TwoFileSnipStorage extends FileSnipStorage {
     }
 
     try {
-      storeMetadata(snip, new FileOutputStream(metadataFile));
-    } catch (FileNotFoundException e) {
+      FileOutputStream out = new FileOutputStream(metadataFile);
+      storeMetadata(snip, out);
+      out.close();
+    } catch (IOException e) {
       Logger.log("TwoFileSnipStorage: unable to store snip metadata" + snip.getName(), e);
     }
 
@@ -256,8 +267,10 @@ public abstract class TwoFileSnipStorage extends FileSnipStorage {
     }
 
     try {
-      storeContent(snip, new FileOutputStream(contentFile));
-    } catch (FileNotFoundException e) {
+      FileOutputStream out = new FileOutputStream(contentFile);
+      storeContent(snip, out);
+      out.close();
+    } catch (IOException e) {
       Logger.log("TwoFileSnipStorage: unable to store snip content" + snip.getName(), e);
     }
   }
@@ -280,7 +293,12 @@ public abstract class TwoFileSnipStorage extends FileSnipStorage {
       return null;
     }
 
-    return createSnipFromFile(new FileInputStream(metadataFile), new FileInputStream(contentFile));
+    FileInputStream metaIn = new FileInputStream(metadataFile);
+    FileInputStream contentIn = new FileInputStream(contentFile);
+    Map map = createSnipFromFile(metaIn, contentIn);
+    contentIn.close();
+    metaIn.close();
+    return map;
   }
 
   /**

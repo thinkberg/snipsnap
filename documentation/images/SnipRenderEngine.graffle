@@ -12,7 +12,7 @@
 	<key>ColumnSpacing</key>
 	<real>36</real>
 	<key>GraphDocumentVersion</key>
-	<integer>3</integer>
+	<integer>4</integer>
 	<key>GraphicsList</key>
 	<array>
 		<dict>
@@ -22,6 +22,8 @@
 			<string>ShapedGraphic</string>
 			<key>FitText</key>
 			<string>YES</string>
+			<key>Flow</key>
+			<string>Resize</string>
 			<key>ID</key>
 			<integer>25</integer>
 			<key>Shape</key>
@@ -62,6 +64,8 @@
 			</dict>
 			<key>TextPlacement</key>
 			<integer>0</integer>
+			<key>Wrap</key>
+			<string>NO</string>
 		</dict>
 		<dict>
 			<key>Bounds</key>
@@ -70,6 +74,8 @@
 			<string>ShapedGraphic</string>
 			<key>FitText</key>
 			<string>YES</string>
+			<key>Flow</key>
+			<string>Resize</string>
 			<key>ID</key>
 			<integer>24</integer>
 			<key>Shape</key>
@@ -111,6 +117,8 @@ Parameter}</string>
 			</dict>
 			<key>TextPlacement</key>
 			<integer>0</integer>
+			<key>Wrap</key>
+			<string>NO</string>
 		</dict>
 		<dict>
 			<key>Bounds</key>
@@ -128,11 +136,11 @@ Parameter}</string>
 					<key>Color</key>
 					<dict>
 						<key>b</key>
-						<string>1</string>
+						<string>0.901961</string>
 						<key>g</key>
-						<string>0.780392</string>
+						<string>0.901961</string>
 						<key>r</key>
-						<string>0.639216</string>
+						<string>0.901961</string>
 					</dict>
 					<key>FillType</key>
 					<integer>3</integer>
@@ -141,11 +149,11 @@ Parameter}</string>
 					<key>GradientColor</key>
 					<dict>
 						<key>b</key>
-						<string>1</string>
+						<string>0.8</string>
 						<key>g</key>
-						<string>0.615686</string>
+						<string>0.8</string>
 						<key>r</key>
-						<string>0.298039</string>
+						<string>0.8</string>
 					</dict>
 				</dict>
 			</dict>
@@ -223,6 +231,8 @@ Parameter}</string>
 			<string>ShapedGraphic</string>
 			<key>FitText</key>
 			<string>YES</string>
+			<key>Flow</key>
+			<string>Resize</string>
 			<key>ID</key>
 			<integer>20</integer>
 			<key>Shape</key>
@@ -263,6 +273,8 @@ Parameter}</string>
 			</dict>
 			<key>TextPlacement</key>
 			<integer>0</integer>
+			<key>Wrap</key>
+			<string>NO</string>
 		</dict>
 		<dict>
 			<key>Bounds</key>
@@ -286,11 +298,13 @@ Parameter}</string>
 		</dict>
 		<dict>
 			<key>Bounds</key>
-			<string>{{148, 305}, {96, 14}}</string>
+			<string>{{148, 305}, {92, 14}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>FitText</key>
 			<string>YES</string>
+			<key>Flow</key>
+			<string>Resize</string>
 			<key>ID</key>
 			<integer>17</integer>
 			<key>Shape</key>
@@ -327,10 +341,12 @@ Parameter}</string>
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
 
-\f0\fs24 \cf0 RenderrContext}</string>
+\f0\fs24 \cf0 RenderContext}</string>
 			</dict>
 			<key>TextPlacement</key>
 			<integer>0</integer>
+			<key>Wrap</key>
+			<string>NO</string>
 		</dict>
 		<dict>
 			<key>Bounds</key>
@@ -339,6 +355,8 @@ Parameter}</string>
 			<string>ShapedGraphic</string>
 			<key>FitText</key>
 			<string>YES</string>
+			<key>Flow</key>
+			<string>Resize</string>
 			<key>ID</key>
 			<integer>16</integer>
 			<key>Shape</key>
@@ -379,6 +397,8 @@ Parameter}</string>
 			</dict>
 			<key>TextPlacement</key>
 			<integer>0</integer>
+			<key>Wrap</key>
+			<string>NO</string>
 		</dict>
 		<dict>
 			<key>Class</key>
@@ -445,6 +465,8 @@ Parameter}</string>
 			<string>ShapedGraphic</string>
 			<key>FitText</key>
 			<string>YES</string>
+			<key>Flow</key>
+			<string>Resize</string>
 			<key>ID</key>
 			<integer>13</integer>
 			<key>Shape</key>
@@ -485,6 +507,8 @@ Parameter}</string>
 			</dict>
 			<key>TextPlacement</key>
 			<integer>0</integer>
+			<key>Wrap</key>
+			<string>NO</string>
 		</dict>
 		<dict>
 			<key>Class</key>
@@ -559,6 +583,8 @@ Parameter}</string>
 			<string>ShapedGraphic</string>
 			<key>FitText</key>
 			<string>YES</string>
+			<key>Flow</key>
+			<string>Resize</string>
 			<key>ID</key>
 			<integer>10</integer>
 			<key>Shape</key>
@@ -600,6 +626,8 @@ Context}</string>
 			</dict>
 			<key>TextPlacement</key>
 			<integer>0</integer>
+			<key>Wrap</key>
+			<string>NO</string>
 		</dict>
 		<dict>
 			<key>Bounds</key>
@@ -617,11 +645,11 @@ Context}</string>
 					<key>Color</key>
 					<dict>
 						<key>b</key>
-						<string>1</string>
+						<string>0.901961</string>
 						<key>g</key>
-						<string>0.780392</string>
+						<string>0.901961</string>
 						<key>r</key>
-						<string>0.639216</string>
+						<string>0.901961</string>
 					</dict>
 					<key>FillType</key>
 					<integer>3</integer>
@@ -630,11 +658,11 @@ Context}</string>
 					<key>GradientColor</key>
 					<dict>
 						<key>b</key>
-						<string>1</string>
+						<string>0.8</string>
 						<key>g</key>
-						<string>0.615686</string>
+						<string>0.8</string>
 						<key>r</key>
-						<string>0.298039</string>
+						<string>0.8</string>
 					</dict>
 				</dict>
 			</dict>
@@ -646,6 +674,8 @@ Context}</string>
 			<string>ShapedGraphic</string>
 			<key>FitText</key>
 			<string>YES</string>
+			<key>Flow</key>
+			<string>Resize</string>
 			<key>ID</key>
 			<integer>8</integer>
 			<key>Shape</key>
@@ -686,6 +716,8 @@ Context}</string>
 			</dict>
 			<key>TextPlacement</key>
 			<integer>0</integer>
+			<key>Wrap</key>
+			<string>NO</string>
 		</dict>
 		<dict>
 			<key>Bounds</key>
@@ -709,7 +741,7 @@ Context}</string>
 			<integer>6</integer>
 			<key>Points</key>
 			<array>
-				<string>{80.9905, 166.343}</string>
+				<string>{81, 166.345}</string>
 				<string>{162.875, 186.108}</string>
 			</array>
 			<key>Style</key>
@@ -761,6 +793,8 @@ Context}</string>
 			<string>ShapedGraphic</string>
 			<key>FitText</key>
 			<string>YES</string>
+			<key>Flow</key>
+			<string>Resize</string>
 			<key>ID</key>
 			<integer>4</integer>
 			<key>Shape</key>
@@ -801,6 +835,8 @@ Context}</string>
 			</dict>
 			<key>TextPlacement</key>
 			<integer>0</integer>
+			<key>Wrap</key>
+			<string>NO</string>
 		</dict>
 		<dict>
 			<key>Bounds</key>
@@ -819,6 +855,8 @@ Context}</string>
 			<string>ShapedGraphic</string>
 			<key>FitText</key>
 			<string>YES</string>
+			<key>Flow</key>
+			<string>Resize</string>
 			<key>ID</key>
 			<integer>2</integer>
 			<key>Shape</key>
@@ -859,6 +897,8 @@ Context}</string>
 			</dict>
 			<key>TextPlacement</key>
 			<integer>0</integer>
+			<key>Wrap</key>
+			<string>NO</string>
 		</dict>
 		<dict>
 			<key>Bounds</key>
@@ -876,11 +916,11 @@ Context}</string>
 					<key>Color</key>
 					<dict>
 						<key>b</key>
-						<string>1</string>
+						<string>0.901961</string>
 						<key>g</key>
-						<string>0.780392</string>
+						<string>0.901961</string>
 						<key>r</key>
-						<string>0.639216</string>
+						<string>0.901961</string>
 					</dict>
 					<key>FillType</key>
 					<integer>3</integer>
@@ -889,11 +929,11 @@ Context}</string>
 					<key>GradientColor</key>
 					<dict>
 						<key>b</key>
-						<string>1</string>
+						<string>0.8</string>
 						<key>g</key>
-						<string>0.615686</string>
+						<string>0.8</string>
 						<key>r</key>
-						<string>0.298039</string>
+						<string>0.8</string>
 					</dict>
 				</dict>
 			</dict>
@@ -906,6 +946,8 @@ Context}</string>
 		<key>SnapsToGrid</key>
 		<string>YES</string>
 	</dict>
+	<key>GuidesLocked</key>
+	<string>NO</string>
 	<key>GuidesVisible</key>
 	<string>YES</string>
 	<key>HPages</key>
@@ -929,10 +971,8 @@ Context}</string>
 	</array>
 	<key>LayoutInfo</key>
 	<dict>
-		<key>AutoAdjust</key>
-		<string>YES</string>
-		<key>MagneticFieldCenter</key>
-		<string>{0, 0}</string>
+		<key>ChildOrdering</key>
+		<integer>0</integer>
 	</dict>
 	<key>LinksVisible</key>
 	<string>NO</string>
@@ -1023,7 +1063,7 @@ Context}</string>
 	YWw+CgkJCQkJPC9hcnJheT4KCQkJCQk8a2V5PmNvbS5hcHBsZS5wcmludC50aWNrZXQu
 	Y2xpZW50PC9rZXk+CgkJCQkJPHN0cmluZz5jb20uYXBwbGUucHJpbnRpbmdtYW5hZ2Vy
 	PC9zdHJpbmc+CgkJCQkJPGtleT5jb20uYXBwbGUucHJpbnQudGlja2V0Lm1vZERhdGU8
-	L2tleT4KCQkJCQk8ZGF0ZT4yMDA0LTAyLTA2VDEwOjU3OjIxWjwvZGF0ZT4KCQkJCQk8
+	L2tleT4KCQkJCQk8ZGF0ZT4yMDA0LTAzLTExVDExOjAyOjU4WjwvZGF0ZT4KCQkJCQk8
 	a2V5PmNvbS5hcHBsZS5wcmludC50aWNrZXQuc3RhdGVGbGFnPC9rZXk+CgkJCQkJPGlu
 	dGVnZXI+MDwvaW50ZWdlcj4KCQkJCTwvZGljdD4KCQkJPC9hcnJheT4KCQk8L2RpY3Q+
 	CgkJPGtleT5jb20uYXBwbGUucHJpbnQuUGFnZUZvcm1hdC5QTUFkanVzdGVkUGFwZXJS
@@ -1037,7 +1077,7 @@ Context}</string>
 	YXk+CgkJCQkJPGtleT5jb20uYXBwbGUucHJpbnQudGlja2V0LmNsaWVudDwva2V5PgoJ
 	CQkJCTxzdHJpbmc+Y29tLmFwcGxlLnByaW50aW5nbWFuYWdlcjwvc3RyaW5nPgoJCQkJ
 	CTxrZXk+Y29tLmFwcGxlLnByaW50LnRpY2tldC5tb2REYXRlPC9rZXk+CgkJCQkJPGRh
-	dGU+MjAwNC0wMi0wNlQxMDo1NzoyMVo8L2RhdGU+CgkJCQkJPGtleT5jb20uYXBwbGUu
+	dGU+MjAwNC0wMy0xMVQxMTowMjo1OFo8L2RhdGU+CgkJCQkJPGtleT5jb20uYXBwbGUu
 	cHJpbnQudGlja2V0LnN0YXRlRmxhZzwva2V5PgoJCQkJCTxpbnRlZ2VyPjA8L2ludGVn
 	ZXI+CgkJCQk8L2RpY3Q+CgkJCTwvYXJyYXk+CgkJPC9kaWN0PgoJCTxrZXk+Y29tLmFw
 	cGxlLnByaW50LlBhcGVySW5mby5QTVBhcGVyTmFtZTwva2V5PgoJCTxkaWN0PgoJCQk8
@@ -1137,7 +1177,7 @@ Context}</string>
 		<key>ShowStatusBar</key>
 		<true/>
 		<key>VisibleRegion</key>
-		<string>{{-88, 2}, {722, 648}}</string>
+		<string>{{-88, 3}, {722, 648}}</string>
 		<key>Zoom</key>
 		<string>1</string>
 	</dict>

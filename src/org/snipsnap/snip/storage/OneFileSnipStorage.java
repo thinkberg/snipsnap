@@ -126,7 +126,10 @@ public abstract class OneFileSnipStorage extends FileSnipStorage {
       return null;
     }
 
-    return loadSnip(new FileInputStream(versionFile));
+    FileInputStream in = new FileInputStream(versionFile);
+    Map map = loadSnip(in);
+    in.close();
+    return map;
   }
 
   /**
@@ -143,8 +146,10 @@ public abstract class OneFileSnipStorage extends FileSnipStorage {
 
     File file = new File(versionDir, getFileName() + "-" + snip.getVersion());
     try {
-      storeSnip(snip, new FileOutputStream(file));
-    } catch (FileNotFoundException e) {
+      FileOutputStream out = new FileOutputStream(file);
+      storeSnip(snip, out);
+      out.close();
+    } catch (IOException e) {
       Logger.log("FileSnipStorage: unable to store version snip" + snip.getName(), e);
     }
   }
@@ -171,8 +176,10 @@ public abstract class OneFileSnipStorage extends FileSnipStorage {
     }
 
     try {
-      storeSnip(snip, new FileOutputStream(file));
-    } catch (FileNotFoundException e) {
+      FileOutputStream out = new FileOutputStream(file);
+      storeSnip(snip, out);
+      out.close();
+    } catch (IOException e) {
       Logger.log("FileSnipStorage: unable to store snip metadata" + snip.getName(), e);
     }
   }
@@ -191,6 +198,9 @@ public abstract class OneFileSnipStorage extends FileSnipStorage {
       return null;
     }
 
-    return loadSnip(new FileInputStream(metadataFile));
+    FileInputStream in = new FileInputStream(metadataFile);
+    Map map = loadSnip(in);
+    in.close();
+    return map;
   }
 }

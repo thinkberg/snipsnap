@@ -237,7 +237,7 @@ public abstract class FileSnipStorage implements CacheableStorage, VersionStorag
     File versionDir = new File(snipDir, "version");
     String name = snip.getName();
     try {
-      Snip newSnip = SnipFactory.createSnip(name, "");                                                
+      Snip newSnip = SnipFactory.createSnip(name, "");
       return serializer.deserialize(loadVersion(snip, versionDir, version), newSnip);
     } catch (IOException e) {
       Logger.log("FileSnipStorage: Unable to load version snip " + snip.getName() + " " + version);

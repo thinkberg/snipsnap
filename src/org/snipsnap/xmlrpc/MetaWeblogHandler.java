@@ -32,6 +32,8 @@ import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.User;
 import org.snipsnap.user.AuthenticationService;
+import org.snipsnap.semanticweb.rss.BlogFeeder;
+import org.snipsnap.semanticweb.rss.Feeder;
 
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -68,8 +70,8 @@ public class MetaWeblogHandler extends XmlRpcSupport implements MetaWeblogAPI {
     User user = authenticate(username, password);
     Snip snip = SnipSpaceFactory.getInstance().getBlog().getSnip();
 
-    List children =
-        SnipSpaceFactory.getInstance().getChildrenDateOrder(snip, numberOfPosts);
+    Feeder feeder = new BlogFeeder();
+    List children = feeder.getFeed();
 
     Vector posts = new Vector(children.size());
     for (Iterator i = children.iterator(); i.hasNext();) {

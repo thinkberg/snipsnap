@@ -1,7 +1,5 @@
 package org.snipsnap.user;
 
-import org.snipsnap.snip.storage.UserStorage;
-
 /*
  * This file is part of "SnipSnap Wiki/Weblog".
  *
