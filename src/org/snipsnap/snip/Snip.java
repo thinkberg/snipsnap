@@ -29,6 +29,6 @@ public class Snip {
   }
 
   public String toXML() {
-    SnipFormatter.toXML(this, getContent());
+    return SnipFormatter.toXML(this, getContent());
   }
 }

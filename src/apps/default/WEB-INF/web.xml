@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/j2ee/dtds/web-app_2_3.dtd">
+
+<web-app>
+  <display-name>Snip</display-name>
+
+  <servlet>
+    <servlet-name>com.neotis.net.Layouter</servlet-name>
+    <servlet-class>com.neotis.net.Layouter</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>com.neotis.net.SnipServlet</servlet-name>
+    <servlet-class>com.neotis.net.SnipServlet</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>com.neotis.net.Layouter</servlet-name>
+    <url-pattern>/space/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>com.neotis.net.SnipServlet</servlet-name>
+    <url-pattern>/app/*</url-pattern>
+  </servlet-mapping>
+</web-app>

@@ -1,0 +1,262 @@
+/**
+ * Stylesheet customization for generic formats.
+ * $Id$
+ */
+
+/************************************************/
+/* page title */
+.title {
+	font-family: verdana, sans-serif;
+	font-size: 24px;
+	font-weight: bold;
+	color: rgb(0,0,0);
+	padding: 10px;
+}
+
+/* page content */
+.content {
+    position: static;
+}
+
+
+/* menu formatting */
+.menu {
+        background: #aaaaaa;
+	width: 100%;
+	text-align: left;
+}
+
+.menuitem {
+        color: #ffffff;
+	text-align: left;
+	font-weight: bold;
+}
+
+.menuheader {
+    font-weight: bold;
+}
+
+/* page copyright */
+.copyright {
+	font-family: verdana, sans-serif;
+	font-size: 10px;
+	color: rgb(0,0,0);
+	padding: 2px;
+}
+
+.error {
+        border: 1px solid red;
+        color: red;
+}
+
+/************************************************/
+/* content formatting */
+.section {
+	font-family: verdana, sans-serif;
+	font-size: 18px;
+	font-weight: bold;
+	color: rgb(0,0,0);
+	padding-bottom: 1px;
+	padding-bottom: 5px;
+	border-top: 2px solid #cccccc;
+}
+
+.subsection {
+	font-family: verdana, sans-serif;
+	font-size: 14px;
+	color: rgb(33,33,33);
+	padding-bottom: 5px;
+}
+
+.justified {
+    text-align: justify;
+}
+
+/* box header style */
+.header {
+	background-color: #cccccc;
+}
+
+.box {
+    background-color: #cccccc;
+}
+
+/* list stripes */
+.striped-odd {
+    background-color: #dddddd;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+/* horizontal and vertical separator */
+.hsep {
+	color: rgb(55,55,55);
+}
+
+.separator {
+	border-left: 5px;
+	border-right: 5px;
+	margin: 5px;
+	background-color: rgb(55,55,55);
+}
+
+/************************************************/
+/* code formatting */
+.code {
+  margin-top: 4px;
+  margin-bottom: 4px;
+  padding: 5px 5px 5px 5px;
+  background-color: #fffced;
+  border: 1px dashed black;
+  font-family: courier, courier new, monospace;
+  font-size: 12px;
+  line-height: 100%;
+  white-space: pre;
+}
+
+
+.java-keyword {
+  font-weight: bold;
+  color: #0000aa;
+}
+
+.java-object {
+  color: #000088;
+}
+
+.java-quote {
+  color: #00aa00;
+}
+
+.xml-keyword {
+  font-weight: bold;
+}
+
+.xml-tag {
+  color: #0000aa;
+}
+
+/* special formatting of a wiki table */
+.wiki-table {
+
+}
+
+.wiki-table td {
+  border-top: 1px solid black;
+  padding: 1px 1px 1px 1px;
+}
+
+.wiki-table-header {
+  font-weight: bold;
+}
+
+.wiki-table-odd {
+}
+
+.wiki-table-even {
+}
+
+/* knowledge is a special box */
+.knowledge {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  float: right;
+  border: 1px solid #cccccc;
+  margin: 5px;
+  padding: 3px;
+}
+
+/* search formatting */
+.search-header {
+  background-color: #ffffff;
+  table-layout: fixed;
+  empty-cells:show;
+  width: 100%;
+}
+
+.space {
+  border-left: 2px solid white;
+  border-right: 2px solid white;
+  border-bottom: 1px solid #000000;
+}
+
+.search-active {
+  font-weight: bold;
+  padding: 2px 2px 2px 2px;
+  margin-right: 10px;
+  border-top: 1px solid #000000;
+  border-left: 1px solid #000000;
+  border-right: 1px solid #000000;
+  background-color: #3366cc;
+  color: #ffffff;
+  width: 80px;
+  text-align: center;
+}
+
+.search-inactive {
+  font-weight: bold;
+  margin-right: 10px;
+  padding: 2px 2px 2px 2px;
+  border-top: 1px solid #3366cc;
+  border-left: 1px solid #3366cc;
+  border-right: 1px solid #3366cc;
+  border-bottom: 1px solid #000000;
+  width: 80px;
+  text-align: center;
+}
+
+.search-result {
+  background-color: #3366cc;
+  padding: 2px 2px 2px 2px;
+  color: #ffffff;
+  border-bottom: 5px solid white;
+  width: 100%;
+}
+
+.search-back {
+  font-weight: bold;
+}
+
+.search-forward {
+  font-weight: bold;
+}
+
+.search-page a {
+  color: #000000;
+}
+
+.search-page-current a {
+  font-weight: bold;
+}
+
+/************************************************/
+/* tag formatting, page wide and individual */
+body {
+	font-family: verdana, sans-serif;
+	background-color: #ffffff;
+	margin: 10px;
+}
+
+
+td, p {
+	font-size: 11px;
+	color: rgb(76,76,76);
+	line-height: 15px;
+}
+
+input[type=submit] {
+    text-align: center;
+    background: #cccccc;
+}
+
+input, select, textarea {
+    font-size: inherit;
+    font-family: inherit;
+    line-height: inherit;
+    vertical-align: middle;
+}
+
+table {
+	empty-cells: show;
+}

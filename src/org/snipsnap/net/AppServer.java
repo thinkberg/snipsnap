@@ -2,6 +2,7 @@ package com.neotis.net;
 
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.ServletHttpContext;
+import org.mortbay.jetty.servlet.WebApplicationContext;
 import org.mortbay.util.MultiException;
 
 import java.io.IOException;
@@ -25,11 +26,9 @@ public class AppServer {
     } else {
       try {
         jettyServer = new Server("./conf/server.conf");
-
-        ServletHttpContext context = (ServletHttpContext) jettyServer.getContext(null, "/");
-        context.addServlet("SnipServlet", "/space/*", "com.neotis.net.SnipServlet");
-        context.addServlet("JSPServlet", "*.jsp", "org.apache.jasper.servlet.JspServlet");
-        context.setResourceBase("./app");
+        WebApplicationContext context = jettyServer.addWebApplication("/", "./app");
+//        context.addServlet("JSPServlet", "*.jsp", "org.apache.jasper.servlet.JspServlet");
+//        context.setResourceBase("./app");
 
         jettyServer.start();
       } catch (MultiException e) {
