@@ -15,10 +15,10 @@
   <p>
   <fmt:message key="snip.diff.changes" >
     <fmt:param>
-      <a href="/exec/version?name=<c:out value='${snip.nameEncoded}'/>&amp;version=<c:out value="${oldVersion}"/>">#<c:out value="${oldVersion}"/></a>
+      <a href="exec/version?name=<c:out value='${snip.nameEncoded}'/>&amp;version=<c:out value="${oldVersion}"/>">#<c:out value="${oldVersion}"/></a>
     </fmt:param>
     <fmt:param>
-      <a href="/exec/version?name=<c:out value='${snip.nameEncoded}'/>&amp;version=<c:out value="${newVersion}"/>">#<c:out value="${newVersion}"/></a>
+      <a href="exec/version?name=<c:out value='${snip.nameEncoded}'/>&amp;version=<c:out value="${newVersion}"/>">#<c:out value="${newVersion}"/></a>
     </fmt:param>
   </fmt:message>
   </p>
