@@ -48,6 +48,10 @@ public class Comments {
     space = SnipSpace.getInstance();
   }
 
+  /**
+   * Lazy initialization of containers
+   * (comments, users)
+   */
   private void init() {
     if (null == comments) {
       comments = SnipSpace.getInstance().getComments(snip);
@@ -63,11 +67,23 @@ public class Comments {
     }
   }
 
+  /**
+   * Get list of all comments for the snip
+   *
+   * @return List of comments (snips)
+   */
   public List getComments() {
     init();
     return comments;
   }
 
+  /**
+   * Post a new comment to snip
+   *
+   * @param content Content of the comment
+   * @param app Application object for security reasons.
+   * @return The generated comment (snip)
+   */
   public Snip postComment(String content, Application app) {
     init();
     String name = "comment-" + snip.getName() + "-" + (getCount() + 1);
@@ -80,6 +96,13 @@ public class Comments {
     return comment;
   }
 
+  /**
+   * Returns a pretty printed version of the comments
+   * for the snip.
+   * (usernames, count)
+   *
+   * @return Pretty printed version of comments
+   */
   public String getCommentString() {
     StringBuffer buffer = new StringBuffer();
     SnipLink.appendLink(buffer, "comments-" + snip.getName(), StringUtil.plural(getCount(), "comment"));
@@ -92,6 +115,12 @@ public class Comments {
     return buffer.toString();
   }
 
+  /**
+   * Append user list "funzel, arte, warg" to
+   * buffer.
+   *
+   * @param buffer Buffer to append to
+   */
   public void appendUserString(StringBuffer buffer) {
     init();
     Iterator userIterator = users.iterator();
@@ -105,6 +134,11 @@ public class Comments {
     return;
   }
 
+  /**
+   * Get number of comments
+   *
+   * @return Number of comments
+   */
   public int getCount() {
     init();
     return comments.size();
