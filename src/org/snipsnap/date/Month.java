@@ -29,6 +29,7 @@ import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipSpaceFactory;
 
 import java.text.DateFormatSymbols;
@@ -134,6 +135,13 @@ public class Month {
     Application app = Application.get();
     Configuration config = app.getConfiguration();
     Snip viewedSnip = (Snip) app.getParameters().get("viewed");
+    String weblogName = (String) app.getParameters().get("weblog");
+    if (weblogName != null) {
+      SnipSpace space = SnipSpaceFactory.getInstance();
+      if (space.exists(weblogName)) {
+        viewedSnip = SnipSpaceFactory.getInstance().load(weblogName);
+      }
+    }
     String viewed = viewedSnip.isWeblog() ? viewedSnip.getName() : config.getStartSnip();
 
     StringBuffer view = new StringBuffer();
@@ -142,11 +150,15 @@ public class Month {
     view.append(ResourceManager.getString("i18n.messages", "month.summary"));
     view.append("\">");
     view.append("<caption>");
+
+
     if (navigation) {
       view.append("<a href=\"");
       view.append(SnipLink.getSpaceRoot()).append("/");
       view.append(viewed);
-      view.append("?calmonth=");
+      view.append("?weblog=");
+      view.append(viewedSnip.getNameEncoded());
+      view.append("&calmonth=");
       view.append(prevMonth);
       view.append("&amp;calyear=");
       view.append(prevYear);
@@ -160,7 +172,9 @@ public class Month {
       view.append("<a href=\"");
       view.append(SnipLink.getSpaceRoot()).append("/");
       view.append(viewed);
-      view.append("?calmonth=");
+      view.append("?weblog=");
+      view.append(viewedSnip.getNameEncoded());
+      view.append("&calmonth=");
       view.append(nextMonth);
       view.append("&amp;calyear=");
       view.append(nextYear);
@@ -216,9 +230,9 @@ public class Month {
       String calBlogNew = viewed + "/" + calBlogOld + "/1";
 
       if (days.contains(calBlogNew)) {
-        day = SnipLink.createLink(calBlogNew, day);
+        day = makeLink(SnipLink.encode(calBlogNew) + "?weblog=" + viewedSnip.getNameEncoded() + "&calmonth=" + month + "&calyear=" + year, day);
       } else if (days.contains(calBlogOld)) {
-        day = SnipLink.createLink(calBlogOld, day);
+        day = makeLink(SnipLink.encode(calBlogOld) + "?weblog=" + viewedSnip.getNameEncoded() + "&calmonth=" + month + "&calyear=" + year, day);
       }
 
       if (i == todayNumber && month == today.get(Calendar.MONTH) + 1 && year == today.get(Calendar.YEAR)) {
@@ -256,5 +270,10 @@ public class Month {
     }
     buffer.append("</tr>");
     return buffer.toString();
+  }
+
+  private String makeLink(String snipName, String view) {
+    StringBuffer linkBuffer = new StringBuffer();
+    return SnipLink.appendLinkWithRoot(linkBuffer, SnipLink.getSpaceRoot(), snipName, view).toString();
   }
 }
