@@ -63,7 +63,7 @@ public class NameSpaceServlet extends HttpServlet {
 
     TreeBuilder builder = new NameSpaceTreeBuilder(name);
     Renderer renderer = new ExplorerRenderer();
-    DrawTree drawTree = new DrawTree();
-    drawTree.draw(builder.build(), renderer, out);
+    //DrawTree drawTree = new DrawTree();
+    //drawTree.draw(builder.build(), renderer, out);
 	}
 }

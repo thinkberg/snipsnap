@@ -172,7 +172,7 @@ public class JDBCVersionStorage implements VersionStorage {
     newSnip.setContent(rs.getString("content"));
     newSnip.setMTime(rs.getTimestamp("mTime"));
     newSnip.setMUser(rs.getString("mUser"));
-    newSnip.setLabels(new Labels(rs.getString("labels")));
+    newSnip.setLabels(new Labels(newSnip, rs.getString("labels")));
     newSnip.setViewCount(rs.getInt("viewCount"));
     return newSnip;
   }

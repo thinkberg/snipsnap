@@ -77,11 +77,11 @@ public class NameSpaceTreeBuilder implements TreeBuilder {
         lastNode = child;
       }
     }
-    tree.setRowCounter(tree.getDepth());
-    int maxChildren[] = new Maximum().getMaxChildren(tree);
-    int maxAttributes[] = new Maximum().getMaxAttributes(tree);
-    tree.setMaxChildren(maxChildren);
-    tree.setMaxAttributes(maxAttributes);
+ //   tree.setRowCounter(tree.getDepth());
+  //  int maxChildren[] = new Maximum().getMaxChildren(tree);
+  //  int maxAttributes[] = new Maximum().getMaxAttributes(tree);
+  //  tree.setMaxChildren(maxChildren);
+  //  tree.setMaxAttributes(maxAttributes);
 
     System.err.println("Tree="+tree);
     System.err.println("Tree depth="+tree.getDepth());

@@ -480,7 +480,7 @@ public class JDBCSnipStorage implements SnipStorage, CacheableStorage {
     snip.setPermissions(new Permissions(result.getString("permissions")));
     snip.setBackLinks(new Links(result.getString("backLinks")));
     snip.setSnipLinks(new Links(result.getString("snipLinks")));
-    snip.setLabels(new Labels(result.getString("labels")));
+    snip.setLabels(new Labels(snip, result.getString("labels")));
     snip.setAttachments(new Attachments(result.getString("attachments")));
     snip.setViewCount(result.getInt("viewCount"));
     snip.setVersion(result.getInt("version"));

@@ -28,6 +28,7 @@ package org.snipsnap.snip.label;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.snipsnap.container.Components;
+import org.snipsnap.snip.Snip;
 import org.radeox.api.engine.RenderEngine;
 
 import java.util.Map;
@@ -43,6 +44,7 @@ import java.util.Map;
 public class RenderEngineLabel implements Label {
   protected String name;
   protected String engine;
+  protected Snip snip;
 
   public RenderEngineLabel() {
     name = "RenderEngine";
@@ -56,6 +58,14 @@ public class RenderEngineLabel implements Label {
   }
 
   public void change() {
+  }
+
+  public void setSnip(Snip snip) {
+    this.snip = snip;
+  }
+
+  public Snip getSnip() {
+    return snip;
   }
 
   public RenderEngineLabel(String name, String engine) {

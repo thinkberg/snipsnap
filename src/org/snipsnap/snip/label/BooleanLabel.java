@@ -27,6 +27,7 @@ package org.snipsnap.snip.label;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.snipsnap.snip.Snip;
 
 import java.util.Map;
 
@@ -40,6 +41,7 @@ import java.util.Map;
 public abstract class BooleanLabel implements Label {
   protected String name;
   protected String value;
+  protected Snip snip;
 
   public BooleanLabel() {
     name = "";
@@ -58,6 +60,15 @@ public abstract class BooleanLabel implements Label {
   }
 
   public void change() {
+  }
+
+
+  public void setSnip(Snip snip) {
+    this.snip = snip;
+  }
+
+  public Snip getSnip() {
+    return snip;
   }
 
   public String getInputProxy() {

@@ -26,6 +26,7 @@
 package org.snipsnap.snip.label;
 
 import org.snipsnap.util.StringUtil;
+import org.snipsnap.snip.Snip;
 
 import java.util.*;
 
@@ -44,9 +45,9 @@ public class Labels {
     this.labels = new HashMap();
   }
 
-  public Labels(String labelString) {
+  public Labels(Snip snip, String labelString) {
     cache = labelString;
-    deserialize(labelString);
+    deserialize(snip, labelString);
   }
 
   public void addLabel(Label label) {
@@ -115,7 +116,7 @@ public class Labels {
     return label;
   }
 
-  private void deserialize(String labelString) {
+  private void deserialize(Snip snip, String labelString) {
     labels = new HashMap();
     if ("".equals(labelString)) { return; }
 
@@ -126,6 +127,7 @@ public class Labels {
       //System.out.println("Data="+data);
       if(data.length == 3) {
         Label label = createLabel(data[0], data[1], data[2]);
+        label.setSnip(snip);
         labels.put(label.getName(), label);
       } else {
         System.err.println("Labels: Broken Label: '" + labelToken + "' ignored");

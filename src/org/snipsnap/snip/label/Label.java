@@ -25,6 +25,8 @@
 
 package org.snipsnap.snip.label;
 
+import org.snipsnap.snip.Snip;
+
 import java.util.Map;
 
 /**
@@ -53,4 +55,7 @@ public interface Label extends Indexable, LifeCycle {
 
   public void setValue(String value);
 
+  public void setSnip(Snip snip);
+
+  public Snip getSnip();
 }

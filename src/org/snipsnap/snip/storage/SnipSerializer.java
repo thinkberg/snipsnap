@@ -188,7 +188,7 @@ public class SnipSerializer extends SerializerSupport {
       } else if (SNIP_SNIPLINKS.equals(element)) {
         snip.setSnipLinks(new Links(value));
       } else if (SNIP_LABELS.equals(element)) {
-        snip.setLabels(new Labels(value));
+        snip.setLabels(new Labels(snip, value));
       } else if (SNIP_ATTACHMENTS.equals(element)) {
         if(elementValue instanceof Element) {
           snip.setAttachments(new Attachments((Element)elementValue));
