@@ -42,11 +42,11 @@ public class TableMacro extends Macro {
     return "table";
   }
 
-  public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {
+  public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
+    buffer.append("<table class=\"snip-table\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
     content = content.trim()+"\n";
 
     StringTokenizer tokenizer = new StringTokenizer(content, "|\n", true);
-    StringBuffer result = new StringBuffer("<table class=\"snip-table\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
     StringBuffer cell = new StringBuffer();
     StringBuffer row = new StringBuffer();
     boolean firstLine = true;
@@ -64,25 +64,25 @@ public class TableMacro extends Macro {
         cell = new StringBuffer();
 
         // add row
-        result.append("<tr valign=\"top\"");
+        buffer.append("<tr valign=\"top\"");
         if (firstLine) {
-          result.append(" class=\"snip-table-header\">");
+          buffer.append(" class=\"snip-table-header\">");
           firstLine = false;
         } else if (odd) {
-          result.append(" class=\"snip-table-odd\">");
+          buffer.append(" class=\"snip-table-odd\">");
           odd = false;
         } else {
-          result.append(" class=\"snip-table-even\">");
+          buffer.append(" class=\"snip-table-even\">");
           odd = true;
         }
-        result.append(row).append("</tr>\n");
+        buffer.append(row).append("</tr>\n");
         row = new StringBuffer();
       } else {
         cell.append(token);
       }
     }
-    result.append("</table>");
-    return result.toString().trim();
+    buffer.append("</table>");
+    return;
   }
 
 }

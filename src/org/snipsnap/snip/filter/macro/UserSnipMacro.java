@@ -44,10 +44,10 @@ public class UserSnipMacro extends ListoutputMacro {
     return "snips-by-user";
   }
 
-  public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {
+  public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
     if (params.length == 1) {
       Collection c =  space.getByUser(params[0]);
-      return output("this user's snips", c, "none written yet.");
+      output(buffer, "this user's snips", c, "none written yet.");
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

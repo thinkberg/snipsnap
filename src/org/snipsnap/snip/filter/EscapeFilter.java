@@ -41,6 +41,10 @@ public class EscapeFilter extends RegexTokenFilter {
     super("\\\\(\\\\\\\\)|\\\\(.)");
   }
 
+  public void handleMatch(StringBuffer buffer, MatchResult result, Snip snip) {
+    buffer.append(handleMatch(result, snip));
+  }
+
   public String handleMatch(MatchResult result, Snip snip) {
     if (result.group(1) == null) {
       String match = result.group(2);

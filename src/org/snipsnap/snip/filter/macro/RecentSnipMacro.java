@@ -41,10 +41,10 @@ public class RecentSnipMacro extends ListoutputMacro {
     return "snips-by-recent";
   }
 
-  public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {
+  public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
     if (params.length == 1) {
       Collection c = space.getChanged(Integer.parseInt(params[0]));
-      return output("recently changed snips", c, "no recently changes.");
+      output(buffer, "recently changed snips", c, "no recently changes.");
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

@@ -39,11 +39,14 @@ public class AnnotationMacro extends Macro {
     return "note";
   }
 
-  public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {
+  public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
     if (params.length == 1) {
-      return "<footnote>" + params[0] + "</footnote>";
+      buffer.append("<footnote>");
+      buffer.append(params[0]);
+      buffer.append("</footnote>");
     } else {
       throw new IllegalArgumentException("footnote needs exactly one argument");
     }
+    return;
   }
 }

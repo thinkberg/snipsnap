@@ -47,9 +47,8 @@ public class WeblogMacro extends Macro {
     return "weblog";
   }
 
-  public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {
+  public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
     if (params.length == 0) {
-      StringBuffer buffer = new StringBuffer();
       List snips = SnipSpace.getInstance().getChildrenDateOrder(snip, 10);
       Iterator iterator = snips.iterator();
       while (iterator.hasNext()) {
@@ -67,7 +66,7 @@ public class WeblogMacro extends Macro {
         buffer.append("</p><pre>\n\n</pre>");
       }
 
-      return buffer.toString();
+      return;
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

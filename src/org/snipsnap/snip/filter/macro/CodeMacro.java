@@ -60,7 +60,7 @@ public class CodeMacro extends Preserved {
     return "code";
   }
 
-  public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {
+  public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
     Filter filter = null;
 
     if (params == null || !filters.containsKey(params[0])) {
@@ -70,6 +70,9 @@ public class CodeMacro extends Preserved {
     }
     String result = filter.filter(content, snip);
 
-    return "<div class=\"code\"><pre>" + replace(result.trim()) + "</pre></div>";
+    buffer.append("<div class=\"code\"><pre>");
+    buffer.append(replace(result.trim()));
+    buffer.append("</pre></div>");
+    return;
   }
 }

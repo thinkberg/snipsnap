@@ -44,9 +44,9 @@ public class IndexSnipMacro extends ListoutputMacro {
     return "index";
   }
 
-  public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {
+  public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
     if (params.length == 0) {
-      return output("all snips", space.getAll(), "none written yet.");
+      output(buffer, "all snips", space.getAll(), "none written yet.");
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

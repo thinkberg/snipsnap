@@ -34,6 +34,13 @@ package com.neotis.snip.filter.macro;
 import com.neotis.snip.Snip;
 
 public abstract class Macro {
-   public abstract String execute(String[] params, String content, Snip snip) throws IllegalArgumentException;
+   public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {
+     return "";
+   }
+
    public abstract String getName();
+
+  public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
+      buffer.append(execute(params, content, snip));
+  }
 }

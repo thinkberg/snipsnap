@@ -49,9 +49,8 @@ public class SearchMacro extends Macro {
     return "search";
   }
 
-  public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {
+  public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
     if (params.length == 1) {
-      StringBuffer buffer = new StringBuffer();
       buffer.append("<b>snips with ");
       buffer.append(params[0]);
       buffer.append(": (");
@@ -79,7 +78,7 @@ public class SearchMacro extends Macro {
       } else {
         buffer.append("none found.");
       }
-      return buffer.toString();
+      return;
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

@@ -53,7 +53,7 @@ public abstract class RegexTokenFilter extends RegexFilter implements ActionMatc
     addRegex(regex, "");
   }
 
-  public abstract String handleMatch(MatchResult result, Snip snip);
+  public abstract void handleMatch(StringBuffer buffer, MatchResult result, Snip snip);
 
   public String filter(String input, Snip snip) {
     String result = input;

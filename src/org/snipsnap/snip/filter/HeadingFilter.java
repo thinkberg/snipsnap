@@ -41,6 +41,10 @@ public class HeadingFilter extends RegexTokenFilter {
     super("^[:space:]*(1(\\.1)*) (.*?)[:space:]*$");
   }
 
+  public void handleMatch(StringBuffer buffer, MatchResult result, Snip snip) {
+    buffer.append(handleMatch(result, snip));
+  }
+
   public String handleMatch(MatchResult result, Snip snip) {
     String indent = result.group(1).replace('.', '-');
     return "<div class=\"heading-"+indent+"\">" + result.group(3) + "</div>";

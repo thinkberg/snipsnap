@@ -93,11 +93,10 @@ public class MacroFilter extends RegexTokenFilter {
     return result;
   }
 
-  public String handleMatch(MatchResult result, Snip snip) {
+  public void handleMatch(StringBuffer buffer, MatchResult result, Snip snip) {
     String[] params = null;
     String content = null;
     String command = result.group(1);
-
 
 //    for (int i=0; i<result.groups(); i++) {
 //      System.err.println(i+" "+result.group(i));
@@ -125,17 +124,19 @@ public class MacroFilter extends RegexTokenFilter {
         if (null != content) {
           content = filter(content, snip);
         }
-        return macro.execute(params, content, snip);
+        macro.execute(buffer, params, content, snip);
       } else if (command.startsWith("!")) {
         // TODO including of other snips
-        return "";
+        return;
       } else {
-        return result.group(0);
+        buffer.append(result.group(0));
+        return;
       }
     } catch (Exception e) {
       System.err.println("unable to format macro: " + result.group(1));
       e.printStackTrace();
-      return "?" + result.group(1) + (result.length() > 1 ? ":" + result.group(2) : "") + "?";
+      buffer.append("?" + result.group(1) + (result.length() > 1 ? ":" + result.group(2) : "") + "?");
+      return;
     }
   }
 }

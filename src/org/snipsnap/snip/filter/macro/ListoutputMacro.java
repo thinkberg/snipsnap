@@ -46,9 +46,7 @@ public abstract class ListoutputMacro extends Macro {
     space = SnipSpace.getInstance();
   }
 
-  public String output(String explaination, Collection c, String emptyText) {
-    StringBuffer buffer = new StringBuffer();
-    buffer.setLength(0);
+  public void output(StringBuffer buffer, String explaination, Collection c, String emptyText) {
     buffer.append("<b>");
     buffer.append(explaination);
     buffer.append(": (");
@@ -68,8 +66,8 @@ public abstract class ListoutputMacro extends Macro {
     } else {
       buffer.append(emptyText);
     }
-    return buffer.toString();
+    return;
   }
 
-  public abstract String execute(String[] params, String content, Snip snip) throws IllegalArgumentException;
+  public abstract void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException;
 }

@@ -49,8 +49,6 @@ public class ActionSubstitution extends StringSubstitution {
   public void appendSubstitution(StringBuffer stringBuffer, MatchResult matchResult,
                                  int i, PatternMatcherInput patternMatcherInput,
                                  PatternMatcher patternMatcher, Pattern pattern) {
-    setSubstitution(actionMatch.handleMatch(matchResult, snip));
-    super.appendSubstitution(stringBuffer, matchResult, i, patternMatcherInput,
-        patternMatcher, pattern);
+    actionMatch.handleMatch(stringBuffer, matchResult, snip);
   }
 }

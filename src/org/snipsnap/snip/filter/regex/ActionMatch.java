@@ -36,5 +36,5 @@ import org.apache.oro.text.regex.MatchResult;
 import com.neotis.snip.Snip;
 
 public interface ActionMatch {
-  public String handleMatch(MatchResult result, Snip snip);
+  public void handleMatch(StringBuffer buffer, MatchResult result, Snip snip);
 }

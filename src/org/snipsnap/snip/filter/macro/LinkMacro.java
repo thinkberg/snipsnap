@@ -42,8 +42,7 @@ public class LinkMacro extends Macro {
     return "link";
   }
 
-  public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {
-    StringBuffer buffer = new StringBuffer();
+  public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
     if (params.length == 2) {
       buffer.append("<nobr>");
       buffer.append(img);
@@ -56,6 +55,6 @@ public class LinkMacro extends Macro {
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }
-    return buffer.toString();
+    return;
   }
 }

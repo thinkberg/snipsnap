@@ -40,7 +40,7 @@ public class ApiMacro extends Macro {
     return "api";
   }
 
-  public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {
+  public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
     String mode;
 
     if (params.length == 1) {
@@ -65,6 +65,11 @@ public class ApiMacro extends Macro {
       url.append(params[0].toLowerCase());
       url.append(".html");
     }
-    return "<a href=\"" + params[0] + "\"<a href=\"" + url.toString() + "\">" + params[0] + "</a>";
+    buffer.append("<a href=\"");
+    buffer.append(url.toString());
+    buffer.append("\">");
+    buffer.append(params[0]);
+    buffer.append("</a>");
+    return;
   }
 }
