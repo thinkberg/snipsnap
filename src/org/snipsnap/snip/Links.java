@@ -121,9 +121,13 @@ public class Links {
     StringTokenizer tokenizer = new StringTokenizer(links, "|");
     while (tokenizer.hasMoreTokens()) {
       String urlString = tokenizer.nextToken();
-      Integer count = getCount(urlString);
-      String url = getUrl(urlString);
-      linkcounts.put(url, count);
+      try {
+        Integer count = getCount(urlString);
+        String url = getUrl(urlString);
+        linkcounts.put(url, count);
+      } catch (Exception e) {
+        System.err.println("ignoring '"+urlString+"' while deserializing: "+e);
+      }
     }
     return linkcounts;
   }
