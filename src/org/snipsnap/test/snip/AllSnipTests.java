@@ -28,6 +28,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.snipsnap.test.commons.EncoderTest;
+import org.snipsnap.test.snip.name.AllNameFormatterTests;
 
 public class AllSnipTests extends TestCase {
   public AllSnipTests(String name) {
@@ -40,6 +41,7 @@ public class AllSnipTests extends TestCase {
     s.addTestSuite(ImageTest.class);
     s.addTestSuite(EncoderTest.class);
     s.addTestSuite(SnipPathTest.class);
+    s.addTest(AllNameFormatterTests.suite());
     return s;
   }
 }
