@@ -97,6 +97,11 @@
     <servlet-class>org.snipsnap.net.UserManagerServlet</servlet-class>
   </servlet>
 
+  <servlet>
+    <servlet-name>org.snipsnap.net.iCalServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.iCalServlet</servlet-class>
+  </servlet>
+
   <!-- servlet mappings -->
   <servlet-mapping>
     <servlet-name>org.snipsnap.net.SnipViewServlet</servlet-name>
@@ -161,6 +166,11 @@
   <servlet-mapping>
     <servlet-name>org.snipsnap.net.LoginServlet</servlet-name>
     <url-pattern>/exec/authenticate</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>org.snipsnap.net.iCalServlet</servlet-name>
+    <url-pattern>/exec/ical/*</url-pattern>
   </servlet-mapping>
 
   <!-- ADMIN -->
