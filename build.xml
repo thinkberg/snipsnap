@@ -544,13 +544,26 @@
     </junit>
   </target>
 
-  <target description="upload to sourceforge" name="publish" depends="">
-    <ftp server="upload.sourceforge.org"
-       remotedir="incoming"
-       userid="anonymous"
-       password="ftp">
-    <fileset dir="../snipsnap*.tgz"/>
-  </ftp>
+<target description="generation javadocs" name="javadoc">
+  <javadoc packagenames="org.snipsnap.*"
+           sourcepath="src"
+           excludepackagenames="org.snipsnap.test.*"
+           defaultexcludes="yes"
+           destdir="docs/api"
+           author="true"
+           version="true"
+           use="true"
+           windowtitle="SnipSnap API">
+    <doctitle><![CDATA[<h1>SnipSnap</h1>]]></doctitle>
+    <bottom><![CDATA[<i>Copyright &#169; 2001-2004 Matthias L. Jugel, Stephan J. Schmidt. All Rights Reserved
+.</i>]]></bottom>
+    <!-- <tag name="todo" scope="all" description="To do:" />
+    <group title="Group 1 Packages" packages="com.dummy.test.a*"/>
+    <group title="Group 2 Packages" packages="com.dummy.test.b*:com.dummy.test.c*"/>
+    -->
+    <link href="http://java.sun.com/j2se/1.4/docs/api/package-list"/>
+    <link href="http://java.sun.com/j2ee/1.4/docs/api/package-list"/>
+  </javadoc>
   </target>
 
 </project>
