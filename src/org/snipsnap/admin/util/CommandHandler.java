@@ -108,7 +108,8 @@ public class CommandHandler extends HttpServlet {
     User admin = (User) session.getAttribute(ATT_ADMIN);
 
     String command = request.getPathInfo();
-    if (null != config.getAdminLogin() && null == admin && !openFiles.contains(command)) {
+    if (null != config.getAdminLogin() && null == admin && 
+        !openFiles.contains(command)) {
       command = "/login.jsp";
     } else {
       Collection servers = Server.getHttpServers();

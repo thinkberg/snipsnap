@@ -142,7 +142,7 @@ public class UserManager {
     Connection connection = ConnectionManager.getConnection();
 
     try {
-      statement = connection.prepareStatement("UPDATE User SET login=?, passwd=?, email=?, status=?, roles=?, " +
+      statement = connection.prepareStatement("UPDATE SnipUser SET login=?, passwd=?, email=?, status=?, roles=?, " +
                                               " cTime=?, mTime=?, lastLogin=? " +
                                               " WHERE login=?");
 
@@ -178,7 +178,7 @@ public class UserManager {
     user.setLastLogin(cTime);
 
     try {
-      statement = connection.prepareStatement("INSERT INTO User " +
+      statement = connection.prepareStatement("INSERT INTO SnipUser " +
                                               " (login, passwd, email, status, roles, cTime, mTime, lastLogin) "+
                                               " VALUES (?,?,?,?,?,?,?,?)");
       statement.setString(1, login);
@@ -208,7 +208,7 @@ public class UserManager {
     Connection connection = ConnectionManager.getConnection();
 
     try {
-      statement = connection.prepareStatement("DELETE FROM User WHERE login=?");
+      statement = connection.prepareStatement("DELETE FROM SnipUser WHERE login=?");
       statement.setString(1, user.getLogin());
       statement.execute();
     } catch (SQLException e) {
@@ -228,7 +228,7 @@ public class UserManager {
 
     try {
       statement = connection.prepareStatement("SELECT login, passwd, email, status, roles, cTime, mTime, lastLogin " +
-                                              " FROM User " +
+                                              " FROM SnipUser " +
                                               " WHERE login=?");
       statement.setString(1, login);
 
@@ -255,7 +255,7 @@ public class UserManager {
 
     try {
       statement = connection.prepareStatement("SELECT login, passwd, email, status, roles, cTime, mTime, lastLogin " +
-                                              " FROM User " +
+                                              " FROM SnipUser " +
                                               " ORDER BY login");
       result = statement.executeQuery();
       User user = null;

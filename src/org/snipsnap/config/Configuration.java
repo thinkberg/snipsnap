@@ -148,6 +148,14 @@ public class Configuration {
     return properties.getProperty(ADMIN_EMAIL);
   }
 
+  public String getVersion() {
+    String version = getProperty(SERVER_VERSION);
+    if(null == version) {
+      version = System.getProperty("snipsnap."+SERVER_VERSION);
+    }
+    return version;
+  }
+
   public void setProperty(String name, String value) {
     properties.setProperty(name, value);
   }

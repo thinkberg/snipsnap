@@ -249,6 +249,9 @@ public class Installer extends HttpServlet {
       CreateDB.insertData(config);
     }
 
+    String tagline = request.getParameter("tagline");
+    config.setTagLine(tagline != null ? tagline : "The easy Weblog and Wiki Software.");
+
     config.setLogger("org.snipsnap.util.log.NullLogger");
     config.store();
 

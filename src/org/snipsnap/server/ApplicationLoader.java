@@ -32,6 +32,7 @@ import org.mortbay.jetty.servlet.WebApplicationContext;
 import org.mortbay.util.InetAddrPort;
 import org.mortbay.util.Resource;
 import org.snipsnap.config.AppConfiguration;
+import org.snipsnap.config.Configuration;
 
 import java.io.File;
 import java.util.HashMap;

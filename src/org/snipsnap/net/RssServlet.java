@@ -47,17 +47,7 @@ public class RssServlet extends HttpServlet {
   private AppConfiguration config;
 
   public void init(ServletConfig servletConfig) throws ServletException {
-    String configFile = (String) servletConfig.getServletContext().getAttribute(Configuration.INIT_PARAM);
-    if (null == configFile) {
-      configFile = servletConfig.getServletContext().getRealPath("../application.conf");
-    }
-    try {
-      config = AppConfiguration.getInstance(configFile);
-
-    } catch (IOException e) {
-      e.printStackTrace();
-      System.err.println("InitServlet: Unable to load configuration for this application: " + e);
-    }
+    config = AppConfiguration.getInstance();
   }
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)

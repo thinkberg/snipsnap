@@ -103,7 +103,7 @@ public class CreateDB {
         "       permissions VARCHAR(200) )");
 
       statement.executeQuery(
-        "    CREATE TABLE User ( " +
+        "    CREATE TABLE SnipUser ( " +
         "       cTime     TIMESTAMP, " +
         "       mTime     TIMESTAMP, " +
         "       lastLogin TIMESTAMP, " +

@@ -42,6 +42,8 @@ public class AppConfiguration extends Configuration {
   private final static String APP_HOST = "app.host";
   private final static String APP_PORT = "app.port";
   private final static String APP_PATH = "app.path";
+  private final static String APP_PERM = "app.perm";
+  private final static String APP_TAGLINE = "app.tagline";
   private final static String APP_LOGGER = "app.logger";
   private final static String APP_JDBC_URL = "app.jdbc.url";
   private final static String APP_JDBC_DRIVER = "app.jdbc.driver";
@@ -139,10 +141,13 @@ public class AppConfiguration extends Configuration {
     return getUrl("space/"+snipName);
   }
 
+  public void setTagLine(String tagline) {
+    setProperty(AppConfiguration.APP_TAGLINE, tagline);
+  }
+
   public String getTagLine() {
-    // @TODO make this real
-    // return "Bigger. Better. Faster. More.";
-    return "The easy Weblog and Wiki Software.";
+    String tagline = getProperty(APP_TAGLINE);
+    return tagline != null ? tagline : "The easy Weblog and Wiki Software.";
   }
 
   public void setJDBCURL(String url) {
@@ -169,7 +174,15 @@ public class AppConfiguration extends Configuration {
     return getProperty(AppConfiguration.APP_LOGGER);
   }
 
+  public boolean allow(String action) {
+    return "allow".equals(getProperty(AppConfiguration.APP_PERM+action));
+  }
+
+  public boolean deny(String action) {
+    return "deny".equals(getProperty(AppConfiguration.APP_PERM+action));
+  }
+
   public boolean allowExternalImages() {
-      return false;
+    return allow("externalImages");
   }
 }
