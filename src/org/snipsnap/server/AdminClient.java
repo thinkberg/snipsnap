@@ -25,6 +25,7 @@
 package org.snipsnap.server;
 
 import org.snipsnap.config.ServerConfiguration;
+import org.snipsnap.util.XMLSnipRepair;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -54,16 +55,16 @@ public class AdminClient {
     try {
       config.load(new FileInputStream("conf/server.conf"));
     } catch (IOException e) {
-      System.err.println("AdminClient: unable to load conf/server.conf: " + e);
+//      System.err.println("AdminClient: unable to load conf/server.conf: " + e);
     }
 
     List commands = parseOptions(args, config);
     if (commands.size() > 0) {
-      System.err.println("Contacting Remote Server ...");
       execute(commands, config);
       System.exit(0);
     } else {
       System.err.println("usage: AdminClient command arguments");
+      System.err.println("       command may be either an XML-RPC method or 'repair'");
     }
     System.exit(1);
   }
@@ -84,26 +85,44 @@ public class AdminClient {
   }
 
   private static void execute(List commands, Properties config) {
-    try {
-      AdminXmlRpcClient client = new AdminXmlRpcClient(config.getProperty(ServerConfiguration.ADMIN_URL),
-                                                       config.getProperty(ServerConfiguration.ADMIN_USER),
-                                                       config.getProperty(ServerConfiguration.ADMIN_PASS));
-      String method = (String) commands.get(0);
-      Vector args = new Vector();
-      for (int i = 1; i < commands.size(); i++) {
-        args.addElement(commands.get(i));
+    if ("repair".equals(commands.get(0))) {
+      File in = null, out = null, webapp = null;
+      switch (commands.size()) {
+        case 1:
+          System.err.println("repair needs arguments: <input> <output> <webapp directory>");
+          System.exit(0);
+          break;
+        case 4:
+          webapp = new File((String) commands.get(3));
+        case 3:
+          out = new File((String) commands.get(2));
+        case 2:
+          in = new File((String) commands.get(1));
       }
-      Object result = client.execute(method, args);
-      System.err.println("Operation '" + method + "' okay:");
-      if(result instanceof Object[]) {
-        System.out.println("" + Arrays.asList((Object[]) result));
-      } else if(result instanceof byte[]) {
-        System.out.println(new String((byte[])result, "UTF-8"));    
-      } else {
-        System.out.println(result);
+      XMLSnipRepair.repair(in, out, webapp);
+    } else {
+      try {
+        System.err.println("Contacting Remote Server ...");
+        AdminXmlRpcClient client = new AdminXmlRpcClient(config.getProperty(ServerConfiguration.ADMIN_URL),
+                                                         config.getProperty(ServerConfiguration.ADMIN_USER),
+                                                         config.getProperty(ServerConfiguration.ADMIN_PASS));
+        String method = (String) commands.get(0);
+        Vector args = new Vector();
+        for (int i = 1; i < commands.size(); i++) {
+          args.addElement(commands.get(i));
+        }
+        Object result = client.execute(method, args);
+        System.err.println("Operation '" + method + "' okay:");
+        if (result instanceof Object[]) {
+          System.out.println("" + Arrays.asList((Object[]) result));
+        } else if (result instanceof byte[]) {
+          System.out.println(new String((byte[]) result, "UTF-8"));
+        } else {
+          System.out.println(result);
+        }
+      } catch (Exception e) {
+        System.err.println("AdminClient: error executing command: " + e.getMessage());
       }
-    } catch (Exception e) {
-      System.err.println("AdminClient: error executing command: " + e.getMessage());
     }
   }
 

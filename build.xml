@@ -218,8 +218,12 @@
     <javac deprecation="${deprecation}" debug="${debug}"
       srcdir="${src}"
       destdir="${target}/server"
-      classpathref="server.classpath"
-      includes="org/snipsnap/server/**,org/snipsnap/util/*JDBC*"/>
+      classpathref="server.classpath">
+
+      <include name="org/snipsnap/server/**"/>
+      <include name="org/snipsnap/util/*JDBC*"/>
+      <exclude name="org/snipsnap/server/Admin*"/>
+    </javac>
   </target>
 
   <!-- create utility code -->

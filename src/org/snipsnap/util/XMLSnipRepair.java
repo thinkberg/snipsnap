@@ -52,11 +52,13 @@ public class XMLSnipRepair {
       System.exit(0);
     }
 
+  }
 
+  public static void repair(File input, File output, File webAppDir) {
     System.err.println("STEP 1: parsing input file ...");
     Document document = null;
     try {
-      document = load(new File(args[0]));
+      document = load(input);
     } catch (Exception e) {
       System.err.println("Unable to read input document: " + e);
       System.err.println("This is usually the case for illegal XML characters, please manually edit the file and remove them.");
@@ -64,14 +66,14 @@ public class XMLSnipRepair {
     }
 
     System.err.println("STEP 2: checking SnipSpace consistency ...");
-    Document repaired = repair(document, args.length > 2 ? new File(args[2]) : null);
+    Document repaired = repair(document, webAppDir);
 
     System.err.println("STEP 3: writing output file ...");
     OutputFormat outputFormat = new OutputFormat();
     outputFormat.setEncoding("UTF-8");
     outputFormat.setNewlines(true);
     try {
-      XMLWriter xmlWriter = new XMLWriter(new FileOutputStream(args[1]));
+      XMLWriter xmlWriter = new XMLWriter(null == output ? System.out : (OutputStream)new FileOutputStream(output));
       xmlWriter.write(repaired);
       xmlWriter.flush();
       xmlWriter.close();
