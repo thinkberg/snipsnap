@@ -64,7 +64,7 @@ public class QueryListTest extends TestCase {
 
   public void testQuery() {
     List test = new ArrayList();
-    list.add(new Integer(2));
+    test.add(new Integer(2));
     assertEquals(test, list.query(
         new IntegerQuery() {
           public boolean fit(Integer i) {

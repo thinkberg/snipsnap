@@ -29,6 +29,7 @@ import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.storage.query.SnipComparator;
 import org.snipsnap.snip.storage.query.SnipQuery;
 import org.snipsnap.snip.storage.query.QueryKit;
+import org.snipsnap.app.Application;
 import org.radeox.util.logging.Logger;
 
 import java.sql.Timestamp;
@@ -177,12 +178,13 @@ public class QuerySnipStorage implements SnipStorage {
   }
 
   public List storageByDateInName(final String start, final String end) {
+    final String startName = Application.get().getConfiguration().getStartName();
     return QueryKit.querySorted(storage.storageAll(), new SnipQuery() {
       public boolean fit(Snip snip) {
         String name = snip.getName();
         Snip parent = snip.getParent();
         return (start.compareTo(name) <= 0 && end.compareTo(name) >= 0 &&
-            null != parent && "start".equals(parent.getName()));
+            null != parent && startName.equals(parent.getName()));
       }
     }, nameComparator);
   }

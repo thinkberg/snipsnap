@@ -23,24 +23,33 @@
  * --LICENSE NOTICE--
  */
 
-package org.snipsnap.util.log;
+package org.snipsnap.snip;
 
-import org.snipsnap.app.Application;
-import org.radeox.util.logging.LogHandler;
+import java.sql.Date;
+import java.util.List;
 
 /**
- * Concrete Logger that logs to Application
+ * Blog encapsulates snips with
+ * blog functionality.
  *
  * @author stephan
  * @version $Id$
  */
 
-public abstract class ApplicationLogger implements LogHandler {
-  public void log(String output) {
-    Application.get().log(output);
-  }
+public interface Blog {
+  public String getName();
 
-  public void log(String output, Throwable e) {
-    Application.get().log(output+": "+e.getMessage());
-  }
+  public Snip post(String content, String title);
+
+  public Snip post(String content);
+
+  public Snip post(String content, Date date);
+
+  public Snip post(Snip weblog, String content, Date date);
+
+  public List getFlatPosts();
+
+  public List getPosts(int count);
+
+  public Snip getSnip();
 }

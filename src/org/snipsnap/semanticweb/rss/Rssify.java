@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Iterator;
 
 /**
- * Split snips into sub-units for RSS. By default header titles
+ * Split snips into sub-units for e.g. RSS. By default header titles
  * are used as seperators.
  *
  * @author Stephan J. Schmidt
@@ -65,9 +65,7 @@ public class Rssify {
     while (iterator.hasNext() && result.size() <= 10) {
       Snip snip = (Snip) iterator.next();
 
-      String content = snip.getContent(); // "bbb\n1 x {anchor:bla_bla}\ny\ny\n1 z\na\na";
-      //System.err.println("Content:");
-      //System.err.println(content);
+      String content = snip.getContent();
 
       input = new PatternMatcherInput(content);
 
@@ -81,7 +79,6 @@ public class Rssify {
         }
         start = input.getMatchEndOffset();
         title = matchResult.group(3).trim();
-        // Perform whatever processing on the result you want.
       }
 
       add(result, snip, content.substring(start).trim(), title);

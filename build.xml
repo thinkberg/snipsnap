@@ -187,6 +187,14 @@
       includes="org/snipsnap/util/Test*, org/snipsnap/util/*Util.java, org/snipsnap/util/DB*.java, org/snipsnap/util/*JDBC*.java, org/snipsnap/util/mail/**, org/snipsnap/util/*Test.java"/>
   </target>
 
+  <target description="compile test code" name="compile-test">
+    <mkdir dir="${target}/test"/>
+    <javac deprecation="${deprecation}" debug="${debug}"
+      srcdir="${src}"
+      classpathref="all.classpath"
+      destdir="${target}/test"
+      includes="org/snipsnap/test/**"/>
+  </target>
 
   <target description="compile template application code" name="compile-servlets">
     <mkdir dir="${target}/default/WEB-INF/classes"/>
@@ -393,12 +401,13 @@
   </target>
 
 
-  <target name="test" depends="snipsnap-war">
+  <target name="test" depends="compile-servlets, compile-util, compile-test">
     <junit printsummary="true">
        <formatter usefile="false" type="plain"/>
        <test name="org.snipsnap.test.AllTests"/>
        <classpath>
-          <pathelement location="./src/apps/default/WEB-INF/lib/snipsnap-servlets.jar"/>
+          <pathelement location="./cls/test"/>
+          <pathelement location="./cls"/>
           <path refid="all.classpath"/>
        </classpath>
     </junit>

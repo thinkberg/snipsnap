@@ -23,24 +23,35 @@
  * --LICENSE NOTICE--
  */
 
-package org.snipsnap.util.log;
+package org.snipsnap.interceptor.custom;
 
 import org.snipsnap.app.Application;
-import org.radeox.util.logging.LogHandler;
+import org.snipsnap.interceptor.InterceptorSupport;
+import org.snipsnap.interceptor.Invocation;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.user.Roles;
+import org.snipsnap.user.Security;
+import org.snipsnap.user.User;
 
-/**
- * Concrete Logger that logs to Application
- *
- * @author stephan
- * @version $Id$
- */
+import java.security.GeneralSecurityException;
 
-public abstract class ApplicationLogger implements LogHandler {
-  public void log(String output) {
-    Application.get().log(output);
+public class BlogACLInterceptor extends InterceptorSupport {
+  private Roles roles;
+
+  public BlogACLInterceptor() {
+    super();
+    roles = new Roles();
+    roles.add("Editor");
   }
 
-  public void log(String output, Throwable e) {
-    Application.get().log(output+": "+e.getMessage());
+  public Object invoke(Invocation invocation) throws Throwable {
+    if (invocation.getMethod().getName().startsWith("post")) {
+      User user = Application.get().getUser();
+      if (!Security.hasRoles(user, null, roles)) {
+        //Logger.debug("SECURITY EXCEPTION");
+        throw new GeneralSecurityException("Not allowed to post.");
+      }
+    }
+    return invocation.next();
   }
 }

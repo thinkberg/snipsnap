@@ -1,5 +1,13 @@
 0.5
 
+- Developer: Refactore blog functionality to class Blog
+- Developer: Refactored missing to MissingInterceptor in SnipSpace
+- Fixed bug: /raw/ had problems with UTF-8 characters
+- Added feature: Aliases for links [alias|link]
+- Added feature: app.perm.register=deny prevents registering
+
+0.4.2
+
 0.4.1
 
 0.4

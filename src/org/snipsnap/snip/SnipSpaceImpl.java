@@ -27,6 +27,7 @@ package org.snipsnap.snip;
 import org.apache.lucene.search.Hits;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
+import org.snipsnap.interceptor.Aspects;
 import org.snipsnap.notification.Notification;
 import org.snipsnap.snip.storage.CacheSnipStorage;
 import org.snipsnap.snip.storage.CacheStorage;
@@ -36,13 +37,9 @@ import org.snipsnap.snip.storage.MemorySnipStorage;
 import org.snipsnap.snip.storage.QuerySnipStorage;
 import org.snipsnap.snip.storage.SnipStorage;
 import org.snipsnap.user.Digest;
-import org.snipsnap.user.Permissions;
-import org.snipsnap.user.Roles;
 import org.snipsnap.util.Queue;
 import org.snipsnap.util.mail.PostDaemon;
-import org.snipsnap.xmlrpc.WeblogsPing;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,18 +55,15 @@ import java.util.TimerTask;
  * loading, storing, searching etc.
  *
  * @TODO move indexing to Interceptor
- * @TODO introduce Missing Interceptor
  * @TODO move ETag / changed handling to Interceptor
+ * @TODO move changed to Interceptor
+ * @TODO add Blog object for Post etc.
  *
  * @author Stephan J. Schmidt
  * @version $Id$
  */
 
 public class SnipSpaceImpl implements SnipSpace {
-  // @TODO we use map instead of map to increment the
-  // missing counter each time a snip could not be found
-  // List of missing snips
-  private Map missing;
   // List of snips that were changed
   private Queue changed;
   // List of snips that are scheduled for storage
@@ -79,14 +73,15 @@ public class SnipSpaceImpl implements SnipSpace {
   private String eTag;
   private SnipStorage storage;
 
+  private Map blogs;
+
   public SnipSpaceImpl() {
   }
 
   public void init() {
-    // @TODO missing should probably done with an Interceptor
-    missing = new HashMap();
     changed = new Queue(100);
     storage = new JDBCSnipStorage();
+    blogs = new HashMap();
 
     // Fully fill the cache with all Snips
     if ("full".equals(Application.get().getConfiguration().getCache())) {
@@ -138,6 +133,24 @@ public class SnipSpaceImpl implements SnipSpace {
 
   public String getETag() {
     return "\"" + eTag + "\"";
+  }
+
+  public Blog getBlog() {
+    return getBlog(Application.get().getConfiguration().getStartName());
+  }
+
+  // Perhaps add getBlog(Wnip)
+  public Blog getBlog(String name) {
+    Blog blog;
+    if (blogs.containsKey(name)) {
+      blog = (Blog) blogs.get(name);
+    } else {
+      blog = (Blog) Aspects.newInstance(
+          new BlogImpl((SnipSpace) Aspects.getThis(), name),
+          Blog.class);
+      blogs.put(name, blog);
+    }
+    return blog;
   }
 
   // A snip is changed by the user (created, stored)
@@ -222,52 +235,8 @@ public class SnipSpaceImpl implements SnipSpace {
     return content = "1 " + title + " {anchor:" + title + "}\n" + content;
   }
 
-  //@TODO perhaps move all post and associated methods to a Blog class that
-  // creates posts -> snips and then only stores snips
-  public Snip post(String content, String title) {
-    return post(getContent(title, content));
-  }
-
-  public Snip post(String content) {
-    Date date = new Date(new java.util.Date().getTime());
-    return post(content, date);
-  }
-
-  public Snip post(String content, Date date) {
-    Snip start = load("start");
-    return post(start, content, date);
-  }
-
-  public String getPostName() {
-    Date date = new Date(new java.util.Date().getTime());
-    return SnipUtil.toName(date);
-  }
-
-  public Snip post(Snip weblog, String content, Date date) {
-    String name = SnipUtil.toName(date);
-    Snip snip = null;
-    if (exists(name)) {
-      snip = load(name);
-      snip.setContent(content + "\n\n" + snip.getContent());
-    } else {
-      snip = create(name, content);
-    }
-    snip.setParent(weblog);
-    snip.addPermission(Permissions.EDIT, Roles.OWNER);
-    store(snip);
-
-    // Ping weblogs.com that we changed our site
-    WeblogsPing.ping(weblog);
-    return snip;
-  }
-
   public boolean exists(String name) {
-    if (missing.containsKey(name.toUpperCase())) {
-      return false;
-    }
-
     if (null == load(name)) {
-      missing.put(name.toUpperCase(), new Integer(0));
       return false;
     } else {
       return true;
@@ -330,9 +299,6 @@ public class SnipSpaceImpl implements SnipSpace {
   public Snip create(String name, String content) {
     name = name.trim();
     Snip snip = storage.storageCreate(name, content);
-    if (missing.containsKey(name.toUpperCase())) {
-      missing.remove(name.toUpperCase());
-    }
     changed(snip);
     indexer.index(snip);
     Application.get().notify(Notification.SNIP_CREATE, snip);

@@ -69,6 +69,7 @@ public class AppConfiguration extends Configuration {
   public final static String APP_INDEX_PATH = "app.index.path";
   public final static String APP_FILE_PATH = "app.file.path";
   public final static String APP_COORDINATES = "app.geoCoordinates";
+  public final static String APP_START_NAME = "app.startName";
 
   public final static String PERM_NOTIFICATION = "notification";
   public final static String PERM_WEBLOGS_PING = "weblogsPing";
@@ -135,6 +136,12 @@ public class AppConfiguration extends Configuration {
   public String getName() {
     return getProperty(AppConfiguration.APP_NAME);
   }
+
+  public String getStartName() {
+    return "start";
+    //return getProperty(AppConfiguration.APP_START_SNIP);
+  }
+
 
   public String getLocaleString() {
     String locale = getProperty(AppConfiguration.APP_LOCALE);

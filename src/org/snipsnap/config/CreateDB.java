@@ -109,7 +109,7 @@ public class CreateDB {
     config.setProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_WEBLOGS_PING, "deny");
     config.setProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_NOTIFICATION, "deny");
 
-    SnipSpaceFactory.getInstance().post("Welcome to [SnipSnap]." +
+    SnipSpaceFactory.getInstance().getBlog().post("Welcome to [SnipSnap]." +
            " You can now login and add/edit your first post. There is a __post blog__ link in the menu bar. For help with formatting your post" +
            " take a look at [snipsnap-help]. To create a link to a page on your site surround a word with \\[ and \\]." +
            " Putting \\_\\_ around a phrase makes it __bold__ and putting \\~\\~ around it makes the" +

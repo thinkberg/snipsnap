@@ -31,6 +31,7 @@ import org.snipsnap.app.Application;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipSpaceFactory;
+import org.snipsnap.snip.Blog;
 import org.snipsnap.user.User;
 
 import java.util.Hashtable;
@@ -82,11 +83,11 @@ public class BloggerHandler extends XmlRpcSupport {
                         boolean publish) throws XmlRpcException {
     Logger.debug("XML-RPC call to newPost()");
 
-    SnipSpace space = SnipSpaceFactory.getInstance();
+    Blog blog = SnipSpaceFactory.getInstance().getBlog();
 
     User user = authenticate(username, password);
 
-    Snip snip = space.post(content);
+    Snip snip = blog.post(content);
     return snip.getName();
   }
 
@@ -144,7 +145,7 @@ public class BloggerHandler extends XmlRpcSupport {
     Logger.debug("XML-RPC call to getRecentPosts()");
 
     User user = authenticate(username, password);
-    Snip snip = SnipSpaceFactory.getInstance().load("start");
+    Snip snip = SnipSpaceFactory.getInstance().getBlog().getSnip();
 
     List children =
         SnipSpaceFactory.getInstance().getChildrenDateOrder(snip, numberOfPosts);

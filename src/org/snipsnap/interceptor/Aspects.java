@@ -29,8 +29,11 @@ import org.radeox.util.logging.Logger;
 import org.snipsnap.interceptor.custom.ACLInterceptor;
 import org.snipsnap.interceptor.custom.SnipSpaceACLInterceptor;
 import org.snipsnap.interceptor.custom.StoreInterceptor;
+import org.snipsnap.interceptor.custom.MissingInterceptor;
+import org.snipsnap.interceptor.custom.BlogACLInterceptor;
 import org.snipsnap.snip.SnipImpl;
 import org.snipsnap.snip.SnipSpaceImpl;
+import org.snipsnap.snip.BlogImpl;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -70,22 +73,27 @@ public class Aspects implements InvocationHandler {
   public static Object newInstance(Object target, Class[] interfaceTargets) {
     Class targetClass = target.getClass();
     Class interfaces[] = interfaceTargets;
+    Aspects aspects = new Aspects(target);
+    if (target.getClass().equals(SnipImpl.class)) {
+      aspects.addInterceptor(new ACLInterceptor());
+    } else if (target.getClass().equals(SnipSpaceImpl.class)) {
+      aspects.addInterceptor(new MissingInterceptor());
+      aspects.addInterceptor(new SnipSpaceACLInterceptor());
+      aspects.addInterceptor(new StoreInterceptor());
+    } else if (target.getClass().equals(BlogImpl.class)) {
+      aspects.addInterceptor(new BlogACLInterceptor());
+    }
     return Proxy.newProxyInstance(targetClass.getClassLoader(),
         interfaces, new Aspects(target));
   }
 
-  private Aspects(Object target) {
+  public Aspects(Object target) {
     this.target = target;
     interceptors = new ArrayList();
-    // either read from class
-    // or configuration file or use nanning
-    //Logger.debug("Aspects: class = "+target.getClass());
-    if (target.getClass().equals(SnipImpl.class)) {
-      interceptors.add(new ACLInterceptor());
-    } else if (target.getClass().equals(SnipSpaceImpl.class)) {
-      interceptors.add(new SnipSpaceACLInterceptor());
-      interceptors.add(new StoreInterceptor());
-    }
+  }
+
+  public void addInterceptor(Interceptor interceptor) {
+     interceptors.add(interceptor);
   }
 
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {

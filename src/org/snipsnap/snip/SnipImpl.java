@@ -30,39 +30,44 @@ import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.interceptor.Aspects;
 import org.snipsnap.render.context.SnipRenderContext;
+import org.snipsnap.snip.attachment.Attachment;
 import org.snipsnap.snip.attachment.Attachments;
 import org.snipsnap.snip.label.Labels;
-import org.snipsnap.snip.attachment.Attachments;
-import org.snipsnap.snip.attachment.Attachment;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.User;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
-import java.io.File;
 import java.sql.Timestamp;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Central class for snips.
+ *
+ * @TODO: cUser, mUser, cTime, ... -> modified to composite object
+ *
  * @author Stephan J. Schmidt
  * @version $Id$
  */
 public class SnipImpl implements Snip {
+
   //@TODO think about that
   public Snip parent;
   private List children;
   private Snip comment;
-  private Attachments attachments;
   private Comments comments;
-  private Permissions permissions;
   private String name, content;
-  private Modified modified;
   private String oUser;
+
+  // @TODO: Composite Object
+  private Permissions permissions;
   private Access access;
   private Labels labels;
+  private Attachments attachments;
+  private Modified modified;
 
   private void init() {
     if (null == children) {
@@ -92,7 +97,7 @@ public class SnipImpl implements Snip {
 
   /**
    * Returns true, when the snip is a weblog.
-   * Currently only test against "start".
+   * Currently only test against 'start'.
    * Should be extendet to test a "weblog"-label
    *
    * @return true, if the snip is a weblog
@@ -372,7 +377,7 @@ public class SnipImpl implements Snip {
     while (it.hasNext()) {
       Attachment att = (Attachment) it.next();
       File file = new File(fileStorePath, att.getLocation());
-      if(file.exists()) {
+      if (file.exists()) {
         tmp.append(SnipLink.createLink("../space/" + SnipLink.encode(name), att.getName(), att.getName()));
         tmp.append(" (").append(att.getSize()).append(")");
         if (it.hasNext()) {
@@ -390,7 +395,7 @@ public class SnipImpl implements Snip {
     RenderContext context = new SnipRenderContext((Snip) Aspects.getThis(), SnipSpaceFactory.getInstance());
     context.setParameters(Application.get().getParameters());
     String xml = EngineManager.getInstance("snipsnap").render(content, context);
-    Logger.debug(getName() + " is cacheable: "+context.isCacheable());
+    Logger.debug(getName() + " is cacheable: " + context.isCacheable());
     //String xml = SnipFormatter.toXML(this, getContent());
     Application.get().stop(start, "Formatting " + name);
     return xml;
@@ -418,7 +423,7 @@ public class SnipImpl implements Snip {
   }
 
   public int hashCode() {
-    return this.name.hashCode();
+    return name.hashCode();
   }
 
 //  public String toString() {

@@ -22,25 +22,23 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
+package org.snipsnap.test.interceptor;
 
-package org.snipsnap.util.log;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+import org.snipsnap.test.commons.EncoderTest;
+import org.snipsnap.test.snip.PermalinkTest;
+import org.snipsnap.test.snip.ImageTest;
 
-import org.snipsnap.app.Application;
-import org.radeox.util.logging.LogHandler;
-
-/**
- * Concrete Logger that logs to Application
- *
- * @author stephan
- * @version $Id$
- */
-
-public abstract class ApplicationLogger implements LogHandler {
-  public void log(String output) {
-    Application.get().log(output);
+public class AllInterceptorTests extends TestCase {
+  public AllInterceptorTests(String name) {
+    super(name);
   }
 
-  public void log(String output, Throwable e) {
-    Application.get().log(output+": "+e.getMessage());
+  public static Test suite() {
+    TestSuite s = new TestSuite();
+    s.addTestSuite(MissingInterceptorTest.class);
+    return s;
   }
 }

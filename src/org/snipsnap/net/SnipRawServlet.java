@@ -56,7 +56,7 @@ public class SnipRawServlet extends HttpServlet {
 
     String name = request.getPathInfo();
     if (null == name || "/".equals(name)) {
-      name = "start";
+      name = Application.get().getConfiguration().getStartName();
     } else {
       name = name.substring(1);
     }
@@ -66,7 +66,7 @@ public class SnipRawServlet extends HttpServlet {
 
     ServletOutputStream out = response.getOutputStream();
 
-    response.setContentType("text/plain");
+    response.setContentType("text/plain; charset="+Application.get().getConfiguration().getEncoding());
     // Snip does not exist
     if (null != snip) {
       snip.handle(request);

@@ -29,6 +29,7 @@ import org.snipsnap.app.Application;
 import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipSpaceFactory;
+import org.snipsnap.snip.Blog;
 import org.snipsnap.user.UserManager;
 import org.radeox.util.logging.Logger;
 
@@ -101,7 +102,7 @@ public class PostDaemon {
 // Get directory
         Message message[] = folder.getMessages();
 
-        String name = SnipSpaceFactory.getInstance().getPostName();
+        String name = Blog.getPostName();
 
         for (int i = 0, n = message.length; i < n; i++) {
           StringWriter writer = new StringWriter();
@@ -131,7 +132,7 @@ public class PostDaemon {
               // BUG
               String user = Application.get().getConfiguration().getAdminLogin();
               Application.get().setUser(UserManager.getInstance().load(user));
-              SnipSpaceFactory.getInstance().post(writer.getBuffer().toString(), title);
+              SnipSpaceFactory.getInstance().getBlog().post(writer.getBuffer().toString(), title);
             } catch (Exception e) {
               Logger.warn("PostDaemon Error:", e);
             } finally {

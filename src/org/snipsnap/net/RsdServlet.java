@@ -48,16 +48,16 @@ import java.io.IOException;
  */
 public class RsdServlet extends HttpServlet {
   private AppConfiguration config;
+  private String startName;
 
   public void init(ServletConfig servletConfig) throws ServletException {
     config = AppConfiguration.getInstance();
-  }
+ }
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
 
-    String name = "start";
-    Snip snip = SnipSpaceFactory.getInstance().load(name);
+    Snip snip = SnipSpaceFactory.getInstance().getBlog().getSnip();
 
     request.setAttribute("snip", snip);
     request.setAttribute("space", SnipSpaceFactory.getInstance());

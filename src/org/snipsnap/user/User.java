@@ -44,7 +44,10 @@ public class User implements Linkable {
   private String email;
   private String status;
   private Roles roles;
-  private Timestamp cTime, mTime, lastLogin, lastAccess, lastLogout;
+  // @TODO: composite object
+  private Timestamp lastLogin, lastAccess, lastLogout;
+  // @TODO: -> Modified composite object
+  private Timestamp cTime, mTime;
 
   private boolean guest = false;
   private boolean nonUser = false;
@@ -71,6 +74,11 @@ public class User implements Linkable {
     this.mTime = mTime;
   }
 
+  /**
+   * LastAccess sets the time when the user
+   * last accessed SnipSnap. This is used
+   * to find snips since his last access.
+   */
   public void lastAccess() {
     this.lastAccess = new Timestamp(new java.util.Date().getTime());
     //Logger.debug(this.login+" hashcode: "+((Object) this).hashCode());

@@ -29,6 +29,7 @@ import org.snipsnap.user.User;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.Blog;
 import org.apache.xmlrpc.XmlRpcException;
 import org.radeox.util.logging.Logger;
 
@@ -61,7 +62,7 @@ public class MetaWeblogHandler extends XmlRpcSupport {
     Logger.debug("XML-RPC call to getRecentPosts()");
 
     User user = authenticate(username, password);
-    Snip snip = SnipSpaceFactory.getInstance().load("start");
+    Snip snip = SnipSpaceFactory.getInstance().getBlog().getSnip();
 
     List children =
         SnipSpaceFactory.getInstance().getChildrenDateOrder(snip, numberOfPosts);
@@ -88,7 +89,7 @@ public class MetaWeblogHandler extends XmlRpcSupport {
   public String newPost(String blogid, String username, String password, Hashtable struct, boolean publish) throws Exception {
     User user = authenticate(username, password);
 
-    SnipSpace space = SnipSpaceFactory.getInstance();
+    Blog blog  = SnipSpaceFactory.getInstance().getBlog();
 
     Hashtable postcontent = struct;
 
@@ -97,9 +98,9 @@ public class MetaWeblogHandler extends XmlRpcSupport {
 
     Snip snip = null;
     if (null == title) {
-       snip = space.post(content);
+       snip = blog.post(content);
     } else {
-      snip = space.post(content, title);
+      snip = blog.post(content, title);
     }
 
     return snip.getName();

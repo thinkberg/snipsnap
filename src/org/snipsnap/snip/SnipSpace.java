@@ -1,4 +1,4 @@
-/*
+/*                                  n
  * This file is part of "SnipSnap Wiki/Weblog".
  *
  * Copyright (c) 2002 Stephan J. Schmidt, Matthias L. Jugel
@@ -83,17 +83,9 @@ public interface SnipSpace  {
 
   public Hits search(String queryString);
 
-  public String getContent(String title, String content);
+  public Blog getBlog();
 
-  public Snip post(String content, String title);
-
-  public Snip post(String content);
-
-  public Snip post(String content, Date date);
-
-  public String getPostName();
-
-  public Snip post(Snip weblog, String content, Date date);
+  public Blog getBlog(String name);
 
   public boolean exists(String name);
 

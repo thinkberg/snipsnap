@@ -30,6 +30,7 @@ import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipUtil;
 import org.snipsnap.snip.SnipSpaceFactory;
+import org.snipsnap.snip.Blog;
 import org.snipsnap.render.filter.links.BackLinks;
 import org.radeox.macro.parameter.MacroParameter;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
@@ -78,9 +79,11 @@ public class WeblogMacro extends SnipMacro {
         count = 10;
       }
 
-      List snips = SnipSpaceFactory.getInstance().getChildrenDateOrder(params.getSnip(), count);
+      Blog blog = SnipSpaceFactory.getInstance().getBlog(params.getSnip().getName());
 
-      Iterator iterator = snips.iterator();
+      List posts = blog.getPosts(count);
+
+      Iterator iterator = posts.iterator();
       while (iterator.hasNext()) {
         Snip entry = (Snip) iterator.next();
         writer.write("<div class=\"blog-date\">");
