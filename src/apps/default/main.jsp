@@ -13,7 +13,7 @@
       <img src="/images/javangelist.gif"/>
       <jsp:include page="/menu.jsp" flush="true"/>
      </td>
-     <td valign="top">
+     <td valign="top" width="100%">
       <jsp:include page="<%=request.getAttribute(\"page\")%>" flush="true"/>
       </td>
     </tr>
