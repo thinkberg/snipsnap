@@ -25,8 +25,8 @@
 
 package org.snipsnap.render.filter;
 
-import org.apache.oro.text.regex.MatchResult;
 import org.radeox.filter.regex.RegexTokenFilter;
+import org.radeox.filter.regex.MatchResult;
 import org.radeox.filter.context.FilterContext;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
@@ -58,7 +58,7 @@ public class CalendarFilter extends RegexTokenFilter {
     buffer.append("subscribe to").append(" <a href=\"");
 
     String file = null;
-    StringBuffer url = new StringBuffer("/exec/ical/");
+    StringBuffer url = new StringBuffer("exec/ical/");
     if (parent != null) {
       file = snip.getName().substring(CALENDAR_PREFIX_LENGTH + parent.getName().length() + 1);
       url.append(parent.getName()).append("/");

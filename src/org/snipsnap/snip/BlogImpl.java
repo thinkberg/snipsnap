@@ -101,8 +101,8 @@ public class BlogImpl implements Blog {
     }
 
     //snip.setParent(weblog);
-    snip.addPermission(Permissions.EDIT, Roles.OWNER);
-    space.store(snip);
+    snip.addPermission(Permissions.EDIT_SNIP, Roles.OWNER);
+    space.systemStore(snip);
 
     // Ping weblogs.com that we changed our site
     WeblogsPing.ping(blog);

@@ -31,6 +31,8 @@ import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
+import org.snipsnap.user.User;
+import org.snipsnap.config.Configuration;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -53,14 +55,14 @@ public class SnipLockServlet extends HttpServlet {
     SnipSpace space = SnipSpaceFactory.getInstance();
     Snip snip = space.load(name);
     if (session != null) {
-      Application app = Application.getInstance(session);
       if (request.getParameter("unlock") != null) {
-        snip.getPermissions().remove(Permissions.EDIT, Roles.EDITOR);
+        snip.getPermissions().remove(Permissions.EDIT_SNIP, Roles.EDITOR);
       } else {
-        snip.getPermissions().add(Permissions.EDIT, Roles.EDITOR);
+        snip.getPermissions().add(Permissions.EDIT_SNIP, Roles.EDITOR);
       }
       space.store(snip);
     }
-    response.sendRedirect(SnipLink.absoluteLink("/space/" + SnipLink.encode(name)));
+    Configuration config = Application.get().getConfiguration();
+    response.sendRedirect(config.getUrl("/space/" + SnipLink.encode(name)));
   }
 }

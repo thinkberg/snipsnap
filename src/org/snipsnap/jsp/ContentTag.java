@@ -25,16 +25,18 @@
 package org.snipsnap.jsp;
 
 import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
-import org.jdom.output.XMLOutputter;
-import org.radeox.filter.HtmlRemoveFilter;
 import org.radeox.filter.Filter;
+import org.radeox.filter.HtmlRemoveFilter;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.snip.Snip;
+import org.dom4j.io.XMLWriter;
+import org.dom4j.io.OutputFormat;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.io.IOException;
+import java.io.StringWriter;
 
 
 /*
@@ -70,8 +72,15 @@ public class ContentTag extends TagSupport {
           }
         }
       } else if (encodeHtml) {
-        XMLOutputter out = new XMLOutputter();
-        content = out.outputString(content);
+        StringWriter stringWriter = new StringWriter();
+        try {
+          XMLWriter xmlWriter = new XMLWriter(stringWriter, OutputFormat.createCompactFormat());
+          xmlWriter.write(content);
+          xmlWriter.flush();
+        } catch (IOException e) {
+          Logger.warn("ContentTag: unable to write encoded content: "+e);
+        }
+        content = stringWriter.toString();
       }
       try {
         JspWriter out = pageContext.getOut();

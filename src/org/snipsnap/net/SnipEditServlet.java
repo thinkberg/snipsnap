@@ -28,6 +28,7 @@ import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.app.Application;
+import org.snipsnap.config.Configuration;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -55,7 +56,8 @@ public class SnipEditServlet extends HttpServlet {
 
     final String name = request.getParameter("name");
     if (null == name) {
-      response.sendRedirect(SnipLink.absoluteLink("/space/"+Application.get().getConfiguration().getStartSnip()));
+      Configuration config = Application.get().getConfiguration();
+      response.sendRedirect(config.getUrl("/space/"+config.getStartSnip()));
       return;
     }
 

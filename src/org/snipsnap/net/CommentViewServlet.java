@@ -28,6 +28,7 @@ import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.app.Application;
+import org.snipsnap.config.Configuration;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -48,7 +49,9 @@ public class CommentViewServlet extends HttpServlet {
 
     String name = request.getPathInfo();
     if (null == name) {
-      response.sendRedirect(SnipLink.absoluteLink("/space/"+Application.get().getConfiguration().getStartSnip()));
+      Configuration config = Application.get().getConfiguration();
+
+      response.sendRedirect(config.getUrl("/space/"+Application.get().getConfiguration().getStartSnip()));
       return;
     } else {
       name = name.substring(1);

@@ -29,6 +29,8 @@ import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.snip.label.Label;
 import org.snipsnap.snip.label.LabelManager;
+import org.snipsnap.config.Configuration;
+import org.snipsnap.app.Application;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -54,12 +56,13 @@ public class StoreLabelServlet extends HttpServlet {
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
+    Configuration config = Application.get().getConfiguration();
 
     String snipName = request.getParameter("snipname");
 
     // cancel pressed
     if (null != request.getParameter("cancel")) {
-      response.sendRedirect(SnipLink.absoluteLink("/exec/labels?snipname=" + SnipLink.encode(snipName)));
+      response.sendRedirect(config.getUrl("/exec/labels?snipname=" + SnipLink.encode(snipName)));
       return;
     }
 
@@ -78,6 +81,6 @@ public class StoreLabelServlet extends HttpServlet {
       snip.getLabels().addLabel(label);
       SnipSpaceFactory.getInstance().store(snip);
     }
-    response.sendRedirect(SnipLink.absoluteLink("/exec/labels?snipname=" + SnipLink.encode(snipName)));
+    response.sendRedirect(config.getUrl("/exec/labels?snipname=" + SnipLink.encode(snipName)));
   }
 }

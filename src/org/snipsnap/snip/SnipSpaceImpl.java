@@ -22,21 +22,26 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
+
 package org.snipsnap.snip;
 
 import org.apache.lucene.search.Hits;
+import org.codehaus.nanning.Aspects;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
-import org.snipsnap.notification.Notification;
+import org.snipsnap.app.ApplicationManager;
+import org.snipsnap.container.Components;
+import org.snipsnap.notification.Message;
+import org.snipsnap.notification.MessageService;
 import org.snipsnap.snip.storage.*;
 import org.snipsnap.user.Digest;
+import org.snipsnap.util.ApplicationAwareMap;
 import org.snipsnap.util.Queue;
 import org.snipsnap.util.mail.PostDaemon;
-import org.codehaus.nanning.Aspects;
+import org.snipsnap.versioning.VersionManager;
 
 import java.sql.Timestamp;
 import java.util.*;
-
 
 /**
  * SnipSpace implementation handles all the operations with snips like
@@ -52,21 +57,27 @@ import java.util.*;
 
 public class SnipSpaceImpl implements SnipSpace {
   // List of snips that were changed
-  private Queue changed;
-  // List of snips that are scheduled for storage
+  private ApplicationAwareMap changed;
   private List delayed;
+
+  // List of snips that are scheduled for storage
   private SnipIndexer indexer;
   private Timer timer;
   private String eTag;
   private SnipStorage storage;
+  private VersionManager versionManager;
 
-  private Map blogs;
+  private ApplicationAwareMap blogs;
 
-  public SnipSpaceImpl(SnipStorage storage) {
+  public SnipSpaceImpl(SnipStorage storage,
+                       ApplicationManager manager,
+                       VersionManager versionManager
+                       ) {
     this.storage = storage;
+    this.versionManager = versionManager;
 
-    changed = new Queue(100);
-    blogs = new HashMap();
+    changed = new ApplicationAwareMap(HashMap.class, Queue.class);
+    blogs = new  ApplicationAwareMap(HashMap.class, HashMap.class);
 
     // @TODO resolve this with components from PicoContainer
     // Fully fill the cache with all Snips
@@ -75,7 +86,7 @@ public class SnipSpaceImpl implements SnipSpace {
       // If we keep all snips in memory we can use queries directly on the snip list
       // Wrap the real storage with the memory storage wrapper and an in-memory
       // query class
-      this.storage = new QuerySnipStorage(new MemorySnipStorage(storage));
+      this.storage = new QuerySnipStorage(new MemorySnipStorage(storage, manager));
     } else if ("cache".equals(Application.get().getConfiguration().getCache())
         && storage instanceof CacheableStorage) {
       Logger.debug("Cache strategy is: cache, using CacheSnipStorage");
@@ -89,7 +100,16 @@ public class SnipSpaceImpl implements SnipSpace {
     }
 
     indexer = new SnipIndexer();
-    changed.fill(storage.storageByRecent(50));
+
+    //This should also fill the cache
+    // This should be moved somewhere down, SnipSpace need not know about
+   // different applications
+//    Iterator iterator = manager.getApplications().iterator();
+//    while (iterator.hasNext()) {
+//      String oid = (String) iterator.next();
+//      ((Queue) changed.getObject()).fill(storage.storageByRecent(oid, 50));
+//    }
+
     // We do not store frequent changes right away but
     // collect them in "delayed"
     delayed = new ArrayList();
@@ -102,6 +122,8 @@ public class SnipSpaceImpl implements SnipSpace {
           ListIterator iterator = delayed.listIterator();
           while (iterator.hasNext()) {
             Snip snip = (Snip) iterator.next();
+            // make sure the OID is set to the corresponding snips SnipSpace
+            Application.get().storeObject(Application.OID, snip.getApplication());
             systemStore(snip);
             iterator.remove();
           }
@@ -130,22 +152,23 @@ public class SnipSpaceImpl implements SnipSpace {
   // Perhaps add getBlog(Snip)
   public Blog getBlog(String name) {
     Blog blog;
-    if (blogs.containsKey(name)) {
-      blog = (Blog) blogs.get(name);
+    // ApplicationOid::name/this/is/snip
+    if (blogs.getMap().containsKey(name)) {
+      blog = (Blog) blogs.getMap().get(name);
     } else {
-      System.out.println("SnipSpace aspect="+Aspects.getThis());
-      System.out.flush();
+//      System.out.println("SnipSpace aspect="+Aspects.getThis());
+//      System.out.flush();
       blog = (Blog) org.snipsnap.interceptor.Aspects.newInstance(
           new BlogImpl((SnipSpace) Aspects.getThis(), name),
           Blog.class);
-      blogs.put(name, blog);
+      blogs.getMap().put(name, blog);
     }
     return blog;
   }
 
   // A snip is changed by the user (created, stored)
   public void changed(Snip snip) {
-    changed.add(snip);
+    changed.getQueue().add(snip);
     setETag();
   }
 
@@ -162,7 +185,7 @@ public class SnipSpaceImpl implements SnipSpace {
   }
 
   public List getChanged(int count) {
-    return changed.get(count);
+    return changed.getQueue().get(count);
   }
 
   public List getAll() {
@@ -247,13 +270,18 @@ public class SnipSpaceImpl implements SnipSpace {
 
   public void store(Snip snip) {
     Application app = Application.get();
-    long start = app.start();
-    snip.setMUser(app.getUser());
     changed(snip);
+    snip.setMUser(app.getUser());
     snip.setMTime(new Timestamp(new java.util.Date().getTime()));
-    storage.storageStore(snip);
-    indexer.reIndex(snip);
-    app.stop(start, "store - " + snip.getName());
+    synchronized(snip) {
+      snip.setVersion(snip.getVersion()+1);
+    }
+    versionManager.storeVersion(snip);
+    systemStore(snip);
+    MessageService service = (MessageService) Components.getComponent(MessageService.class);
+    if (null != service) {
+      service.send(new Message(Message.SNIP_MODIFIED, snip));
+    }
     return;
   }
 
@@ -297,14 +325,18 @@ public class SnipSpaceImpl implements SnipSpace {
   public Snip create(String name, String content) {
     name = name.trim();
     Snip snip = storage.storageCreate(name, content);
+    versionManager.storeVersion(snip);
     changed(snip);
     indexer.index(snip);
-    Application.get().notify(Notification.SNIP_CREATE, snip);
+    MessageService service = (MessageService) Components.getComponent(MessageService.class);
+    if (null!=service) {
+      service.send(new Message(Message.SNIP_CREATE, snip));
+    }
     return snip;
   }
 
   public void remove(Snip snip) {
-    changed.remove(snip);
+    changed.getQueue().remove(snip);
     storage.storageRemove(snip);
     indexer.removeIndex(snip);
     return;

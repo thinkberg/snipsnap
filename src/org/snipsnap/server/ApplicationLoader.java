@@ -31,9 +31,9 @@ import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.WebApplicationContext;
 import org.mortbay.util.InetAddrPort;
 import org.mortbay.util.MultiException;
-import org.snipsnap.config.Configuration;
-import org.snipsnap.config.ConfigurationProxy;
+import org.snipsnap.config.Globals;
 import org.snipsnap.config.ServerConfiguration;
+import org.snipsnap.config.Globals;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -42,6 +42,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * Application Server handler that loads, starts, stops and unloads applications.
@@ -50,10 +53,9 @@ import java.util.Map;
  * @version $Id$
  */
 public class ApplicationLoader {
+  private final static String WEBINF = "__WEBINF";
   protected static Map applications = new HashMap();
   protected static int errors = 0;
-
-  private final static String APPLICATION_NAME = "__internal.name";
 
   /**
    * Create a new application load that uses the given jetty server and searches for applications in
@@ -67,7 +69,7 @@ public class ApplicationLoader {
       for (int i = 0; i < files.length; i++) {
         if (files[i].isDirectory()) {
           try {
-            Configuration config = getConfiguration(root, files[i].getName());
+            Properties config = getGlobals(root, files[i].getName());
             if (config != null) {
               loadApplication(config);
             }
@@ -88,11 +90,21 @@ public class ApplicationLoader {
     return errors;
   }
 
+  private static String getName(Properties config) {
+    String host = config.getProperty(Globals.APP_HOST) == null ? "" : config.getProperty(Globals.APP_HOST);
+    String port = config.getProperty(Globals.APP_PORT) == null ? "8668" : config.getProperty(Globals.APP_PORT);
+    String contextPath = config.getProperty(Globals.APP_PATH);
+    if (contextPath == null || contextPath.length() == 0) {
+      contextPath = "";
+    }
+    return normalize(host + port + contextPath).replace('/', '_');
+  }
+
   private static String normalize(String name) {
     return name.replace(' ', '_');
   }
 
-  private static Configuration getConfiguration(String root, String name) throws IOException {
+  private static Properties getGlobals(String root, String name) throws IOException {
     File rootDir = new File(root);
     if (rootDir.exists() && rootDir.isDirectory()) {
       File appDir = new File(rootDir, normalize(name));
@@ -103,10 +115,9 @@ public class ApplicationLoader {
         }
 
         if (configFile.exists()) {
-          Configuration config = ConfigurationProxy.newInstance();
+          Properties config = new Properties();
           config.load(new FileInputStream(configFile));
-          config.setWebInfDir(configFile.getParentFile());
-          config.getProperties().setProperty(APPLICATION_NAME, name);
+          config.setProperty(WEBINF, configFile.getParentFile().getCanonicalPath());
           return config;
         }
       }
@@ -114,8 +125,8 @@ public class ApplicationLoader {
     return null;
   }
 
-  public static Configuration reloadApplication(String root, String name) throws Exception {
-    Configuration config = getConfiguration(root, name);
+  public static Properties reloadApplication(String root, String name) throws Exception {
+    Properties config = getGlobals(root, name);
     if (config != null) {
       unloadApplication(config);
       loadApplication(config);
@@ -124,8 +135,8 @@ public class ApplicationLoader {
     return null;
   }
 
-  public static Configuration loadApplication(String root, String name) throws Exception {
-    Configuration config = getConfiguration(root, name);
+  public static Properties loadApplication(String root, String name) throws Exception {
+    Properties config = getGlobals(root, name);
     if (config != null) {
       loadApplication(config);
       return config;
@@ -134,7 +145,7 @@ public class ApplicationLoader {
   }
 
   public static void unloadApplication(String root, String name) throws Exception {
-    Configuration config = getConfiguration(root, name);
+    Properties config = getGlobals(root, name);
     if (config != null) {
       unloadApplication(config);
     }
@@ -149,8 +160,8 @@ public class ApplicationLoader {
     return applications.size();
   }
 
-  private static WebApplicationContext loadApplication(Configuration config) throws Exception {
-    String appName = config.getProperties().getProperty(APPLICATION_NAME);
+  private static WebApplicationContext loadApplication(Properties config) throws Exception {
+    String appName = getName(config);
     if (applications.get(appName) != null) {
       WebApplicationContext context = (WebApplicationContext) applications.get(appName);
       if (context.isStarted()) {
@@ -158,15 +169,14 @@ public class ApplicationLoader {
       }
     }
 
-    String host = config.getHost() == null ? "" : config.getHost();
-    String port = config.getPort() == null ? "8668" : config.getPort();
-    // use get() instead of getPath() to be sure to get the local context path
-    String contextPath = config.get(Configuration.APP_PATH);
+    String host = config.getProperty(Globals.APP_HOST) == null ? "" : config.getProperty(Globals.APP_HOST);
+    String port = config.getProperty(Globals.APP_PORT) == null ? "8668" : config.getProperty(Globals.APP_PORT);
+    String contextPath = config.getProperty(Globals.APP_PATH);
     if (contextPath == null || contextPath.length() == 0) {
       contextPath = "/";
     }
 
-    File appRoot = config.getWebInfDir().getParentFile();
+    File appRoot = new File(config.getProperty(WEBINF)).getParentFile();
     boolean extract = appRoot.getName().equals("webapp");
     if (extract) {
       appRoot = appRoot.getParentFile();
@@ -175,23 +185,23 @@ public class ApplicationLoader {
     Server server = findOrCreateServer(host, port, contextPath);
     WebApplicationContext context =
       server.addWebApplication(null, contextPath,
-                               extract ? "lib/snipsnap-template.war" : appRoot.getCanonicalPath());
+                               extract ? "lib/snipsnap.war" : appRoot.getCanonicalPath());
 
     if (extract) {
       context.setTempDirectory(appRoot.getCanonicalFile());
       context.setExtractWAR(true);
     }
-    context.setAttribute(ServerConfiguration.INIT_PARAM, new File(config.getWebInfDir(), "application.conf").getCanonicalPath());
+    context.setAttribute(ServerConfiguration.INIT_PARAM, new File(config.getProperty(WEBINF), "application.conf").getCanonicalPath());
     context.start();
 
     applications.put(appName, context);
-    System.out.println("Started '" + config.getName() + "' at " + config.getUrl());
+    System.out.println("Started '" + appName + "' at " + getUrl(config));
 
     return context;
   }
 
-  private static void unloadApplication(Configuration config) {
-    String appName = config.getProperties().getProperty(APPLICATION_NAME);
+  private static void unloadApplication(Properties config) {
+    String appName = getName(config);
     try {
       WebApplicationContext context = (WebApplicationContext) applications.get(appName);
       context.stop();
@@ -281,4 +291,28 @@ public class ApplicationLoader {
     }
     return null;
   }
+
+  /**
+   * Return base url to Snipsnap instance
+   */
+  public static String getUrl(Properties config) {
+    String host = config.getProperty(Globals.APP_HOST);
+    String port = config.getProperty(Globals.APP_PORT);
+    String path = config.getProperty(Globals.APP_PATH);
+
+    StringBuffer tmp = new StringBuffer();
+    tmp.append("http://");
+    try {
+      tmp.append(host == null || host.length() == 0 || "localhost".equals(host) ? InetAddress.getLocalHost().getHostName() : host);
+    } catch (UnknownHostException e) {
+      tmp.append(System.getProperty("host", "localhost"));
+    }
+    if (port != null && !"80".equals(port)) {
+      tmp.append(":");
+      tmp.append(port);
+    }
+    tmp.append(path != null ? path : "");
+    return tmp.toString();
+  }
+
 }

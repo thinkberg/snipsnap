@@ -36,15 +36,14 @@ import java.util.Vector;
 public class AdminXmlRpcClient {
   protected XmlRpcClient xmlRpcClient = null;
 
-  public AdminXmlRpcClient(String host, String port, String password) throws MalformedURLException {
-    this(host, Integer.parseInt(port), password);
+  public AdminXmlRpcClient(String url, String user, String password) throws MalformedURLException {
+    this(new URL(url), user, password);
   }
 
-  public AdminXmlRpcClient(String host, int port, String password) throws MalformedURLException  {
-    String xmlRpcUrl = "http://" + host + (port != 80 ? ":" + port : "") + "/RPC2";
+  public AdminXmlRpcClient(URL url, String user, String password) throws MalformedURLException  {
+    URL xmlRpcUrl = new URL(url, "RPC2");
     xmlRpcClient = new XmlRpcClient(xmlRpcUrl);
-    xmlRpcClient.setBasicAuthentication("admin", password);
-    //System.err.println("AdminXmlRpcClient: new client for "+xmlRpcUrl);
+    xmlRpcClient.setBasicAuthentication(user != null ? user : "admin", password != null ? password : "");
   }
 
   public Object execute(String method, Vector args) throws XmlRpcException, IOException {
@@ -67,7 +66,7 @@ public class AdminXmlRpcClient {
     args.addElement(host);
     args.addElement(port);
     args.addElement(path);
-    return new URL((String)execute("install", args));
+    return new URL((String) execute("install", args));
   }
 
   public void delete(String name, boolean backup) throws XmlRpcException, IOException {

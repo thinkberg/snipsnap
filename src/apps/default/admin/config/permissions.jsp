@@ -15,7 +15,7 @@
     <td>
       <fmt:message key="config.app.perm.register"/><br/>
       <input type="checkbox" name="app.perm.register" value="allow"
-        <c:if test="${config.permRegister == 'allow'}">checked="checked"</c:if>>
+        <c:if test="${newconfig.permRegister == 'allow'}">checked="checked"</c:if>>
     </td>
   </tr>
   <tr>
@@ -23,7 +23,7 @@
     <td>
       <fmt:message key="config.app.perm.weblogsPing"/><br/>
       <input type="checkbox" name="app.perm.weblogsPing" value="allow"
-        <c:if test="${config.permWeblogsPing == 'allow'}">checked="checked"</c:if>>
+        <c:if test="${newconfig.permWeblogsPing == 'allow'}">checked="checked"</c:if>>
     </td>
   </tr>
     <tr>
@@ -31,7 +31,7 @@
     <td>
       <fmt:message key="config.app.perm.notification"/><br/>
       <input type="checkbox" name="app.perm.notification" value="allow"
-        <c:if test="${config.permNotification == 'allow'}">checked="checked"</c:if>>
+        <c:if test="${newconfig.permNotification == 'allow'}">checked="checked"</c:if>>
     </td>
   </tr>
   <tr>
@@ -39,7 +39,7 @@
     <td>
       <fmt:message key="config.app.perm.externalImages"/><br/>
       <input type="checkbox" name="app.perm.externalImages" value="allow"
-        <c:if test="${config.permExternalImages == 'allow'}">checked="checked"</c:if>>
+        <c:if test="${newconfig.permExternalImages == 'allow'}">checked="checked"</c:if>>
     </td>
   </tr>
     <tr>
@@ -47,7 +47,7 @@
     <td>
       <fmt:message key="config.app.perm.multiplePosts"/><br/>
       <input disabled="disabled" type="checkbox" name="app.perm.multiplePosts" value="allow"
-        <c:if test="${config.permMultiplePosts == 'allow'}">checked="checked"</c:if>>
+        <c:if test="${newconfig.permMultiplePosts == 'allow'}">checked="checked"</c:if>>
     </td>
   </tr>
 </table>

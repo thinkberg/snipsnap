@@ -5,13 +5,14 @@
   --%>
 
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %>
 
 <div class="snip-wrapper">
-  <div class="snip-title"><h1 class="snip-name">Create new Snip:</h1></div>
- <form class="form" name="f" method="post" action="<c:out value='${app.configuration.path}'/>/exec/store" enctype="multipart/form-data">
+ <div class="snip-title"><h1 class="snip-name"><fmt:message key="snip.create"/></h1></div>
+ <form class="form" name="f" method="post" action="exec/store" enctype="multipart/form-data">
   <div class="snip-title">
-     Name<br><input name="name" value="" type="text"/>
+     <fmt:message key="snip.name"/><br><input name="name" value="" type="text"/>
   </div>
   <c:if test="${not empty preview}">
    <div class="preview"><div class="snip-content"><c:out value="${preview}" escapeXml="false"/></div></div>
@@ -22,17 +23,19 @@
        <table>
         <tr><td><textarea name="content" type="text" cols="80" rows="20"><c:out value="${content}" escapeXml="true"/></textarea></td></tr>
         <tr><td class="form-buttons">
-         <input value="Preview" name="preview" type="submit"/>
-         <input value="Save" name="save" type="submit"/>
-         <input value="Cancel" name="cancel" type="submit"/>
+         <input value="<fmt:message key="dialog.preview"/>" name="preview" type="submit"/>
+         <input value="<fmt:message key="dialog.save"/>" name="save" type="submit"/>
+         <input value="<fmt:message key="dialog.cancel"/>" name="cancel" type="submit"/>
         </td></tr>
        </table>
        <input name="referer" type="hidden" value="<%= request.getHeader("REFERER") %>"/>
      </div>
    </s:check>
    <s:check roles="Authenticated" invert="true" >
-    Please <a href="<c:out value='${app.configuration.path}'/>/exec/login.jsp">login</a> to create this snip.
+     <fmt:message key="login.please">
+       <fmt:param><fmt:message key="snip.create"/></fmt:param>
+     </fmt:message>
    </s:check>
   </div>
-  </form>
+ </form>
 </div>

@@ -35,12 +35,18 @@ body {
   list-style-type: none;
 }
 
+.content {
+  clear: both;
+  width: 100%;
+}
+
 .configuration {
   clear: both;
   padding: 0px;
   border-bottom: 1px solid #999999;
   border-top: 1px solid #999999;
   display: block;
+  width: 100%;
 }
 
 .guide {
@@ -48,6 +54,21 @@ body {
   padding: 10px 5px 5px 5px;
   border-right: 1px solid #999999;
   vertical-align: top;
+}
+
+.guide a:link {
+  color: #999999;
+  text-decoration: none;
+}
+.guide a:visited	{
+  color: #999999;
+  text-decoration: none;
+}
+.guide a:active {
+  color: #000000;
+}
+.guide a:hover {
+  color: #000000;
 }
 
 .guide ul {

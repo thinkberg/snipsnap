@@ -25,12 +25,13 @@
 
 package org.snipsnap.net;
 
+import org.snipsnap.app.Application;
+import org.snipsnap.config.Configuration;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.snip.label.Label;
 import org.snipsnap.snip.label.LabelManager;
-import org.snipsnap.app.Application;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -45,34 +46,35 @@ import java.io.IOException;
  * @version $Id$
  */
 public class AddLabelServlet extends HttpServlet {
-    protected void doPost(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
-        throws ServletException, IOException {
-            doGet(httpServletRequest, httpServletResponse);
+  protected void doPost(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
+    throws ServletException, IOException {
+    doGet(httpServletRequest, httpServletResponse);
+  }
+
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    Configuration config = Application.get().getConfiguration();
+
+    String snipName = request.getParameter("snipname");
+    if (null == snipName) {
+      response.sendRedirect(config.getUrl(config.getStartSnip()));
+      return;
+    }
+    // cancel pressed
+    if (null != request.getParameter("cancel")) {
+      response.sendRedirect(config.getUrl("/exec/labels?snipname=" + SnipLink.encode(snipName)));
+      return;
     }
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    Snip snip = SnipSpaceFactory.getInstance().load(snipName);
+    request.setAttribute("snip", snip);
 
-        String snipName = request.getParameter("snipname");
-        if (null == snipName) {
-            response.sendRedirect(SnipLink.absoluteLink("/space/"+Application.get().getConfiguration().getStartSnip()));
-            return;
-        }
-        // cancel pressed
-        if (null != request.getParameter("cancel")) {
-            response.sendRedirect(SnipLink.absoluteLink("/exec/labels?snipname=" + SnipLink.encode(snipName)));
-            return;
-        }
+    String labelType = request.getParameter("labeltype");
+    LabelManager manager = LabelManager.getInstance();
+    Label label = manager.getLabel(labelType);
+    request.setAttribute("label", label);
 
-        Snip snip = SnipSpaceFactory.getInstance().load(snipName);
-        request.setAttribute("snip", snip);
-
-        String labelType = request.getParameter("labeltype");
-        LabelManager manager = LabelManager.getInstance();
-        Label label = manager.getLabel(labelType);
-        request.setAttribute("label", label);
-
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/addlabel.jsp");
-        dispatcher.forward(request, response);
-    }
+    RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/addlabel.jsp");
+    dispatcher.forward(request, response);
+  }
 
 }

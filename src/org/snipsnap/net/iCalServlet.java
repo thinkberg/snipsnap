@@ -56,7 +56,7 @@ public class iCalServlet extends HttpServlet {
   private final static int WD_UNAUTHORIZED = 401;
 
   public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    HttpSession session = request.getSession(true);
+    HttpSession session = request.getSession();
     UserManager um = UserManagerFactory.getInstance();
 
     String method = request.getMethod();

@@ -12,7 +12,7 @@
     <td><fmt:message key="config.app.admin.login.text"/></td>
     <td>
       <fmt:message key="config.app.admin.login"/><br/>
-      <input type="text" name="app.admin.login" value="<c:out value='${config.adminLogin}' default=""/>">
+      <input type="text" name="app.admin.login" value="<c:out value='${newconfig.adminLogin}' default=""/>">
       <c:if test="${!empty errors['app.admin.login']}"><img src="images/attention.jpg"></c:if>
     </td>
   </tr>
@@ -26,7 +26,7 @@
       <input type="password" name="app.admin.password.vrfy" value="">
       <c:if test="${!empty errors['app.admin.password']}"><img src="images/attention.jpg"></c:if><br/>
       <div class="hint">
-        <c:if test="${not empty config.adminPassword}">
+        <c:if test="${not empty newconfig.adminPassword}">
           <fmt:message key="config.password.set" />
         </c:if>
       </div>
@@ -36,7 +36,7 @@
     <td><fmt:message key="config.app.admin.email.text"/></td>
     <td>
       <fmt:message key="config.app.admin.email"/><br/>
-      <input type="text" name="app.admin.email" value="<c:out value='${config.adminEmail}' default=""/>">
+      <input type="text" name="app.admin.email" value="<c:out value='${newconfig.adminEmail}' default=""/>">
       <c:if test="${!empty errors['app.admin.email']}"><img src="images/attention.jpg"></c:if>
     </td>
   </tr>

@@ -25,9 +25,8 @@
 package org.snipsnap.admin;
 
 import org.apache.xmlrpc.XmlRpcException;
-import org.snipsnap.config.ServerConfiguration;
 import org.snipsnap.config.Configuration;
-import org.snipsnap.config.ConfigurationProxy;
+import org.snipsnap.config.ServerConfiguration;
 import org.snipsnap.net.filter.EncRequestWrapper;
 import org.snipsnap.server.AdminXmlRpcClient;
 
@@ -46,9 +45,9 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Properties;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 public class AdminInitFilter implements Filter {
 
@@ -60,7 +59,6 @@ public class AdminInitFilter implements Filter {
   protected final static String ATT_STEP = "step";
   protected final static String ATT_ERRORS = "errors";
   protected final static String ATT_APPS = "applications";
-
 
   protected final static String PARAM_INSTALL = "install";
 
@@ -74,10 +72,12 @@ public class AdminInitFilter implements Filter {
       System.err.println("AdminInitFilter: unable to load server config: " + e);
     }
     try {
-      adminClient = new AdminXmlRpcClient(serverConfig.getProperty(ServerConfiguration.ADMIN_HOST, "localhost"),
-                                          serverConfig.getProperty(ServerConfiguration.ADMIN_PORT),
+      adminClient = new AdminXmlRpcClient(serverConfig.getProperty(ServerConfiguration.ADMIN_URL),
+                                          serverConfig.getProperty(ServerConfiguration.ADMIN_USER, "admin"),
                                           serverConfig.getProperty(ServerConfiguration.ADMIN_PASS));
     } catch (MalformedURLException e) {
+      System.out.println("!! Unable to create XML-RPC client, edit conf/server.conf:");
+      System.out.println("!! You may need to add "+ServerConfiguration.ADMIN_URL);
       throw new ServletException(e);
     }
   }
@@ -100,7 +100,7 @@ public class AdminInitFilter implements Filter {
     }
 
     // get or create session and application object
-    HttpSession session = request.getSession(true);
+    HttpSession session = request.getSession();
     Properties config = null;
     Map errors = new HashMap();
 
@@ -136,7 +136,7 @@ public class AdminInitFilter implements Filter {
         config = (Properties) session.getAttribute(ATT_CONFIG);
         if (null == config) {
           config = new Properties();
-          config.load(AdminInitFilter.class.getResourceAsStream("/org/snipsnap/config/defaults.conf"));
+          config.load(AdminInitFilter.class.getResourceAsStream("/org/snipsnap/config/globals.conf"));
         }
 
         String host = request.getParameter(Configuration.APP_HOST);
@@ -178,6 +178,7 @@ public class AdminInitFilter implements Filter {
               return;
             }
           } catch (Exception e) {
+            e.printStackTrace();
             System.out.println(e);
             System.out.println(e.getCause());
             errors.put(e.getMessage(), "unknown");
@@ -199,6 +200,7 @@ public class AdminInitFilter implements Filter {
   }
 
   protected URL install(String host, String port, String path) throws Exception {
+    //System.out.println("install("+host+", "+port+", "+path+")");
     try {
       return adminClient.install(host + "_" + port + "_" + path.replace('/', '_'), host, port, path);
     } catch (XmlRpcException e) {

@@ -7,5 +7,5 @@
 #
 # Disallow all access to the configuration part
 User-agent: *
-Disallow: /SnipSnap/
+Disallow: /space/SnipSnap/
 

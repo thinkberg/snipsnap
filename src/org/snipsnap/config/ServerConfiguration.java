@@ -24,7 +24,11 @@
  */
 package org.snipsnap.config;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Properties;
 
 /**
@@ -42,8 +46,7 @@ public class ServerConfiguration {
   public final static String ENCODING = "snipsnap.server.encoding";
   public final static String ADMIN_USER = "snipsnap.server.admin.user";
   public final static String ADMIN_PASS = "snipsnap.server.admin.password";
-  public final static String ADMIN_PORT = "snipsnap.server.admin.port";
-  public final static String ADMIN_HOST = "snipsnap.server.admin.host";
+  public final static String ADMIN_URL = "snipsnap.server.admin.rpc.url";
   public final static String ADMIN_EMAIL = "snipsnap.server.admin.email";
   public final static String WEBAPP_ROOT = "snipsnap.server.webapp.root";
 
@@ -183,7 +186,9 @@ public class ServerConfiguration {
   }
 
   public void setProperty(String name, String value) {
-    if (name == null || value == null) { return; }
+    if (name == null || value == null) {
+      return;
+    }
     properties.setProperty(name, value);
   }
 
@@ -193,7 +198,7 @@ public class ServerConfiguration {
 
   public String getProperty(String name, String defaultValue) {
     String value = getProperty(name);
-    if(value == null) {
+    if (value == null) {
       return defaultValue;
     }
     return value;

@@ -1,4 +1,4 @@
-/*
+/*      Rss
  * This file is part of "SnipSnap Wiki/Weblog".
  *
  * Copyright (c) 2002 Stephan J. Schmidt, Matthias L. Jugel
@@ -26,12 +26,14 @@
 package org.snipsnap.snip.storage;
 
 import org.radeox.util.logging.Logger;
-import org.snipsnap.jdbc.Finder;
-import org.snipsnap.jdbc.FinderFactory;
+import org.snipsnap.app.Application;
+import org.snipsnap.jdbc.*;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.User;
 import org.snipsnap.util.ConnectionManager;
+import org.snipsnap.util.log.SQLLogger;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,186 +47,166 @@ import java.util.List;
 
 public class JDBCUserStorage implements UserStorage {
   private FinderFactory finders;
+  private DataSource ds;
 
-  public JDBCUserStorage() {
-    finders = new FinderFactory("SELECT login, passwd, email, status, roles, " +
+  public JDBCUserStorage(DataSource ds) {
+    this.ds = ds;
+    finders = new FinderFactory(ds, "SELECT applicationOid, login, passwd, email, status, roles, " +
         " cTime, mTime, lastLogin, lastAccess, lastLogout " +
         " FROM SnipUser ");
   }
 
   public static void createStorage() {
-    Connection connection = ConnectionManager.getConnection();
+    DataSource datasource = ConnectionManager.getDataSource();
+    System.err.println("JDBCUserStorage: dropping SnipUser SQL table");
+    JDBCTemplate droptemplate = new JDBCTemplate(datasource);
     try {
-      Statement statement = connection.createStatement();
-      System.out.println("JDBCUserStorage: creating user SQL tables");
-      statement.executeQuery(
-          "    CREATE TABLE SnipUser ( " +
-          "       cTime      TIMESTAMP, " +
-          "       mTime      TIMESTAMP, " +
-          "       lastLogin  TIMESTAMP, " +
-          "       lastAccess TIMESTAMP, " +
-          "       lastLogout TIMESTAMP, " +
-          "       login      VARCHAR(100) NOT NULL, " +
-          "       passwd     VARCHAR(100), " +
-          "       email      VARCHAR(100)," +
-          "       status     VARCHAR(50), " +
-          "       roles      VARCHAR(200) )");
-
-      // Close the statement and the connection.
-      statement.close();
-    } catch (SQLException e) {
-      System.out.println(
-          "An error occured\n" +
-          "The SQLException message is: " + e.getMessage());
-    } finally {
-      try {
-        connection.close();
-      } catch (SQLException e2) {
-        e2.printStackTrace(System.err);
-      }
+      droptemplate.update("DROP TABLE SnipUser");
+    } catch (Exception e) {
+      SQLLogger.warn("JDBCUserStorage: unable to drop table (new install?)", e);
     }
+
+    System.err.println("JDBCUserStorage: creating SnipUser SQL table");
+    JDBCTemplate template = new JDBCTemplate(datasource);
+    template.update(
+        "    CREATE TABLE SnipUser ( " +
+        "       login          VARCHAR(100) NOT NULL, " +
+        "       applicationOid VARCHAR(100) NOT NULL," +
+        "       cTime          TIMESTAMP, " +
+        "       mTime          TIMESTAMP, " +
+        "       lastLogin      TIMESTAMP, " +
+        "       lastAccess     TIMESTAMP, " +
+        "       lastLogout     TIMESTAMP, " +
+        "       passwd         VARCHAR(100), " +
+        "       email          VARCHAR(100)," +
+        "       status         VARCHAR(50), " +
+        "       roles          VARCHAR(200) )");
+    return;
   }
 
-  public void storageStore(User user) {
-    PreparedStatement statement = null;
-    Connection connection = ConnectionManager.getConnection();
-
-    try {
-      statement = connection.prepareStatement("UPDATE SnipUser SET login=?, passwd=?, email=?, status=?, roles=?, " +
-          " cTime=?, mTime=?, lastLogin=?, lastAccess=?, lastLogout=? " +
-          " WHERE login=?");
-
-      statement.setString(1, user.getLogin());
-      statement.setString(2, user.getPasswd());
-      statement.setString(3, user.getEmail());
-      statement.setString(4, user.getStatus());
-      statement.setString(5, user.getRoles().toString());
-      statement.setTimestamp(6, user.getCTime());
-      statement.setTimestamp(7, user.getMTime());
-      statement.setTimestamp(8, user.getLastLogin());
-      statement.setTimestamp(9, user.getLastAccess());
-      statement.setTimestamp(10, user.getLastLogout());
-      statement.setString(11, user.getLogin());
-
-      statement.execute();
-    } catch (SQLException e) {
-      Logger.warn("JDBCUserStorage: unable to get store user " + user.getLogin(), e);
-    } finally {
-      ConnectionManager.close(statement);
-      ConnectionManager.close(connection);
-    }
+  public void storageStore(final User user) {
+    JDBCTemplate template = new JDBCTemplate(ds);
+    template.update(
+        "UPDATE SnipUser SET login=?, passwd=?, email=?, status=?, roles=?, " +
+        " cTime=?, mTime=?, lastLogin=?, lastAccess=?, lastLogout=? " +
+        " WHERE login=? AND applicationOid=?",
+        new PreparedStatementSetter() {
+          public void setValues(PreparedStatement ps) throws SQLException {
+            ps.setString(1, user.getLogin());
+            ps.setString(2, user.getPasswd());
+            ps.setString(3, user.getEmail());
+            ps.setString(4, user.getStatus());
+            ps.setString(5, user.getRoles().toString());
+            ps.setTimestamp(6, user.getCTime());
+            ps.setTimestamp(7, user.getMTime());
+            ps.setTimestamp(8, user.getLastLogin());
+            ps.setTimestamp(9, user.getLastAccess());
+            ps.setTimestamp(10, user.getLastLogout());
+            ps.setString(11, user.getLogin());
+            ps.setString(12, user.getApplication());
+          }
+        });
     return;
   }
 
   public User storageCreate(String login, String passwd, String email) {
-    PreparedStatement statement = null;
-    ResultSet result = null;
-    Connection connection = ConnectionManager.getConnection();
+    String applicationOid = (String) Application.get().getObject(Application.OID);
 
-    User user = new User(login, passwd, email);
-    Timestamp cTime = new Timestamp(new java.util.Date().getTime());
+    final User user = new User(login, passwd, email);
+    final Timestamp cTime = new Timestamp(new java.util.Date().getTime());
     user.setCTime(cTime);
     user.setMTime(cTime);
     user.setLastLogin(cTime);
     user.setLastAccess(cTime);
     user.setLastLogout(cTime);
+    user.setApplication(applicationOid);
 
-    try {
-      statement = connection.prepareStatement("INSERT INTO SnipUser " +
-          " (login, passwd, email, status, roles, " +
-          " cTime, mTime, lastLogin, lastAccess, lastLogout) " +
-          " VALUES (?,?,?,?,?,?,?,?,?,?)");
-      statement.setString(1, user.getLogin());
-      statement.setString(2, user.getPasswd());
-      statement.setString(3, user.getEmail());
-      statement.setString(4, "");
-      statement.setString(5, "");
-      statement.setTimestamp(6, cTime);
-      statement.setTimestamp(7, cTime);
-      statement.setTimestamp(8, cTime);
-      statement.setTimestamp(9, cTime);
-      statement.setTimestamp(10, cTime);
-
-      statement.execute();
-    } catch (SQLException e) {
-      Logger.warn("JDBCUserStorage: unable to get create user " + login, e);
-    } finally {
-      ConnectionManager.close(result);
-      ConnectionManager.close(statement);
-      ConnectionManager.close(connection);
-    }
-
+    JDBCTemplate template = new JDBCTemplate(ds);
+    template.update(
+        "INSERT INTO SnipUser " +
+        " (login, passwd, email, status, roles, " +
+        " cTime, mTime, lastLogin, lastAccess, lastLogout, applicationOid) " +
+        " VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+        new PreparedStatementSetter() {
+          public void setValues(PreparedStatement ps) throws SQLException {
+            ps.setString(1, user.getLogin());
+            ps.setString(2, user.getPasswd());
+            ps.setString(3, user.getEmail());
+            ps.setString(4, "");
+            ps.setString(5, "");
+            ps.setTimestamp(6, cTime);
+            ps.setTimestamp(7, cTime);
+            ps.setTimestamp(8, cTime);
+            ps.setTimestamp(9, cTime);
+            ps.setTimestamp(10, cTime);
+            ps.setString(11, user.getApplication());
+          }
+        });
     return user;
   }
 
-  public void storageRemove(User user) {
-    PreparedStatement statement = null;
-    Connection connection = ConnectionManager.getConnection();
-
-    try {
-      statement = connection.prepareStatement("DELETE FROM SnipUser WHERE login=?");
-      statement.setString(1, user.getLogin());
-      statement.execute();
-    } catch (SQLException e) {
-      Logger.warn("JDBCUserStorage: unable to get remove user " + user.getLogin(), e);
-    } finally {
-      ConnectionManager.close(statement);
-      ConnectionManager.close(connection);
-    }
+  public void storageRemove(final User user) {
+    JDBCTemplate template = new JDBCTemplate(ds);
+    template.update(
+        "DELETE FROM SnipUser WHERE login=? AND applicationOid=?",
+        new PreparedStatementSetter() {
+          public void setValues(PreparedStatement ps) throws SQLException {
+            ps.setString(1, user.getLogin());
+            ps.setString(2, user.getApplication());
+          }
+        });
     return;
   }
 
   public int storageUserCount() {
-    PreparedStatement statement = null;
-    ResultSet result = null;
-    Connection connection = ConnectionManager.getConnection();
-    int count = -1;
+    final String applicationOid = (String) Application.get().getObject(Application.OID);
+    final IntHolder holder = new IntHolder(-1);
 
-    try {
-      statement = connection.prepareStatement("SELECT count(*) FROM SnipUser");
-      result = statement.executeQuery();
-      if (result.next()) {
-        count = result.getInt(1);
-      }
-    } catch (SQLException e) {
-      Logger.warn("JDBCUserStorage: unable to get user count", e);
-    } finally {
-      ConnectionManager.close(result);
-      ConnectionManager.close(statement);
-      ConnectionManager.close(connection);
-    }
-    return count;
+    JDBCTemplate template = new JDBCTemplate(ds);
+    template.query(
+        "SELECT count(*) FROM SnipUser WHERE applicationOid=?",
+        new RowCallbackHandler() {
+          public void processRow(ResultSet rs) throws SQLException {
+            holder.setValue(rs.getInt(1));
+          }
+        },
+        new PreparedStatementSetter() {
+          public void setValues(PreparedStatement ps) throws SQLException {
+            ps.setString(1, applicationOid);
+          }
+        });
+    return holder.getValue();
   }
 
-  public User storageLoad(String login) {
-    Logger.debug("storageLoad() User=" + login);
-    User user = null;
-    PreparedStatement statement = null;
-    ResultSet result = null;
-    Connection connection = ConnectionManager.getConnection();
-
-    try {
-      statement = connection.prepareStatement("SELECT login, passwd, email, status, roles, cTime, mTime, lastLogin, lastAccess, lastLogout " +
-          " FROM SnipUser " +
-          " WHERE login=?");
-      statement.setString(1, login);
-
-      result = statement.executeQuery();
-      if (result.next()) {
-        user = createUser(result);
-      }
-    } catch (SQLException e) {
-      Logger.warn("JDBCUserStorage: unable to get load user " + login, e);
-    } finally {
-      ConnectionManager.close(result);
-      ConnectionManager.close(statement);
-      ConnectionManager.close(connection);
-    }
-    return user;
+  public User storageLoad(final String login) {
+    //System.err.println("storageLoad: User login="+login);
+    final String applicationOid = (String) Application.get().getObject(Application.OID);
+    final List users = new ArrayList();
+    JDBCTemplate template = new JDBCTemplate(ds);
+    template.query(
+        "SELECT applicationOid, login, passwd, email, status, roles, cTime, mTime, " +
+        " lastLogin, lastAccess, lastLogout " +
+        " FROM SnipUser " +
+        " WHERE login=? AND applicationOid=?",
+        new RowCallbackHandler() {
+          public void processRow(ResultSet rs) throws SQLException {
+            users.add(createUser(rs));
+          }
+        },
+        new PreparedStatementSetter() {
+          public void setValues(PreparedStatement ps) throws SQLException {
+            ps.setString(1, login);
+            ps.setString(2, applicationOid);
+          }
+        });
+    return (users.size() > 0 ? (User) users.get(0) : null);
   }
 
   public List storageAll() {
-    Finder finder = finders.getFinder(" ORDER BY login");
+    String applicationOid = (String) Application.get().getObject(Application.OID);
+
+    Finder finder = finders.getFinder(" WHERE applicationOid=? ORDER BY login ")
+        .setString(1, applicationOid);
     List list = createObjects(finder.execute());
     finder.close();
     return list;
@@ -252,6 +234,7 @@ public class JDBCUserStorage implements UserStorage {
   }
 
   public User createUser(ResultSet result) throws SQLException {
+    String applicationOid = result.getString("applicationOid");
     String login = result.getString("login");
     String passwd = result.getString("passwd");
     String email = result.getString("email");
@@ -262,6 +245,7 @@ public class JDBCUserStorage implements UserStorage {
     Timestamp lastLogout = result.getTimestamp("lastLogout");
     String status = result.getString("status");
     User user = new User(login, passwd, email);
+    user.setApplication(applicationOid);
     user.setStatus(status);
     user.setRoles(new Roles(result.getString("roles")));
     user.setCTime(cTime);

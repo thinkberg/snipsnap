@@ -1,5 +1,9 @@
 0.5
 
+- Added feature: FileSnipStorage und FileUserStorage to store users and snips in files (properties or XML)
+- Refactored Import/Export
+- Changed Installation and Setup
+- Added feature: Version history of snips
 - Added feature: Each post can be a single snip (with comments etc.)
 - Developer: Upgrade to Radeox 0.9
 - Developer: Moved aspects into container

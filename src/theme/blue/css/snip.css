@@ -223,3 +223,18 @@ h2.comment-name a {
   border: 1px solid black;
   width: 15%;
 }
+
+
+.diff { }
+
+.diff-delete { background-color: #ffcece; }
+.diff-delete .line:before { content: " - "; }
+
+.diff-insert { background-color: #ceffce; }
+.diff-insert .line:before { content: " + "; }
+
+.diff-change { background-color: #ffffa5; }
+.diff-change .line:before { content: " +/- "; }
+
+.diff-move { background-color: #ffffa5; }
+.diff-move .line:before { content: " M "; }

@@ -25,10 +25,10 @@
 
 package org.snipsnap.render.filter;
 
-import org.apache.oro.text.regex.MatchResult;
 import org.radeox.api.engine.IncludeRenderEngine;
 import org.radeox.api.engine.RenderEngine;
 import org.radeox.filter.regex.RegexTokenFilter;
+import org.radeox.filter.regex.MatchResult;
 import org.radeox.filter.Filter;
 import org.radeox.filter.context.FilterContext;
 import org.radeox.macro.Macro;

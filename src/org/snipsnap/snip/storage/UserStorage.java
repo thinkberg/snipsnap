@@ -37,15 +37,50 @@ import java.util.List;
  */
 
 public interface UserStorage  {
+  /**
+   * Store an user in to the backend
+   *
+   * @param user User to store
+   */
   public void storageStore(User user);
 
+  /**
+   * Create a new user in the backend
+   *
+   * @param login Login name of the user
+   * @param passwd Credential of the user
+   * @param email Email adress of the user
+   * @return
+   */
   public User storageCreate(String login, String passwd, String email);
 
+  /**
+   * Remove an user from the backend
+   *
+   * @param user User to remove
+   */
   public void storageRemove(User user);
 
+  /**
+   * Return the number of users in the backend
+   *
+   * @return
+   */
   public int storageUserCount();
+
+  /**
+   * Load a user from the backend
+   *
+   * @param login Login of the user to load
+   * @return
+   */
 
   public User storageLoad(String login);
 
+  /**
+   * Return a list of all users
+   *
+   * @return
+   */
   public List storageAll();
 }

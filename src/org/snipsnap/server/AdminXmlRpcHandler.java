@@ -24,9 +24,8 @@
  */
 package org.snipsnap.server;
 
-import org.apache.xmlrpc.XmlRpcException;
 import org.mortbay.jetty.servlet.WebApplicationContext;
-import org.snipsnap.config.Configuration;
+import org.snipsnap.config.Globals;
 import org.snipsnap.config.ServerConfiguration;
 import org.snipsnap.xmlrpc.AuthXmlRpcHandler;
 
@@ -34,14 +33,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 public class AdminXmlRpcHandler extends AuthXmlRpcHandler {
   private Properties serverConfig = null;
@@ -101,15 +100,17 @@ public class AdminXmlRpcHandler extends AuthXmlRpcHandler {
     File applicationConf = new File(webInf, "application.conf");
     if(!applicationConf.exists()) {
       Properties installConfig = new Properties();
-      installConfig.setProperty(Configuration.APP_HOST, host);
-      installConfig.setProperty(Configuration.APP_PORT, port);
-      installConfig.setProperty(Configuration.APP_PATH, path);
+      installConfig.setProperty(Globals.APP_HOST, host);
+      installConfig.setProperty(Globals.APP_PORT, port);
+      installConfig.setProperty(Globals.APP_PATH, path);
       try {
         installConfig.store(new FileOutputStream(applicationConf), " Bootstrap Configuration");
-        Configuration config = ApplicationLoader.loadApplication(root.getPath(), name);
-        return config.getUrl();
+        ApplicationLoader.loadApplication(root.getPath(), name);
+        installConfig.load(new FileInputStream(applicationConf));
+        return ApplicationLoader.getUrl(installConfig) + "?key="+installConfig.getProperty(Globals.APP_INSTALL_KEY);
       } catch (Exception e) {
         applicationConf.delete();
+        e.printStackTrace();
         throw e;
       }
     } else {

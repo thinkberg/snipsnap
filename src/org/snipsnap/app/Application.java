@@ -28,12 +28,10 @@ import org.radeox.util.logging.Logger;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.config.ConfigurationProxy;
 import org.snipsnap.container.Components;
-import org.snipsnap.notification.NotificationService;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.name.NameFormatter;
 import org.snipsnap.user.AuthenticationService;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManagerFactory;
+import org.snipsnap.util.ApplicationAwareMap;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
@@ -49,21 +47,33 @@ import java.util.Map;
  * @version $Id$
  */
 public class Application {
-  private static Map currentUsers = new HashMap();
-  private static Map globalStore = new HashMap();
+  public final static String OID = "_applicationOid";
 
-  private User user;
-  private Configuration config;
-  private List log = new ArrayList();
-  private NotificationService notification;
-  private Map params;
+  private static ApplicationAwareMap currentUsers =
+    new ApplicationAwareMap(HashMap.class, HashMap.class);
 
   private static ThreadLocal instance = new ThreadLocal() {
-    protected synchronized Object initValue() {
-      Logger.debug("Reading init value.");
+    protected synchronized Object initialValue() {
+//      System.out.println("creating new initial application value");
       return new Application();
     }
   };
+
+  // TODO make this an application-aware map to get old functionality
+  private Map objectStore = new HashMap();
+  private User user;
+  private Configuration config;
+  private List log = new ArrayList();
+  // TODO use private NotificationService notification;
+  private Map params;
+
+  public static Application get() {
+    return (Application) instance.get();
+  }
+
+  public static void set(Application application) {
+    instance.set(application);
+  }
 
   public void clearLog() {
     log = new ArrayList();
@@ -77,50 +87,12 @@ public class Application {
     log.add(output);
   }
 
-  public void notify(int type, Snip snip) {
-    //Logger.debug("Application - notify() "+type);
-    if (notification == null &&
-        config != null && config.allow(Configuration.APP_PERM_NOTIFICATION)) {
-      //notification = (NotificationService) Components.getComponent(NotificationService.class);
-      notification = new NotificationService();
-    }
-    if (notification != null) {
-      notification.notify(type, snip);
-    }
-  }
-
   public long start() {
     return System.currentTimeMillis();
   }
 
   public void stop(long start, String output) {
     Logger.log(Logger.PERF, output + " - " + (System.currentTimeMillis() - start));
-  }
-
-  public static Application get() {
-    Application app = (Application) instance.get();
-    // Workaround, because initValue doesn't work
-    if (null == app) {
-      app = new Application();
-      instance.set(app);
-    }
-    return app;
-  }
-
-  public static void set(Application application) {
-    instance.set(application);
-  }
-
-  public static Application getInstance(HttpSession session) {
-    if (session != null) {
-      Application application = (Application) session.getAttribute("app");
-      if (null == application) {
-        application = new Application();
-      }
-      instance.set(application);
-      return application;
-    }
-    return null;
   }
 
   public User getUser() {
@@ -152,13 +124,13 @@ public class Application {
     return;
   }
 
-  public static void addCurrentUser(User user, HttpSession session) {
-    currentUsers.put(session, user);
+  public static synchronized void addCurrentUser(User user, HttpSession session) {
+    currentUsers.getMap().put(session, user);
   }
 
   public static List getCurrentUsers() {
     List users = new ArrayList();
-    Iterator iterator = currentUsers.values().iterator();
+    Iterator iterator = currentUsers.getMap().values().iterator();
     while (iterator.hasNext()) {
       User user = (User) iterator.next();
       if (!(user.isGuest() || user.isNonUser() || users.contains(user))) {
@@ -170,7 +142,7 @@ public class Application {
 
   public static List getCurrentNonUsers() {
     List users = new ArrayList();
-    Iterator iterator = currentUsers.values().iterator();
+    Iterator iterator = currentUsers.getMap().values().iterator();
     while (iterator.hasNext()) {
       User user = (User) iterator.next();
       if (user.isNonUser() && !users.contains(user) && !"IGNORE".equals(user.getEmail())) {
@@ -182,7 +154,7 @@ public class Application {
 
   public static int getGuestCount() {
     int count = 0;
-    Iterator iterator = currentUsers.values().iterator();
+    Iterator iterator = currentUsers.getMap().values().iterator();
     while (iterator.hasNext()) {
       User user = (User) iterator.next();
       if (user.isGuest() && !user.isNonUser()) {
@@ -192,11 +164,11 @@ public class Application {
     return count;
   }
 
-  public static void removeCurrentUser(HttpSession session) {
+  public static synchronized void removeCurrentUser(HttpSession session) {
     if (null == currentUsers) { return; }
 
-    if (currentUsers.containsKey(session)) {
-      User user = (User) currentUsers.get(session);
+    if (currentUsers.getMap().containsKey(session)) {
+      User user = (User) currentUsers.getMap().get(session);
       AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
 
       if (service.isAuthenticated(user)) {
@@ -204,17 +176,16 @@ public class Application {
         user.setLastLogout(user.getLastAccess());
         UserManagerFactory.getInstance().systemStore(user);
       }
-      currentUsers.remove(session);
+      currentUsers.getMap().remove(session);
     }
   }
 
-  // Global memory
   public void storeObject(String key, Object value) {
-    Application.globalStore.put(key, value);
+    objectStore.put(key, value);
   }
 
   public Object getObject(String key) {
-    return Application.globalStore.get(key);
+    return objectStore.get(key);
   }
 
   public void setConfiguration(Configuration config) {

@@ -1,4 +1,6 @@
 Manifest-Version: 1.0
 Created-By: SnipSnap Project (http://snipsnap.org)
 Main-Class: org.snipsnap.server.AppServer
-Class-Path: org.mortbay.jetty.jar javax.servlet.jar org.apache.jasper.jar jdbcpool.jar mckoidb.jar org.apache.crimson.jar xmlrpc-1.1.jar
+Class-Path: org.mortbay.jetty.jar javax.servlet.jar org.apache.jasper.jar \
+  org.apache.crimson.jar xmlrpc-1.1.jar \
+  mckoidb.jar mysql-connector.jar postgres-jdbc.jar

@@ -18,18 +18,18 @@
     <c:if test="${snip.notWeblog}">
       <h1 class="snip-name"><c:out value="${snip.title}"/>
         <c:if test="${snip.comment}">
-         <span class="snip-commented-snip"><s:image name="commented"/> <a href="<c:out value='${app.configuration.path}'/>/comments/<c:out value='${snip.commentedSnip.nameEncoded}'/>"><c:out value='${snip.commentedSnip.name}'/></a></span>
+         <span class="snip-commented-snip"><s:image name="commented"/> <a href="comments/<c:out value='${snip.commentedSnip.nameEncoded}'/>"><c:out value='${snip.commentedSnip.name}'/></a></span>
         </c:if>
       </h1>
     </c:if>
-    <div class="snip-info"><c:out value="${snip.modified}" escapeXml="false"/> Viewed <c:out value="${snip.access.viewCount}"/> times.</div>
+    <div class="snip-info"><c:out value="${snip.modified}" escapeXml="false"/> Viewed <c:out value="${snip.access.viewCount}"/> times. #<c:out value="${snip.version}"/></div>
     <div class="snip-buttons"><c:import url="util/buttons.jsp"/></div>
    </div>
   </c:when>
   <c:otherwise>
   <%-- TODO this is an ugly hack to let owners edit their buttons (see util/buttons.jsp) --%>
     <s:check permission="Edit" roles="Owner:Editor" snip="${snip}">
-      <div class="snip-buttons">[<a href="<c:out value='${app.configuration.path}'/>/exec/edit?name=<c:out value='${snip.nameEncoded}'/>"><fmt:message key="menu.edit"/></a>]</div>
+      <div class="snip-buttons">[<a href="exec/edit?name=<c:out value='${snip.nameEncoded}'/>"><fmt:message key="menu.edit"/></a>]</div>
     </s:check>
  </c:otherwise>
 </c:choose>
@@ -39,8 +39,8 @@
    <div class="snip-meta">
      <div class="snip-label">
        <div>
-         <s:check roles="Authenticated" permission="Edit" snip="${snip}">[<a href="<c:out value='${app.configuration.path}'/>/exec/labels?snipname=<c:out value='${snip.nameEncoded}'/>">Add Label</a>]</s:check>
-         <s:check roles="Authenticated" permission="Edit" snip="${snip}" invert="true"><span class="inactive">Labels</span></s:check>
+         <s:check roles="Authenticated" permission="Edit" snip="${snip}">[<a href="exec/labels?snipname=<c:out value='${snip.nameEncoded}'/>"><fmt:message key="menu.labels.add"/></a>]</s:check>
+         <s:check roles="Authenticated" permission="Edit" snip="${snip}" invert="true"><span class="inactive"><fmt:message key="menu.labels"/></span></s:check>
        </div>
        <table>
          <c:forEach items="${snip.labels.all}" var="label">
@@ -50,8 +50,8 @@
      </div>
      <div class="snip-attachments">
        <div>
-         <s:check roles="Authenticated" permission="Edit" snip="${snip}">[<a href="<c:out value='${app.configuration.path}'/>/exec/upload?name=<c:out value='${snip.nameEncoded}'/>">Attach File</a>]</s:check>
-         <s:check roles="Authenticated" permission="Edit" snip="${snip}" invert="true"><span class="inactive">Attachments</span></s:check>
+         <s:check roles="Authenticated" permission="Edit" snip="${snip}">[<a href="exec/upload?name=<c:out value='${snip.nameEncoded}'/>"><fmt:message key="menu.attachments.add"/></a>]</s:check>
+         <s:check roles="Authenticated" permission="Edit" snip="${snip}" invert="true"><span class="inactive"><fmt:message key="menu.attachments"/></span></s:check>
        </div>
        <c:out value="${snip.attachmentString}" escapeXml="false" />
      </div>

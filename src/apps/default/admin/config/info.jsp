@@ -9,14 +9,14 @@
 
 <div class="info">
   <ul>
-    <li><c:out value="${config.name}"/></li>
-    <li><c:out value="${config.url}"/></li>
-    <li><c:out value="${config.country}(${config.language}) ${config.timezone} ${config.encoding}"/></li>
-    <li><c:out value="${config.theme}"/>
+    <li><c:out value="${newconfig.name}"/></li>
+    <li><c:out value="${newconfig.url}"/></li>
+    <li><c:out value="${newconfig.country}(${newconfig.language}) ${newconfig.timezone} ${newconfig.encoding}"/></li>
+    <li><c:out value="${newconfig.theme}"/>
     <li>
-      <c:out value="${config.adminLogin}"/>
-      <c:if test="${not empty config.adminEmail}">
-        (<c:out value="${config.adminEmail}"/>)
+      <c:out value="${newconfig.adminLogin}"/>
+      <c:if test="${not empty newconfig.adminEmail}">
+        (<c:out value="${newconfig.adminEmail}"/>)
       </c:if>
     </li>
   </ul>

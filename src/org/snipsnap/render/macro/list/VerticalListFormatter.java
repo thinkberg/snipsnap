@@ -89,7 +89,8 @@ public class VerticalListFormatter implements ListFormatter {
             writer.write(" (");
             SnipLink.appendLink(writer, snip.getCUser());
             writer.write(")");
-          } else if (UserManagerFactory.getInstance().load(name) != null) {
+            // @TODO replace with Type Snip check
+          } else if (UserManagerFactory.getInstance().exists(name)) {
             SnipLink.appendImage(writer, "person-icon", "");
             writer.write(" ");
             SnipLink.appendLink(writer, ((Nameable) object).getName());

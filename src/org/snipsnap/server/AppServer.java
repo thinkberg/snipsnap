@@ -24,14 +24,13 @@
  */
 package org.snipsnap.server;
 
+import org.apache.xmlrpc.WebServer;
 import org.mortbay.http.HttpListener;
 import org.mortbay.jetty.Server;
 import org.mortbay.util.InetAddrPort;
 import org.mortbay.util.MultiException;
 import org.snipsnap.config.ServerConfiguration;
 import org.snipsnap.user.Digest;
-import org.apache.xmlrpc.XmlRpcServer;
-import org.apache.xmlrpc.WebServer;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -43,10 +42,9 @@ import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Properties;
-import java.util.Random;
-import java.util.Date;
 
 /**
  * Application Server
@@ -68,7 +66,7 @@ public class AppServer {
     } catch (IOException e) {
       System.err.println("AppServer: warning: unable to load server defaults: " + e);
     }
-    System.setProperty(ServerConfiguration.VERSION, serverInfo.getProperty(ServerConfiguration.VERSION));
+    System.setProperty(ServerConfiguration.VERSION, serverInfo.getProperty(ServerConfiguration.VERSION, "<unknown version>"));
 
     printCopyright();
 
@@ -92,9 +90,10 @@ public class AppServer {
       }
     });
 
-    // set encoding of the JVM
+    // set encoding of the JVM and make sure Jetty decodes URIs correctly
     String enc = serverInfo.getProperty(ServerConfiguration.ENCODING, "UTF-8");
     System.setProperty("file.encoding", enc);
+    System.setProperty("org.mortbay.util.URI.charset", "iso-8859-1");
 
     // start jetty server and install web application
     try {
@@ -117,7 +116,8 @@ public class AppServer {
     }
 
     try {
-      WebServer xmlRpcServer = new WebServer(Integer.parseInt(serverInfo.getProperty(ServerConfiguration.ADMIN_PORT)));
+      URL xmlRpcServerUrl = new URL(serverInfo.getProperty(ServerConfiguration.ADMIN_URL));
+      WebServer xmlRpcServer = new WebServer(xmlRpcServerUrl.getPort());
       // xmlRpcServer.setParanoid(true);
       xmlRpcServer.addHandler("$default", new AdminXmlRpcHandler(serverInfo));
       xmlRpcServer.start();
@@ -147,6 +147,8 @@ public class AppServer {
   }
 
   private static void printCopyright() {
+    System.out.println("SnipSnap "+ System.getProperty(ServerConfiguration.VERSION));
+
     // output version and copyright information
     BufferedReader copyrightReader = new BufferedReader(new InputStreamReader(AppServer.class.getResourceAsStream("/conf/copyright.txt")));
     String line = null;
@@ -180,21 +182,6 @@ public class AppServer {
         } else {
           usage("an argument is required for -root");
         }
-      } else if ("-admin".equals(args[i])) {
-        if (args.length > i + 1) {
-          String command = args[i + 1];
-          String argument = null;
-          if (args.length > i + 2) {
-            argument = args[i + 2];
-          }
-          if (!AdminServer.execute(Integer.parseInt(serverInfo.getProperty(ServerConfiguration.ADMIN_PORT)), command, argument)) {
-            System.out.println("Cannot execute administrative command: '" + command + "'");
-            System.exit(-1);
-          }
-        } else {
-          usage("an argument is required for -admin");
-        }
-        System.exit(0);
       }
     }
     return serverInfo;
@@ -231,10 +218,6 @@ public class AppServer {
     System.out.println(message);
     System.out.println("usage: " + AppServer.class.getName() + " [-root <dir>]");
     System.out.println("  -root   directory, where to find the applications for this server");
-    Iterator it = AdminServer.COMMANDS.iterator();
-    while (it.hasNext()) {
-      System.out.println("  -admin " + it.next());
-    }
-    System.exit(-1);
+    System.exit(0);
   }
 }

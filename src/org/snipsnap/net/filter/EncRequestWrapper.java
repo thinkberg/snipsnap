@@ -29,18 +29,38 @@ import org.radeox.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.UnsupportedEncodingException;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Enumeration;
+import java.util.Collection;
+import java.util.Collections;
 
 public class EncRequestWrapper extends HttpServletRequestWrapper {
   String encoding = "UTF-8";
+  Map paramMap = null;
 
-  public EncRequestWrapper(HttpServletRequest request) {
-    super(request);
+  public EncRequestWrapper(HttpServletRequest request) throws UnsupportedEncodingException {
+    this(request, request.getCharacterEncoding());
   }
 
   public EncRequestWrapper(HttpServletRequest request, String enc) throws UnsupportedEncodingException {
     super(request);
     "".getBytes(enc);
     encoding = enc;
+
+    Map params = request.getParameterMap();
+    Iterator iterator = params.keySet().iterator();
+    Map encodedParams = new HashMap();
+    while (iterator.hasNext()) {
+      String key = (String) iterator.next();
+      String[] values = (String[]) params.get(key);
+      for(int n = 0; n < values.length; n++) {
+        values[n] = getEncodedString(values[n]);
+      }
+      encodedParams.put(key, values);
+    }
+    paramMap = Collections.unmodifiableMap(encodedParams);
   }
 
   private String getEncodedString(String src) {
@@ -48,6 +68,7 @@ public class EncRequestWrapper extends HttpServletRequestWrapper {
       try {
         return new String(src.getBytes("iso-8859-1"), encoding);
       } catch (UnsupportedEncodingException e) {
+        System.err.println(e);
         Logger.warn("Error: illegal encoding: " + e);
       }
     }
@@ -68,5 +89,34 @@ public class EncRequestWrapper extends HttpServletRequestWrapper {
 
   public String getPathInfo() {
     return getEncodedString(super.getPathInfo());
+  }
+
+  public String getParameter(String name) {
+    String[] values = (String[])paramMap.get(name);
+    if(null != values && values.length > 0) {
+      return ((String[])paramMap.get(name))[0];
+    }
+    return null;
+  }
+
+  public Map getParameterMap() {
+    return new HashMap(paramMap);
+  }
+
+  public Enumeration getParameterNames() {
+    final Iterator nameIt = paramMap.keySet().iterator();
+    return new Enumeration() {
+      public boolean hasMoreElements() {
+        return nameIt.hasNext();
+      }
+
+      public Object nextElement() {
+        return nameIt.next();
+      }
+    };
+  }
+
+  public String[] getParameterValues(String name) {
+    return (String[])paramMap.get(name);
   }
 }

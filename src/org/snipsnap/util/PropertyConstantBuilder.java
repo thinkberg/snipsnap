@@ -27,9 +27,18 @@ package org.snipsnap.util;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Properties;
+import java.util.StringTokenizer;
+import java.util.TreeSet;
+import java.util.List;
 
 public class PropertyConstantBuilder extends Task {
   public static void main(String args[]) {
@@ -74,12 +83,14 @@ public class PropertyConstantBuilder extends Task {
 
   private void buildClass(String propertiesFile, File file, String prefix) throws BuildException {
     Properties defaults = new Properties();
-    try {
-      defaults.load(new FileInputStream(propertiesFile));
-    } catch (IOException e) {
-      throw new BuildException("properties file '" + propertiesFile + "' not found.");
+    String[] files = propertiesFile.split(" *, *");
+    for(int fileCount = 0; fileCount < files.length; fileCount++) {
+      try {
+        defaults.load(new FileInputStream(files[fileCount]));
+      } catch (IOException e) {
+        throw new BuildException("properties file '" + files[fileCount] + "' not found.");
+      }
     }
-
     try {
       PrintWriter stubWriter = new PrintWriter(new FileWriter(stubFile));
       stubWriter.println();

@@ -39,14 +39,10 @@ import java.io.IOException;
  */
 public class MultipartFilter implements Filter {
 
-  private FilterConfig config = null;
-
   public void init(FilterConfig config) throws ServletException {
-    this.config = config;
   }
 
   public void destroy() {
-    config = null;
   }
 
   public void doFilter(ServletRequest request, ServletResponse response,
@@ -59,7 +55,7 @@ public class MultipartFilter implements Filter {
       chain.doFilter(req, response);
     } else {
       try {
-        chain.doFilter(new MultipartWrapper(req), response);
+        chain.doFilter(new MultipartWrapper(req, "UTF-8"), response);
       } catch (IllegalArgumentException e) {
         Logger.warn("MultipartFilter: "+e.getMessage());
       }

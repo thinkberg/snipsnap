@@ -24,19 +24,27 @@
  */
 package org.snipsnap.util;
 
-import com.bitmechanic.sql.ConnectionPoolManager;
-import org.radeox.util.logging.Logger;
+import org.apache.commons.dbcp.ConnectionFactory;
+import org.apache.commons.dbcp.DriverManagerConnectionFactory;
+import org.apache.commons.dbcp.PoolableConnectionFactory;
+import org.apache.commons.dbcp.PoolingDataSource;
+import org.apache.commons.pool.ObjectPool;
+import org.apache.commons.pool.impl.GenericObjectPool;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
+import org.radeox.util.logging.Logger;
 
-import java.sql.*;
-import java.util.HashSet;
-import java.util.Set;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Properties;
 
 /**
  * The connection manager handles all database connections.
  *
- * @author Stephan J. Schmidt
+ * @author Stephan J. Schmidt, Matthias L. Jugel
  * @version $Id$
  */
 public class ConnectionManager {
@@ -49,65 +57,60 @@ public class ConnectionManager {
     return instance;
   }
 
-  private ConnectionPoolManager mgr = null;
-
-  public ConnectionManager() {
-    try {
-      mgr = new ConnectionPoolManager(300);
-    } catch (SQLException e) {
-      System.out.println("Unable to create ConnectionPool");
+  public static synchronized void removeInstance() {
+    if(null != instance) {
+      instance = null;
     }
   }
 
-  private Set names = new HashSet();
+  private DataSource dataSource = null;
+
+  private ConnectionManager() {
+  }
 
   private void update(Configuration config) {
-    if (!names.contains(config.getName())) {
+    if (null == dataSource) {
       try {
+        System.err.println("ConnectionManager: Registering JDBC driver: " + config.getJdbcDriver());
         Class.forName(config.getJdbcDriver());
       } catch (Exception e) {
-        System.out.println("Unable to register the JDBC Driver: " + config.getJdbcDriver());
-        return;
+        Logger.fatal("unable to register JDBC driver: " + config.getJdbcDriver(), e);
       }
 
-      // This URL specifies we are connecting with a local database.  The
-      // configuration file for the database is found at './ExampleDB.conf'
-      //String url = "jdbc:mckoi:local://./conf/db.conf";
-      String url = config.getJdbcUrl();
-      String name = config.getName();
-
-      try {
-        mgr.addAlias(name, config.getJdbcDriver(),
-                     url,
-                     config.getJdbcUser(),
-                     config.getJdbcPassword(),
-                     10, // max connections to open
-                     300, // seconds a connection can be idle before it is closed
-                     120, // seconds a connection can be checked out by a thread
-                     // before it is returned back to the pool
-                     30, // number of times a connection can be re-used before
-                     // connection to database is closed and re-opened
-                     // (optional parameter)
-                     false); // specifies whether to cache statements
-        names.add(name);
-      } catch (Exception e) {
-        Logger.warn("Unable to add connection alias for '"+config.getName()+"'", e);
+      String jdbcUrl = config.getJdbcUrl();
+      if(jdbcUrl.indexOf("?") != -1) {
+        jdbcUrl = jdbcUrl.concat("&");
+      } else {
+        jdbcUrl = jdbcUrl.concat("?");
       }
+      jdbcUrl = jdbcUrl.concat("user="+config.getJdbcUser()).concat("&password="+config.getJdbcPassword());
+      //System.err.println("ConnectionManager: using: "+ jdbcUrl);
+      ObjectPool connectionPool = new GenericObjectPool(null);
+      ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(jdbcUrl, config.getJdbcUser(), config.getJdbcPassword());
+      PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory, connectionPool, null, null, false, true);
+      dataSource = new PoolingDataSource(connectionPool);
     }
   }
 
   private Connection connection() {
-    Application app = Application.get();
-    Configuration config = app.getConfiguration();
-    String appName = config.getName();
-    // make sure a pool exists for this config
-    update(config);
+    update(Application.get().getConfiguration());
+
     try {
-      return DriverManager.getConnection(ConnectionPoolManager.URL_PREFIX + appName);
-    } catch (SQLException e) {
-      Logger.warn("Unable to get connection for application '" + appName + "'", e);
+      return dataSource.getConnection();
+    } catch (Exception e) {
+      Logger.fatal("unable to get connection: ", e);
       return null;
     }
+  }
+
+  private DataSource dataSource() {
+    update(Application.get().getConfiguration());
+
+    return dataSource;
+  }
+
+  public static DataSource getDataSource() {
+    return getInstance().dataSource();
   }
 
   public static Connection getConnection() {

@@ -29,12 +29,11 @@ import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.net.filter.MultipartWrapper;
 import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.snip.storage.FileSnipStorage;
-import org.snipsnap.snip.attachment.Attachments;
 import org.snipsnap.snip.attachment.Attachment;
+import org.snipsnap.snip.attachment.Attachments;
+import org.snipsnap.snip.storage.XMLFileSnipStorage;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.Security;
@@ -76,16 +75,16 @@ public class FileUploadServlet extends HttpServlet {
     String snipName = request.getParameter("name");
     SnipSpace space = SnipSpaceFactory.getInstance();
     Snip snip = space.load(snipName);
+    Configuration config = Application.get().getConfiguration();
 
     if (request.getParameter("cancel") != null) {
-      response.sendRedirect(SnipLink.absoluteLink("/space/" + snip.getNameEncoded()));
+      response.sendRedirect(config.getUrl("/space/" + snip.getNameEncoded()));
       return;
     }
 
     User user = Application.get().getUser();
-    if (Security.checkPermission(Permissions.ATTACH, user, snip)) {
-      Configuration config = Application.get().getConfiguration();
-      File fileStore = new File(config.getFilePath());
+    if (Security.checkPermission(Permissions.ATTACH_TO_SNIP, user, snip)) {
+      File filePath = config.getFilePath();
 
       if (request.getParameter("upload") != null) {
         MultipartWrapper wrapper = (MultipartWrapper) request;
@@ -97,7 +96,7 @@ public class FileUploadServlet extends HttpServlet {
           InputStream fileInputStream = wrapper.getFileInputStream("file");
           if (fileInputStream != null && fileName != null && fileName.length() > 0 && contentType != null) {
             File relativeFileLocation = new File(snip.getName(), fileName);
-            File file = new File(fileStore, relativeFileLocation.getPath());
+            File file = new File(filePath, relativeFileLocation.getPath());
 
             // check and create the directory, where to store the snip attachments
             if (!file.getParentFile().isDirectory()) {
@@ -121,7 +120,7 @@ public class FileUploadServlet extends HttpServlet {
           for (int fileNo = 0; fileNo < files.length; fileNo++) {
             Attachment attachment = attachments.getAttachment(files[fileNo]);
             if(null != attachment) {
-              File file = new File(fileStore, attachment.getLocation());
+              File file = new File(filePath, attachment.getLocation());
               file.delete();
               attachments.removeAttachment(attachment);
             }
@@ -153,8 +152,8 @@ public class FileUploadServlet extends HttpServlet {
       Logger.log(Logger.WARN, "UNIX path detected, cutting off: " + fileName);
       fileName = fileName.substring(slashIndex + 1);
     }
-    
-    if (fileName.equals(FileSnipStorage.SNIP_XML)) {
+
+    if (fileName.equals(XMLFileSnipStorage.SNIP_XML)) {
       throw new IOException("illegal file name");
     }
 

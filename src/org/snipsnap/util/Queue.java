@@ -40,6 +40,10 @@ public class Queue {
   private LinkedList queue;
   private int size;
 
+  public Queue() {
+    this(100);
+  }
+
   public Queue(int size) {
     this.size = size;
     queue = new LinkedList();

@@ -48,7 +48,6 @@ public class XmlRpcServerTest extends TestCase {
   public XmlRpcServerTest(String name) throws IOException {
     super(name);
     config.load(XmlRpcServerTest.class.getResourceAsStream("/conf/snipsnap.conf"));
-    config.setProperty(ServerConfiguration.ADMIN_HOST, "localhost");
     config.setProperty(ServerConfiguration.ADMIN_PASS, "test");
     File tmpFile = File.createTempFile("xmlrpctest", "root");
     tmpFile.deleteOnExit();
@@ -60,13 +59,14 @@ public class XmlRpcServerTest extends TestCase {
   protected void setUp() throws Exception {
     super.setUp();
     if (null == xmlRpcServer) {
-      xmlRpcServer = new WebServer(Integer.parseInt(config.getProperty(ServerConfiguration.ADMIN_PORT)));
+      URL url = new URL(config.getProperty(ServerConfiguration.ADMIN_URL));
+      xmlRpcServer = new WebServer(url.getPort());
       xmlRpcServer.addHandler("$default", new AdminXmlRpcHandler(config));
       xmlRpcServer.start();
     }
 
-    xmlRpcClient = new AdminXmlRpcClient(config.getProperty(ServerConfiguration.ADMIN_HOST),
-                                         config.getProperty(ServerConfiguration.ADMIN_PORT),
+    xmlRpcClient = new AdminXmlRpcClient(config.getProperty(ServerConfiguration.ADMIN_URL),
+                                         config.getProperty(ServerConfiguration.ADMIN_USER),
                                          config.getProperty(ServerConfiguration.ADMIN_PASS));
   }
 
@@ -76,8 +76,9 @@ public class XmlRpcServerTest extends TestCase {
 
   public void testXmlRpcInstall() throws IOException {
     try {
-      URL url = new URL("http://"+InetAddress.getLocalHost().getHostName()+":8668/");
-      assertEquals(url, xmlRpcClient.install("test", "localhost", "8668", "/"));
+      URL url = new URL("http://"+InetAddress.getLocalHost().getHostName()+":8668/?key=");
+      URL result = xmlRpcClient.install("test", "localhost", "8668", "/");
+      assertTrue(result.toExternalForm().startsWith(url.toExternalForm()));
     } catch (XmlRpcException e) {
       fail("installation of application failed: " + e.getMessage());
     }

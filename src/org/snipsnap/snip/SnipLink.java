@@ -170,25 +170,28 @@ public class SnipLink {
     return buffer;
   }
 
-  public static String absoluteLink(String path) {
-    String contextPath = Application.get().getConfiguration().getPath();
-    return (contextPath != null ? contextPath : "")  + path;
-  }
+//  private static String absoluteLink(String path) {
+//    Configuration config = Application.get().getConfiguration();
+//    String contextPath = config.getPath();
+//    String prefix = config.getPrefix();
+//    return (contextPath != null ? contextPath : "")  +
+//      (prefix != null && !"/".equals(prefix) ? prefix + "/" : "") + path;
+//  }
 
   public static String getImageRoot() {
-    return absoluteLink("/images");
+    return "images";
   }
 
   public static String getSpaceRoot() {
-    return absoluteLink("/space");
+    return "space";
   }
 
   public static String getExecRoot() {
-    return absoluteLink("/exec");
+    return "exec";
   }
 
   public static String getCommentsRoot() {
-    return absoluteLink("/comments");
+    return "comments";
   }
 
   private static List extensions = Arrays.asList(new String[]{"png", "jpg", "jpeg", "gif"});

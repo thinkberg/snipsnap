@@ -44,9 +44,17 @@ public class PartialSearcher implements Map {
   private Map hash;
   private String[] sortedArray;
 
-   public PartialSearcher(Map h) {
-    hash = h;
-    createSortedArray();
+  public PartialSearcher() {
+    this(HashMap.class);
+  }
+
+   public PartialSearcher(Class klass) {
+     try {
+       hash = (Map) klass.newInstance();
+     } catch (Exception e) {
+       hash = new HashMap();
+     }
+     createSortedArray();
   }
 
   public Snip[] match(String s) {

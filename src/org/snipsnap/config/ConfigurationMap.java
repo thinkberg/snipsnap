@@ -24,7 +24,7 @@
  */
 package org.snipsnap.config;
 
-import org.snipsnap.snip.name.NameFormatter;
+import org.snipsnap.app.Application;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,38 +37,108 @@ import java.net.UnknownHostException;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Properties;
-import java.util.List;
-import java.util.Arrays;
 
 /**
  * Implementation of a configuration map which is used as storage for configuration parameters.
  * @see Configuration
+ * @version $Id$
  */
 public class ConfigurationMap {
 
+  private final static String GLOBALS_CONF = "/org/snipsnap/config/globals.conf";
   private final static String DEFAULTS_CONF = "/org/snipsnap/config/defaults.conf";
   private final static String TRANSPOSE_MAP = "/org/snipsnap/config/transpose.map";
 
-  private final static List bootstrap = Arrays.asList(new String[] {
-    Configuration.APP_HOST,
-    Configuration.APP_PORT,
-    Configuration.APP_PATH,
-    Configuration.APP_JDBC_URL,
-    Configuration.APP_JDBC_DRIVER,
-    Configuration.APP_JDBC_USER,
-    Configuration.APP_JDBC_PASSWORD,
-    Configuration.APP_CACHE,
-    Configuration.APP_INSTALLED,
-  });
 
-  protected Properties properties = null;
-  protected Properties defaults = null;
-
-  private File webInfDir = null;
+  // local settings available for a specific instance
+  private Properties properties = null;
+  private Properties defaults = null;
 
   // internal transposition map for old property file versions
   private Properties transposeMap = null;
 
+  // static content, global values
+  private static File webInfDir = null;
+  private static Properties globals = null;
+  private static Properties globalDefaults = null;
+
+  // initialize global defaults and globals itself
+  static {
+    globalDefaults = new Properties();
+    try {
+      globalDefaults.load(ConfigurationMap.class.getResourceAsStream(GLOBALS_CONF));
+    } catch (IOException e) {
+      System.err.println("Configuration: unable to load global defaults: " + e.getMessage());
+    }
+    globals = new Properties(globalDefaults);
+  }
+
+  public void setGlobal(String name, String value) {
+    ConfigurationMap.globals.setProperty(name, value);
+  }
+
+  public String getGlobal(String name) {
+    String value = replaceTokens(ConfigurationMap.globals.getProperty(name));
+    return "".equals(value) ? null : value;
+  }
+
+  public String getGlobalDefault(String name) {
+    String value = globalDefaults.getProperty(name);
+    return ("".equals(value) ? null : value);
+  }
+
+
+  // get all properties
+  public Properties getGlobals() {
+    return globals;
+  }
+
+  // Globals handling
+  public void loadGlobals(InputStream stream) throws IOException {
+    ConfigurationMap.globals.load(stream);
+  }
+
+  public void storeGlobals(OutputStream stream) throws IOException {
+    ConfigurationMap.globals.store(stream, "SnipSnap Globals Configuration $Revision$");
+  }
+
+  /**
+   * Sets the WEB-INF directory, where information is stored.
+   * @param dir
+   */
+  public void setWebInfDir(File dir) {
+    ConfigurationMap.webInfDir = dir;
+  }
+
+  /**
+   * Returns the configuration directory which is identical to the parent directory of the
+   * configuration file or null.
+   * @return the configuration directory
+   */
+  public File getWebInfDir() {
+    return ConfigurationMap.webInfDir;
+  }
+
+  public String getFileStore() {
+    return getFileStore((String)Application.get().getObject(Application.OID)).getPath();
+  }
+
+  public File getFileStore(String applicationOid) {
+    return new File(getGlobal(Globals.APP_FILE_STORE), applicationOid);
+  }
+
+  public String getVersion() {
+    String version = System.getProperty(ServerConfiguration.VERSION);
+    if (null == version) {
+      version = (String)ConfigurationMap.globals.get(ServerConfiguration.VERSION);
+    }
+    return version;
+  }
+
+  /**
+   * Initialize new configuration map
+   * @param init
+   */
   public ConfigurationMap(Configuration init) {
     initDefaults();
     webInfDir = init.getWebInfDir();
@@ -78,7 +148,7 @@ public class ConfigurationMap {
   public ConfigurationMap() {
     initDefaults();
     // instantiate properties with defaults
-    initialize((Properties)defaults.clone());
+    initialize((Properties) defaults.clone());
   }
 
   private void initDefaults() {
@@ -101,18 +171,6 @@ public class ConfigurationMap {
     }
   }
 
-  public void setWebInfDir(File dir) {
-    webInfDir = dir;
-  }
-
-  /**
-   * Returns the configuration directory which is identical to the parent directory of the
-   * configuration file or null.
-   * @return the configuration directory
-   */
-  public File getWebInfDir() {
-    return webInfDir;
-  }
 
   /**
    * Stores the configuration in a properties to the stream given.
@@ -120,28 +178,7 @@ public class ConfigurationMap {
    * @throws IOException
    */
   public void store(OutputStream stream) throws IOException {
-    Properties saveProperties = new Properties();
-    Iterator propIt = properties.keySet().iterator();
-    while (propIt.hasNext()) {
-      String entry = (String) propIt.next();
-      if(!bootstrap.contains(entry)) {
-        saveProperties.setProperty(entry, properties.getProperty(entry));
-      }
-    }
-    saveProperties.store(stream, "SnipSnap Configuration $Revision$");
-  }
-
-  /**
-   * Actually a read-only output file for starting up SnipSnap.
-   * @throws IOException
-   */
-  public void storeBootstrap(OutputStream stream) throws IOException {
-    Properties bootProperties = new Properties();
-    for (int i = 0; i < bootstrap.size(); i++) {
-      String entry = (String) bootstrap.get(i);
-      bootProperties.setProperty(entry, properties.getProperty(entry));
-    }
-    bootProperties.store(stream, "SnipSnap Bootstrap $Revision$");
+    properties.store(stream, "SnipSnap Configuration $Revision$");
   }
 
   /**
@@ -278,6 +315,22 @@ public class ConfigurationMap {
     return ("".equals(value) ? null : value);
   }
 
+  public File getFilePath(String applicationOid) {
+    return new File(getFileStore(applicationOid), "snips");
+  }
+
+  public File getFilePath() {
+    return getFilePath((String) Application.get().getObject(Application.OID));
+  }
+
+  public File getIndexPath() {
+    return new File(getFileStore(), "index");
+  }
+
+  public File getUserPath(String applicationOid) {
+    return new File(getFileStore(applicationOid), "users");
+  }
+
   /**
    * Create a real locale object from the strings in our configuration.
    * @return the locale configured
@@ -295,7 +348,7 @@ public class ConfigurationMap {
         return realPath;
       }
     }
-    return get(Configuration.APP_PATH);
+    return getGlobal(Globals.APP_PATH);
   }
 
   /**
@@ -305,11 +358,12 @@ public class ConfigurationMap {
     String host = get(Configuration.APP_REAL_HOST);
     String port = get(Configuration.APP_REAL_PORT);
     String path = get(Configuration.APP_REAL_PATH);
+    String prefix = get(Configuration.APP_PREFIX);
 
     if (null == host) {
-      host = get(Configuration.APP_HOST);
-      port = get(Configuration.APP_PORT);
-      path = get(Configuration.APP_PATH);
+      host = getGlobal(Globals.APP_HOST);
+      port = getGlobal(Globals.APP_PORT);
+      path = getGlobal(Globals.APP_PATH);
     }
 
     StringBuffer tmp = new StringBuffer();
@@ -324,6 +378,7 @@ public class ConfigurationMap {
       tmp.append(port);
     }
     tmp.append(path != null ? path : "");
+    tmp.append(prefix != null && !"/".equals(prefix) ? prefix : "");
     return tmp.toString();
   }
 
@@ -357,17 +412,14 @@ public class ConfigurationMap {
     return !deny(Configuration.APP_PERM_REGISTER);
   }
 
-  public boolean isInstalled() {
-    return "true".equals(properties.getProperty(Configuration.APP_INSTALLED));
+  public boolean isConfigured() {
+    return "true".equals(properties.getProperty(Configuration.APP_CONFIGURED));
   }
 
-  public String getVersion() {
-    String version = System.getProperty(ServerConfiguration.VERSION);
-    if (null == version) {
-      version = get(ServerConfiguration.VERSION);
-    }
-    return version;
+  public boolean isInstalled() {
+    return "true".equals(ConfigurationMap.globals.getProperty(Globals.APP_INSTALLED));
   }
+
 
   public String toString() {
     StringBuffer result = new StringBuffer();

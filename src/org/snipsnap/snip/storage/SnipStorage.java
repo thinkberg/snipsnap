@@ -56,6 +56,8 @@ public interface SnipStorage {
 
   public List storageAll();
 
+  public List storageAll(String applicationOid);
+
   public List storageByHotness(int size);
 
   // find all Snips with the cUser matching the login

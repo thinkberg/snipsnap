@@ -26,12 +26,10 @@ package org.snipsnap.net;
 
 import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
-import org.snipsnap.user.User;
-import org.snipsnap.user.UserManager;
-import org.snipsnap.user.AuthenticationService;
-import org.snipsnap.user.UserManagerFactory;
 import org.snipsnap.container.Components;
 import org.snipsnap.container.SessionService;
+import org.snipsnap.user.AuthenticationService;
+import org.snipsnap.user.User;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -47,7 +45,7 @@ import java.io.IOException;
  * @version $Id$
  */
 public class LoginServlet extends HttpServlet {
-  private final static String ERR_PASSWORD = "User name and password do not match!";
+  private final static String ERR_PASSWORD = "";
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
@@ -57,13 +55,13 @@ public class LoginServlet extends HttpServlet {
     String referer = request.getParameter("referer");
 
     if (request.getParameter("cancel") == null) {
-      UserManager um = UserManagerFactory.getInstance();
       User user = ((AuthenticationService) Components.getComponent(AuthenticationService.class)).authenticate(login, password);
       if (Application.getCurrentUsers().contains(user)) {
         Application.getCurrentUsers().remove(user);
       }
-      HttpSession session = request.getSession(true);
-      if (user == null) {
+
+      HttpSession session = request.getSession();
+      if (null == user) {
         request.setAttribute("tmpLogin", login);
         request.setAttribute("referer", referer);
         request.setAttribute("error", ERR_PASSWORD);
@@ -73,12 +71,10 @@ public class LoginServlet extends HttpServlet {
       }
 
       session.removeAttribute("referer");
-      Application app = Application.getInstance(session);
-      app.setUser(user, session);
+      Application.get().setUser(user, session);
 
       SessionService service = (SessionService) Components.getComponent(SessionService.class);
-      service.setCookie(request, response, user);
-      session.setAttribute("app", app);
+      service.setUser(request, response, user);
     }
 
     response.sendRedirect(referer);
@@ -93,12 +89,14 @@ public class LoginServlet extends HttpServlet {
     }
 
     if ("true".equals(request.getParameter("logoff"))) {
-      HttpSession session = request.getSession(true);
+      HttpSession session = request.getSession();
       SessionService service = (SessionService) Components.getComponent(SessionService.class);
       service.removeCookie(request, response);
+      Application.removeCurrentUser(session);
+      Application.get().setUser(null);
       session.invalidate();
     } else if ("true".equals(request.getParameter("timeout"))) {
-      HttpSession session = request.getSession(true);
+      HttpSession session = request.getSession();
       Application.removeCurrentUser(session);
       session.invalidate();
     }

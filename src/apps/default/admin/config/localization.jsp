@@ -21,7 +21,7 @@
       <select size="1" name="app.country">
         <c:forEach items="${locales}" var="locale">
           <c:if test="${!empty locale.country}">
-            <option value="<c:out value='${locale.country}'/>" <c:if test="${config.country == locale.country}">selected="selected"</c:if>><c:out value="${locale.displayCountry}" /></option>
+            <option value="<c:out value='${locale.country}'/>" <c:if test="${newconfig.country == locale.country}">selected="selected"</c:if>><c:out value="${locale.displayCountry}" /></option>
           </c:if>
         </c:forEach>
       </select>
@@ -41,7 +41,7 @@
           pageContext.setAttribute("languages", languages);
         %>
         <c:forEach items="${languages}" var="language">
-          <option value="<c:out value='${language.key}'/>" <c:if test="${config.language == language.key}">selected="selected"</c:if>><c:out value="${language.value.displayLanguage}" /></option>
+          <option value="<c:out value='${language.key}'/>" <c:if test="${newconfig.language == language.key}">selected="selected"</c:if>><c:out value="${language.value.displayLanguage}" /></option>
         </c:forEach>
       </select>
     </td>
@@ -66,7 +66,7 @@
           pageContext.setAttribute("timezones", timezones);
         %>
         <c:forEach items="${timezones}" var="timezone">
-          <option value="<c:out value='${timezone.value.ID}'/>" <c:if test="${config.timezone == timezone.value.ID}">selected="selected"</c:if>><fmt:message key="${timezone.key}"/></option>
+          <option value="<c:out value='${timezone.value.ID}'/>" <c:if test="${newconfig.timezone == timezone.value.ID}">selected="selected"</c:if>><fmt:message key="${timezone.key}"/></option>
         </c:forEach>
       </select>
     </td>
@@ -75,11 +75,11 @@
     <td><fmt:message key="config.app.weblogDateFormat.text"/></td>
     <td>
       <fmt:message key="config.app.weblogDateFormat"/><br/>
-      <input type="text" name="app.weblogDateFormat" value="<c:out value='${config.weblogDateFormat}'/>">
+      <input type="text" name="app.weblogDateFormat" value="<c:out value='${newconfig.weblogDateFormat}'/>">
       <c:if test="${!empty errors['app.weblogDateFormat']}"><img src="images/attention.jpg"></c:if>
       <%
         Locale current = Locale.getDefault();
-        Configuration cfg = (Configuration)pageContext.findAttribute("config");
+        Configuration cfg = (Configuration)pageContext.findAttribute("newconfig");
         Locale.setDefault(cfg.getLocale());
         try {
           DateFormat df = new SimpleDateFormat(cfg.getWeblogDateFormat());
@@ -99,7 +99,7 @@
     <td><fmt:message key="config.app.geoCoordinates.text"/></td>
     <td>
       <fmt:message key="config.app.geoCoordinates"/><br/>
-      <input type="text" name="app.geoCoordinates" value="<c:out value='${config.geoCoordinates}'/>">
+      <input type="text" name="app.geoCoordinates" value="<c:out value='${newconfig.geoCoordinates}'/>">
       <c:if test="${!empty errors['app.geoCoordinates']}"><img src="images/attention.jpg"></c:if>
     </td>
   </tr>

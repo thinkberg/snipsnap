@@ -80,7 +80,8 @@ public class MailPasswordKeyServlet extends HttpServlet {
         Mail.getInstance().sendMail(receiver, subject, content);
       }
     } else {
-      response.sendRedirect(SnipLink.absoluteLink("/space/"+Application.get().getConfiguration().getStartSnip()));
+      Configuration config = Application.get().getConfiguration();
+      response.sendRedirect(config.getUrl("/space/"+config.getStartSnip()));
       return;
     }
 

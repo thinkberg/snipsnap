@@ -54,7 +54,7 @@ public abstract class AuthXmlRpcHandler implements AuthenticatedXmlRpcHandler {
   protected abstract boolean authenticate(String user, String password);
 
   public Object execute(String method, Vector vector, String user, String password) throws Exception {
-    System.out.println("execute("+method+","+vector+")");
+    //System.out.println("execute("+method+","+vector+")");
     if (authenticate(user, password)) {
       return execute(method, vector);
     } else {

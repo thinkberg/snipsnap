@@ -11,20 +11,20 @@
 <div class="admin-menu">
  <div class="menu-items">
   <c:choose>
-   <c:when test="${page == '/admin/application.jsp'}"><div class="menu-active">Overview</div></c:when>
-   <c:otherwise><div class="menu-in active"><a href="<c:out value='${config.path}/manager/'/>">Overview</a></div></c:otherwise>
+   <c:when test="${page == 'admin/application.jsp'}"><div class="menu-active">Overview</div></c:when>
+   <c:otherwise><div class="menu-in active"><a href="<c:out value='manager/'/>">Overview</a></div></c:otherwise>
   </c:choose>
   <c:choose>
-   <c:when test="${page == '/admin/usermanager.jsp' || page == '/admin/user.jsp'}"><div class="menu-active">User Management</div></c:when>
-   <c:otherwise><div class="menu-inactive"><a href="<c:out value='${config.path}/manager/usermanager.jsp'/>">User Management</a></div></c:otherwise>
+   <c:when test="${page == 'admin/usermanager.jsp' || page == 'admin/user.jsp'}"><div class="menu-active">User Management</div></c:when>
+   <c:otherwise><div class="menu-inactive"><a href="<c:out value='manager/usermanager.jsp'/>">User Management</a></div></c:otherwise>
   </c:choose>
   <c:choose>
-   <c:when test="${page == '/admin/export.jsp'}"><div class="menu-active">Export</div></c:when>
-   <c:otherwise><div class="menu-inactive"><a href="<c:out value='${config.path}/manager/export.jsp'/>">Export</a></div></c:otherwise>
+   <c:when test="${page == 'admin/export.jsp'}"><div class="menu-active">Export</div></c:when>
+   <c:otherwise><div class="menu-inactive"><a href="<c:out value='manager/export.jsp'/>">Export</a></div></c:otherwise>
   </c:choose>
   <c:choose>
-   <c:when test="${page == '/admin/import.jsp'}"><div class="menu-active">Import</div></c:when>
-   <c:otherwise><div class="menu-inactive"><a href="<c:out value='${config.path}/manager/import.jsp'/>">Import</a></div></c:otherwise>
+   <c:when test="${page == 'admin/import.jsp'}"><div class="menu-active">Import</div></c:when>
+   <c:otherwise><div class="menu-inactive"><a href="<c:out value='manager/import.jsp'/>">Import</a></div></c:otherwise>
   </c:choose>
  </div>
 </div>

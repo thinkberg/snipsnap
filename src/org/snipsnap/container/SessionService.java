@@ -34,8 +34,9 @@ import javax.servlet.http.HttpServletResponse;
 
 public interface SessionService {
   /**
-   * Get user from session or cookie.
+   * Get/Set user from session or cookie.
    */
+  public void setUser(HttpServletRequest request, HttpServletResponse response, User user);
   public User getUser(HttpServletRequest request, HttpServletResponse response);
 
   /**

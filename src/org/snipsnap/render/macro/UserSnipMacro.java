@@ -22,12 +22,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-/*
- * Macro that displays all Snips by user
- *
- * @author stephan
- * @version $Id$
- */
 
 package org.snipsnap.render.macro;
 
@@ -37,6 +31,13 @@ import org.snipsnap.snip.SnipSpaceFactory;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;
+
+/*
+ * Macro that displays all Snips by user
+ *
+ * @author stephan
+ * @version $Id$
+ */
 
 public class UserSnipMacro extends ListOutputMacro {
   private String[] paramDescription =

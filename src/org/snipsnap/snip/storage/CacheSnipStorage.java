@@ -26,28 +26,26 @@
 package org.snipsnap.snip.storage;
 
 import org.snipsnap.snip.Snip;
+import org.snipsnap.util.ApplicationAwareMap;
 
 import java.sql.Timestamp;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Wrapper with caching for loading snips
  *
- * @TODO should be an Interceptor
+ * DOES NOT WORK!
  *
  * @author Stephan J. Schmidt
  * @version $Id$
  */
 
 public class CacheSnipStorage implements SnipStorage, CacheStorage {
-  private Map cache;
+  private ApplicationAwareMap cache;
   private SnipStorage storage;
 
   public CacheSnipStorage(SnipStorage storage) {
     this.storage = storage;
-    this.cache = new HashMap();
   }
 
   // Basic manipulation methods Load,Store,Create,Remove
@@ -62,16 +60,16 @@ public class CacheSnipStorage implements SnipStorage, CacheStorage {
   // Basic manipulation methods Load,Store,Create,Remove
   public Snip storageLoad(String name) {
     Snip snip;
-    if (cache.containsKey(name)) {
-      snip = (Snip) cache.get(name);
+    if (cache.getMap().containsKey(name)) {
+      snip = (Snip) cache.getMap().get(name);
     } else {
       snip = storage.storageLoad(name);
-      cache.put(snip.getName(), snip);
+      cache.getMap().put(snip.getName(), snip);
     }
     return snip;
   }
 
-  public Map getCache() {
+  public ApplicationAwareMap getCache() {
     return cache;
   }
 
@@ -85,18 +83,22 @@ public class CacheSnipStorage implements SnipStorage, CacheStorage {
 
   public Snip storageCreate(String name, String content) {
     Snip snip = storage.storageCreate(name, content);
-    cache.put(snip.getName(), snip);
+    cache.getMap().put(snip.getName(), snip);
     return snip;
   }
 
   public void storageRemove(Snip snip) {
-    cache.remove(snip);
+    cache.getMap().remove(snip);
     storage.storageRemove(snip);
   }
 
   // Finder methods
   public int storageCount() {
     return storage.storageCount();
+  }
+
+  public List storageAll(String applicationOid) {
+    return storage.storageAll(applicationOid);
   }
 
   public List storageAll() {

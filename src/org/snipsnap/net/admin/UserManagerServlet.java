@@ -31,6 +31,7 @@ import org.snipsnap.user.Roles;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.user.UserManagerFactory;
+import org.snipsnap.config.Configuration;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -61,8 +62,9 @@ public class UserManagerServlet extends HttpServlet {
       throws ServletException, IOException {
     HttpSession session = request.getSession(false);
     User admin = session != null ? (User) session.getAttribute(AdminServlet.ATT_ADMIN) : null;
+    Configuration config = Application.get().getConfiguration();
     if (null == admin) {
-      response.sendRedirect(SnipLink.absoluteLink("/manager/"));
+      response.sendRedirect(config.getUrl("/manager/"));
       return;
     }
     String command = request.getParameter("command");
@@ -89,7 +91,7 @@ public class UserManagerServlet extends HttpServlet {
           if (update(request, errors, user)) {
             um.store(user);
             errors.put("", OK_USER_UPDATED);
-            response.sendRedirect(SnipLink.absoluteLink("/manager/usermanager.jsp"));
+            response.sendRedirect(config.getUrl("/manager/usermanager.jsp"));
             return;
           } else {
             dispatcher = request.getRequestDispatcher("/manager/user.jsp");
@@ -107,7 +109,7 @@ public class UserManagerServlet extends HttpServlet {
             Application.get().setUser(user);
             HomePage.create(user.getLogin());
             errors.put("", OK_USER_CREATED);
-            response.sendRedirect(SnipLink.absoluteLink("/manager/usermanager.jsp"));
+            response.sendRedirect(config.getUrl("/manager/usermanager.jsp"));
             return;
           }
         }

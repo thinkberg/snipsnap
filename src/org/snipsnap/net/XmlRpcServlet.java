@@ -25,9 +25,12 @@
 package org.snipsnap.net;
 
 import org.apache.xmlrpc.XmlRpcServer;
-import org.snipsnap.xmlrpc.*;
-import org.snipsnap.container.Components;
 import org.picocontainer.PicoContainer;
+import org.snipsnap.config.ConfigurationProxy;
+import org.snipsnap.config.Globals;
+import org.snipsnap.container.Components;
+import org.snipsnap.util.Base64;
+import org.snipsnap.xmlrpc.XmlRpcHandler;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -47,10 +50,13 @@ import java.util.Iterator;
 
 public class XmlRpcServlet extends HttpServlet {
   private XmlRpcServer xmlrpc;
+  private boolean initalized = false;
 
   public void init(ServletConfig servletConfig) throws ServletException {
     xmlrpc = new XmlRpcServer();
+  }
 
+  private void initialize() {
     PicoContainer container = Components.getContainer();
     Iterator iterator = container.getComponentInstances().iterator();
     while (iterator.hasNext()) {
@@ -60,6 +66,7 @@ public class XmlRpcServlet extends HttpServlet {
         xmlrpc.addHandler(handler.getName(), handler);
       }
     }
+    initalized = true;
   }
 
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -68,7 +75,29 @@ public class XmlRpcServlet extends HttpServlet {
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-    byte[] result = xmlrpc.execute(request.getInputStream());
+    Globals globals = ConfigurationProxy.getInstance();
+    if(!globals.isInstalled()) {
+      throw new ServletException("Please finish basic database configuration first.");
+    }
+
+    if(!initalized) {
+      initialize();
+    }
+
+    String auth = request.getHeader("Authorization");
+    String login = "", password = "";
+
+    byte[] result = null;
+    if (auth != null) {
+      auth = new String(Base64.decode(auth.substring(auth.indexOf(' ') + 1)));
+      login = auth.substring(0, auth.indexOf(':'));
+      password = auth.substring(auth.indexOf(':') + 1);
+
+      result = xmlrpc.execute(request.getInputStream(), login, password);
+    } else {
+      result = xmlrpc.execute(request.getInputStream());
+    }
+
     response.setContentType("text/xml");
     response.setContentLength(result.length);
     OutputStream out = response.getOutputStream();

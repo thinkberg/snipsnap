@@ -26,22 +26,29 @@
 package org.snipsnap.xmlrpc;
 
 import org.apache.xmlrpc.XmlRpcException;
-import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
+import org.snipsnap.app.ApplicationManager;
+import org.snipsnap.config.Configuration;
+import org.snipsnap.config.ConfigurationManager;
+import org.snipsnap.config.ConfigurationProxy;
+import org.snipsnap.config.Globals;
+import org.snipsnap.config.InitializeDatabase;
+import org.snipsnap.container.Components;
 import org.snipsnap.snip.XMLSnipExport;
+import org.snipsnap.snip.XMLSnipImport;
+import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.user.AuthenticationService;
 import org.snipsnap.user.User;
-import org.w3c.dom.Document;
+import org.snipsnap.user.UserManager;
 
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.sax.SAXTransformerFactory;
-import javax.xml.transform.stream.StreamResult;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.File;
 import java.util.Arrays;
+import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -53,10 +60,14 @@ import java.util.Vector;
  */
 
 public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler {
-  private final static List FREE_METHODS = Arrays.asList(new String[] {
-    "getName",
+  private final static List FREE_METHODS = Arrays.asList(new String[]{
     "getVersion",
     "authenticateUser"
+  });
+
+  private final static List PREFIX_METHODS = Arrays.asList(new String[]{
+    "dumpXml",
+    "restoreXml",
   });
 
   public static final String API_PREFIX = "snipSnap";
@@ -68,18 +79,35 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
   }
 
   protected boolean authenticate(String username, String password) {
+    Globals globals = ConfigurationProxy.getInstance();
+    if(password != null && password.equals(globals.getInstallKey())) {
+      return true;
+    }
+
     User user = authenticationService.authenticate(username, password);
     if (user != null && user.isAdmin()) {
       Application.get().setUser(user);
       return true;
     }
-    Logger.warn("XML-RPC authenticate: invalid login for " + username);
+    System.err.println("XML-RPC authenticate: invalid login for " + username);
     return false;
   }
 
   public Object execute(String method, Vector vector, String user, String password) throws Exception {
-    if(FREE_METHODS.contains(method)) {
+    if (FREE_METHODS.contains(method)) {
       return super.execute(method, vector);
+    } else if (PREFIX_METHODS.contains(method)) {
+      ApplicationManager appManager = (ApplicationManager) Components.getComponent(ApplicationManager.class);
+      String prefix = "/";
+      String appOid = appManager.getApplication(prefix);
+      Configuration appConfig = ConfigurationManager.getInstance().getConfiguration(appOid);
+      if (appConfig != null) {
+        vector.remove(0);
+        Application.get().setConfiguration(appConfig);
+        Application.get().storeObject(Application.OID, appOid);
+        return super.execute(method, vector, user, password);
+      }
+      throw new Exception("no instance found for prefix '" + prefix + "'");
     }
     return super.execute(method, vector, user, password);
   }
@@ -89,12 +117,13 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
   }
 
   /**
-   * Returns the SnipSnap version of this running instance
+   * Returns the SnipSnap version of this web application
    *
-   * @return version Version number of this running instance
+   * @return version version number
    */
   public String getVersion() {
-    return Application.get().getConfiguration().getVersion();
+    Globals globals = ConfigurationProxy.getInstance();
+    return globals.getVersion();
   }
 
   /**
@@ -119,24 +148,34 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
    * @throws IOException
    */
   public byte[] dumpXml() throws IOException {
+    Configuration config = Application.get().getConfiguration();
     ByteArrayOutputStream exportStream = new ByteArrayOutputStream();
-    Document exportDocument = XMLSnipExport.getBackupDocument();
-    StreamResult streamResult = new StreamResult(exportStream);
-    TransformerFactory tf = SAXTransformerFactory.newInstance();
-    try {
-      Transformer serializer = tf.newTransformer();
-      serializer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-      serializer.setOutputProperty(OutputKeys.INDENT, "yes");
-      serializer.transform(new DOMSource(exportDocument), streamResult);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-
+    UserManager um = (UserManager) Components.getComponent(UserManager.class);
+    SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
+    XMLSnipExport.store(exportStream, space.getAll(), um.getAll(), config.getFilePath());
     return exportStream.toByteArray();
   }
 
-  public void restoreXml(byte[] xmlData) throws IOException {
-//    ByteArrayInputStream importStream = new ByteArrayInputStream(xmlData);
-//    Document importDocument =
+  public byte[] dumpXml(String match) throws IOException {
+    Configuration config = Application.get().getConfiguration();
+    ByteArrayOutputStream exportStream = new ByteArrayOutputStream();
+    SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
+    XMLSnipExport.store(exportStream, Arrays.asList(space.match(match)), null, config.getFilePath());
+    return exportStream.toByteArray();
+  }
+
+  public boolean restoreXml(byte[] xmlData) throws IOException {
+    return restoreXml(xmlData, XMLSnipImport.IMPORT_SNIPS | XMLSnipImport.IMPORT_USERS | XMLSnipImport.OVERWRITE);
+  }
+
+  public boolean restoreXml(byte[] xmlData, int flags) throws IOException {
+    ByteArrayInputStream importStream = new ByteArrayInputStream(xmlData);
+    try {
+      XMLSnipImport.load(importStream, flags);
+    } catch (Exception e) {
+      System.err.println("SnipSnapHandler.restoreXml: unable to import snips: "+e);
+      e.printStackTrace();
+    }
+    return true;
   }
 }

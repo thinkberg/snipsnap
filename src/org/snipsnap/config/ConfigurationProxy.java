@@ -28,19 +28,31 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.Arrays;
 
 public class ConfigurationProxy implements InvocationHandler {
+  private Map methodCache = new HashMap();
+  private Map propertyMethodCache = new HashMap();
 
   private ConfigurationMap config = null;
   private Method getMethod, setMethod;
+  private Method staticGetMethod, staticSetMethod;
   private Map propertyMethodMap;
 
   public ConfigurationProxy(ConfigurationMap config) {
     this.config = config;
     try {
+      // static get/set methods for globals
+      staticGetMethod = config.getClass().getMethod("getGlobal", new Class[]{String.class});
+      staticSetMethod = config.getClass().getMethod("setGlobal", new Class[]{String.class, String.class});
+      methodCache.put(staticGetMethod.toString(), staticGetMethod);
+      methodCache.put(staticGetMethod.toString(), staticSetMethod);
+
+      // simple get/set methods
       getMethod = config.getClass().getMethod("get", new Class[]{String.class});
       setMethod = config.getClass().getMethod("set", new Class[]{String.class, String.class});
       methodCache.put(getMethod.toString(), getMethod);
@@ -51,20 +63,43 @@ public class ConfigurationProxy implements InvocationHandler {
       getMethod = null;
     }
 
-    Field fields[] = Configuration.class.getFields();
     propertyMethodMap = new HashMap();
+    Field[] fields = Configuration.class.getFields();
     for (int fieldCount = 0; fieldCount < fields.length; fieldCount++) {
       try {
         String value = (String) fields[fieldCount].get(Configuration.class);
         propertyMethodMap.put("get" + getCamlCase(value, "app."), value);
         propertyMethodMap.put("set" + getCamlCase(value, "app."), value);
+        propertyMethodCache.put("get" + getCamlCase(value, "app."), getMethod);
+        propertyMethodCache.put("set" + getCamlCase(value, "app."), setMethod);
       } catch (Exception e) {
         System.err.println("ERROR unable to load property names: " + e);
         e.printStackTrace();
       }
     }
+
+    fields = Globals.class.getFields();
+    for(int fieldCount = 0; fieldCount < fields.length; fieldCount++) {
+      try {
+        String value = (String) fields[fieldCount].get(Globals.class);
+        propertyMethodMap.put("get" + getCamlCase(value, "app."), value);
+        propertyMethodMap.put("set" + getCamlCase(value, "app."), value);
+        propertyMethodCache.put("get" + getCamlCase(value, "app."), staticGetMethod);
+        propertyMethodCache.put("set" + getCamlCase(value, "app."), staticSetMethod);
+      } catch (Exception e) {
+        System.err.println("ERROR unable to load global property names: " + e);
+        e.printStackTrace();
+      }
+    }
   }
 
+  /**
+   * Transforms a property name into a CamlCase method name for reflection.
+   *
+   * @param name the name of the property
+   * @param prefix the prefix that should be removed before transforming
+   * @return a java method name usable for reflection
+   */
   private String getCamlCase(String name, String prefix) {
     if (name.startsWith(prefix)) {
       name = name.substring(prefix.length());
@@ -84,31 +119,44 @@ public class ConfigurationProxy implements InvocationHandler {
   // DYNAMIC PROXY METHODS
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
     Object result = null;
+    Object[] invokeArgs = args;
+
+//    System.out.println(method.getName() + "(" + (args != null ? "" + Arrays.asList(args) : "") + ") ");
+
     Method targetMethod = getTargetMethod(method);
+
+    // if we cannot find a method this must be a get/set method
     if (targetMethod == null) {
       String methodName = method.getName();
-      //System.out.println(methodName + "(" + (args != null ? "" + Arrays.asList(args) : "") + ") ");
-      String property = (String) propertyMethodMap.get(methodName);
-      if (methodName.startsWith("get")) {
-        result = config.get(property);
-      } else if (methodName.startsWith("set")) {
-        Object setArgs[] = new Object[args.length + 1];
-        setArgs[0] = property;
-        System.arraycopy(args, 0, setArgs, 1, args.length);
-        //System.out.println(setMethod.getName() + "(" + Arrays.asList(setArgs) + ")");
-        result = setMethod.invoke(config, setArgs);
+      targetMethod = (Method)propertyMethodCache.get(methodName);
+      // extend arguments by one and insert property name in front (works for
+      // set(property, value) and get(property), TODO may be optimized
+      if(args != null) {
+        invokeArgs = new Object[args.length + 1];
+        System.arraycopy(args, 0, invokeArgs, 1, args.length);
       } else {
-        System.err.println("FATAL: unknown method " + methodName + " called.");
+        invokeArgs = new Object[1];
       }
-    } else {
-      //System.out.print(targetMethod.getName() + "(" + (args != null ? "" + Arrays.asList(args) : "") + ") => ");
-      result = targetMethod.invoke(config, args);
+      invokeArgs[0] = propertyMethodMap.get(methodName);
     }
-    //System.out.println(result);
+
+    try {
+//      System.out.print(targetMethod.getName() + "(" +
+//                       (invokeArgs != null ? "" + Arrays.asList(invokeArgs) : "") +
+//                       ") => ");
+      result = targetMethod.invoke(config, invokeArgs);
+    } catch (IllegalAccessException e) {
+      System.err.println("ConfigurationProxy: illegal access to method: "+targetMethod);
+    } catch (IllegalArgumentException e) {
+      System.err.println("ConfigurationProxy: illegal arguments: "+Arrays.asList(invokeArgs));
+      e.printStackTrace();
+    } catch (InvocationTargetException e) {
+      e.getTargetException().printStackTrace();
+
+    }
+//    System.out.println(result);
     return result;
   }
-
-  private Map methodCache = new HashMap();
 
   private Method getTargetMethod(Method method) {
     String methodKey = method.toString();
@@ -148,7 +196,7 @@ public class ConfigurationProxy implements InvocationHandler {
 
   private static Configuration newProxyInstance(ConfigurationMap config) {
     proxy = (Configuration) Proxy.newProxyInstance(config.getClass().getClassLoader(),
-                                                   new Class[]{Configuration.class},
+                                                   new Class[]{Configuration.class, Globals.class},
                                                    new ConfigurationProxy(config));
     return proxy;
   }

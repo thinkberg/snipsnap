@@ -64,7 +64,7 @@ public class FileDownloadServlet extends HttpServlet {
       // make sure the attachment exists
       if (attachment != null) {
         Configuration config = Application.get().getConfiguration();
-        File fileStore = new File(config.getFilePath());
+        File fileStore = config.getFilePath();
         File file = new File(fileStore, attachment.getLocation());
 
         if (file.exists()) {

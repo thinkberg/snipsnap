@@ -28,6 +28,8 @@ import org.apache.lucene.search.Hits;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipSpaceFactory;
+import org.snipsnap.config.Configuration;
+import org.snipsnap.app.Application;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -48,7 +50,7 @@ public class SnipSearchServlet extends HttpServlet {
       throws IOException, ServletException {
     String query = request.getParameter("query");
     if (query != null && query.length() > 0) {
-      HttpSession session = request.getSession(true);
+      HttpSession session = request.getSession();
       SnipSpace space = SnipSpaceFactory.getInstance();
       Hits hits = space.search(query);
       session.setAttribute("query", query);
@@ -58,7 +60,9 @@ public class SnipSearchServlet extends HttpServlet {
       dispatcher.forward(request, response);
       return;
     }
-    response.sendRedirect(SnipLink.absoluteLink("/"));
+
+    Configuration config = Application.get().getConfiguration();
+    response.sendRedirect(config.getUrl());
   }
 
 }

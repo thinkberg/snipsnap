@@ -56,7 +56,8 @@ public class ImportServlet extends HttpServlet {
     HttpSession session = request.getSession(false);
     User admin = session != null ? (User) session.getAttribute(AdminServlet.ATT_ADMIN) : null;
     if (null == admin || !(request instanceof MultipartWrapper)) {
-      response.sendRedirect(SnipLink.absoluteLink("/manager/"));
+      Configuration config = Application.get().getConfiguration();
+      response.sendRedirect(config.getUrl("/manager/"));
       return;
     }
 

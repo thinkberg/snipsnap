@@ -30,6 +30,7 @@ import org.snipsnap.config.Configuration;
 import org.snipsnap.notification.jabber.JabberNotifier;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.user.User;
+import org.snipsnap.container.Components;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -44,13 +45,22 @@ import java.util.List;
  * @version $Id$
  */
 
-public class NotificationService {
+public class NotificationService implements Consumer {
+  private MessageService messageService;
   private NotificationQueue queue;
   private Thread thread;
 
   private List notifiers;
 
   public NotificationService() {
+    this((MessageService) Components.getComponent(MessageService.class));
+  }
+
+  public NotificationService(MessageService service) {
+//    (MessageService service) {
+//    this.messageService = service;
+//    service.register(this);
+
     queue = new NotificationQueue();
     notifiers = new ArrayList();
     notifiers.add(new JabberNotifier("leo@snipsnap.org"));
@@ -74,26 +84,19 @@ public class NotificationService {
       }
     };
     thread.start();
+
+    service.register(this);
   }
 
-  public void notify(int type, Snip snip) {
-    StringBuffer buffer = new StringBuffer();
-    if (type == Notification.SNIP_CREATE) {
-      buffer.append("new snip '");
-      buffer.append(snip.getName());
-      buffer.append("'");
+  public void consume(Message messsage) {
+    if (Message.SNIP_CREATE.equals(messsage.getType())) {
+      StringBuffer buffer = new StringBuffer();
+        buffer.append("new snip '");
+        buffer.append(((Snip) messsage.getValue()).getName());
+        buffer.append("'");
+      notify(buffer);
     }
-    notify(buffer);
-  }
-
-  public void notify(int type, User user) {
-    StringBuffer buffer = new StringBuffer();
-    if (type == Notification.USER_LOGIN) {
-      buffer.append("user login '");
-      buffer.append(user.getLogin());
-      buffer.append("'");
-    }
-    notify(buffer);
+    // do something
   }
 
   public void notify(StringBuffer buffer) {

@@ -26,13 +26,12 @@ package org.snipsnap.net;
  */
 
 import org.snipsnap.app.Application;
-import org.snipsnap.container.Components;
+import org.snipsnap.config.Configuration;
 import org.snipsnap.snip.Blog;
 import org.snipsnap.snip.BlogKit;
 import org.snipsnap.snip.SnipFormatter;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.user.AuthenticationService;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.Security;
 import org.snipsnap.user.User;
@@ -84,10 +83,8 @@ public class PostStoreServlet extends HttpServlet {
       return;
     } else if (request.getParameter("cancel") == null) {
       HttpSession session = request.getSession();
-      Application app = null;
       if (session != null) {
-        app = Application.getInstance(session);
-        User user = app.getUser();
+        User user = Application.get().getUser();
 //        AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
         Blog blog = SnipSpaceFactory.getInstance().getBlog(snipName);
 
@@ -103,6 +100,7 @@ public class PostStoreServlet extends HttpServlet {
       }
     }
 
-    response.sendRedirect(SnipLink.absoluteLink("/space/" + snipName));
+    Configuration config = Application.get().getConfiguration();
+    response.sendRedirect(config.getUrl("/space/" + SnipLink.encode(snipName)));
   }
 }

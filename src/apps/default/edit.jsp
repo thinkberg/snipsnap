@@ -5,6 +5,7 @@
   --%>
 
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %>
 
 <div class="snip-wrapper">
@@ -17,7 +18,7 @@
   <div class="snip-content">
    <s:check roles="Authenticated">
      <div class="snip-input">
-      <form class="form" name="f" method="post" action="<c:out value='${app.configuration.path}'/>/exec/store" enctype="multipart/form-data">
+      <form class="form" name="f" method="post" action="exec/store" enctype="multipart/form-data">
        <table>
         <tr><td><textarea name="content" type="text" cols="80" rows="20"><c:out value="${content}" escapeXml="true"/></textarea></td></tr>
         <tr><td class="form-buttons">
@@ -32,7 +33,9 @@
      </div>
    </s:check>
    <s:check roles="Authenticated" invert="true" >
-    Please <a href="<c:out value='${app.configuration.path}'/>/exec/login.jsp">login</a> to create this snip.
+     <fmt:message key="login.please">
+       <fmt:param><fmt:message key="edit.snip"/></fmt:param>
+     </fmt:message>
    </s:check>
   </div>
 </div>

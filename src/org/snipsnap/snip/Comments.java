@@ -92,7 +92,7 @@ public class Comments {
     String name = "comment-" + snip.getName() + "-" + (getCount() + 1);
     Snip comment = space.create(name, content);
     comment.setCommentedSnip(this.snip);
-    comment.addPermission(Permissions.EDIT, Roles.OWNER);
+    comment.addPermission(Permissions.EDIT_SNIP, Roles.OWNER);
     space.store(comment);
     comments.add(comment);
     users.add(comment.getCUser());

@@ -98,7 +98,7 @@ public class Security {
 
   /**
    * Check if the user has the permission on the object.
-   * Returns true if there is no "Edit" permission.
+   * Returns true if there is e.g no "Edit" permission.
    *
    * @param permission the permission to check, e.g. "Edit"
    * @param user the user to check permissions for, e.g. "funzel"

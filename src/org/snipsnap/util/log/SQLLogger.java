@@ -38,9 +38,9 @@ import java.sql.SQLException;
 
 public class SQLLogger extends Logger {
   public static void warn(String output, SQLException e) {
-    warn(output);
+    System.err.println(output);
     while (null != e) {
-      warn("  "+e.getErrorCode()+" "+e.getSQLState());
+      System.err.println("  "+e.getErrorCode()+" "+e.getSQLState());
       e = e.getNextException();
     }
   }

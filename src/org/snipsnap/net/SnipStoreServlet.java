@@ -29,6 +29,7 @@ import org.snipsnap.snip.*;
 import org.snipsnap.user.User;
 import org.snipsnap.user.AuthenticationService;
 import org.snipsnap.container.Components;
+import org.snipsnap.config.Configuration;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -59,10 +60,8 @@ public class SnipStoreServlet extends HttpServlet {
       return;
     } else if (request.getParameter("cancel") == null) {
       HttpSession session = request.getSession();
-      Application app = null;
       if (session != null) {
-        app = Application.getInstance(session);
-        User user = app.getUser();
+        User user = Application.get().getUser();
         AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
 
         if (service.isAuthenticated(user)) {
@@ -81,7 +80,7 @@ public class SnipStoreServlet extends HttpServlet {
       response.sendRedirect(request.getParameter("referer"));
       return;
     }
-
-    response.sendRedirect(SnipLink.absoluteLink("/space/" + SnipLink.encode(name)));
+    Configuration config = Application.get().getConfiguration();
+    response.sendRedirect(config.getUrl("/space/" + SnipLink.encode(name)));
   }
 }

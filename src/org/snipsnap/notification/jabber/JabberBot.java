@@ -25,9 +25,9 @@
 
 package org.snipsnap.notification.jabber;
 
-
-import com.echomine.common.SendMessageFailedException;
-import com.echomine.jabber.*;
+import org.jivesoftware.smack.Chat;
+import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.packet.Message;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 
@@ -41,8 +41,7 @@ import org.snipsnap.app.Application;
 
 public class JabberBot {
   private static JabberBot instance;
-  private Jabber jabber;
-  private JabberSession session;
+  private XMPPConnection con;
 
   public static synchronized JabberBot getInstance() {
     if (null == instance) {
@@ -53,15 +52,11 @@ public class JabberBot {
 
   public JabberBot() {
     try {
-      JabberContext context = new JabberContext("snipbot", "snipbot", "snipsnap.org");
-      jabber = new Jabber();
-      session = jabber.createSession(context);
-
-      reconnect();
-
-      JabberRosterService roster = session.getRosterService();
-      roster.addToRoster("funzel@snipsnap.org", "Funzel", "SnipSnap", false);
-      roster.addToRoster("leo@snipsnap.org", "Leo", "SnipSnap", false);
+      con = new XMPPConnection("snipsnap.org");
+      con.login("snipbot", "snipbot");
+//      JabberRosterService roster = session.getRosterService();
+//      roster.addToRoster("funzel@snipsnap.org", "Funzel", "SnipSnap", false);
+//      roster.addToRoster("leo@snipsnap.org", "Leo", "SnipSnap", false);
 
       // session.getPresenceService().setToAvailable(null,null);
     } catch (Exception e) {
@@ -69,29 +64,16 @@ public class JabberBot {
     }
   }
 
-  protected void reconnect() {
-    try {
-      session.connect("snipsnap.org", 5222);
-      session.getUserService().login();
-    } catch (Exception e) {
-      Logger.warn("JabberBot: unable to connect", e);
-    }
-  }
-
   public void send(String user, String message) {
-    if (!session.getConnection().isConnected()) {
-      reconnect();
-    }
-
     try {
       Logger.debug("Sending '" + message + "' to '" + user + "' ...");
-      JabberChatMessage msg = new JabberChatMessage(JabberChatMessage.TYPE_HEADLINE);
-      msg.setSubject(Application.get().getConfiguration().getName());
-      msg.setBody(message);
-      msg.setTo(user);
-      session.sendMessage(msg);
+      Chat chat = con.createChat(user);
+      Message newMessage = chat.createMessage();
+      newMessage.setBody("message!");
+      newMessage.setSubject(Application.get().getConfiguration().getName());
+      chat.sendMessage(newMessage);
       Logger.debug("Sent.");
-    } catch (SendMessageFailedException e) {
+    } catch (Exception e) {
       Logger.warn("Unable to send message to " + user, e);
     }
   }

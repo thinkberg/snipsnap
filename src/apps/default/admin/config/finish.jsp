@@ -57,10 +57,10 @@
             <input onClick="enableOnCheck(this);" id="advanced.proxy" type="checkbox" name="advanced.step.proxy">
             <fmt:message key="config.advanced.proxy"/>
           </li>
-          <li>
-            <input onClick="enableOnCheck(this);" id="advanced.database" type="checkbox" name="advanced.step.database">
-            <fmt:message key="config.advanced.database"/>
-          </li>
+<%--          <li>--%>
+<%--            <input onClick="enableOnCheck(this);" id="advanced.database" type="checkbox" name="advanced.step.database">--%>
+<%--            <fmt:message key="config.advanced.database"/>--%>
+<%--          </li>--%>
           <li>
             <input onClick="enableOnCheck(this);" type="checkbox" name="advanced.all">
             <fmt:message key="config.advanced.all"/>

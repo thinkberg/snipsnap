@@ -30,32 +30,31 @@ import org.snipsnap.snip.storage.UserStorage;
 public class DefaultAuthenticationService implements AuthenticationService {
   private UserStorage storage;
 
-   public DefaultAuthenticationService(UserStorage storage) {
-     this.storage = storage;
-   }
+  public DefaultAuthenticationService(UserStorage storage) {
+    this.storage = storage;
+  }
 
-   public User authenticate(String login, String passwd) {
-     User user = storage.storageLoad(login);
+  public User authenticate(String login, String passwd) {
+    User user = storage.storageLoad(login);
 
-     //System.out.println("user: "+user);
-     //System.out.println("check: unencrypted: "+user.getPasswd().equals(passwd));
-     //System.out.println(passwd+"-"+Digest.getDigest(passwd)+"-"+user.getPasswd());
-     //System.out.println("check: encrypted: "+Digest.authenticate(passwd, user.getPasswd()));
+//     System.out.println("user: "+user);
+//     System.out.println("check: unencrypted: "+user.getPasswd().equals(passwd));
+//     System.out.println(passwd+"-"+Digest.getDigest(passwd)+"-"+user.getPasswd());
+//     System.out.println("check: encrypted: "+Digest.authenticate(passwd, user.getPasswd()));
 
-     //@TODO split authenticate and lastLogin
-     if (null != user &&
-         (user.getPasswd().equals(passwd) ||
-         Digest.authenticate(passwd, user.getPasswd()))) {
-       user.lastLogin();
-       storage.storageStore(user);
-       return user;
-     } else {
-       return null;
-     }
-   }
+    //@TODO split authenticate and lastLogin
+    if (null != user &&
+      (user.getPasswd().equals(passwd) || Digest.authenticate(passwd, user.getPasswd()))) {
+      user.lastLogin();
+      storage.storageStore(user);
+      return user;
+    } else {
+      return null;
+    }
+  }
 
-   public boolean isAuthenticated(User user) {
-     return user != null && !(user.isGuest() || user.isNonUser());
-   }
+  public boolean isAuthenticated(User user) {
+    return user != null && !(user.isGuest() || user.isNonUser());
+  }
 
 }

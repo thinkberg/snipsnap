@@ -28,6 +28,7 @@ package org.snipsnap.jdbc;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.util.ConnectionManager;
 
+import javax.sql.DataSource;
 import java.sql.*;
 
 /**
@@ -36,15 +37,15 @@ import java.sql.*;
  * @author stephan
  * @version $Id$
  */
+
 public class Finder {
   private PreparedStatement statement;
   private String statementString;
   private Connection connection;
-  private ResultSet result;
 
-  public Finder(String statement) {
+  public Finder(DataSource ds, String statement) {
     try {
-      this.connection = ConnectionManager.getConnection();
+      this.connection = ds.getConnection();
       this.statementString = statement;
       this.statement = this.connection.prepareStatement(statement);
     } catch (SQLException e) {
@@ -80,7 +81,6 @@ public class Finder {
   }
 
   public void close() {
-    ConnectionManager.close(result);
     ConnectionManager.close(statement);
     ConnectionManager.close(connection);
   }

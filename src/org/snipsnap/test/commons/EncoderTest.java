@@ -85,7 +85,7 @@ public class EncoderTest extends SnipTestSupport {
 
   public void testCutLengthLink() throws UnsupportedEncodingException {
     assertEquals("Cutting link text is broken",
-                 "<a href=\"/space/" + encodedString + "\">" + unencodedString.substring(0, 22) + "...</a>",
+                 "<a href=\"space/" + encodedString + "\">" + unencodedString.substring(0, 22) + "...</a>",
                  SnipLink.createLink(unencodedString, SnipLink.cutLength(unencodedString, 25)));
   }
 }

@@ -58,7 +58,7 @@ public class GraphMacro extends SnipMacro {
 //    writer.write(":"+ params.getContentEnd());
 //    writer.write(":"+params.getSnip().getContent().length());
 //    writer.write("<br/>");
-    writer.write("<img src=\"/exec/render?name=");
+    writer.write("<img src=\"exec/render?name=");
     writer.write(name);
     writer.write("&handler=");
     writer.write(handler);

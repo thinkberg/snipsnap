@@ -27,7 +27,6 @@
 package org.snipsnap.xmlrpc;
 
 import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
 
 
 /**
@@ -46,14 +45,15 @@ public class GeneratorHandler extends XmlRpcSupport {
 
   /**
    * Return the version of the running webtool
-   **/
-  private Configuration conf;
-
+   */
   public GeneratorHandler() {
-    conf = Application.get().getConfiguration();
   }
 
+  /**
+   * Returns the current version of SnipSnap.
+   * @return version string
+   */
   public String version() {
-    return "SnipSnap/" + conf.getVersion();
+    return "SnipSnap/"+Application.get().getConfiguration().getVersion();
   }
 }

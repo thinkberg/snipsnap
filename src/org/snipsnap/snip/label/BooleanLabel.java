@@ -119,7 +119,7 @@ public abstract class BooleanLabel implements Label {
   }
 
   public void index(Document document) {
-    System.out.println("Label index: " + name + ", " + value);
+    //System.out.println("Label index: " + name + ", " + value);
     document.add(Field.Text(name, "" + value));
   }
 }

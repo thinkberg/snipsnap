@@ -25,13 +25,22 @@
 
 package org.snipsnap.snip.attachment;
 
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.input.SAXBuilder;
-import org.jdom.output.XMLOutputter;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.io.OutputFormat;
+import org.dom4j.io.SAXReader;
+import org.dom4j.io.XMLWriter;
+import org.radeox.util.logging.Logger;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.StringReader;
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Class for grouping and managing attachments for a snip
@@ -48,7 +57,17 @@ public class Attachments {
    * Initialize Attachments object with a serialized string.
    */
   public Attachments(String serialized) {
-    cache = serialized;
+    if(null != serialized) {
+      if (serialized.startsWith("<" + ATTACHMENTS + ">")) {
+        cache = serialized;
+      } else {
+        cache = "<" + ATTACHMENTS + ">" + serialized + "</" + ATTACHMENTS + ">";
+      }
+    }
+  }
+
+  public Attachments(Element serialized) {
+    cache = toString(serialized);
   }
 
   public Attachments() {
@@ -78,7 +97,7 @@ public class Attachments {
       deserialize();
     }
     Attachment attachment = (Attachment) attachments.get(name);
-    if(attachment != null) {
+    if (attachment != null) {
       removeAttachment(attachment);
     }
   }
@@ -117,50 +136,66 @@ public class Attachments {
   private final static String DATE = "date";
   private final static String LOCATION = "location";
 
-  private final SAXBuilder saxBuilder = new SAXBuilder();
-
   private void deserialize() {
     attachments = new HashMap();
-
-    Document attXml = new Document();
-    try {
-      attXml = saxBuilder.build(new StringReader("<" + ATTACHMENTS + ">" + cache + "</" + ATTACHMENTS + ">"));
-      Element root = attXml.getRootElement();
-      Iterator it = root.getChildren().iterator();
-      while (it.hasNext()) {
-        Element attElement = (Element) it.next();
-        String name = attElement.getChildText(NAME);
-        String contentType = attElement.getChildText(CONTENTTYPE);
-        int size = Integer.parseInt(attElement.getChildTextTrim(SIZE));
-        Date date = new Date(Long.parseLong(attElement.getChildTextTrim(DATE)));
-        String location = attElement.getChildTextTrim(LOCATION);
-        attachments.put(name, new Attachment(name, contentType, size, new Date(), location));
+    if (null != cache && !"".equals(cache)) {
+      Document attXml;
+      try {
+        SAXReader saxReader = new SAXReader();
+        attXml = saxReader.read(new StringReader(cache));
+        Element root = attXml.getRootElement();
+        Iterator it = root.elementIterator(ATTACHMENT);
+        while (it.hasNext()) {
+          Element attElement = (Element) it.next();
+          try {
+            String name = attElement.element(NAME).getText();
+            String contentType = attElement.element(CONTENTTYPE).getTextTrim();
+            int size = Integer.parseInt(attElement.element(SIZE).getTextTrim());
+            Date date = new Date(Long.parseLong(attElement.element(DATE).getTextTrim()));
+            String location = attElement.element(LOCATION).getTextTrim();
+            attachments.put(name, new Attachment(name, contentType, size, date, location));
+          } catch (Exception e) {
+            Logger.warn("Attachments: ignoring attachment: " + attElement);
+          }
+        }
+      } catch (Exception e) {
+        Logger.warn("Attachments: unable to deserialize: '" + cache + "'");
       }
-    } catch (Exception e) {
-      System.err.println("Attachments: unable to deserialize: " + cache);
     }
   }
-
-  private final XMLOutputter xmlOutputter = new XMLOutputter();
 
   private String serialize() {
     if (null == attachments) {
       return cache;
     }
 
-    List root = new ArrayList();
+    Element attElement = DocumentHelper.createElement(ATTACHMENTS);
     Iterator it = attachments.values().iterator();
     while (it.hasNext()) {
       Attachment attachment = (Attachment) it.next();
-      Element attElement = new Element(ATTACHMENT);
-      attElement.addContent(new Element(NAME).addContent(attachment.getName()));
-      attElement.addContent(new Element(CONTENTTYPE).addContent(attachment.getContentType()));
-      attElement.addContent(new Element(SIZE).addContent("" + attachment.getSize()));
-      attElement.addContent(new Element(DATE).addContent("" + attachment.getDate().getTime()));
-      attElement.addContent(new Element(LOCATION).addContent(attachment.getLocation()));
-      root.add(attElement);
+      Element attachmentNode = attElement.addElement(ATTACHMENT);
+      attachmentNode.addElement(NAME).addText(attachment.getName());
+      attachmentNode.addElement(CONTENTTYPE).addText(attachment.getContentType());
+      attachmentNode.addElement(SIZE).addText("" + attachment.getSize());
+      attachmentNode.addElement(DATE).addText("" + attachment.getDate().getTime());
+      attachmentNode.addElement(LOCATION).addText(attachment.getLocation());
     }
-    return cache = xmlOutputter.outputString(root);
+
+    return cache = toString(attElement);
+  }
+
+  private String toString(Element attElement) {
+    OutputFormat outputFormat = OutputFormat.createCompactFormat();
+    outputFormat.setEncoding("UTF-8");
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    try {
+      XMLWriter xmlWriter = new XMLWriter(out, outputFormat);
+      xmlWriter.write(attElement);
+      xmlWriter.flush();
+    } catch (IOException e) {
+      System.err.println("Attachments: unable to serialize: " + e);
+    }
+    return out.toString();
   }
 
   public String toString() {

@@ -32,6 +32,7 @@ import org.snipsnap.snip.label.Label;
 import org.snipsnap.snip.label.LabelManager;
 import org.snipsnap.snip.label.Labels;
 import org.snipsnap.app.Application;
+import org.snipsnap.config.Configuration;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -47,71 +48,72 @@ import java.util.Iterator;
  * @version $Id$
  */
 public class LabelsServlet extends HttpServlet {
-    protected void doPost(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
-        throws ServletException, IOException {
-            doGet(httpServletRequest, httpServletResponse);
+  protected void doPost(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
+    throws ServletException, IOException {
+    doGet(httpServletRequest, httpServletResponse);
+  }
+
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    Configuration config = Application.get().getConfiguration();
+
+    String snipName = request.getParameter("snipname");
+    if (null == snipName) {
+      response.sendRedirect(config.getUrl("/space/" + config.getStartSnip()));
+      return;
     }
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-
-        String snipName = request.getParameter("snipname");
-        if (null == snipName) {
-            response.sendRedirect(SnipLink.absoluteLink("/space/"+Application.get().getConfiguration().getStartSnip()));
-            return;
-        }
-
-        // cancel pressed
-        if (null != request.getParameter("cancel")) {
-            response.sendRedirect(SnipLink.absoluteLink("/space/" + SnipLink.encode(snipName)));
-            return;
-        }
-
-        Snip snip = SnipSpaceFactory.getInstance().load(snipName);
-        request.setAttribute("snip", snip);
-
-         // display all labels of current Snip:
-        StringBuffer labelsProxy = new StringBuffer();
-        labelsProxy.append("<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">");
-        labelsProxy.append("<tr><th> Name </th><th> Type </th><th> Value </th></tr>");
-        Labels labels = snip.getLabels();
-        Iterator labelsIt = labels.getIds().iterator();
-        while (labelsIt.hasNext()) {
-            Label lbl = labels.getLabel((String)labelsIt.next());
-            labelsProxy.append("<tr><td>");
-            labelsProxy.append(lbl.getName());
-            labelsProxy.append("</td><td>");
-            labelsProxy.append(lbl.getType());
-            labelsProxy.append("</td><td>");
-            labelsProxy.append(lbl.getValue());
-            labelsProxy.append("</td><td>");
-            labelsProxy.append("[<a href=\"");
-            labelsProxy.append(SnipLink.getExecRoot());
-            labelsProxy.append("/removelabel?snipname=");
-            labelsProxy.append(snip.getNameEncoded());
-            labelsProxy.append("&labelname=");
-            labelsProxy.append(lbl.getName());
-            labelsProxy.append("\">remove</a>]");
-            labelsProxy.append("</td></tr>");
-        }
-        labelsProxy.append("</table>");
-        request.setAttribute("labelsProxy", labelsProxy.toString());
-
-		// selection of label type for adding a new label:
-        StringBuffer typesProxy = new StringBuffer();
-        typesProxy.append("Choose label type:<br/><select name=\"labeltype\">");
-
-        LabelManager manager = LabelManager.getInstance();
-        Iterator typesIt = manager.getTypes().iterator();
-        while (typesIt.hasNext()) {
-            String labelType = (String)typesIt.next();
-            typesProxy.append("<option>");
-            typesProxy.append(labelType);
-            typesProxy.append("</option>");
-        }
-        typesProxy.append("</select>");
-        request.setAttribute("typesProxy", typesProxy.toString());
-
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/showlabels.jsp");
-        dispatcher.forward(request, response);
+    // cancel pressed
+    if (null != request.getParameter("cancel")) {
+      response.sendRedirect(config.getUrl("/space/" + SnipLink.encode(snipName)));
+      return;
     }
+
+    Snip snip = SnipSpaceFactory.getInstance().load(snipName);
+    request.setAttribute("snip", snip);
+
+    // display all labels of current Snip:
+    StringBuffer labelsProxy = new StringBuffer();
+    labelsProxy.append("<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">");
+    labelsProxy.append("<tr><th> Name </th><th> Type </th><th> Value </th></tr>");
+    Labels labels = snip.getLabels();
+    Iterator labelsIt = labels.getIds().iterator();
+    while (labelsIt.hasNext()) {
+      Label lbl = labels.getLabel((String) labelsIt.next());
+      labelsProxy.append("<tr><td>");
+      labelsProxy.append(lbl.getName());
+      labelsProxy.append("</td><td>");
+      labelsProxy.append(lbl.getType());
+      labelsProxy.append("</td><td>");
+      labelsProxy.append(lbl.getValue());
+      labelsProxy.append("</td><td>");
+      labelsProxy.append("[<a href=\"");
+      labelsProxy.append(SnipLink.getExecRoot());
+      labelsProxy.append("/removelabel?snipname=");
+      labelsProxy.append(snip.getNameEncoded());
+      labelsProxy.append("&labelname=");
+      labelsProxy.append(lbl.getName());
+      labelsProxy.append("\">remove</a>]");
+      labelsProxy.append("</td></tr>");
+    }
+    labelsProxy.append("</table>");
+    request.setAttribute("labelsProxy", labelsProxy.toString());
+
+    // selection of label type for adding a new label:
+    StringBuffer typesProxy = new StringBuffer();
+    typesProxy.append("Choose label type:<br/><select name=\"labeltype\">");
+
+    LabelManager manager = LabelManager.getInstance();
+    Iterator typesIt = manager.getTypes().iterator();
+    while (typesIt.hasNext()) {
+      String labelType = (String) typesIt.next();
+      typesProxy.append("<option>");
+      typesProxy.append(labelType);
+      typesProxy.append("</option>");
+    }
+    typesProxy.append("</select>");
+    request.setAttribute("typesProxy", typesProxy.toString());
+
+    RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/showlabels.jsp");
+    dispatcher.forward(request, response);
+  }
 }

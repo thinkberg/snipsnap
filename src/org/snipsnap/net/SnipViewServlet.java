@@ -29,10 +29,10 @@ import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.container.Components;
 import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpaceFactory;
+import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.user.AuthenticationService;
 import org.snipsnap.user.User;
+import org.snipsnap.util.URLEncoderDecoder;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -70,10 +70,11 @@ public class SnipViewServlet extends HttpServlet {
     if (encodedSpace != null && encodedSpace.length() > 0) {
       name = name.replace(encodedSpace.charAt(0), ' ');
     }
-    //System.out.println("name='"+name+"'");
+//    System.out.println("name='"+name+"'");
 
     // load snip and set attributes for request
-    Snip snip = SnipSpaceFactory.getInstance().load(name);
+    SnipSpace space = (SnipSpace)Components.getComponent(SnipSpace.class);
+    Snip snip = space.load(name);
 
     String subname = null;
     if (null == snip) {
@@ -84,7 +85,7 @@ public class SnipViewServlet extends HttpServlet {
         name = name.substring(0, slashIndex);
         Logger.log(Logger.DEBUG, name + ": attachment: " + subname);
       }
-      snip = SnipSpaceFactory.getInstance().load(name);
+      snip = space.load(name);
     }
 
 
@@ -108,7 +109,7 @@ public class SnipViewServlet extends HttpServlet {
     // Snip does not exist
     if (null == snip) {
       if (config.allow(Configuration.APP_PERM_CREATESNIP)) {
-        response.sendRedirect("/exec/edit?name=" + name);
+        response.sendRedirect("/exec/edit?name=" + URLEncoderDecoder.encode(name, config.getEncoding()));
       } else {
         if ("snipsnap-notfound".equals(name)) {
           response.sendError(HttpServletResponse.SC_NOT_FOUND,
@@ -116,7 +117,7 @@ public class SnipViewServlet extends HttpServlet {
                              + "This may indicate that either the installation has failed or the Database is corrupted.");
           return;
         }
-        response.sendRedirect(SnipLink.absoluteLink("/space/snipsnap-notfound?name=" + name));
+        response.sendRedirect(config.getUrl("/space/snipsnap-notfound?name=" + URLEncoderDecoder.encode(name, config.getEncoding())));
       }
       return;
     }

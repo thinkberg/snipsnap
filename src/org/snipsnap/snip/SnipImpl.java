@@ -64,6 +64,7 @@ import java.util.List;
  */
 public class SnipImpl implements Snip {
   private NameFormatter nameFormatter;
+  private String applicationOid;
 
   //@TODO think about that
   public Snip parent;
@@ -79,6 +80,7 @@ public class SnipImpl implements Snip {
   private Labels labels;
   private Attachments attachments;
   private Modified modified;
+  private int version = 1;
 
   // @TODO: Remove
   private String commentedName;
@@ -100,6 +102,22 @@ public class SnipImpl implements Snip {
   public void handle(HttpServletRequest request) {
     access.handle(name, request);
     SnipSpaceFactory.getInstance().delayedStore((Snip) Aspects.getThis());
+  }
+
+  public int getVersion() {
+    return this.version;
+  }
+
+  public void setVersion(int version) {
+    this.version = version;
+  }
+
+  public void setApplication(String applicationOid) {
+    this.applicationOid = applicationOid;
+  }
+
+  public String getApplication() {
+    return applicationOid;
   }
 
   public Access getAccess() {
@@ -404,7 +422,7 @@ public class SnipImpl implements Snip {
   public String getAttachmentString() {
     StringBuffer tmp = new StringBuffer();
     Iterator it = attachments.iterator();
-    String fileStorePath = Application.get().getConfiguration().getFilePath();
+    File fileStorePath = new File(Application.get().getConfiguration().getFileStore(), "snips");
     while (it.hasNext()) {
       Attachment att = (Attachment) it.next();
       File file = new File(fileStorePath, att.getLocation());

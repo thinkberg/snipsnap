@@ -27,7 +27,17 @@ package org.snipsnap.snip;
 
 import org.radeox.util.logging.Logger;
 
-import java.util.*;
+import java.io.UTFDataFormatException;
+import java.io.UnsupportedEncodingException;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.StringTokenizer;
 
 /**
  * Manages links to and from snips. Links can be external to internal
@@ -51,12 +61,81 @@ public class Links {
   }
 
   public int getSize() {
-    if (null == linkMap) { linkMap = deserialize(cache); }
+    if (null == linkMap) {
+      linkMap = deserialize(cache);
+    }
     return linkMap.size();
   }
 
+  /**
+   * Verify a given string for UTF-8 encoding compliance. Does check up to
+   * three byte encoded strings.
+   *
+   * @param str the input string to check
+   * @return the string if everything went ok, for simplicity
+   * @throws UTFDataFormatException if the encoding is incorrect
+   */
+  private String checkUTF8(String str) throws UTFDataFormatException {
+    byte[] bytes = new byte[0];
+    try {
+      bytes = str.getBytes("UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      throw new UTFDataFormatException("unable to decode string: " + e.getMessage());
+    }
+    int length = bytes.length;
+
+    int bytePos = 0;
+
+    while (bytePos < length) {
+      int byte1 = bytes[bytePos] & 0xFF;
+      int byte2;
+      int byte3;
+
+      int encoderByte = byte1 >> 4;
+      //System.out.print(Integer.toHexString(encoderByte));
+      if (encoderByte < 8) {  // one byte
+        bytePos++;
+      } else if (encoderByte == 12 || encoderByte == 13) { // two bytes
+        bytePos += 2;
+        if (bytePos > length) {
+          throw new UTFDataFormatException("EOL");
+        } else {
+          //System.out.print("[2]");
+          byte2 = bytes[bytePos - 1] & 0xFF;
+          if ((byte2 & 0xC0) != 0x80) {
+            throw new UTFDataFormatException("0x" + Integer.toHexString(byte2) + ", offset: " + (bytePos - 1));
+          }
+        }
+      } else if (encoderByte == 14) { // three bytes
+        //System.out.print("[3]");
+        bytePos += 3;
+        if (bytePos > length) {
+          throw new UTFDataFormatException("EOL");
+        } else {
+          byte2 = bytes[bytePos - 2] & 0xFF;
+          byte3 = bytes[bytePos - 1] & 0xFF;
+          if (((byte2 & 0xC0) != 0x80) || ((byte3 & 0xC0) != 0x80)) {
+            throw new UTFDataFormatException("0x" + Integer.toHexString(byte2) + " 0x" + Integer.toHexString(byte3) + ", offset: " + (bytePos - 1));
+          }
+        }
+      } else {
+        throw new UTFDataFormatException("0x" + Integer.toHexString(byte1) + ", offset: " + bytePos);
+      }
+    }
+    return str;
+  }
+
   public void addLink(String url) {
-    if (null == linkMap) { linkMap = deserialize(cache); }
+    try {
+      checkUTF8(url);
+    } catch (UTFDataFormatException e) {
+      Logger.warn("ignoring '"+url+"' that contains broken UTF-8 data");
+      return;
+    }
+
+    if (null == linkMap) {
+      linkMap = deserialize(cache);
+    }
     cache = null;
 
     if (linkMap.containsKey(url)) {
@@ -89,7 +168,9 @@ public class Links {
    * @return Iterator over the urls of Links
    */
   public Iterator iterator() {
-    if (null == linkMap) { linkMap = deserialize(cache); }
+    if (null == linkMap) {
+      linkMap = deserialize(cache);
+    }
     List keys = new LinkedList(linkMap.keySet());
     Collections.sort(keys, new Comparator() {
       public int compare(Object o1, Object o2) {
@@ -101,7 +182,9 @@ public class Links {
   }
 
   public int getIntCount(String url) {
-    if (null == linkMap) { linkMap = deserialize(cache); }
+    if (null == linkMap) {
+      linkMap = deserialize(cache);
+    }
     int currentCount = 0;
     if (linkMap.containsKey(url)) {
       currentCount = ((Integer) linkMap.get(url)).intValue();
@@ -116,26 +199,35 @@ public class Links {
   }
 
   public Map deserialize(String links) {
-    if ("".equals(links)) { return newLinkMap(); }
+    if ("".equals(links)) {
+      return newLinkMap();
+    }
 
     Map linkcounts = newLinkMap();
-
+    boolean errors = false;
     StringTokenizer tokenizer = new StringTokenizer(links, "|");
     while (tokenizer.hasMoreTokens()) {
       String urlString = tokenizer.nextToken();
       try {
         Integer count = getCount(urlString);
-        String url = getUrl(urlString);
+        String url = checkUTF8(getUrl(urlString));
         linkcounts.put(url, count);
       } catch (Exception e) {
-        Logger.warn("ignoring '" + urlString + "' while deserializing", e);
+        Logger.warn("ignoring '" + urlString + "' while deserializing: " +e.getMessage());
+        errors = true;
       }
+    }
+    // make sure correct data is in the cache
+    if(errors) {
+      cache = null;
     }
     return linkcounts;
   }
 
   private String serialize() {
-    if (null == linkMap || linkMap.isEmpty()) { return ""; }
+    if (null == linkMap || linkMap.isEmpty()) {
+      return "";
+    }
 
     StringBuffer linkBuffer = new StringBuffer();
     Iterator iterator = linkMap.keySet().iterator();

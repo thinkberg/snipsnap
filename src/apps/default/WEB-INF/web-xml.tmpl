@@ -9,7 +9,7 @@
   ** @version $Id$
   -->
 <web-app>
-  <display-name>SnipSnap</display-name>
+  <display-name>SnipSnap @VERSION@</display-name>
 
   <context-param>
     <param-name>javax.servlet.jsp.jstl.fmt.fallbackLocale</param-name>
@@ -26,17 +26,12 @@
   </filter>
 
   <filter>
-    <filter-name>org.snipsnap.net.filter.MultipartFilter</filter-name>
-    <filter-class>org.snipsnap.net.filter.MultipartFilter</filter-class>
+    <filter-name>org.snipsnap.net.filter.EncRequestFilter</filter-name>
+    <filter-class>org.snipsnap.net.filter.EncRequestFilter</filter-class>
   </filter>
 
   <filter-mapping>
     <filter-name>org.snipsnap.net.filter.InitFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-  </filter-mapping>
-
-  <filter-mapping>
-    <filter-name>org.snipsnap.net.filter.MultipartFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
@@ -47,12 +42,6 @@
   <listener>
     <listener-class>org.snipsnap.net.ApplicationContextListener</listener-class>
   </listener>
-
-  <servlet>
-    <servlet-name>org.snipsnap.net.InitServlet</servlet-name>
-    <servlet-class>org.snipsnap.net.InitServlet</servlet-class>
-    <load-on-startup/>
-  </servlet>
 
   <servlet>
     <servlet-name>org.snipsnap.net.Layouter</servlet-name>
@@ -100,8 +89,28 @@
   </servlet>
 
   <servlet>
+    <servlet-name>org.snipsnap.net.HistoryServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.HistoryServlet</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>org.snipsnap.net.SnipVersionServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.SnipVersionServlet</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>org.snipsnap.net.DiffServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.DiffServlet</servlet-class>
+  </servlet>
+
+  <servlet>
     <servlet-name>org.snipsnap.net.RenderServlet</servlet-name>
     <servlet-class>org.snipsnap.net.RenderServlet</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>org.snipsnap.net.NameSpaceServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.NameSpaceServlet</servlet-class>
   </servlet>
 
   <servlet>
@@ -220,19 +229,15 @@
     <servlet-class>org.snipsnap.net.admin.UserManagerServlet</servlet-class>
   </servlet>
 
-  <servlet>
-    <servlet-name>org.snipsnap.net.admin.ExportServlet</servlet-name>
-    <servlet-class>org.snipsnap.net.admin.ExportServlet</servlet-class>
-  </servlet>
-
-  <servlet>
-    <servlet-name>org.snipsnap.net.admin.ImportServlet</servlet-name>
-    <servlet-class>org.snipsnap.net.admin.ImportServlet</servlet-class>
-  </servlet>
-
+  <!-- setup and configuration -->
   <servlet>
     <servlet-name>org.snipsnap.net.admin.ConfigureServlet</servlet-name>
     <servlet-class>org.snipsnap.net.admin.ConfigureServlet</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>org.snipsnap.net.admin.ThemeImageServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.admin.ThemeImageServlet</servlet-class>
   </servlet>
 
   <!-- include precompiled servlet mappings -->
@@ -251,6 +256,21 @@
   </servlet-mapping>
 
   <servlet-mapping>
+    <servlet-name>org.snipsnap.net.HistoryServlet</servlet-name>
+    <url-pattern>/exec/history</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>org.snipsnap.net.SnipVersionServlet</servlet-name>
+    <url-pattern>/exec/version</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>org.snipsnap.net.DiffServlet</servlet-name>
+    <url-pattern>/exec/diff</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
     <servlet-name>org.snipsnap.net.RdfServlet</servlet-name>
     <url-pattern>/rdf/*</url-pattern>
   </servlet-mapping>
@@ -258,6 +278,11 @@
   <servlet-mapping>
     <servlet-name>org.snipsnap.net.RenderServlet</servlet-name>
     <url-pattern>/exec/render</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>org.snipsnap.net.NameSpaceServlet</servlet-name>
+    <url-pattern>/exec/namespace</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
@@ -402,23 +427,13 @@
   </servlet-mapping>
 
   <servlet-mapping>
-    <servlet-name>org.snipsnap.net.admin.ExportServlet</servlet-name>
-    <url-pattern>/manager/export</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>org.snipsnap.net.admin.ImportServlet</servlet-name>
-    <url-pattern>/manager/import</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>org.snipsnap.net.admin.ImportServlet</servlet-name>
-    <url-pattern>/manager/import</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
     <servlet-name>org.snipsnap.net.admin.ConfigureServlet</servlet-name>
     <url-pattern>/admin/configure</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>org.snipsnap.net.admin.ThemeImageServlet</servlet-name>
+    <url-pattern>/admin/themeimage</url-pattern>
   </servlet-mapping>
 
   <welcome-file-list>

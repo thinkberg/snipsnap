@@ -24,153 +24,119 @@
  */
 package org.snipsnap.snip;
 
+import org.apache.xmlrpc.Base64;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.io.OutputFormat;
+import org.dom4j.io.XMLWriter;
 import org.radeox.util.logging.Logger;
-import org.snipsnap.util.ConnectionManager;
-import org.snipsnap.container.Components;
 import org.snipsnap.snip.storage.SnipSerializer;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
+import org.snipsnap.snip.storage.UserSerializer;
+import org.snipsnap.user.User;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.FactoryConfigurationError;
-import javax.xml.parsers.ParserConfigurationException;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.sql.*;
-import java.util.StringTokenizer;
-import java.util.List;
 import java.util.Iterator;
-import java.beans.XMLEncoder;
+import java.util.List;
 
 /**
- * Import
+ * Helper class for exporting Snips and users as XML document.
+ * @author Matthias L. Jugel
+ * @version $Id$
  */
 public class XMLSnipExport {
   public final static int USERS = 0x01;
   public final static int SNIPS = 0x02;
 
-  public static void store(OutputStream out) throws IOException {
-    store(out, USERS | SNIPS);
-  }
-
-  /**
-   * Store snips and users from the SnipSpace to an xml document into a stream.
-   * @param out outputstream to write to
-   * @param exportMask mask of what to store and what to ignore
-   */
-  public static void store(OutputStream out, int exportMask) {
-
-    Connection connection = ConnectionManager.getConnection();
-    ResultSet results = null;
-
+  private static void store(OutputStream out, Document exportDocument) {
     try {
-      PrintWriter pw = new PrintWriter(new OutputStreamWriter(out, "UTF-8"));
-      pw.println("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
-      pw.println("<snipspace>");
-
-      if ((exportMask & USERS) != 0) { toXml("SnipUser", "user", connection, pw); }
-      if ((exportMask & SNIPS) != 0) { toXml("Snip", "snip", connection, pw); }
-
-      pw.println("</snipspace>");
-      pw.flush();
-      pw.close();
+      OutputFormat outputFormat = new OutputFormat();
+      outputFormat.setEncoding("UTF-8");
+      outputFormat.setNewlines(true);
+      XMLWriter xmlWriter = new XMLWriter(out);
+      xmlWriter.write(exportDocument);
+      xmlWriter.flush();
     } catch (Exception e) {
-      Logger.warn("error writing output", e);
-    }
-  }
-
-  /**
-   * Make an XML respresentation from a table.
-   */
-  private static void toXml(String table, String export, Connection connection, PrintWriter out) {
-    ResultSet results;
-    try {
-      PreparedStatement prepStmt = connection.prepareStatement("SELECT * " +
-                                                               " FROM " + table);
-      results = prepStmt.executeQuery();
-      toXml(export, results, out);
-    } catch (SQLException e) {
-      Logger.warn("Problems with query", e);
-    }
-  }
-
-  /**
-   * Make an XML representation from a result set.
-   */
-  private static void toXml(String objectName, ResultSet results, PrintWriter out) throws SQLException {
-    ResultSetMetaData meta = results.getMetaData();
-    int size = meta.getColumnCount();
-    while (results.next()) {
-      out.println("<" + objectName + ">");
-      for (int i = 1; i <= size; i++) {
-        Object object = results.getObject(i);
-        String name = meta.getColumnName(i);
-        if (null != object) {
-          out.print("  <" + name + ">");
-          if (object instanceof Timestamp) {
-            Timestamp time = (Timestamp) object;
-            out.print(time.getTime());
-          } else {
-            out.print(escape(object.toString()));
-          }
-          out.println("</" + name + ">");
-        }
-      }
-      out.println("</" + objectName + ">");
-    }
-  }
-
-  /**
-   * Encode special characters in output.
-   */
-  private static String escape(String in) {
-    StringBuffer out = new StringBuffer();
-    StringTokenizer t = new StringTokenizer(in, "\0<>&", true);
-    boolean nullBytes = false;
-    while (t.hasMoreTokens()) {
-      String token = t.nextToken();
-      if (token.equals("\0")) {
-        nullBytes = true;
-      } else if ("<".equals(token) || ">".equals(token) || "&".equals(token)) {
-        out.append("&#x").append(Integer.toHexString(token.charAt(0))).append(";");
-      } else {
-        out.append(token);
-      }
-    }
-
-    // Had we some errors in our data?
-    if (nullBytes) {
-      System.err.println("Found null-byte in data: removing it.");
-    }
-    return out.toString();
-  }
-
-  private static DocumentBuilder documentBuilder = null;
-  public static Document getBackupDocument() {
-    try {
-      DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-      documentBuilder = documentBuilderFactory.newDocumentBuilder();
-    } catch (FactoryConfigurationError error) {
-      System.err.println("Unable to create document builder factory: " + error);
-    } catch (ParserConfigurationException e) {
-      System.err.println("Unable to create document builder");
       e.printStackTrace();
     }
+  }
 
-    Document backupDoc = documentBuilder.newDocument();
-    Node root = backupDoc.appendChild(backupDoc.createElement("snipspace"));
+  /**
+   * Stores a list of users and/or snips into the stream in XML format.
+   * @param out the output stream to store the xml data in
+   * @param snips the list of snips to store
+   * @param users the list of users to store
+   */
+  public static void store(OutputStream out, List snips, List users, File fileStore) {
+    Document exportDocument = store(users, snips, fileStore);
+    store(out, exportDocument);
+  }
 
-    SnipSpace space = (SnipSpace)Components.getComponent(SnipSpace.class);
-    SnipSerializer serializer = SnipSerializer.getInstance();
-    Iterator snipListIterator = space.getAll().iterator();
-    while (snipListIterator.hasNext()) {
-      Snip snip = (Snip) snipListIterator.next();
-      Node node = serializer.serialize(backupDoc, snip);
-      root.appendChild(node);
-    }
+  /**
+   * Store a list of users and snips into an XML document.
+   * @param users the users to store
+   * @param snips the snips to store
+   * @return the XML document
+   */
+  public static Document store(List users, List snips, File fileStore) {
+    Document backupDoc = DocumentHelper.createDocument();
+    Element root = backupDoc.addElement("snipspace");
+
+    storeUsers(root, users);
+    storeSnips(root, snips, fileStore);
+
     return backupDoc;
+  }
+
+  private static void storeUsers(Element root, List users) {
+    if (users != null && users.size() > 0) {
+      UserSerializer userSerializer = UserSerializer.getInstance();
+      Iterator userListIterator = users.iterator();
+      while (userListIterator.hasNext()) {
+        User user = (User) userListIterator.next();
+        root.add(userSerializer.serialize(user));
+      }
+    }
+  }
+
+  private static void storeSnips(Element root, List snips, File fileStore) {
+    if (snips != null && snips.size() > 0) {
+      SnipSerializer snipSerializer = SnipSerializer.getInstance();
+      Iterator snipListIterator = snips.iterator();
+      while (snipListIterator.hasNext()) {
+        Snip snip = (Snip) snipListIterator.next();
+        Element snipEl = snipSerializer.serialize(snip);
+        storeAttachments(snipEl, fileStore);
+        root.add(snipEl);
+      }
+    }
+  }
+
+  private static void storeAttachments(Element snipEl, File attRoot) {
+    Element attachmentsEl = snipEl.element("attachments");
+    Iterator attIt = attachmentsEl.elements("attachment").iterator();
+    while (attIt.hasNext()) {
+      Element att = (Element) attIt.next();
+      try {
+        File attFile = new File(attRoot, att.elementText("location"));
+        ByteArrayOutputStream data = new ByteArrayOutputStream();
+        BufferedInputStream fileIs = new BufferedInputStream(new FileInputStream(attFile));
+        int count = 0;
+        byte[] buffer = new byte[8192];
+        while ((count = fileIs.read(buffer)) != -1) {
+          data.write(buffer, 0, count);
+        }
+        data.close();
+        att.addElement("data").addText(new String(Base64.encode(data.toByteArray()), "UTF-8"));
+      } catch (Exception e) {
+        Logger.fatal("unable to export attachment: " + e);
+        e.printStackTrace();
+      }
+    }
   }
 }

@@ -116,6 +116,10 @@ public class QuerySnipStorage implements SnipStorage {
     return storage.storageAll();
   }
 
+  public List storageAll(String applicationOid) {
+    return storage.storageAll(applicationOid);
+  }
+
 
   public List storageByHotness(int size) {
     return QueryKit.querySorted(storage.storageAll(), hotnessComparator, size);

@@ -33,6 +33,7 @@ import org.codehaus.nanning.config.P;
 import org.codehaus.nanning.config.Pointcut;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.Snip;
+import org.snipsnap.util.ApplicationAwareMap;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,12 +54,12 @@ public class MissingSnipAspect implements Aspect {
   Pointcut createPc = P.methodName("create.*");
   Pointcut removePc = P.methodName("remove.*");
 
-  private Map missing;
-  private Map existing;
+  private ApplicationAwareMap missing;
+  private ApplicationAwareMap existing;
 
   public MissingSnipAspect() {
-    this.missing = new HashMap();
-    this.existing = new HashMap();
+    this.missing = new ApplicationAwareMap(HashMap.class, HashMap.class);
+    this.existing = new ApplicationAwareMap(HashMap.class, HashMap.class);
   }
 
   public void advise(AspectInstance instance) {
@@ -71,22 +72,22 @@ public class MissingSnipAspect implements Aspect {
           String name = ((String)
               invocation.getArgs()[0]).toUpperCase();
           // Snip is in the missing list
-          if (missing.containsKey(name)) {
+          if (missing.getMap().containsKey(name)) {
             //System.out.println("Hit=" + name);
             return new Boolean(false);
-          } else if (existing.containsKey(name)) {
+          } else if (existing.getMap().containsKey(name)) {
             return new Boolean(true);
           }
 
           //System.out.println("Miss=" + name);
           Boolean result = (Boolean)
               invocation.invokeNext();
-          //System.out.println("Result=" + name + " exists?=" + result);
+          // System.out.println("Result=" + name + " exists?=" + result);
           // The snip does not exist so put it in the missing list
           if (result.equals(Boolean.FALSE)) {
-            missing.put(name, new Integer(0));
+            missing.getMap().put(name, new Integer(0));
           } else {
-            existing.put(name, new Integer(0));
+            existing.getMap().put(name, new Integer(0));
           }
           return result;
         }
@@ -100,8 +101,8 @@ public class MissingSnipAspect implements Aspect {
 
           Object result = invocation.invokeNext();
 
-          if (existing.containsKey(name)) {
-            existing.remove(name);
+          if (existing.getMap().containsKey(name)) {
+            existing.getMap().remove(name);
           }
           return result;
         }
@@ -113,8 +114,8 @@ public class MissingSnipAspect implements Aspect {
 
           Object result = invocation.invokeNext();
 
-          if (missing.containsKey(name)) {
-            missing.remove(name);
+          if (missing.getMap().containsKey(name)) {
+            missing.getMap().remove(name);
           }
           return result;
         }

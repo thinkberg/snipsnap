@@ -38,6 +38,7 @@ import java.sql.Timestamp;
  * @version $Id$
  */
 public class User implements Linkable {
+  private String applicationOid;
   private String login;
   private String passwd;
   private String email;
@@ -51,11 +52,24 @@ public class User implements Linkable {
   private boolean guest = false;
   private boolean nonUser = false;
 
+  public User() {
+    this("", "", "");
+  }
+  
   public User(String login, String passwd, String email) {
     this.login = login;
     setPasswd(passwd);
     setEmail(email);
   }
+
+  public void setApplication(String applicationOid) {
+    this.applicationOid = applicationOid;
+  }
+
+  public String getApplication() {
+    return applicationOid;
+  }
+
 
   public Timestamp getCTime() {
     return cTime;
@@ -146,6 +160,14 @@ public class User implements Linkable {
 
   public String getPasswd() {
     return passwd;
+  }
+
+  /**
+   * WARNING: DO NOT USE THIS METHOD UNLESS YOU KNOW WHAT YOU DO.
+   * @param login
+   */
+  public void setLogin(String login) {
+    this.login = login;
   }
 
   public String getLogin() {

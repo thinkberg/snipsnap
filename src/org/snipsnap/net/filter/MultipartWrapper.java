@@ -56,14 +56,18 @@ public class MultipartWrapper extends HttpServletRequestWrapper {
   private Hashtable params = null;
   private Map files = new HashMap();
 
-  public MultipartWrapper(HttpServletRequest request) throws IOException, IllegalArgumentException {
+  public MultipartWrapper(HttpServletRequest request, String enc) throws IOException, IllegalArgumentException {
     super(request);
+
+    if(null != enc) {
+      encoding = enc;
+      "".getBytes(enc);
+    }
 
     InputStreamDataSource ds = new InputStreamDataSource(request.getInputStream(), request.getContentType());
     try {
       multipart = new MimeMultipart(ds);
       params = new Hashtable(request.getParameterMap());
-      encoding = request.getCharacterEncoding();
 
       int count = multipart.getCount();
       for (int i = 0; i < count; i++) {
@@ -110,7 +114,7 @@ public class MultipartWrapper extends HttpServletRequestWrapper {
    * Returns a map of all parameters except special body parts
    */
   public Map getParameterMap() {
-    return (Map) params;
+    return params;
   }
 
   /**

@@ -26,16 +26,25 @@ package org.snipsnap.server;
 
 import org.snipsnap.config.ServerConfiguration;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
+import java.util.Arrays;
+import java.text.NumberFormat;
 
 public class AdminClient {
 
   public static void main(String args[]) {
+    printCopyright();
     Properties config = new Properties();
     try {
       config.load(AdminClient.class.getResourceAsStream("/conf/snipsnap.conf"));
@@ -45,33 +54,50 @@ public class AdminClient {
     try {
       config.load(new FileInputStream("conf/server.conf"));
     } catch (IOException e) {
-      System.err.println("AdminClient: unable to load conf/server.conf: "+e);
+      System.err.println("AdminClient: unable to load conf/server.conf: " + e);
     }
 
     List commands = parseOptions(args, config);
-    if(commands.size() > 0) {
+    if (commands.size() > 0) {
+      System.err.println("Contacting Remote Server ...");
       execute(commands, config);
       System.exit(0);
     } else {
-      System.out.println("usage: AdminClient command arguments");
+      System.err.println("usage: AdminClient command arguments");
     }
     System.exit(1);
   }
 
+  private static void printCopyright() {
+    System.err.println("SnipSnap AdminClient ($Revision$)");
+
+    // output version and copyright information
+    try {
+      BufferedReader copyrightReader = new BufferedReader(new InputStreamReader(AdminClient.class.getResourceAsStream("/conf/copyright.txt")));
+      String line = null;
+      while ((line = copyrightReader.readLine()) != null) {
+        System.err.println(line);
+      }
+    } catch (Exception e) {
+      // ignore io exception here ...
+    }
+  }
+
   private static void execute(List commands, Properties config) {
     try {
-      AdminXmlRpcClient client = new AdminXmlRpcClient(config.getProperty(ServerConfiguration.ADMIN_HOST),
-                                                       Integer.parseInt(config.getProperty(ServerConfiguration.ADMIN_PORT)),
+      AdminXmlRpcClient client = new AdminXmlRpcClient(config.getProperty(ServerConfiguration.ADMIN_URL),
+                                                       config.getProperty(ServerConfiguration.ADMIN_USER),
                                                        config.getProperty(ServerConfiguration.ADMIN_PASS));
-      String method = (String)commands.get(0);
+      String method = (String) commands.get(0);
       Vector args = new Vector();
-      for(int i = 1; i < commands.size(); i++) {
+      for (int i = 1; i < commands.size(); i++) {
         args.addElement(commands.get(i));
       }
-      client.execute(method, args);
+      Object result = client.execute(method, args);
+      System.err.println("Operation '" + method + "' okay:");
+      System.out.println(result instanceof Object[] ? "" + Arrays.asList((Object[]) result) : result);
     } catch (Exception e) {
-      System.err.println("AdminClient: error executing command: " + e);
-      e.printStackTrace();
+      System.err.println("AdminClient: error executing command: " + e.getMessage());
     }
   }
 
@@ -79,21 +105,71 @@ public class AdminClient {
   private static List parseOptions(String args[], Properties config) {
     int argNo;
     List commands = new ArrayList();
-    for(argNo = 0; argNo < args.length; argNo++) {
-      if("-host".equals(args[argNo]) && args.length > argNo + 1) {
-        config.setProperty("admin.host", args[argNo + 1]);
-      } else if("-port".equals(args[argNo]) && args.length > argNo + 1) {
-        config.setProperty("admin.port", args[argNo + 1]);
-      } else if("-config".equals(args[argNo]) && args.length > argNo + 1) {
+    for (argNo = 0; argNo < args.length; argNo++) {
+      if ("-url".equals(args[argNo]) && args.length > argNo + 1) {
+        config.setProperty(ServerConfiguration.ADMIN_URL, args[argNo + 1]);
+        argNo++;
+      } else if ("-config".equals(args[argNo]) && args.length > argNo + 1) {
         try {
           config.load(new FileInputStream(args[argNo + 1]));
         } catch (IOException e) {
-          System.err.println("AdminClient: unable to load configuration: "+e);
+          System.err.println("AdminClient: unable to load configuration: " + e);
         }
+        argNo++;
+      } else if ("-user".equals(args[argNo]) && args.length > argNo + 1) {
+        config.setProperty(ServerConfiguration.ADMIN_USER, args[argNo + 1]);
+        argNo++;
+      } else if ("-password".equals(args[argNo]) && args.length > argNo + 1) {
+        config.setProperty(ServerConfiguration.ADMIN_PASS, args[argNo + 1]);
+        argNo++;
       } else {
-        commands.add(args[argNo]);
+        if (args[argNo] != null && args[argNo].startsWith("file:")) {
+          String fileName = args[argNo].substring("file:".length());
+          System.err.print("Reading file '" + fileName + "'");
+          try {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            File file = new File(fileName);
+            InputStream in = new BufferedInputStream(new FileInputStream(file));
+            long fileLength = file.length();
+            System.err.println(" " + (fileLength / 1024) + " kB");
+            System.err.print("0%");
+            byte[] buffer = new byte[4096];
+            int n = 0;
+            int current = 0;
+            while ((n = in.read(buffer)) != -1) {
+              current += n;
+              loadProgress(fileLength, current, 4096);
+              bos.write(buffer, 0, n);
+            }
+            commands.add(bos.toByteArray());
+          } catch (IOException e) {
+            System.err.println("AdminClient: unable to load file: " + args[argNo] + ": " + e);
+          }
+          System.err.println();
+        } else if (args[argNo] != null && args[argNo].startsWith("properties:")) {
+          String fileName = args[argNo].substring("properties:".length());
+          System.err.println("Reading properties from file '" + fileName + "'");
+          try {
+            Properties props = new Properties();
+            props.load(new FileInputStream(fileName));
+            commands.add(props);
+          } catch (IOException e) {
+            System.err.println("AdminClient: unable to load properties: " + args[argNo] + ": " + e);
+          }
+        } else {
+          commands.add(args[argNo]);
+        }
       }
     }
     return commands;
+  }
+
+  private static void loadProgress(long length, long current, int blockSize) {
+    long percentage = current * 100 / length;
+    if (percentage % 5 != 0 && ((current - blockSize) * 100 / length) % 5 == 0) {
+      System.err.print(".");
+    } else if (percentage % 20 == 0 && ((current - blockSize) * 100 / length) % 20 != 0) {
+      System.err.print(NumberFormat.getIntegerInstance().format(percentage) + "%");
+    }
   }
 }

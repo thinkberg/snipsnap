@@ -45,7 +45,7 @@ public class RenderEngineLabel implements Label {
   protected String engine;
 
   public RenderEngineLabel() {
-    name = "";
+    name = "RenderEngine";
     engine = Components.DEFAULT_ENGINE;
   }
 
@@ -87,7 +87,9 @@ public class RenderEngineLabel implements Label {
   public void handleInput(Map input) {
     if (input.containsKey("label.renderEngine")) {
       this.engine = (String) input.get("label.renderEngine");
+      this.name = "RenderEngine";
     }
+
   }
 
   public String getType() {
@@ -111,7 +113,7 @@ public class RenderEngineLabel implements Label {
   }
 
   public void index(Document document) {
-    System.out.println("Label index: " + name + ", " + engine);
+    //System.out.println("Label index: " + name + ", " + engine);
     document.add(Field.Text(name, "" + engine));
   }
 }

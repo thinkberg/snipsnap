@@ -13,7 +13,7 @@
     <td><fmt:message key="config.app.name.text"/></td>
     <td>
       <fmt:message key="config.app.name"/><br/>
-      <input type="text" name="app.name" value="<c:out value='${config.name}'/>" size="40">
+      <input type="text" name="app.name" value="<c:out value='${newconfig.name}'/>" size="40">
       <c:if test="${!empty errors['app.name']}"><img src="images/attention.jpg"></c:if>
     </td>
   </tr>
@@ -21,7 +21,7 @@
     <td><fmt:message key="config.app.tagline.text"/></td>
     <td>
        <fmt:message key="config.app.tagline"/><br/>
-       <input type="text" name="app.tagline" value="<c:out value='${config.tagline}'/>" size="40">
+       <input type="text" name="app.tagline" value="<c:out value='${newconfig.tagline}'/>" size="40">
        <c:if test="${!empty errors['app.tagline']}"><img src="images/attention.jpg"></c:if>
     </td>
   </tr>
@@ -29,7 +29,7 @@
     <td><fmt:message key="config.app.logo.text"/></td>
     <td>
       <fmt:message key="config.app.logo"/><br/>
-      <input type="file" name="app.logo" value="<c:out value='${config.logo}'/>" accept="image/*">
+      <input type="file" name="app.logo" value="<c:out value='${newconfig.logo}'/>" accept="image/*">
       <c:if test="${!empty errors['app.logo']}"><img src="images/attention.jpg"></c:if>
     </td>
   </tr>

@@ -38,6 +38,8 @@ import org.snipsnap.app.Application;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Indexes snips for fulltext searches
@@ -48,16 +50,15 @@ import java.io.IOException;
 
 public class SnipIndexer {
   private static final String[] searchFields = new String[]{"content", "title"};
-  private File indexFile;
+  private Map indexMap = new HashMap();
 
   private File indexFile() {
+    Application app = Application.get();
+    String appOid = (String)app.getObject(Application.OID);
+    File indexFile = (File) indexMap.get(appOid);
     if (indexFile == null) {
-      String file = Application.get().getConfiguration().getIndexPath();
-      if(null == file) {
-        indexFile = new File(Application.get().getConfiguration().getWebInfDir(), "index");
-      } else {
-        indexFile = new File(file);
-      }
+      indexFile = Application.get().getConfiguration().getIndexPath();
+      indexMap.put(appOid, indexFile);
     }
     return indexFile;
   }
@@ -89,10 +90,6 @@ public class SnipIndexer {
   private void index(Snip snip, boolean exists) {
     IndexWriter writer = null;
 
-    if (exists) {
-      removeIndex(snip);
-    }
-
     try {
       File f;
       boolean create = true;
@@ -103,6 +100,10 @@ public class SnipIndexer {
         create = true;
       }
       writer = new IndexWriter(f, new SnipAnalyzer(), create);
+
+      if (exists) {
+        removeIndex(snip);
+      }
 
       writer.mergeFactor = 20;
       writer.addDocument(SnipDocument.Document(snip));

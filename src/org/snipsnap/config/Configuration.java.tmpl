@@ -28,15 +28,15 @@ import java.util.Locale;
 import java.util.Properties;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.File;
 import java.io.IOException;
+import java.io.File;
 
 /**
  * Interface template for easy usage of the configuration.
  * @author Matthias L. Jugel
  * @version $Id$
  */
-public interface Configuration {
+public interface Configuration extends Globals {
   public final static String SNIPSNAP_CONFIG = "SnipSnap/config";
   public final static String SNIPSNAP_CONFIG_API = "SnipSnap/config/apidocs";
   public final static String SNIPSNAP_CONFIG_WIKI = "SnipSnap/config/interwiki";
@@ -50,16 +50,19 @@ public interface Configuration {
   public String get(String name);
   public void set(String name, String value);
 
-  public void setWebInfDir(File file);
-  public File getWebInfDir();
-
   public void load(InputStream stream) throws IOException;
   public void store(OutputStream stream) throws IOException;
-  public void storeBootstrap(OutputStream stream) throws IOException;
-  
+
   // get all properties
   public Properties getProperties();
   public String getDefault(String name);
+  public File getFileStore(String applicationOid);
+
+  public File getFilePath(String applicationOid);
+  public File getUserPath(String applicationOid);
+
+  public File getFilePath();
+  public File getIndexPath();
 
   // LOCALE
   Locale getLocale();
@@ -77,8 +80,7 @@ public interface Configuration {
   boolean getAllowRegister();
 
   // GENERICS
-  public String getVersion();
-  boolean isInstalled();
+  boolean isConfigured();
 
   // EASY ACCESS
   @DEFAULTS@

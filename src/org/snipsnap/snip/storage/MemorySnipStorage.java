@@ -27,12 +27,13 @@ package org.snipsnap.snip.storage;
 
 import org.snipsnap.snip.Snip;
 import org.snipsnap.util.PartialSearcher;
+import org.snipsnap.util.ApplicationAwareMap;
+import org.snipsnap.app.Application;
+import org.snipsnap.app.ApplicationManager;
+import org.snipsnap.app.ApplicationStorage;
 
 import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Wrapper with finders for in-memory searching. Can
@@ -50,50 +51,59 @@ public class MemorySnipStorage implements SnipStorage {
 
   private SnipStorage storage;
 
-  // Use LinkedHashMap in 1.4
-  private PartialSearcher cacheMap;
-  private Map map;
+  private ApplicationAwareMap cache;
 
   // @TODO Keep list sorted with comparator
-  private List allList;
+  // This is used to keep an list of all Snips
+  // for faster storageAll() operations
+  private Map allList;
 
-  public MemorySnipStorage(SnipStorage storage) {
+  public MemorySnipStorage(SnipStorage storage, ApplicationManager manager) {
     this.storage = storage;
 
-    map = new HashMap();
+//    if (!(storage instanceof CacheableStorage)) {
+//      //@TODO optimize with array
+//      Iterator iterator = allList.iterator();
+//      while (iterator.hasNext()) {
+//        Snip snip = (Snip) iterator.next();
+//        map.put(snip.getName().toUpperCase(), snip);
+//      }
+//    }
 
-    if (!(storage instanceof CacheableStorage)) {
-      //@TODO optimize with array
-      Iterator iterator = allList.iterator();
-      while (iterator.hasNext()) {
-        Snip snip = (Snip) iterator.next();
-        map.put(snip.getName().toUpperCase(), snip);
-      }
-    }
+    cache = new ApplicationAwareMap(HashMap.class, PartialSearcher.class);
 
-    cacheMap = new PartialSearcher(map);
     if (storage instanceof CacheableStorage) {
-      ((CacheableStorage) storage).setCache(cacheMap);
+      ((CacheableStorage) storage).setCache(cache);
     }
 
-    allList = storage.storageAll();
+    // hash of list of snips
+    // applicationOid -> [snip, snip, ...]
+    allList = new HashMap();
+
+    //This should also fill the cache
+    Iterator iterator = manager.getApplications().iterator();
+    while (iterator.hasNext()) {
+      String oid = ((Properties)iterator.next()).getProperty(ApplicationStorage.OID);
+      List instanceList = storage.storageAll(oid); 
+      allList.put(oid, instanceList);
+    }
   }
 
   // Basic manipulation methods Load,Store,Create,Remove
   public Snip[] match(String pattern) {
-    return cacheMap.match(pattern.toUpperCase());
+    return ((PartialSearcher) cache.getMap()).match(pattern.toUpperCase());
   }
 
   public Snip[] match(String start, String end) {
-    return cacheMap.match(start.toUpperCase(), end.toUpperCase());
+    return ((PartialSearcher) cache.getMap()).match(start.toUpperCase(), end.toUpperCase());
   }
 
   public Snip storageLoad(String name) {
-    return (Snip) cacheMap.get(name.toUpperCase());
+    return (Snip) cache.getMap().get(name.toUpperCase());
   }
 
   public Object loadObject(String name) {
-    return (Snip) cacheMap.get(name.toUpperCase());
+    return (Snip) cache.getMap().get(name.toUpperCase());
   }
 
   public void storageStore(Snip snip) {
@@ -102,23 +112,43 @@ public class MemorySnipStorage implements SnipStorage {
 
   public Snip storageCreate(String name, String content) {
     Snip snip = storage.storageCreate(name, content);
-    allList.add(snip);
-    cacheMap.put(snip.getName().toUpperCase(), snip);
+
+    // TODO fix this, the allList is not necessarily correctly initialized!
+    List allSnips = (List) allList.get(snip.getApplication());
+    if(null == allSnips) {
+      allSnips = storage.storageAll(snip.getApplication());
+      allList.put(snip.getApplication(), allSnips);
+    }
+    allSnips.add(snip);
+    cache.getMap().put(snip.getName().toUpperCase(), snip);
     return snip;
   }
 
   public void storageRemove(Snip snip) {
     storage.storageRemove(snip);
-    allList.remove(snip);
-    cacheMap.remove(snip.getName().toUpperCase());
+    List allSnips = (List) allList.get(snip.getApplication());
+    if (null != allSnips) {
+      allSnips.remove(snip);
+    } else {
+      System.err.println("WARNING: access to unknown oid: "+snip.getApplication());
+    }
+    cache.getMap().remove(snip.getName().toUpperCase());
   }
 
   public int storageCount() {
-    return allList.size();
+    String application = (String) Application.get().getObject(Application.OID);
+    List allSnips = (List) allList.get(application);
+    return allSnips != null ? allSnips.size() : 0;
+  }
+
+  public List storageAll(String applicationOid) {
+    List all = (List) allList.get(applicationOid);
+    return all;
   }
 
   public List storageAll() {
-    return allList;
+    String applicationOid = (String) Application.get().getObject(Application.OID);
+    return storageAll(applicationOid);
   }
 
   // Finder methods

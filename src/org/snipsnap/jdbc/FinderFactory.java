@@ -25,6 +25,10 @@
 
 package org.snipsnap.jdbc;
 
+import org.snipsnap.util.ConnectionManager;
+
+import javax.sql.DataSource;
+
 /**
  * Convenience factory to generate Finders
  *
@@ -34,16 +38,18 @@ package org.snipsnap.jdbc;
 
 public class FinderFactory {
   private String statementRoot;
+  private DataSource ds;
 
-  public FinderFactory(String statement) {
+  public FinderFactory(DataSource ds, String statement) {
+    this.ds = ds;
     this.statementRoot = statement + " ";
   }
 
   public Finder getFinder() {
-    return new Finder(statementRoot);
+    return new Finder(ds, statementRoot);
   }
 
   public Finder getFinder(String statement) {
-    return new Finder(statementRoot + statement);
+    return new Finder(ds, statementRoot + statement);
   }
 }

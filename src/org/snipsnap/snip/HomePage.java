@@ -50,7 +50,7 @@ public class HomePage {
     } else {
       snip = space.create(login, hp);
     }
-//    snip.addPermission(Permissions.EDIT, Security.OWNER);
+//    snip.addPermission(Permissions.EDIT_SNIP, Security.OWNER);
 //    space.store(snip);
     return;
   }

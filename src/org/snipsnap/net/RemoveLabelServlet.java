@@ -29,6 +29,7 @@ import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.app.Application;
+import org.snipsnap.config.Configuration;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -43,29 +44,30 @@ import java.io.IOException;
  * @version $Id$
  */
 public class RemoveLabelServlet extends HttpServlet {
-    protected void doPost(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
-        throws ServletException, IOException {
-            doGet(httpServletRequest, httpServletResponse);
+  protected void doPost(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
+    throws ServletException, IOException {
+    doGet(httpServletRequest, httpServletResponse);
+  }
+
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    Configuration config = Application.get().getConfiguration();
+
+    String snipName = request.getParameter("snipname");
+    if (null == snipName) {
+      response.sendRedirect(config.getUrl("/space/" + config.getStartSnip()));
+      return;
+    }
+    // cancel pressed
+    if (null != request.getParameter("cancel")) {
+      response.sendRedirect(config.getUrl("/exec/labels?snipname=" + SnipLink.encode(snipName)));
+      return;
     }
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    Snip snip = SnipSpaceFactory.getInstance().load(snipName);
+    String labelName = request.getParameter("labelname");
+    snip.getLabels().removeLabel(labelName);
 
-        String snipName = request.getParameter("snipname");
-        if (null == snipName) {
-            response.sendRedirect(SnipLink.absoluteLink("/space/"+Application.get().getConfiguration().getStartSnip()));
-            return;
-        }
-        // cancel pressed
-        if (null != request.getParameter("cancel")) {
-            response.sendRedirect(SnipLink.absoluteLink("/exec/labels?snipname=" + SnipLink.encode(snipName)));
-            return;
-        }
-
-        Snip snip = SnipSpaceFactory.getInstance().load(snipName);
-        String labelName = request.getParameter("labelname");
-        snip.getLabels().removeLabel(labelName);
-
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/labels?snipname=" + SnipLink.encode(snipName));
-        dispatcher.forward(request, response);
-    }
+    RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/labels?snipname=" + SnipLink.encode(snipName));
+    dispatcher.forward(request, response);
+  }
 }

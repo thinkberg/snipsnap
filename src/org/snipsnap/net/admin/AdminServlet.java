@@ -33,6 +33,7 @@ import org.snipsnap.user.AuthenticationService;
 import org.snipsnap.user.UserManagerFactory;
 import org.snipsnap.container.Components;
 import org.snipsnap.container.SessionService;
+import org.snipsnap.config.Configuration;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -59,7 +60,7 @@ public class AdminServlet extends HttpServlet {
     // get user manager and store in session
     UserManager um = UserManagerFactory.getInstance();
     HttpSession session = request.getSession();
-    Application app = Application.getInstance(session);
+    Application app = Application.get();
     User user = app.getUser();
     if (user == null) {
       SessionService service = (SessionService) Components.getComponent(SessionService.class);
@@ -82,7 +83,8 @@ public class AdminServlet extends HttpServlet {
       dispatcher.forward(request, response);
       return;
     }
-    response.sendRedirect(SnipLink.absoluteLink("/"));
+
+    response.sendRedirect(app.getConfiguration().getUrl());
   }
 
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

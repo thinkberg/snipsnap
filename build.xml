@@ -13,7 +13,6 @@
     <pathelement location="${jar}/org.apache.jasper.jar"/>
     <pathelement location="${jar}/org.apache.crimson.jar"/>
     <pathelement location="${jar}/org.mortbay.jetty.jar"/>
-    <pathelement location="${jar}/jdbcpool.jar"/>
     <pathelement location="${jar}/mckoidb.jar"/>
     <pathelement location="${jar}/xmlrpc-1.1.jar"/>
   </path>
@@ -24,13 +23,15 @@
     <pathelement location="${jar}/radeox.jar"/>
     <pathelement location="${jar}/jena.jar"/>
     <pathelement location="${jar}/commons-logging.jar"/>
-    <pathelement location="${jar}/jakarta-oro.jar"/>
+    <pathelement location="${jar}/commons-dbcp-1.1.jar"/>
+    <pathelement location="${jar}/commons-pool-1.1.jar"/>
+    <pathelement location="${jar}/commons-collections.jar"/>
     <pathelement location="${jar}/xmlrpc-1.1.jar"/>
     <pathelement location="${jar}/lucene-1.2.jar"/>
     <pathelement location="${jar}/jython.jar"/>
-    <pathelement location="${jar}/muse-jabber-0.8a1.jar"/>
+    <pathelement location="${jar}/smack.jar"/>
     <pathelement location="${jar}/aspectjrt.jar"/>
-    <pathelement location="${jar}/jdom-b8.jar"/>
+    <pathelement location="${jar}/dom4j.jar"/>
     <pathelement location="${src}/apps/default/WEB-INF/lib/jstl.jar"/>
     <pathelement location="${src}/apps/default/WEB-INF/lib/standard.jar"/>
     <pathelement location="${jar}/activation.jar"/>
@@ -103,14 +104,16 @@
       <tarfileset dir="${basedir}" prefix="${appname}-${snipsnap.server.version}">
         <include name="lib/${appname}.jar"/>
         <include name="lib/${appname}-server.jar"/>
-        <include name="lib/${appname}-template.war"/>
+        <include name="lib/${appname}.war"/>
         <include name="lib/${appname}-theme-*.jar"/>
         <include name="lib/${appname}-installer.war"/>
         <include name="lib/${appname}-utils.jar"/>
         <include name="lib/org.mortbay.jetty.jar"/>
         <include name="lib/javax.servlet.jar"/>
         <include name="lib/org.apache.jasper.jar"/>
-        <include name="lib/jdbcpool.jar"/>
+        <include name="lib/commons-dbcp-1.1.jar"/>
+        <include name="lib/commons-pool-1.1.jar"/>
+        <include name="lib/commons-collections.jar"/>
         <include name="lib/mckoidb.jar"/>
         <include name="lib/org.apache.crimson.jar"/>
         <include name="lib/xmlrpc-1.1.jar"/>
@@ -168,16 +171,27 @@
   <target depends="declaretask" name="generate">
     <constants
       properties="${src}/org/snipsnap/config/defaults.conf"
-      file="${target}/ant/interface.stub" prefix="app."
+      file="${target}/ant/config.stub" prefix="app."
     />
-    <loadfile property="interface-stub" srcfile="${target}/ant/interface.stub" failonerror="false"/>
+    <loadfile property="config-stub" srcfile="${target}/ant/config.stub" failonerror="false"/>
     <copy file="${src}/org/snipsnap/config/Configuration.java.tmpl"
       tofile="${src}/org/snipsnap/config/Configuration.java" filtering="true" overwrite="true" >
       <filterset>
-        <filter token="DEFAULTS" value="${interface-stub}"/>
+        <filter token="DEFAULTS" value="${config-stub}"/>
       </filterset>
-      </copy>
+     </copy>
 
+    <constants
+      properties="${src}/org/snipsnap/config/globals.conf"
+      file="${target}/ant/globals.stub" prefix="app."
+    />
+    <loadfile property="globals-stub" srcfile="${target}/ant/globals.stub" failonerror="false"/>
+    <copy file="${src}/org/snipsnap/config/Globals.java.tmpl"
+      tofile="${src}/org/snipsnap/config/Globals.java" filtering="true" overwrite="true" >
+      <filterset>
+        <filter token="DEFAULTS" value="${globals-stub}"/>
+      </filterset>
+     </copy>
   </target>
 
   <!-- create server code -->
@@ -196,6 +210,7 @@
         <include name="conf/snipsnap.conf"/>
         <include name="conf/jetty.conf"/>
       </fileset>
+      <fileset dir="${src}" includes="org/snipsnap/config/globals.conf"/>
       <fileset dir="${src}" includes="org/snipsnap/config/defaults.conf"/>
       <fileset dir="${src}" includes="org/snipsnap/config/transpose.map"/>
     </jar>
@@ -215,6 +230,7 @@
     <jar destfile="${jar}/${appname}-utils.jar" excludes="**/CVS" manifest="conf/utils.manifest" >
       <fileset dir="${target}/util" includes="**"/>
       <fileset dir="." includes="conf/snipsnap.conf"/>
+      <fileset dir="." includes="conf/copyright.txt"/>
       <fileset dir="${src}" includes="org/snipsnap/config/defaults.conf"/>
       <fileset dir="${src}" includes="org/snipsnap/config/transpose.map"/>
     </jar>
@@ -269,12 +285,19 @@
   </target>
 
   <target depends="compile-servlets" name="servlets-jar">
-    <jar destfile="${src}/apps/default/WEB-INF/lib/snipsnap-servlets.jar" excludes="**/CVS">
-      <fileset dir="${target}/default/WEB-INF/classes" includes="**"/>
-      <fileset dir="${src}" includes="META-INF/**"/>
+    <copy todir="${target}/default/WEB-INF/classes" filtering="true" overwrite="true">
+      <filterset>
+        <filter token="VERSION" value="${snipsnap.server.version}"/>
+      </filterset>
+      <fileset dir="${src}" includes="org/snipsnap/net/dispatcher.conf"/>
+      <fileset dir="${src}" includes="org/snipsnap/config/globals.conf"/>
       <fileset dir="${src}" includes="org/snipsnap/config/defaults.conf"/>
       <fileset dir="${src}" includes="org/snipsnap/config/transpose.map"/>
       <fileset dir="${src}" includes="org/snipsnap/snip/storage/SnipSerializer.properties"/>
+    </copy>
+    <jar destfile="${src}/apps/default/WEB-INF/lib/snipsnap-servlets.jar" excludes="**/CVS">
+      <fileset dir="${target}/default/WEB-INF/classes" includes="**"/>
+      <fileset dir="${src}" includes="META-INF/**"/>
     </jar>
   </target>
 
@@ -320,6 +343,10 @@
       <fileset dir="${src}/theme/blue" includes="**" excludes="**/CVS"/>
     </copy>
 
+    <mkdir dir="${target}/webapp/WEB-INF/themes"/>
+    <copy todir="${target}/webapp/WEB-INF/themes">
+      <fileset dir="${jar}" includes="${appname}-theme-*.jar"/>
+    </copy>
     <loadfile property="web.inc" srcfile="${target}/jsp/web.inc" failonerror="false"/>
     <condition property="web.inc" value="">
       <not>
@@ -331,6 +358,7 @@
       tofile="${target}/webapp/WEB-INF/web.xml"
       file="${src}/apps/default/WEB-INF/web-xml.tmpl" overwrite="true">
       <filterset>
+        <filter token="VERSION" value="${snipsnap.server.version}"/>  
         <filter token="PRECOMPILED-JSP" value="${web.inc}"/>
       </filterset>
     </copy>
@@ -350,11 +378,13 @@
         <include name="radeox.jar"/>
         <include name="jena.jar"/>
         <include name="commons-logging.jar"/>
-        <include name="jakarta-oro.jar"/>
+        <include name="commons-dbcp-1.1.jar"/>
+        <include name="commons-pool-1.1.jar"/>
+        <include name="commons-collections.jar"/>
         <include name="lucene-1.2.jar"/>
         <include name="xmlrpc-1.1.jar"/>
-        <include name="muse-jabber-0.8a1.jar"/>
-        <include name="jdom-b8.jar"/>
+        <include name="dom4j.jar"/>
+        <include name="smack.jar"/>
         <include name="aspectjrt.jar"/>
         <include name="jython.jar"/>
         <include name="mail.jar"/>
@@ -366,7 +396,7 @@
       </fileset>
     </copy>
 
-    <jar destfile="${jar}/${appname}-template.war">
+    <jar destfile="${jar}/${appname}.war">
       <fileset dir="${target}/webapp" includes="**"/>
     </jar>
   </target>
@@ -486,6 +516,7 @@
     <mkdir dir="${target}/test/org/snipsnap/config"/>
     <copy file="conf/snipsnap.conf" tofile="./cls/test/conf/snipsnap.conf"/>
     <copy file="src/org/snipsnap/config/defaults.conf" tofile="${target}/test/org/snipsnap/config/defaults.conf"/>
+    <copy file="src/org/snipsnap/config/globals.conf" tofile="${target}/test/org/snipsnap/config/globals.conf"/>
     <copy file="src/org/snipsnap/config/transpose.map" tofile="${target}/test/org/snipsnap/config/transpose.map"/>
   </target>
 

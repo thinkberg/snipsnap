@@ -68,11 +68,19 @@ public interface Snip extends Linkable, Ownable, Nameable, Appendable {
    */
   public boolean isNotWeblog();
 
+  public int getVersion();
+
+  public void setVersion(int version);
+
   public void addPermission(String permission, String role);
 
   public void setPermissions(Permissions permissions);
 
   public Permissions getPermissions();
+
+  public void setApplication(String applicationOid);
+
+  public String getApplication();
 
   public String getOUser();
 

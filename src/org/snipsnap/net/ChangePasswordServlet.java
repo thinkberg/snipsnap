@@ -32,6 +32,7 @@ import org.snipsnap.user.PasswordService;
 import org.snipsnap.user.UserManagerFactory;
 import org.snipsnap.container.Components;
 import org.snipsnap.container.SessionService;
+import org.snipsnap.config.Configuration;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -53,19 +54,19 @@ public class ChangePasswordServlet extends HttpServlet {
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
+    Configuration config = Application.get().getConfiguration();
 
     String password1 = request.getParameter("password");
     String password2 = request.getParameter("password2");
     String key = request.getParameter("key");
 
     if (request.getParameter("cancel") == null) {
-      UserManager um = UserManagerFactory.getInstance();
       User user;
       if (null != password1 && password1.equals(password2)) {
         PasswordService passwordService = (PasswordService) Components.getComponent(PasswordService.class);
         user = passwordService.changePassWord(key, password1);
       } else {
-        request.setAttribute("error", "Passwords do not match.");
+        request.setAttribute("error", "user.password.error.nomatch");
         RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/changepass.jsp");
         dispatcher.forward(request, response);
         return;
@@ -75,21 +76,19 @@ public class ChangePasswordServlet extends HttpServlet {
         if (Application.getCurrentUsers().contains(user)) {
           Application.getCurrentUsers().remove(user);
         }
-        HttpSession session = request.getSession(true);
-        Application app = Application.getInstance(session);
-        app.setUser(user, session);
-        session.setAttribute("app", app);
+        HttpSession session = request.getSession();
+        Application.get().setUser(user, session);
 
         SessionService service = (SessionService) Components.getComponent(SessionService.class);
-        service.setCookie(request, response, user);
-        response.sendRedirect(SnipLink.absoluteLink("/space/" + SnipLink.encode(user.getLogin())));
+        service.setUser(request, response, user);
+        response.sendRedirect(config.getUrl("/space/"+SnipLink.encode(user.getLogin())));
       } else {
-        request.setAttribute("error", "Your reset key has been manipulated. Try again, please.");
+        request.setAttribute("error", "user.password.error.keymismatch");
         RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/forgot.jsp");
         dispatcher.forward(request, response);
       }
     } else {
-      response.sendRedirect(SnipLink.absoluteLink("/space/"+Application.get().getConfiguration().getStartSnip()));
+      response.sendRedirect(config.getUrl("/space/"+Application.get().getConfiguration().getStartSnip()));
     }
   }
 }

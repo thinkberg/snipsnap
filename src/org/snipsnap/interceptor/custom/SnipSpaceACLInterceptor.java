@@ -41,7 +41,8 @@ public class SnipSpaceACLInterceptor extends InterceptorSupport {
   public SnipSpaceACLInterceptor() {
     super();
     roles = new Roles();
-    roles.add("Editor");
+    //roles.add("Editor");
+    roles.add("Admin");
   }
 
   public Object invoke(Invocation invocation) throws Throwable {

@@ -73,17 +73,46 @@ public class SnipTreeMacro extends BaseMacro {
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
 
+    // Names from the namespace look like
+    // [0] = foo/
+    // [1] = foo/bar
+    // [2] = foo/barbar
+    // [3] = foo/barbar/boing
+
     if (params.getLength() == 1) {
       Snip[] snips = space.match(params.get("0"));
 
-      writer.write("<ul>");
+      int depth = -1;
+      int startDepth = -1;
+      int currentDepth = -1;
       for (int i = 0; i < snips.length; i++) {
         Snip snip = snips[i];
+        String elements[] = snip.getName().split("/");
+        currentDepth = elements.length-1;
+        if (startDepth == -1) {
+          startDepth = currentDepth;
+        }
+        if (currentDepth > depth) {
+          depth = currentDepth;
+          writer.write("<ul>");
+        } else if (currentDepth < depth) {
+          depth = currentDepth;
+          writer.write("</ul>");
+        }
         writer.write("<li>");
-        SnipLink.appendLink(writer, snip.getName());
+        SnipLink.appendLink(writer, snip.getName(), elements[elements.length-1]);
+        // writer.write(" :: "+snip.getName()+" sd:"+startDepth+" cd:"+currentDepth+" d:"+depth);
         writer.write("</li>");
       }
-      writer.write("</ul>");
+      // There have been some snips
+      // We might have to close some lists
+      if (-1 != startDepth) {
+        for (int i=0; i < currentDepth; i++ ) {
+          writer.write("</ul>");
+        }
+      }
+    } else if (params.getLength() == 2) {
+      writer.write("<img src=\"/exec/namespace?name="+params.get(0)+"\"/>");
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

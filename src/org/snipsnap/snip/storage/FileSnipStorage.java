@@ -33,206 +33,242 @@ import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipFactory;
 import org.snipsnap.snip.attachment.Attachments;
 import org.snipsnap.snip.label.Labels;
-import org.snipsnap.snip.storage.query.Query;
-import org.snipsnap.snip.storage.query.QueryKit;
 import org.snipsnap.user.Permissions;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
+import org.snipsnap.util.ApplicationAwareMap;
+import org.snipsnap.versioning.VersionInfo;
+import org.snipsnap.versioning.VersionStorage;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.sax.SAXTransformerFactory;
-import javax.xml.transform.stream.StreamResult;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.FileInputStream;
-import java.io.BufferedInputStream;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * SnipStorage backend that uses files for persisting data. This storage
  * has limitations in the snip name length and possibly characters as well
  * since not all filesystems can store UTF-8 file names.
  *
- * TODO: optimize file system usage by keeping a consistent map of files
+ * This Storage navigates to the correct directory. Sub classes should
+ * then persist the snip to one or several files.
  *
- * @author Matthias L. Jugel
+ * @author Stephan J. Schmidt
  * @version $Id$
  */
 
-public class FileSnipStorage implements SnipStorage, CacheableStorage {
-  public final static String SNIP_XML = "snip.xml";
+public abstract class FileSnipStorage implements CacheableStorage, VersionStorage, SnipStorage {
+  public static final String NOT_SUPPORTED_EXCEPTION_MSG =
+    "Method not supported, do not call FileStorage directly";
 
-  private static DocumentBuilder documentBuilder;
+  protected ApplicationAwareMap cache;
 
-  private Map cache = new HashMap();
   private SnipSerializer serializer = SnipSerializer.getInstance();
 
-  public static void createStorage() {
-  }
-
-  public FileSnipStorage() throws ParserConfigurationException {
-    documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-  }
-
-  public void setCache(Map cache) {
+  // Cacheable Storage
+  public void setCache(ApplicationAwareMap cache) {
     this.cache = cache;
   }
 
-  public int storageCount() {
+  /**
+   * Return the directory where all snips are stored
+   *
+   * @return
+   */
+  public File getWorkingDir() {
     Application app = Application.get();
-    File fileStore = new File(app.getConfiguration().getFilePath());
-    return traverseFileStore(fileStore, new ArrayList()).size();
+    return new File(app.getConfiguration().getFileStore(), "snips");
   }
 
-  public List storageAll() {
+  /**
+   * Return the directory where all snips are stored
+   *
+   * @param applicationOid
+   * @return
+   */
+  public File getWorkingDir(String applicationOid) {
     Application app = Application.get();
-    File fileStore = new File(app.getConfiguration().getFilePath());
-    long start = app.start();
-    List all = traverseFileStore(fileStore, new ArrayList());
-    app.stop(start, "storageAll()");
-    return all;
+    return app.getConfiguration().getFilePath(applicationOid);
   }
 
-  private List traverseFileStore(File root, List list) {
-    // it is unclear whether the name of the directory is correct on every file system
-    Snip snip = createSnip(root.getName(), root);
-    if (snip != null) {
-      list.add(snip);
-    }
-
-    File[] files = root.listFiles();
-    for (int entry = 0; files != null && entry < files.length; entry++) {
-      if (files[entry].isDirectory()) {
-        traverseFileStore(files[entry], list);
-      }
-    }
-    return list;
+  public void storageRemove(Snip snip) {
+    File snipDir = new File(getWorkingDir(), snip.getName());
+    storageRemoveFile(snip, snipDir);
   }
 
-  public List storageByHotness(int size) {
-    List all = storageAll();
-    Collections.sort(all, new Comparator() {
-      public int compare(Object object, Object object1) {
-        Snip snipA = (Snip) object;
-        Snip snipB = (Snip) object1;
-        return snipA.getViewCount() - snipB.getViewCount();
-      }
-    });
-    int actualSize = all.size();
-    return all.subList(0, actualSize < size ? actualSize : size);
-  }
+  /**
+   * Remove one or more files from the given directory.
+   * Subclasses should employ strategies like backup etc.
+   *
+   * @param snip Snip to remove
+   * @param snipDir Directory with the stored snips
+   */
+  protected abstract void storageRemoveFile(Snip snip, File snipDir);
 
-  public List storageByUser(final String login) {
-    return QueryKit.query(storageAll(), new Query() {
-      public boolean fit(Object object) {
-        return login.equals(((Snip) object).getCUser());
-      }
-    });
-  }
+  protected abstract Map createSnipFromFile(File snipDir) throws IOException;
 
-  public List storageByDateSince(final Timestamp date) {
-    return QueryKit.query(storageAll(), new Query() {
-      public boolean fit(Object object) {
-        return date.before(((Snip) object).getMTime());
-      }
-    });
-  }
-
-  public List storageByRecent(int size) {
-    List all = storageAll();
-    Collections.sort(all, new Comparator() {
-      public int compare(Object object, Object object1) {
-        Snip snipA = (Snip) object;
-        Snip snipB = (Snip) object1;
-        return (int) (snipA.getMTime().getTime() - snipB.getMTime().getTime());
-      }
-    });
-    int actualSize = all.size();
-    return all.subList(0, actualSize < size ? actualSize : size);
-  }
-
-  public List storageByComments(final Snip parent) {
-    return QueryKit.query(storageAll(), new Query() {
-      public boolean fit(Object object) {
-        return parent.equals(((Snip) object).getCommentedSnip());
-      }
-    });
-  }
-
-  public List storageByParent(final Snip parent) {
-    return QueryKit.query(storageAll(), new Query() {
-      public boolean fit(Object object) {
-        return parent.equals(((Snip) object).getParent());
-      }
-    });
-  }
-
-  public List storageByParentNameOrder(Snip parent, int count) {
-    // TODO implement this
-    return new ArrayList();
-  }
-
-  public List storageByParentModifiedOrder(Snip parent, int count) {
-    // TODO implement this
-    return new ArrayList();
-  }
-
-  public List storageByDateInName(String start, String end) {
-    // TODO implement this
-    return new ArrayList();
-  }
-
-  // Basic manipulation methods Load,Store,Create,Remove
-  public Snip[] match(String pattern) {
-    //@TODO implement this with LIKE
-    return new Snip[]{};
-  }
-
-  public Snip[] match(String start, String end) {
-    //@TODO implement this with LIKE
-    return new Snip[]{};
-  }
-
+  /**
+   * Load the snip from a directory. Navigate to
+   * the correct directory then load and create
+   * the snip
+   *
+   * @param name Name of Snip to load
+   * @return
+   */
   public Snip storageLoad(String name) {
-    //System.out.println("storageLoad('" + name + "')");
-
-    Application app = Application.get();
-    long start = app.start();
     Snip snip = null;
-
-    File fileStore = new File(app.getConfiguration().getFilePath());
-    File snipDir = new File(fileStore, name);
-
-    snip = createSnip(name, snipDir);
-    app.stop(start, "storageLoad - " + name);
+    File snipDir = new File(getWorkingDir(), name);
+    try {
+      snip = parseSnip(createSnipFromFile(snipDir));
+    } catch (IOException e) {
+      Logger.log("unable to load snip", e);
+    }
     return snip;
   }
 
-  public void storageStore(Snip snip) {
-    //System.out.println("storageLoad('" + snip.getName() + "')");
+  // VersionStorage
 
-    Application app = Application.get();
-    File fileStore = new File(app.getConfiguration().getFilePath());
-    File snipDir = new File(fileStore, snip.getName());
+  /**
+   * Store a version of the snip to the
+   * file system with the given directory
+   *
+   * @param snip
+   * @param versionDir
+   */
+  protected abstract void storeVersion(Snip snip, File versionDir);
+
+
+  /**
+   * Stora a version of a snip in the storage.
+   * Navigates to a directory for the version
+   * files, then calls storeVersion() which is
+   * implemented in subclasses.
+   *
+   * @param snip Snip to store
+   */
+  public void storeVersion(Snip snip) {
+    File snipDir = new File(getWorkingDir(), snip.getName());
+    File versionDir = new File(snipDir, "version");
+    storeVersion(snip, versionDir);
+  }
+
+  /**
+   * Return a list of VersionInfo objects for the
+   * given snip. Objects should be ordered by decreasing version.
+   * Navigates to the directory and scans for versions of snips
+   *
+   * @param snip Snip for which the revision should be loaded
+   * @return
+   */
+  public List getVersionHistory(Snip snip) {
+    File snipDir = new File(getWorkingDir(), snip.getName());
+    File versionDir = new File(snipDir, "version");
+    List versions = getVersionHistory(snip, versionDir);
+    return versions;
+  }
+
+  /**
+   * Return the checker object for this file storage.
+   * Depends on the filename that is used by the
+   * storage to store snip versions.
+   *
+   * @return
+   */
+  protected abstract VersionFileNameChecker getVersionFileNameChecker();
+
+  /**
+   * Read snips from the directory and return a list of
+   * VersionInfo objects.
+   *
+   * @param snip Snip to get version history
+   * @param versionDir Directory to read versions from
+   * @return
+   */
+
+  protected List getVersionHistory(Snip snip, File versionDir) {
+    VersionFileNameChecker checker = getVersionFileNameChecker();
+
+    String[] files = versionDir.list(checker);
+
+//    System.out.println("Version files="+Arrays.asList(files));
+    List versions = new ArrayList();
+    try {
+      for (int i = 0; i < files.length; i++) {
+        String fileName = files[i];
+        int version = checker.getVersion(fileName);
+        Map map = loadVersion(snip, versionDir, version);
+        VersionInfo info = new VersionInfo();
+        info.setVersion(version);
+        info.setViewCount(Integer.parseInt((String) map.get(SnipSerializer.SNIP_VIEWCOUNT)));
+        info.setMUser((String) map.get(SnipSerializer.SNIP_MUSER));
+        info.setMTime(new Timestamp(Long.parseLong((String) map.get(SnipSerializer.SNIP_MTIME))));
+        info.setSize(((String) map.get(SnipSerializer.SNIP_CONTENT)).length());
+        versions.add(info);
+      }
+    } catch (Exception e) {
+      Logger.log("TwoFileSnipStorage: unable read version history of snip" + snip.getName(), e);
+    }
+    Collections.sort(versions, new Comparator() {
+      public int compare(Object o1, Object o2) {
+        return ((VersionInfo) o1).getVersion() > ((VersionInfo) o2).getVersion() ? -1 : 1;
+      }
+    });
+
+    return versions;
+  }
+
+  /**
+   * Load a version of a snip from the file system
+   * and the given directory
+   *
+   * @param snip
+   * @param versionDir
+   * @return
+   */
+  protected abstract Map loadVersion(Snip snip, File versionDir, int version) throws IOException;
+
+  /**
+   * Load a version of a snip from the storage
+   *
+   * @param snip Example of a snip to load
+   * @param version Version number
+   * @return
+   */
+  public Snip loadVersion(Snip snip, int version) {
+    File snipDir = new File(getWorkingDir(), snip.getName());
+    File versionDir = new File(snipDir, "version");
+    String name = snip.getName();
+    try {
+      Snip newSnip = SnipFactory.createSnip(name, "");
+      return serializer.deserialize(loadVersion(snip, versionDir, version), newSnip);
+    } catch (IOException e) {
+      Logger.log("FileSnipStorage: Unable to load version snip " + snip.getName() + " " + version);
+    }
+    return null;
+  }
+
+  /**
+   * Store a snip to a given directory. Subclasses should
+   * implement this and store the snip to one or more files.
+   *
+   * @param snip Snip to store
+   * @param snipDir Directory to store the snip in
+   */
+  protected abstract void storeSnip(Snip snip, File snipDir);
+
+  /**
+   * Stors a version of a snip in the storage.
+   * Navigates to a directory then calls storeSnip() from
+   * a subclass to store the snip.
+   *
+   * @param snip Snip to store
+   */
+  public void storageStore(Snip snip) {
+    File snipDir = new File(getWorkingDir(), snip.getName());
     storeSnip(snip, snipDir);
   }
 
   public Snip storageCreate(String name, String content) {
     Application app = Application.get();
+    String applicationOid = (String) app.getObject(Application.OID);
     String login = app.getUser().getLogin();
 
     Snip snip = SnipFactory.createSnip(name, content);
@@ -248,79 +284,115 @@ public class FileSnipStorage implements SnipStorage, CacheableStorage {
     snip.setSnipLinks(new Links());
     snip.setLabels(new Labels());
     snip.setAttachments(new Attachments());
-
+    snip.setApplication(applicationOid);
     storageStore(snip);
     return (Snip) Aspects.newInstance(snip, Snip.class);
   }
 
+  private Snip parseSnip(Map snipMap) {
+    // the application oid is a special for file snip storage
+    String applicationOid = (String) snipMap.get(SnipSerializer.SNIP_APPLICATION);
+    String name = (String) snipMap.get(SnipSerializer.SNIP_NAME);
+    if (cache.getMap(applicationOid).containsKey(name.toUpperCase())) {
+      return (Snip) cache.getMap(applicationOid).get(name.toUpperCase());
+    }
 
-  public void storageRemove(Snip snip) {
+    Snip newSnip = SnipFactory.createSnip(name, (String) snipMap.get(SnipSerializer.SNIP_CONTENT));
+    Snip snip = serializer.deserialize(snipMap, newSnip);
+
+    // Aspects.setTarget(proxy, snip);
+    // return proxy;
+    snip = (Snip) Aspects.newInstance(snip, Snip.class);
+    cache.getMap(applicationOid).put(name.toUpperCase(), snip);
+    return snip;
+  }
+
+  // SnipStorage
+  public List storageAll() {
+    String applicationOid = (String) Application.get().getObject(Application.OID);
+    return storageAll(applicationOid);
+  }
+
+  public int storageCount() {
     Application app = Application.get();
-    File fileStore = new File(app.getConfiguration().getFilePath());
-    File snipDir = new File(fileStore, snip.getName());
-
-    File snipFile = new File(snipDir, SNIP_XML);
-
-    if (snipFile.exists()) {
-      File backup = new File(snipFile.getPath() + ".removed");
-      snipFile.renameTo(backup);
-    }
+    File fileStore = new File(app.getConfiguration().getFileStore());
+    return traverseFileStore(fileStore, new ArrayList()).size();
   }
 
-  private synchronized Snip createSnip(String name, File snipDir) {
-    if (cache.containsKey(name.toUpperCase())) {
-      return (Snip) cache.get(name.toUpperCase());
-    }
-
-    return createSnip(snipDir);
+  public List storageAll(String applicationOid) {
+    return traverseFileStore(getWorkingDir(applicationOid), new ArrayList());
   }
 
-  private synchronized Snip createSnip(File snipDir) {
-    File snipFile = new File(snipDir, SNIP_XML);
+  private List traverseFileStore(File root, List list) {
+    try {
+      Map map = createSnipFromFile(root);
+      if (null != map) {
+        list.add(parseSnip(map));
+      }
+    } catch (IOException e) {
+      // ignored because empty dirs may exist
+    }
 
-    if (snipFile.exists()) {
-      try {
-        Document snipDocument = documentBuilder.parse(new BufferedInputStream(new FileInputStream(snipFile)));
-        Snip snip = serializer.deserialize(snipDocument.getFirstChild(), SnipFactory.createSnip("", ""));
-        snip = (Snip) Aspects.newInstance(snip, Snip.class);
-        cache.put(snip.getName().toUpperCase(), snip);
-        return snip;
-      } catch (SAXException e) {
-        Logger.log("FileSnipStorage: unable to parse " + snipFile, e);
-      } catch (IOException e) {
-        Logger.log("FileSnipStorage: i/o exception while parsing " + snipFile, e);
+    File[] files = root.listFiles();
+    for (int entry = 0; files != null && entry < files.length; entry++) {
+      if (files[entry].isDirectory()) {
+        traverseFileStore(files[entry], list);
       }
     }
-    return null;
+    return list;
   }
 
-  private void storeSnip(Snip snip, File snipDir) {
-    if (!snipDir.exists()) {
-      snipDir.mkdirs();
+  /**
+   * Not implemented, should be handled on a higher level
+   * e.g. QuerySnipStorage
+   */
+  public List storageByHotness(int size) {
+    throw new MethodNotSupportedException(NOT_SUPPORTED_EXCEPTION_MSG);
+  }
+
+  public List storageByUser(final String login) {
+    throw new MethodNotSupportedException(NOT_SUPPORTED_EXCEPTION_MSG);
+  }
+
+  public List storageByDateSince(final Timestamp date) {
+    throw new MethodNotSupportedException(NOT_SUPPORTED_EXCEPTION_MSG);
+  }
+
+  public List storageByRecent(int size) {
+    throw new MethodNotSupportedException(NOT_SUPPORTED_EXCEPTION_MSG);
+  }
+
+  public List storageByComments(final Snip parent) {
+    throw new MethodNotSupportedException(NOT_SUPPORTED_EXCEPTION_MSG);
+  }
+
+  public List storageByParent(final Snip parent) {
+    throw new MethodNotSupportedException(NOT_SUPPORTED_EXCEPTION_MSG);
+  }
+
+  public List storageByParentNameOrder(Snip parent, int count) {
+    throw new MethodNotSupportedException(NOT_SUPPORTED_EXCEPTION_MSG);
+  }
+
+  public List storageByParentModifiedOrder(Snip parent, int count) {
+    throw new MethodNotSupportedException(NOT_SUPPORTED_EXCEPTION_MSG);
+  }
+
+  public List storageByDateInName(String start, String end) {
+    throw new MethodNotSupportedException(NOT_SUPPORTED_EXCEPTION_MSG);
+  }
+
+  public Snip[] match(String pattern) {
+    throw new MethodNotSupportedException(NOT_SUPPORTED_EXCEPTION_MSG);
+  }
+
+  public Snip[] match(String start, String end) {
+    throw new MethodNotSupportedException(NOT_SUPPORTED_EXCEPTION_MSG);
+  }
+
+  public class MethodNotSupportedException extends RuntimeException {
+    public MethodNotSupportedException(String s) {
+      super(s);
     }
-
-    File snipFile = new File(snipDir, SNIP_XML);
-
-    if (snipFile.exists()) {
-      Logger.log("FileSnipStorage: backing up " + snipFile.getPath());
-      File backup = new File(snipFile.getPath() + ".bck");
-      snipFile.renameTo(backup);
-    }
-
-    Document snipDocument = documentBuilder.newDocument();
-    snipDocument.appendChild(serializer.serialize(snipDocument, snip));
-
-    try {
-      BufferedOutputStream xmlStream = new BufferedOutputStream(new FileOutputStream(snipFile));
-      StreamResult streamResult = new StreamResult(xmlStream);
-      TransformerFactory tf = SAXTransformerFactory.newInstance();
-      Transformer serializer = tf.newTransformer();
-      serializer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-      serializer.setOutputProperty(OutputKeys.INDENT, "yes");
-      serializer.transform(new DOMSource(snipDocument), streamResult);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-
   }
 }

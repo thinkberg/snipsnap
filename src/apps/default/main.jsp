@@ -6,7 +6,9 @@
 
 <%@ page import="org.snipsnap.snip.SnipSpace,
                  org.snipsnap.app.Application,
-                 org.snipsnap.snip.SnipSpaceFactory"%>
+                 org.snipsnap.snip.SnipSpaceFactory,
+                 org.snipsnap.container.Components,
+                 org.snipsnap.snip.Snip"%>
 <%@ page pageEncoding="iso-8859-1" %>
 <% response.setContentType("text/html; charset="+Application.get().getConfiguration().getEncoding()); %>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
@@ -18,7 +20,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="<c:out value='${app.configuration.locale}'/>" xml:lang="<c:out value='${app.configuration.locale}'/>">
  <head>
   <!-- base of this document to make all links relative -->
-  <base href="<c:out value="${app.configuration.url}"/>">
+  <base href="<c:out value='${app.configuration.url}/'/>">
   <!-- content type and generator -->
   <meta http-equiv="Content-Type" content="text/html; charset=<c:out value='${app.configuration.encoding}'/>"/>
   <meta http-equiv="Generator" content="SnipSnap/<c:out value="${app.configuration.version}"/>"/>
@@ -55,13 +57,18 @@
     <c:import url="${page}"/>
     <s:debug/>
    </div>
-   <% for(int i = 1; SnipSpaceFactory.getInstance().exists("snipsnap-portlet-"+i); i++) { %>
-    <% pageContext.setAttribute("snip", SnipSpaceFactory.getInstance().load("snipsnap-portlet-"+i)); %>
+   <%
+     SnipSpace space = (SnipSpace)Components.getComponent(SnipSpace.class);
+     for(int i = 1; space.exists("snipsnap-portlet-"+i) || space.exists("SnipSnap/portlet/"+i); i++) {
+       Snip snip = space.load("snipsnap-portlet-"+i);
+       if(null == snip) {
+         snip = space.load("SnipSnap/portlet/" + i);
+       }
+       pageContext.setAttribute("snip", snip);
+   %>
     <div id="page-portlet-<%=i%>"><s:snip snip="${snip}"/></div>
    <% } %>
  </div>
    <div id="page-bottom"><s:snip name="snipsnap-copyright"/></div>
  </body>
 </html>
-
-

@@ -64,10 +64,9 @@ public class DefaultSessionService implements SessionService {
     this.storage = storage;
     this.authService = authService;
 
-    // TODO readfrom snip and make dependend from SnipSpace
     try {
       Snip robots = space.load(Configuration.SNIPSNAP_CONFIG_ROBOTS);
-      if(robots != null) {
+      if (robots != null) {
         BufferedReader crawler = new BufferedReader(new StringReader(robots.getContent()));
         String line = null;
         int ln = 0;
@@ -83,13 +82,13 @@ public class DefaultSessionService implements SessionService {
                 robotIds.put(id, url);
               }
             } catch (Exception e) {
-              Logger.warn("SessionService: "+Configuration.SNIPSNAP_CONFIG_ROBOTS+" line " + ln + ": syntax error", e);
+              Logger.warn("SessionService: " + Configuration.SNIPSNAP_CONFIG_ROBOTS + " line " + ln + ": syntax error", e);
             }
           }
         }
       }
     } catch (Exception e) {
-      Logger.warn("SessionService: unable to read "+Configuration.SNIPSNAP_CONFIG_ROBOTS, e);
+      Logger.warn("SessionService: unable to read " + Configuration.SNIPSNAP_CONFIG_ROBOTS, e);
     }
   }
 
@@ -111,13 +110,23 @@ public class DefaultSessionService implements SessionService {
     return Digest.getDigest(tmp);
   }
 
+  public void setUser(HttpServletRequest request, HttpServletResponse response, User user) {
+    HttpSession session = request.getSession();
+    session.setAttribute(ATT_USER, user);
+    setCookie(request, response, user);
+  }
 
   /**
    * Get user from session or cookie.
    */
   public User getUser(HttpServletRequest request, HttpServletResponse response) {
-    HttpSession session = request.getSession(true);
+    HttpSession session = request.getSession();
     User user = (User) session.getAttribute(ATT_USER);
+    String appOid = (String)Application.get().getObject(Application.OID);
+    if (null != user && !appOid.equals(user.getApplication())) {
+      user = null; 
+    }
+
     if (null == user) {
       Cookie cookie = getCookie(request, COOKIE_NAME);
       if (cookie != null) {
@@ -127,11 +136,12 @@ public class DefaultSessionService implements SessionService {
         }
 
         user = (User) authHash.get(auth);
-        if (user != null) {
+        if (user != null && appOid.equals(user.getApplication())) {
           user = authService.authenticate(user.getLogin(), user.getPasswd());
           setCookie(request, response, user);
         } else {
-          Logger.warn("UserManager: invalid hash: " + auth);
+          Logger.warn("SessionService: invalid hash: " + auth);
+          user = null;
         }
       }
 
@@ -156,6 +166,7 @@ public class DefaultSessionService implements SessionService {
         } else {
           Logger.debug("User agent of unknown user: '" + agent + "'");
           user = new User("Guest", "Guest", "");
+          user.setApplication(appOid);
           user.setGuest(true);
         }
         removeCookie(request, response);
@@ -193,8 +204,9 @@ public class DefaultSessionService implements SessionService {
 
   private String getCookiePath() {
     String path;
+    Configuration config = Application.get().getConfiguration();
     try {
-      path = new URL(Application.get().getConfiguration().getUrl()).getPath();
+      path = new URL(config.getUrl()).getPath();
       if (path == null || path.length() == 0) {
         path = "/";
       }

@@ -31,6 +31,8 @@ import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.user.UserManagerFactory;
+import org.snipsnap.container.SessionService;
+import org.snipsnap.container.Components;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -46,23 +48,24 @@ import java.util.StringTokenizer;
  * @version $Id$
  */
 public class NewUserServlet extends HttpServlet {
-  private final static String ERR_EXISTS = "User exists, please choose another login name!";
-  private final static String ERR_TOO_SHORT = "User name too short (min. 3 characters)!";
-  private final static String ERR_ILLEGAL = "Illegal user name! Should only contain letters, numbers, underscore and a dot.";
-  private final static String ERR_PASSWORD = "Password does not match!";
-  private final static String ERR_PASSWORD_TOO_SHORT = "Password must be at least 3 characters long!";
-  private final static String ERR_NOT_ALLOWED = "Not allowed to register new users!";
+  private final static String ERR_EXISTS = "login.register.error.user.exists";
+  private final static String ERR_TOO_SHORT = "login.register.error.user.short";
+  private final static String ERR_ILLEGAL = "login.register.error.user.illegal";
+  private final static String ERR_PASSWORD = "login.register.error.passwords";
+  private final static String ERR_PASSWORD_TOO_SHORT = "login.register.error.password.short";
+  private final static String ERR_NOT_ALLOWED = "login.register.error.not.allowed";
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
 
-    HttpSession session = request.getSession(true);
+    HttpSession session = request.getSession();
     session.removeAttribute("errors");
     Map errors = new HashMap();
 
-    Application app = Application.getInstance(session);
+    Application app = Application.get();
+    Configuration config = app.get().getConfiguration();
 
-    if (!app.getConfiguration().deny(Configuration.APP_PERM_REGISTER)) {
+    if (!config.deny(Configuration.APP_PERM_REGISTER)) {
       String login = request.getParameter("login");
       String email = request.getParameter("email");
       String password = request.getParameter("password");
@@ -115,17 +118,15 @@ public class NewUserServlet extends HttpServlet {
         HomePage.create(login);
 
         // store user name and app in cookie and session
-        Cookie cookie = new Cookie("userName", user.getLogin());
-        cookie.setMaxAge(43200000);
-        cookie.setPath(request.getContextPath());
-        response.addCookie(cookie);
-        session.setAttribute("app", app);
-        response.sendRedirect(SnipLink.absoluteLink("/space/" + SnipLink.encode(login)));
+        SessionService sessionService = (SessionService)Components.getComponent(SessionService.class);
+        sessionService.setCookie(request, response, user);
+
+        response.sendRedirect(config.getUrl("/space/" + SnipLink.encode(login)));
         return;
       }
 
       String referer = request.getParameter("referer");
-      response.sendRedirect(referer != null ? referer : SnipLink.absoluteLink("/space/"+app.getConfiguration().getStartSnip()));
+      response.sendRedirect(referer != null ? referer : config.getUrl("/space/"+config.getStartSnip()));
     } else {
       errors.put("Fatal", ERR_NOT_ALLOWED);
       sendError(session, errors, request, response);

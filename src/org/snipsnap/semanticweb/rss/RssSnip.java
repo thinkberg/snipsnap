@@ -78,6 +78,13 @@ public class RssSnip implements Snip {
     this.url = "#" + url.replace(' ', '_');
   }
 
+  public int getVersion() {
+    return snip.getVersion();
+  }
+
+  public void setVersion(int version) {
+  }
+
   public void setParentName(String name) {
   }
 
@@ -86,6 +93,13 @@ public class RssSnip implements Snip {
 
   public SnipPath getPath() throws IOException {
     return snip.getPath();
+  }
+
+  public void setApplication(String applicationOid) {
+  }
+
+  public String getApplication() {
+    return snip.getApplication();
   }
 
   public String getName() {
@@ -109,7 +123,7 @@ public class RssSnip implements Snip {
   }
 
   public String getXMLContent() {
-    RenderEngine engine = (RenderEngine) Components.getComponent(RenderEngine.class);
+    RenderEngine engine = (RenderEngine) Components.getContainer().getComponentInstance(Components.DEFAULT_ENGINE);
     RenderContext context = new SnipRenderContext(snip, SnipSpaceFactory.getInstance());
     context.setParameters(Application.get().getParameters());
     return engine.render(content, context);

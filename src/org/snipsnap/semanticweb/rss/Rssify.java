@@ -25,13 +25,15 @@
 
 package org.snipsnap.semanticweb.rss;
 
-import org.apache.oro.text.regex.*;
 import org.radeox.util.logging.Logger;
+import org.radeox.filter.regex.MatchResult;
 import org.snipsnap.snip.Snip;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 /**
  * Split snips into sub-units for e.g. RSS. By default header titles
@@ -48,17 +50,13 @@ public class Rssify {
 
   public static List rssify(List snips) {
     List result = new ArrayList();
-    PatternMatcher matcher = new Perl5Matcher();
-    PatternCompiler compiler = new Perl5Compiler();
-    Pattern pattern;
-    PatternMatcherInput input;
+    Pattern pattern = null;
     MatchResult matchResult;
 
     try {
-      pattern = compiler.compile("^[[:space:]]*(1(\\.1)*)[[:space:]]+(.*?)$", Perl5Compiler.MULTILINE_MASK);
-    } catch (MalformedPatternException e) {
-      Logger.warn("Bad pattern.",e);
-      return result;
+      pattern = Pattern.compile("^[\\p{Space}]*(1(\\.1)*)[\\p{Space}]+(.*?)$", Pattern.DOTALL | Pattern.MULTILINE);
+    } catch (Exception e) {
+      Logger.warn("bad pattern", e);
     }
 
     Iterator iterator = snips.iterator();
@@ -66,18 +64,17 @@ public class Rssify {
       Snip snip = (Snip) iterator.next();
 
       String content = snip.getContent();
-
-      input = new PatternMatcherInput(content);
+      Matcher matcher = pattern.matcher(content);
 
       int start = 0;
       String title = "";
-      while (matcher.contains(input, pattern)) {
-        matchResult = matcher.getMatch();
-        String post = content.substring(start, input.getMatchBeginOffset()).trim();
+      while (matcher.find()) {
+        matchResult = new MatchResult(matcher);
+        String post = content.substring(start, matchResult.beginOffset(0)).trim();
         if (!("".equals(title) && "".equals(post))) {
            add(result, snip, post, title);
         }
-        start = input.getMatchEndOffset();
+        start = matchResult.endOffset(0);
         title = matchResult.group(3).trim();
       }
 
