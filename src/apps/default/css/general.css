@@ -11,46 +11,6 @@
 /* inactive buttons are greyed out */
 .inactive { color: #aaaaaa; background-color: inherit;}
 
-/* the wiki rendering preview */
-.preview {
-  color: inherit;
-  background-color: inherit;
-  padding: 5px 5px 5px 5px;
-}
-
-
-.calendar-head {
-  text-align: left;
-  font-weight: bold;
-}
-
-.calendar-today {
-  color: inherit;
-  background-color: #aaaaaa;
-}
-
-.calendar-weekday {
-}
-
-
-/************************************************/
-/* list formatting                              */
-
-#list {
-}
-
-#list .list-title {
-  font-weight: bold;
-}
-
-#list ul {
-  margin-top: 0px;
-  margin-bottom: 0px;
-  margin-left: 0px;
-  padding-left: 0px;
-  list-style-type: none;
-}
-
 /************************************************/
 /* ANCHOR tag                                   */
 a {

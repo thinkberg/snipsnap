@@ -43,7 +43,7 @@ import java.util.List;
 import java.io.IOException;
 import java.io.Writer;
 
-public class LastLoginMacro extends ListoutputMacro {
+public class LastLoginMacro extends Macro {
   public String getName() {
     return "last-login";
   }

@@ -46,7 +46,12 @@ public abstract class ListoutputMacro extends Macro {
   protected SnipSpace space = SnipSpace.getInstance();
 
   public interface ListFormatter {
-    public void format(Writer writer, String listComment, Collection c, String emptyText) throws IOException ;
+    public void format(Writer writer,
+                       String listComment,
+                       Collection c,
+                       String emptyText,
+                       boolean showSize)
+      throws IOException ;
   }
 
   private final static String FORMATTER_PREFIX = "org.snipsnap.snip.filter.macro.list";
@@ -54,7 +59,7 @@ public abstract class ListoutputMacro extends Macro {
   private Map formatterMap = new HashMap();
 
 
-  public void output(Writer writer, String listComment, Collection c, String emptyText, String style) throws IOException {
+  public void output(Writer writer, String listComment, Collection c, String emptyText, String style, boolean showSize) throws IOException {
     ListFormatter formatter = (ListFormatter) formatterMap.get(style);
     if (formatter == null && style != null && style.length() > 0) {
       try {
@@ -76,17 +81,13 @@ public abstract class ListoutputMacro extends Macro {
     }
 
     if (formatter != null) {
-      formatter.format(writer, listComment, c, emptyText);
+      formatter.format(writer, listComment, c, emptyText, showSize);
     } else {
-      output(writer, listComment, c, emptyText);
+      defaultFormatter.format(writer, listComment, c, emptyText, showSize);
     }
   }
 
   private final ListFormatter defaultFormatter = new SimpleList();
-
-  public void output(Writer writer, String listComment, Collection c, String emptyText) throws IOException {
-    defaultFormatter.format(writer, listComment, c, emptyText);
-  }
 
   public abstract void execute(Writer writer, String[] params, String content, Snip snip) throws IllegalArgumentException, IOException;
 }

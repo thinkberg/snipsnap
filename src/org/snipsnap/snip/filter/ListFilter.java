@@ -37,9 +37,9 @@ import org.snipsnap.snip.filter.regex.RegexReplaceFilter;
 public class ListFilter extends RegexReplaceFilter {
 
   public ListFilter() {
-    super("^[:space:]*([-*])[:space:]?(?![-*])(.*)$", "<li type=\"$1\">$2</li>");
-    addRegex("^[:space:]*([iIaA])\\.[:space:]?(?![iIaA]\\.)(.*)$", "<li type=\"$1\">$2</li>");
-    addRegex("^[:space:]*\\d+\\.[:space:]?(?!\\d+\\.)(.*)$", "<li type=\"enumerated\">$1</li>");
+    super("^[:space:]*([-*])[:space:]?(?![-*])(.*)$", "<li class=\"$1\">$2</li>");
+    addRegex("^[:space:]*([iIaA])\\.[:space:]?(?![iIaA]\\.)(.*)$", "<li class=\"$1\">$2</li>");
+    addRegex("^[:space:]*\\d+\\.[:space:]?(?!\\d+\\.)(.*)$", "<li class=\"enumerated\">$1</li>");
     addRegex("((<li[^>]*>.*?</li>[\r]?[\n]?)+)", "<ul>$1</ul>\n", RegexReplaceFilter.SINGLELINE);
   };
 }

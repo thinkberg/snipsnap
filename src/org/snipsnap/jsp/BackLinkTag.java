@@ -56,7 +56,7 @@ public class BackLinkTag extends TagSupport {
         out.print("<span class=\"count\">");
         out.print(backLinks.getIntCount(url));
         out.print("</span>");
-        out.print(" <span class=\"url\"><a href=\"");
+        out.print(" <span class=\"content\"><a href=\"");
         out.print(url);
         out.print("\">");
         out.print(SnipLink.cutLength(url, 90));

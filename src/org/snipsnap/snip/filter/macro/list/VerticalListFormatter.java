@@ -24,14 +24,14 @@
  */
 package org.snipsnap.snip.filter.macro.list;
 
-import org.snipsnap.snip.filter.macro.ListoutputMacro;
 import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.filter.macro.ListoutputMacro;
 import org.snipsnap.util.Nameable;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.util.Collection;
 import java.util.Iterator;
-import java.io.Writer;
-import java.io.IOException;
 
 /**
  * Simple list formatter.
@@ -43,19 +43,24 @@ public class VerticalListFormatter implements ListoutputMacro.ListFormatter {
   /**
    * Display a simple vertical list.
    */
-  public void format(Writer writer, String listComment, Collection c, String emptyText) throws IOException {
+  public void format(Writer writer, String listComment, Collection c, String emptyText, boolean showSize)
+    throws IOException {
     writer.write("<div id=\"list\"><div class=\"list-title\">");
     writer.write(listComment);
-    writer.write(" (");
-    writer.write(""+c.size());
-    writer.write(")</div>");
+    if (showSize) {
+      writer.write(" (");
+      writer.write("" + c.size());
+      writer.write(")");
+    }
+    writer.write("</div>");
     if (c.size() > 0) {
       writer.write("<ul>");
       Iterator nameIterator = c.iterator();
       while (nameIterator.hasNext()) {
-        Nameable nameable = (Nameable) nameIterator.next();
+        Object object = nameIterator.next();
+        String name = object instanceof Nameable ? ((Nameable) object).getName() : object.toString();
         writer.write("<li>");
-        SnipLink.appendLink(writer, nameable.getName());
+        SnipLink.appendLink(writer, name);
         writer.write("</li>");
       }
       writer.write("</ul>");

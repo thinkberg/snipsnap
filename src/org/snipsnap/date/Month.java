@@ -106,8 +106,8 @@ public class Month {
     Set days = getDays(month+1, year);
 
     StringBuffer view = new StringBuffer();
-    view.append("<table summary=\"Monthly calendar with links to each day's posts\">");
-    view.append("<caption class=\"calendar-head\">");
+    view.append("<table id=\"calendar\" summary=\"Monthly calendar with links to each day's posts\">");
+    view.append("<caption>");
     view.append(months[month]);
     view.append(" ");
     view.append(year);
@@ -153,7 +153,7 @@ public class Month {
       }
 
       if (i == todayNumber && month == today.get(Calendar.MONTH) && year == today.get(Calendar.YEAR)) {
-        day = "<span class=\"calendar-today\">" + day + "</span>";
+        day = "<span class=\"today\">" + day + "</span>";
       }
       week.append("<td>");
       week.append(day);
@@ -161,7 +161,7 @@ public class Month {
 
       // wrap if end of line.
       if ((leadGap + i) % 7 == 0) {
-        view.append("<tr align=\"right\">");
+        view.append("<tr>");
         view.append(week);
         week.setLength(0);
         view.append("</tr>");
@@ -179,11 +179,11 @@ public class Month {
     StringBuffer buffer = new StringBuffer();
     buffer.append("<tr>");
     for (int i=0; i<weekDaysShort.length; i++) {
-      buffer.append("<td class=\"calendar-weekday\" abbr=\"");
+      buffer.append("<th abbr=\"");
       buffer.append(weekDaysLong[i]);
       buffer.append("\">");
       buffer.append(weekDaysShort[i]);
-      buffer.append("</td>");
+      buffer.append("</th>");
     }
     buffer.append("</tr>");
     return buffer.toString();

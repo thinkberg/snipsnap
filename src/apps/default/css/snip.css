@@ -57,7 +57,7 @@
   background-color: inherit;
 }
 
-#snip-sniplinks td {
+#snip-sniplinks td, th {
   padding: 4px;
 }
 
@@ -78,17 +78,17 @@
   background-color: inherit;
 }
 
-#snip-backlinks .url {
+span.content {
 }
 
-#snip-backlinks .count {
+span.count {
 }
 
-#snip-backlinks span.count:before {
+span.count:before {
   content: "";
 }
 
-#snip-backlinks span.count:after {
+span.count:after {
   content: ": ";
 }
 

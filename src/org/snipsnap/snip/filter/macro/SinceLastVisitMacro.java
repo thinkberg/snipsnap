@@ -55,13 +55,24 @@ public class SinceLastVisitMacro extends ListoutputMacro {
 
   public void execute(Writer writer, String[] params, String content, Snip snip)
       throws IllegalArgumentException, IOException {
+    String type = null;
+    boolean showSize = true;
+    String userName = null;
+    if(params != null) {
+      if(params.length > 0) {
+        userName = params[0];
+      }
+      if(params.length > 1) {
+        type = params[1];
+      }
+    }
 
-    if (params.length == 1) {
+    if (params.length > 0) {
       User user = UserManager.getInstance().load(params[0]);
       System.err.println("Hashcode lastVisit="+((Object) user).hashCode());
       System.err.println("SinceLastVisit: "+user.getLastLogout());
       Collection c = space.getSince(user.getLastLogout());
-      output(writer, "changed snips since last visit", c, "no recently changes.");
+      output(writer, "changed snips since last visit", c, "no recent changes.", type, showSize);
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

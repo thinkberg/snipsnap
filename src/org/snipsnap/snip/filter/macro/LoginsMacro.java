@@ -51,14 +51,17 @@ public class LoginsMacro extends ListoutputMacro {
       throws IllegalArgumentException, IOException
   {
     String type = "Vertical";
-    if(params != null && params.length > 0) {
+    boolean showSize = true;
+    if(params != null) {
+      if(params.length > 0) {
       type = params[0];
+      }
     }
-    if (params == null || params.length <= 1) {
+    if (params == null || params.length <= 2) {
       List users = Application.getCurrentUsers();
       users.addAll(Application.getCurrentNonUsers());
 
-      output(writer, "Users:", users, "", type);
+      output(writer, "Users:", users, "", type, showSize);
       int guests = Application.getGuestCount();
       if(guests > 0) {
         writer.write("... and ");

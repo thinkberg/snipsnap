@@ -53,20 +53,15 @@ public class MacroListMacro extends ListoutputMacro {
       throws IllegalArgumentException, IOException
   {
     String type = null;
-    if(params != null && params.length > 0) {
+    boolean showSize = true;
+    if(params != null) {
+      if(params.length > 0) {
       type = params[0];
-    }
-    if (params == null || params.length <= 1) {
-      // @TODO rewrite list formatter to use either nameable or plain output
-      // output(writer, "Macros:", MacroFilter.getInstance().getMacroList(), "", type);
-      Iterator it = MacroFilter.getInstance().getMacroList().iterator();
-      while (it.hasNext()) {
-        Macro macro = (Macro)it.next();
-        writer.write(macro.getName());
-        if (it.hasNext()) {
-          writer.write(", ");
-        }
       }
+    }
+
+    if (params == null || params.length <= 2) {
+      output(writer, "Macros:", MacroFilter.getInstance().getMacroList(), "", type, showSize);
     } else {
       throw new IllegalArgumentException("MacroListMacro: number of arguments does not match");
     }

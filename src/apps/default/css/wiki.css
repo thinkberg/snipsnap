@@ -89,55 +89,88 @@
 
 
 /* special formatting of a wiki table */
-.snip-table {
+#wiki-table {
   border-style: solid;
   border-color: black;
   border-width: 0px 1px 1px 1px;
+  empty-cells: show;
 }
 
-.snip-table td {
+#wiki-table td {
   border-top: 1px solid black;
   padding: 4px 4px 4px 4px;
 }
 
-.snip-table-header {
+#wiki-table th {
+  border-top: 1px solid black;
+  text-align: left;
   color: inherit;
   font-weight: bold;
   /* background: #DDEEFF; */
   background: #d9e4f9;
 }
 
-.snip-table-odd {
+#wiki-table .table-odd {
   color: inherit;
   background: #F8F8F8;
 }
 
-.snip-table-1 {
-  color: inherit;
-  background: #F8F8F8;
-}
-
-
-.snip-table-even {
-}
-
-.snip-table-0 {
+#wiki-table .table-even {
 }
 
 .sniplinks {
   table-layout: auto;
 }
 
-.index-table {
+/************************************************/
+/* list formatting                              */
+
+#list {
 }
 
-.index-table td {
+.list-title {
+  font-weight: bold;
+}
+
+#list ul {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  padding-left: 0px;
+  list-style-type: none;
+}
+
+li
+/************************************************/
+/* index formatting                             */
+#index {
+}
+
+#index td {
   padding: 1px 1px 1px 1px;
 }
 
-.index-table-header {
+#index th {
+  padding: 1px 1px 1px 1px;
+  text-align: left;
   color: inherit;
   font-weight: bold;
-  /* background: #DDEEFF; */
   background: #d9e4f9;
+}
+
+/************************************************/
+/* calendar display                             */
+#calendar {
+  border-spacing: 0px;
+  text-align: right;
+}
+
+#calendar caption {
+  text-align: left;
+  font-weight: bold;
+}
+
+#calendar .today {
+  color: inherit;
+  background-color: #aaaaaa;
 }

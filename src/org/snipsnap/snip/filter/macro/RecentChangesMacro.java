@@ -51,6 +51,7 @@ public class RecentChangesMacro extends ListoutputMacro {
       throws IllegalArgumentException, IOException {
 
     String type = "Vertical";
+    boolean showSize = false;
     int length = 10;
     if(params != null) {
       if(params.length > 0) {
@@ -65,9 +66,9 @@ public class RecentChangesMacro extends ListoutputMacro {
       }
     }
 
-    if (params == null || params.length <= 1) {
+    if (params == null || params.length <= 3) {
       List changed = SnipSpace.getInstance().getChanged(length);
-      output(writer, "Recently Changed:", changed, "No changes yet.", type);
+      output(writer, "Recently Changed:", changed, "No changes yet.", type, showSize);
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

@@ -49,14 +49,25 @@ public class RecentWeblogMacro extends ListoutputMacro {
 
   public void execute(Writer writer, String[] params, String content, Snip snip)
       throws IllegalArgumentException, IOException {
-    if (params.length == 1) {
-      Collection c = SnipSnapPing.getInstance().getChanged(Integer.parseInt(params[0]));
-      Iterator iterator = c.iterator();
-      while (iterator.hasNext()) {
-        Appendable weblog = (Appendable) iterator.next();
-        weblog.appendTo(writer);
-        writer.write("<br/>");
+    String type = "Vertical";
+    boolean showSize = false;
+    int length = 10;
+        if(params != null) {
+      if(params.length > 0) {
+        type = params[0];
       }
+      if(params.length > 1) {
+        try {
+          length = Integer.parseInt(params[1]);
+        } catch (NumberFormatException e) {
+          System.err.println("RecentWeblogMacro: illegal parameter count='"+params[1]+"'");
+        }
+      }
+    }
+
+    if (params == null || params.length <= 2) {
+      Collection c = SnipSnapPing.getInstance().getChanged(length);
+      output(writer, "Recently Changed Weblogs", c, "No new changes", type, showSize);
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

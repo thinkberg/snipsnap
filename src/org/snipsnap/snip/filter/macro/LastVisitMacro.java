@@ -43,7 +43,7 @@ import java.util.List;
 import java.io.IOException;
 import java.io.Writer;
 
-public class LastVisitMacro extends ListoutputMacro {
+public class LastVisitMacro extends Macro {
   public String getName() {
     return "last-visit";
   }

@@ -37,11 +37,14 @@ import org.snipsnap.snip.SnipLink;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
 import java.io.IOException;
 import java.io.Writer;
 
 
-public class HotSnipMacro extends ListoutputMacro {
+public class HotSnipMacro extends Macro {
   SnipSpace space;
 
   public HotSnipMacro() {
@@ -55,38 +58,40 @@ public class HotSnipMacro extends ListoutputMacro {
   public void execute(Writer writer, String[] params, String content, Snip snip)
       throws IllegalArgumentException, IOException {
 
-    String type = "Vertical";
-    if(params != null && params.length > 1) {
-      type = params[1];
+    int length = 10;
+    boolean showSize = false;
+    if(params != null) {
+      if(params.length > 0) {
+        try {
+          length = Integer.parseInt(params[0]);
+        } catch (NumberFormatException e) {
+          System.err.println("RecentChangesMacro: illegal parameter count='"+params[0]+"'");
+        }
+      }
     }
 
-    if (params.length >= 1) {
-      Collection c = space.getHot(Integer.parseInt(params[0]));
+    if (params == null || params.length <= 3) {
+      Collection c = space.getHot(length);
       Iterator iterator = c.iterator();
-
+      writer.write("<div id=\"list\"><div class=\"list-title\">Most viewed:");
+      if(showSize) {
+        writer.write(" (");
+        writer.write(""+length);
+        writer.write(")");
+      }
+      writer.write("</div><ul>");
       while (iterator.hasNext()) {
         Snip hotSnip = (Snip) iterator.next();
+        writer.write("<li><span class=\"count\">");
         writer.write(""+hotSnip.getViewCount());
-        writer.write(": ");
+        writer.write("</span>");
+        writer.write("<span class=\"content\">");
         SnipLink.appendLink(writer, hotSnip);
-        writer.write("<br/>");
+        writer.write("</span></li>");
       }
+      writer.write("</ul></div>");
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }
   }
 }
-
-/*
-    String type = "Vertical";
-    if(params != null && params.length > 1) {
-      type = params[1];
-    }
-
-    if (params.length >= 1) {
-      Collection c = space.getHot(Integer.parseInt(params[0]));
-      output(writer, "Most Viewed:", c, "Nothing hot there ...", type);
-    } else {
-      throw new IllegalArgumentException("Number of arguments does not match");
-    }
-*/

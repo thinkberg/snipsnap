@@ -32,14 +32,8 @@
 package org.snipsnap.snip.filter.macro;
 
 import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.UserManager;
-import org.snipsnap.user.User;
-import org.snipsnap.serialization.StringBufferWriter;
 
-import java.util.Iterator;
-import java.util.List;
 import java.io.IOException;
 import java.io.Writer;
 
@@ -49,13 +43,17 @@ public class UserMacro extends ListoutputMacro {
   }
 
   public void execute(Writer writer, String[] params, String content, Snip snip)
-      throws IllegalArgumentException, IOException {
+    throws IllegalArgumentException, IOException {
     String type = null;
-    if(params != null && params.length > 0) {
-      type = params[0];
+    boolean showSize = true;
+    if (params != null) {
+      if (params.length > 0) {
+        type = params[0];
+      }
+      showSize = !(params.length > 1 && "nosize".equals(params[1]));
     }
-    if (params == null || params.length <= 1) {
-      output(writer, "users", UserManager.getInstance().getAll(), "no users. not very popular ;-)", type);
+    if (params == null || params.length <= 2) {
+      output(writer, "users", UserManager.getInstance().getAll(), "no users. not very popular ;-)", type, showSize);
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

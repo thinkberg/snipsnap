@@ -43,18 +43,24 @@ public class SimpleList implements ListoutputMacro.ListFormatter {
   /**
    * Create a simple list.
    */
-  public void format(Writer writer, String listComment, Collection c, String emptyText) throws IOException {
-    writer.write("<div id=\"list\"><div class=\"list-title\">");
+  public void format(Writer writer, String listComment, Collection c, String emptyText, boolean showSize)
+    throws IOException {
+    writer.write("<div class=\"list\"><div class=\"list-title\">");
     writer.write(listComment);
-    writer.write(" (");
-    writer.write(""+c.size());
-    writer.write(")</div>");
+    if (showSize) {
+      writer.write(" (");
+      writer.write(""+c.size());
+      writer.write(")");
+    }
+    writer.write("</div>");
     if (c.size() > 0) {
       writer.write("<blockquote>");
       Iterator nameIterator = c.iterator();
       while (nameIterator.hasNext()) {
-        Nameable nameable = (Nameable) nameIterator.next();
-        SnipLink.appendLink(writer, nameable.getName());
+        Object object = nameIterator.next();
+        String name = object instanceof Nameable ? ((Nameable)object).getName() : object.toString();
+
+        SnipLink.appendLink(writer, name);
         if (nameIterator.hasNext()) {
           writer.write(", ");
         }

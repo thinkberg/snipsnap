@@ -47,7 +47,7 @@ public class AtoZListFormatter implements ListoutputMacro.ListFormatter {
   /**
    * Create an A to Z index
    */
-  public void format(Writer writer, String listComment, Collection c, String emptyText)
+  public void format(Writer writer, String listComment, Collection c, String emptyText, boolean showSize)
     throws IOException {
     if (c.size() > 0) {
       Iterator it = c.iterator();
@@ -55,8 +55,8 @@ public class AtoZListFormatter implements ListoutputMacro.ListFormatter {
       List numberRestList = new ArrayList();
       List otherRestList = new ArrayList();
       while (it.hasNext()) {
-        Nameable nameable = (Nameable) it.next();
-        String name = nameable.getName();
+        Object object = it.next();
+        String name = object instanceof Nameable ? ((Nameable)object).getName() : object.toString();
         String indexChar = name.substring(0, 1).toUpperCase();
 
         if (indexChar.charAt(0) >= 'A' && indexChar.charAt(0) <= 'Z') {
@@ -72,41 +72,44 @@ public class AtoZListFormatter implements ListoutputMacro.ListFormatter {
         }
       }
 
-      writer.write("<table width=\"100%\" class=\"index-table\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
+      writer.write("<table width=\"100%\" id=\"index\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
       for(int idxChar = 'A'; idxChar <= 'Z'; idxChar++) {
-        writer.write("<tr class=\"index-table-header\">");
+        writer.write("<tr>");
         for(int i = 0; i < 5 && idxChar + i <= 'Z'; i++) {
           String ch = "" + (char)(idxChar + i);
-          writer.write("<td><b> &nbsp;<a href=\"#idx"+ch+"\">");
+          writer.write("<th><b> &nbsp;<a href=\"#idx"+ch+"\">");
           writer.write(ch);
-          writer.write("</a></b></td>");
-          writer.write("<td>...</td><td>");
+          writer.write("</a></b></th>");
+          writer.write("<th>...</th><th>");
           writer.write(""+(atozMap.get(ch) == null ? 0 : ((List)atozMap.get(ch)).size()));
-          writer.write("&nbsp; </td>");
+          writer.write("&nbsp; </th>");
         }
         idxChar += 5;
         if(idxChar >= 'Z') {
-          writer.write("<td><b> &nbsp;<a href=\"#idx0-9\">0-9</a></b></td>");
-          writer.write("<td>...</td><td>");
+          writer.write("<th><b> &nbsp;<a href=\"#idx0-9\">0-9</a></b></th>");
+          writer.write("<th>...</th><th>");
           writer.write(""+numberRestList.size());
-          writer.write("&nbsp; </td>");
-          writer.write("<td><b> &nbsp;<a href=\"#idx@\">@</a></b></td>");
-          writer.write("<td>...</td><td>");
+          writer.write("&nbsp; </th>");
+          writer.write("<th><b> &nbsp;<a href=\"#idx@\">@</a></b></th>");
+          writer.write("<th>...</th><th>");
           writer.write(""+otherRestList.size());
-          writer.write("&nbsp; </td>");
-          writer.write("<td></td></td></td><td></td><td></td>");
+          writer.write("&nbsp; </th>");
+          writer.write("<th></th></th></th><th></th><th></th>");
         }
         writer.write("</tr>");
 
       }
       writer.write("</table>");
 
-      writer.write("<b>");
+      writer.write("<div class=\"list-title\">");
       writer.write(listComment);
-      writer.write("(");
-      writer.write(""+c.size());
-      writer.write("):</b>");
-      writer.write("<table width=\"100%\" class=\"index-table\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
+      if(showSize) {
+        writer.write(" (");
+        writer.write(""+c.size());
+        writer.write(")");
+      }
+      writer.write("</div>");
+      writer.write("<table width=\"100%\" id=\"index\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
       for (int ch = 'A'; ch <= 'Z'; ch += 2) {
         String left = "" + (char) ch;
         String right = "" + (char) (ch + 1);
@@ -134,17 +137,17 @@ public class AtoZListFormatter implements ListoutputMacro.ListFormatter {
   }
 
   private void insertCharHeader(Writer writer, String leftHeader, String rightHeader) throws IOException {
-    writer.write("<tr class=\"index-table-header\"><td>");
+    writer.write("<tr><th>");
     writer.write("<b><a name=\"idx");
     writer.write(leftHeader);
     writer.write("\"></a>");
     writer.write(leftHeader);
-    writer.write("</b></td><td> </td><td>");
+    writer.write("</b></th><th> </th><th>");
     writer.write("<b><a name=\"idx");
     writer.write(rightHeader);
     writer.write("\"></a>");
     writer.write(rightHeader);
-    writer.write("</b></td></tr>");
+    writer.write("</b></th></tr>");
   }
 
   private void insertRow(Writer writer, String left, String right, boolean odd) throws IOException {

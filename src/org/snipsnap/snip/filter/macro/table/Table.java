@@ -69,27 +69,27 @@ public class Table implements Appendable {
   }
 
   public Writer appendTo(Writer writer) throws IOException {
-    writer.write("<table class=\"snip-table\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
+    writer.write("<table id=\"wiki-table\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
     List[] outputRows = (List[]) rows.toArray(new List[0]);
     int rowSize = outputRows.length;
     boolean odd=true;
     for (int i=0; i<rowSize; i++) {
-      writer.write("<tr valign=\"top\" ");
+      writer.write("<tr ");
       if (i==0) {
-        writer.write(" class=\"snip-table-header\">");
+        writer.write(">");
       } else if (odd) {
-        writer.write(" class=\"snip-table-odd\">");
+        writer.write(" class=\"table-odd\">");
         odd = false;
       } else {
-        writer.write(" class=\"snip-table-even\">");
+        writer.write(" class=\"table-even\">");
         odd = true;
       }
       String[] outputCols = (String[]) outputRows[i].toArray(new String[0]);
       int colSize = outputCols.length;
       for (int j=0; j<colSize; j++) {
-        writer.write("<td>");
+        writer.write(i == 0 ? "<th>" : "<td>");
         writer.write(outputCols[j]);
-        writer.write("</td>");
+        writer.write(i == 0 ? "</th>" : "</td>");
       }
       writer.write("</tr>");
     }
