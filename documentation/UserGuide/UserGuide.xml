@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<!--
+  ** User Guide SnipSnap
+  **
+  ** <document>
+  **  <header>
+  **   <title>TITLE</title>
+  **   <author>AUTHOR</author>
+  **   <email>EMAIL</email>
+  **   <date>DATE</date>
+  **
+  **   <head>HEAD</head>		% document header
+  **   <foot>FOOT</foot>		% document footer
+  **
+  **   <comment>COMMENT</comment>	% comment for title page
+  **  </header>
+  **
+  **  <section title="TITLE">
+  **   <subsection title="TITLE">
+  **    ... <important>!</important>
+  **    ... <quote>"Anfuehrungszeichen"</quote>
+  **    ... <br/>
+  **    ... <i>ITALICS</i>
+  **    ... <b>BOLD</b>
+  **	... <list type="enumerated">	% list (no type = bulleted)
+  **         <item>ITEM</item>
+  **	... </list>
+  **   </subsection>
+  **   ...
+  **  </section>
+  **
+  **  <include file="file.xml"/>
+  ** </document>
+  **
+  -->
+<document>
+ <header>
+  <title>User Guide <product/></title>
+  <author><companylong/></author>
+  <date>August 2004</date>
+
+  <head>User Guide</head>
+  <foot>User Guide</foot>
+
+  <contact>
+   <person>
+    <name>Matthias L. Jugel (CEO)</name>
+    <email>matthias.jugel@first.fraunhofer.de</email>
+   </person>
+
+   <product>SnipSnap CRM</product>
+   <company>
+    <name><companylong/></name>
+   </company>
+  </contact>
+ </header>
+
+ <include file="Introduction.xml"/>
+</document>

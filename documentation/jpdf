@@ -1,0 +1,27 @@
+#!/bin/sh
+XHOME=`dirname $0`
+
+DIR=`dirname $1`
+FILE=`basename $1 .xml`
+STYLE="$DIR/xsl/doc2latex.xsl"
+
+echo $XHOME
+
+CLASSPATH=$XHOME/jar/xalan.jar:$XHOME/jar/xerces.jar
+ 
+
+echo -n "Creating $FILE.pdf ... ["
+$XHOME/insert_source.sh $FILE.xml
+echo -n I
+if ( java -classpath $CLASSPATH org.apache.xalan.xslt.Process -in $FILE.xml -out $FILE.tex -xsl $STYLE >> $FILE.log 2>&1 ); then
+  echo -n X
+  pdflatex --interaction batchmode $FILE.tex >> $FILE.log 2>&1
+  if [ $? != "0" ]; then
+    echo ""
+    tail $FILE.log
+    exit 1
+  fi
+  echo -n "L"
+  echo "]"
+  open $FILE.pdf
+fi
