@@ -27,6 +27,7 @@
   <path id="app.classpath">
     <pathelement location="${jar}/rss-ng-1.0-alpha-1.jar"/>
     <pathelement location="${jar}/jdbcstorage-1.0-alpha-1.jar"/>
+    <pathelement location="${jar}/${search-ng.jar}"/>
     <pathelement location="${jar}/gabriel.jar"/>
     <pathelement location="${jar}/jmdns.jar"/>
     <pathelement location="${jar}/${rome.jar}"/>
@@ -480,6 +481,7 @@
         <include name="nanocontainer-1.0.jar"/>
         <include name="nanocontainer-dynaop-1.0-beta-1-SNAPSHOT.jar"/>
         <include name="rss-ng-1.0-alpha-1.jar"/>
+	<include name="${search-ng.jar}"/>
         <include name="jdbcstorage-1.0-alpha-1.jar"/>
       </fileset>
     </copy>

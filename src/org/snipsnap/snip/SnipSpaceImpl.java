@@ -44,6 +44,7 @@ import org.snipsnap.util.ApplicationAwareMap;
 import org.snipsnap.util.Queue;
 import org.snipsnap.util.mail.PostDaemon;
 import org.snipsnap.versioning.VersionManager;
+import org.snipsnap.components.IndexerService;
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -69,25 +70,26 @@ import java.util.TimerTask;
  */
 
 public class SnipSpaceImpl implements SnipSpace {
-  // List of snips that were changed
   private ApplicationAwareMap changed;
+    // List of snips that are scheduled for storage
   private List delayed;
 
-  // List of snips that are scheduled for storage
-  private SnipIndexer indexer;
   private Timer timer;
   private String eTag;
   private SnipStorage storage;
   private VersionManager versionManager;
+  private IndexerService indexer;
 
   private ApplicationAwareMap blogs;
 
   public SnipSpaceImpl(SnipStorage storage,
                        ApplicationManager manager,
-                       VersionManager versionManager
+                       VersionManager versionManager,
+                       IndexerService indexer
                        ) {
     this.storage = storage;
     this.versionManager = versionManager;
+    this.indexer = indexer;
 
     changed = new ApplicationAwareMap(HashMap.class, Queue.class);
     blogs = new ApplicationAwareMap(HashMap.class, HashMap.class);
@@ -111,8 +113,6 @@ public class SnipSpaceImpl implements SnipSpace {
       // it's cache from for checking
       old.setCache(((CacheStorage) storage).getCache());
     }
-
-    indexer = new SnipIndexer();
 
     //This should also fill the cache
     // This should be moved somewhere down, SnipSpace need not know about
@@ -324,14 +324,6 @@ public class SnipSpaceImpl implements SnipSpace {
     storage.storageStore(snip);
     // indexer.reIndex(snip);
     return;
-  }
-
-  private void reIndex(List snips) {
-    Iterator iterator = snips.iterator();
-    while (iterator.hasNext()) {
-      Snip indexSnip = (Snip) iterator.next();
-      indexer.reIndex(indexSnip);
-    }
   }
 
   public void systemStore(List snips) {

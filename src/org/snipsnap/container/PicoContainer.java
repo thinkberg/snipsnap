@@ -35,6 +35,9 @@ import org.snipsnap.notification.MessageService;
 import org.snipsnap.notification.jmdns.JmDnsService;
 import org.snipsnap.feeder.FeederRepository;
 import org.snipsnap.feeder.BasicFeederRepository;
+import org.snipsnap.components.LuceneIndexerService;
+import org.snipsnap.components.IndexerService;
+import org.snipsnap.components.SearchService;
 import org.nanocontainer.dynaop.DynaopComponentAdapterFactory;
 import org.picocontainer.defaults.DefaultComponentAdapterFactory;
 import org.picocontainer.defaults.DefaultPicoContainer;
@@ -87,6 +90,10 @@ public class PicoContainer implements Container {
         addComponent(Components.DEFAULT_ENGINE, SnipRenderEngine.class);
         addComponent(PlainTextRenderEngine.class);
         addComponent(SnipSpace.class, SnipSpaceImpl.class);
+
+        // Searching
+        addComponent(IndexerService.class, LuceneIndexerService.class);
+        addComponent(SearchService.class);
 
         // Sec
         // XML-RPC Handlers
