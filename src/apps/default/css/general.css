@@ -86,17 +86,18 @@ table.debug {
 
 /************************************************/
 /* input tag                                    */
+
+input[type=text], select, textarea {
+  line-height: inherit;
+  /*vertical-align: middle; a bug in IE5.2-mac crashes with this*/
+	border: 1px dashed #999999;
+  padding-top: 10px;
+  font-size: inherit;
+  font-family: courier, courier new, monospaced;
+}
+
 input[type=submit] {
   color: inherit;
   background: #eeeeee;
 	font-family: inherit;
 }
-
-input, select, textarea {
-  line-height: inherit;
-  /*vertical-align: middle; a bug in IE5.2-mac crashes with this*/
-	border: 1px dashed #999999;
-  font-size: inherit;
-  font-family: courier, courier new, monospaced;
-}
-

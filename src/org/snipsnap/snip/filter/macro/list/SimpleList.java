@@ -44,11 +44,11 @@ public class SimpleList implements ListoutputMacro.ListFormatter {
    * Create a simple list.
    */
   public void format(Writer writer, String listComment, Collection c, String emptyText) throws IOException {
-    writer.write("<b>");
+    writer.write("<div id=\"list\"><div class=\"list-title\">");
     writer.write(listComment);
-    writer.write(": (");
-    writer.write(c.size());
-    writer.write(") </b><br/>");
+    writer.write(" (");
+    writer.write(""+c.size());
+    writer.write(")</div>");
     if (c.size() > 0) {
       writer.write("<blockquote>");
       Iterator nameIterator = c.iterator();
@@ -63,6 +63,6 @@ public class SimpleList implements ListoutputMacro.ListFormatter {
     } else {
       writer.write(emptyText);
     }
-    return;
+    writer.write("</div>");
   }
 }

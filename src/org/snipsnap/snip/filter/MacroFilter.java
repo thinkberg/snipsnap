@@ -81,9 +81,10 @@ public class MacroFilter extends RegexTokenFilter {
     add(new LoginsMacro());
     add(new RecentChangesMacro());
     add(new CalendarMacro());
+    add(new MacroListMacro());
   }
 
-  public static Filter getInstance() {
+  public static MacroFilter getInstance() {
     synchronized (monitor) {
       if (null == instance) {
         instance = new MacroFilter();
@@ -94,6 +95,10 @@ public class MacroFilter extends RegexTokenFilter {
 
   public void add(Macro macro) {
     macros.put(macro.getName(), macro);
+  }
+
+  public Collection getMacroList() {
+    return macros.values();
   }
 
   /**

@@ -27,12 +27,14 @@ package org.snipsnap.snip.filter.macro;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.filter.MacroFilter;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.user.User;
 import org.snipsnap.app.Application;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.ArrayList;
 import java.io.IOException;
 import java.io.Writer;
 
@@ -42,34 +44,31 @@ import java.io.Writer;
  * @author Matthias L. Jugel
  * @version $Id$
  */
-public class LoginsMacro extends ListoutputMacro {
+public class MacroListMacro extends ListoutputMacro {
   public String getName() {
-    return "logins";
+    return "macro-list";
   }
 
   public void execute(Writer writer, String[] params, String content, Snip snip)
       throws IllegalArgumentException, IOException
   {
-    String type = "Vertical";
+    String type = null;
     if(params != null && params.length > 0) {
       type = params[0];
     }
     if (params == null || params.length <= 1) {
-      List users = Application.getCurrentUsers();
-      users.addAll(Application.getCurrentNonUsers());
-
-      output(writer, "Users:", users, "", type);
-      int guests = Application.getGuestCount();
-      if(guests > 0) {
-        writer.write("... and ");
-        writer.write(""+guests);
-        writer.write(" Guest");
-        if(guests > 1) {
-          writer.write("s");
+      // @TODO rewrite list formatter to use either nameable or plain output
+      // output(writer, "Macros:", MacroFilter.getInstance().getMacroList(), "", type);
+      Iterator it = MacroFilter.getInstance().getMacroList().iterator();
+      while (it.hasNext()) {
+        Macro macro = (Macro)it.next();
+        writer.write(macro.getName());
+        if (it.hasNext()) {
+          writer.write(", ");
         }
       }
     } else {
-      throw new IllegalArgumentException("Number of arguments does not match");
+      throw new IllegalArgumentException("MacroListMacro: number of arguments does not match");
     }
   }
 }

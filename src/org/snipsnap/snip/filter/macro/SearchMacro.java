@@ -62,15 +62,22 @@ public class SearchMacro extends Macro {
       }
       String searchString = params[0];
 
-      writer.write("<b>snips with ");
-      writer.write(searchString);
-      writer.write(": (");
-      Hits hits = space.search(searchString);
-      writer.write(hits.length());
 
-      writer.write(") </b><br/>");
+      Hits hits = null;
+      try {
+        hits = space.search(searchString);
+      } catch (Exception e) {
+        System.err.println("SearchMacro: exception while searching: "+e);
+      }
 
-      if (hits.length() > 0) {
+
+      if (hits != null && hits.length() > 0) {
+        writer.write("<div id=\"list\"><div class=\"list-title\">snips with ");
+        writer.write(searchString);
+        writer.write(": (");
+        writer.write(""+hits.length());
+        writer.write(")</div>");
+
         int start = 0;
         int end = Math.min(maxHits, hits.length());
         writer.write("<blockquote>");
@@ -86,16 +93,17 @@ public class SearchMacro extends Macro {
           System.err.println("I/O error while iterating over search results.");
         }
       } else {
-        writer.write("none found.");
+        writer.write("Nothing found.");
       }
 
-      if (! SnipSpace.getInstance().exists(searchString) &&
+      if (searchString != null && searchString.length() > 0 &&
+        !SnipSpace.getInstance().exists(searchString) &&
         UserManager.getInstance().isAuthenticated(Application.get().getUser())) {
           writer.write("<p>There is no snip with <b>");
           writer.write(searchString);
           writer.write("</b> , would you like to ");
           SnipLink.createCreateLink(writer, searchString);
-          writer.write(" ?</p>");
+          writer.write("?</p>");
       }
 
       return;

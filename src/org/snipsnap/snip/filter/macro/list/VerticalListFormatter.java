@@ -47,10 +47,10 @@ public class VerticalListFormatter implements ListoutputMacro.ListFormatter {
     writer.write("<div id=\"list\"><div class=\"list-title\">");
     writer.write(listComment);
     writer.write(" (");
-    writer.write(c.size());
+    writer.write(""+c.size());
     writer.write(")</div>");
     if (c.size() > 0) {
-      writer.write("<ul id=\"vertical\">");
+      writer.write("<ul>");
       Iterator nameIterator = c.iterator();
       while (nameIterator.hasNext()) {
         Nameable nameable = (Nameable) nameIterator.next();

@@ -41,7 +41,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 
-public class HotSnipMacro extends Macro {
+public class HotSnipMacro extends ListoutputMacro {
   SnipSpace space;
 
   public HotSnipMacro() {
@@ -55,9 +55,15 @@ public class HotSnipMacro extends Macro {
   public void execute(Writer writer, String[] params, String content, Snip snip)
       throws IllegalArgumentException, IOException {
 
-    if (params.length == 1) {
+    String type = "Vertical";
+    if(params != null && params.length > 1) {
+      type = params[1];
+    }
+
+    if (params.length >= 1) {
       Collection c = space.getHot(Integer.parseInt(params[0]));
       Iterator iterator = c.iterator();
+
       while (iterator.hasNext()) {
         Snip hotSnip = (Snip) iterator.next();
         writer.write(hotSnip.getViewCount());
@@ -70,3 +76,17 @@ public class HotSnipMacro extends Macro {
     }
   }
 }
+
+/*
+    String type = "Vertical";
+    if(params != null && params.length > 1) {
+      type = params[1];
+    }
+
+    if (params.length >= 1) {
+      Collection c = space.getHot(Integer.parseInt(params[0]));
+      output(writer, "Most Viewed:", c, "Nothing hot there ...", type);
+    } else {
+      throw new IllegalArgumentException("Number of arguments does not match");
+    }
+*/
