@@ -260,7 +260,7 @@ public class Installer extends HttpServlet {
     config.setTagLine(tagline != null && tagline.length() > 0 ? tagline : "The easy Weblog and Wiki Software.");
 
     String logo = request.getParameter("logoimage");
-    config.setLogoImage(logo != null && logo.length() > 0 ? logo : null);
+    config.setLogoImage(logo != null && logo.length() > 0 ? logo : "snipsnap-logo");
 
     config.setLogger("org.snipsnap.util.log.NullLogger");
     config.store();
