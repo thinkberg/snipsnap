@@ -16,6 +16,16 @@
     <servlet-class>com.neotis.net.SnipStoreServlet</servlet-class>
   </servlet>
 
+  <servlet>
+    <servlet-name>com.neotis.net.NewUserServlet</servlet-name>
+    <servlet-class>com.neotis.net.NewUserServlet</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>com.neotis.net.LoginServlet</servlet-name>
+    <servlet-class>com.neotis.net.LoginServlet</servlet-class>
+  </servlet>
+
   <servlet-mapping>
     <servlet-name>com.neotis.net.Layouter</servlet-name>
     <url-pattern>/space/*</url-pattern>
@@ -29,6 +39,16 @@
   <servlet-mapping>
     <servlet-name>com.neotis.net.SnipStoreServlet</servlet-name>
     <url-pattern>/exec/store</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>com.neotis.net.NewUserServlet</servlet-name>
+    <url-pattern>/exec/newuser</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>com.neotis.net.LoginServlet</servlet-name>
+    <url-pattern>/exec/authenticate</url-pattern>
   </servlet-mapping>
 
 

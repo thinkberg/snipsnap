@@ -15,7 +15,7 @@
      </td>
      <td valign="top" width="100%">
       <jsp:include page="<%=request.getAttribute(\"page\")%>" flush="true"/>
-      </td>
+     </td>
     </tr>
    </table>
    </td></tr></table>

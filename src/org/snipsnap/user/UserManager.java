@@ -3,6 +3,8 @@ package com.neotis.user;
 import com.neotis.util.ConnectionManager;
 
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,14 +26,43 @@ public class UserManager {
     connection = ConnectionManager.getConnection();
   }
 
-  public User getUser(HttpSession session) {
-    return new User("Guest", "Guest");
+  public User getUser(HttpServletRequest request) {
+    HttpSession session = request.getSession(true);
+    User user = (User)session.getAttribute("user");
+    if(user == null) {
+      Cookie cookie =  getCookie(request, "userName");
+      if(cookie != null) {
+        user = load(cookie.getValue());
+      }
+      if(user == null) {
+        user = new User("Guest", "Guest");
+      }
+      session.setAttribute("user", user);
+    }
+    System.out.println("User found: "+user.getLogin());
+    return user;
   }
+
+  /**
+   * Helper method for getUser to extract user from request/cookie/session
+   * @param request
+   * @param name
+   * @return
+   */
+  private Cookie getCookie(HttpServletRequest request, String name) {
+    Cookie cookies[] = request.getCookies();
+    for(int i = 0; cookies != null && i < cookies.length; i++) {
+      if(cookies[i].getName().equals(name)) {
+	return cookies[i];
+      }
+    }
+    return null;
+  }
+
 
   public User authenticate(String login, String passwd) {
     User user = storageLoad(login);
-    if (null != user
-      && user.getPasswd().equals(passwd)) {
+    if (null != user && user.getPasswd().equals(passwd)) {
       return user;
     } else {
       return null;
@@ -59,8 +90,8 @@ public class UserManager {
   // Storage System dependend Methods
 
   private User createUser(ResultSet result) throws SQLException {
-    String login = result.getString("login");
-    String passwd = result.getString("passwd");
+    String login = result.getString("login").trim();
+    String passwd = result.getString("passwd").trim();
     User user = new User(login, passwd);
     return user;
   }

@@ -21,6 +21,7 @@ import org.apache.oro.text.regex.Perl5Substitution;
 import org.apache.oro.text.regex.Util;
 
 import java.net.URLEncoder;
+import java.io.UnsupportedEncodingException;
 
 import com.neotis.util.Transliterate;
 
@@ -70,12 +71,20 @@ public class LinkTestFilter extends Filter {
         if(linkTester.exists(key)) {
           buffer.append("<a href=\"");
           buffer.append("/space/");
-          buffer.append(URLEncoder.encode(key));
+          try {
+            buffer.append(URLEncoder.encode(key, "iso-8859-1"));
+          } catch (UnsupportedEncodingException e) {
+            buffer.append(key);
+          }
           buffer.append("\">").append(result.group(1)).append("</a>");
         } else {
           buffer.append("[create <a href=\"");
           buffer.append("/exec/edit?name=");
-          buffer.append(URLEncoder.encode(key));
+          try {
+            buffer.append(URLEncoder.encode(key, "iso-8859-1"));
+          } catch (UnsupportedEncodingException e) {
+            buffer.append(key);
+          }
           buffer.append("\">").append(result.group(1)).append("</a>]");
         }
       } else {

@@ -11,7 +11,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -250,7 +249,7 @@ public class SnipSpace implements LinkTester {
 
     try {
       statement = connection.prepareStatement("UPDATE Snip " +
-          "SET name=?, content=?, cTime=?, mTime=?, cUser=?, mUser=?, parentSnip=?, commentSnip=? WHERE name=?");
+                                              "SET name=?, content=?, cTime=?, mTime=?, cUser=?, mUser=?, parentSnip=?, commentSnip=? WHERE name=?");
       statement.setString(1, snip.getName());
       statement.setString(2, snip.getContent());
       statement.setTimestamp(3, snip.getCTime());
@@ -258,14 +257,14 @@ public class SnipSpace implements LinkTester {
       statement.setString(5, snip.getCUser());
       statement.setString(6, snip.getMUser());
       Snip parent = snip.getParent();
-      if (null==parent) {
-        statement.setNull(7, Types.VARCHAR );
+      if (null == parent) {
+        statement.setNull(7, Types.VARCHAR);
       } else {
         statement.setString(7, parent.getName());
       }
       Snip comment = snip.getComment();
-      if (null==comment) {
-        statement.setNull(8, Types.VARCHAR );
+      if (null == comment) {
+        statement.setNull(8, Types.VARCHAR);
       } else {
         statement.setString(8, comment.getName());
       }
@@ -302,14 +301,14 @@ public class SnipSpace implements LinkTester {
       statement.setString(5, login);
       statement.setString(6, login);
       Snip parent = snip.getParent();
-      if (null==parent) {
-        statement.setNull(7, Types.VARCHAR );
+      if (null == parent) {
+        statement.setNull(7, Types.VARCHAR);
       } else {
         statement.setString(7, parent.getName());
       }
       Snip comment = snip.getComment();
-      if (null==comment) {
-        statement.setNull(8, Types.VARCHAR );
+      if (null == comment) {
+        statement.setNull(8, Types.VARCHAR);
       } else {
         statement.setString(8, comment.getName());
       }

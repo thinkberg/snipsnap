@@ -5,9 +5,18 @@
 
 /************************************************/
 
+.error { color: #ff0000; font-weight: bold; }
 .bold { font-weight: bold }
 .snip-name { font-weight: bold; font-size: 15px; }
 
+.menu {
+
+}
+
+.menuitem {
+  font-weight: bold;
+  font-size: 20px;
+}
 /************************************************/
 /* code formatting */
 .code {
