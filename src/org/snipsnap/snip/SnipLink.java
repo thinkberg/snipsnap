@@ -25,15 +25,16 @@
 
 package org.snipsnap.snip;
 
+import org.snipsnap.serialization.StringBufferWriter;
 import org.snipsnap.snip.filter.EscapeFilter;
 import org.snipsnap.util.URLEncoderDecoder;
-import org.snipsnap.serialization.StringBufferWriter;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.Arrays;
 import java.util.List;
-import java.io.Writer;
-import java.io.IOException;
+import java.util.StringTokenizer;
 
 /**
  *  Generates links for snips
@@ -233,7 +234,7 @@ public class SnipLink {
         name = name.substring(0, dotIndex);
       }
     }
-    if(null == ext) {
+    if (null == ext) {
       ext = "png";
     }
 
@@ -249,7 +250,7 @@ public class SnipLink {
       writer.write(alt);
       writer.write("\"");
     }
-    if(position != null) {
+    if (position != null) {
       writer.write(" class=\"");
       writer.write(position);
       writer.write("\"");
@@ -260,7 +261,7 @@ public class SnipLink {
 
 
   public static StringBuffer appendImageWithRoot(StringBuffer buffer, String root,
-                                                  String name, String alt, String ext, String position) {
+                                                 String name, String alt, String ext, String position) {
     Writer writer = new StringBufferWriter(buffer);
     try {
       appendImageWithRoot(writer, root, name, alt, ext, position);
@@ -301,5 +302,23 @@ public class SnipLink {
       return url.substring(0, len - 3) + "...";
     }
     return url;
+  }
+
+  /**
+   * Escape special characters that may occur in a URL.
+   * @param url the original url string
+   * @return the escaped string
+   */
+  public static String escape(String url) {
+    StringTokenizer t = new StringTokenizer(url, "&", true);
+    String result = "";
+    while (t.hasMoreTokens()) {
+      String tmp = t.nextToken();
+      if ("&".equals(tmp)) {
+        tmp = "&amp;";
+      }
+      result += tmp;
+    }
+    return result;
   }
 }

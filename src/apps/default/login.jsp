@@ -7,9 +7,9 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %>
 
-<div id="snip-wrapper">
- <div id="snip-title"><h1 class="snip-name">Login</h1></div>
- <div id="snip-content">
+<div class="snip-wrapper">
+ <div class="snip-title"><h1 class="snip-name">Login</h1></div>
+ <div class="snip-content">
   <s:check roles="Authenticated" invert="true">
    <%-- display error message --%>
    <c:if test="${error != null}">
@@ -18,10 +18,10 @@
     <div><b>Not registered? <a href="../exec/register.jsp?login=<c:out value='${login.login}'/>">Register!<a/></b></div>
    </c:if>
    <%-- the login form --%>
-   <form id="form" method="POST" action="../exec/authenticate">
+   <form class="form" method="post" action="../exec/authenticate">
     <table>
-     <tr><td><label for="login">User name:</label></td><td><input name="login" type="text" size="20" value="<c:out value='${login.login}'/>" tabindex="0"/></td></tr>
-     <tr><td><label for="password">Password:</label></td><td><input name="password" type="password" size="20" value="" tabindex="0"/></td></tr>
+     <tr><td><label for="login">User name:</label></td><td><input id="login" name="login" type="text" size="20" value="<c:out value='${login.login}'/>" tabindex="0"/></td></tr>
+     <tr><td><label for="password">Password:</label></td><td><input id="password" name="password" type="password" size="20" value="" tabindex="0"/></td></tr>
      <tr><td class="form-buttons" colspan="2">
       <input value="Login" name="ok" type="submit" tabindex="0"/>
       <input value="Cancel" name="cancel" type="submit" tabindex="0"/>

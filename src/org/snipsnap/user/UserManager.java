@@ -30,6 +30,7 @@ import org.snipsnap.cache.Cache;
 import org.snipsnap.jdbc.Loader;
 import org.snipsnap.jdbc.FinderFactory;
 import org.snipsnap.jdbc.Finder;
+import org.snipsnap.app.Application;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -43,6 +44,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.*;
+import java.net.URL;
+import java.net.MalformedURLException;
 
 /**
  * User manager handles all register, creation and authentication of users.
@@ -184,7 +187,11 @@ public class UserManager implements Loader {
     authHash.put(auth, user);
     Cookie cookie = new Cookie(COOKIE_NAME, auth);
     cookie.setMaxAge(SECONDS_PER_YEAR);
-    cookie.setPath("/");
+    try {
+      cookie.setPath(new URL(Application.get().getConfiguration().getUrl()).getPath());
+    } catch (MalformedURLException e) {
+      System.err.println("Malformed URL: "+e);
+    }
     cookie.setComment("SnipSnap User");
     response.addCookie(cookie);
   }
@@ -193,8 +200,6 @@ public class UserManager implements Loader {
     Cookie cookie = getCookie(request, COOKIE_NAME);
     if (cookie != null) {
       cookie.setMaxAge(0);
-      cookie.setPath("/");
-      cookie.setComment("SnipSnap User");
       response.addCookie(cookie);
     }
   }

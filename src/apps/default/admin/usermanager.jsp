@@ -7,9 +7,9 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 
 <c:import url="/admin/menu.jsp"/>
-<div id="admin">
+<div class="admin">
 
- <table id="wiki-table" width="100%" border="0" cellpadding="3" cellspacing="0">
+ <table class="wiki-table" width="100%" border="0" cellpadding="3" cellspacing="0">
   <tr>
     <th width="100%">User name</th><th>Last Login</th><th>Email</th><th>Roles</th><th>Status</th><th colspan="2">Action</th>
   </tr>
@@ -28,7 +28,7 @@
       <td><span class="nobr"><c:out value="${user.roles}"/></span></td>
       <td><span class="nobr"><c:out value="${user.status}"/></span></td>
       <td>
-        <form method="POST" action="<c:url value='/exec/admin/user'/>">
+        <form method="post" action="<c:url value='/exec/admin/user'/>">
           <input type="hidden" name="command" value="edit"/>
           <input type="hidden" name="login" value="<c:out value='${user.login}'/>"/>
           <input type="submit" name="ok" value="Edit"/>
@@ -36,7 +36,7 @@
       </td>
       <td>
         <c:if test="${config.adminLogin != user.login}">
-          <form method="POST" action="<c:url value='/exec/admin/user'/>">
+          <form method="post" action="<c:url value='/exec/admin/user'/>">
             <input type="hidden" name="command" value="remove"/>
             <input type="hidden" name="login" value="<c:out value='${user.login}'/>"/>
             <input style="color: red" type="submit" name="ok" value="Remove"/>

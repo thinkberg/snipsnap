@@ -21,7 +21,7 @@
 </c:if>
 
 <br/>
-<form method="POST" action="../exec/install">
+<form method="post" action="../exec/install">
   <table border="0" cellpadding="2" cellspacing="2">
     <tr>
       <td colspan="3" class="table-header">Application Name</td>

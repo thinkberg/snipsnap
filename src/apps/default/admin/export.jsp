@@ -7,14 +7,14 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 
 <c:import url="/admin/menu.jsp"/>
-<div id="admin">
+<div class="admin">
  <c:forEach items="${errors}" var="error">
   <div class="error"><c:out value="${error.value}"/></div>
  </c:forEach>
 
 
  <h2>Export Database</h2>
- <form id="form" method="POST" action="<c:url value='/exec/admin/export'/>">
+ <form class="form" method="post" action="<c:url value='/exec/admin/export'/>">
   <table class="wiki-table" border="0" cellspacing="0" cellpadding="2">
    <tr>
     <td valign="top">Select Output:</td>

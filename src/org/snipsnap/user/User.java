@@ -159,7 +159,7 @@ public class User implements Nameable {
   public boolean isAdmin() {
     Application app = Application.get();
     AppConfiguration config = app.getConfiguration();
-    return config.getAdminLogin().equals(login);
+    return config.getAdminLogin().equals(login) || getRoles().contains(Roles.ADMIN);
   }
 
   public void setGuest(boolean guest) {

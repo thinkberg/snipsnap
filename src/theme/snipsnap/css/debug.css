@@ -4,7 +4,7 @@
  * @version $Id$
  */
 
-#debug {
+.debug {
   color: inherit;
   background-color: #ffff99;
 }

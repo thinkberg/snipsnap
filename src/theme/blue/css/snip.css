@@ -4,10 +4,10 @@
  * @version $Id$
  */
 
-#snip-wrapper {
+.snip-wrapper {
 }
 
-#snip-title {
+.snip-title {
   float: left;
   width: 100%;
   text-align: left;
@@ -25,9 +25,10 @@
 }
 
 .snip-commented-snip {
+  font-size: 10px;
 }
 
-#snip-buttons {
+.snip-buttons {
   border: 0;
   float: right;
   font-family: verdana, arial, sans-serif;
@@ -35,7 +36,7 @@
   font-weight:normal;
 }
 
-#snip-info {
+.snip-info {
   border: 0;
   float: left;
   font-family: verdana, arial, sans-serif;
@@ -43,7 +44,7 @@
   font-weight:normal;
 }
 
-#snip-content {
+.snip-content {
   clear: left;
   border: 0;
   display: block;
@@ -55,41 +56,41 @@
   line-height:16px;
 }
 
-#snip-post-comments {
+.snip-post-comments {
   margin-top: 20px;
   margin-bottom: 20px;
 }
 
-#snip-sniplinks {
+.snip-sniplinks {
   margin-top: 20px;
 }
 
-#snip-sniplinks table {
+.snip-sniplinks table {
   table-layout: fixed;
 }
 
-#snip-sniplinks caption {
+.snip-sniplinks caption {
   text-align: left;
   color: #999999;
   background-color: inherit;
 }
 
-#snip-sniplinks td, th {
+.snip-sniplinks td, th {
   padding: 4px;
 }
 
-#snip-backlinks {
+.snip-backlinks {
   margin-top: 20px;
 }
 
-#snip-backlinks .list {
+.snip-backlinks .list {
   list-style-type: none;
   margin-top: 0;
   padding-left: 0;
   margin-left: 0;
 }
 
-#snip-backlinks .caption {
+.snip-backlinks .caption {
   text-align: left;
   color: #999999;
   background-color: inherit;
@@ -112,47 +113,47 @@ span.count:after {
 /**************************************************/
 /* snip edit part                                 */
 
-#snip-input {
+.snip-input {
   margin-top: 20px;
 }
 
-#form {
+.form {
 }
 
-#form .form-buttons {
+.form .form-buttons {
   text-align: right;
 }
 
-#form input[type=submit] {
+.form input[type=submit] {
   vertical-align: text-bottom;
 }
 
 /**************************************************/
 /* snip with comments part                        */
 
-#snip-comments {
+.snip-comments {
 }
 
-#comment-title {
+.comment-title {
   margin-top: 20px;
 }
 
-#comment-title h2.comment-name {
+.comment-title h2.comment-name {
   display: inline;
   font-weight: normal;
   font-size: 120%;
 }
 
-#comment-buttons {
+.comment-buttons {
   display: inline;
 }
 
-#comment-content {
+.comment-content {
   margin-top: 5px;
   margin-left: 20px;
 }
 
-#comment-input {
+.comment-input {
   margin-top: 20px;
 }
 
@@ -160,7 +161,7 @@ span.count:after {
 /* preview formatting                             */
 
 
-#preview {
+.preview {
   background-color: #999999;
   color: inherit;
 }

@@ -97,12 +97,12 @@ public class AtoZListFormatter implements ListoutputMacro.ListFormatter {
           writer.write("<th>...</th><th>");
           writer.write(""+numberRestList.size());
           writer.write("&nbsp; </th>");
-          writer.write("<th><b> &nbsp;<a href=\"#idx@\">@</a></b></th>");
+          writer.write("<th><b> &nbsp;<a href=\"#idxAT\">@</a></b></th>");
           writer.write("<th>...</th><th>");
           writer.write(""+otherRestList.size());
           writer.write("&nbsp; </th>");
-          writer.write("<th></th></th></th><th></th><th></th>");
-          writer.write("<th></th></th></th><th></th><th></th>");
+          writer.write("<th></th><th></th><th></th><th></th>");
+          writer.write("<th></th><th></th><th></th><th></th>");
         }
         writer.write("</tr>");
 
@@ -147,12 +147,12 @@ public class AtoZListFormatter implements ListoutputMacro.ListFormatter {
   private void insertCharHeader(Writer writer, String leftHeader, String rightHeader) throws IOException {
     writer.write("<tr><th>");
     writer.write("<b><a name=\"idx");
-    writer.write(leftHeader);
+    writer.write("@".equals(leftHeader) ? "AT" : leftHeader);
     writer.write("\"></a>");
     writer.write(leftHeader);
     writer.write("</b></th><th> </th><th>");
     writer.write("<b><a name=\"idx");
-    writer.write(rightHeader);
+    writer.write("@".equals(leftHeader) ? "AT" : leftHeader);
     writer.write("\"></a>");
     writer.write(rightHeader);
     writer.write("</b></th></tr>");

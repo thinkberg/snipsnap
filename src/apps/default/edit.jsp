@@ -7,17 +7,17 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %>
 
-<div id="snip-wrapper">
+<div class="snip-wrapper">
  <s:check roles="Authenticated" permission="Edit" snip="${snip}">
-  <div id="snip-title">
+  <div class="snip-title">
    <h1 class="snip-name"><c:out value="${snip_name}" escapeXml="false"/></h1>
   </div>
   <c:if test="${not empty preview}">
-   <div id="preview"><div id="snip-content"><c:out value="${preview}" escapeXml="false"/></div></div>
+   <div class="preview"><div class="snip-content"><c:out value="${preview}" escapeXml="false"/></div></div>
   </c:if>
-  <div id="snip-content">
-   <div id="snip-input">
-    <form id="form" name="f" method="POST" action="../exec/store">
+  <div class="snip-content">
+   <div class="snip-input">
+    <form class="form" name="f" method="post" action="../exec/store">
      <table>
       <tr><td><textarea name="content" type="text" cols="80" rows="20"><c:out value="${content}" escapeXml="false"/></textarea></td></tr>
       <tr><td class="form-buttons">

@@ -8,7 +8,7 @@
 
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <c:import url="/admin/menu.jsp"/>
-<div id="admin">
+<div class="admin">
  <h2>Application Info</h2>
  <table>
   <tr><td><b>Administrator:</b></td><td>

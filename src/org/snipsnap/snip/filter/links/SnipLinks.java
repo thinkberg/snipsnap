@@ -49,24 +49,26 @@ public class SnipLinks {
 
     try {
       int i = 0;
-      writer.write("<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\">\n");
-      writer.write("<caption>see also:</caption>\n");
-      writer.write("<tr>\n");
-      while (iterator.hasNext() && i < 20) {
-        if (i % width == 0 && i!= 0 ) {
-          writer.write("</tr><tr>");
+      if(iterator.hasNext()) {
+        writer.write("<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\">\n");
+        writer.write("<caption>see also:</caption>\n");
+        writer.write("<tr>\n");
+        while (iterator.hasNext() && i < 20) {
+          if (i % width == 0 && i!= 0 ) {
+            writer.write("</tr><tr>");
+          }
+          String url = (String) iterator.next();
+          writer.write("<td bgcolor=\"");
+          writer.write(cr.getColor(i++));
+          writer.write("\" width=\"");
+          writer.write(""+percentPerCell);
+          writer.write("%\">");
+          writer.write(SnipLink.createLink(url, SnipLink.cutLength(url, 25)));
+          // writer.write(" - " + snipLinks.getIntCount(url));
+          writer.write("</td>\n");
         }
-        String url = (String) iterator.next();
-        writer.write("<td bgcolor=\"");
-        writer.write(cr.getColor(i++));
-        writer.write("\" width=\"");
-        writer.write(percentPerCell);
-        writer.write("%\">");
-        writer.write(SnipLink.createLink(url, SnipLink.cutLength(url, 25)));
-        // writer.write(" - " + snipLinks.getIntCount(url));
-        writer.write("</td>\n");
+        writer.write("</tr></table>\n");
       }
-      writer.write("</tr></table>\n");
     } catch (IOException e) {
       System.err.println("unable write to writer: " + e);
     }

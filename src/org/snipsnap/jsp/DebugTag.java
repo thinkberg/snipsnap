@@ -45,7 +45,7 @@ public class DebugTag extends TagSupport {
     if (!debug.isEmpty()) {
       Iterator iterator = debug.iterator();
       try {
-        out.println("<div id=\"debug\">");
+        out.println("<div class=\"debug\">");
         out.println("<h1 class=\"debug-title\">Debug Log:</h1>");
         while (iterator.hasNext()) {
           String s = (String) iterator.next();

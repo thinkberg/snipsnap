@@ -28,11 +28,11 @@
     </tr>
   </c:forEach>
   <tr><td colspan="5">
-    <form method="POST" action="<c:url value='/exec/install.jsp'/>">
+    <form method="post" action="<c:url value='/exec/install.jsp'/>">
       <input type="submit" name="ok" value="Install New Application">
     </form>
   </td></tr>
-  <form method="POST" action="<c:url value='/exec/shutdown'/>">
+  <form method="post" action="<c:url value='/exec/shutdown'/>">
     <tr class="table-header"><td colspan="8">Server Shutdown</td></tr>
     <tr><td colspan="8">(<i>The administrator user name and password is required again to shut down!</i>)</td></tr>
     <tr>

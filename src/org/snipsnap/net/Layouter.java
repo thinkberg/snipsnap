@@ -31,6 +31,7 @@ import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.config.Configuration;
+import org.snipsnap.util.log.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -76,11 +77,13 @@ public class Layouter extends SnipSnapServlet {
     Application.get().setParameters(paramMap);
 
     String uri = (String)request.getAttribute("URI");
+    Logger.log("URI: "+uri);
     AppConfiguration config = Application.get().getConfiguration();
     if(uri != null) {
       paramMap.put("URI", config.getUrl(uri));
     } else {
-      paramMap.put("URI", config.getUrl(layout));
+      String path = request.getPathInfo();
+      paramMap.put("URI", config.getUrl(request.getServletPath()+(path != null ? path : "")));
     }
     paramMap.put("RSS", config.getUrl("/exec/rss"));
     Application.get().setParameters(paramMap);

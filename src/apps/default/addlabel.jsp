@@ -9,7 +9,7 @@
 
 <s:check roles="Authenticated" permission="Edit" snip="${snip}">
   <p>Add label to <b><c:out value="${snip.name}"/></b></p>
-  <form name="form" method="POST" action="../exec/storelabel">
+  <form name="form" method="post" action="../exec/storelabel">
     <table border="0" cellpadding="0" cellspacing="2">
       <tr><td><c:out value="${label.inputProxy}" escapeXml="false"/></td></tr>
       <tr><td align="right">

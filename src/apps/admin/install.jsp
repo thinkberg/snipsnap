@@ -19,7 +19,7 @@
     directories and the <b>conf/local.conf</b> file.
   </c:when>
   <c:otherwise>
-    <form method="POST" action="../exec/install">
+    <form method="post" action="../exec/install">
       <table border="0" cellpadding="2" cellspacing="0">
         <tr>
           <td colspan="2" class="table-header">Administrator</td>

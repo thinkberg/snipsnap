@@ -33,7 +33,7 @@
         </td>
         <td>
           <c:if test="${context.started && context.contextPath != '/admin' && usermanagers[context.contextPath] != null}">
-            <form method="POST" action="../exec/user">
+            <form method="post" action="../exec/user">
               <input type="hidden" name="server" value="<c:out value='${server}'/>">
               <input type="hidden" name="context" value="<c:out value='${context.contextPath}'/>">
               <input type="submit" name="user" value="Manage User">
@@ -43,14 +43,14 @@
           <td>
             <c:choose>
               <c:when test="${!context.started && context.contextPath != '/admin'}">
-                <form method="POST" action="../exec/app/start">
+                <form method="post" action="../exec/app/start">
                   <input type="hidden" name="server" value="<c:out value='${server}'/>">
                   <input type="hidden" name="context" value="<c:out value='${context.contextPath}'/>">
                   <input style="color: green" type="submit" name="command" value="Start">
                 </form>
               </c:when>
               <c:when test="${context.started && context.contextPath != '/admin'}">
-                <form method="POST" action="../exec/app/stop">
+                <form method="post" action="../exec/app/stop">
                   <input type="hidden" name="server" value="<c:out value='${server}'/>">
                   <input type="hidden" name="context" value="<c:out value='${context.contextPath}'/>">
                   <input style="color: red" type="submit" name="command" value="Stop">
@@ -60,7 +60,7 @@
           </td>
           <td>
             <c:if test="${context.contextPath != '/admin'}">
-              <form method="POST" action="../exec/app/remove">
+              <form method="post" action="../exec/app/remove">
                 <input type="hidden" name="server" value="<c:out value='${server}'/>">
                 <input type="hidden" name="context" value="<c:out value='${context.contextPath}'/>">
                 <input style="color: red" type="submit" name="command" value="Remove">
@@ -70,7 +70,7 @@
         </form>
         <td>
           <c:if test="${context.contextPath != '/admin'}">
-            <form method="POST" action="../exec/app/update">
+            <form method="post" action="../exec/app/update">
               <input type="hidden" name="server" value="<c:out value='${server}'/>">
               <input type="hidden" name="context" value="<c:out value='${context.contextPath}'/>">
               <input type="submit" name="command" value="Update">
@@ -80,7 +80,7 @@
       </tr>
     </c:forEach>
   </c:forEach>
-  <form method="POST" action="../exec/shutdown">
+  <form method="post" action="../exec/shutdown">
     <tr class="table-header"><td colspan="8">Server Shutdown</td></tr>
     <tr><td colspan="8">(<i>The administrator user name and password is required again to shut down!</i>)</td></tr>
     <tr>

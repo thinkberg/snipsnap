@@ -7,11 +7,11 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %>
 
-<div id="snip-wrapper">
+<div class="snip-wrapper">
  <%-- include snip header and content --%>
  <c:import url="util/snip-base.jsp"/>
  <%-- Snip "post comment" string --%>
- <div id="snip-post-comments">
+ <div class="snip-post-comments">
   <c:if test="${snip.notWeblog}">
    <c:choose>
     <c:when test="${snip.comment}">
@@ -25,6 +25,6 @@
    </c:choose>
   </c:if>
  </div>
- <div id="snip-sniplinks"><s:snipLinks snip="${snip}" width="4" start="#ffffff" end="#b0b0b0"/></div>
- <div id="snip-backlinks"><s:backLinks snip="${snip}" count="15"/></div>
+ <div class="snip-sniplinks"><s:snipLinks snip="${snip}" width="4" start="#ffffff" end="#b0b0b0"/></div>
+ <div class="snip-backlinks"><s:backLinks snip="${snip}" count="15"/></div>
 </div>

@@ -100,7 +100,7 @@ img.float-right {
 }
 
 /* weblog formatting */
-#blog-date {
+.blog-date {
   display: block;
   background-color: #f8f8f8;
   color: black;
@@ -112,19 +112,19 @@ img.float-right {
 }
 
 /* special formatting of a wiki table */
-#wiki-table {
+.wiki-table {
   border-style: solid;
   border-color: black;
   border-width: 0px 1px 1px 1px;
   empty-cells: show;
 }
 
-#wiki-table td {
+.wiki-table td {
   border-top: 1px solid black;
   padding: 4px 4px 4px 4px;
 }
 
-#wiki-table th {
+.wiki-table th {
   border-top: 1px solid black;
   text-align: left;
   color: inherit;
@@ -133,25 +133,25 @@ img.float-right {
   background-color: #d9e4f9;
 }
 
-#wiki-table .table-odd {
+.wiki-table .table-odd {
   color: inherit;
   background-color: #F8F8F8;
 }
 
-#wiki-table .table-even {
+.wiki-table .table-even {
 }
 
 /************************************************/
 /* list formatting                              */
 
-#list {
+.list {
 }
 
 .list-title {
   font-weight: bold;
 }
 
-#list ul {
+.list ul {
   margin-top: 0px;
   margin-bottom: 0px;
   margin-left: 0px;
@@ -178,10 +178,10 @@ ol.HEBREW { list-style-type: hebrew; }
 
 /************************************************/
 /* index formatting                             */
-#index-top {
+.index-top {
 }
 
-#index-top th {
+.index-top th {
   padding: 1px 1px 1px 1px;
   text-align: left;
   color: inherit;
@@ -189,14 +189,14 @@ ol.HEBREW { list-style-type: hebrew; }
   background-color: #d9e4f9;
 }
 
-#index {
+.index {
 }
 
-#index td {
+.index td {
   padding: 1px 1px 1px 1px;
 }
 
-#index th {
+.index th {
   padding: 1px 1px 1px 1px;
   text-align: left;
   color: inherit;
@@ -206,16 +206,16 @@ ol.HEBREW { list-style-type: hebrew; }
 
 /************************************************/
 /* calendar display                             */
-#calendar {
+.calendar {
   border-spacing: 0px;
   text-align: right;
 }
 
-#calendar caption {
+.calendar caption {
   text-align: left;
   font-weight: bold;
 }
 
-#calendar .today {
+.calendar .today {
   border: 1px solid black;
 }

@@ -31,6 +31,7 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 /**
  * Manages books to book dealears or comparison services
@@ -67,10 +68,11 @@ public class BookServices {
     String line;
     while ((line = reader.readLine()) != null) {
       int index = line.indexOf(" ");
-      services.put(line.substring(0, index), line.substring(index + 1));
+      services.put(line.substring(0, index), SnipLink.escape(line.substring(index + 1)));
     }
-    ;
   }
+
+
 
   public Writer appendTo(Writer writer) throws IOException {
     Iterator iterator = services.entrySet().iterator();

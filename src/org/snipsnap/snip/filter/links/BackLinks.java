@@ -44,21 +44,23 @@ public class BackLinks {
     Iterator iterator = backLinks.iterator();
 
     try {
-      writer.write("<span class=\"caption\">people came here from:</span>\n");
-      writer.write("<ul class=\"list\">\n");
-      while (iterator.hasNext() && --count >= 0) {
-        String url = (String) iterator.next();
-        writer.write("<li>");
-        writer.write("<span class=\"count\">");
-        writer.write(backLinks.getIntCount(url));
-        writer.write("</span>");
-        writer.write(" <span class=\"content\"><a href=\"");
-        writer.write(url);
-        writer.write("\">");
-        writer.write(SnipLink.cutLength(url, 90));
-        writer.write("</a></span>\n");
+      if(iterator.hasNext()) {
+        writer.write("<span class=\"caption\">people came here from:</span>\n");
+        writer.write("<ul class=\"list\">\n");
+        while (iterator.hasNext() && --count >= 0) {
+          String url = (String) iterator.next();
+          writer.write("<li>");
+          writer.write("<span class=\"count\">");
+          writer.write(""+backLinks.getIntCount(url));
+          writer.write("</span>");
+          writer.write(" <span class=\"content\"><a href=\"");
+          writer.write(SnipLink.escape(url));
+          writer.write("\">");
+          writer.write(SnipLink.cutLength(SnipLink.escape(url), 90));
+          writer.write("</a></span></li>\n");
+        }
+        writer.write("</ul>");
       }
-      writer.write("</ul>");
     } catch (IOException e) {
       System.err.println("unable write to writer: " + e);
     }

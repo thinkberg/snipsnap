@@ -6,11 +6,11 @@
 
 <%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %>
 
-<div id="snip-wrapper">
- <div id="snip-title"><h1 class="snip-name">Post To Weblog</h1></div>
- <div id="snip-content">
+<div class="snip-wrapper">
+ <div class="snip-title"><h1 class="snip-name">Post To Weblog</h1></div>
+ <div class="snip-content">
   <s:check roles="Editor">
-   <form id="form" method="POST" action="../exec/storepost">
+   <form class="form" method="post" action="../exec/storepost">
     <table>
      <tr><td><textarea name="content" type="text" cols="80" rows="20"></textarea></td></tr>
      <tr><td class="form-buttons">

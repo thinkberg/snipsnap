@@ -23,7 +23,7 @@ application.<br/>In case of an error <b>restart your server manually</b>.
 <% Set available = (Set)pageContext.findAttribute("available"); %>
 <% if(available != null && !available.isEmpty()) { %>
   <div style="border: 1px solid red; padding: 2px;">
-    <form method="POST" action="../app/update">
+    <form method="post" action="../app/update">
       <input type="hidden" name="server" value="<c:out value='${server}'/>">
       <input type="hidden" name="context" value="<c:out value='${context}'/>">
       There is an update of the web application available on <a href="http://snipsnap.org">SnipSnap</a>.
@@ -33,7 +33,7 @@ application.<br/>In case of an error <b>restart your server manually</b>.
   </div>
 <% } %>
 
-<form method="POST" action="../app/update">
+<form method="post" action="../app/update">
   <input type="hidden" name="server" value="<c:out value='${server}'/>">
   <input type="hidden" name="context" value="<c:out value='${context}'/>">
   <span style="color: green">green</span> files are either unchanged or may be updated from the distribution.<br/>

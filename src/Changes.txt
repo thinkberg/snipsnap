@@ -1,5 +1,7 @@
 0.2.8
 
+- re-validated XHTML 1.0
+- Fixed bug: correct context path in cookies
 - Added feature: {backlinks} macro lists backlinks, e.g. {backlinks:10}
 - Added feature: {sniplinks} macro lists sniplinks, e.g. {sniplinks:4}
 - Fixed bug: escape '-' and '*' within code macro

@@ -18,7 +18,7 @@
   <c:when test="${serverConfig.adminLogin == null}">
    <h3>You do not have a server administrator!</h3>
    <span class="error">Protect your server by creating an administrator now!</span>
-    <form method="POST" action="../exec/authenticate">
+    <form method="post" action="../exec/authenticate">
      <table border="0" cellspacing="2" cellpadding="2">
       <tr><td>Admin Login: </td><td><input name="login" type="text" size="20" value="" tabindex="0"></td></tr>
       <tr><td>Password: </td><td><input name="password" type="password" size="20" value="" tabindex="0"></td></tr>
@@ -31,7 +31,7 @@
     </form>
   </c:when>
   <c:when test="${empty serverAdmin}">
-    <form method="POST" action="../exec/authenticate">
+    <form method="post" action="../exec/authenticate">
      <table border="0" cellspacing="2" cellpadding="2">
       <tr><td>Admin Login: </td><td><input name="login" type="text" size="20" value="" tabindex="0"></td></tr>
       <tr><td>Password: </td><td><input name="password" type="password" size="20" value="" tabindex="0"></td></tr>

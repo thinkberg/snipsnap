@@ -5,11 +5,11 @@
   --%>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <c:url var="base" value="/exec/admin/"/>
-<div id="snip-title">
+<div class="snip-title">
   <h1 class="snip-name">Administrative Interface (<c:out value="${config.name}"/>)</h1>
 </div>
 
-<div id="admin-menu">
+<div class="admin-menu">
  <div class="menu-items">
   <c:choose>
    <c:when test="${page == '/admin/application.jsp'}"><div class="menu-active">Overview</div></c:when>
