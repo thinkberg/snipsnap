@@ -63,6 +63,7 @@ public class AppConfiguration extends Configuration {
   public final static String APP_JDBC_URL = "app.jdbc.url";
   public final static String APP_JDBC_DRIVER = "app.jdbc.driver";
   public final static String APP_INDEX_PATH = "app.index.path";
+  public final static String APP_FILE_PATH = "app.file.path";
   public final static String APP_COORDINATES = "app.geoCoordinates";
 
   public final static String PERM_NOTIFICATION = "notification";
@@ -116,7 +117,7 @@ public class AppConfiguration extends Configuration {
   }
 
   public Locale getLocale() {
-    return new Locale(getLocaleString(),getCountry());
+    return new Locale(getLocaleString(), getCountry());
   }
 
   // HOST CONFIGURATION
@@ -161,10 +162,25 @@ public class AppConfiguration extends Configuration {
    */
   public String getUrl() {
     String url = getProperty(AppConfiguration.APP_URL);
-    if(null == url) {
+    if (null == url) {
       url = getProperty(AppConfiguration.APP_DOMAIN);
-      if(url != null) {
+      if (url != null) {
         System.out.println("Please edit application.conf and change app.domain to app.url!");
+      } else {
+        StringBuffer tmp = new StringBuffer();
+        tmp.append("http://");
+        try {
+          tmp.append(getHost() == null ? InetAddress.getLocalHost().getHostName() : getHost());
+        } catch (UnknownHostException e) {
+          tmp.append(System.getProperty("host", "localhost"));
+        }
+        int port = getPort();
+        if (port != 80) {
+          tmp.append(":");
+          tmp.append(port);
+        }
+        tmp.append(getContextPath());
+        url = tmp.toString();
       }
     }
     return url;
@@ -288,10 +304,17 @@ public class AppConfiguration extends Configuration {
     return getProperty(AppConfiguration.APP_COORDINATES);
   }
 
-  public String getIndexPath() {
-    return getProperty(AppConfiguration.APP_INDEX_PATH);
+  public String getFileStorePath() {
+    String path = getProperty(AppConfiguration.APP_FILE_PATH);
+    return path == null ? getFile().getParent() + "/files" : path;
   }
 
+  public String getIndexPath() {
+    String path = getProperty(AppConfiguration.APP_INDEX_PATH);
+    return path == null ? getFile().getParent() + "/index" : path;
+  }
+
+  // PERMISSIONS
   public boolean allow(String action) {
     return "allow".equals(getProperty(AppConfiguration.APP_PERM + "." + action));
   }
