@@ -16,7 +16,7 @@
   <div><b>Not registered? <a href="../exec/register.jsp?login=<c:out value='${login.login}'/>">Register!<a/></b></div>
  </c:if>
  <%-- the login form --%>
- <form id="form" name="f" method="POST" action="../exec/authenticate">
+ <form id="form" method="POST" action="../exec/authenticate">
   <table>
    <tr><td><label for="login">User name:</label></td><td><input name="login" type="text" size="20" value="<c:out value='${login.login}'/>" tabindex="0"/></td></tr>
    <tr><td><label for="password">Password:</label></td><td><input name="password" type="password" size="20" value="" tabindex="0"/></td></tr>

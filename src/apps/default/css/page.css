@@ -56,21 +56,25 @@ body {
 
 #page-content {
   position: absolute;
+  float: right;
   left: 0px;
   width: 590px;
   max-width: 590px;
-  /* border: 1px solid red; */
 }
 
 #page-portlet-1 {
   position: absolute;
+  top: 0px;
   left: 600px;
-  width: 200px;
-  color: inherit;
-  background-color: inherit;
+  width: 190px;
 	border: 1px dashed #999999;
 	line-height: 14px;
   padding: 5px;
+  margin-bottom: 5px;
+}
+
+#page-portlet-2 {
+  display: none; /* hide */
 }
 
 
