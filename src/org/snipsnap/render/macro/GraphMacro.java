@@ -28,6 +28,7 @@ package org.snipsnap.render.macro;
 import org.radeox.util.i18n.ResourceManager;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipLink;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -62,7 +63,7 @@ public class GraphMacro extends SnipMacro {
 //    writer.write(":"+params.getSnip().getContent().length());
 //    writer.write("<br/>");
     writer.write("<img src=\"exec/render?name=");
-    writer.write(name);
+    writer.write(SnipLink.encode(name));
     writer.write("&amp;handler=");
     writer.write(handler);
     // Remove {graph} from start and end offset

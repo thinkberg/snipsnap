@@ -33,6 +33,7 @@ import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Searcher;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.container.Components;
@@ -137,7 +138,7 @@ public class SnipIndexer {
         removeIndex(snip);
       }
 
-      writer = new IndexWriter(f, new SnipAnalyzer(), create);
+      writer = new IndexWriter(f, new StandardAnalyzer(), create);
       writer.mergeFactor = 20;
       writer.addDocument(SnipDocument.Document(snip));
       writer.optimize();
@@ -165,7 +166,7 @@ public class SnipIndexer {
     // parse the query String.
     Query query = null;
     try {
-      query = MultiFieldQueryParser.parse(queryString, searchFields, new SnipAnalyzer());
+      query = MultiFieldQueryParser.parse(queryString, searchFields, new StandardAnalyzer());
     } catch (org.apache.lucene.queryParser.ParseException e1) {
       close(searcher);
       Logger.warn("Unable to parse: '" + queryString + "'");
