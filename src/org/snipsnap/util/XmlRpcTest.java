@@ -48,7 +48,7 @@ public class XmlRpcTest {
       // Url of the weblog
       Object result = test.execute("generator.version", params);
       Logger.debug("result="+result);
-      result = test.execute("snipSnap.getBackup", params);
+      result = test.execute("snipSnap.dumpXml", params);
       System.out.println(new String((byte[]) result, "UTF-8"));
     } catch (Exception e) {
       Logger.warn("XmlRpcTest: unable to call XML-RPC", e);

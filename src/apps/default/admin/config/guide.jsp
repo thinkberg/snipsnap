@@ -12,7 +12,7 @@
 <div class="guide-menu">
   <div class="guide-title">
     <fmt:message key="config.guide.title">
-      <fmt:param><%= ((List)pageContext.findAttribute("steps")).size()-1 %></fmt:param>
+      <fmt:param><%= ((List)pageContext.findAttribute("steps")).size() %></fmt:param>
     </fmt:message>
   </div>
   <ul>

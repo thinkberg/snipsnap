@@ -3,29 +3,36 @@
   --%>
 
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %>
 
 <%-- Snip header, displayed only when snip is not a weblog --%>
 <c:if test="${snip.name != app.configuration.startSnip}">
  <div class="snip-path"><s:path snip="${snip}"/></div>
 </c:if>
-<s:checkRoles snip="${snip}" roles="Owner:Editor">
-  <c:set var="isOwner" scope="page" value="true"/>
-</s:checkRoles>
 
-<c:if test="${snip.notWeblog || not empty isOwner}">
- <div class="snip-title">
-  <c:if test="${snip.notWeblog}">
-    <h1 class="snip-name"><c:out value="${snip.title}"/>
-      <c:if test="${snip.comment}">
-       <span class="snip-commented-snip"><s:image name="commented"/> <a href="<c:out value='${app.configuration.path}'/>/comments/<c:out value='${snip.commentedSnip.nameEncoded}'/>"><c:out value='${snip.commentedSnip.name}'/></a></span>
-      </c:if>
-    </h1>
-  </c:if>
-  <div class="snip-info"><c:out value="${snip.modified}" escapeXml="false"/> Viewed <c:out value="${snip.access.viewCount}"/> times.</div>
-  <div class="snip-buttons"><c:import url="util/buttons.jsp"/></div>
- </div>
-</c:if>
+
+<c:choose>
+  <c:when test="${snip.notWeblog}">
+   <div class="snip-title">
+    <c:if test="${snip.notWeblog}">
+      <h1 class="snip-name"><c:out value="${snip.title}"/>
+        <c:if test="${snip.comment}">
+         <span class="snip-commented-snip"><s:image name="commented"/> <a href="<c:out value='${app.configuration.path}'/>/comments/<c:out value='${snip.commentedSnip.nameEncoded}'/>"><c:out value='${snip.commentedSnip.name}'/></a></span>
+        </c:if>
+      </h1>
+    </c:if>
+    <div class="snip-info"><c:out value="${snip.modified}" escapeXml="false"/> Viewed <c:out value="${snip.access.viewCount}"/> times.</div>
+    <div class="snip-buttons"><c:import url="util/buttons.jsp"/></div>
+   </div>
+  </c:when>
+  <c:otherwise>
+  <%-- TODO this is an ugly hack to let owners edit their buttons (see util/buttons.jsp) --%>
+    <s:check permission="Edit" roles="Owner:Editor" snip="${snip}">
+      <div class="snip-buttons">[<a href="<c:out value='${app.configuration.path}'/>/exec/edit?name=<c:out value='${snip.nameEncoded}'/>"><fmt:message key="menu.edit"/></a>]</div>
+    </s:check>
+ </c:otherwise>
+</c:choose>
 <%-- Snip content --%>
 <div class="snip-content">
 <c:if test="${snip.notWeblog}">

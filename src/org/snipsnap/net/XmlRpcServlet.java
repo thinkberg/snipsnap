@@ -27,6 +27,7 @@ package org.snipsnap.net;
 import org.apache.xmlrpc.XmlRpcServer;
 import org.snipsnap.xmlrpc.*;
 import org.snipsnap.container.Components;
+import org.snipsnap.user.AuthenticationService;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -60,7 +61,8 @@ public class XmlRpcServlet extends HttpServlet {
     handlers.add(Components.getComponent(BloggerAPI.class));
 
     // Read via services plugin
-    handlers.add(new SnipSnapHandler());
+    handlers.add(new SnipSnapHandler((AuthenticationService)
+      Components.getComponent(AuthenticationService.class)));
     handlers.add(new WeblogsPingHandler());
     handlers.add(new GeneratorHandler());
     handlers.add(new WeblogHandler());

@@ -26,8 +26,10 @@
 package org.snipsnap.xmlrpc;
 
 import org.apache.xmlrpc.XmlRpcException;
+import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.snip.XMLSnipExport;
+import org.snipsnap.user.AuthenticationService;
 import org.snipsnap.user.User;
 import org.w3c.dom.Document;
 
@@ -39,6 +41,9 @@ import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Vector;
 
 /**
  * Handles XML-RPC calls for the SnipSnap API
@@ -47,8 +52,37 @@ import java.io.IOException;
  * @version $Id$
  */
 
-public class SnipSnapHandler extends XmlRpcSupport {
+public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler {
+  private final static List FREE_METHODS = Arrays.asList(new String[] {
+    "getName",
+    "getVersion",
+    "authenticateUser"
+  });
+
   public static final String API_PREFIX = "snipSnap";
+
+  private AuthenticationService authenticationService;
+
+  public SnipSnapHandler(AuthenticationService authenticationService) {
+    this.authenticationService = authenticationService;
+  }
+
+  protected boolean authenticate(String username, String password) {
+    User user = authenticationService.authenticate(username, password);
+    if (user != null) {
+      Application.get().setUser(user);
+      return true;
+    }
+    Logger.warn("XML-RPC authenticate: invalid login for " + username);
+    return false;
+  }
+
+  public Object execute(String method, Vector vector, String user, String password) throws Exception {
+    if(FREE_METHODS.contains(method)) {
+      return super.execute(method, vector);
+    }
+    return super.execute(method, vector, user, password);
+  }
 
   public String getName() {
     return API_PREFIX;
@@ -73,11 +107,18 @@ public class SnipSnapHandler extends XmlRpcSupport {
    * @return isAuthenticated True when the user can be authenticated
    */
   public boolean authenticateUser(String login, String passwd) throws XmlRpcException {
-    User user = authenticate(login, passwd);
+    User user = authenticationService.authenticate(login, passwd);
     return (null != user);
   }
 
-  public byte[] exportDatabase() throws IOException {
+  // PROTECTED METHODS
+
+  /**
+   * Dump the database contents.
+   * @return a XML stream containing the dump of the database
+   * @throws IOException
+   */
+  public byte[] dumpXml() throws IOException {
     ByteArrayOutputStream exportStream = new ByteArrayOutputStream();
     Document exportDocument = XMLSnipExport.getBackupDocument();
     StreamResult streamResult = new StreamResult(exportStream);
@@ -94,7 +135,7 @@ public class SnipSnapHandler extends XmlRpcSupport {
     return exportStream.toByteArray();
   }
 
-  public void importDatabase(byte[] xmlData) throws IOException {
+  public void restoreXml(byte[] xmlData) throws IOException {
 //    ByteArrayInputStream importStream = new ByteArrayInputStream(xmlData);
 //    Document importDocument =
   }

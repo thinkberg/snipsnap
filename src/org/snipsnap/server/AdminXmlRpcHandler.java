@@ -28,6 +28,7 @@ import org.apache.xmlrpc.XmlRpcException;
 import org.mortbay.jetty.servlet.WebApplicationContext;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.config.ServerConfiguration;
+import org.snipsnap.xmlrpc.AuthXmlRpcHandler;
 
 import java.io.File;
 import java.io.FileInputStream;

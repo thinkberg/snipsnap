@@ -29,16 +29,14 @@ package org.snipsnap.xmlrpc;
 import org.apache.xmlrpc.XmlRpcException;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
-import org.snipsnap.user.User;
-import org.snipsnap.user.UserManager;
 import org.snipsnap.user.AuthenticationService;
-import org.snipsnap.container.Components;
+import org.snipsnap.user.User;
 
 /**
  * Utility base class for XML-RPC handlers.
  *
  * Constants were taken from Blojsom. This
- * should make understanding tyhe code easier.
+ * should make understanding the code easier.
  * (both ways).
  *
  * @author Stephan J. Schmidt
