@@ -13,8 +13,8 @@
 </fmt:message><br/>
 <table class="statusbar">
   <tr>
-    <c:forEach begin="0" end="100" step="10" var="completed" >
-      <td <c:if test="${percentage >= completed}">class="completed"</c:if>></td>
+    <c:forEach begin="0" end="99" step="10" var="completed" >
+      <td <c:if test="${percentage > completed}">class="completed"</c:if>></td>
     </c:forEach>
   </tr>
 </table>

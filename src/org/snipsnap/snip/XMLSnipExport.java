@@ -32,12 +32,12 @@ import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.container.Components;
+import org.snipsnap.jdbc.IntHolder;
 import org.snipsnap.snip.storage.SnipSerializer;
 import org.snipsnap.snip.storage.UserSerializer;
 import org.snipsnap.user.User;
 import org.snipsnap.versioning.VersionInfo;
 import org.snipsnap.versioning.VersionManager;
-import org.snipsnap.jdbc.IntHolder;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -45,10 +45,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Helper class for exporting Snips and users as XML document.
@@ -67,100 +65,57 @@ public class XMLSnipExport {
     return (IntHolder) instance.get();
   }
 
-  private static void store(OutputStream out, Document exportDocument) {
+  public static void store(OutputStream out, List snips, List users, String filter, List ignoreElements, File fileStore) {
     try {
       OutputFormat outputFormat = new OutputFormat();
       outputFormat.setEncoding("UTF-8");
       outputFormat.setNewlines(true);
       XMLWriter xmlWriter = new XMLWriter(out, outputFormat);
-      xmlWriter.write(exportDocument);
+      Element root = DocumentHelper.createElement("snipspace");
+      xmlWriter.writeOpen(root);
+      storeUsers(xmlWriter, users);
+      storeSnips(xmlWriter, snips, filter, ignoreElements, fileStore);
+      xmlWriter.writeClose(root);
       xmlWriter.flush();
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
 
-  /**
-   * Stores a list of users and/or snips into the stream in XML format.
-   * @param out the output stream to store the xml data in
-   * @param snips the list of snips to store
-   * @param users the list of users to store
-   */
-  public static void store(OutputStream out, List snips, List users, File fileStore) {
-    Document exportDocument = store(users, snips, null, fileStore);
-    store(out, exportDocument);
-  }
-
-  /**
-   * Stores a list of users and/or snips into the stream in XML format.
-   * @param out the output stream to store the xml data in
-   * @param snips the list of snips to store
-   * @param users the list of users to store
-   * @param filter a regex filter to ignore snips
-   */
-  public static void store(OutputStream out, List snips, List users, String filter, File fileStore) {
-    Document exportDocument = store(users, snips, filter, fileStore);
-    store(out, exportDocument);
-  }
-
-  public static void store(OutputStream out, List snips, List users, String filter, List ignoreElements, File fileStore) {
-    Document exportDocument = store(users, snips, filter, ignoreElements, fileStore);
-    store(out, exportDocument);
-  }
-
-  public static Document store(List users, List snips, String filter, File fileStore) {
-    return store(users, snips, filter, null, fileStore);
-  }
-
-  /**
-   * Store a list of users and snips into an XML document.
-   * @param users the users to store
-   * @param snips the snips to store
-   * @return the XML document
-   */
-  public static Document store(List users, List snips, String filter, List ignoreElements, File fileStore) {
-    Document backupDoc = DocumentHelper.createDocument();
-    Element root = backupDoc.addElement("snipspace");
-
-    storeUsers(root, users);
-    storeSnips(root, snips, filter, ignoreElements, fileStore);
-
-    return backupDoc;
-  }
-
-  private static void storeUsers(Element root, List users) {
+  private static void storeUsers(XMLWriter xmlWriter, List users) throws IOException {
     if (users != null && users.size() > 0) {
       UserSerializer userSerializer = UserSerializer.getInstance();
       Iterator userListIterator = users.iterator();
       while (userListIterator.hasNext()) {
         User user = (User) userListIterator.next();
-        root.add(userSerializer.serialize(user));
+        xmlWriter.write(userSerializer.serialize(user));
         getStatus().inc();
       }
     }
   }
 
-  private static void storeSnips(Element root, List snips, String filter, List ignoreElements, File fileStore) {
+  private static void storeSnips(XMLWriter xmlWriter, List snips, String filter, List ignoreElements, File fileStore)
+    throws IOException {
     if (snips != null && snips.size() > 0) {
       SnipSerializer snipSerializer = SnipSerializer.getInstance();
 
       Iterator snipListIterator = snips.iterator();
       while (snipListIterator.hasNext()) {
         Snip snip = (Snip) snipListIterator.next();
-        if(filter == null || !snip.getName().matches(filter)) {
+        if (filter == null || !snip.getName().matches(filter)) {
           Element snipEl = snipSerializer.serialize(snip);
-          if(null != ignoreElements) {
+          if (null != ignoreElements) {
             Iterator filterIt = ignoreElements.iterator();
             while (filterIt.hasNext()) {
               String el = (String) filterIt.next();
-              if(snipEl.element(el) != null) {
+              if (snipEl.element(el) != null) {
                 snipEl.remove(snipEl.element(el));
               }
             }
           }
           storeAttachments(snipEl, fileStore);
           storeVersions(snipEl, snip);
-          root.add(snipEl);
+          xmlWriter.write(snipEl);
         }
         getStatus().inc();
       }

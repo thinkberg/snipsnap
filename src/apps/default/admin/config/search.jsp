@@ -9,7 +9,9 @@
 
 <table>
   <tr>
-    <td><fmt:message key="config.search.reset.text"/></td>
+    <td>
+      <fmt:message key="config.search.reset.text"/>
+    </td>
     <td>
       <input <c:if test="${indexerThread.alive}">disabled="disabled"</c:if>
         type="submit" name="reset" value="<fmt:message key="config.search.reset"/>"/>

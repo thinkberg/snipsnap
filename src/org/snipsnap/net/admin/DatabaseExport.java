@@ -32,6 +32,7 @@ import org.snipsnap.snip.XMLSnipExport;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.app.Application;
 import org.snipsnap.jdbc.IntHolder;
+import org.radeox.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,6 +41,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.BufferedOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -116,7 +118,7 @@ public class DatabaseExport implements SetupHandler {
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
         File outFile = new File(config.getWebInfDir(),
                                 config.getName() + "-" + df.format(new Date()) + ".snip");
-        workerThread = new ExportThread(new FileOutputStream(outFile), snips, users, exportIgnore, config.getFilePath());
+        workerThread = new ExportThread(new BufferedOutputStream(new FileOutputStream(outFile)), snips, users, exportIgnore, config.getFilePath());
         workerThread.start();
         workerThreads.put(appOid, workerThread);
         setRunning(workerThread, request.getSession());
@@ -130,7 +132,7 @@ public class DatabaseExport implements SetupHandler {
         return errors;
       }
 
-      XMLSnipExport.store(out, snips, users, exportIgnore, config.getFilePath());
+      XMLSnipExport.store(new BufferedOutputStream(out), snips, users, exportIgnore, null, config.getFilePath());
     } catch (IOException e) {
       errors.put("message", "export.failed");
     }
@@ -184,7 +186,12 @@ public class DatabaseExport implements SetupHandler {
 
     public void run() {
       status = XMLSnipExport.getStatus();
-      XMLSnipExport.store(out, snips, users, exportIgnore, filePath);
+      XMLSnipExport.store(out, snips, users, exportIgnore, null, filePath);
+      try {
+        out.close();
+      } catch (IOException e) {
+        Logger.warn("DatabaseExport: unable to close document", e);
+      }
     }
   }
 }

@@ -11,15 +11,18 @@
   <c:choose>
     <c:when test="${not empty running && not empty running.export}">
       <tr>
-        <td><fmt:message key="config.export.running"/></td>
+        <td>
+          <fmt:message key="config.export.running"/>
+          <fmt:message key="config.refresh.text"/>
+        </td>
         <td>
           <c:import url="config/statusbar.jsp">
-            <c:param name="statusMessage" value="config.export.status"/>
+            <c:param name="statusMessage" value="config.status"/>
             <c:param name="statusMax" value="${running.max}"/>
             <c:param name="statusCurrent" value="${running.current}"/>
           </c:import>
           <br/>
-          <a href="configure?step=export"><fmt:message key="config.export.refresh"/></a>
+          <a href="configure?step=export"><fmt:message key="config.refresh"/></a>
         </td>
       </tr>
     </c:when>

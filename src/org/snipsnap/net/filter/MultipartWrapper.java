@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.BufferedInputStream;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -64,7 +65,8 @@ public class MultipartWrapper extends HttpServletRequestWrapper {
       "".getBytes(enc);
     }
 
-    InputStreamDataSource ds = new InputStreamDataSource(request.getInputStream(), request.getContentType());
+    Logger.debug("MultipartWrapper: parsing input data ...");
+    InputStreamDataSource ds = new InputStreamDataSource(new BufferedInputStream(request.getInputStream()), request.getContentType());
     try {
       multipart = new MimeMultipart(ds);
       params = new Hashtable(request.getParameterMap());
@@ -92,6 +94,7 @@ public class MultipartWrapper extends HttpServletRequestWrapper {
       Logger.warn("Error parsing request (not multipart/form-data)", e);
       throw new IllegalArgumentException("Error parsing request (not multipart/form-data?)");
     }
+    Logger.debug("MultipartWrapper: finished parsing input data ...");
   }
 
   public Enumeration getParameterNames() {
@@ -190,6 +193,19 @@ public class MultipartWrapper extends HttpServletRequestWrapper {
     } catch (MessagingException e) {
       throw new IOException(e.getMessage());
     }
+  }
+
+  public int getFileContentLength(String name) throws IOException {
+    BodyPart part = getBodyPart(name);
+    if (part != null) {
+      try {
+        return part.getSize();
+      } catch (MessagingException e) {
+        // ignore and simply return null
+      }
+    }
+    return -1;
+
   }
 
 }

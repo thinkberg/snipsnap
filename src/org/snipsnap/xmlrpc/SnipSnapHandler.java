@@ -199,14 +199,14 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
   public byte[] dumpXml() throws IOException {
     Configuration config = Application.get().getConfiguration();
     ByteArrayOutputStream exportStream = new ByteArrayOutputStream();
-    XMLSnipExport.store(exportStream, space.getAll(), um.getAll(), config.getFilePath());
+    XMLSnipExport.store(exportStream, space.getAll(), um.getAll(), null, null, config.getFilePath());
     return exportStream.toByteArray();
   }
 
   public byte[] dumpXml(String match) throws IOException {
     Configuration config = Application.get().getConfiguration();
     ByteArrayOutputStream exportStream = new ByteArrayOutputStream();
-    XMLSnipExport.store(exportStream, Arrays.asList(space.match(match)), null, config.getFilePath());
+    XMLSnipExport.store(exportStream, Arrays.asList(space.match(match)), null, null, null, config.getFilePath());
     return exportStream.toByteArray();
   }
 

@@ -106,17 +106,14 @@ public class SnipSerializer extends SerializerSupport {
     snipElement.addElement(SNIP_CTIME).addText(getStringTimestamp(snip.getCTime()));
     snipElement.addElement(SNIP_MTIME).addText(getStringTimestamp(snip.getMTime()));
     snipElement.addElement(SNIP_PERMISSIONS).addText(notNull(snip.getPermissions()));
-    snipElement.addElement(SNIP_BACKLINKS).addCDATA(notNull(snip.getBackLinks()));
-    snipElement.addElement(SNIP_SNIPLINKS).addCDATA(notNull(snip.getSnipLinks()));
-    snipElement.addElement(SNIP_LABELS).addCDATA(notNull(snip.getLabels()));
-    snipElement.add(addXMLContent(notNull(snip.getAttachments()), SNIP_ATTACHMENTS));
+    snipElement.add(addCDATAContent(SNIP_BACKLINKS, notNull(snip.getBackLinks())));
+    snipElement.add(addCDATAContent(SNIP_SNIPLINKS, notNull(snip.getSnipLinks())));
+    snipElement.add(addCDATAContent(SNIP_LABELS, notNull(snip.getLabels())));
+    snipElement.add(addXMLContent(SNIP_ATTACHMENTS, notNull(snip.getAttachments())));
     snipElement.addElement(SNIP_VIEWCOUNT).addText("" + snip.getViewCount());
-    snipElement.addElement(SNIP_CONTENT).addCDATA(snip.getContent());
+    snipElement.add(addCDATAContent(SNIP_CONTENT, snip.getContent()));
     snipElement.addElement(SNIP_VERSION).addText("" + snip.getVersion());
     snipElement.addElement(SNIP_APPLICATION).addText(notNull(snip.getApplication()));
-
-    VersionManager versionManager = (VersionManager)Components.getComponent(VersionManager.class);
-    List snipHistory = versionManager.getHistory(snip);
 
     // TODO deprecated
     Snip parentSnip = snip.getParent();
@@ -127,7 +124,16 @@ public class SnipSerializer extends SerializerSupport {
     return snipElement;
   }
 
-  private Element addXMLContent(String content, String elementName) {
+  private Element addCDATAContent(String elementName, String content) {
+    Element element = DocumentHelper.createElement(elementName);
+    if(null == content || "".equals(content)) {
+      return element;
+    }
+    element.addCDATA(content);
+    return element;
+  }
+
+  private Element addXMLContent(String elementName, String content) {
     if (null != content && !"".equals(content)) {
       try {
         StringReader stringReader = new StringReader(content);

@@ -1,12 +1,3 @@
-<%@ page import="org.snipsnap.snip.SnipSpace,
-                 java.util.Collection,
-                 java.util.Set,
-                 java.util.HashSet,
-                 java.util.List,
-                 java.util.Collections,
-                 java.util.ArrayList,
-                 org.snipsnap.snip.Snip,
-                 java.util.Iterator"%>
  <%--
   ** Maintenance
   ** @author Matthias L. Jugel
@@ -18,17 +9,20 @@
 
 <table>
   <c:choose>
-    <c:when test="${not empty running && not empty running.maint}">
+    <c:when test="${not empty running && not empty running.maintenance}">
       <tr>
-        <td><fmt:message key="config.maint.${running.maint}"/></td>
+        <td>
+          <fmt:message key="config.maint.${running.maintenance}"/>
+          <fmt:message key="config.refresh.text"/>
+        </td>
         <td>
           <c:import url="config/statusbar.jsp">
-            <c:param name="statusMessage" value="config.maint.status"/>
+            <c:param name="statusMessage" value="config.status"/>
             <c:param name="statusMax" value="${running.max}"/>
             <c:param name="statusCurrent" value="${running.current}"/>
           </c:import>
           <br/>
-          <a href="configure?step=maintenance"><fmt:message key="config.maint.refresh"/></a>
+          <a href="configure?step=maintenance"><fmt:message key="config.refresh"/></a>
         </td>
       </tr>
     </c:when>

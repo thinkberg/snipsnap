@@ -102,9 +102,9 @@ public class Maintenance implements SetupHandler {
     statusMap.put("max", new Integer(workerThread.getMax()));
     statusMap.put("current", new Integer(workerThread.getCurrent()));
     if(workerThread.isRepairing()) {
-      statusMap.put("maint", "repairing");
+      statusMap.put("maintenance", "repairing");
     } else {
-      statusMap.put("maint", "checking");
+      statusMap.put("maintenance", "checking");
     }
     session.setAttribute("running", statusMap);
   }

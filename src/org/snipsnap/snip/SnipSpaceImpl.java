@@ -108,7 +108,7 @@ public class SnipSpaceImpl implements SnipSpace {
     // This should be moved somewhere down, SnipSpace need not know about
    // different applications
     Iterator iterator = manager.getApplications().iterator();
-    System.out.println("apps = "+manager.getApplications());
+//    System.out.println("apps = "+manager.getApplications());
     while (iterator.hasNext()) {
       Map app = (Map) iterator.next();
       String applicationOid = (String) app.get(ApplicationStorage.OID);

@@ -13,7 +13,7 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <c:if test="${not empty running}">
+    <c:if test="${not empty running && not empty running[step]}">
       <meta http-equiv="refresh" content="2; URL=configure?step=<c:out value='${step}'/>"/>
     </c:if>
     <title><fmt:message key="config.title"/> :: <fmt:message key="config.step.${step}"/></title>

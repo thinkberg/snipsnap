@@ -22,7 +22,15 @@
         </c:if>
       </h1>
     </c:if>
-    <div class="snip-info"><c:out value="${snip.modified}" escapeXml="false"/> Viewed <c:out value="${snip.access.viewCount}"/> times. #<c:out value="${snip.version}"/></div>
+    <div class="snip-info">
+      <c:out value="${snip.modified}" escapeXml="false"/>
+      <fmt:message key="snip.viewed">
+        <fmt:param value="${snip.access.viewCount}"/>
+      </fmt:message>
+      <fmt:message key="snip.version">
+        <fmt:param value="${snip.version}"/>
+      </fmt:message>
+    </div>
     <div class="snip-buttons"><c:import url="util/buttons.jsp"/></div>
    </div>
   </c:when>

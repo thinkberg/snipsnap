@@ -25,12 +25,11 @@
 package org.snipsnap.net;
 
 import org.snipsnap.app.Application;
+import org.snipsnap.config.Configuration;
 import org.snipsnap.container.Components;
 import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.user.User;
-import org.snipsnap.config.Configuration;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

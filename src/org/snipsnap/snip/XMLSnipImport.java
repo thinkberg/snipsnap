@@ -38,15 +38,18 @@ import org.snipsnap.snip.storage.UserSerializer;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.versioning.VersionManager;
+import org.snipsnap.jdbc.IntHolder;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.FilterInputStream;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.List;
+import java.util.HashMap;
 
 /**
  * Helper class for importing serialized database backups.
@@ -58,6 +61,30 @@ public class XMLSnipImport {
   public final static int IMPORT_SNIPS = 0x02;
   public final static int OVERWRITE = 0x04;
 
+  private static ThreadLocal instance = new ThreadLocal() {
+    protected synchronized Object initialValue() {
+      return new HashMap();
+    }
+  };
+
+  public static IntHolder getStatus() {
+    IntHolder current = (IntHolder) ((Map)instance.get()).get("current");
+    if(null == current) {
+      current = new IntHolder(0);
+      ((Map) instance.get()).put("current", current);
+    }
+    return current;
+  }
+
+  public static IntHolder getMax() {
+    IntHolder max = (IntHolder) ((Map) instance.get()).get("max");
+    if (null == max) {
+      max = new IntHolder(0);
+      ((Map) instance.get()).put("max", max);
+    }
+    return max;
+  }
+
   /**
    * Load snips and users into the SnipSpace from an xml document out of a stream.
    * @param in  the input stream to load from
@@ -67,6 +94,7 @@ public class XMLSnipImport {
     SAXReader saxReader = new SAXReader();
     try {
       Document document = saxReader.read(in);
+      getMax().setValue(document.getRootElement().elements().size());
       load(document, flags);
     } catch (DocumentException e) {
       Logger.warn("XMLSnipImport: unable to parse document", e);
@@ -110,6 +138,7 @@ public class XMLSnipImport {
 
         user = userSerializer.deserialize(userMap, user);
         userManager.systemStore(user);
+        getStatus().inc();
       }
     }
 
@@ -152,16 +181,19 @@ public class XMLSnipImport {
           snipMap.put(SnipSerializer.SNIP_OUSER, importUser.getLogin());
         }
 
+        // TODO remove data elements from attachments!
         snip = snipSerializer.deserialize(snipMap, snip);
         restoreAttachments(snipElement);
         restoreVersions(snipElement, snip, (flags & OVERWRITE) == 1);
         snip.getBackLinks().getSize();
         space.systemStore(snip);
+        getStatus().inc();
       }
     }
   }
 
   private static void restoreAttachments(Element snipEl) {
+    // TODO use attachments element directly
     Configuration config = Application.get().getConfiguration();
     File attRoot = config.getFilePath();
     Element attachmentsEl = snipEl.element("attachments");
