@@ -1,0 +1,5 @@
+#default ping list
+org.snipsnap.xmlrpc.ping.SimplePingHandler http://rpc.weblogs.com/RPC2
+org.snipsnap.xmlrpc.ping.SimplePingHandler http://www.snipsnap.org/RPC2
+org.snipsnap.xmlrpc.ping.RssPingHandler http://rssrpc.weblogs.com/RPC2
+org.snipsnap.xmlrpc.ping.ExtendedPingHandler http://ping.blo.gs/
