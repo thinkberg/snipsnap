@@ -131,6 +131,7 @@ public class ConfigureServlet extends HttpServlet {
         if (null != locale.getLanguage() && !"".equals(locale.getLanguage())) {
           config.set(Configuration.APP_LANGUAGE, locale.getLanguage());
         }
+        // divide offset (ms) by an hour
         int offset = TimeZone.getDefault().getRawOffset() / (60 * 60 * 1000);
         String id = "GMT" + (offset >= 0 ? "+" : "") + offset;
         config.set(Configuration.APP_TIMEZONE, TimeZone.getTimeZone(id).getID());
@@ -518,8 +519,25 @@ public class ConfigureServlet extends HttpServlet {
     }
   }
 
-  private void setupExpert(HttpServletRequest request, Configuration config, Map errors) {
+  private boolean checkPath(String path) {
+    File pathFile = new File(path);
+    while(pathFile.getParentFile() != null && !pathFile.exists()) {
+      pathFile = pathFile.getParentFile();
+    }
+    return pathFile.exists() && pathFile.canWrite();
+  }
 
+  private void setupExpert(HttpServletRequest request, Configuration config, Map errors) {
+    String startSnip = request.getParameter(Configuration.APP_START_SNIP);
+    config.setStartSnip(null == startSnip || "".equals(startSnip) ? "start" : startSnip);
+    config.setPermCreateSnip(allowDeny(request.getParameter(Configuration.APP_PERM_CREATESNIP)));
+    String indexPath = request.getParameter(Configuration.APP_INDEX_PATH);
+    if(indexPath != null && indexPath.length() > 0) {
+      if(!checkPath(indexPath)) {
+        errors.put(Configuration.APP_INDEX_PATH, Configuration.APP_INDEX_PATH);
+      }
+    }
+    
   }
 
 }
