@@ -65,7 +65,7 @@ public class SnipLinkTag extends TagSupport {
         out.print("\" width=\"");
         out.print(percentPerCell);
         out.print("%\">");
-        out.print(SnipLink.createLink(url, url));
+        out.print(SnipLink.createLink(url, SnipLink.cutLength(url, 25)));
         // out.print(" - " + snipLinks.getIntCount(url));
         out.println("</td>");
       }

@@ -227,4 +227,11 @@ public class SnipLink {
 
     return URLDecoder.decode(s);
   }
+
+  public static String cutLength(String url, int len) {
+    if(url != null && len > 3 && url.length() > len) {
+      return url.substring(0, len - 3) + "...";
+    }
+    return url;
+  }
 }

@@ -51,12 +51,12 @@
   </c:if>
  </td></tr>
  <tr><td>&nbsp;</td></tr>
- <tr><td>
+ <tr><td width="100%">
   <span class="snip-modified">See also:</span><br/>
   <s:snipLinks snip="${snip}" width="4" start="#ffffff" end="#b0b0b0"/>
  </td></tr>
  <tr><td>&nbsp;</td></tr>
- <tr><td>
+ <tr><td width="100%">
   <span class="snip-modified">People came here from:</span><br/>
   <s:backLinks snip="${snip}" count="15"/>
  </td></tr>

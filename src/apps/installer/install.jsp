@@ -28,7 +28,7 @@
     </tr>
     <tr <c:if test="${errors['appname'] != null}">class="error-position"</c:if>>
       <td>Name:</td>
-      <td><input name="appname" type="text" value="<c:out value='${config.name}' default=''/>"></td>
+      <td><input name="appname" type="text" value="<c:out value='${config.appname}' default=''/>"></td>
     </tr>
     <tr>
       <td colspan="2" class="table-header">Administrator</td>
