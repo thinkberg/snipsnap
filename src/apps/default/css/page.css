@@ -1,0 +1,90 @@
+/**
+ * General Stylesheet definitions.
+ * @author Matthias L. Jugel
+ * @version $Id$
+ */
+
+body {
+  margin: 5;
+  padding: 0;
+  background: #ffffff;
+  color: #000000;
+  width: 800px;
+  font-size: 100%;
+  font-family: "Lucida Grande", "Trebuchet MS", Verdana, Geneva, Lucida, Helvetica, sans-serif;
+}
+
+#page-logo {
+  display: block;
+  width: 100%;
+}
+
+#page-title {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+
+	padding: 17px 0px 7px 0px;
+	border-style: solid;
+	border-color: black;
+	border-width: 1px 0px;
+	line-height: 11px;
+	color: inherit;
+	background-color: #eeeeee;
+	font-size: 14px;
+	voice-family: inherit;
+	height: 14px; /* the correct height */
+  text-align: right;
+}
+
+#page-tagline {
+  display: inline;
+  font-size: 120%;
+  padding-right: 10px;
+}
+
+#page-buttons {
+  display: inline;
+  padding-right: 5px;
+}
+
+#page-wrapper {
+  position:absolute;
+  margin-top: 10px;
+  left:5px;
+  width:800px;
+  height: auto;
+}
+
+#page-content {
+  position: absolute;
+  left: 0px;
+  width: 590px;
+  max-width: 590px;
+  /* border: 1px solid red; */
+}
+
+#page-menu {
+  position: absolute;
+  left: 600px;
+  width: 200px;
+  color: #eeeeee;
+  background-color: inherit;
+	border: 1px dashed #999999;
+	line-height:14px;
+}
+
+
+/* the actual content */
+#page-bottom {
+  position: relative;
+  bottom: 0px;
+  margin-top: 10px;
+  text-align: center;
+  width: 100%;
+  font-size: 60%;
+}
+
+#copyright:before {
+  content: "Copyright 2000-2002 Matthias L. Jugel, Stephan J. Schmidt";
+}

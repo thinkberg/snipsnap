@@ -1,0 +1,148 @@
+/**
+ * Wiki text stylesheet definitions.
+ * @author Matthias L. Jugel
+ * @version $Id$
+ */
+
+.bold { font-weight: bold; }
+.italic { font-style: italic; }
+
+.heading-1 {
+  font-weight: bold;
+  font-size: 12px;
+  font-variant: small-caps;
+}
+
+.heading-1-1 {
+  font-size: 12px;
+  font-variant: small-caps;
+}
+
+.quote {
+  font-style: italic;
+  color: inherit;
+  background-color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/************************************************/
+/* code formatting */
+.code {
+  margin-top: 4px;
+  margin-bottom: 4px;
+  padding: 5px 5px 5px 5px;
+  color: inherit;
+  background-color: #F0F0F0;
+  border: 1px dashed black;
+  font-family: courier, courier new, monospace;
+  font-size: 12px;
+  line-height: 100%;
+  white-space: pre;
+}
+
+
+.java-keyword {
+  font-weight: bold;
+  color: #0000aa;
+  background-color: inherit;
+}
+
+.java-object {
+  color: #000088;
+  background-color: inherit;
+}
+
+.java-quote {
+  color: #00aa00;
+  background-color: inherit;
+}
+
+.xml-keyword {
+  font-weight: bold;
+}
+
+.xml-tag {
+  color: #0000aa;
+  background-color: inherit;
+}
+
+/* weblog formatting */
+.blog-date {
+  display: block;
+  background-color: #f8f8f8;
+  color: black;
+  font-family: verdana, sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.comment {
+  color: black;
+  background-color: inherit;
+  font-family: verdana, sans-serif;
+  margin-top: 10px;
+  margin-bottom: 25px;
+}
+
+.snip-name { font-weight: bold; font-size: 15px; color: black; background-color: inherit;}
+
+.snip-modified {
+  color: #999999;
+  background-color: inherit;
+}
+
+/* special formatting of a wiki table */
+.snip-table {
+  border: 1px solid black;
+  border-width: 0px 1px 1px 1px;
+}
+
+.snip-table td {
+  border-top: 1px solid black;
+  padding: 4px 4px 4px 4px;
+}
+
+.snip-table-header {
+  color: inherit;
+  font-weight: bold;
+  /* background: #DDEEFF; */
+  background: #d9e4f9;
+}
+
+.snip-table-odd {
+  color: inherit;
+  background: #F8F8F8;
+}
+
+.snip-table-1 {
+  color: inherit;
+  background: #F8F8F8;
+}
+
+
+.snip-table-even {
+}
+
+.snip-table-0 {
+}
+
+.sniplinks {
+  table-layout: auto;
+}
+
+.index-table {
+}
+
+.index-table td {
+  padding: 1px 1px 1px 1px;
+}
+
+.index-table-header {
+  color: inherit;
+  font-weight: bold;
+  /* background: #DDEEFF; */
+  background: #d9e4f9;
+}

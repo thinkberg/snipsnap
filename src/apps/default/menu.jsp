@@ -11,7 +11,7 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %>
 
-<table class="menu" width="200" border="0" cellpadding="4" cellspacing="1">
+<table class="menu" width="100%" border="0" cellpadding="4" cellspacing="1">
  <tr><td>
    <form method="get" action="../space/snipsnap-search">
      <input type="text" size="18" name="query" style="border: 1px solid #aaaaaa"/> <input type="submit" name="search" value="search"/>

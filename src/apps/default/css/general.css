@@ -1,0 +1,82 @@
+/**
+ * General Stylesheet definitions.
+ * @author Matthias L. Jugel
+ * @version $Id$
+ */
+
+
+/* error messages and error positions should be marked red */
+.error { color: #ff0000; font-weight: bold;	background-color: inherit;}
+.error-position { background-color: #ffaaaa; color: inherit;}
+
+
+
+/* inactive buttons are greyed out */
+.inactive { color: #aaaaaa; background-color: inherit;}
+
+/* the wiki rendering preview */
+.preview {
+    color: inherit;
+    background-color: inherit;
+    padding: 5px 5px 5px 5px;
+}
+
+/************************************************/
+/* ANCHOR tag                                   */
+
+a {
+	color:#09c;
+	background-color: inherit;
+	text-decoration:none;
+	font-weight:400;
+	font-family:verdana, arial, helvetica, sans-serif;
+}
+a:link {
+  color:#09c;
+  background-color: inherit;
+}
+a:visited {
+  color:#07a;
+  background-color: inherit;
+}
+a:hover {
+  background-color:#eee;
+  color: inherit;
+}
+
+pre.nobr {
+	font-family: verdana, sans-serif;
+}
+
+
+td, p {
+	font-size: 11px;
+	color: rgb(76,76,76);
+  /* background-color: inherit; */
+	line-height: 15px;
+}
+
+table {
+	empty-cells: show;
+}
+
+table.debug {
+  color: inherit;
+  background-color: #ffff99;
+	empty-cells: show;
+}
+
+input[type=submit] {
+  color: inherit;
+  background: #eeeeee;
+  border: 1px ridge #aaaaaa;
+	font-family: verdana, sans-serif;
+}
+
+input, select, textarea {
+  font-size: inherit;
+  font-family: courier, courier new, monospace;
+  line-height: inherit;
+  vertical-align: middle;
+	border:1px dashed #999;
+}
