@@ -95,7 +95,13 @@ public class AdminClient {
       }
       Object result = client.execute(method, args);
       System.err.println("Operation '" + method + "' okay:");
-      System.out.println(result instanceof Object[] ? "" + Arrays.asList((Object[]) result) : result);
+      if(result instanceof Object[]) {
+        System.out.println("" + Arrays.asList((Object[]) result));
+      } else if(result instanceof byte[]) {
+        System.out.println(new String((byte[])result, "UTF-8"));    
+      } else {
+        System.out.println(result);
+      }
     } catch (Exception e) {
       System.err.println("AdminClient: error executing command: " + e.getMessage());
     }
