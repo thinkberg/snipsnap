@@ -32,6 +32,7 @@ import org.snipsnap.snip.Snip;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.Security;
 import org.snipsnap.user.User;
+import org.radeox.util.logging.Logger;
 
 import java.security.GeneralSecurityException;
 
@@ -45,12 +46,20 @@ public class SnipSpaceACLInterceptor extends InterceptorSupport {
   }
 
   public Object invoke(Invocation invocation) throws Throwable {
-    if (invocation.getMethod().getName().startsWith("post")) {
+    String method = invocation.getMethod().getName();
+    if (method.startsWith("post")) {
       User user = Application.get().getUser();
       if (!Security.hasRoles(user, null, roles)) {
         //Logger.debug("SECURITY EXCEPTION");
         throw new GeneralSecurityException("Not allowed to post.");
       }
+    } else if(method.equals("remove")) {
+      User user = Application.get().getUser();
+      if (!Security.hasRoles(user, null, roles)) {
+        Logger.debug("SECURITY EXCEPTION");
+        throw new GeneralSecurityException("Not allowed to remove.");
+      }
+
     }
     return invocation.next();
   }
