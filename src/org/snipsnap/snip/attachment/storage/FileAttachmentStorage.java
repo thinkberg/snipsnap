@@ -45,7 +45,7 @@ public class FileAttachmentStorage implements AttachmentStorage {
     Configuration config = Application.get().getConfiguration();
     File filePath = config.getFilePath();
 
-    return  new File(filePath, attachment.getLocation());
+    return new File(new File(filePath, attachment.getLocation()), attachment.getName());
   }
 
   public boolean exists(Attachment attachment) {
