@@ -104,7 +104,7 @@
         <include name="lib/${appname}.jar"/>
         <include name="lib/${appname}.war"/>
         <include name="lib/${appname}-server.jar"/>
-<!--        <include name="lib/${appname}-theme-*.jar"/>-->
+        <!--        <include name="lib/${appname}-theme-*.jar"/>-->
         <include name="lib/${appname}-installer.war"/>
         <include name="lib/${appname}-utils.jar"/>
         <include name="lib/org.apache.jasper.jar"/>
@@ -113,6 +113,7 @@
         <include name="lib/javax.servlet.jar"/>
         <include name="lib/xmlrpc-1.2-b1.jar"/>
         <include name="lib/mckoidb.jar"/>
+        <include name="lib/dom4j.jar"/>
         <include name="lib/mysql-connector.jar"/>
         <include name="lib/postgres-jdbc.jar"/>
         <include name="conf/jetty.conf"/>
@@ -165,33 +166,33 @@
     <constants
       properties="${src}/org/snipsnap/config/defaults.conf"
       file="${target}/ant/config.stub" prefix="app."
-    />
+      />
     <loadfile property="config-stub" srcfile="${target}/ant/config.stub" failonerror="false"/>
     <copy file="${src}/org/snipsnap/config/Configuration.java.tmpl"
-      tofile="${src}/org/snipsnap/config/Configuration.java" filtering="true" overwrite="true" >
+      tofile="${src}/org/snipsnap/config/Configuration.java" filtering="true" overwrite="true">
       <filterset>
         <filter token="DEFAULTS" value="${config-stub}"/>
       </filterset>
-     </copy>
+    </copy>
 
     <constants
       properties="${src}/org/snipsnap/config/globals.conf"
       file="${target}/ant/globals.stub" prefix="app."
-    />
+      />
     <loadfile property="globals-stub" srcfile="${target}/ant/globals.stub" failonerror="false"/>
     <copy file="${src}/org/snipsnap/config/Globals.java.tmpl"
-      tofile="${src}/org/snipsnap/config/Globals.java" filtering="true" overwrite="true" >
+      tofile="${src}/org/snipsnap/config/Globals.java" filtering="true" overwrite="true">
       <filterset>
         <filter token="DEFAULTS" value="${globals-stub}"/>
       </filterset>
-     </copy>
+    </copy>
   </target>
 
   <!-- create server code -->
   <target depends="compile-jsp, compile-server,installer-war" description="create server jar" name="jar-server">
     <copy file="conf/copyright.txt" tofile="${target}/server/conf/copyright.txt" filtering="true">
       <filterset>
-        <filter  token="VERSION" value="${snipsnap.server.version}"/>
+        <filter token="VERSION" value="${snipsnap.server.version}"/>
       </filterset>
     </copy>
     <jar destfile="${jar}/${appname}.jar" excludes="**/CVS" manifest="conf/launcher.manifest">
@@ -199,7 +200,7 @@
     </jar>
     <jar destfile="${jar}/${appname}-server.jar" excludes="**/CVS, org/snipsnap/server/*Launcher*" manifest="conf/manifest">
       <fileset dir="${target}/server" includes="**">
-       <exclude name="org/snipsnap/server/*Launcher*"/>
+        <exclude name="org/snipsnap/server/*Launcher*"/>
       </fileset>
       <fileset dir=".">
         <include name="conf/snipsnap.conf"/>
@@ -225,7 +226,7 @@
 
   <!-- create utility code -->
   <target depends="compile-util" description="build util jar" name="jar-util">
-    <jar destfile="${jar}/${appname}-utils.jar" excludes="**/CVS" manifest="conf/utils.manifest" >
+    <jar destfile="${jar}/${appname}-utils.jar" excludes="**/CVS" manifest="conf/utils.manifest">
       <fileset dir="${target}/util" includes="**"/>
       <fileset dir="." includes="conf/snipsnap.conf"/>
       <fileset dir="." includes="conf/copyright.txt"/>
@@ -253,15 +254,15 @@
   </target>
 
   <target name="checkstyle">
-        <taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask"/>
-        <pmd rulesetfiles="${check_rules}" shortFilenames="true" printToConsole="true">
-        <!-- <pmd rulesetfiles="rulesets/coupling.xml,rulesets/unusedcode.xml,rulesets/basic.xml,rulesets/imports.xml" shortFilenames="true" printToConsole="true"> -->
-            <formatter type="html" toFile="pmd_report.html"/>
-            <fileset dir="./src">
-                <include name="**/*.java"/>
-            </fileset>
-        </pmd>
-    </target>
+    <taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask"/>
+    <pmd rulesetfiles="${check_rules}" shortFilenames="true" printToConsole="true">
+      <!-- <pmd rulesetfiles="rulesets/coupling.xml,rulesets/unusedcode.xml,rulesets/basic.xml,rulesets/imports.xml" shortFilenames="true" printToConsole="true"> -->
+      <formatter type="html" toFile="pmd_report.html"/>
+      <fileset dir="./src">
+        <include name="**/*.java"/>
+      </fileset>
+    </pmd>
+  </target>
 
   <target depends="generate" description="compile test code" name="compile-test">
     <mkdir dir="${target}/test"/>
@@ -305,17 +306,17 @@
     <mkdir dir="${target}/jsp/source"/>
     <mkdir dir="${target}/jsp/classes"/>
     <jspc destdir="${target}/jsp/source"
-          verbose="1" srcdir="${src}/apps/default"
-          classpathref="all.classpath"
-          webinc="${target}/jsp/web.inc">
-      <include name="**/*.jsp" />
+      verbose="1" srcdir="${src}/apps/default"
+      classpathref="all.classpath"
+      webinc="${target}/jsp/web.inc">
+      <include name="**/*.jsp"/>
       <webapp basedir="${src}/apps/default"/>
     </jspc>
     <depend
-         srcdir="${target}/jsp/source"
-         destdir="${target}/jsp/classes"
-         cache="${target}/jsp/dependencies"
-         classpathref="all.classpath"/>
+      srcdir="${target}/jsp/source"
+      destdir="${target}/jsp/classes"
+      cache="${target}/jsp/dependencies"
+      classpathref="all.classpath"/>
     <javac deprecation="${deprecation}" debug="${debug}"
       srcdir="${target}/jsp/source"
       classpath="${src}/apps/default/WEB-INF/lib/snipsnap-servlets.jar"
@@ -432,17 +433,17 @@
     <mkdir dir="${target}/installer/jsp/source"/>
     <mkdir dir="${target}/installer/jsp/classes"/>
     <jspc destdir="${target}/installer/jsp/source"
-          verbose="1"
-          classpathref="all.classpath"
-          webinc="${target}/installer/jsp/web.inc">
-      <include name="**/*.jsp" />
+      verbose="1"
+      classpathref="all.classpath"
+      webinc="${target}/installer/jsp/web.inc">
+      <include name="**/*.jsp"/>
       <webapp basedir="${src}/apps/installer"/>
     </jspc>
     <depend
-         srcdir="${target}/installer/jsp/source"
-         destdir="${target}/installer/jsp/classes"
-         cache="${target}/installer/jsp/dependencies"
-         classpathref="all.classpath"/>
+      srcdir="${target}/installer/jsp/source"
+      destdir="${target}/installer/jsp/classes"
+      cache="${target}/installer/jsp/dependencies"
+      classpathref="all.classpath"/>
     <javac deprecation="${deprecation}" debug="${debug}"
       srcdir="${target}/installer/jsp/source"
       classpath="${target}/installer/webapp/WEB-INF/lib/installer-servlets.jar"
@@ -524,21 +525,21 @@
     <copy file="src/org/snipsnap/config/globals.conf" tofile="${target}/test/org/snipsnap/config/globals.conf"/>
     <copy file="src/org/snipsnap/config/transpose.map" tofile="${target}/test/org/snipsnap/config/transpose.map"/>
     <copy todir="${target}/test">
-      <fileset dir="${src}/apps/default" includes="**.properties" />
+      <fileset dir="${src}/apps/default" includes="**.properties"/>
     </copy>
 
   </target>
 
   <target name="test" depends="snipsnap-war, jar-server, prepare-tests, compile-test">
     <junit printsummary="true">
-       <formatter usefile="false" type="plain"/>
-       <test name="org.snipsnap.test.AllTests"/>
-       <classpath>
-          <pathelement location="${target}/test"/>
-          <pathelement location="${target}/webapp/WEB-INF/classes"/>
-          <path refid="all.classpath"/>
-          <path refid="snipsnap.test"/>
-       </classpath>
+      <formatter usefile="false" type="plain"/>
+      <test name="org.snipsnap.test.AllTests"/>
+      <classpath>
+        <pathelement location="${target}/test"/>
+        <pathelement location="${target}/webapp/WEB-INF/classes"/>
+        <path refid="all.classpath"/>
+        <path refid="snipsnap.test"/>
+      </classpath>
     </junit>
   </target>
 
@@ -554,26 +555,26 @@
     </junit>
   </target>
 
-<target description="generation javadocs" name="javadoc">
-  <javadoc packagenames="org.snipsnap.*"
-           sourcepath="src"
-           excludepackagenames="org.snipsnap.test.*"
-           defaultexcludes="yes"
-           destdir="docs/api"
-           author="true"
-           version="true"
-           use="true"
-           windowtitle="SnipSnap API">
-    <doctitle><![CDATA[<h1>SnipSnap</h1>]]></doctitle>
-    <bottom><![CDATA[<i>Copyright &#169; 2001-2004 Matthias L. Jugel, Stephan J. Schmidt. All Rights Reserved
+  <target description="generation javadocs" name="javadoc">
+    <javadoc packagenames="org.snipsnap.*"
+      sourcepath="src"
+      excludepackagenames="org.snipsnap.test.*"
+      defaultexcludes="yes"
+      destdir="docs/api"
+      author="true"
+      version="true"
+      use="true"
+      windowtitle="SnipSnap API">
+      <doctitle><![CDATA[<h1>SnipSnap</h1>]]></doctitle>
+      <bottom><![CDATA[<i>Copyright &#169; 2001-2004 Matthias L. Jugel, Stephan J. Schmidt. All Rights Reserved
 .</i>]]></bottom>
-    <!-- <tag name="todo" scope="all" description="To do:" />
-    <group title="Group 1 Packages" packages="com.dummy.test.a*"/>
-    <group title="Group 2 Packages" packages="com.dummy.test.b*:com.dummy.test.c*"/>
-    -->
-    <link href="http://java.sun.com/j2se/1.4/docs/api/package-list"/>
-    <link href="http://java.sun.com/j2ee/1.4/docs/api/package-list"/>
-  </javadoc>
+      <!-- <tag name="todo" scope="all" description="To do:" />
+      <group title="Group 1 Packages" packages="com.dummy.test.a*"/>
+      <group title="Group 2 Packages" packages="com.dummy.test.b*:com.dummy.test.c*"/>
+      -->
+      <link href="http://java.sun.com/j2se/1.4/docs/api/package-list"/>
+      <link href="http://java.sun.com/j2ee/1.4/docs/api/package-list"/>
+    </javadoc>
   </target>
 
 </project>
