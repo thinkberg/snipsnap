@@ -39,6 +39,6 @@ if [ "$1" = "-debug" ]; then
 fi
 
 # execute application server
-mv server.log server.log.old
+[ -f server.log ] && mv server.log server.log.old
 $JAVA_HOME/bin/java -server -verbose:gc $DBG -cp $CLASSPATH:lib/snipsnap.jar org.snipsnap.server.AppServer $cmdline 2> server.log
 
