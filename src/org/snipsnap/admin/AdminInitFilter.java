@@ -61,6 +61,7 @@ public class AdminInitFilter implements Filter {
   protected final static String ATT_APPS = "applications";
 
   protected final static String PARAM_INSTALL = "install";
+  protected final static String PARAM_EXPERT = "expert";
 
   protected AdminXmlRpcClient adminClient;
   private Properties serverConfig = new Properties();
@@ -164,7 +165,8 @@ public class AdminInitFilter implements Filter {
           e.printStackTrace();
         }
 
-        if (null == request.getParameter(PARAM_INSTALL) && (applications != null && applications.size() > 0)) {
+        if (null != request.getParameter(PARAM_EXPERT) ||
+          (null == request.getParameter(PARAM_INSTALL) && (applications != null && applications.size() > 0))) {
           step = "install";
         } else {
           URL url = null;
