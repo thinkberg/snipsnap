@@ -24,17 +24,17 @@
  */
 package org.snipsnap.net;
 
+import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
+import org.snipsnap.config.Configuration;
+import org.snipsnap.container.Components;
+import org.snipsnap.net.filter.MultipartWrapper;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipFormatter;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.user.User;
 import org.snipsnap.user.AuthenticationService;
-import org.snipsnap.container.Components;
-import org.snipsnap.config.Configuration;
-import org.snipsnap.net.filter.MultipartWrapper;
-import org.radeox.util.logging.Logger;
+import org.snipsnap.user.User;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -46,12 +46,13 @@ import java.io.IOException;
 
 /**
  * Servlet to store comments.
+ *
  * @author Matthias L. Jugel
  * @version $Id$
  */
 public class CommentStoreServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
+          throws ServletException, IOException {
     Configuration config = Application.get().getConfiguration();
     // If this is not a multipart/form-data request continue
     String type = request.getHeader("Content-Type");
@@ -78,7 +79,6 @@ public class CommentStoreServlet extends HttpServlet {
     } else if (request.getParameter("cancel") == null) {
 
       HttpSession session = request.getSession();
-      Application app = null;
       if (session != null) {
         User user = Application.get().getUser();
         AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
@@ -96,6 +96,6 @@ public class CommentStoreServlet extends HttpServlet {
       return;
     }
 
-    response.sendRedirect(config.getUrl("/comments/"+SnipLink.encode(name)));
+    response.sendRedirect(config.getUrl("/comments/" + SnipLink.encode(name)));
   }
 }

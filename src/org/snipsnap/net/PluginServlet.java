@@ -36,6 +36,7 @@ import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.Security;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -45,6 +46,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -77,66 +79,94 @@ public class PluginServlet extends HttpServlet {
       pluginName = pluginName.substring(1);
     }
 
-    BufferedWriter writer = new BufferedWriter(response.getWriter());
-    String handlerMIMEType = (String) ServletPluginLoader.getPlugins().get(pluginName);
-    if (null == handlerMIMEType) {
-      SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
-      if (space.exists(pluginName)) {
-        Snip snip = space.load(pluginName);
-        if(Security.existsPermission(Permissions.EDIT_SNIP, snip, EXEC_ROLES)) {
-          String mimeType = getMIMEType(snip);
-          if ("text/gsp".equalsIgnoreCase(mimeType)) {
-            try {
-              writer.write(handleGroovyTemplate(snip.getContent()));
-            } catch (IOException e) {
-              writer.write("<span class=\"error\">" + e.getLocalizedMessage() + "</span>");
-            }
-            writer.flush();
-            return;
+    // check for the plugin in the snip space which overrides other plugins
+    SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
+    if (space.exists(pluginName)) {
+      Snip snip = space.load(pluginName);
+      // only execute plugins who are locked by an Admin
+      if (Security.existsPermission(Permissions.EDIT_SNIP, snip, EXEC_ROLES)) {
+        String mimeType = getMIMEType(snip);
+        if ("text/gsp".equalsIgnoreCase(mimeType)) {
+          BufferedWriter writer = new BufferedWriter(response.getWriter());
+          try {
+            writer.write(handleGroovyTemplate(snip.getContent()));
+          } catch (IOException e) {
+            writer.write("<span class=\"error\">" + e.getLocalizedMessage() + "</span>");
+          }
+          writer.flush();
+        } else {
+          // plugins of types other than text/gsp are included into the response
+          RequestDispatcher dispatcher = request.getRequestDispatcher("/raw/" + pluginName);
+          dispatcher.include(request, response);
+        }
+        return;
+      }
+    }
+
+    // check for registered plugins
+    Map plugins = ServletPluginLoader.getPlugins();
+    if (plugins.containsKey(pluginName)) {
+      String handlerMIMEType = (String) plugins.get(pluginName);
+
+      // try to find a mime type for the requested plugin
+      if (null == handlerMIMEType) {
+        int extIndex = pluginName.indexOf(".");
+        if (extIndex != -1) {
+          handlerMIMEType = (String) extTypeMap.get(pluginName.substring(extIndex));
+        }
+      }
+
+      if ("text/gsp".equalsIgnoreCase(handlerMIMEType)) {
+        BufferedWriter writer = new BufferedWriter(response.getWriter());
+        try {
+          writer.write(handleGroovyTemplate(getTemplateSource(pluginName)));
+        } catch (IOException e) {
+          writer.write("<span class=\"error\">" + e.getLocalizedMessage() + "</span>");
+        }
+        writer.flush();
+        return;
+      } else {
+        // a non-script plugin (i.e. servlet or simply a file)
+        ServletPlugin servletPlugin = (ServletPlugin) servletCache.get(pluginName);
+        if (null == servletPlugin) {
+          try {
+            servletPlugin = getServletPlugin(pluginName);
+            servletCache.put(pluginName, servletPlugin);
+          } catch (Exception e) {
+            // ignore plugins not found ...
+          }
+        }
+
+        // a servlet plugin is executed, everything else is included into the response
+        if (null != servletPlugin) {
+          try {
+            servletPlugin.service(request, response);
+          } catch (Exception e) {
+            Logger.warn("error while executing servlet plugin", e);
+            throw new ServletException("error while executing servlet plugin", e);
           }
         } else {
-          throw new ServletException("a snip plugin must be locked by admin");
+          if (null != handlerMIMEType) {
+            response.setContentType(handlerMIMEType);
+          }
+          OutputStream out = response.getOutputStream();
+          InputStream fileIs = PluginServlet.class.getResourceAsStream("/" + pluginName);
+          if (null != fileIs) {
+            byte[] buffer = new byte[1024];
+            int bytes = 0;
+            while ((bytes = fileIs.read(buffer)) != -1) {
+              out.write(buffer, 0, bytes);
+            }
+            out.flush();
+            return;
+          } else {
+            throw new ServletException("unable to load servlet plugin: not found");
+          }
         }
       }
     }
 
-    if (null == handlerMIMEType) {
-      int extIndex = pluginName.indexOf(".");
-      if (extIndex != -1) {
-        handlerMIMEType = (String) extTypeMap.get(pluginName.substring(extIndex));
-      }
-    }
-
-    if ("text/gsp".equalsIgnoreCase(handlerMIMEType)) {
-      try {
-        writer.write(handleGroovyTemplate(getTemplateSource(pluginName)));
-      } catch (IOException e) {
-        writer.write("<span class=\"error\">" + e.getLocalizedMessage() + "</span>");
-      }
-    } else {
-      ServletPlugin servletPlugin = (ServletPlugin) servletCache.get(pluginName);
-      if (null == servletPlugin) {
-        try {
-          servletPlugin = getServletPlugin(pluginName);
-        } catch (Exception e) {
-          Logger.warn("unable to load servlet plugin", e);
-          throw new ServletException("unable to load servlet plugin", e);
-        }
-        servletCache.put(pluginName, servletPlugin);
-      }
-
-      if (null != servletPlugin) {
-        try {
-          servletPlugin.service(request, response);
-        } catch (Exception e) {
-          Logger.warn("error while executing servlet plugin", e);
-          throw new ServletException("error while executing servlet plugin", e);
-        }
-      } else {
-
-      }
-    }
-    writer.flush();
+    response.sendError(HttpServletResponse.SC_FORBIDDEN);
   }
 
   private ServletPlugin getServletPlugin(String pluginName) throws Exception {
@@ -170,6 +200,7 @@ public class PluginServlet extends HttpServlet {
   /**
    * Read the template source from either a snip or if not existent try the
    * jar/classpath based file read.
+   *
    * @param name the name of the resource to load
    * @return a string with the template source
    * @throws IOException
