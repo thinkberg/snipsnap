@@ -28,8 +28,8 @@ import org.mortbay.http.HttpContext;
 import org.mortbay.http.HttpServer;
 import org.mortbay.jetty.Server;
 
-import java.util.Iterator;
 import java.io.IOException;
+import java.util.Iterator;
 
 /**
  * Start, stop or remove a web application from the server.
@@ -50,9 +50,14 @@ public class ApplicationCommand {
       if (server.toString().equals(srv)) {
         if (CMD_APPLICATION_ADD.equals(command)) {
           try {
-            ((Server) server).addWebApplication(ctx, "./app"+ctx);
+            ((Server) server).addWebApplication(ctx, "./app" + ctx);
+            try {
+              Thread.sleep(5000);
+            } catch (InterruptedException e) {
+              System.err.println("Updater: interrupted while waiting for application to sync ..." + e);
+            }
           } catch (IOException e) {
-            System.err.println("Application: unable to add context: "+srv+":"+ctx);
+            System.err.println("Application: unable to add context: " + srv + ":" + ctx);
           }
           return;
         } else {
@@ -67,6 +72,11 @@ public class ApplicationCommand {
                   context.stop();
                 } else if (CMD_APPLICATION_REMOVE.equals(command)) {
                   server.removeContext(context);
+                  try {
+                    Thread.sleep(5000);
+                  } catch (InterruptedException e) {
+                    System.err.println("Application: interrupted while waiting for application to sync ..." + e);
+                  }
                 } else {
                   System.err.println("Application: unknown or illegal command: " + command);
                 }

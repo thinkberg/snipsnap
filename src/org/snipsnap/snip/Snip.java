@@ -234,6 +234,11 @@ public class Snip implements Ownable {
   }
 
   public String getXMLContent() {
-    return toXML();
+    try {
+      return toXML();
+    } catch (Exception e) {
+      e.printStackTrace();
+      return "<span class=\"error\">"+e+"</span>";
+    }
   }
 }

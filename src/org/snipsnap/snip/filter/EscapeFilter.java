@@ -38,7 +38,7 @@ import org.apache.oro.text.regex.MatchResult;
 public class EscapeFilter extends RegexTokenFilter {
 
   public EscapeFilter() {
-    super("\\\\(\\\\\\\\)|\\\\(.)");
+    super("\\\\(\\\\\\\\)|\\\\(.)|([<>&])");
   }
 
   public void handleMatch(StringBuffer buffer, MatchResult result, Snip snip) {
@@ -48,10 +48,13 @@ public class EscapeFilter extends RegexTokenFilter {
   public String handleMatch(MatchResult result, Snip snip) {
     if (result.group(1) == null) {
       String match = result.group(2);
+      if(match == null) {
+        match = result.group(3);
+      }
       if("\\".equals(match)) {
         return "\\\\";
       }
-      return "&#x" + Integer.toHexString((int) result.group(2).charAt(0)) + ";";
+      return "&#x" + Integer.toHexString((int) match.charAt(0)) + ";";
     } else {
       return "&#x005c;";
     }

@@ -39,7 +39,7 @@
         <input name="referer" type="hidden" value="<c:out value='${referer}'/>">
       </c:when>
       <c:otherwise>
-        <input name="referer" type="hidden" value="<c:out value='${header[REFERER]}'/>">
+        <input name="referer" type="hidden" value="<c:out value='${header["REFERER"]}'/>">
       </c:otherwise>
     </c:choose>
   </form>
