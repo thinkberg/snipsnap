@@ -35,6 +35,10 @@
     <path refid="app.classpath"/>
   </path>
 
+  <target name="init">
+    <mkdir dir="${target}"/>
+  </target>
+
   <!-- build distribution -->
   <target depends="tar-source, tar-binary" name="dist" description="tar complete distribution"/>
 
