@@ -111,7 +111,8 @@ public class SnipSpaceImpl implements SnipSpace {
     System.out.println("apps = "+manager.getApplications());
     while (iterator.hasNext()) {
       Map app = (Map) iterator.next();
-      ((Queue) changed.getObject()).fill(this.storage.storageByRecent((String) app.get(ApplicationStorage.OID), 50));
+      String applicationOid = (String) app.get(ApplicationStorage.OID);
+      ((Queue) changed.getObject(applicationOid)).fill(this.storage.storageByRecent(applicationOid, 50));
     }
 
     // We do not store frequent changes right away but
