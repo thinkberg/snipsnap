@@ -50,7 +50,7 @@ public class SnipLinkTag extends TagSupport {
 
     int size = snipLinks.getSize();
     int percentPerCell = 100/width;
-    ColorRange cr = new ColorRange(start, end, Math.max(size,8));
+    ColorRange cr = new ColorRange(start, end, Math.max(size <= 20 ? size : 20, 8));
 
     try {
       int i = 0;
