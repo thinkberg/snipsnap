@@ -1,5 +1,7 @@
 0.5
 
+- Fixed bug: special characters in snip names and links are now detected
+- Added feature: ThemeImageServlet for theme style images
 - Added feature: FileSnipStorage und FileUserStorage to store users and snips in files (properties or XML)
 - Refactored Import/Export
 - Changed Installation and Setup
