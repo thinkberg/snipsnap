@@ -154,13 +154,15 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
     return snip.getContent();
   }
 
-  public void createSnip(String name, String content) {
+  public String createSnip(String name, String content) {
     Snip snip = space.create(name, content);
+    return name;
   }
 
-  public void removeSnip(String name) {
+  public String removeSnip(String name) {
     Snip snip = space.load(name);
     space.remove(snip);
+    return name;
   }
 
   /**
