@@ -24,7 +24,11 @@
       <table class="configuration">
         <tr>
           <td rowspan="2" class="guide">
-            <fmt:message key="install.guide"/><br/>
+            <div class="guide-menu">
+              <ul>
+                <li class="current-step"><fmt:message key="install.guide"/></li>
+              </ul>
+            </div>
             <div class="step-info"><fmt:message key="install.guide.${step}"/></div>
           </td>
           <td class="edit">
@@ -47,7 +51,7 @@
           </td>
         </tr>
         <tr>
-          <td>
+          <td class="navigation">
             <c:choose>
               <c:when test="${step == 'login'}">
                 <input type="submit" name="login" value="<fmt:message key="install.button.${step}"/>">
