@@ -106,8 +106,12 @@ public class Labels {
       String labelToken = tokenizer.nextToken();
       String[] data = StringUtil.split(labelToken, ":");
       //System.out.println("Data="+data);
-      Label label = createLabel(data[0], data[1], data[2]);
-      labels.put(label.getName(), label);
+      if(data.length == 3) {
+        Label label = createLabel(data[0], data[1], data[2]);
+        labels.put(label.getName(), label);
+      } else {
+        System.err.println("Labels: Broken Label: '" + labelToken + "' ignored");
+      }
     }
     return;
   }
