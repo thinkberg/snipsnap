@@ -76,8 +76,8 @@ public class XMLSnipImport {
       document = documentBuilder.parse(in);
       load(document, overwrite);
     } catch (SAXException e) {
-      System.out.println("Error parsing document: "+e);
       e.printStackTrace();
+      throw new IOException("Error parsing document: "+e);
     }
   }
 

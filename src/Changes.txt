@@ -1,5 +1,6 @@
 0.2.8
 
+- Added Feature: import/export from web interface
 - Fixed bug: list detection
 - Changed macro interface: User Writer instead of StringBuffer and Refactoring
   "Introduce Parameter Object"

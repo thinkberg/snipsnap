@@ -7,8 +7,9 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 
 <c:import url="/admin/menu.jsp"/>
+<div id="admin">
 
-<table id="wiki-table" width="100%" border="0" cellpadding="3" cellspacing="0">
+ <table id="wiki-table" width="100%" border="0" cellpadding="3" cellspacing="0">
   <tr>
     <th width="100%">User name</th><th>Last Login</th><th>Email</th><th>Roles</th><th>Status</th><th colspan="2">Action</th>
   </tr>
@@ -51,5 +52,5 @@
       </form>
     </td>
   </tr>
-</table>
-
+ </table>
+</div>

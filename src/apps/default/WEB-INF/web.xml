@@ -127,6 +127,11 @@
     <servlet-class>org.snipsnap.net.admin.ExportServlet</servlet-class>
   </servlet>
 
+  <servlet>
+    <servlet-name>org.snipsnap.net.admin.ImportServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.admin.ImportServlet</servlet-class>
+  </servlet>
+
   <!-- servlet mappings -->
   <servlet-mapping>
     <servlet-name>org.snipsnap.net.SnipViewServlet</servlet-name>
@@ -232,6 +237,11 @@
   <servlet-mapping>
     <servlet-name>org.snipsnap.net.admin.ExportServlet</servlet-name>
     <url-pattern>/exec/admin/export</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>org.snipsnap.net.admin.ImportServlet</servlet-name>
+    <url-pattern>/exec/admin/import</url-pattern>
   </servlet-mapping>
 
   <!-- TAGLIBS -->

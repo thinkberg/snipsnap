@@ -7,9 +7,9 @@
   -->
 
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
-
-<div id="#admin">
- <c:import url="/admin/menu.jsp"/>
+<c:import url="/admin/menu.jsp"/>
+<div id="admin">
+ <h2>Application Info</h2>
  <table>
   <tr><td><b>Administrator:</b></td><td>
    <a href="<c:url value='/space/${config.adminLogin}'/>"><c:out value="${config.adminLogin}"/></a>
