@@ -144,7 +144,7 @@ public class Mail {
 
     } catch (MessagingException ex) {
       Exception e;
-      while ((e = ex.getNextException()) != null) {
+      if ((e = ex.getNextException()) != null) {
         Logger.warn(ex.getMessage(), e);
       }
     }
