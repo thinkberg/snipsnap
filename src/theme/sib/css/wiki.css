@@ -83,7 +83,9 @@ img.float-right {
   font-size: 12px;
   line-height: 100%;
   white-space: pre;
-  overflow: auto;
+  overflow: -moz-scrollbars-horizontal;
+  overflow-x: auto;
+  width: 98%;
 }
 
 
