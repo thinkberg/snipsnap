@@ -63,6 +63,7 @@ public class SnipStoreServlet extends HttpServlet {
     }
 
     String name = request.getParameter("name");
+
     String parent = request.getParameter("parent");
     if (parent != null && ! "".equals(parent)) {
       name = parent + "/" + name;
@@ -71,6 +72,15 @@ public class SnipStoreServlet extends HttpServlet {
     Snip snip = space.load(name);
 
     String content = request.getParameter("content");
+
+    // if the name is empty show an error
+    if (null == name || "".equals(name)) {
+      RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/new");
+      request.setAttribute("error", "snip.name.empty");
+      dispatcher.forward(request, response);
+      return;
+    }
+
     if (request.getParameter("preview") != null) {
       request.setAttribute("preview", SnipFormatter.toXML(snip, content));
       RequestDispatcher dispatcher;

@@ -13,6 +13,7 @@
  <form class="form" name="f" method="post" action="exec/store" enctype="multipart/form-data">
   <div class="snip-title">
      <fmt:message key="snip.name"/><br/><input name="name" value="<c:out value="${name}"/>" type="text"/>
+     <c:if test="${error == 'snip.name.empty'}"><span class="error"><fmt:message key="snip.name.empty"/></span></c:if>
   </div>
   <fmt:message key="snip.parent"/>
   <input name="parentBefore" value="<c:out value="${parentBefore}"/>" type="hidden"/>
