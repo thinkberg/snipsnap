@@ -46,7 +46,7 @@ import java.sql.Timestamp;
  * @version $Id$
  */
 public class Application {
-  private static Map currentUsers;
+  private static Map currentUsers = new HashMap();
 
   private User user;
   private AppConfiguration config;
@@ -148,9 +148,6 @@ public class Application {
   }
 
   public static void addCurrentUser(User user, HttpSession session) {
-    if (null == currentUsers) {
-      currentUsers = new HashMap();
-    }
     currentUsers.put(session, user);
   }
 

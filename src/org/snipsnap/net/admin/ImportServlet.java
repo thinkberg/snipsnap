@@ -75,11 +75,11 @@ public class ImportServlet extends HttpServlet {
 //      XMLSnipImport.load(new ByteArrayInputStream(xml.getBytes()), overwrite);
 //    } catch (IOException e) {
 //      errors.put("message", ERR_IOEXCEPTION);
-//      response.sendRedirect(SnipLink.absoluteLink(request, "/exec/admin/export.jsp"));
+//      response.sendRedirect(SnipLink.absoluteLink(request, "/manager/export.jsp"));
 //      return;
 //    }
 
     errors.put("message", "not implemented yet");
-    response.sendRedirect(SnipLink.absoluteLink(request, "/exec/admin/import.jsp"));
+    response.sendRedirect(SnipLink.absoluteLink(request, "/manager/import.jsp"));
   }
 }

@@ -28,7 +28,7 @@
       <td><span class="nobr"><c:out value="${user.roles}"/></span></td>
       <td><span class="nobr"><c:out value="${user.status}"/></span></td>
       <td>
-        <form method="post" action="<c:url value='/exec/admin/user'/>">
+        <form method="post" action="<c:url value='/manager/user'/>">
           <input type="hidden" name="command" value="edit"/>
           <input type="hidden" name="login" value="<c:out value='${user.login}'/>"/>
           <input type="submit" name="ok" value="Edit"/>
@@ -36,7 +36,7 @@
       </td>
       <td>
         <c:if test="${config.adminLogin != user.login}">
-          <form method="post" action="<c:url value='/exec/admin/user'/>">
+          <form method="post" action="<c:url value='/manager/user'/>">
             <input type="hidden" name="command" value="remove"/>
             <input type="hidden" name="login" value="<c:out value='${user.login}'/>"/>
             <input style="color: red" type="submit" name="ok" value="Remove"/>
@@ -47,7 +47,7 @@
   </c:forEach>
   <tr>
     <td colspan="7">
-      <form method="GET" action="<c:url value='/exec/admin/newuser.jsp'/>">
+      <form method="GET" action="<c:url value='/manager/newuser.jsp'/>">
         <input type="submit" name="ok" value="Add New User"/>
       </form>
     </td>

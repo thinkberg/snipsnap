@@ -226,22 +226,22 @@
   <!-- ADMIN -->
   <servlet-mapping>
     <servlet-name>org.snipsnap.net.admin.AdminServlet</servlet-name>
-    <url-pattern>/exec/admin/*</url-pattern>
+    <url-pattern>/manager/*</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
     <servlet-name>org.snipsnap.net.admin.UserManagerServlet</servlet-name>
-    <url-pattern>/exec/admin/user</url-pattern>
+    <url-pattern>/manager/user</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
     <servlet-name>org.snipsnap.net.admin.ExportServlet</servlet-name>
-    <url-pattern>/exec/admin/export</url-pattern>
+    <url-pattern>/manager/export</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
     <servlet-name>org.snipsnap.net.admin.ImportServlet</servlet-name>
-    <url-pattern>/exec/admin/import</url-pattern>
+    <url-pattern>/manager/import</url-pattern>
   </servlet-mapping>
 
   <!-- TAGLIBS -->

@@ -14,7 +14,7 @@
   <div class="error"><c:out value="${error.value}"/></div>
  </c:forEach>
 
- <form class="form" method="post" action="<c:url value='/exec/admin/user'/>">
+ <form class="form" method="post" action="<c:url value='/manager/user'/>">
   <input type="hidden" name="command" value="create"/>
   <table class="snip-table" border="0" cellspacing="0" cellpadding="2">
    <tr><td class="snip-table-header" colspan="2">User Information</td></tr>

@@ -78,21 +78,21 @@ public class UserManagerServlet extends SnipSnapServlet {
         RequestDispatcher dispatcher = null;
 
         if(EDIT.equals(command)) {
-          dispatcher = request.getRequestDispatcher("/exec/admin/user.jsp");
+          dispatcher = request.getRequestDispatcher("/admin/user.jsp");
         } else if (UPDATE.equals(command)) {
           if(update(request, errors, user)) {
             um.store(user);
             errors.put("", OK_USER_UPDATED);
-            response.sendRedirect(SnipLink.absoluteLink(request, "/exec/admin/usermanager.jsp"));
+            response.sendRedirect(SnipLink.absoluteLink(request, "/manager/usermanager.jsp"));
             return;
           } else {
-            dispatcher = request.getRequestDispatcher("/exec/admin/user.jsp");
+            dispatcher = request.getRequestDispatcher("/admin/user.jsp");
           }
         } else if(CREATE.equals(command)) {
           User tmp = new User(login, "", "");
           if(user != null || !update(request, errors, tmp)) {
             errors.put("fatal", "User with that name already exists! Use Edit to modify.");
-            dispatcher = request.getRequestDispatcher("/exec/admin/newuser.jsp");
+            dispatcher = request.getRequestDispatcher("/admin/newuser.jsp");
           } else {
             user = um.create(tmp.getLogin(), tmp.getPasswd(), tmp.getEmail());
             user.setRoles(tmp.getRoles());
@@ -101,7 +101,7 @@ public class UserManagerServlet extends SnipSnapServlet {
             Application.get().setUser(user);
             HomePage.create(user.getLogin());
             errors.put("", OK_USER_CREATED);
-            response.sendRedirect(SnipLink.absoluteLink(request, "/exec/admin/usermanager.jsp"));
+            response.sendRedirect(SnipLink.absoluteLink(request, "/manager/usermanager.jsp"));
             return;
           }
         }
@@ -113,7 +113,7 @@ public class UserManagerServlet extends SnipSnapServlet {
       }
     }
 
-    RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/admin/usermanager.jsp");
+    RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/usermanager.jsp");
     dispatcher.forward(request, response);
   }
 

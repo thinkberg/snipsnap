@@ -63,7 +63,7 @@ public class Digest {
    * Compare a password with an encryped password.
    */
   public static boolean authenticate(String password, String encrypted) {
-    return encrypted.equals(digest.digest(password.getBytes()));
+    return encrypted.equals(getDigest(password));
   }
 
   /**

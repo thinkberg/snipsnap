@@ -24,9 +24,9 @@
  <div>
   <h3>Select one of the following actions:</h3>
   <ul class="square">
-   <li><a href="<c:url value='/exec/admin/usermanager.jsp'/>">Manage Registered Users</a></li>
-   <li><a href="<c:url value='/exec/admin/export.jsp'/>">Export Database to XML</a></li>
-   <li><a href="<c:url value='/exec/admin/import.jsp'/>">Import into Database from XML</a></li>
+   <li><a href="<c:url value='/manager/usermanager.jsp'/>">Manage Registered Users</a></li>
+   <li><a href="<c:url value='/manager/export.jsp'/>">Export Database to XML</a></li>
+   <li><a href="<c:url value='/manager/import.jsp'/>">Import into Database from XML</a></li>
   </ul>
  </div>
 </div>

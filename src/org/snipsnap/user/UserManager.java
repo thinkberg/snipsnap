@@ -223,7 +223,15 @@ public class UserManager implements Loader {
 
   public User authenticate(String login, String passwd) {
     User user = load(login);
-    if (null != user && (user.getPasswd().equals(passwd) || Digest.authenticate(passwd, user.getPasswd()))) {
+/*
+    System.out.println("user: "+user);
+    System.out.println("check: unencrypted: "+user.getPasswd().equals(passwd));
+    System.out.println(passwd+"-"+Digest.getDigest(passwd)+"-"+user.getPasswd());
+    System.out.println("check: encrypted: "+Digest.authenticate(passwd, user.getPasswd()));
+*/
+    if (null != user &&
+      (user.getPasswd().equals(passwd) ||
+      Digest.authenticate(passwd, user.getPasswd()))) {
       user.lastLogin();
       storageStore(user);
       return user;

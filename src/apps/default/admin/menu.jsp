@@ -4,7 +4,7 @@
   ** @version $Id$
   --%>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
-<c:url var="base" value="/exec/admin/"/>
+<c:url var="base" value="/manager/"/>
 <div class="snip-title">
   <h1 class="snip-name">Administrative Interface (<c:out value="${config.name}"/>)</h1>
 </div>

@@ -75,7 +75,7 @@ public class ExportServlet extends HttpServlet {
       out = response.getOutputStream();
     } else {
       errors.put("message", ERR_WRONG_OUTPUT);
-      response.sendRedirect(SnipLink.absoluteLink(request, "/exec/admin/export.jsp"));
+      response.sendRedirect(SnipLink.absoluteLink(request, "/manager/export.jsp"));
       return;
     }
 
@@ -93,14 +93,14 @@ public class ExportServlet extends HttpServlet {
       XMLSnipExport.store(out, exportMask);
     } catch (IOException e) {
       errors.put("message", ERR_IOEXCEPTION);
-      response.sendRedirect(SnipLink.absoluteLink(request, "/exec/admin/export.jsp"));
+      response.sendRedirect(SnipLink.absoluteLink(request, "/manager/export.jsp"));
       return;
     }
 
     if("application".equals(output)) {
       out.close();
       errors.put("message", OK_EXPORTED);
-      response.sendRedirect(SnipLink.absoluteLink(request, "/exec/admin/export.jsp"));
+      response.sendRedirect(SnipLink.absoluteLink(request, "/manager/export.jsp"));
     }
   }
 }

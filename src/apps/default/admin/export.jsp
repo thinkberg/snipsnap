@@ -14,7 +14,7 @@
 
 
  <h2>Export Database</h2>
- <form class="form" method="post" action="<c:url value='/exec/admin/export'/>">
+ <form class="form" method="post" action="<c:url value='/manager/export'/>">
   <table class="wiki-table" border="0" cellspacing="0" cellpadding="2">
    <tr>
     <td valign="top">Select Output:</td>

@@ -14,7 +14,7 @@
  </c:forEach>
 
  <h2>Import into Database</h2>
- <form class="form" method="post" action="<c:url value='/exec/admin/import'/>" enctype="multipart/form-data">
+ <form class="form" method="post" action="<c:url value='/manager/import'/>" enctype="multipart/form-data">
   <table class="wiki-table" border="0" cellspacing="0" cellpadding="2">
    <tr>
     <td valign="top">XML File with Users/Snips:</td>
