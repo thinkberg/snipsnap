@@ -26,7 +26,7 @@ if [ ! -f $base/$jar/snipsnap.jar ]; then
 fi
 
 # put classpath together
-CLASSPATH=lib/xmlrpc-1.1.jar:lib/jakarta.jar:lib/javax.servlet.jar:lib/mckoidb.jar:lib/org.apache.jasper.jar:lib/org.mortbay.jetty.jar:lib/jdbcpool.jar:lib/lucene-1.2.jar:$JAVA_HOME/lib/tools.jar
+CLASSPATH=lib/xmlrpc-1.1.jar:lib/jakarta.jar:lib/javax.servlet.jar:lib/mckoidb.jar:lib/org.apache.jasper.jar:lib/org.mortbay.jetty.jar:lib/jdbcpool.jar:lib/lucene-1.2.jar:lib/jython.jar:$JAVA_HOME/lib/tools.jar
 
 if [ "$1" = "stop" ]; then
   cmdline='-admin shutdown'

@@ -98,6 +98,7 @@ public class CreateDB {
         "       backLinks   TEXT, " +
         "       snipLinks   TEXT, " +
         "       labels      TEXT, " +
+        "       attachments TEXT, " +
         "       viewCount   INTEGER, " +
         "       permissions VARCHAR(200) )");
 

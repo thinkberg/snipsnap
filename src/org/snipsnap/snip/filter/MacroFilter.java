@@ -60,6 +60,7 @@ public class MacroFilter extends RegexTokenFilter {
         add(new LinkMacro());
         add(new AnnotationMacro());
         add(new CodeMacro());
+        add(new ScriptMacro());
         add(new IsbnMacro());
         add(new ApiMacro());
         add(new TableMacro());

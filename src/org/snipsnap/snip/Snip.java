@@ -46,6 +46,7 @@ public class Snip implements Ownable, Nameable {
   public Snip parent;
   private List children;
   private Snip comment;
+  private Attachments attachments;
   private Comments comments;
   private Permissions permissions;
   private String name, content;
@@ -136,6 +137,14 @@ public class Snip implements Ownable, Nameable {
 
   public void setOUser(String oUser) {
     this.oUser = oUser;
+  }
+
+  public Attachments getAttachments() {
+      return attachments;
+  }
+
+  public void setAttachments(Attachments attachments) {
+      this.attachments = attachments;
   }
 
   public Labels getLabels() {

@@ -112,6 +112,13 @@ public class SnipSpace implements LinkTester, Loader {
     return storageByDateInName(start, end);
   }
 
+  /**
+   * A list of Snips, ordered by "hotness", currently
+   * viewcount.
+   *
+   * @param count number of snips in the result
+   * @return List of snips, ordered by hotness
+   */
   public List getHot(int count) {
     return storageByHotness(count);
   }
@@ -280,13 +287,14 @@ public class SnipSpace implements LinkTester, Loader {
     snip.setBackLinks(new Links(result.getString("backLinks")));
     snip.setSnipLinks(new Links(result.getString("snipLinks")));
     snip.setLabels(new Labels(result.getString("labels")));
+    snip.setAttachments(new Attachments(result.getString("attachments")));
     snip.setViewCount(result.getInt("viewCount"));
     return snip;
   }
 
   private List storageAll() {
     Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions, " +
-                               " oUser, backLinks, snipLinks, labels, viewCount " +
+                               " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
                                " FROM Snip " +
                                " ORDER BY name", cache, (Loader) this, false);
     return finder.execute();
@@ -294,7 +302,7 @@ public class SnipSpace implements LinkTester, Loader {
 
   private List storageByHotness(int size) {
     Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions, " +
-                               " oUser, backLinks, snipLinks, labels, viewCount " +
+                               " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
                                " FROM Snip " +
                                " ORDER by viewCount DESC", cache, (Loader) this);
     return finder.execute(size);
@@ -302,7 +310,7 @@ public class SnipSpace implements LinkTester, Loader {
 
   private List storageByRecent(int size) {
     Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions, " +
-                               " oUser, backLinks, snipLinks, labels, viewCount " +
+                               " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
                                " FROM Snip " +
                                " ORDER by mTime DESC", cache, (Loader) this);
 
@@ -311,7 +319,7 @@ public class SnipSpace implements LinkTester, Loader {
 
   private List storageByUser(String login) {
     Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions, " +
-                               " oUser, backLinks, snipLinks, labels, viewCount " +
+                               " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
                                " FROM Snip " +
                                " WHERE cUser=?", cache, (Loader) this);
     finder.setString(1, login);
@@ -320,7 +328,7 @@ public class SnipSpace implements LinkTester, Loader {
 
   private List storageByComments(Snip parent) {
     Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions, " +
-                               " oUser, backLinks, snipLinks, labels, viewCount " +
+                               " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
                                " FROM Snip " +
                                " WHERE commentSnip=?", cache, (Loader) this);
     finder.setString(1, parent.getName());
@@ -329,7 +337,7 @@ public class SnipSpace implements LinkTester, Loader {
 
   private List storageByParent(Snip parent) {
     Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions, " +
-                               " oUser, backLinks, snipLinks, labels, viewCount " +
+                               " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
                                " FROM Snip " +
                                " WHERE parentSnip=?", cache, (Loader) this);
     finder.setString(1, parent.getName());
@@ -338,7 +346,7 @@ public class SnipSpace implements LinkTester, Loader {
 
   private List storageByParentNameOrder(Snip parent, int count) {
     Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions, " +
-                               " oUser, backLinks, snipLinks, labels, viewCount " +
+                               " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
                                " FROM Snip " +
                                " WHERE parentSnip=? " +
                                " ORDER BY name DESC ", cache, (Loader) this);
@@ -348,7 +356,7 @@ public class SnipSpace implements LinkTester, Loader {
 
   private List storageByDateInName(String start, String end) {
     Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions, " +
-                               " oUser, backLinks, snipLinks, labels, viewCount " +
+                               " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
                                " FROM Snip " +
                                " WHERE name>=? and name<=? and parentSnip=? " +
                                " ORDER BY name", cache, (Loader) this);
@@ -368,7 +376,7 @@ public class SnipSpace implements LinkTester, Loader {
 
     try {
       statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions, " +
-                                              " oUser, backLinks, snipLinks, labels, viewCount " +
+                                              " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
                                               " FROM Snip " +
                                               " WHERE name=?");
       statement.setString(1, name);
@@ -395,7 +403,7 @@ public class SnipSpace implements LinkTester, Loader {
     try {
       statement = connection.prepareStatement("UPDATE Snip SET name=?, content=?, cTime=?, mTime=?, " +
                                               " cUser=?, mUser=?, parentSnip=?, commentSnip=?, permissions=?, " +
-                                              " oUser=?, backLinks=?, snipLinks=?, labels=?, viewCount=? " +
+                                              " oUser=?, backLinks=?, snipLinks=?, labels=?, attachments=?, viewCount=? " +
                                               " WHERE name=?");
       statement.setString(1, snip.getName());
       statement.setString(2, snip.getContent());
@@ -420,8 +428,9 @@ public class SnipSpace implements LinkTester, Loader {
       statement.setString(11, snip.getBackLinks().toString());
       statement.setString(12, snip.getSnipLinks().toString());
       statement.setString(13, snip.getLabels().toString());
-      statement.setInt(14, snip.getViewCount());
-      statement.setString(15, snip.getName());
+      statement.setString(14, snip.getAttachments().toString());
+      statement.setInt(15, snip.getViewCount());
+      statement.setString(16, snip.getName());
       statement.execute();
     } catch (SQLException e) {
       e.printStackTrace();
@@ -451,11 +460,12 @@ public class SnipSpace implements LinkTester, Loader {
     snip.setBackLinks(new Links());
     snip.setSnipLinks(new Links());
     snip.setLabels(new Labels());
+    snip.setAttachments(new Attachments());
 
     try {
       statement = connection.prepareStatement("INSERT INTO Snip (name, content, cTime, mTime, " +
                                               " cUser, mUser, parentSnip, commentSnip, permissions, " +
-                                              " oUser, backLinks, snipLinks, labels, viewCount " +
+                                              " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
                                               " ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
       statement.setString(1, name);
       statement.setString(2, content);
@@ -480,7 +490,8 @@ public class SnipSpace implements LinkTester, Loader {
       statement.setString(11, snip.getBackLinks().toString());
       statement.setString(12, snip.getSnipLinks().toString());
       statement.setString(13, snip.getLabels().toString());
-      statement.setInt(14, snip.getViewCount());
+      statement.setString(14, snip.getAttachments().toString());
+      statement.setInt(15, snip.getViewCount());
       statement.execute();
     } catch (SQLException e) {
       e.printStackTrace();
