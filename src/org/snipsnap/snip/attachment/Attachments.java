@@ -140,7 +140,6 @@ public class Attachments {
    */
   private synchronized void deserialize() {
     if (null == attachments) {
-      Logger.log("deserializing attachments");
       attachments = new HashMap();
       if (null != cache && !"".equals(cache)) {
         Document attXml;
@@ -153,7 +152,6 @@ public class Attachments {
             Element attElement = (Element) it.next();
             try {
               String name = attElement.element(NAME).getText();
-              Logger.log("found attachment: " + name);
               String contentType = attElement.element(CONTENTTYPE).getTextTrim();
               int size = Integer.parseInt(attElement.element(SIZE).getTextTrim());
               Date date = new Date(Long.parseLong(attElement.element(DATE).getTextTrim()));

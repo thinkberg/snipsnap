@@ -116,12 +116,13 @@ public class WeblogMacro extends SnipMacro {
         Snip entry = (Snip) object;
 
         String[] entryName = StringUtil.split(entry.getName(), "/");
+        String day = (entryName.length > 1 ? entryName[DAY_INDEX] : entryName[0]);
         // New Day?
         //System.err.println("entryName="+Arrays.asList(entryName));
-        if (! lastDay.equals(entryName[DAY_INDEX])) {
+        if (!lastDay.equals(day)) {
           writer.write("<div class=\"blog-date\">");
-          writer.write(SnipUtil.toDate(entryName[DAY_INDEX]));
-          lastDay = entryName[DAY_INDEX];
+          writer.write(SnipUtil.toDate(day));
+          lastDay = day;
           writer.write("</div>");
         }
 

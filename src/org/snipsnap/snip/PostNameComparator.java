@@ -50,7 +50,8 @@ public class PostNameComparator implements Comparator {
     String name2 = (String) o2;
     int index1 = name1.lastIndexOf("/");
     int index2 = name2.lastIndexOf("/");
-    int result = name2.substring(0,index1).compareTo(name1.substring(0,index2));
+    int result = name2.substring(0, index2 != -1 ? index2 : name2.length())
+      .compareTo(name1.substring(0, index1 != -1 ? index1 : name1.length()));
     if (0 == result) {
       int number1 = Integer.parseInt(name1.substring(index1+1));
       int number2 = Integer.parseInt(name2.substring(index2+1));
