@@ -45,8 +45,6 @@ public interface Blog {
 
   public Snip post(String content, Date date);
 
-  public Snip post(Snip weblog, String content, Date date);
-
   public List getFlatPosts();
 
   public List getPosts(int count);

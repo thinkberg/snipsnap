@@ -18,6 +18,10 @@ public class MockSnipSpace extends MockObject implements SnipSpace {
     snips = new HashMap();
   }
 
+  public Snip[] match(String start, String end) {
+    return new Snip[0];
+  }
+
   // A snip is changed by the user (created, stored)
   public Snip[] match(String pattern) {
     return new Snip[0];

@@ -31,10 +31,14 @@ import org.snipsnap.user.Roles;
 import org.snipsnap.xmlrpc.WeblogsPing;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
+import org.snipsnap.date.Month;
 
 import java.sql.Date;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.ArrayList;
 
 /**
  * BlogImpl for Blog.
@@ -49,9 +53,13 @@ public class BlogImpl implements Blog {
   private SnipSpace space;
   private Snip snip;
 
-  public BlogImpl(SnipSpace space, String name) {
+  public BlogImpl(SnipSpace space, String blogName) {
     this.space = space;
-    this.name = name;
+    // May not be initialized, so set it to something sane
+    if (blogName == null || "".equals(blogName)) {
+      blogName = "start";
+    }
+    this.name = blogName;
     this.blog = space.load(name);
   }
 
@@ -69,41 +77,24 @@ public class BlogImpl implements Blog {
   }
 
   public Snip post(String content, Date date) {
-    return post(blog, content, date);
-  }
-
-  public Snip post(Snip weblog, String content, Date date) {
     String snipName = name + "/" + SnipUtil.toName(date);
     Snip snip = null;
 
     // Should several posts per day be one snip or
     // several snips?
-    if (Application.get().getConfiguration().allow(Configuration.APP_PERM_MULTIPLEPOSTS)) {
+    int max = findMaxPost(snipName);
+    if (true) { // Application.get().getConfiguration().allow(Configuration.APP_PERM_MULTIPLEPOSTS)) {
       // if (space.exists(snipName)) {
       // }
       // how many children do exist?
       // get the highest count
-      // e.g. start/2003-05.06
-      Snip[] existing = space.match(snipName+"/");
-      int max = 1;
-      System.out.println("found="+existing.length+" name="+snipName);
-      for (int i = 0; i < existing.length; i++) {
-        Snip post = existing[i];
-        String name = post.getName();
-        int index = name.lastIndexOf('/');
-        System.out.println("name="+name);
-        if (index != -1) {
-          try {
-            System.out.println("parsing="+name.substring(index+1));
-            max = Math.max(Integer.parseInt(name.substring(index + 1)) + 1, max);
-            System.out.println("max="+max);
-          } catch (NumberFormatException e) {
-            //
-          }
-        }
-      }
-      snip = snip = space.create(snipName + "/" + max, content);
+      // e.g. start/2003-05-06
+      snip = snip = space.create(snipName + "/" + (max+1), content);
     } else {
+      // there was a post with a least /1 then add to that post
+      if (max != 0) {
+         snipName = snipName + "/" + max;
+      }
       if (space.exists(snipName)) {
         snip = space.load(snipName);
         snip.setContent(content + "\n\n" + snip.getContent());
@@ -117,8 +108,30 @@ public class BlogImpl implements Blog {
     space.store(snip);
 
     // Ping weblogs.com that we changed our site
-    WeblogsPing.ping(weblog);
+    WeblogsPing.ping(blog);
     return snip;
+  }
+
+  private int findMaxPost(String snipName) {
+    Snip[] existing = space.match(snipName+"/");
+    int max = 0;
+    //System.out.println("found="+existing.length+" name="+snipName);
+    for (int i = 0; i < existing.length; i++) {
+      Snip post = existing[i];
+      String name = post.getName();
+      int index = name.lastIndexOf('/');
+      //System.out.println("name="+name);
+      if (index != -1) {
+        try {
+          //System.out.println("parsing="+name.substring(index+1));
+          max = Math.max(Integer.parseInt(name.substring(index + 1)), max);
+          //System.out.println("max="+max);
+        } catch (NumberFormatException e) {
+          //
+        }
+      }
+    }
+    return max;
   }
 
   public List getFlatPosts() {
@@ -126,10 +139,20 @@ public class BlogImpl implements Blog {
   }
 
   public List getPosts(int count) {
+    // simpledateformat?
+    Calendar startC = new GregorianCalendar();
+    startC.setTime(new java.util.Date());
+    Calendar endC = (Calendar) startC.clone();
+    endC.add(Calendar.DAY_OF_MONTH, count-1);
+    String start = name + "/" + Month.toKey(startC);
+    String end = name+ "/" + Month.toKey(endC);
+
     //@TODO: reduce number of posts to count;
     //@TODO: reorder snips
-    List posts = space.getChildrenDateOrder(blog, count);
-    posts.addAll(Arrays.asList(space.match(name + "/")));
+    //List posts = new ArrayList();
+    //space.getChildrenDateOrder(blog, count);
+    List posts = Arrays.asList(space.match(start, end));
+    // sort
     return posts;
   }
 

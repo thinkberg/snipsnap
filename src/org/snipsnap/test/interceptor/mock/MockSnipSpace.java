@@ -1,4 +1,4 @@
-package org.snipsnap.test.mock;
+package org.snipsnap.test.interceptor.mock;
 
 import org.apache.lucene.search.Hits;
 import org.snipsnap.snip.Blog;
@@ -20,6 +20,10 @@ public class MockSnipSpace extends MockObject implements SnipSpace {
 
   // A snip is changed by the user (created, stored)
   public Snip[] match(String pattern) {
+    return new Snip[0];
+  }
+
+  public Snip[] match(String start, String end) {
     return new Snip[0];
   }
 

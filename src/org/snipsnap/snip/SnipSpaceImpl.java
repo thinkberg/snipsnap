@@ -127,7 +127,7 @@ public class SnipSpaceImpl implements SnipSpace {
     return getBlog(Application.get().getConfiguration().getStartSnip());
   }
 
-  // Perhaps add getBlog(Wnip)
+  // Perhaps add getBlog(Snip)
   public Blog getBlog(String name) {
     Blog blog;
     if (blogs.containsKey(name)) {
@@ -235,6 +235,10 @@ public class SnipSpaceImpl implements SnipSpace {
 
   public Snip[] match(String pattern) {
     return storage.match(pattern.toUpperCase());
+  }
+
+  public Snip[] match(String start, String end) {
+    return storage.match(start, end);
   }
 
   public Snip load(String name) {

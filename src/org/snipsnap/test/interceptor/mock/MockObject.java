@@ -1,4 +1,4 @@
-package org.snipsnap.test.mock;
+package org.snipsnap.test.interceptor.mock;
 
 import java.util.HashMap;
 import java.util.Map;

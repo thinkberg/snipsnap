@@ -55,6 +55,10 @@ public class CacheSnipStorage implements SnipStorage, CacheStorage {
     return storage.match(pattern);
   }
 
+  public Snip[] match(String start, String end) {
+    return storage.match(start, end);
+  }
+
   // Basic manipulation methods Load,Store,Create,Remove
   public Snip storageLoad(String name) {
     Snip snip;

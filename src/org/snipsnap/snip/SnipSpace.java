@@ -90,6 +90,8 @@ public interface SnipSpace  {
 
   public Snip[] match(String pattern);
 
+  public Snip[] match(String start, String end);
+
   public Snip load(String name);
 
   public void store(Snip snip);

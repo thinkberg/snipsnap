@@ -50,8 +50,12 @@ public class PartialSearcher implements Map {
   }
 
   public Snip[] match(String s) {
-    int startIdx = binarySearch(sortedArray, s, 0, sortedArray.length - 1);
-    int endIdx = binarySearch(sortedArray, s + '\uFFFF', 0, sortedArray.length - 1);
+     return match(s, s + '\uFFFF');
+  }
+
+  public Snip[] match(String start, String end) {
+    int startIdx = binarySearch(sortedArray, start, 0, sortedArray.length - 1);
+    int endIdx = binarySearch(sortedArray, end, 0, sortedArray.length - 1);
 
     Snip[] objs = new Snip[endIdx - startIdx];
     for (int i = startIdx; i < endIdx; i++) {

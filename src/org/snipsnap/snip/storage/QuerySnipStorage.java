@@ -87,6 +87,10 @@ public class QuerySnipStorage implements SnipStorage {
     return storage.match(pattern);
   }
 
+  public Snip[] match(String start, String end) {
+    return storage.match(start, end);
+  }
+
   public Snip storageLoad(String name) {
     return storage.storageLoad(name);
   }

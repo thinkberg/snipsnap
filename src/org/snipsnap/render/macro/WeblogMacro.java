@@ -27,12 +27,19 @@ package org.snipsnap.render.macro;
 
 import org.snipsnap.render.filter.links.BackLinks;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
-import org.snipsnap.snip.*;
+import org.snipsnap.snip.Blog;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipSpaceFactory;
+import org.snipsnap.snip.SnipUtil;
+import org.snipsnap.util.StringUtil;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Arrays;
 
 /*
  * Macro that displays a weblog. All subsnips are read and
@@ -55,7 +62,7 @@ public class WeblogMacro extends SnipMacro {
   }
 
   public String getDescription() {
-    return "Renders the sub-snips of the snip as a weblog.";
+    return "Renders the sub-snips from the namespace as a weblog.";
   }
 
   public String[] getParamDescription() {
@@ -73,15 +80,49 @@ public class WeblogMacro extends SnipMacro {
         count = 10;
       }
 
-      Blog blog = SnipSpaceFactory.getInstance().getBlog(params.getSnip().getName());
+      String name = params.getSnip().getName();
+      Blog blog = space.getBlog(name);
 
+      // order by name
+      // with correct ending /1,/2,/3,...,/11,/12
       List posts = blog.getPosts(count);
 
+      // Convert
+      // - all Snips with start parent -> rename start/2003-05-02
+      // - comments?
+
+      // start/2002-03-01
+      // start/2002-05-06
+      // start/2002-05-06/1
+      // start/2002-05-06/2
+      //
+      // 1. Group by day
+      //    - iterate
+      //    - cut "name/"
+      //    - get day
+      //    - if day changes, render new day
+      // 2. Render each day
+
+      int NAME_INDEX = 0;
+      int DAY_INDEX = 1;
+      int COUNT_INDEX = 2;
+
+      String lastDay = "";
       Iterator iterator = posts.iterator();
       while (iterator.hasNext()) {
         Snip entry = (Snip) iterator.next();
-        writer.write("<div class=\"blog-date\">");
-        writer.write(SnipUtil.toDate(entry.getName()));
+
+        String[] entryName = StringUtil.split(entry.getName(), "/");
+        // New Day?
+        System.err.println("entryName="+Arrays.asList(entryName));
+        if (! lastDay.equals(entryName[DAY_INDEX])) {
+          writer.write("<div class=\"blog-date\">");
+          writer.write(SnipUtil.toDate(entryName[DAY_INDEX]));
+          lastDay = entryName[DAY_INDEX];
+          writer.write("</div>");
+        }
+
+        writer.write(entry.getXMLContent());
         writer.write(" <a href=\"");
         SnipLink.appendUrl(writer, entry.getName());
         writer.write("\" title=\"Permalink to ");
@@ -89,8 +130,7 @@ public class WeblogMacro extends SnipMacro {
         writer.write("\">");
         SnipLink.appendImage(writer, "permalink", "PermaLink");
         writer.write("</a>");
-        writer.write("</div>");
-        writer.write(entry.getXMLContent());
+
         writer.write("<div class=\"snip-post-comments\">");
         writer.write(entry.getComments().getCommentString());
         writer.write(" | ");

@@ -84,6 +84,10 @@ public class MemorySnipStorage implements SnipStorage {
     return cacheMap.match(pattern);
   }
 
+  public Snip[] match(String start, String end) {
+    return cacheMap.match(start, end);
+  }
+
   public Snip storageLoad(String name) {
     return (Snip) cacheMap.get(name.toUpperCase());
   }

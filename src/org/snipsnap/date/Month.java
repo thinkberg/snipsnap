@@ -71,6 +71,12 @@ public class Month {
     weekDaysShort = symbols.getShortWeekdays();
   }
 
+  public static String toKey(Calendar calendar) {
+    return toKey(calendar.get(Calendar.YEAR),
+          calendar.get(Calendar.MONTH),
+          calendar.get(Calendar.DAY_OF_MONTH));
+  }
+
   public static String toKey(int year, int month, int day) {
     return year + "-" + (month < 10 ? "0" + month : "" + month) + "-" + (day < 10 ? "0" + day : "" + day);
   }

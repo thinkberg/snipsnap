@@ -214,6 +214,11 @@ public class JDBCSnipStorage implements SnipStorage, CacheableStorage {
     return new Snip[]{};
   }
 
+  public Snip[] match(String start, String end) {
+    //@TODO implement this with LIKE
+    return new Snip[]{};
+  }
+
   public Snip storageLoad(String name) {
     // Logger.debug("LOAD "+name);
 
