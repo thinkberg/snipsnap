@@ -7,6 +7,7 @@
 
   <property file="conf/build.properties"/>
 
+
   <!-- the overall class path -->
   <path id="classpath">
     <pathelement location="${jar}/jdbcpool.jar"/>
@@ -21,8 +22,9 @@
   </path>
 
   <!-- build binary distribution package -->
-  <target depends="clean,jar" description="build binary package" name="bin-tar">
-    <tar destfile="../${appname}-${version}-${DSTAMP}${TSTAMP}.tgz" compression="gzip">
+  <target depends="clean,jar" description="build binary package" name="src-tar">
+    <tstamp/>
+    <tar destfile="../${appname}-${version}-${DSTAMP}${TSTAMP}-src.tgz" compression="gzip">
       <tarfileset dir="." prefix="${appname}-${version}">
         <include name="**"/>
         <exclude name="**/CVS"/>
@@ -30,8 +32,9 @@
     </tar>
   </target>
 
-  <target depends="clean, jar" description="build source package" name="src-tar">
-    <tar destfile="${appname}-${version}.tgz" compression="gzip">
+  <target depends="clean, jar" description="build source package" name="bin-tar">
+    <tstamp/>
+    <tar destfile="${appname}-${version}-${DSTAMP}${TSTAMP}.tgz" compression="gzip">
       <tarfileset dir="." prefix="${appname}-${version}" mode="566">
         <include name="run.sh"/>
       </tarfileset>
