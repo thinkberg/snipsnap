@@ -73,6 +73,10 @@ public class Access {
           if (index != -1) {
             url = url.substring(0, index);
           }
+          index = url.indexOf("#");
+          if(index != -1) {
+            url = url.substring(0, index);
+          }
           // Hack to remove possible jsessionid
           index = url.indexOf(";jsessionid");
           if (index != -1) {

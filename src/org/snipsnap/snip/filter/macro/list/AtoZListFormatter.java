@@ -47,8 +47,6 @@ public class AtoZListFormatter implements ListoutputMacro.ListFormatter {
    */
   public void format(StringBuffer buffer, String listComment, Collection c, String emptyText) {
     if (c.size() > 0) {
-      buffer.append("<b>").append(listComment).append("(").append(c.size()).append("):</b>");
-      buffer.append("<table width=\"100%\" class=\"index-table\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
       Iterator it = c.iterator();
       Map atozMap = new HashMap();
       List numberRestList = new ArrayList();
@@ -71,6 +69,33 @@ public class AtoZListFormatter implements ListoutputMacro.ListFormatter {
         }
       }
 
+      buffer.append("<table width=\"100%\" class=\"index-table\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
+      for(int idxChar = 'A'; idxChar <= 'Z'; idxChar++) {
+        buffer.append("<tr class=\"index-table-header\">");
+        for(int i = 0; i < 5 && idxChar + i <= 'Z'; i++) {
+          String ch = "" + (char)(idxChar + i);
+          buffer.append("<td><b> &nbsp;<a href=\"#idx"+ch+"\">").append(ch).append("</a></b></td>");
+          buffer.append("<td>...</td><td>");
+          buffer.append(atozMap.get(ch) == null ? 0 : ((List)atozMap.get(ch)).size());
+          buffer.append("&nbsp; </td>");
+        }
+        idxChar += 5;
+        if(idxChar >= 'Z') {
+          buffer.append("<td></td></td></td><td></td><td></td>");
+          buffer.append("<td><b> &nbsp;<a href=\"#idx@\">@</a></b></td>");
+          buffer.append("<td>...</td><td>");
+          buffer.append(numberRestList.size()).append("&nbsp; </td>");
+          buffer.append("<td><b> &nbsp;<a href=\"#idx0-9\">0-9</a></b></td>");
+          buffer.append("<td>...</td><td>");
+          buffer.append(otherRestList.size()).append("&nbsp; </td>");
+        }
+        buffer.append("</tr>");
+
+      }
+      buffer.append("</table>");
+
+      buffer.append("<b>").append(listComment).append("(").append(c.size()).append("):</b>");
+      buffer.append("<table width=\"100%\" class=\"index-table\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
       for (int ch = 'A'; ch <= 'Z'; ch += 2) {
         String left = "" + (char) ch;
         String right = "" + (char) (ch + 1);
@@ -80,7 +105,6 @@ public class AtoZListFormatter implements ListoutputMacro.ListFormatter {
       }
       insertCharHeader(buffer, "0-9", "@");
       addRows(buffer, numberRestList, otherRestList);
-
       buffer.append("</table>");
     } else {
       buffer.append(emptyText);
@@ -100,10 +124,10 @@ public class AtoZListFormatter implements ListoutputMacro.ListFormatter {
 
   private void insertCharHeader(StringBuffer buffer, String leftHeader, String rightHeader) {
     buffer.append("<tr class=\"index-table-header\"><td>");
-    buffer.append(leftHeader);
-    buffer.append("</td><td>");
-    buffer.append(rightHeader);
-    buffer.append("</td></tr>");
+    buffer.append("<b><a name=\"idx").append(leftHeader).append("\"></a>").append(leftHeader);
+    buffer.append("</b></td><td> </td><td>");
+    buffer.append("<b><a name=\"idx").append(rightHeader).append("\"></a>").append(rightHeader);
+    buffer.append("</b></td></tr>");
   }
 
   private void insertRow(StringBuffer buffer, String left, String right, boolean odd) {
@@ -111,7 +135,7 @@ public class AtoZListFormatter implements ListoutputMacro.ListFormatter {
     if (left != null) {
       SnipLink.appendLink(buffer, left);
     }
-    buffer.append("</td><td>");
+    buffer.append("</td><td> </td><td>");
     if (right != null) {
       SnipLink.appendLink(buffer, right);
     }
