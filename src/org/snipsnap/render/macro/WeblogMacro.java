@@ -86,7 +86,7 @@ public class WeblogMacro extends SnipMacro {
       // order by name
       // with correct ending /1,/2,/3,...,/11,/12
       List posts = blog.getPosts(count);
-      System.out.println("Weblog Posts for '"+name+"': "+posts.size());
+      //System.out.println("Weblog Posts for '"+name+"': "+posts.size());
 
       // Convert
       // - all Snips with start parent -> rename start/2003-05-02
@@ -112,7 +112,7 @@ public class WeblogMacro extends SnipMacro {
       Iterator iterator = posts.iterator();
       while (iterator.hasNext()) {
         Object object = iterator.next();
-        System.err.println("Class="+object.getClass());
+        // System.err.println("Class="+object.getClass());
         Snip entry = (Snip) object;
 
         String[] entryName = StringUtil.split(entry.getName(), "/");

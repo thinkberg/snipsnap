@@ -152,7 +152,6 @@ public class BlogImpl implements Blog {
     //space.getChildrenDateOrder(blog, count);
     List posts = new ArrayList();
     List postList =  Arrays.asList(space.match(start, end));
-    System.out.println("found matched posts: "+postList.size() + ":"+start+":"+end+":"+count);
     posts.addAll(postList);
     Collections.sort(posts, comparator);
     // sort
