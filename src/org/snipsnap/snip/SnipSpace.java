@@ -40,6 +40,7 @@ import org.snipsnap.user.Digest;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
 import org.snipsnap.util.Queue;
+import org.snipsnap.util.mail.PostDaemon;
 import org.snipsnap.util.log.Logger;
 import org.snipsnap.xmlrpc.WeblogsPing;
 
@@ -59,7 +60,7 @@ public class SnipSpace implements LinkTester {
   private Cache cache;
   private SnipIndexer indexer;
   private FinderFactory finders;
-  private Timer timer;
+  private Timer timer, pop3Timer;
   private String eTag;
   private SnipStorage storage;
 
@@ -124,6 +125,9 @@ public class SnipSpace implements LinkTester {
       // execute after 5 minutes and then
       // every 5 minutes
     }, 5 * 60 * 1000, 5 * 60 * 1000);
+
+    // getting this will trigger Postdaemon
+    PostDaemon.getInstance();
   }
 
   public String getETag() {

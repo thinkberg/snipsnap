@@ -44,7 +44,7 @@ import java.util.StringTokenizer;
  * @version $Id$
  */
 public class NewUserServlet extends HttpServlet {
-  private final static String ERR_EXISTS = "User exists, please user another login name!";
+  private final static String ERR_EXISTS = "User exists, please choose another login name!";
   private final static String ERR_TOO_SHORT = "User name too short (min. 3 characters)!";
   private final static String ERR_ILLEGAL = "Illegal user name! Should only contain letters, numbers, underscore and a dot.";
   private final static String ERR_PASSWORD = "Password does not match!";
