@@ -79,7 +79,7 @@ public class GroovyMacroLoader extends MacroLoader implements Consumer {
       Class clazz = gcl.parseClass(is, "");
       Object aScript = clazz.newInstance();
       macro = (Macro) aScript;
-      System.out.println("Script="+macroSource);
+      //System.out.println("Script="+macroSource);
     } catch (Exception e) {
       System.err.println("Cannot compile groovy macro: " + e.getMessage());
       e.printStackTrace();

@@ -36,6 +36,7 @@ import org.snipsnap.snip.SnipSpaceFactory;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.*;
 
 /*
  * Macro for fulltext searches in SnipSnap. The macro
@@ -52,7 +53,7 @@ public class SnipTreeMacro extends BaseMacro {
   private SnipSpace space;
 
   private String[] paramDescription =
-     {"1: Namespace prefix"};
+      {"1: Namespace prefix"};
 
   public SnipTreeMacro() {
     space = SnipSpaceFactory.getInstance();
@@ -70,6 +71,59 @@ public class SnipTreeMacro extends BaseMacro {
     return "Show a tree of snips from the namespace.";
   }
 
+  private class Node {
+    private String name;
+    private boolean isSnip;
+    private Map children;
+    private String snipName;
+
+    public Node(String name, boolean isSnip) {
+      this.name = name;
+      this.isSnip = isSnip;
+      this.children = new LinkedHashMap();
+    }
+
+    public void setSnipName(String snipName) {
+      this.snipName = snipName;
+    }
+
+    public String getSnipName() {
+      return snipName;
+    }
+
+    public boolean hasChild(String name) {
+      return children.containsKey(name);
+    }
+
+    public void addChild(Node node) {
+      children.put(node.getName(), node);
+    };
+
+    public Node getChild(String name) {
+      return (Node) children.get(name);
+    }
+
+    public boolean hasChildren() {
+      return children.size() > 0;
+    }
+
+    public Collection getChildren() {
+      return children.values();
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public boolean isSnip() {
+      return isSnip;
+    }
+
+    public String toString() {
+      return name + " " + children.values().toString();
+    }
+  }
+
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
 
@@ -82,39 +136,54 @@ public class SnipTreeMacro extends BaseMacro {
     if (params.getLength() == 1) {
       Snip[] snips = space.match(params.get("0"));
 
-      int depth = -1;
-      int startDepth = -1;
-      int currentDepth = -1;
+      Node root = new Node("root", false);
+
       for (int i = 0; i < snips.length; i++) {
         Snip snip = snips[i];
         String elements[] = snip.getName().split("/");
-        currentDepth = elements.length-1;
-        if (startDepth == -1) {
-          startDepth = currentDepth;
-        }
-        if (currentDepth > depth) {
-          depth = currentDepth;
-          writer.write("<ul>");
-        } else if (currentDepth < depth) {
-          depth = currentDepth;
-          writer.write("</ul>");
-        }
-        writer.write("<li>");
-        SnipLink.appendLink(writer, snip.getName(), elements[elements.length-1]);
-        // writer.write(" :: "+snip.getName()+" sd:"+startDepth+" cd:"+currentDepth+" d:"+depth);
-        writer.write("</li>");
-      }
-      // There have been some snips
-      // We might have to close some lists
-      if (-1 != startDepth) {
-        for (int i=0; i < currentDepth; i++ ) {
-          writer.write("</ul>");
+
+        // Create all nodes till leaf
+        Node lastNode = root;
+        for (int j = 0; j < elements.length; j++) {
+          String name = elements[j];
+          if (!lastNode.hasChild(name)) {
+            boolean isSnip = (j == elements.length - 1);
+            Node node = new Node(name, isSnip);
+            if (isSnip) {
+              node.setSnipName(snip.getName());
+            }
+            lastNode.addChild(node);
+            lastNode = node;
+          } else {
+            lastNode = lastNode.getChild(name);
+          }
         }
       }
+
+      writeTree(writer, root);
     } else if (params.getLength() == 2) {
-      writer.write("<img src=\"/exec/namespace?name="+params.get(0)+"\"/>");
+      writer.write("<img src=\"/exec/namespace?name=" + params.get(0) + "\"/>");
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }
+  }
+
+  public void writeTree(Writer writer, Node node) throws IOException {
+    Iterator children = node.getChildren().iterator();
+    writer.write("<ul>");
+    while (children.hasNext()) {
+      Node child = (Node) children.next();
+      writer.write("<li>");
+      if (child.isSnip()) {
+        SnipLink.appendLink(writer, child.getSnipName(), child.getName());
+      } else {
+        writer.write(child.getName());
+      }
+      writer.write("</li>");
+      if (child.hasChildren()) {
+        writeTree(writer, child);
+      }
+    }
+    writer.write("</ul>");
   }
 }
