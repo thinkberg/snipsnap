@@ -173,12 +173,15 @@ public class UserManager {
     Connection connection = ConnectionManager.getConnection();
 
     try {
-      statement = connection.prepareStatement("UPDATE User SET login=?, passwd=?, email=?, status=?, roles=?");
+      statement = connection.prepareStatement("UPDATE User SET login=?, passwd=?, email=?, status=?, roles=? " +
+                                              " WHERE login=?");
+
       statement.setString(1, user.getLogin());
       statement.setString(2, user.getPasswd());
       statement.setString(3, user.getEmail());
-      statement.setString(3, user.getStatus());
-      statement.setString(4, serialize(user.getRoles()));
+      statement.setString(4, user.getStatus());
+      statement.setString(5, serialize(user.getRoles()));
+      statement.setString(6, user.getLogin());
 
       statement.execute();
     } catch (SQLException e) {
@@ -198,7 +201,7 @@ public class UserManager {
     User user = new User(login, passwd, email);
 
     try {
-      statement = connection.prepareStatement("INSERT INTO User (login,passwd, email, status, roles) VALUES (?,?,?,?,?)");
+      statement = connection.prepareStatement("INSERT INTO User (login, passwd, email, status, roles) VALUES (?,?,?,?,?)");
       statement.setString(1, login);
       statement.setString(2, passwd);
       statement.setString(3, email);
