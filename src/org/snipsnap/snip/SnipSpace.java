@@ -32,6 +32,7 @@ import com.neotis.util.ConnectionManager;
 import com.neotis.util.Queue;
 import com.neotis.cache.Cache;
 import com.neotis.user.Permissions;
+import com.neotis.user.Security;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -112,10 +113,12 @@ public class SnipSpace implements LinkTester, Loader {
     if (exists(name)) {
       snip = load(name);
       snip.setContent(snip.getContent() + "\n\n" + content);
+
     } else {
       snip = create(name, content, app);
     }
     snip.setParent(weblog);
+    snip.addPermission(Permissions.EDIT, Security.OWNER);
     store(snip);
     return snip;
   }
