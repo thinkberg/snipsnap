@@ -52,7 +52,7 @@ public class MultipartWrapper extends HttpServletRequestWrapper {
   Hashtable params = null;
   Map files = new HashMap();
 
-  public MultipartWrapper(HttpServletRequest request) throws IOException {
+  public MultipartWrapper(HttpServletRequest request) throws IOException, IllegalArgumentException {
     super(request);
 
     InputStreamDataSource ds = new InputStreamDataSource(request.getInputStream(), request.getContentType());
@@ -80,6 +80,7 @@ public class MultipartWrapper extends HttpServletRequestWrapper {
         }
       }
     } catch (MessagingException e) {
+      e.printStackTrace();
       throw new IllegalArgumentException("Error parsing request (not multipart/form-data?)");
     }
   }
