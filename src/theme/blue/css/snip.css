@@ -15,10 +15,11 @@
 
 .snip-name {
   width: 100%;
-  font-family: verdana, arial, sans-serif;
+  font-family: georgia, times new roman, times, serif;
   font-size: 15px;
   color: #000000;
   text-transform: none;
+  border-bottom: 1px solid #003366;
 }
 
 .snip-commented-snip {

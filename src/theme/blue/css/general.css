@@ -14,18 +14,18 @@
 /************************************************/
 /* ANCHOR tag                                   */
 a {
-  color: #9A1414;
+  color: #003366;
   font-family: verdana, arial, sans-serif;
   font-size:10px;
   text-decoration: none;
   font-weight:bold;
 }
 a:link {
-  color: #9A1414;
+  color: #003366;
   text-decoration: none;
 }
 a:visited	{
-  color: #9A1414;
+  color: #003366;
   text-decoration: none;
 }
 a:active {
