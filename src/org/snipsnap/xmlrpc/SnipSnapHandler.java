@@ -116,8 +116,12 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
     if (FREE_METHODS.contains(method)) {
       return super.execute(method, vector);
     } else if (PREFIX_METHODS.contains(method)) {
-      String prefix = "/";
-      String appOid = applicationManager.getApplication(prefix);
+      ApplicationManager appManager = (ApplicationManager) Components.getComponent(ApplicationManager.class);
+      if(!(vector.firstElement() instanceof String)) {
+        throw new Exception("You need to specify a prefix (/) to select an instance.");
+      }
+      String prefix = (String) vector.firstElement();
+      String appOid = appManager.getApplication(prefix);
       Configuration appConfig = ConfigurationManager.getInstance().getConfiguration(appOid);
       if (appConfig != null) {
         if(prefix.equals(vector.get(0))) {
@@ -225,6 +229,61 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
       throw new IOException(e.getMessage());
     }
     return true;
+  }
+
+  public String install(String prefix, Hashtable appConfig) throws Exception {
+    ConfigurationManager configManager = ConfigurationManager.getInstance();
+    ApplicationManager appManager = (ApplicationManager) Components.getComponent(ApplicationManager.class);
+    String appOid = appManager.getApplication(prefix);
+    Configuration config = configManager.getConfiguration(appOid);
+
+    // only set new values if config does not exits
+    if (null == config) {
+      config = ConfigurationProxy.newInstance();
+      Iterator optionIt = appConfig.keySet().iterator();
+      while (optionIt.hasNext()) {
+        String option = (String) optionIt.next();
+        String value = (String)appConfig.get(option);
+        config.set(option, value);
+      }
+      if (prefix != null && !"".equals(prefix)) {
+        if (!prefix.startsWith("/")) {
+          prefix = "/" + prefix;
+        }
+        config.setPrefix(prefix);
+      }
+      appOid = InitializeDatabase.init(config, new OutputStreamWriter(System.out));
+      return configManager.getConfiguration(appOid).getUrl();
+    }
+
+    return "a configuration for '"+prefix+"' already exists, aborting.";
+  }
+
+  /**
+   * Install a new instance with user name and password. Uses default configuration.
+   * @param prefix the instance prefix
+   * @param adminLogin admin login name
+   * @param passwd admin password
+   */
+  public String install(String prefix, String adminLogin, String passwd) throws Exception {
+    Hashtable appConfig = new Hashtable();
+    appConfig.put(Configuration.APP_ADMIN_LOGIN, adminLogin);
+    appConfig.put(Configuration.APP_ADMIN_PASSWORD, passwd);
+    return install(prefix, appConfig);
+  }
+
+  /**
+   * Install a new instance with user name and password. Uses the configuration as
+   * provided in the command line but overrides the admin user/password found in
+   * that file.
+   * @param prefix the instance prefix
+   * @param adminLogin admin login name
+   * @param passwd admin password
+   */
+  public String install(String prefix, String adminLogin, String passwd, Hashtable appConfig) throws Exception{
+    appConfig.put(Configuration.APP_ADMIN_LOGIN, adminLogin);
+    appConfig.put(Configuration.APP_ADMIN_PASSWORD, passwd);
+    return install(prefix, appConfig);
   }
 
 //  public int removeBacklink(String regexp) {

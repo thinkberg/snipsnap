@@ -39,13 +39,14 @@ import org.snipsnap.container.SessionService;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipSpaceFactory;
+import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.Digest;
 import org.snipsnap.user.User;
-import org.snipsnap.util.mail.PostDaemon;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -124,7 +125,7 @@ public class InitFilter implements Filter {
     if (null == installKey || "".equals(installKey)) {
       globals.setInstallKey(Digest.getDigest("" + new Date()).substring(0, 5).toLowerCase());
       System.out.println(">> Your installation key is '" + globals.getInstallKey() + "'");
-      System.out.println(">> Remember it, you will need this key to setup SnipSnap.");
+      System.out.println(">> Remember it, you will need this key to install new instances.");
       try {
         globals.storeGlobals(new FileOutputStream(configParam));
       } catch (Exception e) {
@@ -155,6 +156,7 @@ public class InitFilter implements Filter {
     Collection prefixes = appManager.getPrefixes();
     Iterator prefixIt = prefixes.iterator();
     Application app = Application.get();
+    int okCount = 0;
     boolean weblogsPing = false;
     while (prefixIt.hasNext()) {
       String prefix = (String) prefixIt.next();
@@ -169,6 +171,7 @@ public class InitFilter implements Filter {
         String configContent = configSnip.getContent();
         try {
           appConfig.load(new ByteArrayInputStream(configContent.getBytes()));
+          okCount++;
           System.out.print("(" + appConfig.getName() + ", " + appConfig.getUrl() + ")");
         } catch (IOException e) {
           System.out.print("ERROR: " + e.getMessage());
@@ -182,12 +185,13 @@ public class InitFilter implements Filter {
       System.out.println();
     }
     if (weblogsPing) {
-      System.out.println(">> WARNING: Weblogs ping is enabled.\n" +
+      System.out.println(">> WARNING: Weblogs ping is enabled for some instances.\n" +
                          ">> This means that SnipSnap sends notifications to hosts on the internet\n" +
                          ">> when your weblog changes. To turn this off take a look at the FAQ at\n" +
                          ">> http://snipsnap.org/space/faq");
     }
     System.out.println(">> Installation key: " + globals.getInstallKey());
+    System.out.println(">> Loaded " + okCount + " instances (" + (prefixes.size() - okCount) + " not configured).");
   }
 
   public void destroy() {
@@ -229,6 +233,18 @@ public class InitFilter implements Filter {
 
     // we need the path again, to make sure it is encoded correctly
     path = request.getServletPath();
+    if (path != null && path.length() > 1) {
+      int prefixEnd = path.indexOf("/", 1);
+      String checkPrefix = null;
+      if (prefixEnd > 1) {
+        checkPrefix = path.substring(0, prefixEnd);
+      } else {
+        checkPrefix = path;
+      }
+      if (appManager != null && appManager.getPrefixes().contains(checkPrefix)) {
+        prefix = checkPrefix;
+      }
+    }
 
     Configuration appConfig = null;
     // get application manager and application oid is possible
@@ -277,7 +293,7 @@ public class InitFilter implements Filter {
     if (null == appManager || null == appConfig || !appConfig.isConfigured()) {
       if (path == null || !(path.startsWith("/admin") || path.startsWith("/images"))) {
         String queryString = request.getQueryString();
-        queryString = (null == queryString || "".equals(queryString) ? "" : queryString);
+        queryString = (null == queryString || "".equals(queryString) ? "" : queryString + "&") + "prefix=" + prefix;
         ((HttpServletResponse) response).sendRedirect(request.getContextPath() + "/admin/configure?" + queryString);
         return;
       }
@@ -285,6 +301,8 @@ public class InitFilter implements Filter {
       if (!"/".equals(prefix)) {
         path = path.substring(prefix.length());
       }
+
+      request.setAttribute(Configuration.APP_PREFIX, prefix);
 
       session.setAttribute("app", app);
       session.setAttribute("space", SnipSpaceFactory.getInstance());
@@ -311,6 +329,22 @@ public class InitFilter implements Filter {
       paramMap.put("RSS", appConfig.getUrl("/exec/rss"));
       paramMap.put("request", request);
       app.setParameters(paramMap);
+    }
+
+    if (!"/".equals(prefix)) {
+      if("".equals(path)) {
+        path = "index.jsp";
+      }
+      // TODO: hack, find a way not to re-encode the path request
+      if(request.getClass().getName().startsWith("org.mortbay")) {
+        path = SnipLink.encode(path);
+      }
+      // try to send this request to the real servlets
+      RequestDispatcher dispatcher = request.getRequestDispatcher(path);
+      if (dispatcher != null) {
+        dispatcher.forward(request, response);
+        return;
+      }
     }
 
     // apply the chain

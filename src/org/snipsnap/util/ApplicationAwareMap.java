@@ -18,7 +18,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software                                                       Queue
+ * along with this program; if not, write to the Free Software 
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
@@ -26,7 +26,10 @@
 package org.snipsnap.util;
 
 import org.snipsnap.app.Application;
+import org.radeox.util.logging.Logger;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -37,13 +40,18 @@ import java.util.Map;
  */
 
 public class ApplicationAwareMap {
-  protected Object map;
+  protected Map applicationMaps;
   private Class mapType;
 
   public ApplicationAwareMap() {
   }
 
   public ApplicationAwareMap(Class outerMapType) {
+    try {
+      applicationMaps = (Map) outerMapType.newInstance();
+    } catch (Exception e) {
+      applicationMaps = new HashMap();
+    }
   }
 
   // @TODO Replace with generics
@@ -64,8 +72,10 @@ public class ApplicationAwareMap {
   }
 
   public Object getObject(String applicationOid) {
+    Object map = applicationMaps.get(applicationOid);
     if(null == map) {
       map = newInstance();
+      applicationMaps.put(applicationOid, map);
     }
     return map;
   }
@@ -87,7 +97,20 @@ public class ApplicationAwareMap {
     return getObject(application);
   }
 
+  /**
+   * Returns the first map containing the object.
+   * @param object
+   * @return
+   */
   public Map findMap(Object object) {
-    return null != object && null != map && ((Map)map).containsKey(object) ? (Map) map : null;
+    //Logger.debug("searching: ["+object+"] "+applicationMaps);
+    Iterator mapIt = applicationMaps.values().iterator();
+    while (mapIt.hasNext()) {
+      Map map = (Map) mapIt.next();
+      if (map.containsKey(object)) {
+        return map;
+      }
+    }
+    return null;
   }
 }

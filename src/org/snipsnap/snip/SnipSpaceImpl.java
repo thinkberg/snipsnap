@@ -133,6 +133,7 @@ public class SnipSpaceImpl implements SnipSpace {
     setETag();
     timer = new Timer();
     timer.schedule(new TimerTask() {
+
       public void run() {
         List toStoreList = delayed;
         // Just to be sure: To be atomic we first create the list and

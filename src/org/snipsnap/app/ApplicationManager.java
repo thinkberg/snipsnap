@@ -26,6 +26,8 @@
 package org.snipsnap.app;
 
 import java.util.Collection;
+import java.util.Map;
+import java.util.Iterator;
 import java.util.Properties;
 
 /**
@@ -38,15 +40,17 @@ import java.util.Properties;
 
 public class ApplicationManager {
   private ApplicationStorage storage;
-  private Properties props;
+  private Map prefixMap;
 
   public ApplicationManager(ApplicationStorage applicationStorage) {
     this.storage = applicationStorage;
-    props = (Properties)applicationStorage.getApplications().get("/");
+    prefixMap = storage.getApplications();
   }
 
   public Properties createApplication(String name, String prefix) {
-    return (props = storage.createApplication(name, "/"));
+    Properties prefixProps = storage.createApplication(name, prefix);
+    prefixMap.put(prefix, prefixProps);
+    return prefixProps;
   }
 
   public void removeApplication(String oid) {
@@ -54,7 +58,16 @@ public class ApplicationManager {
   }
 
   public String getPrefix(String oid) {
-    return props != null ? "/" : null;
+    String result = null;
+    Iterator iterator = prefixMap.keySet().iterator();
+    while (iterator.hasNext()) {
+      String prefix  = (String) iterator.next();
+      String aOid = getApplication(prefix);
+      if (oid.equals(aOid)) {
+        result = prefix;
+      }
+    }
+    return result;
   }
 
   public Collection getPrefixes() {
@@ -66,6 +79,10 @@ public class ApplicationManager {
   }
 
   public String getApplication(String prefix) {
-    return props != null ? props.getProperty(ApplicationStorage.OID) : null;
+    Properties prefixProps = (Properties) prefixMap.get(prefix);
+    if(null != prefixProps) {
+      return prefixProps.getProperty(ApplicationStorage.OID);
+    }
+    return null;
   }
 }

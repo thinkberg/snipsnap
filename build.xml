@@ -375,7 +375,7 @@
       </fileset>
     </copy>
     <copy tofile="${target}/webapp/WEB-INF/classes/i18n/messages.properties"
-      file="${src}/apps/default/WEB-INF/classes/i18n/messages_en.properties"/> 
+      file="${src}/apps/default/WEB-INF/classes/i18n/messages_en.properties"/>
 
     <loadfile property="web.inc" srcfile="${target}/jsp/web.inc" failonerror="false"/>
     <condition property="web.inc" value="">

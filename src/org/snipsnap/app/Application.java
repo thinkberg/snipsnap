@@ -55,7 +55,7 @@ public class Application {
 
   private static ThreadLocal instance = new ThreadLocal() {
     protected synchronized Object initialValue() {
-//      System.out.println("creating new initial application value");
+      Logger.debug("creating new initial application value");
       return new Application();
     }
   };
@@ -132,10 +132,14 @@ public class Application {
     }
     setUser(user);
     Application.addCurrentUser(user, session);
+    if(user.isGuest() || user.isNonUser()) {
+      session.setMaxInactiveInterval(120);
+    }
     return;
   }
 
   public static synchronized void addCurrentUser(User user, HttpSession session) {
+//    Logger.debug("Binding user to session: "+user+": "+session);
     currentUsers.getMap().put(session, user);
   }
 
@@ -193,13 +197,13 @@ public class Application {
       AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
 
       if (service.isAuthenticated(user)) {
-//        Logger.debug("Removing authenticated user from session: " + user);
+        Logger.debug("Removing authenticated user from session: " + user);
         user.setLastLogout(user.getLastAccess());
         // we ensure we remove the correct user by setting the OID from the user object
         Application.get().storeObject(Application.OID, user.getApplication());
         UserManagerFactory.getInstance().systemStore(user);
       } else {
-//        Logger.debug("Removing unauthenticated user from session: " + user);
+        Logger.debug("Removing unauthenticated user from session: " + user);
       }
       currentUsersMap.remove(session);
     } else {

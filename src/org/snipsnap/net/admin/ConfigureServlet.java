@@ -171,10 +171,28 @@ public class ConfigureServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
 
+    // If this is not a multipart/form-data request continue
+    String type = request.getHeader("Content-Type");
+    if (type != null && type.startsWith("multipart/form-data")) {
+      try {
+        request = new MultipartWrapper(request, "UTF-8");
+      } catch (IllegalArgumentException e) {
+        Logger.warn("ConfigureServlet: multipart/form-data wrapper:" + e.getMessage());
+      }
+    }
+
     HttpSession session = request.getSession();
     Configuration config = (Configuration) session.getAttribute(ATT_CONFIG);
 
-    String prefix = "/";
+    String prefix = request.getParameter(ATT_PREFIX);
+    if(null == prefix) {
+      prefix = (String)request.getAttribute(Configuration.APP_PREFIX);
+    }
+    if (prefix != null && config != null && !prefix.equals(config.getPrefix())) {
+      session.removeAttribute(ATT_CONFIG);
+      config = null;
+    }
+
     ApplicationManager appManager = null;
     String appOid = null;
     if (config == null && ConfigurationProxy.getInstance().isInstalled()) {
@@ -201,16 +219,6 @@ public class ConfigureServlet extends HttpServlet {
     }
 
     request.setAttribute(ATT_PREFIX, prefix);
-
-    // If this is not a multipart/form-data request continue
-    String type = request.getHeader("Content-Type");
-    if (type != null && type.startsWith("multipart/form-data")) {
-      try {
-        request = new MultipartWrapper(request, config.getEncoding() != null ? config.getEncoding() : "UTF-8");
-      } catch (IllegalArgumentException e) {
-        Logger.warn("ConfigureServlet: multipart/form-data wrapper:" + e.getMessage());
-      }
-    }
 
     // TODO same as in InitFilter
     Application app = Application.get();

@@ -24,17 +24,18 @@
  */
 package org.snipsnap.config;
 
-import org.radeox.util.logging.Logger;
-import org.snipsnap.container.Components;
 import org.snipsnap.notification.Consumer;
 import org.snipsnap.notification.Message;
 import org.snipsnap.notification.MessageService;
 import org.snipsnap.snip.Snip;
+import org.snipsnap.container.Components;
+import org.radeox.util.logging.Logger;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Iterator;
 
 /**
  * Manages configurations of this web application (different contexts)
@@ -45,8 +46,9 @@ import java.util.Iterator;
 public class ConfigurationManager implements Consumer {
   private static ConfigurationManager configManager = null;
 
-  private String oid;
-  private Configuration config;
+  // local configuration map
+  private Map configMap;
+  private Map prefixMap;
 
   public static ConfigurationManager getInstance() {
     if (null == configManager) {
@@ -56,6 +58,8 @@ public class ConfigurationManager implements Consumer {
   }
 
   private ConfigurationManager() {
+    configMap = new HashMap();
+    prefixMap = new HashMap();
   }
 
   public Configuration addConfiguration(String oid, Configuration config) {
@@ -63,36 +67,39 @@ public class ConfigurationManager implements Consumer {
       MessageService service = (MessageService)Components.getComponent(MessageService.class);
       service.register(this);
     }
-    this.oid = oid;
-    this.config = config;
+    configMap.put(oid, config);
+    prefixMap.put(config.getPrefix(), oid);
     return config;
   }
 
   public void removeConfiguration(String oid) {
-    if(oid != null && oid.equals(this.oid)) {
-      this.oid = null;
-      this.config = null;
+    Configuration config = (Configuration)configMap.get(oid);
+    if(config != null) {
+      configMap.remove(oid);
+      prefixMap.remove(config);
     }
   }
 
   public Configuration getConfiguration(String oid) {
-    return (oid != null && oid.equals(this.oid) ? config : null);
+    return (Configuration) configMap.get(oid);
   }
 
   public String checkForPrefix(String prefix) {
-    return (prefix != null && config != null && prefix.equals(config.getPrefix()) ? oid : null);
+    return (String)prefixMap.get(prefix);
   }
 
   public Iterator getOids() {
-    return (oid != null ? Arrays.asList(new String[] { oid }) : Arrays.asList(new String[] {})).iterator();
+    return configMap.keySet().iterator();
   }
 
   public void consume(Message messsage) {
     if(Message.SNIP_MODIFIED.equals(messsage.getType())) {
       Snip snip = (Snip)messsage.getValue();
       if("SnipSnap/config".equals(snip.getName())) {
+        String appOid = snip.getApplication();
+        Configuration config = getConfiguration(appOid);
         try {
-          Logger.log("reloading config for: "+oid);
+          Logger.log("reloading config for: "+appOid);
           config.load(new ByteArrayInputStream(snip.getContent().getBytes()));
         } catch (IOException e) {
           System.err.println("ConfigurationManager: unable to reload configuration: "+e);
