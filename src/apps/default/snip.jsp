@@ -41,6 +41,3 @@
   <td>Referrer: <%=request.getHeader("REFERER")%></td>
  </tr>
 </table>
-
-
-

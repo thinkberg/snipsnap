@@ -25,13 +25,15 @@ if [ ! -f $base/$jar/SnipSnap.jar ]; then
   exit
 fi
 
-if [ ! -x $base/db/data ]; then
-  echo "No database found, creating one ..."
-  $JAVA_HOME/bin/java -cp lib/SnipSnap.jar com.neotis.config.CreateDB
-fi
 
 # put classpath together
 CLASSPATH=lib/jakarta.jar:lib/javax.servlet.jar:lib/mckoidb.jar:lib/org.apache.jasper.jar:lib/org.mortbay.jetty.jar:lib/jdbcpool.jar:$JAVA_HOME/lib/tools.jar
+
+
+if [ ! -x $base/db/data ]; then
+  echo "No database found, creating one ..."
+  $JAVA_HOME/bin/java -cp $CLASSPATH:lib/SnipSnap.jar com.neotis.config.CreateDB
+fi
 
 # execute application server
 $JAVA_HOME/bin/java -cp $CLASSPATH:lib/SnipSnap.jar com.neotis.net.AppServer 2> server.log

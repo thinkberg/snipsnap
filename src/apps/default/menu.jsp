@@ -20,8 +20,8 @@
   <!-- replace this with a JSTL tag ala <s:checkUser role="anonymous"/> -->
 
   <c:choose>
-    <c:when test="app.user.login != 'Guest'">
-      logged in as <c:out value="'<a href=/space/'+ app.user.login()>"><c:out value="user.login"/></a> | <a href="/exec/authenticate?logoff=true">logoff</a>
+    <c:when test="${app.user.login != 'Guest'}">
+      logged in as <a href="/space/<c:out value='${app.user.login}'/>"><c:out value="${app.user.login}"/></a> | <a href="/exec/authenticate?logoff=true">logoff</a>
       <br>
       <a href="/exec/post">post comment</a>
     </c:when>
@@ -44,15 +44,11 @@
  <tr><td>
   <b>Recent Changes:</b><br>
   <!-- replace this with a JSTL tag ala <s:recent/> -->
-  <%
-   SnipSpace space = SnipSpace.getInstance();
-   Iterator iterator = space.getChanged().iterator();
-   while (iterator.hasNext()) {
-     Snip snip = (Snip)iterator.next(); %>
-  <a href="/space/<%= snip.getName() %>"><%= snip.getName() %></a><br/>
-  <% } %>
-  </p>
-
+  <% SnipSpace space = SnipSpace.getInstance(); %>
+  <% session.setAttribute("space", space); %>
+  <c:forEach var="snip" items="${space.changed}">
+   <a href="/space/<c:out value='${snip.name}'/>"><c:out value="${snip.name}"/></a><br/>
+  </c:forEach>
  </td></tr>
  <tr><td>
   <p>
