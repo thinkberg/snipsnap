@@ -22,12 +22,14 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
+
 package org.snipsnap.test;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.snipsnap.test.snip.AllSnipTests;
+import org.snipsnap.test.admin.AllAdminTests;
 
 public class AllTests extends TestCase {
   public AllTests(String name) {
@@ -37,6 +39,7 @@ public class AllTests extends TestCase {
   public static Test suite() {
     TestSuite s = new TestSuite();
     s.addTest(AllSnipTests.suite());
+    s.addTest(AllAdminTests.suite());
     return s;
   }
 }

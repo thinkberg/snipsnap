@@ -25,16 +25,10 @@
 
 package org.snipsnap.interceptor.custom;
 
-import org.snipsnap.app.Application;
+import org.radeox.util.logging.Logger;
 import org.snipsnap.interceptor.InterceptorSupport;
 import org.snipsnap.interceptor.Invocation;
 import org.snipsnap.snip.Snip;
-import org.snipsnap.user.Roles;
-import org.snipsnap.user.Security;
-import org.snipsnap.user.User;
-import org.radeox.util.logging.Logger;
-
-import java.security.GeneralSecurityException;
 
 public class StoreInterceptor extends InterceptorSupport {
   public StoreInterceptor() {
@@ -43,7 +37,10 @@ public class StoreInterceptor extends InterceptorSupport {
 
   public Object invoke(Invocation invocation) throws Throwable {
     if (invocation.getMethod().getName().startsWith("store")) {
-        Logger.debug("Store called.");
+      Snip snip = (Snip) invocation.getArgs()[0];
+      if (snip.getName().startsWith("macro-")) {
+        Logger.debug("Store on macro called.");
+      }
     }
     return invocation.next();
   }

@@ -108,18 +108,20 @@ public class Installer extends HttpServlet {
 
     // set user name and email, check that information
     writeMessage(out, "Checking user name and password ...");
-    config.setAdminLogin(request.getParameter("username"));
-    if (null == config.getAdminLogin() || config.getAdminLogin().length() == 0) {
+    String adminName = request.getParameter("username");
+    if (checkUserName(adminName)) {
       System.err.println("Installer: user name too short");
       errors.put("login", "You must enter a user name with at least 3 characters!");
+    } else {
+      config.setAdminLogin(adminName);
     }
     config.setAdminEmail(request.getParameter("email"));
 
     String password = request.getParameter("password");
     String password2 = request.getParameter("password2");
-    if (null == password || password.length() == 0 || !password.equals(password2)) {
+    if (! checkPassword(password, password2)) {
       System.err.println("Installer: passwords do not match");
-      errors.put("password", "Passwords do not match!");
+      errors.put("password", "Passwords do not match! Passwords have to be at least 6 characters.");
     } else {
       config.setAdminPassword(password);
     }
@@ -350,5 +352,14 @@ public class Installer extends HttpServlet {
 
   private String normalize(String name) {
     return name.replace(' ', '_');
+  }
+
+  public static boolean checkPassword(String password, String password2) {
+    return (null != password && password.length() >5
+        && password.equals(password2));
+  }
+
+  public static boolean checkUserName(String login) {
+    return (null != login && login.length() >= 3);
   }
 }

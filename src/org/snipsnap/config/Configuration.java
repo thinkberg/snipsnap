@@ -104,6 +104,10 @@ public class Configuration {
     }
   }
 
+  public void load(Properties properties) {
+     this.properties = properties;
+  }
+
   public void load(File configFile) throws IOException {
     setFile(configFile);
     FileInputStream in = new FileInputStream(file);

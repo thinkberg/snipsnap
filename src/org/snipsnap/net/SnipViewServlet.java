@@ -63,7 +63,7 @@ public class SnipViewServlet extends HttpServlet {
       name = name.substring(1);
     }
     name = name.replace('+', ' ');
-    System.err.println("snip: " + name);
+    //System.err.println("snip: " + name);
 
     // handle sub snips and attachments (TODO: handle more than one level)
     String subname = null;

@@ -59,6 +59,7 @@ public class SnipLink {
   public static Writer appendUrlWithBase(Writer writer, String base, String name, String target)
     throws IOException {
     writer.write(base);
+    writer.write("/");
     writer.write(SnipLink.encode(name));
     if(target != null) {
       writer.write("#");
@@ -79,17 +80,16 @@ public class SnipLink {
    * Append a create link for the specified name.
    */
   public static Writer appendCreateLink(Writer writer, String name) throws IOException {
-    writer.write("&#92;create <a href=\"../exec/edit?name=");
+    writer.write("&#91;create <a href=\"../exec/edit?name=");
     writer.write(SnipLink.encode(name));
     writer.write("\">");
     writer.write(name);
-    writer.write("</a>");
     writer.write("</a>&#93;");
     return writer;
   }
 
   public static StringBuffer appendCreateLink(StringBuffer buffer, String name) {
-    buffer.append("&#92;create <a href=\"../exec/edit?name=");
+    buffer.append("&#91;create <a href=\"../exec/edit?name=");
     buffer.append(SnipLink.encode(name));
     buffer.append("\">").append(name).append("</a>&#93;");
     return buffer;
