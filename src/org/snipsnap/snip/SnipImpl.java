@@ -140,7 +140,7 @@ public class SnipImpl implements Snip {
    * @return true, if the snip is a weblog
    */
   public boolean isWeblog() {
-    return content.indexOf("{weblog}") != -1;
+    return content.indexOf("{weblog") != -1;
   }
 
   /**
