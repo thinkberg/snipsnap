@@ -135,7 +135,7 @@ public class Month {
     Application app = Application.get();
     Configuration config = app.getConfiguration();
     Snip viewedSnip = (Snip) app.getParameters().get("viewed");
-    String weblogName = (String) app.getParameters().get("weblog");
+    String weblogName = (String) app.getParameters().get("calsnip");
     if (weblogName != null) {
       SnipSpace space = SnipSpaceFactory.getInstance();
       if (space.exists(weblogName)) {
@@ -156,7 +156,7 @@ public class Month {
       view.append("<a href=\"");
       view.append(SnipLink.getSpaceRoot()).append("/");
       view.append(viewed);
-      view.append("?weblog=");
+      view.append("?calsnip=");
       view.append(viewedSnip.getNameEncoded());
       view.append("&calmonth=");
       view.append(prevMonth);
@@ -172,7 +172,7 @@ public class Month {
       view.append("<a href=\"");
       view.append(SnipLink.getSpaceRoot()).append("/");
       view.append(viewed);
-      view.append("?weblog=");
+      view.append("?calsnip=");
       view.append(viewedSnip.getNameEncoded());
       view.append("&calmonth=");
       view.append(nextMonth);
@@ -230,9 +230,9 @@ public class Month {
       String calBlogNew = viewed + "/" + calBlogOld + "/1";
 
       if (days.contains(calBlogNew)) {
-        day = makeLink(SnipLink.encode(calBlogNew) + "?weblog=" + viewedSnip.getNameEncoded() + "&calmonth=" + month + "&calyear=" + year, day);
+        day = makeLink(SnipLink.encode(calBlogNew) + "?calsnip=" + viewedSnip.getNameEncoded() + "&calmonth=" + month + "&calyear=" + year, day);
       } else if (days.contains(calBlogOld)) {
-        day = makeLink(SnipLink.encode(calBlogOld) + "?weblog=" + viewedSnip.getNameEncoded() + "&calmonth=" + month + "&calyear=" + year, day);
+        day = makeLink(SnipLink.encode(calBlogOld) + "?calsnip=" + viewedSnip.getNameEncoded() + "&calmonth=" + month + "&calyear=" + year, day);
       }
 
       if (i == todayNumber && month == today.get(Calendar.MONTH) + 1 && year == today.get(Calendar.YEAR)) {
