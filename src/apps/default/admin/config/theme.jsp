@@ -21,44 +21,50 @@
 <%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
 
 <%
-  // put known drivers in session context
-  if(null == session.getAttribute("themes")) {
-    Configuration conf = (Configuration) session.getAttribute("newconfig");
-    Map themes = new HashMap();
-    if(conf.isConfigured()) {
-      SnipSpace space = (SnipSpace)Components.getComponent(SnipSpace.class);
-      Snip[] themeSnips = space.match("SnipSnap/themes/");
-      for(int s = 0; s < themeSnips.length; s++) {
-        if(themeSnips[s].getName().indexOf('/', "SnipSnap/themes/".length()) == -1) {
-          String name = themeSnips[s].getName();
-          themes.put(name.substring(name.lastIndexOf('/')+1), themeSnips[s].getContent());
-        }
+  Map themes = new HashMap();
+
+  Configuration conf = (Configuration) session.getAttribute("newconfig");
+  // add/overwrite themes already added within the SnipSpace
+  if (conf.isConfigured()) {
+    SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
+    Snip[] themeSnips = space.match("SnipSnap/themes/");
+    for (int s = 0; s < themeSnips.length; s++) {
+      if (themeSnips[s].getName().indexOf('/', "SnipSnap/themes/".length()) == -1) {
+        String name = themeSnips[s].getName();
+        themes.put(name.substring(name.lastIndexOf('/') + 1), themeSnips[s].getContent());
       }
-    } else {
-      File themeDir = new File(conf.getWebInfDir(), "themes");
-      File[] files = themeDir.listFiles(new FilenameFilter() {
-        public boolean accept(File file, String s) {
-          System.out.println("file: "+s);
-          return s.endsWith(".snip");
-        }
-      });
-      SAXReader saxReader = new SAXReader();
-      for(int f = 0; f < files.length; f++) {
-        System.out.println("--> " + files[f]);
-        Document themeDoc = saxReader.read(new FileReader(files[f]));
-        Iterator it = themeDoc.getRootElement().elementIterator("snip");
-        while(it.hasNext()) {
-          Element snipEl = (Element)it.next();
-          String name = snipEl.element("name").getTextTrim();
-          if(name.indexOf('/', "SnipSnap/themes/".length()) == -1) {
-            String content = snipEl.element("content").getText();
-            themes.put(name.substring(name.lastIndexOf('/') + 1), content);
-          }
+    }
+  }
+
+  request.setAttribute("themes", themes);
+
+  Map newThemes = new HashMap();
+  // find theme files in filesystem
+  File themeDir = new File(conf.getWebInfDir(), "themes");
+  File[] files = themeDir.listFiles(new FilenameFilter() {
+    public boolean accept(File file, String s) {
+      return s.endsWith(".snip");
+    }
+  });
+
+  SAXReader saxReader = new SAXReader();
+  for (int f = 0; f < files.length; f++) {
+    Document themeDoc = saxReader.read(new FileReader(files[f]));
+    Iterator it = themeDoc.getRootElement().elementIterator("snip");
+    while (it.hasNext()) {
+      Element snipEl = (Element) it.next();
+      String name = snipEl.element("name").getTextTrim();
+      if (name.indexOf('/', "SnipSnap/themes/".length()) == -1) {
+        String content = snipEl.element("content").getText();
+        String themeName = name.substring(name.lastIndexOf('/') + 1);
+        if(!themes.containsKey(themeName)) {
+          newThemes.put(themeName, content);
         }
       }
     }
-    session.setAttribute("themes", themes);
   }
+
+  request.setAttribute("newthemes", newThemes);
 %>
 
 <script type="text/javascript" language="Javascript">
@@ -94,6 +100,12 @@
           <option value="<c:out value='${theme.key}'/>"
             <c:if test="${newconfig.theme == theme.key}">selected="selected"</c:if>><c:out value="${theme.key}"/></option>
         </c:forEach>
+        <c:forEach items="${newthemes}" var="theme">
+          <option value="<c:out value='${theme.key}'/>"
+            <c:if test="${newconfig.theme == theme.key}">selected="selected"</c:if>><fmt:message key="config.app.theme.new">
+              <fmt:param><c:out value="${theme.key}" escapeXml="true"/></fmt:param>
+            </fmt:message></option>
+        </c:forEach>
       </select>
     </td>
   </tr>
@@ -103,7 +115,17 @@
       <td><c:out value="${theme.value}"/></td>
       <td>
         <c:out value="${theme.key}"/><br/>
-        <%--<img src="themeimage?name=<c:out value='${theme.key}'/>" alt="<c:out value='${theme.key}'/>" border="0">--%>
+        <img src="themeimage?name=<c:out value='${theme.key}'/>" alt="<c:out value='${theme.key}'/>" border="0">
+      </td>
+    </tr>
+  </c:forEach>
+    <c:forEach items="${newthemes}" var="theme">
+    <tr id="<c:out value='${theme.key}'/>" name="theme"
+      <c:if test="${newconfig.theme != theme.key}">style="visibility:hidden; display:none"</c:if>>
+      <td><c:out value="${theme.value}"/></td>
+      <td>
+        <c:out value="${theme.key}"/><br/>
+        <img src="themeimage?name=<c:out value='${theme.key}'/>" alt="<c:out value='${theme.key}'/>" border="0">
       </td>
     </tr>
   </c:forEach>

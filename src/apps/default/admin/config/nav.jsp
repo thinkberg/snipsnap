@@ -15,7 +15,7 @@
     </c:if>
   </c:when>
   <c:otherwise>
-    <c:if test="${step != 'database'}">
+    <c:if test="${step != 'database' && step != 'login'}">
       <input type="submit" name="previous" value="<fmt:message key="config.nav.previous"/>">
     </c:if>
     <c:choose>

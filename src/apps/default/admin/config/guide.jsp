@@ -12,6 +12,9 @@
 <div class="guide-menu">
   <div class="guide-title">
     <c:choose>
+      <c:when test="${step == 'login'}">
+        <!-- nothing -->
+      </c:when>
       <c:when test="${not empty configuser && configuser.admin}">
         <fmt:message key="config.guide.setup"/>
       </c:when>

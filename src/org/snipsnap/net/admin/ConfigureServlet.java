@@ -79,6 +79,8 @@ public class ConfigureServlet extends HttpServlet {
   protected final static String ATT_ERRORS = "errors";
   protected final static String ATT_USER = "configuser";
 
+  protected final static String STEP_LOGIN = "login";
+
   protected final static String STEP_APPLICATION = "application";
   protected final static String STEP_THEME = "theme";
   protected final static String STEP_ADMINISTRATOR = "administrator";
@@ -95,6 +97,10 @@ public class ConfigureServlet extends HttpServlet {
   protected final static String STEP_EXPORT = "export";
   protected final static String STEP_USERS = "users";
   protected final static String STEP_SEARCH = "search";
+
+  private final static List LOGIN_STEPS = Arrays.asList(new String[]{
+    STEP_LOGIN
+  });
 
   private final static List BASIC_STEPS = Arrays.asList(new String[]{
     STEP_ADMINISTRATOR,
@@ -119,7 +125,7 @@ public class ConfigureServlet extends HttpServlet {
     STEP_SEARCH
   });
 
-  private final static List HANDLERS = Arrays.asList(new String[] {
+  private final static List HANDLERS = Arrays.asList(new String[]{
     "org.snipsnap.net.admin.DatabaseExport",
     "org.snipsnap.net.admin.DatabaseImport",
     "org.snipsnap.net.admin.ManageSearchEngine",
@@ -141,15 +147,15 @@ public class ConfigureServlet extends HttpServlet {
   public void init() throws ServletException {
     super.init();
     Iterator handlerIt = HANDLERS.iterator();
-    while(handlerIt.hasNext()) {
-      String className = (String)handlerIt.next();
+    while (handlerIt.hasNext()) {
+      String className = (String) handlerIt.next();
       try {
         SetupHandler handler = (SetupHandler) Class.forName(className).newInstance();
         String handlerName = handler.getName();
         handlers.put(handlerName, handler);
-        System.err.println("ConfigurServlet: added setup handler: "+handlerName);
+        System.err.println("ConfigurServlet: added setup handler: " + handlerName);
       } catch (Exception e) {
-        System.err.println("ConfigureServlet: unable to instantiate setup handler: "+e);
+        System.err.println("ConfigureServlet: unable to instantiate setup handler: " + e);
         e.printStackTrace();
       }
     }
@@ -254,8 +260,11 @@ public class ConfigureServlet extends HttpServlet {
           if (null == installKey) {
             installKey = request.getParameter("key");
             if (null == installKey || !config.getInstallKey().equals(installKey)) {
+              request.setAttribute("steps", LOGIN_STEPS);
+              request.setAttribute("step", "login");
+              RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/configure.jsp");
+              dispatcher.forward(request, response);
               session.removeAttribute(ATT_CONFIG);
-              response.sendError(HttpServletResponse.SC_FORBIDDEN);
               return;
             }
             session.setAttribute(Configuration.APP_INSTALL_KEY, installKey);
@@ -389,7 +398,7 @@ public class ConfigureServlet extends HttpServlet {
       SetupHandler handler = (SetupHandler) handlers.get(step);
       return handler.setup(request, response, config, errors);
     } else {
-      System.err.println("ConfigureServlet: unknown step: "+step);
+      System.err.println("ConfigureServlet: unknown step: " + step);
     }
 
     return errors;

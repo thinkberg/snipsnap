@@ -26,9 +26,13 @@
 package org.snipsnap.net.admin;
 
 import org.snipsnap.config.Configuration;
+import org.snipsnap.snip.XMLSnipImport;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Map;
 
 public class SetupTheme implements SetupHandler {
@@ -37,7 +41,19 @@ public class SetupTheme implements SetupHandler {
   }
 
   public Map setup(HttpServletRequest request, HttpServletResponse response, Configuration config, Map errors) {
-    config.setTheme(request.getParameter(Configuration.APP_THEME));
+    String themeName = request.getParameter(Configuration.APP_THEME);
+    if(config.isConfigured() && !ThemeHelper.getInstalledThemes().containsKey(themeName)) {
+      try {
+        File themeFile = (File) ThemeHelper.getThemeDocuments(config, ThemeHelper.FILES).get(themeName);
+        XMLSnipImport.load(new FileInputStream(themeFile), XMLSnipImport.OVERWRITE | XMLSnipImport.IMPORT_SNIPS);
+      } catch (IOException e) {
+        errors.put(Configuration.APP_THEME, Configuration.APP_THEME);
+        e.printStackTrace();
+        return errors;
+      }
+    }
+    config.setTheme(themeName);
     return errors;
   }
+
 }
