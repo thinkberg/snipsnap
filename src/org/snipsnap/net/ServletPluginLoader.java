@@ -96,12 +96,14 @@ public class ServletPluginLoader {
       Iterator pluginServletNames = Service.providerNames(ServletPlugin.class);
       while (pluginServletNames.hasNext()) {
         String pluginLine = (String) pluginServletNames.next();
-        String[] pluginInfo = pluginLine.split("\\p{Space}+");
-        if (pluginInfo.length > 0) {
-          pluginServlets.put(pluginInfo[0], pluginInfo.length > 1 ? pluginInfo[1] : null);
-          Logger.log("found plugin: " + pluginInfo[0]);
-        } else {
-          Logger.warn("ignoring servlet plugin '" + pluginLine + "': missing type or servlet");
+        if(!pluginLine.startsWith("#")) {
+          String[] pluginInfo = pluginLine.split("\\p{Space}+");
+          if (pluginInfo.length > 0) {
+            pluginServlets.put(pluginInfo[0], pluginInfo.length > 1 ? pluginInfo[1] : null);
+            Logger.log("found plugin: " + pluginInfo[0]);
+          } else {
+            Logger.warn("ignoring servlet plugin '" + pluginLine + "': missing type or servlet");
+          }
         }
       }
     }

@@ -68,7 +68,7 @@
          </td></tr>
          <%-- display template copy option (only if default edit handler)--%>
          <tr><td class="form-buttons">
-          <c:if test="${empty(error)}">
+          <c:if test="${empty(error) || empty(error_msg)}">
              <c:if test="${not empty(templates) && empty(edit_handler)}">
               <fmt:message key="snip.template"/>
               <select name="template" size="1">
@@ -84,19 +84,14 @@
             <input value="<fmt:message key='dialog.save'/>" name="save" type="submit"/>
           </c:if>
           <input value="<fmt:message key='dialog.cancel'/>" name="cancel" type="submit"/>
-          <c:choose>
-           <c:when test="${error == 'snip.store.handler.error'}">
+           <c:if test="${not empty(error) && not empty(error_msg)}">
             <br/>
             <span class="error">
               <fmt:message key="${error}">
                 <fmt:param value="${error_msg}"/>
               </fmt:message>
             </span>
-           </c:when>
-           <c:when test="${not empty(error)}">
-            <br/><span class="error"><c:out value="${error}"/></span>
-           </c:when>
-          </c:choose>
+           </c:if>
          </td></tr>
         </table>
 

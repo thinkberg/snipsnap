@@ -70,6 +70,16 @@ public class SnipStoreServlet extends HttpServlet {
     String parent = request.getParameter("parent");
     String content = request.getParameter("content");
 
+    // cancel pressed, return to snip or referer
+    if (request.getParameter("cancel") != null) {
+      if (null == name || "".equals(name)) {
+        response.sendRedirect(request.getParameter("referer"));
+      } else {
+        response.sendRedirect(config.getUrl("/space/" + SnipLink.encode(name)));
+      }
+      return;
+    }
+
     // if the name is empty show an error
     if (null == name || "".equals(name)) {
       RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/edit");
@@ -84,16 +94,6 @@ public class SnipStoreServlet extends HttpServlet {
 
     SnipSpace space = SnipSpaceFactory.getInstance();
     Snip snip = space.load(name);
-
-    // cancel pressed, return to snip or referer
-    if (request.getParameter("cancel") != null) {
-      if (null == snip) {
-        response.sendRedirect(request.getParameter("referer"));
-      } else {
-        response.sendRedirect(config.getUrl("/space/" + SnipLink.encode(name)));
-      }
-      return;
-    }
 
     RequestDispatcher dispatcher;
 

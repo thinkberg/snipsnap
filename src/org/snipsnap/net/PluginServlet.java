@@ -90,7 +90,7 @@ public class PluginServlet extends HttpServlet {
           BufferedWriter writer = new BufferedWriter(response.getWriter());
           try {
             writer.write(handleGroovyTemplate(snip.getContent()));
-          } catch (IOException e) {
+          } catch (Exception e) {
             writer.write("<span class=\"error\">" + e.getLocalizedMessage() + "</span>");
           }
           writer.flush();
