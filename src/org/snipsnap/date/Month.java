@@ -71,7 +71,7 @@ public class Month {
     weekDaysShort = symbols.getShortWeekdays();
   }
 
-  public String toKey(int year, int month, int day) {
+  public static String toKey(int year, int month, int day) {
     return year + "-" + (month < 10 ? "0" + month : "" + month) + "-" + (day < 10 ? "0" + day : "" + day);
   }
 

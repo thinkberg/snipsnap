@@ -48,6 +48,11 @@ public class SnipUtil {
   public static String toDate(String dateString) {
     Configuration config = Application.get().getConfiguration();
 
+    int index = dateString.lastIndexOf('/');
+    //@TODO: replace with regex check
+    if (index != -1) {
+      dateString = dateString.substring(index+1);
+    }
     SimpleDateFormat in = new SimpleDateFormat("yyyy-MM-dd");
     SimpleDateFormat out = new SimpleDateFormat(config.getWeblogDateFormat(), config.getLocale());
     try {

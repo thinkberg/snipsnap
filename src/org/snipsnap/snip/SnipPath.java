@@ -39,21 +39,23 @@ public class SnipPath {
   private Snip snip;
 
   public SnipPath(Snip snip) {
-     this.snip = snip;
+    this.snip = snip;
   }
 
   //@TODO: make this a object not static, return object from Snip
   public Writer append(Writer writer, SnipSpace space) {
-    String name = snip.getName();
-    if (name.indexOf('/') == -1) {
-      return writer;
-    }
-    String part = null;
-    String snipName = null;
-    int lastIndex = 0;
-    int i = 0;
-    int index = name.indexOf('/');
     try {
+      String name = snip.getName();
+      if (!name.startsWith("start")) {
+        SnipLink.appendLink(writer, "start");
+        writer.write(" > ");
+      }
+
+      String part = null;
+      String snipName = null;
+      int lastIndex = 0;
+      int i = 0;
+      int index = name.indexOf('/');
       while (index != -1 && i++ < 10) {
         part = name.substring(lastIndex, index);
         snipName = name.substring(0, index);

@@ -31,6 +31,7 @@ import org.snipsnap.user.Roles;
 import org.snipsnap.xmlrpc.WeblogsPing;
 
 import java.sql.Date;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -69,15 +70,31 @@ public class BlogImpl implements Blog {
   }
 
   public Snip post(Snip weblog, String content, Date date) {
-    String name = SnipUtil.toName(date);
+    String snipName = name + "/" + SnipUtil.toName(date);
     Snip snip = null;
-    if (space.exists(name)) {
-      snip = space.load(name);
-      snip.setContent(content + "\n\n" + snip.getContent());
+
+    // Should several posts per day be one snip or
+    // several snips?
+    if (false) {
+      if (space.exists(snipName)) {
+        snip = space.load(snipName);
+        snip.setContent(content + "\n\n" + snip.getContent());
+      } else {
+        snip = space.create(snipName, content);
+      }
     } else {
-      snip = space.create(name, content);
+      if (space.exists(snipName)) {
+        // how many children do exist?
+        // get the highest count
+        snip = space.load(snipName);
+        snip.setContent(content + "\n\n" + snip.getContent());
+      } else {
+        // create a new snip
+        snip = space.create(snipName, content);
+      }
     }
-    snip.setParent(weblog);
+
+    //snip.setParent(weblog);
     snip.addPermission(Permissions.EDIT, Roles.OWNER);
     space.store(snip);
 
@@ -91,7 +108,11 @@ public class BlogImpl implements Blog {
   }
 
   public List getPosts(int count) {
-    return space.getChildrenDateOrder(blog, count);
+    //@TODO: reduce number of posts to count;
+    //@TODO: reorder snips
+    List posts = space.getChildrenDateOrder(blog, count);
+    posts.addAll(Arrays.asList(space.match(name + "/")));
+    return posts;
   }
 
   public Snip getSnip() {
