@@ -47,7 +47,11 @@ public class IndexSnipMacro extends ListoutputMacro {
   }
 
   public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
-    if (params.length == 0) {
+    String type = null;
+    if(params != null && params.length > 0) {
+      type = params[0];
+    }
+    if (params == null || params.length <= 1) {
       output(buffer, "all snips",
              Collections.filter(space.getAll(),
                                 new Filterator() {
@@ -59,7 +63,7 @@ public class IndexSnipMacro extends ListoutputMacro {
                                     return false;
                                   }
                                 }
-      ), "none written yet.");
+      ), "none written yet.", type);
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

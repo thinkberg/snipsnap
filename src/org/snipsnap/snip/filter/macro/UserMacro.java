@@ -46,8 +46,12 @@ public class UserMacro extends ListoutputMacro {
   }
 
   public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
-    if (params.length == 0) {
-      output(buffer, "users", UserManager.getInstance().getAll(), "no users. not very popular ;-)");
+    String type = null;
+    if(params != null && params.length > 0) {
+      type = params[0];
+    }
+    if (params == null || params.length <= 1) {
+      output(buffer, "users", UserManager.getInstance().getAll(), "no users. not very popular ;-)", type);
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

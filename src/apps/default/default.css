@@ -156,6 +156,20 @@
   table-layout: auto;
 }
 
+.index-table {
+}
+
+.index-table td {
+  padding: 1px 1px 1px 1px;
+}
+
+.index-table-header {
+  color: inherit;
+  font-weight: bold;
+  /* background: #DDEEFF; */
+  background: #d9e4f9;
+}
+
 /************************************************/
 /* tag formatting, page wide and individual */
 

@@ -24,9 +24,16 @@
  */
 package org.snipsnap.snip.filter.macro.list;
 
+import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.filter.macro.ListoutputMacro;
+import org.snipsnap.util.Nameable;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Formats a list as AtoZ listing separated by the alphabetical characters.
@@ -35,50 +42,64 @@ import java.util.Collection;
  */
 public class AtoZListFormatter implements ListoutputMacro.ListFormatter {
 
-  private final static String[] atoz = new String[]{
-    "0-9", "N",
-    "A", "O",
-    "B", "P",
-    "C", "Q",
-    "D", "R",
-    "E", "S",
-    "F", "T",
-    "G", "U",
-    "H", "V",
-    "I", "W",
-    "J", "X",
-    "K", "Y",
-    "L", "Z",
-    "M", "@"
-  };
-
   /**
    * Create a simple list.
    */
   public void format(StringBuffer buffer, String listComment, Collection c, String emptyText) {
     if (c.size() > 0) {
-      /*     for (int i = 0; i < atoz.length; i += 2) {
-             Iterator leftIt = Collections.
-             while(
-             buffer.append("<blockquote>");
-             Iterator nameIterator = c.iterator();
-             while (nameIterator.hasNext()) {
-               Nameable nameable = (Nameable) nameIterator.next();
-               SnipLink.appendLink(buffer, nameable.getName());
-               if (nameIterator.hasNext()) {
-                 buffer.append(", ");
-               }
-             }
-             buffer.append("</blockquote>");*/
+      buffer.append("<b>").append(listComment).append("(").append(c.size()).append("):</b>");
+      buffer.append("<table width=\"100%\" class=\"index-table\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
+      Iterator it = c.iterator();
+      Map atozMap = new HashMap();
+      List numberRestList = new ArrayList();
+      List otherRestList = new ArrayList();
+      while (it.hasNext()) {
+        Nameable nameable = (Nameable) it.next();
+        String name = nameable.getName();
+        String indexChar = name.substring(0, 1).toUpperCase();
 
+        if (indexChar.charAt(0) >= 'A' && indexChar.charAt(0) <= 'Z') {
+          if (!atozMap.containsKey(indexChar)) {
+            atozMap.put(indexChar, new ArrayList());
+          }
+          List list = (List) atozMap.get(indexChar);
+          list.add(name);
+        } else if (indexChar.charAt(0) >= '0' && indexChar.charAt(0) <= '9') {
+          numberRestList.add(name);
+        } else {
+          otherRestList.add(name);
+        }
+      }
+
+      for (int ch = 'A'; ch <= 'Z'; ch += 2) {
+        String left = "" + (char) ch;
+        String right = "" + (char) (ch + 1);
+
+        insertCharHeader(buffer, left, right);
+        addRows(buffer, (List) atozMap.get(left), (List) atozMap.get(right));
+      }
+      insertCharHeader(buffer, "0-9", "@");
+      addRows(buffer, numberRestList, otherRestList);
+
+      buffer.append("</table>");
     } else {
       buffer.append(emptyText);
     }
   }
 
+  private void addRows(StringBuffer buffer, List listLeft, List listRight) {
+    Iterator leftIt = listLeft != null ? listLeft.iterator() : new EmptyIterator();
+    Iterator rightIt = listRight != null ? listRight.iterator() : new EmptyIterator();
+
+    while (leftIt.hasNext() || rightIt.hasNext()) {
+      String leftName = (String) (leftIt != null && leftIt.hasNext() ? leftIt.next() : null);
+      String rightName = (String) (rightIt != null && rightIt.hasNext() ? rightIt.next() : null);
+      insertRow(buffer, leftName, rightName, false);
+    }
+  }
 
   private void insertCharHeader(StringBuffer buffer, String leftHeader, String rightHeader) {
-    buffer.append("<tr class=\"snip-table-header\"><td>");
+    buffer.append("<tr class=\"index-table-header\"><td>");
     buffer.append(leftHeader);
     buffer.append("</td><td>");
     buffer.append(rightHeader);
@@ -86,12 +107,27 @@ public class AtoZListFormatter implements ListoutputMacro.ListFormatter {
   }
 
   private void insertRow(StringBuffer buffer, String left, String right, boolean odd) {
-    buffer.append("<tr class=\"snip-table");
-    buffer.append(odd ? "-odd" : "-even");
-    buffer.append("\"><td>");
-    buffer.append(left);
+    buffer.append("<tr><td>");
+    if (left != null) {
+      SnipLink.appendLink(buffer, left);
+    }
     buffer.append("</td><td>");
-    buffer.append(right);
+    if (right != null) {
+      SnipLink.appendLink(buffer, right);
+    }
     buffer.append("</td></tr>");
+  }
+
+  private class EmptyIterator implements Iterator {
+    public boolean hasNext() {
+      return false;
+    }
+
+    public Object next() {
+      return null;
+    }
+
+    public void remove() {
+    }
   }
 }
