@@ -173,6 +173,18 @@ public class Installer extends HttpServlet {
       config.setDomain(domain);
     }
 
+    String mailhost = request.getParameter("mailhost");
+    if(mailhost != null) {
+      config.setMailHost(mailhost);
+    } else {
+      writeMessage(out, "No mail host defined, we will try to find one or you will not be able to mail.");
+    }
+
+    String maildomain = request.getParameter("maildomain");
+    if(maildomain != null) {
+      config.setMailDomain(maildomain);
+    }
+
     // create application root directory
     File webAppRoot = new File(serverConfig.getProperty(Configuration.SERVER_WEBAPP_ROOT) + "/" + normalize(config.getName()));
     writeMessage(out, "Creating web application directories ...");

@@ -25,17 +25,27 @@
 
 package org.snipsnap.util.mail;
 
-import org.snipsnap.user.UserManager;
+import org.snipsnap.app.Application;
+import org.snipsnap.config.AppConfiguration;
 
-import javax.mail.*;
-import javax.mail.internet.MimeMessage;
+import javax.mail.BodyPart;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.Session;
+import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeBodyPart;
-import java.util.Properties;
-import java.util.Collection;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.Properties;
 
 /**
  * Mail manager to send and receive mail
@@ -48,9 +58,9 @@ public class Mail {
   public static Mail instance;
 
   public static synchronized Mail getInstance() {
-     if (null == instance) {
-       instance = new Mail();
-     }
+    if (null == instance) {
+      instance = new Mail();
+    }
     return instance;
   }
 
@@ -58,10 +68,31 @@ public class Mail {
 
   public Mail() {
     Properties props = new Properties();
-    props.put("mail.smtp.host", "tanis.first.gmd.de");
-    session = Session.getDefaultInstance(props, null);
-    // session.setDebug(true);          // Verbose!
+    AppConfiguration config = Application.get().getConfiguration();
+    String mailhost = config.getProperty(AppConfiguration.APP_MAILHOST);
+    InetAddress addr = null;
+    try {
+      addr = InetAddress.getByName(mailhost);
+    } catch (UnknownHostException e) {
+      System.err.println("Mail: '" + mailhost + "': unknown host address");
+      try {
+        addr = InetAddress.getByName("mailhost");
+      } catch (UnknownHostException e1) {
+        try {
+          addr = InetAddress.getByName("mail");
+        } catch (UnknownHostException e2) {
+          System.err.println("Mail: unable to detect mail host automatically, please configure by hand");
+        }
+      }
+    }
+
+    if (null != mailhost) {
+      props.put("mail.smtp.host", addr.getHostName());
+      session = Session.getDefaultInstance(props, null);
+      // session.setDebug(true);          // Verbose!
+    }
   }
+
 
   public void sendMail(String sender, String recipient, String subject, String content) {
     Collection recientList = new ArrayList();
@@ -70,46 +101,56 @@ public class Mail {
   }
 
   public void sendMail(String recipient, String subject, String content) {
-    Collection recientList = new ArrayList();
-    recientList.add(recipient);
+    Collection recipientList = new ArrayList();
+    recipientList.add(recipient);
     //@TODO get admin mail / host
-    sendMail("do-not-reply@snipsnap.org", recientList, subject, content);
+    AppConfiguration configuration = Application.get().getConfiguration();
+    String sender = configuration.getProperty(AppConfiguration.APP_MAILDOMAIN);
+    if (null == sender) {
+      sender = configuration.getUrl();
+      try {
+        sender = new URL(sender).getHost();
+      } catch (MalformedURLException e) {
+        sender = "this-is-a-bug.org";
+      }
+    }
+    sendMail(sender, recipientList, subject, content);
   }
 
   public void sendMail(String sender, Collection recipientList, String subject, String content) {
-     try {
-       Message mesg = new MimeMessage(session);
-       mesg.setFrom(new InternetAddress(sender));
+    try {
+      Message mesg = new MimeMessage(session);
+      mesg.setFrom(new InternetAddress(sender));
 //       InternetAddress toAddress = null;
-       Iterator iterator = recipientList.iterator();
-       while(iterator.hasNext()) {
-         String recpt = (String) iterator.next();
-         mesg.addRecipient(Message.RecipientType.TO, new InternetAddress(recpt));
-       }
+      Iterator iterator = recipientList.iterator();
+      while (iterator.hasNext()) {
+        String recpt = (String) iterator.next();
+        mesg.addRecipient(Message.RecipientType.TO, new InternetAddress(recpt));
+      }
 
-       // CC Address
-       //InternetAddress ccAddress = new InternetAddress(message_cc);
-       //mesg.addRecipient(Message.RecipientType.CC, ccAddress);
-       mesg.setSubject(subject);
+      // CC Address
+      //InternetAddress ccAddress = new InternetAddress(message_cc);
+      //mesg.addRecipient(Message.RecipientType.CC, ccAddress);
+      mesg.setSubject(subject);
 
-       // Now the message body.
-       Multipart mp = new MimeMultipart();
+      // Now the message body.
+      Multipart mp = new MimeMultipart();
 
-       //BodyPart textPart = new MimeBodyPart();
-       //textPart.setText(message_body);       // sets type to "text/plain"
+      //BodyPart textPart = new MimeBodyPart();
+      //textPart.setText(message_body);       // sets type to "text/plain"
 
-        BodyPart htmlPart = new MimeBodyPart();
-        htmlPart.setContent(content, "text/html");
-        mp.addBodyPart(htmlPart);
-        mesg.setContent(mp);
+      BodyPart htmlPart = new MimeBodyPart();
+      htmlPart.setContent(content, "text/html");
+      mp.addBodyPart(htmlPart);
+      mesg.setContent(mp);
 
-        Transport.send(mesg);
+      Transport.send(mesg);
 
-     } catch(MessagingException ex) {
-       while((ex = (MessagingException) ex.getNextException()) != null) {
-         ex.printStackTrace();
-       }
-     }
-     return;
+    } catch (MessagingException ex) {
+      while ((ex = (MessagingException) ex.getNextException()) != null) {
+        ex.printStackTrace();
+      }
+    }
+    return;
   }
 }

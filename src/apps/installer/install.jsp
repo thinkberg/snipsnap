@@ -119,6 +119,23 @@
       </td>
     </tr>
 
+    <tr>
+      <td valign="top">Mail Server Address:</td>
+      <td valign="top"><input name="mailhost" type="text" value="<c:out value='${config.mailHost}' default=''/>"></td>
+      <td valign="top"><b>(may be optional)</b><br/>
+        To enable mailing a reset key to users who have forgotten their password you need to configure a mail server.
+        Ask the administrator of the machine you are going to run SnipSnap on about the local mail host.
+      </td>
+    </tr>
+    <tr>
+      <td valign="top">Mail Domain:</td>
+      <td valign="top"><input name="maildomain" type="text" value="<c:out value='${config.mailDomain}' default=''/>"></td>
+      <td valign="top"><b>(may be optional)</b><br/>
+        To send email you need a <b>valid domain</b> where emails appear to be from. If this is different from your web servers domain
+        name, use this entry.
+      </td>
+    </tr>
+
     <input name="usemckoi" type="hidden" value="checked">
     <input name="jdbc" type="hidden" value="">
     <input name="driver" type="hidden" value="">

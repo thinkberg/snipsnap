@@ -47,6 +47,8 @@ public class AppConfiguration extends Configuration {
   public final static String APP_PATH = "app.path";
   public final static String APP_PERM = "app.perm";
   public final static String APP_DOMAIN = "app.domain";
+  public final static String APP_MAILHOST = "app.mail.host";
+  public final static String APP_MAILDOMAIN = "app.mail.domain";
   public final static String APP_TAGLINE = "app.tagline";
   public final static String APP_LOGO = "app.logo";
   public final static String APP_LOGGER = "app.logger";
@@ -195,6 +197,22 @@ public class AppConfiguration extends Configuration {
 
   public String getLogoImage() {
     return getProperty(APP_LOGO);
+  }
+
+  public void setMailHost(String mailhost) {
+    setProperty(APP_MAILHOST, mailhost);
+  }
+
+  public String getMailHost() {
+    return getProperty(APP_MAILHOST);
+  }
+
+  public void setMailDomain(String maildomain) {
+    setProperty(APP_MAILDOMAIN, maildomain);
+  }
+
+  public String getMailDomain() {
+    return getProperty(APP_MAILDOMAIN);
   }
 
   public void setJDBCURL(String url) {

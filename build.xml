@@ -98,6 +98,8 @@
         <include name="${jar}/mckoidb.jar"/>
         <include name="${jar}/jdbcpool.jar"/>
         <include name="${jar}/lucene-1.2.jar"/>
+        <include name="${jar}/mail.jar"/>
+        <include name="${jar}/activation.jar"/>
         <include name="${jar}/${appname}-template.war"/>
         <include name="${jar}/${appname}-theme-*.jar"/>
         <include name="${jar}/${appname}-installer.war"/>
@@ -194,6 +196,8 @@
         <include name="jdom-b8.jar"/>
         <include name="aspectjrt.jar"/>
         <include name="jython.jar"/>
+        <include name="mail.jar"/>
+        <include name="activation.jar"/>
       </zipfileset>
     </jar>
   </target>
