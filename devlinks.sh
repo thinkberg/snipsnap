@@ -8,9 +8,6 @@ if [ "$1" = "" -o ! -d $app ]; then
   exit
 fi
 
-if [ "$theme" = "" -o ! -d $base/src/theme/$theme ]; then
-  theme=blue
-fi
 if [ -d $app ]; then
   echo Linking code ...
   ln -sf $base/src/apps/default/WEB-INF/*.tld $app/WEB-INF/
@@ -27,7 +24,9 @@ if [ -d $app ]; then
   ln -sf $base/src/apps/default/*.jsp $app/
   ln -sf $base/src/apps/default/util/*.jsp $app/util/
   ln -sf $base/src/apps/default/admin/*.jsp $app/admin/
-  echo Linking theme $theme ...
-  ln -sf $base/src/theme/$theme/css/*.css $app/css/
-  ln -sf $base/src/theme/$theme/images/*.* $app/images/
+  if [ ! "$theme" = "" -a -d $base/src/theme/$theme ]; then
+    echo Linking theme $theme ...
+    ln -sf $base/src/theme/$theme/css/*.css $app/css/
+    ln -sf $base/src/theme/$theme/images/*.* $app/images/
+  fi
 fi
