@@ -54,7 +54,7 @@ public class EscapeFilter extends RegexTokenFilter {
       if("\\".equals(match)) {
         return "\\\\";
       }
-      return escape(match.charAt(0));
+      return EscapeFilter.escape(match.charAt(0));
     } else {
       return "&#x005c;";
     }

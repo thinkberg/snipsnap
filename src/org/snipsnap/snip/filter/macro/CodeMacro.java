@@ -52,10 +52,12 @@ public class CodeMacro extends Preserved {
     filters.put("java", new JavaCodeFilter());
     filters.put("sql", new SqlCodeFilter());
 
-    addSpecial("[", "&#x005b;");
-    addSpecial("]", "&#x005d;");
-    addSpecial("{", "&#x007b;");
-    addSpecial("}", "&#x007d;");
+    addSpecial('[');
+    addSpecial(']');
+    addSpecial('{');
+    addSpecial('}');
+    addSpecial('*');
+    addSpecial('-');
   }
 
   public String getName() {

@@ -22,29 +22,46 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-/*
- * Created by IntelliJ IDEA.
- * User: leo
- * Date: May 13, 2002
- * Time: 1:50:23 PM
- * To change template for new class use 
- * Code Style | Class Templates options (Tools | IDE Options).
- */
 package org.snipsnap.snip.filter.macro;
+
+import org.snipsnap.snip.filter.EscapeFilter;
 
 import java.util.StringTokenizer;
 import java.util.Map;
 import java.util.HashMap;
 
+/**
+ * A specialized macro that allows to preserve certain special characters
+ * by creating character entities. The subclassing macro may decide whether
+ * to call replace() before or after executing the actual macro substitution.
+ *
+ * @author Matthias L. Jugel
+ * @version $Id$
+ */
 public abstract class Preserved extends Macro {
   private Map special = new HashMap();
   private String specialString = "";
 
+  /**
+   * Escape special character c by replacing with it's hex character entity code.
+   */
+  protected void addSpecial(char c) {
+    addSpecial(""+c, EscapeFilter.escape(c));
+  }
+
+  /**
+   * Add a replacement for the special character c which may be a string
+   * @param c the character to replace
+   * @param replacement the new string
+   */
   protected void addSpecial(String c, String replacement) {
     specialString += c;
     special.put(c, replacement);
   }
 
+  /**
+   * Actually replace specials in source.
+   */
   protected String replace(String source) {
     StringBuffer tmp = new StringBuffer();
     StringTokenizer stringTokenizer = new StringTokenizer(source, specialString, true);
