@@ -5,3 +5,4 @@
 @TODO: markup/highlighting for snipsnap macros
 @TODO: Markup for organigramms, for sketching partners or competitor or who is
        responsible for which customer etc, perhaps like LTM { @boss: Fritz }, {@employee: Stephan, boss_is: Fritz}
+@TODO: implement Linkable interface (create link to snip or other URL) to replace parts of Nameable
