@@ -120,11 +120,12 @@ public class InitializeDatabase {
       config.set(Configuration.APP_PERM_WEBLOGSPING, ping);
       config.set(Configuration.APP_PERM_NOTIFICATION, notify);
 
+      ConfigurationManager configManager = ConfigurationManager.getInstance();
+      configManager.addConfiguration(appOid, config);
+
       // last, but not least store to file and configuration snip
       storeConfiguration(config, space);
 
-      ConfigurationManager configManager = ConfigurationManager.getInstance();
-      configManager.addConfiguration(appOid, config);
     } catch (Exception e) {
       appManager.removeApplication(appOid);
       config.getFileStore(appOid).delete();
