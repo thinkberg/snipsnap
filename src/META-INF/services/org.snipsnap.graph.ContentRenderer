@@ -1,0 +1,7 @@
+# Content Renderer for the {graph} macro
+#
+org.snipsnap.graph.VerticalContentRenderer
+org.snipsnap.graph.MindMapContentRenderer
+org.snipsnap.graph.HorizontalContentRenderer
+org.snipsnap.graph.ExplorerContentRenderer
+
