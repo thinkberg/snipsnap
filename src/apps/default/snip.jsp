@@ -32,7 +32,7 @@
    <!-- do not display comments on start page, only on posted
         entries -->
     <c:if test="${snip.notWeblog}">
-      <c:out value="${snip.comments}" escapeXml="false" />
+      <c:out value="${snip.comments}" escapeXml="false" /> | <c:out value="${snip.comments.postString}" escapeXml="false" />
     </c:if>
   </td></tr>
   <tr>

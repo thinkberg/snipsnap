@@ -113,10 +113,18 @@ public class Comments {
       SnipLink.appendLink(buffer, "../comments", snip.getName(), StringUtil.plural(getCount(), "comment"));
       buffer.append(" (by ");
       appendUserString(buffer);
-      buffer.append(") | ");
+      buffer.append(")");
+    } else {
+      buffer.append("no comments");
     }
 
-    SnipLink.appendLink(buffer, "../comments", snip.getName()+"#entry", "post comment");
+    //
+    return buffer.toString();
+  }
+
+  public String getPostString() {
+    StringBuffer buffer = new StringBuffer();
+    SnipLink.appendLink(buffer, "../comments", snip.getName()+"#post", "post comment");
     return buffer.toString();
   }
 

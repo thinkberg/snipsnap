@@ -38,10 +38,10 @@
       </c:forEach>
     </table>
   </td></tr>
-  <s:check roles="Authenticated">
-    <tr>
-      <td>
-        <a name="entry">
+  <a name="post"></a>
+  <tr>
+    <td>
+    <s:check roles="Authenticated">
           <form name="f" method="POST" action="../exec/storecomment">
             <table border="0" cellpadding="0" cellspacing="2">
               <tr><td><textarea name="content" type="text" cols="80" rows="20" tabindex="0"></textarea></td></tr>
@@ -53,10 +53,12 @@
             <input name="comment" type="hidden" value="<c:out value="${snip.name}"/>">
             <input name="referer" type="hidden" value="<%= request.getHeader("REFERER") %>">
           </form>
-        </a>
-      </td>
-    </tr>
-  </s:check>
+    </s:check>
+    <s:check roles="Authenticated" invert="true" >
+      Please <a href="../exec/login.jsp">login</a> to post a comment.
+    </s:check>
+    </td>
+  </tr>
 </table>
 
 
