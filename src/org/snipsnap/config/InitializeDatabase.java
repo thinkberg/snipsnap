@@ -40,15 +40,7 @@ import org.snipsnap.user.UserManager;
 import org.snipsnap.user.UserManagerFactory;
 import org.snipsnap.net.admin.ThemeHelper;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.io.Writer;
+import java.io.*;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Properties;
@@ -119,7 +111,6 @@ public class InitializeDatabase {
       createConfigSnipFromFile(Configuration.SNIPSNAP_CONFIG_ROBOTS_TXT, "/defaults/robots.txt", space);
       createConfigSnipFromFile(Configuration.SNIPSNAP_CONFIG_WIKI, "/defaults/intermap.txt", space);
 
-      File themeTemplateDir = new File(config.getWebInfDir(), "themes");
       Map themeFiles = ThemeHelper.getThemeDocuments(config, ThemeHelper.FILES);
       XMLSnipImport.load(new FileInputStream((File) themeFiles.get(config.getTheme())),
                          XMLSnipImport.OVERWRITE | XMLSnipImport.IMPORT_SNIPS);
@@ -188,7 +179,15 @@ public class InitializeDatabase {
       File relativeFileLocation = new File(new File(Configuration.SNIPSNAP_CONFIG), logo);
       new File(config.getFilePath(), Configuration.SNIPSNAP_CONFIG).mkdirs();
       File attFile = new File(config.getFilePath(), relativeFileLocation.getPath());
-      logoFile.renameTo(attFile);
+      FileInputStream in = new FileInputStream(logoFile);
+      FileOutputStream out = new FileOutputStream(attFile);
+      byte[] buf = new byte[4096];
+      int length = 0;
+      while ((length = in.read(buf)) != -1) {
+        out.write(buf, 0, length);
+      }
+      out.close();
+      in.close();
       configSnip.getAttachments().addAttachment(logo, logoFileType, attFile.length(),
                                                 relativeFileLocation.getPath());
       space.store(configSnip);

@@ -192,7 +192,7 @@ public class FileUploadServlet extends HttpServlet {
   }
 
   // store file from input stream into a file
-  private int storeAttachment(File file, InputStream in) throws IOException {
+  public int storeAttachment(File file, InputStream in) throws IOException {
     FileOutputStream out = new FileOutputStream(file);
     byte[] buf = new byte[4096];
     int length = 0, size = 0;
