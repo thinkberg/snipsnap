@@ -1,5 +1,7 @@
 0.5
 
+- Improvement: Added edit button to weblog snips 
+- Fixed Bug: SnipSnap XML-RPC handlers are now protected
 - Added Feature: Multiple weblogs
 - Fixed Bug: Reimplemented Weblog 
 - Added feature: new Snip button for Snip creation

@@ -69,7 +69,7 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
 
   protected boolean authenticate(String username, String password) {
     User user = authenticationService.authenticate(username, password);
-    if (user != null) {
+    if (user != null && user.isAdmin()) {
       Application.get().setUser(user);
       return true;
     }
