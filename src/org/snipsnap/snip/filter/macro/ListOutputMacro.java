@@ -29,8 +29,7 @@ import org.snipsnap.snip.filter.macro.list.ListFormatter;
 import org.snipsnap.snip.filter.macro.list.SimpleList;
 import org.snipsnap.snip.filter.macro.parameter.MacroParameter;
 import org.snipsnap.snip.filter.macro.parameter.SnipMacroParameter;
-import sun.misc.Service;
-import sun.misc.ServiceConfigurationError;
+import org.snipsnap.util.Service;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -61,9 +60,6 @@ public abstract class ListOutputMacro extends SnipMacro {
       } catch (Exception e) {
         System.err.println("ListOutputMacro: unable to load list formatter: " + e);
         e.printStackTrace();
-      } catch (ServiceConfigurationError err) {
-        System.err.println("ListOutputMacro: error loading list formatter: " + err);
-        err.printStackTrace();
       }
     }
 

@@ -37,8 +37,7 @@ import org.snipsnap.snip.filter.macro.code.SourceCodeFormatter;
 import org.snipsnap.snip.filter.macro.context.FilterContext;
 import org.snipsnap.snip.filter.macro.context.NullFilterContext;
 import org.snipsnap.snip.filter.macro.parameter.MacroParameter;
-import sun.misc.Service;
-import sun.misc.ServiceConfigurationError;
+import org.snipsnap.util.Service;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -69,9 +68,6 @@ public class CodeMacro extends Preserved {
       } catch (Exception e) {
         System.err.println("CodeMacro: unable to load code formatter: " + e);
         e.printStackTrace();
-      } catch (ServiceConfigurationError err) {
-        System.err.println("CodeMacro: error loading code formatters: " + err);
-        err.printStackTrace();
       }
     }
 
