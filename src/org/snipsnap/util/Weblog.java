@@ -39,24 +39,27 @@ import java.util.Date;
  * @version $Id$
  */
 
-public class Weblog implements Appendable {
+public class Weblog implements Linkable {
   private String name;
   private String url;
   private Timestamp update;
+  private String link;
 
   public Weblog(String name, String url) {
     this.name = name;
     this.url = url;
     this.update = new Timestamp(new Date().getTime());
+    StringBuffer tmp = new StringBuffer();
+    tmp.append("<a href=\"");
+    tmp.append(url);
+    tmp.append("\">");
+    tmp.append(name);
+    tmp.append("</a>");
+    link = tmp.toString();
   }
 
-  public Writer appendTo(Writer s) throws IOException {
-    s.write("<a href=\"");
-    s.write(url);
-    s.write("\">");
-    s.write(name);
-    s.write("</a>");
-    return s;
+  public String getLink() {
+    return link;
   }
 
   private String getUrl() {
