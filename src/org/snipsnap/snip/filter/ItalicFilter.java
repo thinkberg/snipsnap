@@ -37,6 +37,6 @@ import org.snipsnap.snip.filter.regex.RegexReplaceFilter;
 public class ItalicFilter extends RegexReplaceFilter {
 
   public ItalicFilter() {
-    super("~~(.*?)~~", "<span class=\"italic\">$1</span>");
+    super("~~(.*?)~~", "<i class=\"italic\">$1</i>");
   };
 }

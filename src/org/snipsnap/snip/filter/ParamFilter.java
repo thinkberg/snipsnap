@@ -22,14 +22,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-/*
- * LinkFilter finds [text] in its input and transforms this
- * to <link name="text">
- *
- * @author stephan
- * @team sonicteam
- * @version $Id$
- */
 package org.snipsnap.snip.filter;
 
 import org.apache.oro.text.regex.MatchResult;
@@ -40,6 +32,14 @@ import org.snipsnap.app.Application;
 import java.util.HashMap;
 import java.util.Map;
 
+/*
+ * LinkFilter finds [text] in its input and transforms this
+ * to <link name="text">
+ *
+ * @author stephan
+ * @team sonicteam
+ * @version $Id$
+ */
 public class ParamFilter extends RegexTokenFilter {
   private Map params;
 

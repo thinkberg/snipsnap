@@ -37,6 +37,6 @@ import org.snipsnap.snip.filter.regex.RegexReplaceFilter;
 public class BoldFilter extends RegexReplaceFilter {
 
   public BoldFilter() {
-    super("__(.*?)__", "<span class=\"bold\">$1</span>");
+    super("__(.*?)__", "<b class=\"bold\">$1</b>");
   };
 }

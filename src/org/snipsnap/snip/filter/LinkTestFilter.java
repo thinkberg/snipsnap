@@ -73,6 +73,8 @@ public class LinkTestFilter extends Filter {
     wikiSpaces.put("C2", "http://www.c2.com/cgi/wiki?");
     wikiSpaces.put("WeblogKitchen", "http://www.weblogkitchen.com/wiki.cgi?");
     wikiSpaces.put("meatball", "http://www.usemod.com/cgi-bin/mb.pl?");
+    wikiSpaces.put("SnipSnap", "http://snipsnap.org/space/");
+
 
     // super("\\[(.*?)\\]", "<link href=\"$1\"/>");
   }
