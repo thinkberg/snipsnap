@@ -25,18 +25,9 @@
 
 package org.snipsnap.xmlrpc;
 
-import org.apache.xmlrpc.XmlRpcException;
-import org.radeox.util.logging.Logger;
-import org.snipsnap.app.Application;
-import org.snipsnap.snip.Blog;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.AuthenticationService;
-import org.snipsnap.user.User;
 
 import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Vector;
 
 /**
@@ -50,9 +41,10 @@ import java.util.Vector;
 
 public class BloggerHandler extends XmlRpcSupport implements BloggerAPI {
   public static final String API_PREFIX = "blogger";
+  MetaWeblogHandler metaHandler;
 
   public BloggerHandler(AuthenticationService authenticationService) {
-    this.authenticationService = authenticationService;
+     metaHandler = new MetaWeblogHandler(authenticationService);
   }
 
   public String getName() {
@@ -84,70 +76,48 @@ public class BloggerHandler extends XmlRpcSupport implements BloggerAPI {
                         String username,
                         String password,
                         String content,
-                        boolean publish) throws XmlRpcException {
-    Logger.debug("XML-RPC call to newPost()");
-
-    Blog blog = SnipSpaceFactory.getInstance().getBlog();
-
-    User user = authenticate(username, password);
-
-    Snip snip = blog.post(content);
-    return snip.getName();
+                        boolean publish) throws Exception {
+        return metaHandler.newPost(appkey,
+                blogid,
+                username,
+                password,
+                content,
+                publish);
   }
 
-  /**
-   * From the spec:
-   * blogger.getUsersBlogs: Returns information on all the blogs a given user is a member of.
-   * appkey (string): Unique identifier/passcode of the application sending the post. (See access info.)
-   * username (string): Login for a Blogger user who has permission to post to the blog.
-   * password (string): Password for said username.
-   *
-   * @param appkey Application key, currently not used by SnipSnap
-   * @param username Login of a SnipSnap user whit permission to post to weblog
-   * @param password Password credential
-   *
-   * @return bloglist List of Blogs, currently SnipSnap has only one weblog
-   **/
+    public boolean editPost(String appkey,
+                            String postId,
+                            String username,
+                            String password,
+                            String content,
+                            boolean publish) throws Exception {
+        return metaHandler.editPost(appkey,
+                postId,
+                username,
+                password,
+                content,
+                publish);
+    }
+
   public Vector getUsersBlogs(String appkey,
                               String username,
-                              String password) throws XmlRpcException {
-    Logger.debug("XML-RPC call to getUserBlogs()");
+                              String password) throws Exception {
+       return metaHandler.getUsersBlogs(appkey,
+              username,
+              password);
+ }
 
-    User user = authenticate(username, password);
-
-    Hashtable blog = new Hashtable(3);
-    blog.put("url", Application.get().getConfiguration().getUrl());
-    blog.put("blogid", "0");
-    blog.put("blogName", Application.get().getConfiguration().getName());
-    Vector vector = new Vector(1);
-    vector.add(blog);
-    return vector;
-  }
-
-  /**
-   * From the spec:
-   * Returns an array of structs containing the latest n posts to a given blog, newest first.
-   * appkey (string): Unique identifier/passcode of the application sending the post. (See access info.)
-   * blogid (string): Unique identifier of the blog the post will be added to.
-   * username (string): Login for a Blogger user who has permission to post to the blog.
-   * password (string): Password for said username.
-   * numberOfPosts (int): Number of posts to retrieve.
-   *
-   * @param appkey Application key, currently not used by SnipSnap
-   * @param blogid Identifaction for the blog, currenty SnipSnap supports only one weblog
-   * @param username Login of a SnipSnap user whit permission to post to weblog
-   * @param password Password credential
-   * @param numberOfPosts Number of the posts to retrieve
-   *
-   * @return recentPosts List of recents weblog posts
-   **/
   public Vector getRecentPosts(String appkey,
                                String blogid,
                                String username,
                                String password,
-                               int numberOfPosts) throws XmlRpcException {
-    Logger.debug("XML-RPC call to getRecentPosts()");
-
+                               int numberOfPosts) throws Exception {
+      return metaHandler.getRecentPosts(appkey,
+              blogid,
+              username,
+              password,
+              numberOfPosts);
+/*
     User user = authenticate(username, password);
     Snip snip = SnipSpaceFactory.getInstance().getBlog().getSnip();
 
@@ -165,29 +135,20 @@ public class BloggerHandler extends XmlRpcSupport implements BloggerAPI {
       posts.add(data);
     }
     return posts;
+ */
   }
 
-  /**
-   blogger.getPost
-
-   Parameters:
-
-   * appkey : currently ignored
-   * postId : postId is a unique identifier for the post created. It is the value returned by blogger.newPost. postId will look like..."zoneId|convId|pathToWeblog|msgNum".
-   * username : the email address you use as a username for the site. This user must have privileges to post to the weblog as either the weblog owner, or a member of the owner group.
-   * password : the password you use for the site
-
-   Returns:
-
-   * struct containing values content ( message body ), userId, postId and dateCreated.
-   **/
 
   public Hashtable getPost(String appkey,
                            String postId,
                            String username,
-                           String password) throws XmlRpcException {
-    Logger.debug("XML-RPC call to getRecentPosts()");
+                           String password) throws Exception {
 
+     return  metaHandler.getPost(appkey,
+              postId,
+              username,
+              password);
+    /*
     User user = authenticate(username, password);
     Snip snip = SnipSpaceFactory.getInstance().load(postId);
     Hashtable post = new Hashtable();
@@ -196,14 +157,30 @@ public class BloggerHandler extends XmlRpcSupport implements BloggerAPI {
     post.put("postid", snip.getName());
     post.put("dateCreated", snip.getCTime());
     return post;
+    */
   }
 
-  /**
-   blogger.editPost: Edits a given post. Optionally, will publish the blog after making the edit.
+    /**
+     *
+     * @param appkey
+     * @param postId
+     * @param username
+     * @param password
+     * @param publish
+     * @return
+     * @throws Exception
+     */
 
-   Blogger specific:
-   blogger.getUserInfo: Authenticates a user and returns basic user info (name, email, userid, etc.).
-   blogger.getTemplate: Returns the main or archive index template of a given blog.
-   blogger.setTemplate: Edits the main or archive index template of a given blog.
-   */
+    public boolean deletePost(String appkey,
+                              String postId,
+                              String username,
+                              String password,
+                              boolean publish) throws Exception {
+        return metaHandler.deletePost(appkey,
+                postId,
+                username,
+                password,
+                publish);
+    }
+
 }
