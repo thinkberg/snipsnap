@@ -16,7 +16,7 @@
    <div class="preview"><div class="snip-content"><c:out value="${preview}" escapeXml="false"/></div></div>
   </c:if>
   <div class="snip-content">
-   <s:check roles="Authenticated">
+   <s:check roles="Authenticated" permission="Edit" >
      <div class="snip-input">
       <form class="form" name="f" method="post" action="exec/store" enctype="multipart/form-data">
        <table>
@@ -32,7 +32,7 @@
       </form>
      </div>
    </s:check>
-   <s:check roles="Authenticated" invert="true" >
+   <s:check roles="Authenticated" permission="Edit" invert="true" >
      <fmt:message key="login.please">
        <fmt:param><fmt:message key="edit.snip"/></fmt:param>
      </fmt:message>
