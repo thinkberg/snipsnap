@@ -94,7 +94,6 @@ public class Layouter extends SnipSnapServlet {
     paramMap.put("RSS", config.getUrl("/exec/rss"));
     Application.get().setParameters(paramMap);
 
-
     if (null == layout || "/".equals(layout)) {
       response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));
       return;

@@ -86,7 +86,9 @@ public class WeblogMacro extends Macro {
         writer.write(" | ");
         writer.write(entry.getComments().getPostString());
         writer.write("</div>\n\n");
+        writer.write("<div class=\"snip-backlinks\">");
         BackLinks.appendTo(writer, entry.getAccess().getBackLinks(), 5);
+        writer.write("</div>");
       }
 
       return;

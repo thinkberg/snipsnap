@@ -55,6 +55,14 @@ public class Labels {
     labels.put(name, value);
   }
 
+  public Label getLabel(String name) {
+    return (Label)labels.get(name);
+  }
+
+  public Set getIds() {
+    return labels.keySet();
+  }
+
   public void deserialize(String labelString) {
     labels = new HashMap();
     if ("".equals(labelString)) return;

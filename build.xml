@@ -30,6 +30,7 @@
     <pathelement location="${src}/apps/default/WEB-INF/lib/standard.jar"/>
     <pathelement location="${jar}/activation.jar"/>
     <pathelement location="${jar}/mail.jar"/>
+    <pathelement location="${jar}/cvslib.jar"/>
   </path>
 
   <path id="all.classpath">

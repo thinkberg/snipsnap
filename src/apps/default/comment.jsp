@@ -30,7 +30,7 @@
     <div class="preview"><div class="comment-content"><c:out value="${preview}" escapeXml="false"/></div></div>
     <form class="form" name="f" method="post" action="../exec/storecomment#post" enctype="multipart/form-data">
      <table>
-      <tr><td><textarea name="content" type="text" cols="80" rows="20" tabindex="0"><c:out value="${content}" escapeXml="false"/></textarea></td></tr>
+      <tr><td><textarea name="content" type="text" cols="80" rows="20" tabindex="0"><c:out value="${content}" escapeXml="true"/></textarea></td></tr>
       <tr><td class="form-buttons">
        <input value="Preview" name="preview" type="submit"/>
        <input value="Comment" name="save" type="submit"/>

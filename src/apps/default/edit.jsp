@@ -19,7 +19,7 @@
    <div class="snip-input">
     <form class="form" name="f" method="post" action="../exec/store" enctype="multipart/form-data">
      <table>
-      <tr><td><textarea name="content" type="text" cols="80" rows="20"><c:out value="${content}" escapeXml="false"/></textarea></td></tr>
+      <tr><td><textarea name="content" type="text" cols="80" rows="20"><c:out value="${content}" escapeXml="true"/></textarea></td></tr>
       <tr><td class="form-buttons">
        <input value="Preview" name="preview" type="submit"/>
        <input value="Save" name="save" type="submit"/>
