@@ -22,12 +22,14 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-package org.snipsnap.user;
+package snipsnap.api.user;
 
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
-import org.snipsnap.snip.SnipLink;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
+import snipsnap.api.snip.SnipLink;
 import org.snipsnap.render.macro.list.Linkable;
+import org.snipsnap.user.Roles;
+import org.snipsnap.user.Digest;
 
 import java.sql.Timestamp;
 import java.util.Iterator;
@@ -41,7 +43,7 @@ import gabriel.Principal;
  * User class.
  *
  * @author Stephan J. Schmidt
- * @version $Id$
+ * @version $Id: User.java 1754 2004-09-16 09:16:06Z stephan $
  */
 public class User implements Linkable {
   private Subject subject;
@@ -220,8 +222,8 @@ public class User implements Linkable {
   }
 
   public boolean isAdmin() {
-    Application app = Application.get();
-    Configuration config = app.getConfiguration();
+    Application app = snipsnap.api.app.Application.get();
+    snipsnap.api.config.Configuration config = app.getConfiguration();
     return (config.getAdminLogin() != null && config.getAdminLogin().equals(login))
         || getRoles().contains(Roles.ADMIN);
   }
@@ -269,7 +271,7 @@ public class User implements Linkable {
     } else if (isGuest()) {
       return "Guest";
     } else {
-      return SnipLink.createLink(getLogin());
+      return snipsnap.api.snip.SnipLink.createLink(getLogin());
     }
   }
 

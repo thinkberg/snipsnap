@@ -23,13 +23,14 @@
  * --LICENSE NOTICE--
  */
 
-package org.snipsnap.snip;
+package snipsnap.api.snip;
 
 import org.snipsnap.serialization.Appendable;
 import org.snipsnap.snip.attachment.Attachments;
-import org.snipsnap.snip.label.Labels;
+import snipsnap.api.label.Labels;
+import org.snipsnap.snip.*;
 import org.snipsnap.user.Permissions;
-import org.snipsnap.user.User;
+import snipsnap.api.user.User;
 import org.snipsnap.render.macro.list.Linkable;
 import org.snipsnap.render.macro.list.Nameable;
 
@@ -42,7 +43,7 @@ import java.io.IOException;
  * Interface for snips
  *
  * @author  Stephan J. Schmidt
- * @version $Id$
+ * @version $Id: Snip.java 1706 2004-07-08 08:53:20Z stephan $
  */
 
 public interface Snip extends Linkable, gabriel.components.context.Ownable, Nameable, Appendable {

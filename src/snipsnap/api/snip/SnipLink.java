@@ -23,13 +23,13 @@
  * --LICENSE NOTICE--
  */
 
-package org.snipsnap.snip;
+package snipsnap.api.snip;
 
 import org.radeox.util.logging.Logger;
 import org.radeox.util.Encoder;
 import org.radeox.util.i18n.ResourceManager;
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.util.URLEncoderDecoder;
 import org.snipsnap.snip.name.NameFormatter;
 import org.snipsnap.snip.name.PathRemoveFormatter;
@@ -41,11 +41,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.text.MessageFormat;
 
+import snipsnap.api.snip.*;
+import snipsnap.api.snip.Snip;
+
 /**
  *  Generates links for snips
  *
  * @author stephan
- * @version $Id$
+ * @version $Id: SnipLink.java 1606 2004-05-17 10:56:18Z leo $
  */
 
 public class SnipLink {
@@ -128,7 +131,7 @@ public class SnipLink {
     return appendLink(writer, snip.getName());
   }
 
-  public static StringBuffer appendLink(StringBuffer buffer, Snip snip) {
+  public static StringBuffer appendLink(StringBuffer buffer, snipsnap.api.snip.Snip snip) {
     return appendLink(buffer, snip.getName());
   }
 
@@ -273,7 +276,7 @@ public class SnipLink {
   // TODO 1.4 buffer.append(URLEncoder.encode(key, "iso-8859-1"));
   public static String encode(String s) {
     try {
-      Configuration config = Application.get().getConfiguration();
+      snipsnap.api.config.Configuration config = Application.get().getConfiguration();
       String encodedSpace = config.getEncodedSpace();
       if(null != encodedSpace && encodedSpace.length() > 0) {
         return URLEncoderDecoder.encode(s, config.getEncoding()).replace(' ', encodedSpace.charAt(0));
@@ -288,7 +291,7 @@ public class SnipLink {
 
   public static String decode(String s) {
     try {
-      Configuration config = Application.get().getConfiguration();
+      snipsnap.api.config.Configuration config = Application.get().getConfiguration();
       String encodedSpace = config.getEncodedSpace();
       if (null != encodedSpace && encodedSpace.length() > 0) {
         s = s.replace(encodedSpace.charAt(0), ' ');

@@ -23,12 +23,13 @@
  * --LICENSE NOTICE--
  */
 
-package org.snipsnap.snip.label;
+package snipsnap.api.label;
 
 import org.snipsnap.util.StringUtil;
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.Snip;
 import org.snipsnap.container.Components;
-import org.snipsnap.app.Application;
+import org.snipsnap.snip.label.LabelManager;
+import snipsnap.api.app.Application;
 
 import java.util.*;
 
@@ -36,7 +37,7 @@ import java.util.*;
  * Stores Label information for a snip
  *
  * @author stephan
- * @version $Id$
+ * @version $Id: Labels.java 1609 2004-05-18 13:28:38Z stephan $
  */
 
 public class Labels {
@@ -70,7 +71,7 @@ public class Labels {
     // additional parameter 'overwrite' or exception or return value?
     // (decision should to be made by user)
     cache = null;
-    Label label = createDefaultLabel(name, value);
+    snipsnap.api.label.Label label = createDefaultLabel(name, value);
     addLabel(label);
   }
 
@@ -78,13 +79,13 @@ public class Labels {
     Map map = (Map) this.labels.get(name);
     if (map == null) return null;
     Iterator it = map.values().iterator();
-    return it.hasNext() ? (Label) it.next() : null;
+    return it.hasNext() ? (snipsnap.api.label.Label) it.next() : null;
   }
 
-  public Label getLabel(String name, String value) {
+  public snipsnap.api.label.Label getLabel(String name, String value) {
     Map map = (Map) this.labels.get(name);
     if (map == null) return null;
-    return (Label) map.get(value);
+    return (snipsnap.api.label.Label) map.get(value);
   }
 
   public Collection getAll() {
@@ -109,7 +110,7 @@ public class Labels {
       Map map = (Map) iterator.next();
       Iterator it = map.values().iterator();
       while (it.hasNext()) {
-        Label label = (Label) it.next();
+        snipsnap.api.label.Label label = (Label) it.next();
         if (null != label && type.equals(label.getType())) {
           result.add(label);
         }
@@ -122,22 +123,22 @@ public class Labels {
     cache = null;
     Map map = (Map) labels.get(name);
     if (map != null) {
-      Label label = (Label) map.get(value);
+      snipsnap.api.label.Label label = (Label) map.get(value);
       label.remove();
       map.remove(value);
     }
   }
 
   private Label createDefaultLabel(String name, String value) {
-    Label label = ((LabelManager) Components.getComponent(LabelManager.class)).getDefaultLabel();
+    snipsnap.api.label.Label label = ((LabelManager) Components.getComponent(LabelManager.class)).getDefaultLabel();
     label.setName(name);
     label.setValue(value);
     return label;
   }
 
-  private Label createLabel(String type, String name, String value) {
+  private snipsnap.api.label.Label createLabel(String type, String name, String value) {
     // TODO: ? throw an exception (e.g. LabelTypeUnkownException ) ?
-    Label label = ((LabelManager) Components.getComponent(LabelManager.class)).getLabel(type);
+    snipsnap.api.label.Label label = ((LabelManager) Components.getComponent(LabelManager.class)).getLabel(type);
     if (label != null) {
       label.setName(name);
       label.setValue(value);
@@ -145,7 +146,7 @@ public class Labels {
     return label;
   }
 
-  private void deserialize(Snip snip, String labelString) {
+  private void deserialize(snipsnap.api.snip.Snip snip, String labelString) {
     labels = new HashMap();
     if (null == labelString || "".equals(labelString)) {
       return;
@@ -157,7 +158,7 @@ public class Labels {
       String[] data = StringUtil.split(labelToken, ":");
       //System.out.println("Data="+data);
       if (data.length == 3) {
-        Label label = createLabel(data[0], data[1], data[2]);
+        snipsnap.api.label.Label label = createLabel(data[0], data[1], data[2]);
         label.setSnip(snip);
         addLabel(label);
       } else {
@@ -180,7 +181,7 @@ public class Labels {
       Map map = (Map) entry.getValue();
       Iterator it = map.values().iterator();
       while (it.hasNext()) {
-        Label label = (Label) it.next();
+        snipsnap.api.label.Label label = (snipsnap.api.label.Label) it.next();
         String type = label.getType();
         String value = label.getValue();
         linkBuffer.append(type);

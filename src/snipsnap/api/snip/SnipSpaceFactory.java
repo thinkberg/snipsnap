@@ -23,20 +23,22 @@
  * --LICENSE NOTICE--
  */
 
-package org.snipsnap.snip;
+package snipsnap.api.snip;
 
 import org.snipsnap.container.Components;
+import snipsnap.api.snip.*;
+import snipsnap.api.snip.SnipSpace;
 
 
 /**
  * SnipSpaceFactory returns SnipSpace instances
  *
  * @author Stephan J. Schmidt
- * @version $Id$
+ * @version $Id: SnipSpaceFactory.java 915 2003-08-06 12:39:12Z stephan $
  */
 
 public class SnipSpaceFactory {
-  public static synchronized SnipSpace getInstance() {
+  public static synchronized snipsnap.api.snip.SnipSpace getInstance() {
     return (SnipSpace) Components.getComponent(SnipSpace.class);
   }
 

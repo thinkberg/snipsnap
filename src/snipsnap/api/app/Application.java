@@ -22,14 +22,14 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-package org.snipsnap.app;
+package snipsnap.api.app;
 
 import org.radeox.util.logging.Logger;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.config.ConfigurationProxy;
 import org.snipsnap.container.Components;
 import org.snipsnap.user.AuthenticationService;
-import org.snipsnap.user.User;
+import snipsnap.api.user.User;
 import org.snipsnap.user.UserManagerFactory;
 import org.snipsnap.util.ApplicationAwareMap;
 
@@ -44,7 +44,7 @@ import java.util.Map;
  * The application object contains information about current users and other
  * session specific information.
  * @author Stephan J. Schmidt
- * @version $Id$
+ * @version $Id: Application.java 1704 2004-07-07 07:47:05Z stephan $
  */
 public class Application {
   public final static String OID = "_applicationOid";
@@ -61,7 +61,7 @@ public class Application {
 
   // TODO make this an application-aware map to get old functionality
   private Map objectStore = new HashMap();
-  private User user;
+  private snipsnap.api.user.User user;
   private Configuration config;
   private List log = new ArrayList();
   // TODO use private NotificationService notification;
@@ -105,7 +105,7 @@ public class Application {
     Logger.log(Logger.PERF, output + " - " + (System.currentTimeMillis() - start));
   }
 
-  public User getUser() {
+  public snipsnap.api.user.User getUser() {
     return user;
   }
 
@@ -121,7 +121,7 @@ public class Application {
     this.params = parameters;
   }
 
-  public void setUser(User user, HttpSession session) {
+  public void setUser(snipsnap.api.user.User user, HttpSession session) {
     if (this.user == user) {
       return;
     }
@@ -137,7 +137,7 @@ public class Application {
     return;
   }
 
-  public static synchronized void addCurrentUser(User user, HttpSession session) {
+  public static synchronized void addCurrentUser(snipsnap.api.user.User user, HttpSession session) {
 //    Logger.debug("Binding user to session: "+user+": "+session);
     currentUsers.getMap().put(session, user);
   }
@@ -146,7 +146,7 @@ public class Application {
     List users = new ArrayList();
     Iterator iterator = currentUsers.getMap().values().iterator();
     while (iterator.hasNext()) {
-      User user = (User) iterator.next();
+      snipsnap.api.user.User user = (snipsnap.api.user.User) iterator.next();
       if (!(user.isGuest() || user.isNonUser() || users.contains(user))) {
         users.add(user);
       }
@@ -158,7 +158,7 @@ public class Application {
     List users = new ArrayList();
     Iterator iterator = currentUsers.getMap().values().iterator();
     while (iterator.hasNext()) {
-      User user = (User) iterator.next();
+      snipsnap.api.user.User user = (User) iterator.next();
       if (user.isNonUser() && !users.contains(user) && !"IGNORE".equals(user.getEmail())) {
         users.add(user);
       }
@@ -192,7 +192,7 @@ public class Application {
     }
 
     if (null != currentUsersMap && currentUsersMap.containsKey(session)) {
-      User user = (User) currentUsersMap.get(session);
+      snipsnap.api.user.User user = (snipsnap.api.user.User) currentUsersMap.get(session);
       AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
 
       if (service.isAuthenticated(user)) {

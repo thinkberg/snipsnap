@@ -23,17 +23,18 @@
  * --LICENSE NOTICE--
  */
 
-package org.snipsnap.snip.label;
+package snipsnap.api.label;
 
-import org.snipsnap.snip.Snip;
-import org.snipsnap.serialization.LabelContext;
+import snipsnap.api.snip.Snip;
+import org.snipsnap.snip.label.Indexable;
+import org.snipsnap.snip.label.LifeCycle;
 
 import java.util.Map;
 
 /**
  * Label is attached to Snips
  * @author Stephan J. Schmidt
- * @version $Id$
+ * @version $Id: Label.java 1263 2003-12-12 08:58:25Z stephan $
  */
 public interface Label extends Indexable, LifeCycle {
   // public String serialize();
@@ -56,9 +57,9 @@ public interface Label extends Indexable, LifeCycle {
 
   public void setValue(String value);
 
-  public void setSnip(Snip snip);
+  public void setSnip(snipsnap.api.snip.Snip snip);
 
-  public Snip getSnip();
+  public snipsnap.api.snip.Snip getSnip();
 
-  public LabelContext getContext();
+  public snipsnap.api.label.LabelContext getContext();
 }
