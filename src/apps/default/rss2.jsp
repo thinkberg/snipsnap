@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %><%-- hack to remove linefeed
 --%><%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %><%--
 --%><%@ page contentType="text/xml"%><%--
---%><!-- name="generator" content="SnipSnap/<c:out value="${config.version}"/> -->
+--%><!-- name="generator" content="SnipSnap/<c:out value="${config.version}"/>" -->
 <rss version="2.0"
     xmlns:dc="http://purl.org/dc/elements/1.1/"
     xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
