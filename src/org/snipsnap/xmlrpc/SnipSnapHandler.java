@@ -227,15 +227,15 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
     return true;
   }
 
-  public int removeBacklink(String regexp) {
-    Configuration config = Application.get().getConfiguration();
-    SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
-    Iterator allSnipIt = space.getAll().iterator();
-    while(allSnipIt.hasNext()) {
-      Snip snip = (Snip)allSnipIt.next();
-      Links links = snip.getBackLinks();
-      links.iterator();
-    }
-
-  }
+//  public int removeBacklink(String regexp) {
+//    Configuration config = Application.get().getConfiguration();
+//    SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
+//    Iterator allSnipIt = space.getAll().iterator();
+//    while(allSnipIt.hasNext()) {
+//      Snip snip = (Snip)allSnipIt.next();
+//      Links links = snip.getBackLinks();
+//      links.iterator();
+//    }
+//
+//  }
 }
