@@ -1,5 +1,6 @@
-0.5.1
+0.5.1 (2004-01-13)
 
+- Fixed bug: SnipGraph didn't work
 - Added feature: HTTP request added to macro parameters
 - Fixed bug: Country sorting in Setup fixed
 - Fixed bug: UserManager added again
