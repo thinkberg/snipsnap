@@ -135,7 +135,7 @@ public class SnipSpaceImpl implements SnipSpace {
     timer.schedule(new TimerTask() {
       public void run() {
         List toStoreList = delayed;
-        // To be atomic we first create the list and
+        // Just to be sure: To be atomic we first create the list and
         // then assign the list to delayed
         // With help from french_c aka Jens
         List temp = new ArrayList();

@@ -24,10 +24,10 @@
  */
 package org.snipsnap.user;
 
-import org.radeox.util.Linkable;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.snip.SnipLink;
+import org.snipsnap.render.macro.list.Linkable;
 
 import java.sql.Timestamp;
 

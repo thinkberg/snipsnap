@@ -25,8 +25,6 @@
 
 package org.snipsnap.util;
 
-import org.radeox.util.Linkable;
-
 import java.sql.Timestamp;
 import java.util.Date;
 
