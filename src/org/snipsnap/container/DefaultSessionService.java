@@ -64,7 +64,7 @@ public class DefaultSessionService implements SessionService {
     this.storage = storage;
     this.authService = authService;
 
-    // TODO read from snip and make dependend from SnipSpace
+    // TODO readfrom snip and make dependend from SnipSpace
     try {
       Snip robots = space.load(Configuration.SNIPSNAP_CONFIG_ROBOTS);
       if(robots != null) {
