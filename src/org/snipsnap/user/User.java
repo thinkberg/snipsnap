@@ -38,7 +38,6 @@ import java.sql.Timestamp;
  * @version $Id$
  */
 public class User implements Linkable {
-
   private String login;
   private String passwd;
   private String email;

@@ -20,6 +20,7 @@
   <!-- the overall class path -->
   <path id="app.classpath">
     <pathelement location="${jar}/radeox.jar"/>
+    <pathelement location="${jar}/commons-logging.jar"/>
     <pathelement location="${jar}/jakarta-oro.jar"/>
     <pathelement location="${jar}/xmlrpc-1.1.jar"/>
     <pathelement location="${jar}/lucene-1.2.jar"/>
@@ -107,6 +108,7 @@
         <include name="${jar}/mail.jar"/>
         <include name="${jar}/activation.jar"/>
         <include name="${jar}/radeox.jar"/>
+        <include name="${jar}/commons-logging.jar"/>
         <include name="${jar}/${appname}-template.war"/>
         <include name="${jar}/${appname}-theme-*.jar"/>
         <include name="${jar}/${appname}-installer.war"/>
@@ -335,6 +337,7 @@
     <copy todir="${target}/webapp/WEB-INF/lib">
       <fileset dir="${jar}">
         <include name="radeox.jar"/>
+        <include name="commons-logging.jar"/>
         <include name="jakarta-oro.jar"/>
         <include name="lucene-1.2.jar"/>
         <include name="xmlrpc-1.1.jar"/>
@@ -464,6 +467,7 @@
     <copy todir="${target}/installer/webapp/WEB-INF/lib">
       <fileset dir="${jar}">
         <include name="radeox.jar"/>
+        <include name="commons-logging.jar"/> 
         <include name="jakarta-oro.jar"/>
         <include name="lucene-1.2.jar"/>
         <include name="xmlrpc-1.1.jar"/>

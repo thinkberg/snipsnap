@@ -36,6 +36,7 @@ import java.util.*;
  * @version $Id$
  */
 public class UserManager {
+
   public static synchronized UserManager getInstance() {
     return (UserManager) Components.getComponent(UserManager.class);
   }
@@ -74,10 +75,6 @@ public class UserManager {
 
   public int getUserCount() {
     return storage.storageUserCount();
-  }
-
-  public Object loadObject(String login) {
-    return storage.storageLoad(login);
   }
 
   public User create(String login, String passwd, String email) {

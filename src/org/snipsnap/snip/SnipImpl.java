@@ -26,15 +26,18 @@ package org.snipsnap.snip;
 
 import org.radeox.EngineManager;
 import org.radeox.engine.context.RenderContext;
+import org.radeox.engine.RenderEngine;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.interceptor.Aspects;
 import org.snipsnap.render.context.SnipRenderContext;
+import org.snipsnap.render.SnipRenderEngine;
 import org.snipsnap.snip.attachment.Attachment;
 import org.snipsnap.snip.attachment.Attachments;
 import org.snipsnap.snip.label.Labels;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.User;
+import org.snipsnap.container.Components;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -43,6 +46,8 @@ import java.io.Writer;
 import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.List;
+
+import picocontainer.Container;
 
 /**
  * Central class for snips.
@@ -391,13 +396,19 @@ public class SnipImpl implements Snip {
   }
 
   public String toXML() {
-    long start = Application.get().start();
-    RenderContext context = new SnipRenderContext((Snip) Aspects.getThis(), SnipSpaceFactory.getInstance());
+    //long start = Application.get().start();
+    Container container = Components.getContainer();
+
+    RenderContext context = new SnipRenderContext(
+        (Snip) Aspects.getThis(),
+        (SnipSpace) container.getComponent(SnipSpace.class));
     context.setParameters(Application.get().getParameters());
-    String xml = EngineManager.getInstance("snipsnap").render(content, context);
-    Logger.debug(getName() + " is cacheable: " + context.isCacheable());
+
+    RenderEngine engine = (RenderEngine) container.getComponent(RenderEngine.class);
+    String xml = engine.render(content, context);
+    //Logger.debug(getName() + " is cacheable: " + context.isCacheable());
     //String xml = SnipFormatter.toXML(this, getContent());
-    Application.get().stop(start, "Formatting " + name);
+    //Application.get().stop(start, "Formatting " + name);
     return xml;
   }
 
