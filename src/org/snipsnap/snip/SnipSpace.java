@@ -1,6 +1,7 @@
 package com.neotis.snip;
 
-import java.util.HashMap;
+import com.neotis.util.ConnectionManager;
+
 import java.sql.*;
 
 public class SnipSpace {
@@ -15,70 +16,87 @@ public class SnipSpace {
     return instance;
   }
 
-  private Connection getConnection() {
-    // Register the Mckoi JDBC Driver
-    try {
-      Class.forName("com.mckoi.JDBCDriver").newInstance();
-    } catch (Exception e) {
-      System.out.println(
-          "Unable to register the JDBC Driver.\n" +
-          "Make sure the classpath is correct.\n" +
-          "For example on Win32;  java -cp ../../mckoidb.jar;. SimpleApplicationDemo\n" +
-          "On Unix;  java -cp ../../mckoidb.jar:. SimpleApplicationDemo");
-      return null;
-    }
-
-    // This URL specifies we are connecting with a local database.  The
-    // configuration file for the database is found at './ExampleDB.conf'
-    String url = "jdbc:mckoi:local://ExampleDB.conf";
-
-    // The username/password for the database.  This is set when the database
-    // is created (see SimpleDatabaseCreateDemo).
-    String username = "funzel";
-    String password = "funzel";
-
-    // Make a connection with the database.
-    Connection connection;
-    try {
-      connection = DriverManager.getConnection(url, username, password);
-    } catch (SQLException e) {
-      System.out.println(
-          "Unable to make a connection to the database.\n" +
-          "The reason: " + e.getMessage());
-      return null;
-    }
-    return connection;
+  private SnipSpace() {
+    connection = ConnectionManager.getConnection();
   }
 
-  private SnipSpace() {
-    connection = getConnection();
+  public boolean exists(String name) {
+      return (null != load(name));
   }
 
   public Snip load(String name) {
     Snip snip = null;
+    PreparedStatement statement = null;
+    ResultSet result = null;
 
     try {
-      Statement statement = connection.createStatement();
-      ResultSet result;
+      statement = connection.prepareStatement("SELECT name, content FROM Snip WHERE name=?");
+      statement.setString(1, name);
 
-      result = statement.executeQuery("SELECT name, content FROM Snip");
+      result = statement.executeQuery();
       if (result.next()) {
         snip = new Snip(result.getString("name"), result.getString("content"));
       }
-
     } catch (SQLException e) {
+      e.printStackTrace();
+    } finally {
+      ConnectionManager.close(statement);
     }
     return snip;
   }
 
   public void store(Snip snip) {
+    PreparedStatement statement = null;
+
+    try {
+      statement = connection.prepareStatement("UPDATE Snip SET name=?, content=? WHERE name=?");
+      statement.setString(1, snip.getName());
+      statement.setString(2, snip.getContent());
+      statement.setString(3, snip.getName());
+
+      statement.execute();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    } finally {
+      ConnectionManager.close(statement);
+    }
+    return;
   }
 
-  public Snip create() {
-    return null;
+  public Snip create(String name, String content) {
+    PreparedStatement statement = null;
+    ResultSet result = null;
+
+    try {
+      statement = connection.prepareStatement("INSERT INTO Snip (name, content) VALUES (?,?)");
+      statement.setString(1, name);
+      statement.setString(2, content);
+
+      statement.execute();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    } finally {
+      ConnectionManager.close(statement);
+      ConnectionManager.close(result);
+    }
+
+    Snip snip = new Snip(name, content);
+    return snip;
   }
 
   public void remove(Snip snip) {
+    PreparedStatement statement = null;
 
+    try {
+      statement = connection.prepareStatement("DELETE FROM Snip WHERE name=?");
+      statement.setString(1, snip.getName());
+
+      statement.execute();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    } finally {
+      ConnectionManager.close(statement);
+    }
+    return;
   }
 }

@@ -26,10 +26,17 @@ public class SnipSpaceTest extends TestCase {
     assertEquals(snip1.getName(), "about");
   }
 
+  public void testExists() {
+    Snip snip1 = SnipSpace.getInstance().create("funzel","stephan");
+    assertTrue("Snip exists", SnipSpace.getInstance().exists("funzel"));
+    SnipSpace.getInstance().remove(snip1);
+  }
+
+  public void testCreateAndDeleteSnip() {
+    Snip snip1 = SnipSpace.getInstance().create("funzel","stephan");
+    assertEquals(snip1.getName(), "funzel");
+    assertEquals(snip1.getContent(), "stephan");
+    SnipSpace.getInstance().remove(snip1);
+  }
+
 }
-
-
-
-
-
-
