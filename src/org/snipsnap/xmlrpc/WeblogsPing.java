@@ -28,6 +28,7 @@ package org.snipsnap.xmlrpc;
 import org.apache.xmlrpc.XmlRpcClient;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.AppConfiguration;
+import org.snipsnap.snip.Snip;
 
 import java.util.Vector;
 
@@ -39,7 +40,7 @@ import java.util.Vector;
  */
 
 public class WeblogsPing {
-  public static void ping() {
+  public static void ping(Snip weblog) {
     try {
       AppConfiguration config = Application.get().getConfiguration();
       if (config.allow(AppConfiguration.PERM_WEBLOGS_PING)) {
@@ -47,7 +48,7 @@ public class WeblogsPing {
         Vector params = new Vector();
         // @TODO read name and url from configuration
         params.addElement(config.getName());
-        params.addElement(config.getUrl());
+        params.addElement(config.getSnipUrl(weblog.getName()));
         xmlrpc.execute("weblogUpdates.ping", params);
       }
     } catch (Exception e) {

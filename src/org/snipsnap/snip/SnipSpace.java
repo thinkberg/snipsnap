@@ -195,7 +195,7 @@ public class SnipSpace implements LinkTester, Loader {
     store(snip);
 
     // Ping weblogs.com that we changed our site
-    WeblogsPing.ping();
+    WeblogsPing.ping(snip);
     return snip;
   }
 
