@@ -29,6 +29,8 @@ import org.snipsnap.app.Application;
 import org.snipsnap.user.User;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.URL;
+import java.net.MalformedURLException;
 
 /**
  * Stores Access information for a snip like viewCount, backLinks, ...
@@ -38,23 +40,21 @@ import javax.servlet.http.HttpServletRequest;
  */
 
 public class Access {
-  private Snip snip;
   private Links backLinks, snipLinks;
   private int viewCount = 0;
   private boolean isModified;
 
-  public Access(Snip snip) {
-    this.snip = snip;
+  public Access() {
   }
 
-  public Access(Snip snip, Links backLinks, Links snipLinks, int viewCount) {
-    this.snip = snip;
+  public Access(Links backLinks, Links snipLinks, int viewCount) {
     this.backLinks = backLinks;
     this.snipLinks = snipLinks;
     this.viewCount = viewCount;
   }
 
-  public void handle(HttpServletRequest request) {
+  // DO NOT store snip in Acess this creates problems with Aspects
+  public void handle(String snipName, HttpServletRequest request) {
     User user = Application.get().getUser();
     if (!user.isNonUser()) {
       incViewCount();
@@ -68,6 +68,7 @@ public class Access {
           // Does the referrer point to a snip ?
           // Forget otherwise (e.g. "/exec/login.jsp")
           if (index != -1) {
+            // @TODO replace all with regex.
             String url = referrer.substring(index + "/space/".length());
             index = url.indexOf("?");
             if (index != -1) {
@@ -84,26 +85,27 @@ public class Access {
             }
 
             String name = SnipLink.decode(url);
-            if (!"start".equals(name) && !snip.getName().equals(name)) {
-              snipLinks.addLink(SnipLink.decode(url));
+            if (!"start".equals(name) && ! snipName.equals(name)) {
+              snipLinks.addLink(name);
             }
           }
         } else {
           // Referrer was external link
           String url = SnipLink.decode(referrer);
-          // do not count localhosts
-          // better use domain object from URL object etc.
-          if (url.indexOf("localhost") == -1) {
-            backLinks.addLink(SnipLink.decode(referrer));
-          }
+          // do not count localhosts, single hosts. Will
+          // not find local network IPs and MacOS X
+          // hosts like megid.local
+            try {
+                URL refURL = new URL(referrer);
+                if (refURL.getHost().indexOf(".") > -1) {
+                  backLinks.addLink(url);
+                }
+            } catch (MalformedURLException e) {
+                // not an URL, so allways drop
+            }
         }
       }
-      store();
     }
-  }
-
-  public void store() {
-    SnipSpace.getInstance().delayedStrore(snip);
   }
 
   public boolean isModified() {
@@ -113,11 +115,6 @@ public class Access {
   public void addLink(String url) {
     isModified = true;
     snipLinks.addLink(url);
-  }
-
-  public void setSnip(Snip snip) {
-    isModified = true;
-    this.snip = snip;
   }
 
   public Links getBackLinks() {
@@ -148,6 +145,7 @@ public class Access {
   }
 
   public int incViewCount() {
+    isModified = true;
     return ++this.viewCount;
   }
 }

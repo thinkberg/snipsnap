@@ -31,6 +31,7 @@ import org.snipsnap.user.Permissions;
 import org.snipsnap.user.User;
 import org.snipsnap.interceptor.Aspects;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.Writer;
 import java.sql.Timestamp;
@@ -65,7 +66,12 @@ public class SnipImpl implements Snip {
     this.name = name;
     this.content = content;
     this.modified = new Modified();
-    this.access = new Access((Snip) Aspects.getThis());
+    this.access = new Access();
+  }
+
+  public void handle(HttpServletRequest request) {
+    access.handle(name, request);
+    SnipSpace.getInstance().delayedStrore((Snip) Aspects.getThis());
   }
 
   public Access getAccess() {

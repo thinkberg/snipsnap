@@ -63,8 +63,8 @@ public class AppServer {
     }
 
     System.out.println("SnipSnap " + snipsnapConfig.getVersion());
-    System.out.println("Copyright (c) 2002 Stephan J. Schmidt, Matthias L. Jugel. "
-        + "All Rights Reserved.");
+    System.out.println("Copyright (c) 2000-2003 Stephan J. Schmidt, Matthias L. Jugel. "
+        + "\nAll Rights Reserved.");
     System.out.println("See License Agreement for terms and conditions of use.");
 
     // if not server.conf exists create one

@@ -67,7 +67,7 @@ public class SnipRawServlet extends SnipSnapServlet {
     response.setContentType("text/plain");
     // Snip does not exist
     if (null != snip) {
-      snip.getAccess().handle(request);
+      snip.handle(request);
       out.println(snip.getContent());
     } else {
       out.println("Snip not found.");

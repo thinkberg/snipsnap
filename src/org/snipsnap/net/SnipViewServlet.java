@@ -66,7 +66,7 @@ public class SnipViewServlet extends SnipSnapServlet {
     if (null == snip) {
       snip = SnipSpace.getInstance().load("snipsnap-notfound");
     }
-    snip.getAccess().handle(request);
+    snip.handle(request);
     request.setAttribute("snip", snip);
     request.setAttribute("URI", request.getServletPath() + request.getPathInfo());
     RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/snip.jsp");

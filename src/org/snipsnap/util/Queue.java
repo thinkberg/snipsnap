@@ -51,16 +51,19 @@ public class Queue {
 
   public Snip add(Snip snip) {
     System.err.println("Adding snip="+snip);
+    System.err.println("Class="+snip.getClass());
     Iterator iterator = queue.iterator();
     while (iterator.hasNext()) {
       Snip snip1 = (Snip) iterator.next();
       System.err.println("content="+snip1);
     }
+    // Queue already contains object, so remove it
     if (queue.contains(snip)) {
-      System.err.println("Removing.");
+      //System.err.println("Removing.");
       queue.remove(snip);
     }
 
+    // Queue is full, drop last item
     if (queue.size() == size) {
       queue.removeLast();
     }

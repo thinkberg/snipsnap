@@ -31,6 +31,7 @@ import org.snipsnap.user.Permissions;
 import org.snipsnap.user.User;
 import org.snipsnap.util.Nameable;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.Writer;
 import java.sql.Timestamp;
@@ -44,6 +45,8 @@ import java.util.List;
  */
 
 public interface Snip extends Ownable, Nameable, Appendable {
+  public void handle(HttpServletRequest request);
+
   public Access getAccess();
 
   public Modified getModified();

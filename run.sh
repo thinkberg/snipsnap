@@ -39,5 +39,5 @@ fi
 
 # execute application server
 mv server.log server.log.old
-$JAVA_HOME/bin/java -server $DBG -cp $CLASSPATH:lib/snipsnap.jar org.snipsnap.server.AppServer $cmdline 2> server.log
+$JAVA_HOME/bin/java -server -verbose:gc $DBG -cp $CLASSPATH:lib/snipsnap.jar org.snipsnap.server.AppServer $cmdline 2> server.log
 
