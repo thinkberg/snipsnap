@@ -24,22 +24,21 @@
  */
 package org.snipsnap.net;
 
+import org.snipsnap.app.Application;
+import org.snipsnap.config.Configuration;
+import org.snipsnap.container.Components;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.container.Components;
-import org.snipsnap.config.Configuration;
-import org.snipsnap.app.Application;
+import org.snipsnap.util.ApplicationAwareMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Handler for CSS Stylesheets (virtual)
@@ -48,27 +47,27 @@ import java.util.Map;
  */
 public class CssHandlerServlet extends HttpServlet {
 
-  Map styleSheets = new HashMap();
-  Map timeStamps = new HashMap();
+  ApplicationAwareMap styleSheets = new ApplicationAwareMap();
+  ApplicationAwareMap timeStamps = new ApplicationAwareMap();
 
   private String getStyleSheet(String id) {
     Configuration config = Application.get().getConfiguration();
     String themeId = config.getTheme() + id;
-    Snip cssSnip = (Snip)styleSheets.get(themeId);
-    Timestamp cssTimestamp = (Timestamp)timeStamps.get(themeId);
+    Snip cssSnip = (Snip)styleSheets.getMap().get(themeId);
+    Timestamp cssTimestamp = (Timestamp)timeStamps.getMap().get(themeId);
     if (null == cssSnip || cssSnip.getMTime().after(cssTimestamp)) {
       SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
       String snipName = Configuration.SNIPSNAP_THEMES + "/" + config.getTheme() + ("/default.css".equals(id) ? "/css" : id);
       cssSnip = space.load(snipName);
-      styleSheets.put(themeId, cssSnip);
-      timeStamps.put(themeId, cssSnip.getMTime().clone());
+      styleSheets.getMap().put(themeId, cssSnip);
+      timeStamps.getMap().put(themeId, cssSnip.getMTime().clone());
     }
 
     return cssSnip.getContent();
   }
 
   protected long getLastModified(HttpServletRequest request) {
-    Timestamp ts = (Timestamp) timeStamps.get(request.getPathInfo());
+    Timestamp ts = (Timestamp) timeStamps.getMap().get(request.getPathInfo());
     return (ts != null ? ts.getTime() / 1000 * 1000 : super.getLastModified(request));
   }
 
