@@ -62,7 +62,7 @@ public class Application {
     if (session != null) {
       Application application = (Application) session.getAttribute("app");
       if (null == application) {
-        application = Application.get();
+        application = new Application();
       }
       instance.set(application);
       return application;

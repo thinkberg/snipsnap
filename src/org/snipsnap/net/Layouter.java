@@ -87,6 +87,7 @@ public class Layouter extends HttpServlet {
     }
     if (dispatcher != null) {
       dispatcher.forward(request, response);
+      Application.set(null);
     } else {
       response.sendRedirect(SnipLink.absoluteLink(request, "/"));
     }

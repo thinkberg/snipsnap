@@ -35,6 +35,7 @@
 package org.snipsnap.snip.filter;
 
 import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.filter.macro.*;
 import org.snipsnap.snip.filter.regex.RegexTokenFilter;
 import org.apache.oro.text.regex.MatchResult;
@@ -48,7 +49,6 @@ public class MacroFilter extends RegexTokenFilter {
   private static Map macros;
 
   public MacroFilter() {
-    // @TODO replace with singleton/static
     super("\\{([^:}]*):?(.*?)\\}(.*?)\\{(\\1)\\}", SINGLELINE);
     addRegex("\\{([^:}]*):?(.*?)\\}", "", MULTILINE);
 
@@ -113,8 +113,8 @@ public class MacroFilter extends RegexTokenFilter {
         params = split(result.group(2), "|");
       }
       content = result.group(3);
-      // {tag}
     } else {
+      // {tag}
       if (result.groups() > 1) {
         params = split(result.group(2), "|");
       }
@@ -130,7 +130,9 @@ public class MacroFilter extends RegexTokenFilter {
         }
         macro.execute(buffer, params, content, snip);
       } else if (command.startsWith("!")) {
-        // TODO including of other snips
+        // @TODO including of other snips
+        Snip includeSnip = SnipSpace.getInstance().load(command.substring(1));
+        buffer.append(includeSnip.getContent());
         return;
       } else {
         buffer.append(result.group(0));
@@ -139,7 +141,7 @@ public class MacroFilter extends RegexTokenFilter {
     } catch (Exception e) {
       System.err.println("unable to format macro: " + result.group(1));
       e.printStackTrace();
-      buffer.append("?" + result.group(1) + (result.length() > 1 ? ":" + result.group(2) : "") + "?");
+      buffer.append("?" + command + (result.length() > 1 ? ":" + result.group(2) : "") + "?");
       return;
     }
   }
