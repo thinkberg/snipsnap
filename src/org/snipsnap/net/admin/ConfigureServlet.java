@@ -335,8 +335,6 @@ public class ConfigureServlet extends HttpServlet {
 
             try {
               InitializeDatabase.init(config, new OutputStreamWriter(System.out));
-              session.removeAttribute(ATT_CONFIG);
-              session.invalidate();
               response.sendRedirect(config.getUrl());
               return;
             } catch (Exception e) {

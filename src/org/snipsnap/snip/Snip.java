@@ -48,6 +48,9 @@ import java.io.IOException;
 public interface Snip extends Linkable, Ownable, Nameable, Appendable {
   public void handle(HttpServletRequest request);
 
+  // HACK: looks like java beans framework does not find Nameable
+  public String getName();
+
   public Access getAccess();
 
   public Modified getModified();
