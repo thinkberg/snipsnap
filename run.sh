@@ -26,7 +26,9 @@ if [ ! -f $base/$jar/snipsnap.jar ]; then
 fi
 
 # put classpath together (this is a script-local variable)
-CLASSPATH=lib/xmlrpc-1.1.jar:lib/jakarta.jar:lib/javax.servlet.jar:lib/mckoidb.jar:lib/org.apache.jasper.jar:lib/org.mortbay.jetty.jar:lib/jdbcpool.jar:lib/lucene-1.2.jar:lib/jython.jar:$TOOLS
+CLASSPATH=lib/xmlrpc-1.1.jar:lib/jakarta.jar:lib/javax.servlet.jar:lib/mckoidb.jar:lib/org.apache.jasper.jar:lib/org.mortbay.jetty.jar:lib/jdbcpool.jar:lib/lucene-1.2.jar:$TOOLS
+CLASSPATH=$CLASSPATH:lib/jython.jar
+CLASSPATH=$CLASSPATH:lib/muse-jabber-0.8a1.jar:lib/aspectjrt.jar:lib/jdom-b8.jar
 
 if [ "$1" = "stop" ]; then
   cmdline='-admin shutdown'

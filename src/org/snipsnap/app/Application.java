@@ -28,6 +28,8 @@ import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.util.log.Logger;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.notification.NotificationService;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
@@ -50,6 +52,7 @@ public class Application {
   private AppConfiguration config;
   private Map parameters;
   private List log = new ArrayList();
+  private NotificationService notification;
 
   private static ThreadLocal instance = new ThreadLocal() {
     protected synchronized Object initValue() {
@@ -57,6 +60,10 @@ public class Application {
       return new Application();
     }
   };
+
+  public Application() {
+    notification = new NotificationService();
+  }
 
   public void clearLog() {
     log = new ArrayList();
@@ -68,6 +75,11 @@ public class Application {
 
   public void log(String output) {
     log.add(output);
+  }
+
+  public void notify(int type, Snip snip) {
+    System.err.println("Application - notify() "+type);
+    notification.notify(type, snip);
   }
 
   public long start() {

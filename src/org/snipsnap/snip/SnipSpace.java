@@ -36,6 +36,7 @@ import org.snipsnap.user.Roles;
 import org.snipsnap.util.ConnectionManager;
 import org.snipsnap.util.Queue;
 import org.snipsnap.util.log.Logger;
+import org.snipsnap.notification.Notification;
 
 import java.sql.*;
 import java.sql.Date;
@@ -266,6 +267,7 @@ public class SnipSpace implements LinkTester, Loader {
     }
     changed.add(snip);
     indexer.index(snip);
+    Application.get().notify(Notification.SNIP_CREATE, snip);
     return snip;
   }
 
