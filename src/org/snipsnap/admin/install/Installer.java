@@ -214,6 +214,20 @@ public class Installer extends HttpServlet {
       return;
     }
 
+    String theme = request.getParameter("skin");
+    if(theme != null && theme.length() != 0) {
+      writeMessage(out, "Extracting theme ...");
+      try {
+        Checksum checksum = JarUtil.extract(new JarFile("lib/snipsnap-theme-"+theme+".jar", true), appDir);
+        checksum.store(new File(webAppRoot, "CHECKSUMS.theme"));
+      } catch (IOException e) {
+        System.err.println("Installer: error while extracting theme: " + e);
+        errors.put("fatal", "Unable to extract selected theme, please see server.log for details!");
+        sendError(session, errors, request, response);
+        return;
+      }
+    }
+
     // store configuration in thread, for database creation
     Application app = Application.getInstance(session);
     System.out.println("app: " + app);

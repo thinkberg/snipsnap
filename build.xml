@@ -83,7 +83,7 @@
         <include name="${jar}/aspectjrt.jar"/>
         <include name="${jar}/jdom-b8.jar"/>
         <include name="${jar}/${appname}-template.war"/>
-        <include name="${jar}/${appname}-layout-*.jar"/>
+        <include name="${jar}/${appname}-theme-*.jar"/>
         <include name="${jar}/${appname}-installer.war"/>
         <include name="${jar}/${appname}-utils.jar"/>
         <include name="conf/snipsnap.conf"/>
@@ -119,12 +119,12 @@
       <fileset dir="${jar}" includes="${appname}-utils.jar"/>
       <fileset dir="${jar}" includes="${appname}-installer.war"/>
       <fileset dir="${jar}" includes="${appname}-template.war"/>
-      <fileset dir="${jar}" includes="${appname}-layout-*.jar"/>
+      <fileset dir="${jar}" includes="${appname}-theme-*.jar"/>
     </delete>
   </target>
 
   <!-- create a jar containing the server code and compile all supporting applications  -->
-  <target depends="build-server,util-jar,template-war,layout-jar,installer-war" description="build executable jar" name="jar">
+  <target depends="build-server,util-jar,template-war,theme-jar,installer-war" description="build executable jar" name="jar">
     <jar destfile="${jar}/${appname}.jar" excludes="**/CVS" manifest="conf/manifest">
       <fileset dir="${target}/server" includes="**"/>
     </jar>
@@ -148,15 +148,15 @@
         <exclude name="css/**"/>
         <exclude name="images/**"/>
       </fileset>
-      <fileset dir="${src}/layout/snipsnap" includes="**"/>
+      <fileset dir="${src}/theme/snipsnap" includes="**"/>
     </jar>
   </target>
 
-  <!-- create jar archives of all layouts -->
-  <target description="build layout jar" name="layout-jar">
-    <jar destfile="${jar}/${appname}-layout-blue.war" excludes="**/CVS">
-      <fileset dir="${src}/layout/blue" includes="**"/>
-      <fileset dir="${src}/layout" includes="blue.snip"/>
+  <!-- create jar archives of all themes -->
+  <target description="build theme jar" name="theme-jar">
+    <jar destfile="${jar}/${appname}-theme-blue.jar" excludes="**/CVS">
+      <fileset dir="${src}/theme/blue" includes="**"/>
+      <fileset dir="${src}/theme" includes="blue.snip"/>
     </jar>
   </target>
 
