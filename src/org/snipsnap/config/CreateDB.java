@@ -28,6 +28,7 @@ import org.snipsnap.app.Application;
 import org.snipsnap.snip.HomePage;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.XMLSnipImport;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.User;
@@ -39,6 +40,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Driver;
+import java.io.InputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 /**
  * Create initial database and example snips.
@@ -133,44 +137,14 @@ public class CreateDB {
     System.out.println("Creating admin homepage.");
     HomePage.create(config.getAdminLogin());
 
+    System.out.println("Importing default snips.");
     SnipSpace space = SnipSpace.getInstance();
-    Snip snip = null;
-    System.out.print("Creating about...");
-    snip = space.create("about", "[SnipSnap] is a [Weblog] and [Wiki] tool by [funzel] und [arte]");
-    if (snip != null) {
-      System.out.println("ok.");
-    } else {
-      System.out.println("failed.");
+    try {
+      XMLSnipImport.load(new FileInputStream("conf/snipsnap.snip"), true);
+    } catch (IOException e) {
+      System.out.println("CreateDB: import failed!");
     }
 
-    snip = space.create("start", "{weblog}");
-    snip.addPermission(Permissions.EDIT, Roles.EDITOR);
-    space.store(snip);
-
-    snip = space.create("snipsnap-index", "{index}");
-    snip.addPermission(Permissions.EDIT, Roles.EDITOR);
-    space.store(snip);
-
-    snip = space.create("snipsnap-search", "Search for snips\n\n{field:query|$query}\n\n{search:$query}");
-    snip.addPermission(Permissions.EDIT, Roles.EDITOR);
-    space.store(snip);
-
-    String rolling = "__Blogrolling:__\\\\ \n" +
-      "{link:Langreiter|http://www.langreiter.com}\\\\ \n" +
-      "{link:Earl|http://earl.strain.at}\\\\ \n" +
-      "{link:henso|http://www.henso.com}\\\\ \n" +
-      "{link:Lambda|http://lambda.weblogs.com}\\\\ \n" +
-      "{link:e7l3|http://www.e7l3.com}\\\\ \n";
-    snip = space.create("snipsnap-blogrolling", rolling);
-    snip.addPermission(Permissions.EDIT, Roles.EDITOR);
-    space.store(snip);
-
-    String notfound = "__We're sorry, the file that you requested does not exist or has moved.__\n\n__You can use [snipsnap-search] to find a page or find it on the [snipsnap-index].__";
-    snip = space.create("snipsnap-notfound", notfound);
-    snip.addPermission(Permissions.EDIT, Roles.EDITOR);
-    space.store(snip);
-
-    System.out.println("Creating first blog entry.");
     space.post("Welcome to [SnipSnap]. You can now login and add/edit your first post");
     System.out.println("CreateDB: Complete");
   }

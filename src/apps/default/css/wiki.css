@@ -140,7 +140,22 @@
   list-style-type: none;
 }
 
-li
+/* wiki lists */
+
+ul.minus { list-style-type: square; }
+ul.star { list-style-type: circle; }
+ol.roman { list-style-type: lower-roman; }
+ol.ROMAN { list-style-type: upper-roman; }
+ol.alpha { list-style-type: lower-alpha; }
+ol.ALPHA { list-style-type: upper-alpha; }
+ol.greek { list-style-type: lower-greek; }
+ol.GREEK { list-style-type: upper-greek; }
+ol.hiragana { list-style-type: hiragana; }
+ol.HIRAGANA { list-style-type: hiragana-iroha; }
+ol.katakana { list-style-type: katakana; }
+ol.KATAKANA { list-style-type: katakana-iroha; }
+
+
 /************************************************/
 /* index formatting                             */
 #index {

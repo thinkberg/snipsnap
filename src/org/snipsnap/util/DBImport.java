@@ -30,6 +30,7 @@ import org.snipsnap.config.Configuration;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.Links;
+import org.snipsnap.snip.XMLSnipImport;
 import org.snipsnap.snip.label.Labels;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.User;
@@ -44,6 +45,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.io.IOException;
+import java.io.FileInputStream;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
@@ -51,9 +53,6 @@ import java.util.Map;
 import java.util.Iterator;
 
 public class DBImport {
-
-  public static Map missingParent = new HashMap();
-  public static Map missingCommentSnip = new HashMap();
 
   public static void main(String args[]) {
     if (args.length < 3) {
@@ -95,271 +94,14 @@ public class DBImport {
     config.setProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_WEBLOGS_PING, "deny");
     config.setProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_NOTIFICATION, "deny");
 
-    File in = new File(args[2]);
-
     try {
-      DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-      DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-
-      Document document = documentBuilder.parse(in);
-      NodeList children = document.getChildNodes().item(0).getChildNodes();
-      for (int i = 0; i < children.getLength(); i++) {
-        Node node = children.item(i);
-        if ("user".equals(node.getNodeName())) {
-          insertUser(node);
-        }
-      }
-
-      for (int i = 0; i < children.getLength(); i++) {
-        Node node = children.item(i);
-        if ("snip".equals(node.getNodeName())) {
-          insertSnip(node, overwrite);
-        }
-      }
-
-      SnipSpace space = SnipSpace.getInstance();
-      if(!missingParent.isEmpty()) {
-        System.out.println("Inserting previously missing parents ...");
-        Iterator it = missingParent.keySet().iterator();
-        while(it.hasNext()) {
-          Snip snip = (Snip)it.next();
-          String parentName = (String) missingParent.get(snip);
-          if(space.exists(parentName)) {
-            System.out.println("setting parent of '"+snip.getName()+"' to '"+parentName+"'");
-            snip.setParent(space.load(parentName));
-            space.systemStore(snip);
-          } else {
-            System.out.println("parent '"+parentName+"' for snip '"+snip.getName()+"' missing");
-          }
-        }
-      }
-
-      if(!missingCommentSnip.isEmpty()) {
-        System.out.println("Inserting previously missing commented snips ...");
-        Iterator it = missingCommentSnip.keySet().iterator();
-        while(it.hasNext()) {
-          Snip snip = (Snip)it.next();
-          String parentName = (String) missingCommentSnip.get(snip);
-          System.out.println("snip: "+snip+", "+parentName);
-          if(space.exists(parentName)) {
-            System.out.println("setting commented snip of '"+snip.getName()+"' to '"+parentName+"'");
-            snip.setCommentedSnip(space.load(parentName));
-            space.systemStore(snip);
-          } else {
-            System.out.println("snip '"+parentName+"' for comment '"+snip.getName()+"' missing");
-          }
-        }
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-      System.out.println("Error while reading import file: " + e);
+      XMLSnipImport.load(new FileInputStream(args[2]), overwrite);
+    } catch (IOException e) {
+      System.out.println("Unable to load import file: "+e);
+      System.exit(-1);
     }
     System.exit(0);
   }
 
-  /**
-   * Create or modify user in the database.
-   *
-   *  <user>
-   *    <login>TestDummy</login>
-   *    <passwd>boing</passwd>
-   *    <email></email>
-   *    <status></status>
-   *    <roles></roles>
-   *    <cTime>1029430469000</cTime>
-   *    <mTime>1029430469000</mTime>
-   *    <lastLogin>1029431779000</lastLogin>
-   *  </user>
-   * @param snipNode the snip node the user is stored in
-   */
-  private static void insertUser(Node snipNode) throws SAXException {
-    UserManager um = UserManager.getInstance();
-
-    Map elements = getElements(snipNode);
-
-    String login = (String) elements.get("login");
-    String passwd = (String) elements.get("passwd");
-    String email = (String) elements.get("email");
-    String status = (String) elements.get("status");
-    String roles = (String) elements.get("roles");
-    String cTime = (String) elements.get("cTime");
-    String mTime = (String) elements.get("mTime");
-    String llogin = (String) elements.get("lastLogin");
-    String lastAccess = (String) elements.get("lastAccess");
-    String lastLogout = (String) elements.get("lastLogout");
-
-    User user = um.load(login);
-    if (user == null) {
-      System.err.println("creating user '" + login + "'");
-      user = um.create(login, passwd, email);
-    } else {
-      if (passwd != null) user.setPasswd(passwd);
-      if (email != null) user.setEmail(email);
-    }
-
-    System.err.println("modifying user properties for '" + login + "'");
-    if (status != null) user.setStatus(status);
-    if (roles != null) user.setRoles(new Roles(roles));
-    if (cTime != null) user.setCTime(getTimestamp(cTime));
-    if (mTime != null) user.setMTime(getTimestamp(mTime));
-    if (llogin != null) user.setLastLogin(getTimestamp(llogin));
-    if (lastAccess != null) user.setLastAccess(getTimestamp(lastAccess));
-    if (lastLogout != null) user.setLastLogout(getTimestamp(lastLogout));
-    um.store(user);
-  }
-
-
-  /**
-   * Store or modify snip.
-   * <snip>
-   *   <name>Reflection Performance</name>
-   *   <content>[Reflection] in Java ist generell langsamer als andere Methoden.
-   *     [french_c].~~
-   *   </content>
-   *   <cTime>1029428690000</cTime>
-   *   <mTime>1029428691000</mTime>
-   *   <cUser>funzel</cUser>
-   *   <mUser>funzel</mUser>
-   *   <backLinks></backLinks>
-   *   <snipLinks>Reflection:1|snipsnap-search:1|Java Performance:1</snipLinks>
-      <labels></labels>
-      <viewCount>5</viewCount>
-      <permissions></permissions>
-    </snip>
-   */
-  private static void insertSnip(Node snipNode, boolean overwrite) throws SAXException {
-    SnipSpace space = SnipSpace.getInstance();
-    UserManager um = UserManager.getInstance();
-
-    Map elements = getElements(snipNode);
-
-    String name = (String) elements.get("name");
-    if (name != null) {
-      // load content
-      Snip snip = null;
-      if (space.exists(name)) {
-        snip = space.load(name);
-      } else {
-        snip = space.create(name, "");
-      }
-
-      // add snip info and content
-      String tmp;
-      if ((tmp = (String) elements.get("content")) != null) {
-        String content = snip.getContent();
-        if (content != null && content.length() > 0 && !overwrite) {
-          System.out.println("appending to '" + name + "'");
-          content += "\n" + tmp;
-        } else {
-          System.out.println("creating node '" + name + "'");
-          content = tmp;
-        }
-        snip.setContent(content);
-      }
-
-      if ((tmp = (String) elements.get("cTime")) != null) {
-        snip.setCTime(getTimestamp(tmp));
-      }
-
-      // creation user
-      User cUser = null;
-      if ((tmp = (String) elements.get("cUser")) != null) {
-        snip.setCUser(um.load(tmp));
-      } else if(snip.getCUser() == null) {
-        cUser = Application.get().getUser();
-      }
-
-      // owner user
-      User oUser = null;
-      if ((tmp = (String) elements.get("oUser")) != null) {
-        snip.setOUser(um.load(tmp));
-      } else if(snip.getOUser() == null) {
-        snip.setOUser(Application.get().getUser());
-      }
-
-      // store last modification time
-      if ((tmp = (String) elements.get("mTime")) != null) {
-        snip.setMTime(getTimestamp(tmp));
-      } else {
-        snip.setMTime(new Timestamp(new java.util.Date().getTime()));
-      }
-
-      // store modification user
-      User mUser = null;
-      if ((tmp = (String) elements.get("mUser")) != null) {
-        snip.setMUser(um.load(tmp));
-      } else if (snip.getMUser() == null) {
-        mUser = Application.get().getUser();
-      }
-
-      if ((tmp = (String) elements.get("parentSnip")) != null) {
-        if(space.exists(tmp)) {
-          snip.setParent(space.load(tmp));
-        } else {
-          missingParent.put(snip, tmp);
-        }
-      }
-
-      if ((tmp = (String) elements.get("commentSnip")) != null) {
-        System.out.println("'"+name+"' is a comment to '"+tmp+"' exists? "+space.exists(tmp));
-        if(space.exists(tmp)) {
-          snip.setCommentedSnip(space.load(tmp));
-        } else {
-          missingCommentSnip.put(snip, tmp);
-        }
-      }
-
-      if ((tmp = (String) elements.get("backLinks")) != null) {
-        snip.setBackLinks(new Links(tmp));
-      }
-
-      if ((tmp = (String) elements.get("snipLinks")) != null) {
-        snip.setSnipLinks(new Links(tmp));
-      }
-
-      if ((tmp = (String) elements.get("labels")) != null) {
-        snip.setLabels(new Labels(tmp));
-      }
-
-      if ((tmp = (String) elements.get("viewCount")) != null) {
-        try {
-          snip.setViewCount(Integer.parseInt(tmp));
-        } catch (NumberFormatException e) {
-          System.err.println("error: viewcount '"+tmp+"' for snip '"+name+"' is not a number");
-        }
-      }
-
-      if ((tmp = (String) elements.get("permissions")) != null) {
-        snip.setPermissions(new Permissions(tmp));
-      }
-
-      // store directly
-      space.systemStore(snip);
-    }
-  }
-
-  private static Timestamp getTimestamp(String t) {
-    return new Timestamp(new Date(Long.parseLong(t)).getTime());
-  }
-
-  private static Map getElements(Node snipNode) {
-    NodeList children = snipNode.getChildNodes();
-
-    Map elements = new HashMap();
-
-    for (int i = 0; i < children.getLength(); i++) {
-      Node node = children.item(i);
-      String name = node.getNodeName();
-      String value = null;
-      NodeList cl = node.getChildNodes();
-      for (int c = 0; c < cl.getLength(); c++) {
-        if (cl.item(c).getNodeType() == Node.TEXT_NODE) {
-          value = cl.item(c).getNodeValue();
-        }
-      }
-      elements.put(name, value);
-    }
-    return elements;
-  }
 
 }

@@ -62,6 +62,5 @@ public class RegexReplaceFilter extends RegexFilter {
       result = Util.substitute(matcher, p, new Perl5Substitution(s, interps), result, limit);
     }
     return result;
-
   }
 }

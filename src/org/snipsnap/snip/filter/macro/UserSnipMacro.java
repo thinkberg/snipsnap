@@ -32,11 +32,10 @@
 package org.snipsnap.snip.filter.macro;
 
 import org.snipsnap.snip.Snip;
-import org.snipsnap.serialization.StringBufferWriter;
 
-import java.util.Collection;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Collection;
 
 public class UserSnipMacro extends ListoutputMacro {
   public String getName() {
@@ -44,18 +43,18 @@ public class UserSnipMacro extends ListoutputMacro {
   }
 
   public void execute(Writer writer, String[] params, String content, Snip snip)
-      throws IllegalArgumentException, IOException {
-        String type = null;
+    throws IllegalArgumentException, IOException {
+    String type = null;
     boolean showSize = true;
-    if(params != null) {
-      if(params.length > 0) {
-      type = params[0];
+    if (params != null) {
+      if (params.length > 1) {
+        type = params[1];
       }
     }
 
     if (params.length > 0) {
       Collection c = space.getByUser(params[0]);
-      output(writer, "this user's snips", c, "none written yet.", type, showSize);
+      output(writer, "this user's snips:", c, "none written yet.", type, showSize);
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }
