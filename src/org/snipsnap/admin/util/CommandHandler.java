@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.File;
 import java.util.*;
 
 /**
@@ -89,15 +90,21 @@ public class CommandHandler extends HttpServlet {
     if (null == config) {
       try {
         // prepare configuration and store admin user information to check password against
-        config = new Configuration(configFile);
+        Properties defaults = new Properties();
+        defaults.load(CommandHandler.class.getResourceAsStream("/conf/snipsnap.conf"));
+        config = new Configuration();
+        config.load(defaults);
+        config.setFile(new File(configFile));
+        config.load();
       } catch (IOException e) {
-        System.out.println("ATTENTION: unable to load configuration file: '" + configFile + "'");
+        System.out.println("ATTENTION: unable to load local configuration file: '" + configFile + "'");
       }
     }
     session.setAttribute(ATT_CONFIG, config);
-    session.setAttribute(Authenticate.ATT_CHECK_USER, new User(config.getAdminLogin(),
-        config.getAdminPassword(),
-        config.getAdminEmail()));
+    session.setAttribute(Authenticate.ATT_CHECK_USER,
+                         new User(config.getAdminLogin(),
+                                  config.getAdminPassword(),
+                                  config.getAdminEmail()));
 
     // get admin user from session, this is null if not authenticated
     User admin = (User) session.getAttribute(ATT_ADMIN);
