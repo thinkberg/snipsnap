@@ -166,8 +166,6 @@ public class Access {
           // hosts like megid.local
           if (isValidReferrer(referrer)) {
             backLinks.addLink(referrer);
-          } else {
-            Logger.warn("ignoring referrer: '"+referrer+"'");
           }
         }
       }
@@ -229,17 +227,20 @@ public class Access {
           if(entry.startsWith("pattern:")) {
             String pattern = entry.substring("pattern:".length()).trim();
             if (url.matches(pattern)) {
+              Logger.warn("invalid referrer url '"+url+"' by pattern '"+pattern+"'");
               return false;
             }
           } else {
             String host = new URL(url).getHost().toLowerCase();
             if (host.endsWith(entry)) {
+              Logger.warn("invalid referrer url '" + url + "' by pattern '" + entry + "'");
               return false;
             }
           }
         }
       }
     } catch (MalformedURLException e) {
+      Logger.warn("invalid referrer url '" + url + "': " +e.getMessage());
       return false;
     }
     return true;
