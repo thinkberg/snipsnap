@@ -15,6 +15,7 @@
     <pathelement location="${jar}/mckoidb.jar"/>
     <pathelement location="${jar}/javax.servlet.jar"/>
     <pathelement location="${jar}/org.apache.jasper.jar"/>
+    <pathelement location="${jar}/org.apache.crimson.jar"/>
     <pathelement location="${jar}/org.mortbay.jetty.jar"/>
     <pathelement location="${jar}/xmlrpc-1.1.jar"/>
     <pathelement location="${jar}/lucene-1.2.jar"/>
@@ -51,6 +52,7 @@
         <include name="${jar}/mckoidb.jar"/>
         <include name="${jar}/javax.servlet.jar"/>
         <include name="${jar}/org.apache.jasper.jar"/>
+        <include name="${jar}/org/apache.crimson.jar"/>
         <include name="${jar}/org.mortbay.jetty.jar"/>
         <include name="${jar}/xmlrpc-1.1.jar"/>
         <include name="${jar}/${appname}-admin.war"/>
