@@ -74,7 +74,7 @@ import java.util.Map;
  */
 
 public class FileSnipStorage implements SnipStorage, CacheableStorage {
-  private final static String SNIP_XML = "snip.xml";
+  public final static String SNIP_XML = "snip.xml";
 
   private static DocumentBuilder documentBuilder;
 

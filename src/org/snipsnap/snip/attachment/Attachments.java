@@ -58,30 +58,49 @@ public class Attachments {
   private Map attachments = null;
 
   public Attachment addAttachment(String name, String contentType, long size, String location) {
-    if (null == attachments) { deserialize(); }
+    if (null == attachments) {
+      deserialize();
+    }
     Attachment attachment = new Attachment(name, contentType, size, new Date(), location);
     attachments.put(name, attachment);
     return attachment;
   }
 
   public Attachment getAttachment(String name) {
-    if (null == attachments) { deserialize(); }
+    if (null == attachments) {
+      deserialize();
+    }
     return (Attachment) attachments.get(name);
   }
 
-  public void removeAttachment(String name, boolean destroy) {
-    if (null == attachments) { deserialize(); }
+  public void removeAttachment(String name) {
+    if (null == attachments) {
+      deserialize();
+    }
     Attachment attachment = (Attachment) attachments.get(name);
-    attachments.remove(name);
+    if(attachment != null) {
+      removeAttachment(attachment);
+    }
+  }
+
+  public void removeAttachment(Attachment attachment) {
+    if (null == attachments) {
+      deserialize();
+    }
+    attachments.remove(attachment.getName());
   }
 
   public Iterator iterator() {
-    if (null == attachments) { deserialize(); }
+    if (null == attachments) {
+      deserialize();
+    }
     return attachments.values().iterator();
   }
 
   public Collection getAll() {
-    if (null == attachments) { deserialize(); }
+    if (null == attachments) {
+      deserialize();
+    }
     return attachments.values();
   }
 
@@ -125,7 +144,9 @@ public class Attachments {
   private final XMLOutputter xmlOutputter = new XMLOutputter();
 
   private String serialize() {
-    if (null == attachments) { return cache; }
+    if (null == attachments) {
+      return cache;
+    }
 
     List root = new ArrayList();
     Iterator it = attachments.values().iterator();
