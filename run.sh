@@ -30,8 +30,8 @@ CLASSPATH=lib/xmlrpc-1.1.jar:lib/jakarta.jar:lib/javax.servlet.jar:lib/mckoidb.j
 CLASSPATH=$CLASSPATH:lib/jython.jar
 CLASSPATH=$CLASSPATH:lib/muse-jabber-0.8a1.jar:lib/aspectjrt.jar:lib/jdom-b8.jar
 
-if [ "$1" = "stop" ]; then
-  cmdline='-admin shutdown'
+if [ "$1" = "admin" ]; then
+  cmdline="-admin $2 $3"
 fi
 
 if [ "$1" = "-debug" ]; then

@@ -50,7 +50,6 @@ public class AppServer {
   public static void main(String args[]) {
     Runtime.getRuntime().addShutdownHook(new Thread() {
       public void run() {
-        System.out.println("Shutting down server ...");
         Shutdown.shutdown();
       }
     });

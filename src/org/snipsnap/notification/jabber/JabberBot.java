@@ -28,6 +28,7 @@ package org.snipsnap.notification.jabber;
 
 import com.echomine.jabber.*;
 import com.echomine.common.SendMessageFailedException;
+import com.echomine.net.ConnectionFailedException;
 
 import java.net.UnknownHostException;
 
@@ -54,10 +55,10 @@ public class JabberBot {
   public JabberBot() {
     try {
       JabberContext context = new JabberContext("snipbot","snipbot", "snipsnap.org");
-      jabber = new Jabber();
       session = jabber.createSession(context);
-      session.connect("snipsnap.org", 5222);
-      session.getUserService().login();
+      jabber = new Jabber();
+
+      reconnect();
 
       JabberRosterService roster = session.getRosterService();
       roster.addToRoster("funzel@snipsnap.org", "Funzel", "SnipSnap", false);
@@ -70,7 +71,21 @@ public class JabberBot {
     }
   }
 
+  protected void reconnect() {
+    try {
+      session.connect("snipsnap.org", 5222);
+      session.getUserService().login();
+    } catch (Exception e) {
+      System.err.println("JabberBot: unable to connect: "+e);
+      e.printStackTrace();
+    }
+  }
+
   public void send(String user, String message) {
+    if(session.getConnection() == null) {
+      reconnect();
+    }
+
     try {
       System.err.print("Sending '"+message+"' to '"+user+"' ...");
       JabberChatMessage msg = new JabberChatMessage(JabberChatMessage.TYPE_HEADLINE);

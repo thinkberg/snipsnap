@@ -50,8 +50,9 @@ public class AdminServer implements Runnable {
   public final static List COMMANDS = Arrays.asList(
     new String[]{
       "shutdown",
-      "unload",
-      "reload"
+      "start <appname>",
+      "stop <appname>",
+      "reload <appname>"
     });
 
   /**
@@ -64,8 +65,15 @@ public class AdminServer implements Runnable {
     try {
       Socket s = new Socket(InetAddress.getLocalHost(), port);
       BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
+      BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
       writer.write(command+" "+args);
       writer.newLine();
+      writer.flush();
+      String output = null;
+      while((output = reader.readLine()) != null) {
+        System.out.println(output);
+      }
+      reader.close();
       writer.close();
       s.close();
     } catch (IOException e) {
@@ -114,18 +122,33 @@ public class AdminServer implements Runnable {
           System.out.println("AdminServer: got command: "+command+" "+args);
           if ("shutdown".equals(command)) {
             Shutdown.shutdown();
+          } else if("start".equals(command) && args != null) {
+            try {
+              ApplicationLoader.loadApplication(config.getProperty(Configuration.SERVER_WEBAPP_ROOT), args);
+            } catch (Exception e) {
+              e.printStackTrace(new PrintWriter(writer));
+              writer.newLine();
+            }
+          } else if("stop".equals(command) && args != null) {
+            try {
+              ApplicationLoader.unloadApplication(config.getProperty(Configuration.SERVER_WEBAPP_ROOT), args);
+            } catch (Exception e) {
+              e.printStackTrace(new PrintWriter(writer));
+              writer.newLine();
+            }
           } else if("reload".equals(command) && args != null) {
             try {
               ApplicationLoader.reloadApplication(config.getProperty(Configuration.SERVER_WEBAPP_ROOT), args);
             } catch (Exception e) {
               e.printStackTrace(new PrintWriter(writer));
+              writer.newLine();
             }
           }
         } else {
           writer.write("I cut you out, don't try that again! Snip Snap!");
           writer.newLine();
-          writer.flush();
         }
+        writer.flush();
         reader.close();
         writer.close();
         s.close();

@@ -101,6 +101,22 @@ public class ApplicationLoader {
     }
   }
 
+  public static void loadApplication(String root, String name) throws Exception {
+    File configFile = getConfigFile(root, normalize(name));
+    if(configFile != null) {
+      AppConfiguration config = new AppConfiguration(configFile);
+      loadApplication(config);
+    }
+  }
+
+  public static void unloadApplication(String root, String name) throws Exception {
+    File configFile = getConfigFile(root, normalize(name));
+    if(configFile != null) {
+      AppConfiguration config = new AppConfiguration(configFile);
+      unloadApplication(config);
+    }
+  }
+
   public static int getApplicationErrorCount() {
     return errors;
   }
@@ -110,6 +126,13 @@ public class ApplicationLoader {
   }
 
   public static WebApplicationContext loadApplication(AppConfiguration config) throws Exception {
+    if(applications.get(config.getName()) != null) {
+      WebApplicationContext context = (WebApplicationContext)applications.get(config.getName());
+      if(context.isStarted()) {
+        throw new Exception("ApplicationLoader: '"+config.getName()+"' already started");
+      }
+    }
+
     File root = config.getFile().getParentFile();
 
     String host = config.getHost();
@@ -167,8 +190,13 @@ public class ApplicationLoader {
   }
 
   public static void unloadApplication(AppConfiguration config) {
-    WebApplicationContext context = (WebApplicationContext)applications.get(config.getName());
-    context.destroy();
+    try {
+      WebApplicationContext context = (WebApplicationContext)applications.get(config.getName());
+      context.stop();
+      context.destroy();
+    } catch (Exception e) {
+      System.out.println("Unable to stop '"+config.getName()+"': "+e);
+    }
     System.out.println("Stopped application '" + config.getName() +"'");
   }
 
