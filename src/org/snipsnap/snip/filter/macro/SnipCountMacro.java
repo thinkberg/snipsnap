@@ -38,6 +38,13 @@ import java.io.Writer;
  */
 
 public class SnipCountMacro extends Macro {
+  private String[] paramDescription =
+     {"none"};
+
+  public String[] getParamDescription() {
+    return paramDescription;
+  }
+
   public String getName() {
     return "snip-count";
   }

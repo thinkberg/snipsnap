@@ -11,6 +11,7 @@ org.snipsnap.snip.filter.macro.ImageMacro
 org.snipsnap.snip.filter.macro.IndexSnipMacro
 org.snipsnap.snip.filter.macro.InterWikiMacro
 org.snipsnap.snip.filter.macro.IsbnMacro
+org.snipsnap.snip.filter.macro.AsinMacro
 org.snipsnap.snip.filter.macro.LastLoginMacro
 org.snipsnap.snip.filter.macro.LastVisitMacro
 org.snipsnap.snip.filter.macro.LinkMacro

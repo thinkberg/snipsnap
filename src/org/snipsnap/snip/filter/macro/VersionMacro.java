@@ -39,7 +39,14 @@ import java.io.IOException;
 import java.io.Writer;
 
 public class VersionMacro extends Macro {
-  String version;
+  private String version;
+
+  private String[] paramDescription =
+     {"none"};
+
+  public String[] getParamDescription() {
+    return paramDescription;
+  }
 
   public VersionMacro() {
     version = Application.get().getConfiguration().getVersion();
@@ -55,6 +62,10 @@ public class VersionMacro extends Macro {
 
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
-    writer.write(version);
+    if (params.getLength() == 0) {
+       writer.write(version);
+    } else {
+      throw new IllegalArgumentException("Number of arguments does not match");
+    }
   }
 }

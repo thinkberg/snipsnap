@@ -38,6 +38,13 @@ import java.util.List;
  */
 
 public class LoginsMacro extends ListOutputMacro {
+  private String[] paramDescription =
+     {"?1: Lister to render users"};
+
+  public String[] getParamDescription() {
+    return paramDescription;
+  }
+
   public String getName() {
     return "logins";
   }
@@ -53,7 +60,7 @@ public class LoginsMacro extends ListOutputMacro {
     if (params.getLength() > 0) {
         type = params.get("0");
     }
-    if (params.getLength() <= 2) {
+    if (params.getLength() <= 1) {
       List users = Application.getCurrentUsers();
       users.addAll(Application.getCurrentNonUsers());
 

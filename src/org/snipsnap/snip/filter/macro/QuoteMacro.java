@@ -39,6 +39,13 @@ import java.util.Map;
 public class QuoteMacro extends Preserved {
   private Map filters;
 
+  private String[] paramDescription =
+     {"?1: source"};
+
+  public String[] getParamDescription() {
+    return paramDescription;
+  }
+
   public QuoteMacro() {
   }
 

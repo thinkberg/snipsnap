@@ -38,7 +38,8 @@ import java.util.Map;
  */
 
 public class FilePathMacro extends Preserved {
-  private Map filters;
+  private String[] paramDescription = {"1: file path"};
+
 
   public FilePathMacro() {
   }
@@ -51,6 +52,9 @@ public class FilePathMacro extends Preserved {
     return "Displays a file system path. Defaults to windows.";
   }
 
+  public String[] getParamDescription() {
+    return paramDescription;
+  }
 
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {

@@ -38,6 +38,13 @@ import java.util.List;
  */
 
 public class RecentChangesMacro extends ListOutputMacro {
+  private String[] paramDescription =
+     {"?1: number of snips to show, defaults to 10", "?2: Lister to render users"};
+
+  public String[] getParamDescription() {
+    return paramDescription;
+  }
+
   public String getName() {
     return "recent-changes";
   }

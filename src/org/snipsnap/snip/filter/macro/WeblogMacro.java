@@ -43,7 +43,8 @@ import java.util.Iterator;
 import java.util.List;
 
 public class WeblogMacro extends Macro {
-  SnipSpace space;
+  private SnipSpace space;
+  private String[] paramDescription = {"?1: number of shown posts"};
 
   public WeblogMacro() {
     space = SnipSpace.getInstance();
@@ -55,6 +56,10 @@ public class WeblogMacro extends Macro {
 
   public String getDescription() {
     return "Renders the sub-snips of the snip as a weblog.";
+  }
+
+  public String[] getParamDescription() {
+    return paramDescription;
   }
 
   public void execute(Writer writer, MacroParameter params)

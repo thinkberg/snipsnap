@@ -41,6 +41,8 @@ import java.util.Map;
  */
 
 public class AnchorMacro extends Preserved {
+  private String[] paramDescription = {"1: anchor text"};
+
   private Map filters;
 
   public AnchorMacro() {
@@ -54,6 +56,9 @@ public class AnchorMacro extends Preserved {
     return "Places a HTML anchor tag in the snip.";
   }
 
+  public String[] getParamDescription() {
+    return paramDescription;
+  }
 
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {

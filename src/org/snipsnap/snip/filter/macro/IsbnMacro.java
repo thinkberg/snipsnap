@@ -32,12 +32,20 @@
 
 package org.snipsnap.snip.filter.macro;
 
+import org.snipsnap.snip.filter.macro.book.TextFileUrlMapper;
 import org.snipsnap.snip.filter.macro.book.BookServices;
 
 import java.io.IOException;
 import java.io.Writer;
 
 public class IsbnMacro extends Macro {
+
+  private String[] paramDescription = {"1: isbn number"};
+
+  public String[] getParamDescription() {
+    return paramDescription;
+  }
+
   public String getDescription() {
     return "Generates links to book dealers or comparison services. Configuration is " +
         " read from ~~conf/bookservices.txt~~.";
@@ -51,7 +59,7 @@ public class IsbnMacro extends Macro {
       throws IllegalArgumentException, IOException {
 
     if (params.getLength() == 1) {
-      BookServices.getInstance().isbn(writer, params.get("0"));
+      BookServices.getInstance().appendUrl(writer, params.get("0"));
       return;
     } else {
       throw new IllegalArgumentException("needs an ISBN numer as argument");

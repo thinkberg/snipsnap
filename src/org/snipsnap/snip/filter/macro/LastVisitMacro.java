@@ -39,6 +39,13 @@ import java.io.IOException;
 import java.io.Writer;
 
 public class LastVisitMacro extends Macro {
+  private String[] paramDescription =
+     {"1: login name"};
+
+  public String[] getParamDescription() {
+    return paramDescription;
+  }
+
   public String getName() {
     return "last-visit";
   }

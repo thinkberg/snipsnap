@@ -38,6 +38,13 @@ import java.io.Writer;
 import java.util.Collection;
 
 public class RecentWeblogMacro extends ListOutputMacro {
+  private String[] paramDescription =
+     {"?1: Lister to render users", "?2: number of weblogs to show, defaults to 10"};
+
+  public String[] getParamDescription() {
+    return paramDescription;
+  }
+
   public String getName() {
     return "recent-weblog";
   }

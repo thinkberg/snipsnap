@@ -43,6 +43,13 @@ import java.io.Writer;
 import java.util.Collection;
 
 public class SinceLastVisitMacro extends ListOutputMacro {
+  private String[] paramDescription =
+     {"1: login name", "?2: Lister to render snips"};
+
+  public String[] getParamDescription() {
+    return paramDescription;
+  }
+
   public String getName() {
     return "since-last-visit";
   }
@@ -65,8 +72,8 @@ public class SinceLastVisitMacro extends ListOutputMacro {
 
     if (params.getLength() > 0) {
       User user = UserManager.getInstance().load(userName);
-      System.err.println("Hashcode lastVisit=" + ((Object) user).hashCode());
-      System.err.println("SinceLastVisit: " + user.getLastLogout());
+      // System.err.println("Hashcode lastVisit=" + ((Object) user).hashCode());
+      // System.err.println("SinceLastVisit: " + user.getLastLogout());
       Collection c = SnipSpace.getInstance().getSince(user.getLastLogout());
       output(writer, "changed snips since last visit", c, "no recent changes.", type, showSize);
     } else {

@@ -46,6 +46,13 @@ import java.util.Map;
 public class CodeMacro extends Preserved {
   private Map filters;
 
+  private String[] paramDescription =
+     {"?1: syntax highlighter to use, defaults to java"};
+
+  public String[] getParamDescription() {
+    return paramDescription;
+  }
+
   public CodeMacro() {
     filters = new HashMap();
 

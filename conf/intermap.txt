@@ -39,6 +39,7 @@ Haribeau http://wiki.haribeau.de/cgi-bin/wiki.pl?
 IAWiki http://www.IAwiki.net/
 IMDB http://us.imdb.com/Title?
 JargonFile http://sunir.org/apps/meta.pl?wiki=JargonFile&redirect=
+Javangelist http://javangelist.snipsnap.org/space/
 JiniWiki http://www.cdegroot.com/cgi-bin/jini?
 JspWiki http://www.ecyrd.com/JSPWiki/Wiki.jsp?page=
 KmWiki http://www.voght.com/cgi-bin/pywiki?

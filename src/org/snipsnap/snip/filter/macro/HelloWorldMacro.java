@@ -36,12 +36,18 @@ import java.io.Writer;
  */
 
 public class HelloWorldMacro extends Macro {
+  private String[] paramDescription = {"1: name to print"};
+
   public String getName() {
     return "hello";
   }
 
   public String getDescription() {
     return "Say hello example macro.";
+  }
+
+  public String[] getParamDescription() {
+    return paramDescription;
   }
 
   public void execute(Writer writer, MacroParameter params)

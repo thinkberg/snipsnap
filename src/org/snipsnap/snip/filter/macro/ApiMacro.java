@@ -39,6 +39,14 @@ import java.io.Writer;
 
 
 public class ApiMacro extends Macro {
+  private String[] paramDescription =
+     {"1: class name, e.g. java.lang.Object or java.lang.Object@Java131",
+      "?2: mode, e.g. Java12, Ruby, defaults to Java"};
+
+  public String[] getParamDescription() {
+    return paramDescription;
+  }
+
   public String getName() {
     return "api";
   }

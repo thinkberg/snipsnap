@@ -36,7 +36,7 @@ import java.io.Writer;
 
 public abstract class Macro implements Comparable {
   protected String description = " ";
-  protected String paramsDescription = " ";
+  protected String[] paramDescription = {"unexplained, lazy programmer, probably [funzel]"};
 
   public abstract String getName();
 
@@ -44,8 +44,8 @@ public abstract class Macro implements Comparable {
     return description;
   }
 
-  public String getParamDescription() {
-    return paramsDescription;
+  public String[] getParamDescription() {
+    return paramDescription;
   }
 
   public abstract void execute(Writer writer, MacroParameter params)

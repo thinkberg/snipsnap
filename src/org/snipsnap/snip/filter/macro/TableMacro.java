@@ -39,6 +39,11 @@ import java.io.Writer;
 import java.util.StringTokenizer;
 
 public class TableMacro extends Macro {
+  private String[] paramDescription = {};
+
+  public String[] getParamDescription() {
+    return paramDescription;
+  }
 
   public String getName() {
     return "table";

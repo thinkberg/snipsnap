@@ -41,10 +41,18 @@ import java.io.IOException;
 import java.io.Writer;
 
 public class SearchMacro extends Macro {
-  SnipSpace space;
+  private SnipSpace space;
+
+  private String[] paramDescription =
+     {"1: string to search",
+      "?2: number of hits to show, defaults to 10"};
 
   public SearchMacro() {
     space = SnipSpace.getInstance();
+  }
+
+  public String[] getParamDescription() {
+    return paramDescription;
   }
 
   public String getName() {

@@ -42,10 +42,17 @@ import java.util.Iterator;
 
 
 public class HotSnipMacro extends Macro {
-  SnipSpace space;
+  private SnipSpace space;
+
+  private String[] paramDescription =
+     {"?1: number of snips to show, defaults to 10"};
 
   public HotSnipMacro() {
     space = SnipSpace.getInstance();
+  }
+
+  public String[] getParamDescription() {
+    return paramDescription;
   }
 
   public String getName() {
@@ -65,11 +72,11 @@ public class HotSnipMacro extends Macro {
       try {
         length = Integer.parseInt(params.get("0"));
       } catch (NumberFormatException e) {
-        System.err.println("RecentChangesMacro: illegal parameter count='" + params.get("0") + "'");
+        System.err.println("HotnessMacro: illegal parameter count='" + params.get("0") + "'");
       }
     }
 
-    if (params.getLength() <= 3) {
+    if (params.getLength() <= 1) {
       Collection c = space.getHot(length);
       Iterator iterator = c.iterator();
       writer.write("<div class=\"list\"><div class=\"list-title\">Most viewed:");

@@ -23,14 +23,8 @@
  * --LICENSE NOTICE--
  */
 
+
 package org.snipsnap.snip.filter.macro.book;
-
-import org.snipsnap.snip.SnipLink;
-
-import java.io.*;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * Manages links to book dealears or comparison services
@@ -39,83 +33,19 @@ import java.util.Map;
  * @version $Id$
  */
 
-public class BookServices {
-  private static BookServices instance;
-  private Map services;
+public class BookServices extends TextFileUrlMapper {
+  public static synchronized UrlMapper getInstance() {
+     if (null == instance) {
+       instance = new BookServices();
+     }
+     return instance;
+   }
 
-  public static synchronized BookServices getInstance() {
-    if (null == instance) {
-      instance = new BookServices();
-    }
-    return instance;
+  public String getFileName() {
+    return "conf/bookservices.txt";
   }
 
-  public BookServices() {
-    services = new HashMap();
-
-    try {
-      BufferedReader br = new BufferedReader(
-          new InputStreamReader(
-              new FileInputStream("conf/bookservices.txt")));
-      addInterMap(br);
-    } catch (IOException e) {
-      System.err.println("Unable to read conf/bookservices.txt ");
-    }
-  }
-
-  public void addInterMap(BufferedReader reader) throws IOException {
-    String line;
-    while ((line = reader.readLine()) != null) {
-      if (!line.startsWith("#")) {
-        int index = line.indexOf(" ");
-        services.put(line.substring(0, index), SnipLink.escape(line.substring(index + 1)));
-      }
-    }
-  }
-
-  public Writer appendTo(Writer writer) throws IOException {
-    Iterator iterator = services.entrySet().iterator();
-    writer.write("{table}\n");
-    writer.write("Book Service|Url\n");
-    while (iterator.hasNext()) {
-      Map.Entry entry = (Map.Entry) iterator.next();
-      writer.write((String) entry.getKey());
-      writer.write("|");
-      writer.write((String) entry.getValue());
-      writer.write("\n");
-    }
-    writer.write("{table}");
-    return writer;
-  }
-
-  public boolean contains(String external) {
-    return services.containsKey(external);
-  }
-
-  public Writer isbn(Writer writer, String isbn)
-      throws IOException {
-    if (services.size() == 0) {
-      writer.write("isbn:");
-      writer.write(isbn);
-    } else {
-
-      SnipLink.appendImage(writer, "external-link", "&gt;&gt;");
-      writer.write("(");
-      Iterator iterator = services.entrySet().iterator();
-      while (iterator.hasNext()) {
-        Map.Entry entry = (Map.Entry) iterator.next();
-        writer.write("<a href=\"");
-        writer.write((String) entry.getValue());
-        writer.write(isbn);
-        writer.write("\">");
-        writer.write((String) entry.getKey());
-        writer.write("</a>");
-        if (iterator.hasNext()) {
-          writer.write(" &#x7c; ");
-        }
-      }
-      writer.write(")");
-    }
-    return writer;
+  public String getKeyName() {
+    return "isbn";
   }
 }

@@ -41,6 +41,12 @@ import java.io.Writer;
  */
 
 public class ApiDocMacro extends Macro {
+  private String[] paramDescription = { };
+
+  public String[] getParamDescription() {
+    return paramDescription;
+  }
+
   public String getName() {
     return "api-docs";
   }

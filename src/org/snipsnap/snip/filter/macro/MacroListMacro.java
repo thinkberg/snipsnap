@@ -69,7 +69,21 @@ public class MacroListMacro extends ListOutputMacro {
       writer.write("|");
       writer.write(macro.getDescription());
       writer.write("|");
-      writer.write(macro.getParamDescription());
+      String[] params = macro.getParamDescription();
+      if (params.length == 0) {
+        writer.write("none");
+      } else {
+        for (int i = 0; i < params.length; i++) {
+          String description = params[i];
+          if (description.startsWith("?")) {
+            writer.write(description.substring(1));
+            writer.write(" (optional)");
+          } else {
+            writer.write(params[i]);
+          }
+          writer.write("\\\\");
+        }
+      }
       writer.write("\n");
     }
     writer.write("{table}");

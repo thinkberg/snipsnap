@@ -40,6 +40,13 @@ import java.io.IOException;
 import java.io.Writer;
 
 public class IndexSnipMacro extends ListOutputMacro {
+  private String[] paramDescription = {"?1: Lister to render snips"};
+
+  public String[] getParamDescription() {
+    return paramDescription;
+  }
+
+
   public String getName() {
     return "index";
   }
@@ -48,16 +55,15 @@ public class IndexSnipMacro extends ListOutputMacro {
     return "Displays a list of all snips of the system. Comment snips are filtered out.";
   }
 
-
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
     String type = null;
     boolean showSize = true;
-      if (params.getLength() > 0) {
-        type = params.get("0");
-      }
+    if (params.getLength() == 1) {
+      type = params.get("0");
+    }
 
-    if (params.getLength() <= 2) {
+    if (params.getLength() < 2) {
       output(writer, "All Snips:",
           Collections.filter(SnipSpace.getInstance().getAll(),
               new Filterator() {
