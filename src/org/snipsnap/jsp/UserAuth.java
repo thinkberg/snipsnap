@@ -32,12 +32,16 @@ import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.Security;
 import org.snipsnap.user.User;
+import org.snipsnap.container.Components;
+import org.snipsnap.security.AccessController;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.jstl.core.ConditionalTagSupport;
 import java.util.StringTokenizer;
 
+import gabriel.Subject;
+import gabriel.components.AccessManager;
 
 public class UserAuth extends ConditionalTagSupport {
   protected Roles roles;
@@ -77,8 +81,11 @@ public class UserAuth extends ConditionalTagSupport {
   }
 
   protected boolean condition() throws JspTagException {
+
     Application app = (Application) pageContext.findAttribute("app");
     User user = app.getUser();
+    AccessController controller = (AccessController) Components.getComponent(AccessController.class);
+
     if (snip != null) {
       boolean isTrue = Security.hasRoles(user, snip, roles);
       return (invertCheck ? !isTrue : isTrue);

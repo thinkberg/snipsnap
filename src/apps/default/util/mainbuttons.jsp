@@ -6,8 +6,8 @@
  <c:when test="${snip.name==app.configuration.startSnip}"><span class="inactive"><fmt:message key="menu.start"/></span></c:when>
  <c:otherwise><a href="space/<c:out value='${app.configuration.startSnip}'/>"><fmt:message key="menu.start"/></a></c:otherwise>
 </c:choose> | <a href="space/snipsnap-index"><fmt:message key="menu.index"/></a> |
-<%--<s:check roles="Authenticated"><fmt:message key="menu.loggedIn"><fmt:param value="${app.user.login}"/></fmt:message> | <a href="exec/authenticate?logoff=true"><fmt:message key="menu.logoff"/></a></s:check>--%>
-<a href="exec/login.jsp"><fmt:message key="menu.login"/></a>
+<s:check permission="VIEW_LOGIN" invert="true"><fmt:message key="menu.loggedIn"><fmt:param value="${app.user.login}"/></fmt:message> | <a href="exec/authenticate?logoff=true"><fmt:message key="menu.logoff"/></a></s:check>
+<s:check permission="VIEW_LOGIN"><a href="exec/login.jsp"><fmt:message key="menu.login"/></a>
 <c:if test="${app.configuration.allowRegister}">
   <fmt:message key="menu.or"/> <a href="exec/register.jsp"><fmt:message key="menu.register"/></a>
 </c:if>

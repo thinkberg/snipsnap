@@ -164,30 +164,6 @@
   </tag>
 
   <tag>
-    <name>newcheck</name>
-    <tag-class>org.snipsnap.jsp.NewCheckPermission</tag-class>
-    <attribute>
-      <name>permission</name>
-      <description>permission to check</description>
-    </attribute>
-    <attribute>
-      <name>snip</name>
-      <type>org.snipsnap.snip.Snip</type>
-      <description>snip to check roles against</description>
-    </attribute>
-    <attribute>
-      <name>name</name>
-      <type>java.lang.String</type>
-      <description>name of snip to check roles against</description>
-    </attribute>
-    <attribute>
-      <name>invert</name>
-      <type>java.lang.Boolean</type>
-      <description>invert the check</description>
-    </attribute>
-  </tag>
-
-  <tag>
     <name>checkObject</name>
     <tag-class>org.snipsnap.jsp.ObjectAuth</tag-class>
     <attribute>

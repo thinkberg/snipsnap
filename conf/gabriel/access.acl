@@ -25,4 +25,7 @@ User   {
 }
 
 Owner  { }
-Guest  { VIEW_SNIP }
+Guest  { 
+  VIEW_LOGIN
+  VIEW_SNIP
+}

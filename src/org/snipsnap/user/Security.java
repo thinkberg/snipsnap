@@ -43,7 +43,7 @@ public class Security {
    * @param user User to check
    * @return List of roles
    */
-  public static Roles getRoles(User user) {
+  private static Roles getRoles(User user) {
     Roles userRoles = new Roles(user.getRoles());
     AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
 
@@ -60,7 +60,7 @@ public class Security {
    * @param object Object with possible owner
    * @return List of roles for user and object
    */
-  public static Roles getRoles(User user, Snip object) {
+  private static Roles getRoles(User user, Snip object) {
     Roles roles = getRoles(user);
 //    if (object instanceof Ownable) {
 //      Ownable o = object;
