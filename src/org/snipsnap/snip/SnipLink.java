@@ -50,13 +50,13 @@ import java.util.StringTokenizer;
 public class SnipLink {
 
   public static void appendUrl(Writer writer, String name) throws IOException {
-    writer.write("../space/");
+    writer.write(getSpaceRoot());
     writer.write(name);
     return;
   }
 
   public static void appendUrl(StringBuffer buffer, String name) {
-    buffer.append("../space/");
+    buffer.append(getSpaceRoot());
     buffer.append(name);
     return;
   }
@@ -116,15 +116,15 @@ public class SnipLink {
   }
 
   public static Writer appendLink(Writer writer, String name, String view) throws IOException {
-    return appendLinkWithRoot(writer, "../space", encode(name), view);
+    return appendLinkWithRoot(writer, getSpaceRoot(), encode(name), view);
   }
 
   public static StringBuffer appendLink(StringBuffer buffer, String name, String view, String target) {
-    return appendLinkWithRoot(buffer, "../space", encode(name) + "#" + target, view);
+    return appendLinkWithRoot(buffer, getSpaceRoot(), encode(name) + "#" + target, view);
   }
 
   public static StringBuffer appendLink(StringBuffer buffer, String name, String view) {
-    return appendLinkWithRoot(buffer, "../space", encode(name), view);
+    return appendLinkWithRoot(buffer, getSpaceRoot(), encode(name), view);
   }
 
   public static Writer appendLinkWithRoot(Writer writer, String root, String name, String view) throws IOException {
@@ -160,6 +160,10 @@ public class SnipLink {
   private static String getImagesRoot() {
     // return "../images";
     return Application.get().getConfiguration().getUrl("/images");
+  }
+
+  private static String getSpaceRoot() {
+    return Application.get().getConfiguration().getUrl("/space");
   }
 
   private static List extensions = Arrays.asList(new String[]{"png", "jpg", "jpeg", "gif"});
