@@ -32,9 +32,7 @@
         <link><c:out value="${url}/${child.nameEncoded}"/></link>
         <description><s:content snip="${child}" removeHtml="true"/></description>
         <guid isPermaLink="true"><c:out value="${url}/${child.nameEncoded}"/></guid>
-        <content:encoded>
-          <s:content snip="${child}"/>
-        </content:encoded>
+        <%-- <content:encoded><s:content snip="${child}"/></content:encoded> --%>
         <s:dublinCore snip="${child}" format="xml"/>
       </item>
     </c:forEach>
