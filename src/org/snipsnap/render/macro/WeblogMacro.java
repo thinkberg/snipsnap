@@ -86,6 +86,7 @@ public class WeblogMacro extends SnipMacro {
       // order by name
       // with correct ending /1,/2,/3,...,/11,/12
       List posts = blog.getPosts(count);
+      System.out.println("Weblog Posts for '"+name+"': "+posts.size());
 
       // Convert
       // - all Snips with start parent -> rename start/2003-05-02

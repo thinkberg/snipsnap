@@ -140,9 +140,8 @@ public class BlogImpl implements Blog {
     Calendar startC = new GregorianCalendar();
     startC.setTime(new java.util.Date());
     Calendar endC = (Calendar) startC.clone();
-    endC.add(Calendar.DAY_OF_MONTH, count-1);
-//    String start = name + "/" + Month.toKey(startC);
-//    String end = name+ "/" + Month.toKey(endC);
+    startC.add(Calendar.DAY_OF_MONTH, -count);
+    endC.add(Calendar.DAY_OF_MONTH, 1);
 
     String start = name + "/" + Month.toKey(startC) + "/";
     String end = name + "/" + Month.toKey(endC) + "/";
@@ -152,7 +151,9 @@ public class BlogImpl implements Blog {
     //List posts = new ArrayList();
     //space.getChildrenDateOrder(blog, count);
     List posts = new ArrayList();
-    posts.addAll(Arrays.asList(space.match(start, end)));
+    List postList =  Arrays.asList(space.match(start, end));
+    System.out.println("found matched posts: "+postList.size() + ":"+start+":"+end+":"+count);
+    posts.addAll(postList);
     Collections.sort(posts, comparator);
     // sort
     // Add old snips of form '2005-03-01' if name == 'start'
