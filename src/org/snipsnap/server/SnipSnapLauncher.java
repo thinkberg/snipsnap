@@ -63,7 +63,9 @@ public class SnipSnapLauncher extends Launcher {
     }
 
     // set default server.log
-    System.setProperty(Launcher.ERRORLOG, "server.log");
+    if(null == System.getProperty(Launcher.ERRORLOG)) {
+      System.setProperty(Launcher.ERRORLOG, "server.log");
+    }
 
     try {
       invokeMain("org.snipsnap.server.AppServer", args);
