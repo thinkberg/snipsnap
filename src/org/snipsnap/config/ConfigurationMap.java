@@ -29,13 +29,12 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.net.URL;
 import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Properties;
-import java.util.Set;
 
 /**
  * Implementation of a configuration map which is used as storage for configuration parameters.
@@ -47,21 +46,22 @@ public class ConfigurationMap {
   private final static String TRANSPOSE_MAP = "/org/snipsnap/config/transpose.map";
 
   private Properties properties = null;
+  private Properties defaults = null;
   private File configFile = null;
 
   // internal transposition map for old property file versions
   private Properties transposeMap = null;
 
   public ConfigurationMap() {
-    properties = new Properties();
+    defaults = new Properties();
     try {
-      properties.load(Configuration.class.getResourceAsStream(DEFAULTS_CONF));
+      defaults.load(Configuration.class.getResourceAsStream(DEFAULTS_CONF));
     } catch (Exception e) {
       System.err.println("Configuration: unable to load defaults: " + e.getMessage());
     }
 
     // instantiate properties with defaults
-    //properties = new Properties(defaults);
+    properties = new Properties(defaults);
 
     try {
       transposeMap = new Properties();
@@ -149,6 +149,15 @@ public class ConfigurationMap {
               System.out.println("INFO: Configuration option '" + oldProperty + "' is deprecated:");
               System.out.println("INFO: " + newProperty.substring("@DEPRECATED".length()));
               System.out.println("INFO: Please edit configuration file manually.");
+            }
+          }
+          if (newProperty.startsWith("@DUPLICATE")) {
+            newProperty = newProperty.substring("@DUPLICATE".length());
+            String newValue = properties.getProperty(newProperty);
+            if (null == newValue || "".equals(newValue)) {
+              System.out.println("INFO: duplicating value of '" + oldProperty + "' to '" + newProperty + "'");
+              properties.setProperty(newProperty, value);
+              hasChanged = true;
             }
           } else {
             System.out.println("INFO: converting '" + oldProperty + "' to '" + newProperty + "'");
@@ -244,6 +253,11 @@ public class ConfigurationMap {
 
   public Properties getProperties() {
     return properties;
+  }
+
+  public String getDefault(String name) {
+    String value = defaults.getProperty(name);
+    return ("".equals(value) ? null : value);
   }
 
   /**

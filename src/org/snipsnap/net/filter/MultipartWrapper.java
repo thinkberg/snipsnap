@@ -150,7 +150,7 @@ public class MultipartWrapper extends HttpServletRequestWrapper {
       Logger.log(Logger.FATAL, "error parsing uploaded file name: "+e.getMessage());
     }
 
-    if (null == fileName) {
+    if (null == fileName && part != null) {
       try {
         fileName = new String(part.getFileName().getBytes("iso-8859-1"), encoding);
       } catch (Exception e) {

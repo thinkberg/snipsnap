@@ -8,21 +8,27 @@
 <%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
 
 <table>
-  <tr><th colspan="2"><fmt:message key="config.step.administrator"/></th></tr>
   <tr>
     <td><fmt:message key="config.app.admin.login.text"/></td>
     <td>
       <fmt:message key="config.app.admin.login"/><br/>
       <input type="text" name="app.admin.login" value="<c:out value='${config.adminLogin}' default=""/>">
+      <c:if test="${!empty errors['app.admin.login']}"><img src="images/attention.jpg"></c:if>
     </td>
   </tr>
   <tr>
     <td><fmt:message key="config.app.admin.password.text"/></td>
     <td>
       <fmt:message key="config.app.admin.password"/><br/>
-      <input type="text" name="app.admin.password" value=""><br/>
+      <input type="password" name="app.admin.password" value="">
+      <c:if test="${!empty errors['app.admin.password']}"><img src="images/attention.jpg"></c:if><br/>
       <fmt:message key="config.app.admin.password.vrfy"/><br/>
-      <input type="text" name="app.admin.password.vrfy" value="">
+      <input type="password" name="app.admin.password.vrfy" value="">
+      <div class="hint">
+        <c:if test="${not empty config.adminPassword}">
+          <fmt:message key="config.password.set" />
+        </c:if>
+      </div>
     </td>
   </tr>
   <tr>
@@ -30,6 +36,7 @@
     <td>
       <fmt:message key="config.app.admin.email"/><br/>
       <input type="text" name="app.admin.email" value="<c:out value='${config.adminEmail}' default=""/>">
+      <c:if test="${!empty errors['app.admin.email']}"><img src="images/attention.jpg"></c:if>
     </td>
   </tr>
 </table>

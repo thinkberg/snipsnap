@@ -11,7 +11,6 @@
 <%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
 
 <table>
-  <tr><th colspan="2"><fmt:message key="config.step.expert"/></th></tr>
   <tr>
     <td><fmt:message key="config.app.start.snip.text"/></td>
     <td>
@@ -31,7 +30,8 @@
     <td>
       <fmt:message key="config.app.file.path"/><br/>
       <input type="text" name="app.file.path" size="40" value="<c:out value='${config.properties["app.file.path"]}'/>">
-      <div class="hint">(<c:out value="${config.filePath}"/>)</div>
+      <c:if test="${!empty errors['app.file.path']}"><img src="images/attention.jpg"></c:if>
+     <div class="hint">(<c:out value="${config.filePath}"/>)</div>
     </td>
   </tr>
   <tr>
@@ -39,6 +39,7 @@
     <td>
       <fmt:message key="config.app.index.path"/><br/>
       <input type="text" name="app.index.path" size="40" value="<c:out value='${config.properties["app.index.path"]}'/>">
+      <c:if test="${!empty errors['app.index.path']}"><img src="images/attention.jpg"></c:if>
       <div class="hint">(<c:out value="${config.indexPath}"/>)</div>
     </td>
   </tr>

@@ -16,3 +16,7 @@ app.pop3.host            = app.mail.pop3.host
 app.pop3.user            = app.mail.pop3.user
 app.pop3.password        = app.mail.pop3.password
 app.locale               = app.language
+
+# changes as of (2003-07-27)
+app.admin.login          = @DUPLICATE app.jdbc.user
+app.admin.password       = @DUPLICATE app.jdbc.password

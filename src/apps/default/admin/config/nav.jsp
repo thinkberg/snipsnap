@@ -1,4 +1,4 @@
-<%--
+<%@ page import="java.util.List"%> <%--
   ** Navigation
   ** @author Matthias L. Jugel
   ** @version $Id$
@@ -12,11 +12,11 @@
   <input type="submit" name="previous" value="<fmt:message key="config.nav.previous"/>">
 </c:if>
 <c:choose>
-  <c:when test="${not empty finish}">
+  <c:when test="${step == 'finish'}">
     <input type="submit" name="finish" value="<fmt:message key="config.nav.finish"/>">
     <c:if test="${empty advanced}">
       <input type="hidden" name="advanced" value="true">
-      <input type="submit" name="next" value="<fmt:message key="config.nav.advanced"/>">
+      <input disabled="disabled" id="submit.advanced" type="submit" name="next" value="<fmt:message key="config.nav.advanced"/>">
     </c:if>
   </c:when>
   <c:otherwise>

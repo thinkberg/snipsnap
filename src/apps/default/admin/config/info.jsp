@@ -11,8 +11,13 @@
   <ul>
     <li><c:out value="${config.name}"/></li>
     <li><c:out value="${config.url}"/></li>
-    <li><c:out value="${config.country}_${config.language} ${config.timezone} ${config.encoding}"/></li>
+    <li><c:out value="${config.country}(${config.language}) ${config.timezone} ${config.encoding}"/></li>
     <li><c:out value="${config.theme}"/>
-    <li><c:out value="${config.adminLogin}"/></li>
+    <li>
+      <c:out value="${config.adminLogin}"/>
+      <c:if test="${not empty config.adminEmail}">
+        (<c:out value="${config.adminEmail}"/>)
+      </c:if>
+    </li>
   </ul>
 </div>

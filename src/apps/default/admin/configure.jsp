@@ -1,4 +1,5 @@
-<%@ page import="org.snipsnap.config.Configuration"%>
+<%@ page import="org.snipsnap.config.Configuration,
+                 org.snipsnap.app.Application"%>
 <!--
   ** Initial installation ...
   ** @author Matthias L. Jugel
@@ -8,11 +9,12 @@
 <%@ page pageEncoding="iso-8859-1" %>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
+<% response.setContentType("text/html; charset=UTF-8"); %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title><fmt:message key="config.title"/> :: <fmt:message key="config.step.${step}"/></title>
     <link type="text/css" href="css/config.css" rel="STYLESHEET"/>
   </head>
@@ -25,15 +27,22 @@
       <table class="configuration">
         <tr>
           <td rowspan="2" class="guide">
-           <c:import url="config/guide.jsp"/>
-           <div class="step-info"><fmt:message key="config.guide.${step}" /></div>
+            <c:import url="config/guide.jsp"/>
+            <div class="step-info"><fmt:message key="config.guide.${step}" /></div>
           </td>
           <td class="edit">
+            <div class="step"><fmt:message key="config.step.${step}"/></div>
             <c:if test="${not empty errors}">
               <div class="errors">
+                <fmt:message key="config.errors"/>
                 <ul>
                 <c:forEach items="${errors}" var="error">
-                  <li><fmt:message key="error.${error}"/></li>
+                  <li>
+                   <fmt:message key="config.error.${error.value}">
+                     <%-- check for null --%>
+                     <fmt:param value=" ${config.properties[error.key]}"/>
+                   </fmt:message>
+                  </li>
                 </c:forEach>
                 </ul>
               </div>

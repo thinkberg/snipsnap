@@ -18,7 +18,6 @@
 </script>
 
 <table>
-  <tr><th colspan="2"><fmt:message key="config.step.proxy"/></th></tr>
   <tr>
     <td><fmt:message key="config.app.real.autodetect.text"/></td>
     <td>
@@ -43,6 +42,7 @@
       <input <c:if test="${config.realAutodetect == 'true'}">disabled="disabled"</c:if>
         id="app.real.port" type="text" name="app.real.port" size="40"
         value="<c:out value='${config.properties["app.real.port"]}'/>">
+      <c:if test="${!empty errors['app.real.port']}"><img src="images/attention.jpg"></c:if>
     </td>
   </tr>
   <tr>
