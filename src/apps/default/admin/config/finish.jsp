@@ -1,7 +1,7 @@
 <%@ page import="java.util.*,
                  org.snipsnap.config.Configuration"%>
  <%--
-  ** Database Settings
+  ** The Finish
   ** @author Matthias L. Jugel
   ** @version $Id$
   --%>
@@ -18,6 +18,7 @@
       function enableOnCheck(checkbox) {
         document.getElementById("submit.advanced").disabled = !checkbox.checked;
         if(checkbox.name == 'advanced.all') {
+          document.getElementById("advanced.localization").disabled = checkbox.checked
           document.getElementById("advanced.moblog").disabled = checkbox.checked;
           document.getElementById("advanced.mail").disabled = checkbox.checked;
           document.getElementById("advanced.proxy").disabled = checkbox.checked;
@@ -29,6 +30,10 @@
       <div class="advanced">
         <fmt:message key="config.advanced"/>
         <ul>
+          <li>
+            <input onClick="enableOnCheck(this);" id="advanced.localization" type="checkbox" name="advanced.step.localization">
+            <fmt:message key="config.advanced.localization"/>
+          </li>
           <li>
             <input onClick="enableOnCheck(this);" id="advanced.moblog" type="checkbox" name="advanced.step.moblog">
             <fmt:message key="config.advanced.moblog"/>

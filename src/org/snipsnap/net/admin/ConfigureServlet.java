@@ -66,8 +66,8 @@ public class ConfigureServlet extends HttpServlet {
 
   protected final static String STEP_APPLICATION = "application";
   protected final static String STEP_THEME = "theme";
-  protected final static String STEP_LOCALIZATION = "localization";
   protected final static String STEP_ADMINISTRATOR = "administrator";
+  protected final static String STEP_LOCALIZATION = "localization";
   protected final static String STEP_PERMISSIONS = "permissions";
   protected final static String STEP_MAIL = "mail";
   protected final static String STEP_MOBLOG = "moblog";
@@ -78,13 +78,13 @@ public class ConfigureServlet extends HttpServlet {
 
   private final static List BASIC_STEPS = Arrays.asList(new String[]{
     STEP_APPLICATION,
-    /*"theme",*/
-    STEP_LOCALIZATION,
+    /*STEP_THEME,*/
     STEP_ADMINISTRATOR,
     STEP_FINISH,
   });
 
   private final static List EXPERT_STEPS = Arrays.asList(new String[]{
+    STEP_LOCALIZATION,
     STEP_PERMISSIONS,
     STEP_MAIL,
     STEP_MOBLOG,
