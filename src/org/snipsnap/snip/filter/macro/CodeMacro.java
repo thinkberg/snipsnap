@@ -72,6 +72,7 @@ public class CodeMacro extends Preserved {
     addSpecial('}');
     addSpecial('*');
     addSpecial('-');
+    addSpecial('\\');
   }
 
   public String getName() {

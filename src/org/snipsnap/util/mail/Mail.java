@@ -45,9 +45,9 @@ import java.util.Iterator;
  */
 
 public class Mail {
-  public Mail instance;
+  public static Mail instance;
 
-  public synchronized Mail getInstance() {
+  public static synchronized Mail getInstance() {
      if (null == instance) {
        instance = new Mail();
      }

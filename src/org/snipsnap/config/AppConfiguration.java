@@ -133,6 +133,7 @@ public class AppConfiguration extends Configuration {
   }
 
   public String getDomain() {
+    // returns something like "http://snipsnap.org"
     return getProperty(AppConfiguration.APP_DOMAIN);
   }
 

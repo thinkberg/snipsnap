@@ -1,7 +1,5 @@
 @TODO: Add Timezone, e.g. +1.00 to Appconfiguration. Needed e.g. for RSS, DublinCore.
 @TODO: Snip with list version of all external libs, like Lucene, ORO, xml parser, ...
-@TODO: implement preview for comments
-@TODO: correct comments image for blue life
 @TODO: markup/highlighting for snipsnap macros
 @TODO: Markup for organigramms, for sketching partners or competitor or who is
        responsible for which customer etc, perhaps like LTM { @boss: Fritz }, {@employee: Stephan, boss_is: Fritz}

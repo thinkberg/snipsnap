@@ -274,11 +274,14 @@ public class UserManager {
     return key;
   }
 
-  public void changePassWord(String key, String passwd) {
+  public User changePassWord(String key, String passwd) {
     User user = (User) authKeys.get(key);
-    user.setPasswd(passwd);
-    storage.storageStore(user);
-    authKeys.remove(key);
+    if (null != user) {
+      user.setPasswd(passwd);
+      storage.storageStore(user);
+      authKeys.remove(key);
+    }
+    return user;
   }
 
   public User getUserFromKey(String key) {

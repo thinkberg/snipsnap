@@ -32,6 +32,7 @@
 package org.snipsnap.snip.filter.macro;
 
 import org.snipsnap.snip.*;
+import org.snipsnap.snip.filter.links.BackLinks;
 import org.snipsnap.snip.storage.SnipStorage;
 
 import java.util.Iterator;
@@ -85,6 +86,7 @@ public class WeblogMacro extends Macro {
         writer.write(" | ");
         writer.write(entry.getComments().getPostString());
         writer.write("</div>\n\n");
+        BackLinks.appendTo(writer, entry.getAccess().getBackLinks(), 5);
       }
 
       return;

@@ -15,7 +15,6 @@
     <pathelement location="${jar}/org.mortbay.jetty.jar"/>
     <pathelement location="${jar}/jdbcpool.jar"/>
     <pathelement location="${jar}/mckoidb.jar"/>
-    <pathelement location="${jar}/mail.jar"/>
   </path>
 
   <!-- the overall class path -->
@@ -29,6 +28,8 @@
     <pathelement location="${jar}/jdom-b8.jar"/>
     <pathelement location="${src}/apps/default/WEB-INF/lib/jstl.jar"/>
     <pathelement location="${src}/apps/default/WEB-INF/lib/standard.jar"/>
+    <pathelement location="${jar}/activation.jar"/>
+    <pathelement location="${jar}/mail.jar"/>
   </path>
 
   <path id="all.classpath">

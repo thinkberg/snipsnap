@@ -97,6 +97,16 @@
   </servlet>
 
   <servlet>
+    <servlet-name>org.snipsnap.net.ChangePasswordServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.ChangePasswordServlet</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>org.snipsnap.net.MailPasswordKeyServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.MailPasswordKeyServlet</servlet-class>
+  </servlet>
+
+  <servlet>
     <servlet-name>org.snipsnap.net.LoginServlet</servlet-name>
     <servlet-class>org.snipsnap.net.LoginServlet</servlet-class>
   </servlet>
@@ -211,6 +221,16 @@
   <servlet-mapping>
     <servlet-name>org.snipsnap.net.CommentStoreServlet</servlet-name>
     <url-pattern>/exec/storecomment</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>org.snipsnap.net.ChangePasswordServlet</servlet-name>
+    <url-pattern>/exec/changepass</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>org.snipsnap.net.MailPasswordKeyServlet</servlet-name>
+    <url-pattern>/exec/mailkey</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
