@@ -11,14 +11,23 @@ public class Layouter extends HttpServlet {
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
     throws IOException, ServletException {
-    String path = request.getPathInfo();
-    if(null == path) {
-      path = "start";
+
+    String requestURI = request.getRequestURI();
+    if(requestURI.startsWith("/space/")) {
+
+      String path = request.getPathInfo();
+      if(null == path) {
+        path = "start";
+      } else {
+        path = path.substring(1);
+      }
+      System.err.println("Layouter: wiki space request: "+path);
+      request.setAttribute("page", "/snip.jsp?name="+path);
     } else {
-      path = path.substring(1);
+      String path = requestURI.substring(6)+".jsp";
+      System.err.println("Layouter: command request: "+path);
+      request.setAttribute("page",  path);
     }
-    request.setAttribute("page", "/snip.jsp");
-    request.setAttribute("path", path);
 
     RequestDispatcher dispatcher = request.getRequestDispatcher("/main.jsp");
     dispatcher.forward(request, response);

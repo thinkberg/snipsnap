@@ -6,24 +6,42 @@ import com.neotis.snip.SnipSpace;
 import javax.servlet.http.HttpServletRequest;
 
 public class SnipBean {
-  HttpServletRequest request = null;
+  Snip snip = null;
 
-  public void setRequest(HttpServletRequest request) {
-    this.request = request;
+  HttpServletRequest request = null;
+  String name, content;
+
+  public void setName(String name) {
+    System.err.println("setName(" + name + ")");
+    this.name = name;
+    snip = SnipSpace.getInstance().load(name);
   }
 
-  public HttpServletRequest getRequest() {
-    return request;
+  public String getName() {
+    if (snip != null) {
+      return snip.getName();
+    } else {
+      return name != null ? name : "";
+    }
   }
 
   public void setContent(String content) {
-    System.err.println("SnipBean: setContent() is not supported, use setRequest()");
+    this.content = content;
   }
 
   public String getContent() {
-    System.err.println("SnipBean: "+request+", "+request.getAttribute("path"));
-    String title = (String)request.getAttribute("path");
-    Snip snip = SnipSpace.getInstance().load(title);
-    return snip.toXML();
+    if (snip != null) {
+      return snip.getContent();
+    }
+    return content != null ? content : "";
   }
+
+  public String getXMLContent() {
+    System.err.println("getXMLContent()");
+    if (snip != null) {
+      return snip.toXML();
+    }
+    return "";
+  }
+
 }

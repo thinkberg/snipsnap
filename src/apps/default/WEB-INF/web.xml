@@ -12,8 +12,8 @@
   </servlet>
 
   <servlet>
-    <servlet-name>com.neotis.net.SnipServlet</servlet-name>
-    <servlet-class>com.neotis.net.SnipServlet</servlet-class>
+    <servlet-name>com.neotis.net.SnipStoreServlet</servlet-name>
+    <servlet-class>com.neotis.net.SnipStoreServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>
@@ -22,7 +22,14 @@
   </servlet-mapping>
 
   <servlet-mapping>
-    <servlet-name>com.neotis.net.SnipServlet</servlet-name>
-    <url-pattern>/app/*</url-pattern>
+    <servlet-name>com.neotis.net.Layouter</servlet-name>
+    <url-pattern>/exec/*</url-pattern>
   </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>com.neotis.net.SnipStoreServlet</servlet-name>
+    <url-pattern>/exec/store</url-pattern>
+  </servlet-mapping>
+
+
 </web-app>

@@ -57,8 +57,20 @@ public class LinkTestFilter extends Filter {
       // Since we're still in the loop, fetch match that was found.
       result = matcher.getMatch();
       buffer.append(input.substring(lastmatch, result.beginOffset(0)));
-      buffer.append("<link href=\"");
-      buffer.append(URLEncoder.encode(result.group(1)));
+
+      if(linkTester.exists(result.group(1))) {
+        buffer.append("[<a href=\"");
+        buffer.append("/space/");
+        buffer.append(URLEncoder.encode(result.group(1)));
+        buffer.append("\">").append(result.group(1)).append("</a>]");
+      } else {
+        buffer.append("<a href=\"");
+        buffer.append("/exec/edit?name=");
+        buffer.append(URLEncoder.encode(result.group(1)));
+        buffer.append("\">create ").append(result.group(1)).append("</a>");
+      }
+
+
 /*
       try {
         buffer.append(URLEncoder.encode(result.group(1), "ISO-8859-1"));
@@ -67,14 +79,6 @@ public class LinkTestFilter extends Filter {
         buffer.append(result.group(1));
       }
 */
-      buffer.append("\" name=\"");
-      buffer.append(result.group(1));
-      buffer.append("\"");
-      if (!linkTester.exists(result.group(1))) {
-        buffer.append(" dangling=\"true\" ");
-      }
-      buffer.append("/>");
-
       lastmatch = result.endOffset(0);
     }
     buffer.append(input.substring(lastmatch));

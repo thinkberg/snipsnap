@@ -1,11 +1,12 @@
 <jsp:useBean id="snip" scope="request" class="com.neotis.jsp.SnipBean" >
-  <jsp:setProperty name="snip" property="request" value="<%= request %>"/>
+  <jsp:setProperty name="snip" property="*"/>
 </jsp:useBean>
 
 <table border="0" cellspacing="2" cellpadding="1">
+ <tr><td class="header"><jsp:getProperty name="snip" property="name" /></td></tr>
  <tr>
   <td>
-   <jsp:getProperty name="snip" property="content" />
+   <jsp:getProperty name="snip" property="XMLContent" />
   </td>
  </tr>
 </table>

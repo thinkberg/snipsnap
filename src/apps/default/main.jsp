@@ -6,7 +6,7 @@
   <link type="text/css" href="/default.css" rel="STYLESHEET"/>
  </head>
  <body>
-   <h1 class="title">Weblog: <%= request.getAttribute("path") %></h1>
+   <h1 class="title">Weblog</h1>
    <table border="0" cellpadding="4" cellspacing="1">
     <tr>
      <td valign="top">
