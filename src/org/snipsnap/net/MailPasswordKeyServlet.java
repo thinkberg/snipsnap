@@ -78,6 +78,11 @@ public class MailPasswordKeyServlet extends HttpServlet {
           "\">" + url + "</a>";
 
         Mail.getInstance().sendMail(receiver, subject, content);
+      } else {
+        request.setAttribute("error", "No email, please contact the SnipSnap administrator!");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/forgot.jsp");
+        dispatcher.forward(request, response);
+        return;
       }
     } else {
       Configuration config = Application.get().getConfiguration();
