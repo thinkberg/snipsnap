@@ -42,7 +42,6 @@ import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.render.filter.interwiki.InterWiki;
 import org.snipsnap.user.UserManager;
-import org.snipsnap.util.Transliterate;
 import org.radeox.filter.Filter;
 import org.radeox.filter.LinkTester;
 import org.radeox.filter.context.FilterContext;
@@ -59,11 +58,9 @@ public class LinkTestFilter extends Filter {
   private Pattern pattern = null;
   private PatternCompiler compiler = new Perl5Compiler();
   private String _substitute;
-  private Transliterate trans;
 
   public LinkTestFilter() {
     linkTester = SnipSpace.getInstance();
-    trans = new Transliterate("romaji.properties");
 
     try {
       pattern = compiler.compile("\\[(.*?)\\]");
@@ -89,9 +86,6 @@ public class LinkTestFilter extends Filter {
         result = matcher.getMatch();
         buffer.append(input.substring(lastmatch, result.beginOffset(0)));
         String targetSnip = result.group(1).trim();
-        if (targetSnip.startsWith("&#")) {
-          targetSnip = trans.nativeToAscii(targetSnip);
-        }
 
         if (targetSnip != null) {
           int colonIndex = targetSnip.indexOf(':');
