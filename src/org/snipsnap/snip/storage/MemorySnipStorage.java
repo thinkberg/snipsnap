@@ -114,25 +114,28 @@ public class MemorySnipStorage implements SnipStorage {
     Snip snip = storage.storageCreate(name, content);
 
     // TODO fix this, the allList is not necessarily correctly initialized!
-    List allSnips = (List) allList.get(snip.getApplication());
+    String applicationOid = snip.getApplication();
+
+    List allSnips = (List) allList.get(applicationOid);
     if(null == allSnips) {
-      allSnips = storage.storageAll(snip.getApplication());
-      allList.put(snip.getApplication(), allSnips);
+      allSnips = storage.storageAll(applicationOid);
+      allList.put(applicationOid, allSnips);
     }
     allSnips.add(snip);
-    cache.getMap().put(snip.getName().toUpperCase(), snip);
+    cache.getMap(applicationOid).put(snip.getName().toUpperCase(), snip);
     return snip;
   }
 
   public void storageRemove(Snip snip) {
+    String applicationOid = snip.getApplication();
     storage.storageRemove(snip);
-    List allSnips = (List) allList.get(snip.getApplication());
+    List allSnips = (List) allList.get(applicationOid);
     if (null != allSnips) {
       allSnips.remove(snip);
     } else {
       System.err.println("WARNING: access to unknown oid: "+snip.getApplication());
     }
-    cache.getMap().remove(snip.getName().toUpperCase());
+    cache.getMap(applicationOid).remove(snip.getName().toUpperCase());
   }
 
   public int storageCount() {
