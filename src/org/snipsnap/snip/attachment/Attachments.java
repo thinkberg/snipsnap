@@ -32,10 +32,12 @@ import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 import org.radeox.util.logging.Logger;
+import org.snipsnap.app.Application;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -89,6 +91,7 @@ public class Attachments {
     attachments.put(attachment.getName(), attachment);
     return attachment;
   }
+
   public Attachment addAttachment(String name, String contentType, long size, String location) {
     Attachment attachment = new Attachment(name, contentType, size, new Date(), location);
     addAttachment(attachment);
@@ -200,9 +203,15 @@ public class Attachments {
       xmlWriter.write(attElement);
       xmlWriter.flush();
     } catch (IOException e) {
-      System.err.println("Attachments: unable to serialize: " + e);
+      Logger.warn("Attachments: unable to serialize", e);
     }
-    return out.toString();
+    
+    try {
+      String enc = Application.get().getConfiguration().getEncoding();
+      return out.toString(enc == null ? "UTF-8" : enc);
+    } catch (UnsupportedEncodingException e) {
+      return out.toString();
+    }
   }
 
   public String toString() {
