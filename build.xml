@@ -86,10 +86,10 @@
     </tar>
   </target>
 
-  <target depends="clean, all" description="tar binary package" name="tar-binary">
+  <target depends="all" description="tar binary package" name="tar-binary">
     <tstamp/>
     <tar destfile="../${appname}-${snipsnap.server.version}-${DSTAMP}.tgz" compression="gzip">
-      <tarfileset dir="." prefix="${appname}-${snipsnap.server.version}" mode="700">
+      <tarfileset dir="${basedir}" prefix="${appname}-${snipsnap.server.version}" mode="700">
         <include name="run.sh"/>
         <include name="run.bat"/>
         <include name="db.sh"/>
@@ -100,24 +100,20 @@
         <include name="devlinks.sh"/>
         <include name="renimg.sh"/>
       </tarfileset>
-      <tarfileset dir="." prefix="${appname}-${snipsnap.server.version}">
-        <include name="${jar}/${appname}.jar"/>
-        <include name="${jar}/javax.servlet.jar"/>
-        <include name="${jar}/org.apache.jasper.jar"/>
-        <include name="${jar}/org.apache.crimson.jar"/>
-        <include name="${jar}/org.mortbay.jetty.jar"/>
-        <include name="${jar}/mckoidb.jar"/>
-        <include name="${jar}/jdbcpool.jar"/>
-        <include name="${jar}/lucene-1.2.jar"/>
-        <include name="${jar}/mail.jar"/>
-        <include name="${jar}/activation.jar"/>
-        <include name="${jar}/radeox.jar"/>
-        <include name="${jar}/jena.jar"/>
-        <include name="${jar}/commons-logging.jar"/>
-        <include name="${jar}/${appname}-template.war"/>
-        <include name="${jar}/${appname}-theme-*.jar"/>
-        <include name="${jar}/${appname}-installer.war"/>
-        <include name="${jar}/${appname}-utils.jar"/>
+      <tarfileset dir="${basedir}" prefix="${appname}-${snipsnap.server.version}">
+        <include name="lib/${appname}.jar"/>
+        <include name="lib/${appname}-server.jar"/>
+        <include name="lib/${appname}-template.war"/>
+        <include name="lib/${appname}-theme-*.jar"/>
+        <include name="lib/${appname}-installer.war"/>
+        <include name="lib/${appname}-utils.jar"/>
+        <include name="lib/org.mortbay.jetty.jar"/>
+        <include name="lib/javax.servlet.jar"/>
+        <include name="lib/org.apache.jasper.jar"/>
+        <include name="lib/jdbcpool.jar"/>
+        <include name="lib/mckoidb.jar"/>
+        <include name="lib/org.apache.crimson.jar"/>
+        <include name="lib/xmlrpc-1.1.jar"/>
         <include name="conf/jetty.conf"/>
         <include name="license.txt"/>
         <include name="validate.xsl"/>
