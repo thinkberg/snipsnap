@@ -221,6 +221,7 @@
 
   <!-- create web archive of the installer web application -->
   <target depends="compile-installer" description="build installer war" name="installer-war">
+    <mkdir dir="${src}/apps/installer/WEB-INF/lib"/>
     <jar destfile="${src}/apps/installer/WEB-INF/lib/installer-servlets.jar" excludes="**/CVS">
       <fileset dir="${target}/installer/WEB-INF/classes" includes="**"/>
     </jar>
