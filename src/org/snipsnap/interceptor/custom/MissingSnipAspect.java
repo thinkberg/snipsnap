@@ -32,6 +32,7 @@ import org.codehaus.nanning.config.Aspect;
 import org.codehaus.nanning.config.P;
 import org.codehaus.nanning.config.Pointcut;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.Snip;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -94,7 +95,8 @@ public class MissingSnipAspect implements Aspect {
 
       removePc.advise(instance, new MethodInterceptor() {
         public Object invoke(Invocation invocation) throws Throwable {
-          String name = ((String) invocation.getArgs()[0]).toUpperCase();
+          Snip snip = (Snip) invocation.getArgs()[0];
+          String name = snip.getName().toUpperCase();
 
           Object result = invocation.invokeNext();
 
