@@ -109,6 +109,20 @@ public class AppConfiguration extends Configuration {
     return getProperty(AppConfiguration.APP_PATH);
   }
 
+  public String getUrl() {
+    StringBuffer url = new StringBuffer();
+    url.append(getHost());
+    int port = getPort();
+    if (port != 80) {
+      url.append(":");
+      url.append(port);
+    }
+    url.append("/");
+    url.append(getContextPath());
+    url.append("/space");
+    return url.toString();
+  }
+
   public void setJDBCURL(String url) {
     setProperty(AppConfiguration.APP_JDBC_URL, url);
   }
