@@ -12,7 +12,11 @@
   </td>
   </tr>
   <tr><td>
-   <jsp:getProperty name="snip" property="comments" />
+   <!-- do not display comments on start page, only on posted
+        entries -->
+   <% if (! snip.getName().equals("start")) { %>
+    <jsp:getProperty name="snip" property="comments" />
+   <% } %>
   </td></tr>
   <tr>
   <td>Referrer: <%=request.getHeader("REFERER")%></td>

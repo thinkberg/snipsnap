@@ -116,7 +116,7 @@ public class CreateDB {
         "{link:henso|http://www.henso.com}\\\\ \n" +
         "{link:Lambda|http://lambda.weblogs.com}\\\\ \n" +
         "{link:e7l3|http://www.e7l3.com}\\\\ \n";
-      space.create("weblog::blogrolling", rolling, app);
+      space.create("snipsnap-blogrolling", rolling, app);
 
       System.out.println("--- Complete ---");
 

@@ -6,9 +6,8 @@ import com.neotis.util.StringUtil;
 
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.Collection;
-import java.util.List;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 
 public class Snip {
@@ -24,6 +23,18 @@ public class Snip {
   public static String toName(Date date) {
     SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
     return sf.format(date);
+  }
+
+  public static void appendLink(StringBuffer buffer, String name) {
+    appendLink(buffer, name, name);
+  }
+
+  public static void appendLink(StringBuffer buffer, String name, String view) {
+    buffer.append(" <a href=\"/space/");
+    buffer.append(name);
+    buffer.append("\">");
+    buffer.append(view);
+    buffer.append("</a> ");
   }
 
   public String getNiceTime(Timestamp time) {
@@ -59,9 +70,9 @@ public class Snip {
   public String getModified() {
     StringBuffer buffer = new StringBuffer();
     buffer.append("Created by");
-    User.appendLink(buffer, cUser);
+    Snip.appendLink(buffer, cUser);
     buffer.append("Last Edited by");
-    User.appendLink(buffer, mUser);
+    Snip.appendLink(buffer, mUser);
     buffer.append(getNiceTime(mTime));
     return buffer.toString();
   }

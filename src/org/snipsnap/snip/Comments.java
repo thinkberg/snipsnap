@@ -54,7 +54,8 @@ public class Comments {
 
   public String getCommentString() {
     StringBuffer buffer = new StringBuffer();
-    StringUtil.plural(buffer, getCount(), "comment");
+    Snip.appendLink(buffer, "comments-"+snip.getName(), StringUtil.plural(getCount(), "comment"));
+
     if (getCount()>0) {
       buffer.append("(by ");
       appendUserString(buffer);
@@ -68,7 +69,7 @@ public class Comments {
     Iterator userIterator = users.iterator();
     while (userIterator.hasNext()) {
       String s = (String) userIterator.next();
-      User.appendLink(buffer, s);
+      Snip.appendLink(buffer, s);
       if (userIterator.hasNext()) {
         buffer.append(", ");
       }

@@ -36,9 +36,10 @@
    Iterator iterator = space.getChanged().iterator();
    while (iterator.hasNext()) {
      Snip snip = (Snip)iterator.next(); %>
-  <tr><td><a href="/space/<%= snip.getName() %>"><%= snip.getName() %></a></td></tr>
+  <a href="/space/<%= snip.getName() %>"><%= snip.getName() %></a><br/>
   <% } %>
   </p>
+
  </td></tr>
  <tr><td>
   <p>
@@ -47,7 +48,7 @@
   </p>
 
   <p>
-   <% Snip rolling = space.load("weblog::blogrolling"); %>
+   <% Snip rolling = space.load("snipsnap-blogrolling"); %>
    <%= rolling.toXML() %>
   </p>
  </td></tr>
