@@ -43,7 +43,7 @@ public class User implements Nameable {
   private String email;
   private String status;
   private Roles roles;
-  private Timestamp cTime, mTime, lastLogin;
+  private Timestamp cTime, mTime, lastLogin, lastAccess;
 
   public static final String UNKNOWN = "Guest";
 
@@ -69,8 +69,24 @@ public class User implements Nameable {
     this.mTime = mTime;
   }
 
+  public void lastAccess() {
+    this.lastAccess = new Timestamp(new java.util.Date().getTime());
+  }
+
+  public Timestamp getLastAccess() {
+    return this.lastAccess;
+  }
+
+  public void setLastAccess(Timestamp lastAccess) {
+    this.lastAccess = lastAccess;
+  }
+
   public Timestamp getLastLogin() {
     return lastLogin;
+  }
+
+  public void lastLogin() {
+    setLastLogin(new Timestamp(new java.util.Date().getTime()));
   }
 
   public void setLastLogin(Timestamp lastLogin) {

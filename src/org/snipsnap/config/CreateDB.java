@@ -89,14 +89,15 @@ public class CreateDB {
 
       statement.executeQuery(
         "    CREATE TABLE SnipUser ( " +
-        "       cTime     TIMESTAMP, " +
-        "       mTime     TIMESTAMP, " +
-        "       lastLogin TIMESTAMP, " +
-        "       login     VARCHAR(100) NOT NULL, " +
-        "       passwd    VARCHAR(20), " +
-        "       email     VARCHAR(100)," +
-        "       status    VARCHAR(50), " +
-        "       roles     VARCHAR(200) )");
+        "       cTime      TIMESTAMP, " +
+        "       mTime      TIMESTAMP, " +
+        "       lastLogin  TIMESTAMP, " +
+        "       lastAccess TIMESTAMP, " +
+        "       login      VARCHAR(100) NOT NULL, " +
+        "       passwd     VARCHAR(20), " +
+        "       email      VARCHAR(100)," +
+        "       status     VARCHAR(50), " +
+        "       roles      VARCHAR(200) )");
 
 
       // Close the statement and the connection.

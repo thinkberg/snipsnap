@@ -1,5 +1,6 @@
 0.2.6
 
+- Added feature: RSS Autodiscovery, RSS
 - Added feature: {image:http://boing.org/boing.gif} for external images
 - Added feature: create snip at search, whe snip does not exist
 - Added feature: XML-RPC Blogger API newPost()

@@ -25,6 +25,7 @@
 package org.snipsnap.user;
 
 import org.snipsnap.util.ConnectionManager;
+import org.snipsnap.util.log.Logger;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -37,11 +38,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * User manager handles all register, creation and authentication of users.
@@ -62,32 +59,47 @@ public class UserManager {
     return storageAll();
   }
 
-
   private final static String COOKIE_NAME = "SnipSnapUser";
   private final static String ATT_USER = "user";
   private final static int SECONDS_PER_YEAR = 60 * 60 * 24 * 365;
 
-  public MessageDigest md5;
-  public Map authHash = new HashMap();
-
+  private MessageDigest digest;
+  private Map authHash = new HashMap();
+  private List delayed;
 
   protected UserManager() {
     try {
-      md5 =  MessageDigest.getInstance("SHA1");
+      digest =  MessageDigest.getInstance("SHA1");
     } catch (NoSuchAlgorithmException e) {
-      System.err.println("UserManager: unable to load MD5 algorithm: "+e);
-      md5 = null;
+      System.err.println("UserManager: unable to load digest algorithm: "+e);
+      digest = null;
     }
+
+    delayed = new LinkedList();
+    Timer timer = new Timer();
+    timer.schedule(new TimerTask() {
+      public void run() {
+        synchronized (delayed) {
+          ListIterator iterator = delayed.listIterator();
+          while (iterator.hasNext()) {
+            User user = (User) iterator.next();
+            systemStore(user);
+            iterator.remove();
+          }
+        }
+      }
+      // execute after 5 minutes and then
+      // every 5 minutes
+    }, 5 * 60 * 1000, 5 * 60 * 1000);
   }
 
-
-  // create a string representation of the MD5 hash of current user
-  StringBuffer md5hex = new StringBuffer();
-  private String getMD5Hash(User user) {
-    if (md5 != null) {
+  private String getDigest(User user) {
+    // create a string representation of the MD5 hash of current user
+    StringBuffer md5hex = new StringBuffer();
+    if (digest != null) {
       String tmp = user.getLogin() + user.getPasswd() + user.getLastLogin().toString();
       // System.out.println("encoding: "+tmp);
-      byte buf[] = md5.digest(tmp.getBytes());
+      byte buf[] = digest.digest(tmp.getBytes());
       md5hex.setLength(0);
       for (int i = 0; i < buf.length; i++) {
         md5hex.append(Integer.toHexString(buf[i]).toUpperCase());
@@ -103,7 +115,7 @@ public class UserManager {
     Iterator users = getAll().iterator();
     while (users.hasNext()) {
       User user = (User) users.next();
-      authHash.put(getMD5Hash(user), user);
+      authHash.put(getDigest(user), user);
     }
   }
 
@@ -145,7 +157,7 @@ public class UserManager {
    * Set cookie with has of encoded user/pass and last login time.
    */
   public void setCookie(HttpServletRequest request, HttpServletResponse response, User user) {
-    String auth = getMD5Hash(user);
+    String auth = getDigest(user);
     // @TODO find better solution by removing by value
     updateAuthHash();
 
@@ -191,9 +203,12 @@ public class UserManager {
   }
 
   public User authenticate(String login, String passwd) {
+    System.err.println("login="+login);
+    System.err.println("passwd="+passwd);
     User user = storageLoad(login);
+    System.err.println("user="+user);
     if (null != user && user.getPasswd().equals(passwd)) {
-      user.setLastLogin(new Timestamp(new java.util.Date().getTime()));
+      user.lastLogin();
       storageStore(user);
       return user;
     } else {
@@ -211,6 +226,19 @@ public class UserManager {
 
   public void store(User user) {
     user.setMTime(new Timestamp(new java.util.Date().getTime()));
+    storageStore(user);
+    return;
+  }
+
+  public void delayedStrore(User user) {
+    synchronized (delayed) {
+      if (!delayed.contains(user)) {
+        delayed.add(user);
+      }
+    }
+  }
+
+  public void systemStore(User user) {
     storageStore(user);
     return;
   }
@@ -233,6 +261,7 @@ public class UserManager {
     Timestamp cTime = result.getTimestamp("cTime");
     Timestamp mTime = result.getTimestamp("mTime");
     Timestamp lastLogin = result.getTimestamp("lastLogin");
+    Timestamp lastAccess = result.getTimestamp("lastAccess");
     String status = result.getString("status");
     User user = new User(login, passwd, email);
     user.setStatus(status);
@@ -240,6 +269,7 @@ public class UserManager {
     user.setCTime(cTime);
     user.setMTime(mTime);
     user.setLastLogin(lastLogin);
+    user.setLastAccess(lastAccess);
     return user;
   }
 
@@ -249,7 +279,7 @@ public class UserManager {
 
     try {
       statement = connection.prepareStatement("UPDATE SnipUser SET login=?, passwd=?, email=?, status=?, roles=?, " +
-                                              " cTime=?, mTime=?, lastLogin=? " +
+                                              " cTime=?, mTime=?, lastLogin=?, lastAccess=? " +
                                               " WHERE login=?");
 
       statement.setString(1, user.getLogin());
@@ -260,7 +290,8 @@ public class UserManager {
       statement.setTimestamp(6, user.getCTime());
       statement.setTimestamp(7, user.getMTime());
       statement.setTimestamp(8, user.getLastLogin());
-      statement.setString(9, user.getLogin());
+      statement.setTimestamp(9, user.getLastAccess());
+      statement.setString(10, user.getLogin());
 
       statement.execute();
     } catch (SQLException e) {
@@ -282,11 +313,13 @@ public class UserManager {
     user.setCTime(cTime);
     user.setMTime(cTime);
     user.setLastLogin(cTime);
+    user.setLastAccess(cTime);
 
     try {
       statement = connection.prepareStatement("INSERT INTO SnipUser " +
-                                              " (login, passwd, email, status, roles, cTime, mTime, lastLogin) " +
-                                              " VALUES (?,?,?,?,?,?,?,?)");
+                                              " (login, passwd, email, status, roles, " +
+                                              " cTime, mTime, lastLogin, lastAccess) " +
+                                              " VALUES (?,?,?,?,?,?,?,?,?)");
       statement.setString(1, login);
       statement.setString(2, passwd);
       statement.setString(3, email);
@@ -295,6 +328,7 @@ public class UserManager {
       statement.setTimestamp(6, cTime);
       statement.setTimestamp(7, cTime);
       statement.setTimestamp(8, cTime);
+      statement.setTimestamp(9, cTime);
 
       statement.execute();
     } catch (SQLException e) {
@@ -333,7 +367,7 @@ public class UserManager {
     Connection connection = ConnectionManager.getConnection();
 
     try {
-      statement = connection.prepareStatement("SELECT login, passwd, email, status, roles, cTime, mTime, lastLogin " +
+      statement = connection.prepareStatement("SELECT login, passwd, email, status, roles, cTime, mTime, lastLogin, lastAccess " +
                                               " FROM SnipUser " +
                                               " WHERE login=?");
       statement.setString(1, login);
@@ -360,7 +394,7 @@ public class UserManager {
     Connection connection = ConnectionManager.getConnection();
 
     try {
-      statement = connection.prepareStatement("SELECT login, passwd, email, status, roles, cTime, mTime, lastLogin " +
+      statement = connection.prepareStatement("SELECT login, passwd, email, status, roles, cTime, mTime, lastLogin, lastAccess " +
                                               " FROM SnipUser " +
                                               " ORDER BY login");
       result = statement.executeQuery();

@@ -27,6 +27,8 @@ package org.snipsnap.snip;
 
 import org.snipsnap.util.log.Logger;
 import org.snipsnap.app.Application;
+import org.snipsnap.user.User;
+import org.snipsnap.user.UserManager;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -55,6 +57,17 @@ public class Access {
   }
 
   public void handle(HttpServletRequest request) {
+    User user = Application.get().getUser();
+    UserManager um = UserManager.getInstance();
+    System.err.println(user.getLogin());
+    if (um.isAuthenticated(user)) {
+      user.lastAccess();
+      um.getInstance().delayedStrore(user);
+      System.err.println("Authenticaded, setting last access");
+    } else {
+      System.err.println("Not authenticaded no lastAccess.");
+    }
+
     incViewCount();
     String referrer = request.getHeader("REFERER");
     if (null != referrer) {

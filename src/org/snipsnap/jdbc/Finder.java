@@ -29,10 +29,7 @@ import org.snipsnap.cache.Cache;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.util.ConnectionManager;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +41,7 @@ import java.util.List;
  */
 public class Finder {
   PreparedStatement statement;
+  String statementString;
   Connection connection;
   Cache cache;
   Loader loader;
@@ -57,19 +55,28 @@ public class Finder {
   public Finder(String statement, Cache cache, Loader loader) {
     try {
       this.connection = ConnectionManager.getConnection();
+      this.statementString= statement;
       this.statement = this.connection.prepareStatement(statement);
       this.loader = loader;
     } catch (SQLException e) {
-      System.out.println("Unable to prepare statement.");
+      System.out.println("Unable to prepare statement: "+statementString);
     }
     this.cache = cache;
+  }
+
+  public void setDate(int column, Timestamp date) {
+    try {
+      statement.setTimestamp(column, date);
+    } catch (SQLException e) {
+      System.out.println("Unable to set Timestamp value: "+statementString);
+    }
   }
 
   public void setString(int column, String value) {
     try {
       statement.setString(column, value);
     } catch (SQLException e) {
-      System.out.println("Unable to set String value.");
+      System.out.println("Unable to set String value: "+statementString);
     }
   }
 

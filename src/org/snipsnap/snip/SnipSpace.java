@@ -108,6 +108,10 @@ public class SnipSpace implements LinkTester, Loader {
     return storageAll();
   }
 
+  public List getSince(Timestamp date){
+    return storageByDateSince(date);
+  }
+
   public List getByDate(String start, String end) {
     return storageByDateInName(start, end);
   }
@@ -308,15 +312,6 @@ public class SnipSpace implements LinkTester, Loader {
     return finder.execute(size);
   }
 
-  private List storageByRecent(int size) {
-    Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions, " +
-                               " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
-                               " FROM Snip " +
-                               " ORDER by mTime DESC", cache, (Loader) this);
-
-    return finder.execute(size);
-  }
-
   private List storageByUser(String login) {
     Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions, " +
                                " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
@@ -324,6 +319,25 @@ public class SnipSpace implements LinkTester, Loader {
                                " WHERE cUser=?", cache, (Loader) this);
     finder.setString(1, login);
     return finder.execute();
+  }
+
+  private List storageByDateSince(Timestamp date) {
+    Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions, " +
+                               " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
+                               " FROM Snip " +
+                               " WHERE mTime>=?", cache, (Loader) this);
+    finder.setDate(1, date);
+    return finder.execute();
+  }
+
+
+  private List storageByRecent(int size) {
+    Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions, " +
+                               " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
+                               " FROM Snip " +
+                               " ORDER by mTime DESC", cache, (Loader) this);
+
+    return finder.execute(size);
   }
 
   private List storageByComments(Snip parent) {

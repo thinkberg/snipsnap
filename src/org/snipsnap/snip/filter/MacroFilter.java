@@ -72,6 +72,7 @@ public class MacroFilter extends RegexTokenFilter {
         add(new IndexSnipMacro());
         add(new ImageMacro());
         add(new LastLoginMacro());
+        add(new SinceLastLoginMacro());
         add(new HotSnipMacro());
       }
     }

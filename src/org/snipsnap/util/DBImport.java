@@ -176,7 +176,7 @@ public class DBImport {
     String cTime = (String) elements.get("cTime");
     String mTime = (String) elements.get("mTime");
     String llogin = (String) elements.get("lastLogin");
-
+    String lastAccess = (String) elements.get("lastAccess");
 
     User user = um.load(login);
     if (user == null) {
@@ -193,7 +193,7 @@ public class DBImport {
     if (cTime != null) user.setCTime(getTimestamp(cTime));
     if (mTime != null) user.setMTime(getTimestamp(mTime));
     if (llogin != null) user.setLastLogin(getTimestamp(llogin));
-
+    if (lastAccess != null) user.setLastAccess(getTimestamp(lastAccess));
     um.store(user);
   }
 
