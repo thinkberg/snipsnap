@@ -27,8 +27,8 @@
   <s:geoUrl/>
   <s:dublinCore snip="${snip}"/>
   <title><c:out value="${app.configuration.name}" default="SnipSnap"/> :: <c:out value="${snip.name}" default=""/></title>
-  <link type="text/css" href="<c:url value='${app.configuration.url}/default.css'/>" rel="STYLESHEET"/>
-  <link type="text/css" href="<c:url value='${app.configuration.url}/print.css'/>" media="print" rel="STYLESHEET"/>
+  <link type="text/css" href="<c:out value='${app.configuration.path}/default.css'/>" rel="STYLESHEET"/>
+  <link type="text/css" href="<c:out value='${app.configuration.path}/print.css'/>" media="print" rel="STYLESHEET"/>
  </head>
  <body>
   <div id="page-logo">

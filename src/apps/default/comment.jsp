@@ -17,11 +17,11 @@
    <div class="comment-title">
     <a name="<c:out value='${comment.name}'/>"/>
     <h2 class="comment-name">
-     <a href="../raw/<c:out value='${comment.name}'/>"><s:image name="comment"/></a> <c:out value="${comment.modified.short}" escapeXml="false" />
-     <a href="../comments/<c:out value='${snip.nameEncoded}'/>#<c:out value='${comment.name}'/>"><s:image name="permalink"/></a>
+     <a href="<c:out value='${app.configuration.path}'/>/raw/<c:out value='${comment.name}'/>"><s:image name="comment"/></a> <c:out value="${comment.modified.short}" escapeXml="false" />
+     <a href="<c:out value='${app.configuration.path}'/>/comments/<c:out value='${snip.nameEncoded}'/>#<c:out value='${comment.name}'/>"><s:image name="permalink"/></a>
     </h2>
     <s:check roles="Owner" permission="Edit" snip="${comment}">
-      <div class="comment-buttons">[<a href="../exec/edit?name=<c:out value='${comment.name}'/>">edit</a>]</div>
+      <div class="comment-buttons">[<a href="<c:out value='${app.configuration.path}'/>/exec/edit?name=<c:out value='${comment.name}'/>">edit</a>]</div>
     </s:check>
    </div>
    <%-- content --%>
@@ -32,7 +32,7 @@
    <div class="comment-input">
     <a name="post"></a>
     <div class="preview"><div class="comment-content"><c:out value="${preview}" escapeXml="false"/></div></div>
-    <form class="form" name="f" method="post" action="../exec/storecomment#post" enctype="multipart/form-data">
+    <form class="form" name="f" method="post" action="<c:out value='${app.configuration.path}'/>/exec/storecomment#post" enctype="multipart/form-data">
      <table>
       <tr><td><textarea name="content" type="text" cols="80" rows="20" tabindex="0"><c:out value="${content}" escapeXml="true"/></textarea></td></tr>
       <tr><td class="form-buttons">
@@ -47,7 +47,7 @@
    </div>
   </s:check>
   <s:check roles="Authenticated" invert="true" >
-   Please <a href="../exec/login.jsp">login</a> to post a comment.
+   Please <a href="<c:out value='${app.configuration.path}'/>/exec/login.jsp">login</a> to post a comment.
   </s:check>
  </div>
 </div>

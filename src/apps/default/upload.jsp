@@ -18,7 +18,7 @@
      <p/>
    </c:if>
    <div class="snip-input">
-    <form class="form" name="f" method="post" action="../exec/upload" enctype="multipart/form-data">
+    <form class="form" name="f" method="post" action="<c:out value='${app.configuration.path}'/>/exec/upload" enctype="multipart/form-data">
      <input name="name" type="hidden" value="<c:out value="${snip_name}"/>"/>
      <input name="referer" type="hidden" value="<%= request.getHeader("REFERER") %>"/>
      <table class="wiki-table" border="0" cellpaddin="0" cellspacing="0">
@@ -29,7 +29,7 @@
       <c:forEach items="${snip.attachments.all}" var="attachment">
        <tr>
         <s:check roles="Admin"><td><input type="checkbox" name="${attachment.name}"/></td></s:check>
-        <td><a href="<c:url value='../space/${snip.nameEncoded}/${attachment.name}'/>"><c:out value="${attachment.name}"/></a></td>
+        <td><a href="<c:out value='${app.configuration.path}/space/${snip.nameEncoded}/${attachment.name}'/>"><c:out value="${attachment.name}"/></a></td>
         <td><c:out value="${attachment.size}"/></td>
         <td><c:out value="${attachment.date}"/></td>
         <td><c:out value="${attachment.contentType}"/></td>
@@ -51,6 +51,6 @@
   </div>
  </s:check>
  <s:check roles="Authenticated" permission="Edit" snip="${snip}" invert="true">
-  <a href="../exec/login.jsp">Please login to attach files!</a>
+  <a href="<c:out value='${app.configuration.path}'/>/exec/login.jsp">Please login to attach files!</a>
  </s:check>
 </div>

@@ -14,7 +14,7 @@
   <c:if test="${not empty preview}">
    <div class="preview"><div class="snip-content"><c:out value="${preview}" escapeXml="false"/></div></div>
   </c:if>
-   <form class="form" method="post" action="../exec/storepost" enctype="multipart/form-data">
+   <form class="form" method="post" action="<c:out value='${app.configuration.path}'/>/exec/storepost" enctype="multipart/form-data">
     <table>
      <tr><td>Title<br><input name="title" value="<c:out value="${title}" escapeXml="false"/>"/></td></tr>
      <tr><td><textarea name="content" type="text" cols="80" rows="20"><c:out value="${content}" escapeXml="true"/></textarea></td></tr>
@@ -29,7 +29,7 @@
    </form>
   </s:check>
   <s:check roles="Editor" invert="true">
-   Please <a href="../exec/login.jsp">login!</a> as editor.
+   Please <a href="<c:out value='${app.configuration.path}'/>/exec/login.jsp">login!</a> as editor.
   </s:check>
  </div>
 </div>

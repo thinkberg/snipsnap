@@ -58,6 +58,7 @@ public class URLEncoderDecoder {
     dontNeedEncoding.set('_');
     dontNeedEncoding.set('.');
     dontNeedEncoding.set('*');
+    dontNeedEncoding.set('/');
   }
 
 

@@ -80,7 +80,9 @@ public class SnipLink {
    * Append a create link for the specified name.
    */
   public static Writer appendCreateLink(Writer writer, String name) throws IOException {
-    writer.write("&#91;create <a href=\"../exec/edit?name=");
+    writer.write("&#91;create <a href=\"");
+    writer.write(getExecRoot());
+    writer.write("/edit?name=");
     writer.write(SnipLink.encode(name));
     writer.write("\">");
     writer.write(name);
@@ -89,12 +91,13 @@ public class SnipLink {
   }
 
   public static StringBuffer appendCreateLink(StringBuffer buffer, String name) {
-    buffer.append("&#91;create <a href=\"../exec/edit?name=");
+    buffer.append("&#91;create <a href=\"");
+    buffer.append(getExecRoot());
+    buffer.append("/edit?name=");
     buffer.append(SnipLink.encode(name));
     buffer.append("\">").append(name).append("</a>&#93;");
     return buffer;
   }
-
 
   public static String createLink(String name) {
     StringBuffer buffer = new StringBuffer();
@@ -169,23 +172,22 @@ public class SnipLink {
 
   public static String absoluteLink(String path) {
     String contextPath = Application.get().getConfiguration().getPath();
-    System.out.println("--> " + contextPath);
     return (contextPath != null ? contextPath : "")  + path;
   }
 
-  private static String getImageRoot() {
+  public static String getImageRoot() {
     return absoluteLink("/images");
   }
 
-  private static String getSpaceRoot() {
+  public static String getSpaceRoot() {
     return absoluteLink("/space");
   }
 
-  private static String getExecRoot() {
+  public static String getExecRoot() {
     return absoluteLink("/exec");
   }
 
-  private static String getCommentsRoot() {
+  public static String getCommentsRoot() {
     return absoluteLink("/comments");
   }
 

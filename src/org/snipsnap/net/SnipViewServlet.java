@@ -63,18 +63,22 @@ public class SnipViewServlet extends HttpServlet {
     }
     name = name.replace('+', ' ');
 
-    // handle sub snips and attachments (TODO: handle more than one level)
-    String subname = null;
-    int slashIndex = name.indexOf('/');
-    if (slashIndex != -1) {
-      subname = name.substring(slashIndex + 1);
-      name = name.substring(0, slashIndex);
-      Logger.log(Logger.DEBUG, name + ": attachment: " + subname);
-    }
-
     // TODO: make load from snipspace work with name spaces
     // load snip and set attributes for request
     Snip snip = SnipSpaceFactory.getInstance().load(name);
+
+    String subname = null;
+    if(null == snip) {
+      // handle sub snips and attachments (TODO: handle more than one level)
+      int slashIndex = name.indexOf('/');
+      if (slashIndex != -1) {
+        subname = name.substring(slashIndex + 1);
+        name = name.substring(0, slashIndex);
+        Logger.log(Logger.DEBUG, name + ": attachment: " + subname);
+      }
+      snip = SnipSpaceFactory.getInstance().load(name);
+    }
+
 
     request.setAttribute("snip", snip);
     request.setAttribute("URI", request.getRequestURL().toString());

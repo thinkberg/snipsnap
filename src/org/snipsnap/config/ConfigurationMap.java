@@ -198,7 +198,7 @@ public class ConfigurationMap {
       replaced.append(getConfDir().getPath());
       int endIdx = idx + "${CONFDIR}".length();
       if (endIdx < value.length()) {
-        replaced.append(value.substring(idx + endIdx));
+        replaced.append(value.substring(endIdx));
       }
       return replaced.toString();
     }
@@ -293,7 +293,10 @@ public class ConfigurationMap {
   }
 
   public boolean isInstalled() {
-    return get(Configuration.APP_JDBC_URL) != null;
+    if(getFile().exists() && new File(getConfDir(), "db").exists()) {
+      return true;
+    }
+    return false;
   }
 
   public String getVersion() {

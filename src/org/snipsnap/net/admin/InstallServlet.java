@@ -56,9 +56,17 @@ public class InstallServlet extends HttpServlet {
       session.setAttribute(ATT_APPLICATION, app);
       session.setAttribute(ATT_CONFIG, config);
 
-      RequestDispatcher dispatcher = request.getRequestDispatcher("/install/install.jsp");
-      dispatcher.forward(request, response);
-      return;
+      if(request.getParameter("install") == null) {
+        if(!request.getContextPath().equals(config.getPath())) {
+          config.set(Configuration.APP_PATH, request.getContextPath());
+        }
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/install/install.jsp");
+        dispatcher.forward(request, response);
+        return;
+      } else {
+        
+        System.out.println("INSTALLING: "+request);
+      }
     }
     response.sendRedirect(SnipLink.absoluteLink("/"));
   }

@@ -1,5 +1,6 @@
 0.5
 
+- Added Feature: made snip names slash '/' insensitive
 - Fixed bug: links and images no longer contain complete URLs
 - Fixed bug: Reworked URL detection
 - Developer: completely reorganized Configuration (macros need recompile!)

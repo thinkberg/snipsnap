@@ -29,6 +29,7 @@ import org.snipsnap.config.Configuration;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
+import org.radeox.util.logging.Logger;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -68,9 +69,12 @@ public class InitFilter implements Filter {
     HttpSession session = request.getSession(true);
     Application app = Application.getInstance(session);
     Configuration config = app.getConfiguration();
-
     session.setAttribute("app", app);
+
+    // configure the url (base context path) for the current request
     if ("true".equals(config.getRealAutodetect())) {
+      // apache proxies provide the host and port of the original request
+      // however, they do not provide the context path (TODO maybe Apache 2)
       String xForwardedHost = request.getHeader("X-Forwarded-Host");
       if (xForwardedHost != null) {
         int colonIndex = xForwardedHost.indexOf(':');
@@ -98,12 +102,12 @@ public class InitFilter implements Filter {
       request.setCharacterEncoding(config.getEncoding());
       request = new EncRequestWrapper(request, request.getCharacterEncoding());
     } catch (UnsupportedEncodingException e) {
-      // do nothing ...
+      Logger.log(Logger.FATAL, "unsupported encoding '"+config.getEncoding()+"'", e);
+
     }
 
-    // get an instance of the user manager and check for a logged in user
+    // check for a logged in user
     UserManager um = UserManager.getInstance();
-
     User user = app.getUser();
     if (user == null) {
       user = um.getUser(request, (HttpServletResponse) response);
@@ -140,7 +144,9 @@ public class InitFilter implements Filter {
     if (uri != null) {
       paramMap.put("URI", config.getUrl(uri));
     } else {
-      paramMap.put("URI", config.getUrl(request.getContextPath() + (path != null ? path : "")));
+      String base = config.getPath() + (path != null ? path : "");
+      String pathInfo = request.getPathInfo();
+      paramMap.put("URI", config.getUrl(base + (pathInfo != null ? pathInfo : "")));
     }
     paramMap.put("RSS", config.getUrl("/exec/rss"));
     app.setParameters(paramMap);

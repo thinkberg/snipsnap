@@ -378,7 +378,7 @@ public class SnipImpl implements Snip {
       Attachment att = (Attachment) it.next();
       File file = new File(fileStorePath, att.getLocation());
       if (file.exists()) {
-        tmp.append(SnipLink.createLink("../space/" + SnipLink.encode(name), att.getName(), att.getName()));
+        tmp.append(SnipLink.createLink(SnipLink.getSpaceRoot() + SnipLink.encode(name), att.getName(), att.getName()));
         tmp.append(" (").append(att.getSize()).append(")");
         if (it.hasNext()) {
           tmp.append("<br/> ");

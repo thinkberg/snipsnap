@@ -9,7 +9,7 @@
 
 <s:check roles="Authenticated" permission="Edit" snip="${snip}">
   <p>Add a label to <b><c:out value="${snip.name}"/></b> (step 2/2)</p>
-  <form name="form" method="post" action="../exec/storelabel">
+  <form name="form" method="post" action="<c:out value='${app.configuration.path}'/>/exec/storelabel">
     <table border="0" cellpadding="0" cellspacing="2">
       <tr><td><c:out value="${label.inputProxy}" escapeXml="false"/></td></tr>
       <tr><td align="right">
@@ -24,5 +24,5 @@
 </s:check>
 
 <s:check roles="Authenticated" permission="Edit" snip="${snip}" invert="true">
-  <a href="../exec/login.jsp">Please login!</a>
+  <a href="<c:out value='${app.configuration.path}'/>/exec/login.jsp">Please login!</a>
 </s:check>

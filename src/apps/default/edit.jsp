@@ -16,7 +16,7 @@
   </c:if>
   <div class="snip-content">
    <div class="snip-input">
-    <form class="form" name="f" method="post" action="../exec/store" enctype="multipart/form-data">
+    <form class="form" name="f" method="post" action="<c:out value='${app.configuration.path}'/>/exec/store" enctype="multipart/form-data">
      <table>
       <tr><td><textarea name="content" type="text" cols="80" rows="20"><c:out value="${content}" escapeXml="true"/></textarea></td></tr>
       <tr><td class="form-buttons">

@@ -62,6 +62,10 @@ public class InitServlet extends GenericServlet {
         config.load(configFile);
       } else {
         config.setFile(configFile);
+        if(!config.isInstalled()) {
+          System.out.println("Unconfigured SnipSnap. Please visit the web site");
+          System.out.println("and finish the installation procedure.");
+        }
       }
       try {
         Logger.setHandler((LogHandler) Class.forName(config.getLogger()).newInstance());
