@@ -21,4 +21,5 @@
 <div class="snip-content">
  <%-- <div class="snip-label">[[<c:forEach items="${snip.labels.ids}" var="label"><c:out value="label"/></c:forEach>]]</div> --%>
  <c:out value="${snip.XMLContent}" escapeXml="false" />
+ <c:out value="${snip.attachments.listString}" escapeXml="false" />
 </div>

@@ -211,14 +211,22 @@
   <target description="build theme jar" name="theme-jar">
     <jar destfile="${jar}/${appname}-theme-blue.jar" excludes="**/CVS">
       <fileset dir="${src}/theme/blue" includes="**"/>
+      <zipfileset dir="${src}/theme" prefix="WEB-INF">
+        <include name="web.xml"/>
+      </zipfileset>
     </jar>
     <jar destfile="${jar}/${appname}-theme-sky.jar" excludes="**/CVS">
       <fileset dir="${src}/theme/sky" includes="**"/>
+      <zipfileset dir="${src}/theme" prefix="WEB-INF">
+        <include name="web.xml"/>
+      </zipfileset>
     </jar>
     <jar destfile="${jar}/${appname}-theme-orange.jar" excludes="**/CVS">
       <fileset dir="${src}/theme/orange" includes="**"/>
+      <zipfileset dir="${src}/theme" prefix="WEB-INF">
+        <include name="web.xml"/>
+      </zipfileset>
     </jar>
-
   </target>
 
   <target name="compile-jsp" description="compile jsp files">

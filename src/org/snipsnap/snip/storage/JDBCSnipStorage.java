@@ -31,6 +31,7 @@ import org.snipsnap.jdbc.Finder;
 import org.snipsnap.jdbc.FinderFactory;
 import org.snipsnap.jdbc.JDBCCreator;
 import org.snipsnap.snip.*;
+import org.snipsnap.snip.attachment.Attachments;
 import org.snipsnap.snip.label.Labels;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.util.ConnectionManager;

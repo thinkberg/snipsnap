@@ -26,6 +26,9 @@ package org.snipsnap.config;
 
 import java.io.*;
 import java.util.Properties;
+import java.lang.reflect.Proxy;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
 
 /**
  * A configuration object. Contains information about server and admin login.

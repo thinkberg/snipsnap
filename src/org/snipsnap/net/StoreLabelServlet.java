@@ -33,6 +33,7 @@ import org.snipsnap.snip.label.LabelManager;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServlet;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -45,7 +46,7 @@ import java.util.Map;
  * @author Stephan J. Schmidt
  * @version $Id$
  */
-public class StoreLabelServlet extends SnipSnapServlet {
+public class StoreLabelServlet extends HttpServlet {
 
   protected void doPost(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
     doGet(httpServletRequest, httpServletResponse);

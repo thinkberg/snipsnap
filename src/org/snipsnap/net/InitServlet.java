@@ -29,20 +29,33 @@ import org.snipsnap.config.Configuration;
 import org.radeox.util.logging.LogHandler;
 import org.radeox.util.logging.Logger;
 
-import javax.servlet.*;
+import javax.servlet.GenericServlet;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import java.io.IOException;
 
 /**
- * Only used to initialize configuration.
+ * Only used to initialize configuration. The configuration file may either be set using
+ * a servlet context variable or as a servlet parameter "config".
+ *
  * @author Matthias L. Jugel
  * @version $Id$
  */
 public class InitServlet extends GenericServlet {
   public void init(ServletConfig servletConfig) throws ServletException {
+    // check servlet context and then local servlet parameter
     String configFile = (String) servletConfig.getServletContext().getAttribute(Configuration.INIT_PARAM);
     if (null == configFile) {
-      configFile = servletConfig.getServletContext().getRealPath("WEB-INF/application.conf");
+      configFile = servletConfig.getServletContext().getRealPath(
+        servletConfig.getServletContext().getInitParameter(Configuration.INIT_PARAM));
+      if (configFile == null) {
+        throw(new ServletException("unable to find configuration"));
+      }
     }
+
+    // create new configuration instance
     try {
       AppConfiguration config = AppConfiguration.getInstance(configFile);
       try {

@@ -25,7 +25,6 @@
 package org.snipsnap.net.admin;
 
 import org.snipsnap.app.Application;
-import org.snipsnap.net.SnipSnapServlet;
 import org.snipsnap.snip.HomePage;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.Roles;
@@ -37,6 +36,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServlet;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -49,7 +49,7 @@ import java.util.Set;
  * @author Matthias L. Jugel
  * @version $Id$
  */
-public class UserManagerServlet extends SnipSnapServlet {
+public class UserManagerServlet extends HttpServlet {
 
   public final static String EDIT = "edit";
   public final static String UPDATE = "update";

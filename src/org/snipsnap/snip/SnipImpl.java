@@ -29,6 +29,7 @@ import org.radeox.EngineManager;
 import org.radeox.util.logging.Logger;
 import org.radeox.filter.context.FilterContext;
 import org.snipsnap.snip.label.Labels;
+import org.snipsnap.snip.attachment.Attachments;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.User;
 import org.snipsnap.interceptor.Aspects;
@@ -364,7 +365,6 @@ public class SnipImpl implements Snip {
   public String toXML() {
 
     long start = Application.get().start();
-
     FilterContext context = new SnipFilterContext((Snip) Aspects.getThis());
     String xml = EngineManager.getInstance("snipsnap").render(content, context);
 
@@ -379,6 +379,7 @@ public class SnipImpl implements Snip {
       tmp = toXML();
     } catch (Exception e) {
       tmp = "<span class=\"error\">" + e + "</span>";
+      e.printStackTrace();
       Logger.warn("SnipImpl: unable to get XMLContent", e);
     } catch (Error err) {
       err.printStackTrace();

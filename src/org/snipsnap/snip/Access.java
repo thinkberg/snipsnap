@@ -62,7 +62,7 @@ public class Access {
       if (null != referrer) {
         // Decode URL to remove jsessionid for example
         // referrer =
-        String domain = Application.get().getConfiguration().getDomain();
+        String domain = Application.get().getConfiguration().getUrl();
         if (referrer.startsWith(domain)) {
           int index = referrer.indexOf("/space/");
           // Does the referrer point to a snip ?

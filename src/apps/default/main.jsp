@@ -28,28 +28,7 @@
   <title><c:out value="${app.configuration.name}" default="SnipSnap"/> :: <c:out value="${snip.name}" default=""/></title>
   <link type="text/css" href="<c:url value='../default.css'/>" rel="STYLESHEET"/>
   <link type="text/css" href="<c:url value='../print.css'/>" media="print" rel="STYLESHEET"/>
-  <script language="Javascript" type="text/javascript">
-   <!--
-    function showHide(obj)
-    {
-      if (document.layers)
-      {
-        current = (document.layers[obj].display == 'none') ? 'block' : 'none';
-        document.layers[obj].display = current;
-      }
-      else if (document.all)
-      {
-        current = (document.all[obj].style.display == 'none') ? 'block' : 'none';
-        document.all[obj].style.display = current;
-      }
-      else if (document.getElementById)
-      {
-        vista = (document.getElementById(obj).style.display == 'none') ? 'block' : 'none';
-        document.getElementById(obj).style.display = vista;
-      }
-    }
-   // -->
-  </script>
+
  </head>
  <body>
   <div id="page-logo">

@@ -66,6 +66,10 @@ public class ApplicationLoader {
                 errors++;
                 e.printStackTrace();
                 System.out.println("WARNING: unable to load application '" + files[i].getName() + "': " + e.getMessage());
+              } catch(Error err) {
+                errors++;
+                err.printStackTrace();
+                System.out.println("FATAL: unable to load application: '" + files[i].getName() + "': " + err.getMessage());
               }
             }
           }
@@ -177,7 +181,7 @@ public class ApplicationLoader {
     }
 
     WebApplicationContext context =
-        installServer.addWebApplication(contextPath, appRoot.getAbsolutePath());
+      installServer.addWebApplication(contextPath, appRoot.getAbsolutePath());
     context.setAttribute(AppConfiguration.INIT_PARAM, config.getFile().getAbsolutePath());
     context.start();
 

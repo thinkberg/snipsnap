@@ -34,6 +34,7 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServlet;
 import java.io.IOException;
 
 
@@ -43,7 +44,7 @@ import java.io.IOException;
  * @author Stephan J. Schmidt
  * @version $Id$
  */
-public class AddLabelServlet extends SnipSnapServlet {
+public class AddLabelServlet extends HttpServlet {
 
   protected void doPost(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
     doGet(httpServletRequest, httpServletResponse);

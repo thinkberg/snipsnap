@@ -69,13 +69,13 @@ public class ImportServlet extends HttpServlet {
 
     boolean overwrite = request.getParameter("overwrite") != null;
     String data[] = request.getParameterValues("data");
-    int importMask = 0;
+    int importMask = overwrite ? XMLSnipImport.OVERWRITE : 0;
     for (int i = 0; i < data.length; i++) {
       if ("users".equals(data[i])) {
-        importMask = importMask | XMLSnipExport.USERS;
+        importMask = importMask | XMLSnipImport.IMPORT_USERS;
       }
       if ("snips".equals(data[i])) {
-        importMask = importMask | XMLSnipExport.SNIPS;
+        importMask = importMask | XMLSnipImport.IMPORT_SNIPS;
       }
     }
 

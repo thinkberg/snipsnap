@@ -41,6 +41,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServlet;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -51,7 +52,7 @@ import java.io.InputStream;
  * @author Matthias L. Jugel
  * @version $Id$
  */
-public class SnipStoreServlet extends SnipSnapServlet {
+public class SnipStoreServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
@@ -62,37 +63,6 @@ public class SnipStoreServlet extends SnipSnapServlet {
     String content = request.getParameter("content");
     if (request.getParameter("preview") != null) {
       request.setAttribute("preview", SnipFormatter.toXML(snip, content));
-      RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/edit");
-      dispatcher.forward(request, response);
-      return;
-    } else if (request.getParameter("upload") != null) {
-      // @TODO refactor out of this servlet
-      MultipartWrapper wrapper = (MultipartWrapper) request;
-      BodyPart part = wrapper.getBodyPart("image");
-      try {
-        if (part != null && wrapper.getFileContentType("image") != null && part.getFileName() != null) {
-          AppConfiguration config = Application.get().getConfiguration();
-          File imageDir = new File(config.getFile().getParentFile().getParentFile(), "images");
-          File file = new File(imageDir, "image-" + name + "-" + part.getFileName());
-          System.err.println("Uploading '" + part.getFileName() + "' to '" + file.getAbsolutePath() + "'");
-          FileOutputStream out = new FileOutputStream(file);
-          InputStream in = part.getInputStream();
-          byte[] buf = new byte[4096];
-          int length = 0;
-          while ((length = in.read(buf)) != -1) {
-            out.write(buf, 0, length);
-          }
-          out.close();
-          in.close();
-        } else {
-          request.setAttribute("error", "Please provide an image file for upload.");
-        }
-      } catch (IOException e) {
-        request.setAttribute("error", "I/O Error while uploading image.");
-        e.printStackTrace();
-      } catch (MessagingException e) {
-        request.setAttribute("error", "Uploaded image may be corrupted.");
-      }
       RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/edit");
       dispatcher.forward(request, response);
       return;

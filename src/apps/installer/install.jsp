@@ -34,7 +34,7 @@
     </tr>
     <tr <c:if test="${errors['tagline'] != null}">class="error-position"</c:if>>
       <td valign="top"><span class="nobr">Website Tagline:</span></td>
-      <td valign="top"><input name="tagline" type="text" value=""></td>
+      <td valign="top"><input name="tagline" type="text" value="<c:out value='${config.tagLine}'/>"></td>
       <td valign="top">Give your Website a tagline.<br/>
       The tagline should describe your site in
       a very short sentence, like <i>"Stories about Brian."</i> or
@@ -42,19 +42,19 @@
     </tr>
     <tr <c:if test="${errors['logoimage'] != null}">class="error-position"</c:if>>
       <td valign="top"><span class="nobr">Logo Image Name:</span></td>
-      <td valign="top"><input name="logoimage" type="text" value=""></td>
+      <td valign="top"><input name="logoimage" type="text" value="<c:out value='${config.logoImage}'/>"></td>
       <td valign="top"><b>(optional)</b> If you already have a logo for your site put the name here. Leave
       empty if you want to use the Name above as Logo.<br/>
       If it is a PNG image, just use the name without the extension. For <i>"Logo.png"</i> use <i>"Logo"</i>.
       Any other format should include the extension: For <i>"Logo.jpg"</i> use <i>"Logo.jpg"</i>.
       The file itself should be placed in the images directory of your installed application.</td>
     </tr>
-    <tr <c:if test="${errors['skin'] != null}">class="error-position"</c:if>>
+    <tr <c:if test="${errors['theme'] != null}">class="error-position"</c:if>>
       <td valign="top"><span class="nobr">Theme:</span></td>
       <td valign="top" colspan="2">
         <table border="0" cellpadding="0" cellspacing="2">
           <tr>
-            <td><input name="theme" type="radio" value="blue" checked="checked"> Blue Life<br/>
+            <td><input name="theme" type="radio" value="blue"> Blue Life<br/>
             <img src="<c:url value='/images/blue.png'/>" alt="Blue Life Screenshot"/></td>
             <td><input name="theme" type="radio" value="sky"> Sky<br/>
             <img src="<c:url value='/images/sky.png'/>" alt="Sky Screenshot"/></td>

@@ -27,6 +27,7 @@ package org.snipsnap.snip;
 
 import org.snipsnap.serialization.Appendable;
 import org.snipsnap.snip.label.Labels;
+import org.snipsnap.snip.attachment.Attachments;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.User;
 import org.radeox.util.Nameable;

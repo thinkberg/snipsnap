@@ -45,6 +45,8 @@ public class AppConfiguration extends Configuration {
   public final static String APP_HOST = "app.host";
   public final static String APP_PORT = "app.port";
   public final static String APP_PATH = "app.path";
+  public final static String APP_URL = "app.url";
+  public final static String APP_THEME = "app.theme";
   public final static String APP_PERM = "app.perm";
   public final static String APP_DOMAIN = "app.domain";
   public final static String APP_MAILHOST = "app.mail.host";
@@ -60,6 +62,7 @@ public class AppConfiguration extends Configuration {
   public final static String APP_LOCALE = "app.locale";
   public final static String APP_JDBC_URL = "app.jdbc.url";
   public final static String APP_JDBC_DRIVER = "app.jdbc.driver";
+  public final static String APP_INDEX_PATH = "app.index.path";
   public final static String APP_COORDINATES = "app.geoCoordinates";
 
   public final static String PERM_NOTIFICATION = "notification";
@@ -146,38 +149,25 @@ public class AppConfiguration extends Configuration {
     return getProperty(AppConfiguration.APP_PATH);
   }
 
-  public void setDomain(String domain) {
-    setProperty(AppConfiguration.APP_DOMAIN, domain);
-  }
-
-  public String getDomain() {
-    // returns something like "http://snipsnap.org"
-    return getProperty(AppConfiguration.APP_DOMAIN);
+  /**
+   *  set the base URL of the application including
+   */
+  public void setUrl(String url) {
+    setProperty(AppConfiguration.APP_URL, url);
   }
 
   /**
-   * Return root url to Snipsnap instance
+   * Return base url to Snipsnap instance
    */
   public String getUrl() {
-    StringBuffer url = new StringBuffer();
-    String domain = getProperty(AppConfiguration.APP_DOMAIN);
-    if (domain != null && domain.length() > 0) {
-      url.append(domain);
-    } else {
-      url.append("http://");
-      try {
-        url.append(getHost() == null ? InetAddress.getLocalHost().getHostName() : getHost());
-      } catch (UnknownHostException e) {
-        url.append(System.getProperty("host", "localhost"));
+    String url = getProperty(AppConfiguration.APP_URL);
+    if(null == url) {
+      url = getProperty(AppConfiguration.APP_DOMAIN);
+      if(url != null) {
+        System.out.println("Please edit application.conf and change app.domain to app.url!");
       }
-      int port = getPort();
-      if (port != 80) {
-        url.append(":");
-        url.append(port);
-      }
-      url.append(getContextPath());
     }
-    return url.toString();
+    return url;
   }
 
   /**
@@ -298,6 +288,10 @@ public class AppConfiguration extends Configuration {
     return getProperty(AppConfiguration.APP_COORDINATES);
   }
 
+  public String getIndexPath() {
+    return getProperty(AppConfiguration.APP_INDEX_PATH);
+  }
+
   public boolean allow(String action) {
     return "allow".equals(getProperty(AppConfiguration.APP_PERM + "." + action));
   }
@@ -308,5 +302,9 @@ public class AppConfiguration extends Configuration {
 
   public boolean allowExternalImages() {
     return allow(AppConfiguration.PERM_EXTERNAL_IMAGES);
+  }
+
+  public boolean isInstalled() {
+    return getJDBCURL() != null;
   }
 }

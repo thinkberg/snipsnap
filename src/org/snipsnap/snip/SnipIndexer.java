@@ -47,13 +47,17 @@ import java.io.IOException;
  */
 
 public class SnipIndexer {
-  //private static String indexFile = "./index";
   private static final String[] searchFields = new String[]{"content", "title"};
   private File indexFile;
 
   private File indexFile() {
     if (indexFile == null) {
-      indexFile = new File(Application.get().getConfiguration().getFile().getParentFile(), "index");
+      String file = Application.get().getConfiguration().getIndexPath();
+      if(null == file) {
+        indexFile = new File(Application.get().getConfiguration().getFile().getParent(), "index");
+      } else {
+        indexFile = new File(Application.get().getConfiguration().getIndexPath());
+      }
     }
     return indexFile;
   }

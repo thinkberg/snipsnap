@@ -34,6 +34,7 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServlet;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -48,7 +49,7 @@ import java.util.Map;
  * @author Matthias L. Jugel
  * @version $Id$
  */
-public class SnipEditServlet extends SnipSnapServlet {
+public class SnipEditServlet extends HttpServlet {
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {

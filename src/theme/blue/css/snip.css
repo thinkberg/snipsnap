@@ -180,3 +180,12 @@ h2.comment-name a {
   background-color: #eeeeee;
   color: inherit;
 }
+
+.attachments {
+  float: right;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  border: 1px solid black;
+  width: 15%;
+}

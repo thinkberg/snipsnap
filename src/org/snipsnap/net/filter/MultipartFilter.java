@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Iterator;
 
 /**
  * A ServletFilter that parses multipart/form-data requests and wraps the data into
@@ -56,21 +57,6 @@ public class MultipartFilter implements Filter {
   public void doFilter(ServletRequest request, ServletResponse response,
                        FilterChain chain) throws IOException, ServletException {
     HttpServletRequest req = (HttpServletRequest) request;
-
-
-    // if in doubt use application character encoding
-    if (null == req.getCharacterEncoding()) {
-      HttpSession session = req.getSession();
-      AppConfiguration config = Application.getInstance(session).getConfiguration();
-      req.setCharacterEncoding(config.getEncoding());
-    }
-
-    try {
-      req = new EncRequestWrapper((HttpServletRequest) req, req.getCharacterEncoding());
-    } catch (UnsupportedEncodingException e) {
-      req = (HttpServletRequest) req;
-    }
-
     String type = req.getHeader("Content-Type");
 
     // If this is not a multipart/form-data request continue

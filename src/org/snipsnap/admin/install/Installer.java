@@ -82,6 +82,20 @@ public class Installer extends HttpServlet {
     PrintWriter out = new PrintWriter(System.out);
     writeMessage(out, "Installing SnipSnap ...");
 
+    String tagline = request.getParameter("tagline");
+    config.setTagLine(tagline != null && tagline.length() > 0 ? tagline : "The easy Weblog and Wiki Software.");
+
+    String logo = request.getParameter("logoimage");
+    if (logo != null && logo.length() > 0) {
+      config.setLogoImage(logo);
+    }
+
+    config.setLogger("org.radeox.util.logging.NullLogger");
+    config.setProperty(AppConfiguration.APP_CACHE, "full");
+    config.setProperty(AppConfiguration.APP_TIMEZONE, "+1.00");
+    config.setProperty(AppConfiguration.APP_WEBLOG_DATE_FORMAT, "EEEE, dd. MMMM yyyy");
+    config.setProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_WEBLOGS_PING, "allow");
+
     // set application name ...
     writeMessage(out, "Checking application name ...");
     String appName = request.getParameter("appname");
@@ -152,7 +166,7 @@ public class Installer extends HttpServlet {
 
     String domain = request.getParameter("domain");
     if (domain != null) {
-      config.setDomain(domain);
+      config.setUrl(domain);
     }
 
     String mailhost = request.getParameter("mailhost");
@@ -196,7 +210,12 @@ public class Installer extends HttpServlet {
     }
 
     String theme = request.getParameter("theme");
+    if(theme == null || theme.length() == 0) {
+      errors.put("theme", "Please select a theme to install.");
+      sendError(session, errors, request, response);
+    }
     if (theme != null && theme.length() != 0) {
+      config.setProperty(AppConfiguration.APP_THEME, "/"+theme);
       writeMessage(out, "Extracting theme ...");
       try {
         JarFile themeJar = new JarFile("lib/snipsnap-theme-" + theme + ".jar", true);
@@ -271,19 +290,6 @@ public class Installer extends HttpServlet {
       CreateDB.insertData(config, new FileInputStream(themeSnip));
     }
 
-    String tagline = request.getParameter("tagline");
-    config.setTagLine(tagline != null && tagline.length() > 0 ? tagline : "The easy Weblog and Wiki Software.");
-
-    String logo = request.getParameter("logoimage");
-    if (logo != null && logo.length() > 0) {
-      config.setLogoImage(logo);
-    }
-
-    config.setLogger("org.radeox.util.logging.NullLogger");
-    config.setProperty(AppConfiguration.APP_CACHE, "full");
-    config.setProperty(AppConfiguration.APP_TIMEZONE, "+1.00");
-    config.setProperty(AppConfiguration.APP_WEBLOG_DATE_FORMAT, "EEEE, dd. MMMM yyyy");
-    config.setProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_WEBLOGS_PING, "allow");
     config.store();
 
     writeMessage(out, "Starting application ...");

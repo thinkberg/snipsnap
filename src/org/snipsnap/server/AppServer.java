@@ -86,7 +86,7 @@ public class AppServer {
     if (enc != null && enc.length() > 0) {
       System.setProperty("file.encoding", enc);
     } else {
-      System.setProperty("file.encoding", "iso-8859-1");
+      System.setProperty("file.encoding", "UTF-8");
     }
 
     // start jetty server and install web application

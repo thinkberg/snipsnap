@@ -34,6 +34,7 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServlet;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -44,7 +45,7 @@ import java.util.Map;
  * @author Matthias L. Jugel
  * @version $Id$
  */
-public class Layouter extends SnipSnapServlet {
+public class Layouter extends HttpServlet {
 
   public final static String ATT_PAGE = "page";
 
@@ -60,29 +61,6 @@ public class Layouter extends SnipSnapServlet {
     if (null == layout) {
       layout = SnipLink.decode(request.getPathInfo());
     }
-
-    // why copy? because, getParamMap returns an unmodifyable map
-    Map params = request.getParameterMap();
-    Iterator iterator = params.keySet().iterator();
-    Map paramMap = new HashMap();
-    while (iterator.hasNext()) {
-      String key = (String) iterator.next();
-      String[] values = (String[]) params.get(key);
-      paramMap.put(key, values[0]);
-    }
-    Application.get().setParameters(paramMap);
-
-    String uri = (String) request.getAttribute("URI");
-    Logger.log("URI: " + uri);
-    AppConfiguration config = Application.get().getConfiguration();
-    if (uri != null) {
-      paramMap.put("URI", config.getUrl(uri));
-    } else {
-      String path = request.getPathInfo();
-      paramMap.put("URI", config.getUrl(request.getServletPath() + (path != null ? path : "")));
-    }
-    paramMap.put("RSS", config.getUrl("/exec/rss"));
-    Application.get().setParameters(paramMap);
 
     if (null == layout || "/".equals(layout)) {
       response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));

@@ -9,3 +9,6 @@ Baiduspider http://www.baidu.com/search/spider.htm IGNORE
 Infoseek http://www.infoseek.com/ IGNORE
 BlogBot ??? IGNORE
 TurnitinBot http://www.turnitin.com/robot/crawlerinfo.html IGNORE
+Mercator ??? IGNORE
+EvilBot ??? IGNORE
+Teoma ??? IGNORE

@@ -1,5 +1,7 @@
 0.3.4
 
+- Added Feature: Attachments for snips
+- WAR: introduced configuration properties for indexer and config files
 - Developer: Refactored the rendering engine to form sub-project Radeox
 - Added Service class for plugin loading (instead of undocumented sun class)
 - Removed Transliterate in favour of UTF-8

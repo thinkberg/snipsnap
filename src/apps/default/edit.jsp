@@ -28,27 +28,11 @@
      </table>
      <input name="name" type="hidden" value="<c:out value="${snip_name}"/>"/>
      <input name="referer" type="hidden" value="<%= request.getHeader("REFERER") %>"/>
-     <%-- @TODO refactor for use with other forms --%>
-     <a href="#" onClick="showHide('imageUpload'); return false;">Show/Hide Image Upload</a><p/>
-     <div id="imageUpload" style="display: none;" class="preview">
-      <table border="0" cellpaddin="0" cellspacing="0">
-       <c:forEach items="${images}" var="image">
-        <tr><td>{image:<c:out value="${ids[image]}"/>}</td><td><s:image name="${image}"/></td></tr>
-       </c:forEach>
-      </table>
-      <p/>
-      <c:if test="${error != null}">
-       <div class="error"><c:out value="${error}"/></div>
-       <p/>
-      </c:if>
-      <input name="image" type="file" maxlength="1000000" accept="image/*"/>
-      <input value="Upload Image" name="upload" type="submit"/>
-     </div>
     </form>
    </div>
   </div>
  </s:check>
  <s:check roles="Authenticated" permission="Edit" snip="${snip}" invert="true">
-  <a href="../exec/login.jsp">Please login!</a>
+  <a href="../exec/login.jsp">Please login before editing!</a>
  </s:check>
 </div>

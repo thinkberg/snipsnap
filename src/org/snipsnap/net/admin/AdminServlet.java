@@ -26,7 +26,6 @@ package org.snipsnap.net.admin;
 
 import org.snipsnap.app.Application;
 import org.snipsnap.net.Layouter;
-import org.snipsnap.net.SnipSnapServlet;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
@@ -36,6 +35,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServlet;
 import java.io.IOException;
 
 /**
@@ -44,7 +44,7 @@ import java.io.IOException;
  * @author Matthias L. Jugel
  * @version $Id$
  */
-public class AdminServlet extends SnipSnapServlet {
+public class AdminServlet extends HttpServlet {
 
   protected final static String ATT_USERMANAGER = "usermanager";
   protected final static String ATT_CONFIG = "config";
