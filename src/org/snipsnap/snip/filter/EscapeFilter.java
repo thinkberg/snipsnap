@@ -8,6 +8,7 @@
 package com.neotis.snip.filter;
 
 import com.neotis.snip.filter.regex.RegexTokenFilter;
+import com.neotis.snip.Snip;
 import org.apache.oro.text.regex.MatchResult;
 
 public class EscapeFilter extends RegexTokenFilter {
@@ -16,7 +17,7 @@ public class EscapeFilter extends RegexTokenFilter {
     super("\\\\(\\\\\\\\)|\\\\(.)");
   }
 
-  public String handleMatch(MatchResult result) {
+  public String handleMatch(MatchResult result, Snip snip) {
     if (result.group(1) == null) {
       String match = result.group(2);
       if("\\".equals(match)) {

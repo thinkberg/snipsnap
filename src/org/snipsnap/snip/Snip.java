@@ -4,13 +4,16 @@ import com.neotis.snip.filter.SnipFormatter;
 import com.neotis.user.User;
 import com.neotis.util.StringUtil;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Collection;
+import java.util.List;
+import java.text.SimpleDateFormat;
 
 
 public class Snip {
   private Snip parent;
-  private Collection children;
+  private List children;
   private Snip comment;
   private Comments comments;
 
@@ -18,10 +21,15 @@ public class Snip {
   private Timestamp cTime, mTime;
   private String cUser, mUser;
 
+  public static String toName(Date date) {
+    SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+    return sf.format(date);
+  }
+
   public String getNiceTime(Timestamp time) {
-    if(time == null) return "";
+    if (time == null) return "";
     java.util.Date now = new java.util.Date();
-    int secs = (int) (now.getTime() - time.getTime()) /1000;
+    int secs = (int) (now.getTime() - time.getTime()) / 1000;
     //int sec = secs % 60;
     int mins = secs / 60;
     int min = mins % 60;
@@ -31,12 +39,12 @@ public class Snip {
     //int years = days / 365;
 
     StringBuffer nice = new StringBuffer();
-    if (mins==0) {
+    if (mins == 0) {
       nice.append("Just a blink of an eye ago.");
-    } else if (hours==0) {
+    } else if (hours == 0) {
       StringUtil.plural(nice, min, "minute");
       nice.append(" ago.");
-    } else if (days==0) {
+    } else if (days == 0) {
       StringUtil.plural(nice, hour, "hour");
       nice.append(", ");
       StringUtil.plural(nice, min, "minute");
@@ -98,7 +106,7 @@ public class Snip {
     this.mUser = mUser;
   }
 
-  public Collection getChildren() {
+  public List getChildren() {
     init();
     return children;
   }
@@ -125,7 +133,7 @@ public class Snip {
   }
 
   public Comments getComments() {
-    if (null==comments) {
+    if (null == comments) {
       comments = new Comments(this);
     }
     return comments;

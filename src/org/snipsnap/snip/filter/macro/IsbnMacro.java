@@ -8,13 +8,15 @@
 
 package com.neotis.snip.filter.macro;
 
+import com.neotis.snip.Snip;
+
 public class IsbnMacro extends Macro {
   StringBuffer buffer;
 
   public IsbnMacro() {
     buffer = new StringBuffer();
   }
-  public String execute(String[] params, String content) throws IllegalArgumentException {
+  public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {
     if (params.length== 1) {
       buffer.setLength(0);
       buffer.append("<img border=\"0\" alt=\">>\" src=\"/images/arrow.right.gif\"> (<a href=\"http://www.amazon.de/exec/obidos/ASIN/");

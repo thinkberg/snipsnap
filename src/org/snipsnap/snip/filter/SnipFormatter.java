@@ -28,6 +28,6 @@ public class SnipFormatter {
     fp.addFilter(new UrlFilter());
     fp.addFilter(new KeyFilter());
 
-    return fp.filter(content);
+    return fp.filter(content, snip);
   }
 }

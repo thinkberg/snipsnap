@@ -8,31 +8,33 @@
  */
 package com.neotis.snip.filter;
 
+import com.neotis.snip.Snip;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
 public class FilterPipe {
 
-  Collection _filterList = null;
+  Collection filterList = null;
 
   public FilterPipe() {
-    _filterList = new ArrayList();
+    filterList = new ArrayList();
   }
 
   public void addFilter(Filter filter) {
-    _filterList.add(filter);
+    filterList.add(filter);
   }
 
-  public String filter(String input) {
+  public String filter(String input, Snip snip) {
 
     String output = input;
-    Iterator filterIterator = _filterList.iterator();
+    Iterator filterIterator = filterList.iterator();
 
     // Apply every filter in _filterList to input string
     while(filterIterator.hasNext()) {
       Filter f = (Filter) filterIterator.next();
-      String tmp = f.filter(output);
+      String tmp = f.filter(output, snip);
       if(null == tmp) {
         System.err.println("error while filtering: "+f);
       } else {

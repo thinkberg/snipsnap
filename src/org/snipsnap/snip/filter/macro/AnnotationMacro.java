@@ -8,8 +8,10 @@
 
 package com.neotis.snip.filter.macro;
 
+import com.neotis.snip.Snip;
+
 public class AnnotationMacro extends Macro {
-  public String execute(String[] params, String content) throws IllegalArgumentException {
+  public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {
     if (params.length == 1) {
       return "<footnote>" + params[0] + "</footnote>";
     } else {

@@ -11,6 +11,7 @@
 package com.neotis.snip.filter.macro;
 
 import com.neotis.snip.filter.regex.RegexTokenFilter;
+import com.neotis.snip.Snip;
 import org.apache.oro.text.regex.MatchResult;
 
 import java.util.HashMap;
@@ -33,6 +34,7 @@ public class MacroFilter extends RegexTokenFilter {
     macros.put("api", new ApiMacro());
     macros.put("table", new TableMacro());
     macros.put("snips-by-user", new UserSnipMacro());
+    macros.put("weblog", new WeblogMacro());
   }
 
 
@@ -57,7 +59,7 @@ public class MacroFilter extends RegexTokenFilter {
     return result;
   }
 
-  public String handleMatch(MatchResult result) {
+  public String handleMatch(MatchResult result, Snip snip) {
     String[] params = null;
     String content = null;
     String command = result.group(1);
@@ -87,9 +89,9 @@ public class MacroFilter extends RegexTokenFilter {
         Macro macro = (Macro) macros.get(command);
         // recursively filter macros within macros
         if (null != content) {
-          content = filter(content);
+          content = filter(content, snip);
         }
-        return macro.execute(params, content);
+        return macro.execute(params, content, snip);
       } else if (command.startsWith("!")) {
         // TODO including of other snips
         return "";

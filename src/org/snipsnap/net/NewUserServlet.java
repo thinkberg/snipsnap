@@ -1,10 +1,9 @@
 package com.neotis.net;
 
 import com.neotis.app.Application;
+import com.neotis.snip.HomePage;
 import com.neotis.user.User;
 import com.neotis.user.UserManager;
-import com.neotis.snip.SnipSpace;
-import com.neotis.snip.HomePage;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -13,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.net.URLEncoder;
 
 public class NewUserServlet extends HttpServlet {
   private final static String ERR_EXISTS = "User exists, please user another login name!";
@@ -49,7 +47,7 @@ public class NewUserServlet extends HttpServlet {
       // store user name and app in cookie and session
       response.addCookie(new Cookie("userName", user.getLogin()));
       session.setAttribute("app", app);
-      response.sendRedirect("/space/"+login);
+      response.sendRedirect("/space/" + login);
       return;
     }
 

@@ -11,9 +11,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,8 +53,32 @@ public class SnipSpace implements LinkTester {
     return storageByUser(login);
   }
 
-  public Collection getChildren(Snip snip) {
+  public List getChildren(Snip snip) {
     return storageByParent(snip);
+  }
+
+  public Snip post(String content, Application app) {
+    Date date = new Date(new java.util.Date().getTime());
+    return post(content, date, app);
+  }
+
+  public Snip post(String content, Date date, Application app) {
+    Snip start = load("start");
+    return post(start, content, date, app);
+  }
+
+  public Snip post(Snip weblog, String content, Date date, Application app) {
+    String name = Snip.toName(date);
+    Snip snip = null;
+    if (exists(name)) {
+      snip = load(name);
+      snip.setContent(snip.getContent() + "\n\n" + content);
+    } else {
+      snip = create(name, content, app);
+    }
+    snip.setParent(weblog);
+    store(snip);
+    return snip;
   }
 
   public boolean exists(String name) {
@@ -90,7 +114,7 @@ public class SnipSpace implements LinkTester {
 
   public void store(Snip snip) {
     changed.add(snip);
-    snip.setMTime(new Timestamp(new Date().getTime()));
+    snip.setMTime(new Timestamp(new java.util.Date().getTime()));
     storageStore(snip);
     return;
   }
@@ -177,7 +201,7 @@ public class SnipSpace implements LinkTester {
     List snips = new ArrayList();
 
     try {
-      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip FROM Snip WHERE mUser=?");
+      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip FROM Snip WHERE cUser=?");
       statement.setString(1, login);
 
       result = statement.executeQuery();
@@ -220,10 +244,10 @@ public class SnipSpace implements LinkTester {
     return comments;
   }
 
-  private Collection storageByParent(Snip parent) {
+  private List storageByParent(Snip parent) {
     PreparedStatement statement = null;
     ResultSet result = null;
-    Collection children = new ArrayList();
+    List children = new ArrayList();
 
     try {
       statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip FROM Snip WHERE parentSnip=?");
@@ -285,7 +309,7 @@ public class SnipSpace implements LinkTester {
 
     String login = app.getUser().getLogin();
     Snip snip = new Snip(name, content);
-    Timestamp cTime = new Timestamp(new Date().getTime());
+    Timestamp cTime = new Timestamp(new java.util.Date().getTime());
     Timestamp mTime = (Timestamp) cTime.clone();
     snip.setCTime(cTime);
     snip.setMTime(mTime);

@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import com.neotis.snip.filter.Filter;
+import com.neotis.snip.Snip;
 
 public abstract class RegexFilter extends Filter {
   int limit = Util.SUBSTITUTE_ALL;
@@ -40,5 +41,5 @@ public abstract class RegexFilter extends Filter {
     }
   }
 
-  public abstract String filter(String input);
+  public abstract String filter(String input, Snip snip);
 }

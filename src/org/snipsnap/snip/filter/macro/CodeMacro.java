@@ -12,6 +12,7 @@ import com.neotis.snip.filter.Filter;
 import com.neotis.snip.filter.JavaCodeFilter;
 import com.neotis.snip.filter.SqlCodeFilter;
 import com.neotis.snip.filter.XmlCodeFilter;
+import com.neotis.snip.Snip;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,7 +32,7 @@ public class CodeMacro extends Preserved {
     addSpecial("}", "&#x007d;");
   }
 
-  public String execute(String[] params, String content) throws IllegalArgumentException {
+  public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {
     Filter filter = null;
 
     if (params == null || !filters.containsKey(params[0])) {
@@ -39,7 +40,7 @@ public class CodeMacro extends Preserved {
     } else {
       filter = (Filter) filters.get(params[0]);
     }
-    String result = filter.filter(content);
+    String result = filter.filter(content, snip);
 
     return "<div class=\"code\">" + replace(result.trim()) + "</div>";
   }

@@ -11,6 +11,7 @@ package com.neotis.snip.filter.regex;
 import org.apache.oro.text.regex.Pattern;
 import org.apache.oro.text.regex.Perl5Substitution;
 import org.apache.oro.text.regex.Util;
+import com.neotis.snip.Snip;
 
 public class RegexReplaceFilter extends RegexFilter {
 
@@ -28,7 +29,7 @@ public class RegexReplaceFilter extends RegexFilter {
     addRegex(regex, substitute, multiline);
   }
 
-  public String filter(String input) {
+  public String filter(String input, Snip snip) {
     String result = input;
     int size = pattern.size();
     for (int i = 0; i < size; i++) {

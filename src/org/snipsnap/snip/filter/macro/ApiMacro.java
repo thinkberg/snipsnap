@@ -8,9 +8,11 @@
 
 package com.neotis.snip.filter.macro;
 
+import com.neotis.snip.Snip;
+
 
 public class ApiMacro extends Macro {
-  public String execute(String[] params, String content) throws IllegalArgumentException {
+  public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {
     String mode;
 
     if (params.length == 1) {

@@ -8,11 +8,13 @@
 
 package com.neotis.snip.filter.macro;
 
+import com.neotis.snip.Snip;
+
 import java.util.StringTokenizer;
 
 public class TableMacro extends Macro {
 
-  public String execute(String[] params, String content) throws IllegalArgumentException {
+  public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {
     content = content.trim()+"\n";
 
     StringTokenizer tokenizer = new StringTokenizer(content, "|\n", true);

@@ -7,6 +7,8 @@
 
 package com.neotis.snip.filter.macro;
 
+import com.neotis.snip.Snip;
+
 public abstract class Macro {
-   public abstract String execute(String[] params, String content) throws IllegalArgumentException;
+   public abstract String execute(String[] params, String content, Snip snip) throws IllegalArgumentException;
 }

@@ -22,7 +22,7 @@ public class UserSnipMacro extends Macro {
     space = SnipSpace.getInstance();
   }
 
-  public String execute(String[] params, String content) throws IllegalArgumentException {
+  public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {
     if (params.length == 1) {
       buffer.setLength(0);
       buffer.append("<b>this user's snips: (");
@@ -33,11 +33,11 @@ public class UserSnipMacro extends Macro {
         buffer.append("<blockquote>");
         Iterator snipsIterator = snips.iterator();
         while (snipsIterator.hasNext()) {
-          Snip snip = (Snip) snipsIterator.next();
+          Snip aSnip = (Snip) snipsIterator.next();
           buffer.append("<a href=\"/space/");
-          buffer.append(snip.getName());
+          buffer.append(aSnip.getName());
           buffer.append("\">");
-          buffer.append(snip.getName());
+          buffer.append(aSnip.getName());
           buffer.append("</a>");
           if (snipsIterator.hasNext()) {
             buffer.append(", ");

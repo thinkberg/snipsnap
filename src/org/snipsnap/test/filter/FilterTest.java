@@ -19,14 +19,18 @@ public class FilterTest extends TestCase {
     return s;
   }
 
+  public Snip getMock() {
+    return new Snip("mock","mock");
+  }
+
   public void testBold() {
     Filter filter = new BoldFilter();
-    assertEquals("<span class=\"bold\">Text</span>", filter.filter("__Text__"));
+    assertEquals("<span class=\"bold\">Text</span>", filter.filter("__Text__" , getMock()));
   }
 
   public void testItalic() {
     Filter filter = new ItalicFilter();
-    assertEquals("<span class=\"italic\">Text</span>", filter.filter("~~Text~~"));
+    assertEquals("<span class=\"italic\">Text</span>", filter.filter("~~Text~~", getMock()));
   }
 
 }

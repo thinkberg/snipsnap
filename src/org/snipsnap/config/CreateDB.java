@@ -74,15 +74,15 @@ public class CreateDB {
         "       content   TEXT, " +
         "       cTime     TIMESTAMP, " +
         "       mTime     TIMESTAMP, " +
-        "       cUser     CHAR(55), " +
-        "       mUser     CHAR(55), " +
+        "       cUser     VARCHAR(55), " +
+        "       mUser     VARCHAR(55), " +
         "       parentSnip VARCHAR(100), "+
         "       commentSnip VARCHAR(100) ) ");
 
       statement.executeQuery(
         "    CREATE TABLE User ( " +
         "       login    VARCHAR(100) NOT NULL, " +
-        "       passwd   CHAR(20) )");
+        "       passwd   VARCHAR(20) )");
 
       System.out.println("-- Inserting Data --");
 
@@ -107,6 +107,8 @@ public class CreateDB {
       } else {
         System.out.println("failed.");
       }
+
+      snip = space.create("start", "{weblog}", app);
 
      String rolling = "__Blogrolling:__\\\\ \n" +
         "{link:Langreiter|http://www.langreiter.com}\\\\ \n" +

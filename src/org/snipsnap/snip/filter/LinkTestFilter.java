@@ -24,6 +24,7 @@ import java.net.URLEncoder;
 import java.io.UnsupportedEncodingException;
 
 import com.neotis.util.Transliterate;
+import com.neotis.snip.Snip;
 
 public class LinkTestFilter extends Filter {
 
@@ -49,7 +50,7 @@ public class LinkTestFilter extends Filter {
     // super("\\[(.*?)\\]", "<link href=\"$1\"/>");
   }
 
-  public String filter(String input) {
+  public String filter(String input, Snip snip) {
     StringBuffer buffer = new StringBuffer("");
 
     PatternMatcherInput patternMatcherInput = new PatternMatcherInput(input);

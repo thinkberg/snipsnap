@@ -8,8 +8,10 @@
 
 package com.neotis.snip.filter.macro;
 
+import com.neotis.snip.Snip;
+
 public class LinkMacro extends Macro {
-  public String execute(String[] params, String content) throws IllegalArgumentException {
+  public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {
     if (params.length == 2) {
       return "<a href=\"" + params[1] + "\">" + params[0] + "</a>";
     } else if(params.length == 1) {
