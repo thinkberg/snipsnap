@@ -76,7 +76,11 @@ public class MultipartFilter implements Filter {
     if (type == null || !type.startsWith("multipart/form-data")) {
       chain.doFilter(req, response);
     } else {
-      chain.doFilter(new MultipartWrapper(req), response);
+      try {
+        chain.doFilter(new MultipartWrapper(req), response);
+      } catch (IllegalArgumentException e) {
+        System.err.println("MultipartFilter: "+e.getMessage());
+      }
     }
   }
 }
