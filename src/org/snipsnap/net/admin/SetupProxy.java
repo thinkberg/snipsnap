@@ -53,7 +53,7 @@ public class SetupProxy implements SetupHandler {
     }
     String realProtocol = request.getParameter(Configuration.APP_REAL_PROTOCOL);
     if (null != realProtocol && !"".equals(realProtocol)) {
-      config.setRealPath(realProtocol.trim());
+      config.setRealProtocol(realProtocol.trim());
     }
     String realPath = request.getParameter(Configuration.APP_REAL_PATH);
     if (null != realPath && !"".equals(realPath)) {
