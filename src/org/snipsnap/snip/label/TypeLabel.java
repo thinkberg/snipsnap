@@ -25,9 +25,11 @@
 
 package org.snipsnap.snip.label;
 
-import java.util.Arrays;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+
+import org.radeox.util.Service;
 
 /**
  * TypeLabel assigns a type to a Snip
@@ -35,9 +37,10 @@ import java.util.List;
  * @version $Id$
  */
 public class TypeLabel extends BaseLabel {
-  private static List types = Arrays.asList(
-      new String[]{"Person", "Technology", "Meeting", "Book", "Process", "Summary", "Category", "Template"});
-
+  private final static String COMMENT_CHAR = "#";
+  
+  private static List types = getTypes();
+  
   public TypeLabel() {
     name = "Type";
     value = "";
@@ -87,5 +90,18 @@ public class TypeLabel extends BaseLabel {
 
   public void setName(String name) {
     // name should not be set manually
+  }
+  
+  private static List getTypes() {
+    List     result = new LinkedList();
+	Iterator iter   = Service.providerNames(TypeLabel.class);
+
+	while (iter.hasNext()) {
+	  String curTypeName = ((String) iter.next()).trim();
+	  if (!curTypeName.startsWith(COMMENT_CHAR)) {
+	    result.add(curTypeName);
+	  }
+    }
+    return result;
   }
 }
