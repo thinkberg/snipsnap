@@ -28,6 +28,7 @@ package org.snipsnap.snip.label;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.snipsnap.snip.Snip;
+import org.snipsnap.serialization.LabelContext;
 
 import java.util.Map;
 
@@ -59,6 +60,10 @@ public abstract class BaseLabel implements Label {
 
   public Snip getSnip() {
     return snip;
+  }
+
+  public LabelContext getContext() {
+    return new LabelContext(snip, this);
   }
 
   public void create() {

@@ -9,7 +9,24 @@ import org.snipsnap.snip.label.Label;
  *
  * @author gis
  */
+
 public class LabelContext {
-    public Label label;
-    public Snip snip;
+  public Label label;
+  public Snip snip;
+
+  public LabelContext() {
+  }
+
+  public LabelContext(Snip snip, Label label) {
+    this.snip = snip;
+    this.label = label;
+  }
+
+  public Snip getSnip() {
+    return snip;
+  }
+
+  public Label getLabel() {
+    return label;
+  }
 }

@@ -29,6 +29,7 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.snipsnap.container.Components;
 import org.snipsnap.snip.Snip;
+import org.snipsnap.serialization.LabelContext;
 import org.radeox.api.engine.RenderEngine;
 
 import java.util.Map;
@@ -58,6 +59,10 @@ public class RenderEngineLabel implements Label {
   }
 
   public void change() {
+  }
+
+  public LabelContext getContext() {
+    return new LabelContext(snip, this);
   }
 
   public void setSnip(Snip snip) {
