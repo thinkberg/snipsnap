@@ -181,10 +181,10 @@ public class XMLSnipImport {
           snipMap.put(SnipSerializer.SNIP_OUSER, importUser.getLogin());
         }
 
-        // TODO remove data elements from attachments!
-        snip = snipSerializer.deserialize(snipMap, snip);
+        // first restore attached files, then remove the data element
         restoreAttachments(snipElement);
-        restoreVersions(snipElement, snip, (flags & OVERWRITE) == 1);
+        snip = snipSerializer.deserialize(snipMap, snip);
+        restoreVersions(snipElement, snip, (flags & OVERWRITE) != 0);
         snip.getBackLinks().getSize();
         space.systemStore(snip);
         getStatus().inc();
@@ -193,7 +193,6 @@ public class XMLSnipImport {
   }
 
   private static void restoreAttachments(Element snipEl) {
-    // TODO use attachments element directly
     Configuration config = Application.get().getConfiguration();
     File attRoot = config.getFilePath();
     Element attachmentsEl = snipEl.element("attachments");
@@ -215,6 +214,7 @@ public class XMLSnipImport {
             Logger.fatal("unable to store attachment: "+e);
             e.printStackTrace();
           }
+          att.element("data").detach();
         }
       }
     }
