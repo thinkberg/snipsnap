@@ -26,6 +26,12 @@
 
 package org.snipsnap.xmlrpc;
 
+import org.snipsnap.app.Application;
+import org.snipsnap.user.User;
+import org.snipsnap.user.UserManager;
+import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.Snip;
+
 /**
  * Handles XML-RPC calls for the Blogger API
  * http://plant.blogger.com/api/index.html
@@ -52,6 +58,18 @@ public class  BloggerHandler {
                           String content,
                           boolean publish) {
         System.out.println("XML-RPC call to newPost()");
+
+        UserManager um = UserManager.getInstance();
+        SnipSpace space = SnipSpace.getInstance();
+
+        User user = um.authenticate(username, password);
+        if (user == null) {
+          return "";
+        } else {
+          Application.get().setUser(user);
+        }
+
+        Snip snip = space.post(content);
         return "";
     }
 

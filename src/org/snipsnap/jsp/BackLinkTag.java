@@ -39,6 +39,7 @@ import java.io.IOException;
 
 public class BackLinkTag extends TagSupport {
   Snip snip = null;
+  int count = 15;
 
   public int doStartTag() throws JspException {
     JspWriter out = pageContext.getOut();
@@ -46,8 +47,8 @@ public class BackLinkTag extends TagSupport {
     Iterator iterator = backLinks.iterator();
 
     try {
-      int i = 0;
-      while (iterator.hasNext()) {
+      int i = this.count;
+      while (iterator.hasNext() && --i>=0) {
         String url = (String) iterator.next();
         out.print(backLinks.getIntCount(url));
         out.print(": <a href=\"");
@@ -60,6 +61,11 @@ public class BackLinkTag extends TagSupport {
       System.err.println("unable print to JSP writer: " + e);
     }
     return super.doStartTag();
+  }
+
+  public void setCount(int count) {
+      this.count = count;
+      return;
   }
 
   public void setSnip(String snip) {

@@ -42,6 +42,7 @@ public class SnipFormatter {
     fp.addFilter(new MacroFilter());
     fp.addFilter(new MacroFilter());
     fp.addFilter(new HeadingFilter());
+    fp.addFilter(new StrikeThroughFilter());
     fp.addFilter(new ListFilter());
     fp.addFilter(new NewlineFilter());
     fp.addFilter(new ParagraphFilter());

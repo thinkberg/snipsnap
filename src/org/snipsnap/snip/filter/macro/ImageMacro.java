@@ -26,6 +26,8 @@ package org.snipsnap.snip.filter.macro;
 
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
+import org.snipsnap.app.Application;
+import org.snipsnap.config.AppConfiguration;
 
 /*
  * Macro that replaces external links
@@ -35,13 +37,23 @@ import org.snipsnap.snip.SnipLink;
  * @version $Id$
  */
 public class ImageMacro extends Macro {
+  AppConfiguration config;
+
   public String getName() {
     return "image";
   }
 
+  public ImageMacro() {
+    config = Application.get().getConfiguration();
+  }
+
   public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
     if(params.length > 0) {
-      if (params.length == 2) {
+      if (params[0].startsWith("http://")) {
+        if (config.allowExternalImages()) {
+          SnipLink.appendExternalImage(buffer, params[0]);
+        }
+      } else if (params.length == 2) {
         SnipLink.appendImage(buffer, snip.getName()+"-image-"+params[0], params[1]);
       } else {
         SnipLink.appendImage(buffer, snip.getName()+"-image-"+params[0]);

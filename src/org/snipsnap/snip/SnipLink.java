@@ -25,6 +25,8 @@
 
 package org.snipsnap.snip;
 
+import org.snipsnap.snip.filter.EscapeFilter;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.List;
@@ -43,6 +45,15 @@ public class SnipLink {
     buffer.append("../space/");
     buffer.append(name);
     return;
+  }
+
+  public static void createCreateLink(StringBuffer buffer, String name) {
+      buffer.append(EscapeFilter.escape('['));
+      buffer.append("create <a href=\"../exec/edit?name=");
+      buffer.append(SnipLink.encode(name));
+      buffer.append("\">").append(name).append("</a>");
+      buffer.append(EscapeFilter.escape(']'));
+      return;
   }
 
   public static String createLink(String name) {
@@ -117,6 +128,13 @@ public class SnipLink {
   public static String createImage(String name, String alt, String ext) {
     StringBuffer buffer = new StringBuffer();
     return appendImageWithRoot(buffer, SnipLink.IMAGES_ROOT, name, alt, ext).toString();
+  }
+
+  public static StringBuffer appendExternalImage(StringBuffer buffer, String url) {
+    buffer.append("<img src=\"");
+    buffer.append(url);
+    buffer.append("\" border=\"0\"/>");
+    return buffer;
   }
 
   /**

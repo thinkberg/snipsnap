@@ -23,10 +23,10 @@
  * --LICENSE NOTICE--
  */
 /*
- * LinkFilter finds [text] in its input and transforms this
- * to <link name="text">
+ * Italic finds ~~text~~ in its input and transforms this
+ * to <i>text</i>
  *
- * @author stephan
+ * @author Stephan J. Schmidt
  * @team sonicteam
  * @version $Id$
  */

@@ -34,6 +34,8 @@ package org.snipsnap.snip.filter.macro;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.user.UserManager;
+import org.snipsnap.app.Application;
 import org.apache.lucene.search.Hits;
 
 import java.io.IOException;
@@ -55,10 +57,12 @@ public class SearchMacro extends Macro {
       if (params.length == 2) {
           maxHits = Integer.parseInt(params[1]);
       }
+      String searchString = params[0];
+
       buffer.append("<b>snips with ");
-      buffer.append(params[0]);
+      buffer.append(searchString);
       buffer.append(": (");
-      Hits hits = space.search(params[0]);
+      Hits hits = space.search(searchString);
       buffer.append(hits.length());
 
       buffer.append(") </b><br/>");
@@ -81,6 +85,16 @@ public class SearchMacro extends Macro {
       } else {
         buffer.append("none found.");
       }
+
+      if (! SnipSpace.getInstance().exists(searchString) &&
+        UserManager.getInstance().isAuthenticated(Application.get().getUser())) {
+          buffer.append("<p>There is no snip with <b>");
+          buffer.append(searchString);
+          buffer.append("</b> , would you like to ");
+          SnipLink.createCreateLink(buffer, searchString);
+          buffer.append(" ?</p>");
+      }
+
       return;
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");

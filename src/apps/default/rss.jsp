@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!-- RSS generation done by SnipSnap -->
+<!-- name="generator" content="SnipSnap/<c:out value="${config.version}"/> -->
 <rss version="0.92">
 
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>

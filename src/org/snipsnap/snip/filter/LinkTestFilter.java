@@ -126,14 +126,10 @@ public class LinkTestFilter extends Filter {
           if (linkTester.exists(targetSnip)) {
             SnipLink.appendLink(buffer, targetSnip, result.group(1));
           } else if(UserManager.getInstance().isAuthenticated(app.getUser())) {
-            buffer.append(EscapeFilter.escape('['));
-            buffer.append("create <a href=\"../exec/edit?name=");
-            buffer.append(SnipLink.encode(targetSnip));
-            buffer.append("\">").append(result.group(1)).append("</a>");
-            buffer.append(EscapeFilter.escape(']'));
+            SnipLink.createCreateLink(buffer, targetSnip);
           } else {
             // cannot edit/create snip, so just display the text
-            buffer.append(result.group(1));
+            buffer.append(targetSnip);
           }
         }
       } else {

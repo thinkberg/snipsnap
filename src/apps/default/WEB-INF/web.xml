@@ -130,7 +130,7 @@
 
     <servlet-mapping>
       <servlet-name>org.snipsnap.net.XmlRpcServlet</servlet-name>
-      <url-pattern>/api/RPC2</url-pattern>
+      <url-pattern>/RPC2</url-pattern>
     </servlet-mapping>
 
   <servlet-mapping>

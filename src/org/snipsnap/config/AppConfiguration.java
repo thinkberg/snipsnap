@@ -168,4 +168,8 @@ public class AppConfiguration extends Configuration {
   public String getLogger() {
     return getProperty(AppConfiguration.APP_LOGGER);
   }
+
+  public boolean allowExternalImages() {
+      return false;
+  }
 }

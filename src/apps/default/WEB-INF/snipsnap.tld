@@ -19,7 +19,11 @@
     <attribute>
       <name>snip</name>
       <type>org.snipsnap.snip.Snip</type>
-      <description>snip to check roles against</description>
+      <description>snip to get backlinks for</description>
+    </attribute>
+    <attribute>
+      <name>count</name>
+      <description>number of backlinks to show</description>
     </attribute>
    </tag>
 
