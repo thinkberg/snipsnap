@@ -47,6 +47,7 @@ public class Weblog {
     buffer.append("\">");
     buffer.append(name);
     buffer.append("</a>");
+    buffer.append("</br>");
     return;
   }
 }

@@ -54,6 +54,7 @@ public class WeblogsPing extends Thread {
       try {
         // Ping weblogs.com
         XmlRpcClient weblogs_com = new XmlRpcClient("http://rpc.weblogs.com/RPC2");
+        params.clear();
         // Name of the weblog
         params.addElement(config.getName());
         // Url/CheckUrl of the weblog
@@ -65,7 +66,7 @@ public class WeblogsPing extends Thread {
       }
       try {
         // Ping blog.gs
-        XmlRpcClient blo_gs = new XmlRpcClient("http://http://ping.blo.gs/");
+        XmlRpcClient blo_gs = new XmlRpcClient("http://ping.blo.gs/");
         params.clear();
         // Name of the weblog
         params.addElement(config.getName());
