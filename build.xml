@@ -28,8 +28,9 @@
   <target depends="clean" description="build source package" name="src-tar">
     <tstamp/>
     <tar destfile="../${appname}-${server.version}-${DSTAMP}-src.tgz" compression="gzip">
-      <tarfileset dir="." prefix="${appname}-${server.version}" mode="755">
+      <tarfileset dir="." prefix="${appname}-${server.version}" mode="700">
         <include name="run.sh"/>
+        <include name="run.bat"/>
         <include name="db.sh"/>
         <include name="dbexport.sh"/>
         <include name="dbimport.sh"/>
@@ -39,6 +40,12 @@
         <include name="**"/>
         <exclude name="**/CVS"/>
         <exclude name="applications"/>
+        <exclude name="run.sh"/>
+        <exclude name="run.bat"/>
+        <exclude name="db.sh"/>
+        <exclude name="dbexport.sh"/>
+        <exclude name="dbimport.sh"/>
+        <exclude name="dbrepair.sh"/>
       </tarfileset>
     </tar>
   </target>
@@ -46,14 +53,15 @@
   <target depends="clean, jar" description="build binary package" name="bin-tar">
     <tstamp/>
     <tar destfile="../${appname}-${server.version}-${DSTAMP}.tgz" compression="gzip">
-      <tarfileset dir="." prefix="${appname}-${server.version}" mode="755">
+      <tarfileset dir="." prefix="${appname}-${server.version}" mode="700">
         <include name="run.sh"/>
+        <include name="run.bat"/>
         <include name="db.sh"/>
         <include name="dbexport.sh"/>
         <include name="dbimport.sh"/>
         <include name="dbrepair.sh"/>
       </tarfileset>
-      <tarfileset dir="." prefix="${appname}-${server.version}" mode="655">
+      <tarfileset dir="." prefix="${appname}-${server.version}">
         <include name="${jar}/${appname}.jar"/>
         <include name="${jar}/jdbcpool.jar"/>
         <include name="${jar}/jakarta.jar"/>
@@ -74,6 +82,12 @@
         <include name="license.txt"/>
         <include name="README"/>
         <exclude name="**/CVS"/>
+        <exclude name="run.sh"/>
+        <exclude name="run.bat"/>
+        <exclude name="db.sh"/>
+        <exclude name="dbexport.sh"/>
+        <exclude name="dbimport.sh"/>
+        <exclude name="dbrepair.sh"/>
       </tarfileset>
     </tar>
   </target>
