@@ -51,7 +51,7 @@ public class RecentWeblogMacro extends ListoutputMacro {
       while (iterator.hasNext()) {
         Weblog weblog = (Weblog) iterator.next();
         weblog.appendTo(buffer);
-        buffer.append("</br>");
+        buffer.append("<br/>");
       }
 
     } else {

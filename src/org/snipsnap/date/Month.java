@@ -53,6 +53,10 @@ public class Month {
     "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"
   };
 
+  // @TODO Use locale
+  private String[] weekDaysShort = { "Mo", "Tu", "We", "Th", "Fr", "Sa", "Su" };
+  private String[] weekDaysLong = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+
   /** The days in each month. */
   public final static int dom[] = {
     31, 28, 31, 30, /* jan feb mar apr */
@@ -67,6 +71,11 @@ public class Month {
     return year + "-" + (month < 10 ? "0" + month : ""+month) + "-" + (day < 10 ? "0" + day : ""+day);
   }
 
+  /**
+   * Returns a set of days (String) in yyyy-mm-dd format with
+   * posts in this weblog
+   *
+   */
   public Set getDays(int month, int year) {
     String start = toKey(year, month, 1);
     String end = toKey(year, month, 31);
@@ -97,12 +106,12 @@ public class Month {
     Set days = getDays(month+1, year);
 
     StringBuffer view = new StringBuffer();
-    view.append("<table>");
-    view.append("<tr><td colspan=\"7\"><b>");
+    view.append("<table summary=\"Monthly calendar with links to each day's posts\">");
+    view.append("<caption class=\"calendar-head\">");
     view.append(months[month]);
     view.append(" ");
     view.append(year);
-    view.append("</b></td></tr>");
+    view.append("</caption>");
 
     int leadGap = 0;  // for German Style Monday starting weeks
 
@@ -125,7 +134,7 @@ public class Month {
     if (calendar.isLeapYear(calendar.get(Calendar.YEAR)) && month == 1)
       ++daysInMonth;
 
-    view.append("<tr><td>Mo</td><td>Tu</td><td>We</td><td>Th</td><td>Fr</td><td>Sa</td><td>Su</td></tr>");
+    view.append(getHeader());
     // view.append("<tr><td>Mo</td><td>Di</td><td>Mi</td><td>Do</td><td>Fr</td><td>Sa</td><td>So</td></tr>");
 
     StringBuffer week = new StringBuffer();
@@ -144,7 +153,7 @@ public class Month {
       }
 
       if (i == todayNumber && month == today.get(Calendar.MONTH) && year == today.get(Calendar.YEAR)) {
-        day = "<b>" + day + "</b>";
+        day = "<span class=\"calendar-today\">" + day + "</span>";
       }
       week.append("<td>");
       week.append(day);
@@ -166,4 +175,17 @@ public class Month {
     return view.toString();
   }
 
+  private String getHeader() {
+    StringBuffer buffer = new StringBuffer();
+    buffer.append("<tr>");
+    for (int i=0; i<weekDaysShort.length; i++) {
+      buffer.append("<td class=\"calendar-weekday\" abbr=\"");
+      buffer.append(weekDaysLong[i]);
+      buffer.append("\">");
+      buffer.append(weekDaysShort[i]);
+      buffer.append("</td>");
+    }
+    buffer.append("</tr>");
+    return buffer.toString();
+  }
 }

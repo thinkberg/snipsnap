@@ -25,6 +25,9 @@
 
 package org.snipsnap.util;
 
+import java.sql.Timestamp;
+import java.util.Date;
+
 /**
  * Weblog represents external SnipSnap weblogs
  *
@@ -35,10 +38,12 @@ package org.snipsnap.util;
 public class Weblog {
   private String name;
   private String url;
+  private Timestamp update;
 
   public Weblog(String name, String url) {
     this.name = name;
     this.url = url;
+    this.update = new Timestamp(new Date().getTime());
   }
 
   public void appendTo(StringBuffer buffer) {
@@ -47,7 +52,17 @@ public class Weblog {
     buffer.append("\">");
     buffer.append(name);
     buffer.append("</a>");
-    buffer.append("<br/>");
     return;
+  }
+
+  private String getUrl() {
+    return this.url;
+  }
+
+  public boolean equals(Object obj) {
+    if (! (obj instanceof Weblog)) {
+      return false;
+    }
+    return url.equals(((Weblog) obj).getUrl());
   }
 }

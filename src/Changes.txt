@@ -1,3 +1,7 @@
+0.2.8
+
+- Worked on Accessibility
+
 0.2.7
 
 - Fixed bug: Editing users failed when email field was empty
@@ -12,6 +16,7 @@
 - Added feature: Added description to RSS, remove HTML from snip content
 - Fixed bug: AdminServer did not receive shutdown command
 - Fixed bug: application dirs must not contain space (replaced by _ now)
+- Fixed smaller bugs
 
 0.2.6
 
