@@ -26,16 +26,24 @@
   <tr>
     <td><fmt:message key="config.export.types.text"/></td>
     <td>
-      <c:if test="${!empty errors['export.types']}"><img src="images/attention.jpg"><br/></c:if>
-      <input type="checkbox" name="export.types" value="snips"
-        <c:if test="${empty exportTypes || exportTypeSnips == 'true'}">checked="checked"</c:if>>
-      <fmt:message key="config.export.types.snips"/>
-      <fmt:message key="config.export.match"/>
-      <input type="text" name="export.match" value="<c:out value="${exportMatch}"/>">
-      <br/>
-      <input type="checkbox" name="export.types" value="users"
-        <c:if test="${empty exportTypes || exportTypeUsers == 'true'}">checked="checked"</c:if>>
-      <fmt:message key="config.export.types.users"/>
+      <table class="export-options">
+        <tr><td>
+          <c:if test="${!empty errors['export.types']}"><img src="images/attention.jpg"><br/></c:if>
+          <input type="checkbox" name="export.types" value="snips"
+            <c:if test="${empty exportTypes || exportTypeSnips == 'true'}">checked="checked"</c:if>>
+          <fmt:message key="config.export.types.snips"/>
+        <td><td>
+          <fmt:message key="config.export.match"/><br/>
+          <input type="text" name="export.match" value="<c:out value="${exportMatch}"/>"><br/>
+          <fmt:message key="config.export.ignore"/><br/>
+          <input type="text" name="export.ignore" value="<c:out value="${exportIgnore}"/>">
+        </td></tr>
+        <tr><td colspan="2">
+          <input type="checkbox" name="export.types" value="users"
+            <c:if test="${empty exportTypes || exportTypeUsers == 'true'}">checked="checked"</c:if>>
+          <fmt:message key="config.export.types.users"/>
+        </td></tr>
+      </table>
     </td>
   </tr>
   <tr>

@@ -732,6 +732,12 @@ public class ConfigureServlet extends HttpServlet {
     }
     request.setAttribute("exportMatch", exportMatch);
 
+    String exportIgnore = request.getParameter("export.ignore");
+    request.setAttribute("exportIgnore", exportIgnore == null ? "" : exportIgnore);
+    if ("".equals(exportIgnore)) {
+      exportIgnore = null;
+    }
+
     for (int i = 0; i < exportTypes.length; i++) {
       if ("users".equals(exportTypes[i])) {
         users = um.getAll();
@@ -767,7 +773,7 @@ public class ConfigureServlet extends HttpServlet {
         return;
       }
 
-      XMLSnipExport.store(out, snips, users, config.getFilePath());
+      XMLSnipExport.store(out, snips, users, exportIgnore, config.getFilePath());
       if ("webinf".equals(output)) {
         errors.put("message", "export.okay");
       }

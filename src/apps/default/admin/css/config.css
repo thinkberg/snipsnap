@@ -130,7 +130,7 @@ li.current-step {
   width: 100%;
 }
 
-.edit table {
+.edit > table {
   border-collapse: collapse;
   border-spacing: 0px;
   border: 0px;
@@ -140,11 +140,11 @@ li.current-step {
 
 .edit td {
   margin: 0px;
-  vertical-align: top;
   padding-top: 5px;
   padding-bottom: 5px;
   padding-left: 5px;
   padding-right: 5px;
+  vertical-align: top;
   font-size: x-small;
   font-weight: bold;
   line-height: 1.6em;
@@ -152,7 +152,7 @@ li.current-step {
   color: black;
 }
 
-.edit td:first-child {
+.edit > table td:first-child {
   background: #eeeeee;
   /*color: black;*/
   text-align: justify;

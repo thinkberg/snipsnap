@@ -39,7 +39,6 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.List;
@@ -50,9 +49,6 @@ import java.util.List;
  * @version $Id$
  */
 public class XMLSnipExport {
-  public final static int USERS = 0x01;
-  public final static int SNIPS = 0x02;
-
   private static void store(OutputStream out, Document exportDocument) {
     try {
       OutputFormat outputFormat = new OutputFormat();
@@ -73,7 +69,19 @@ public class XMLSnipExport {
    * @param users the list of users to store
    */
   public static void store(OutputStream out, List snips, List users, File fileStore) {
-    Document exportDocument = store(users, snips, fileStore);
+    Document exportDocument = store(users, snips, null, fileStore);
+    store(out, exportDocument);
+  }
+
+  /**
+   * Stores a list of users and/or snips into the stream in XML format.
+   * @param out the output stream to store the xml data in
+   * @param snips the list of snips to store
+   * @param users the list of users to store
+   * @param filter a regex filter to ignore snips
+   */
+  public static void store(OutputStream out, List snips, List users, String filter, File fileStore) {
+    Document exportDocument = store(users, snips, filter, fileStore);
     store(out, exportDocument);
   }
 
@@ -83,12 +91,12 @@ public class XMLSnipExport {
    * @param snips the snips to store
    * @return the XML document
    */
-  public static Document store(List users, List snips, File fileStore) {
+  public static Document store(List users, List snips, String filter, File fileStore) {
     Document backupDoc = DocumentHelper.createDocument();
     Element root = backupDoc.addElement("snipspace");
 
     storeUsers(root, users);
-    storeSnips(root, snips, fileStore);
+    storeSnips(root, snips, filter, fileStore);
 
     return backupDoc;
   }
@@ -104,15 +112,17 @@ public class XMLSnipExport {
     }
   }
 
-  private static void storeSnips(Element root, List snips, File fileStore) {
+  private static void storeSnips(Element root, List snips, String filter, File fileStore) {
     if (snips != null && snips.size() > 0) {
       SnipSerializer snipSerializer = SnipSerializer.getInstance();
       Iterator snipListIterator = snips.iterator();
       while (snipListIterator.hasNext()) {
         Snip snip = (Snip) snipListIterator.next();
-        Element snipEl = snipSerializer.serialize(snip);
-        storeAttachments(snipEl, fileStore);
-        root.add(snipEl);
+        if(filter == null || !snip.getName().matches(filter)) {
+          Element snipEl = snipSerializer.serialize(snip);
+          storeAttachments(snipEl, fileStore);
+          root.add(snipEl);
+        }
       }
     }
   }
