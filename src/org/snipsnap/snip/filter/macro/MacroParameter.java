@@ -109,12 +109,17 @@ public class MacroParameter {
       if (value.startsWith("$")) {
         value = value.substring(1);
         if (globals.containsKey(value)) {
-          result.put(""+i, (String) globals.get(value));
+          result.put(key, (String) globals.get(value));
         } else {
-          result.put(""+i, "");
+          result.put(key, "");
         }
+      } else if (value.indexOf("=") != -1) {
+        int index = value.indexOf("=");
+        key = value.substring(0, index);
+        value = value.substring(index+1);
+        result.put(key, value);
       } else {
-        result.put(""+i, value);
+        result.put(key, value);
       }
       i++;
     }
