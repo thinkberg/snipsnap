@@ -5,10 +5,10 @@
   [<a href="../exec/remove?name=<c:out value='${snip.name}'/>">zap!</a>]
 </s:check>
 <s:check roles="Editor">
-  <s:checkObject permission="Edit" roles="Owner" snip="${snip}" invert="true">
+  <s:checkObject permission="Edit" roles="Editor" snip="${snip}" invert="true">
     [<a href="../exec/lock?name=<c:out value='${snip.name}'/>">lock</a>]
   </s:checkObject>
-  <s:checkObject permission="Edit" roles="Owner" snip="${snip}">
+  <s:checkObject permission="Edit" roles="Editor" snip="${snip}">
     [<a href="../exec/lock?name=<c:out value='${snip.name}'/>&unlock=true">unlock</a>]
   </s:checkObject>
 </s:check>

@@ -54,10 +54,9 @@ public class SnipLockServlet extends HttpServlet {
     if (session != null) {
       Application app = Application.getInstance(session);
       if (request.getParameter("unlock") != null) {
-        snip.getPermissions().remove(Permissions.EDIT, Roles.OWNER);
+        snip.getPermissions().remove(Permissions.EDIT, Roles.EDITOR);
       } else {
-        snip.setCUser(app.getUser());
-        snip.getPermissions().add(Permissions.EDIT, Roles.OWNER);
+        snip.getPermissions().add(Permissions.EDIT, Roles.EDITOR);
       }
       space.store(snip);
     }
