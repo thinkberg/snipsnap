@@ -46,7 +46,7 @@ import java.io.IOException;
 public class SnipViewServlet extends HttpServlet {
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws IOException, ServletException {
+    throws IOException, ServletException {
 
     UserManager um = UserManager.getInstance();
     User user = Application.get().getUser();
@@ -68,7 +68,7 @@ public class SnipViewServlet extends HttpServlet {
     Snip snip = SnipSpaceFactory.getInstance().load(name);
 
     String subname = null;
-    if(null == snip) {
+    if (null == snip) {
       // handle sub snips and attachments (TODO: handle more than one level)
       int slashIndex = name.indexOf('/');
       if (slashIndex != -1) {
@@ -88,7 +88,7 @@ public class SnipViewServlet extends HttpServlet {
       try {
         request.setAttribute(FileDownloadServlet.FILENAME, subname);
         RequestDispatcher dispatcher =
-            getServletContext().getNamedDispatcher("org.snipsnap.net.FileDownloadServlet");
+          getServletContext().getNamedDispatcher("org.snipsnap.net.FileDownloadServlet");
         dispatcher.forward(request, response);
         return;
       } catch (ServletException e) {
@@ -99,7 +99,13 @@ public class SnipViewServlet extends HttpServlet {
 
     // Snip does not exist
     if (null == snip) {
-      response.sendRedirect("/space/snipsnap-notfound?name="+name);
+      if ("snipsnap-notfound".equals(name)) {
+        response.sendError(HttpServletResponse.SC_NOT_FOUND,
+                           "Internal Error: could not find snipsnap-notfound page<br>"
+                           + "This may indicate that either the installation has failed or the Database is corrupted.");
+        return;
+      }
+      response.sendRedirect("/space/snipsnap-notfound?name=" + name);
       return;
     }
 
