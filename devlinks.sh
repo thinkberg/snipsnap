@@ -16,6 +16,13 @@ if [ -d $app ]; then
   ln -sf $base/src/apps/default/WEB-INF/*.tld $app/WEB-INF/
   ln -sf $base/src/apps/default/WEB-INF/web.xml $app/WEB-INF/
   ln -sf $base/src/apps/default/WEB-INF/lib/*.jar $app/WEB-INF/lib
+  ln -sf $base/lib/aspectjrt.jar $app/WEB-INF/lib
+  ln -sf $base/lib/jakarta.jar $app/WEB-INF/lib
+  ln -sf $base/lib/jdom-b8.jar $app/WEB-INF/lib
+  ln -sf $base/lib/jython.jar $app/WEB-INF/lib
+  ln -sf $base/lib/lucene-1.2.jar $app/WEB-INF/lib
+  ln -sf $base/lib/muse-jabber-0.8a1.jar $app/WEB-INF/lib
+  ln -sf $base/lib/lib/xmlrpc-1.1.jar $app/WEB-INF/lib
   echo Linking JSPs ...
   ln -sf $base/src/apps/default/*.jsp $app/
   ln -sf $base/src/apps/default/util/*.jsp $app/util/
