@@ -41,7 +41,6 @@ public class SnipTag extends ConditionalTagSupport {
   public int doStartTag() throws JspException {
     try {
       String snipName = (String) ExpressionEvaluatorManager.evaluate("load", name, Object.class, this, pageContext);
-      System.err.println("SnipTag: " + name + "=" + snipName);
       snip = SnipSpace.getInstance().load(snipName);
     } catch (JspException e) {
       System.err.println("unable to evaluate expression: " + e);
@@ -58,7 +57,6 @@ public class SnipTag extends ConditionalTagSupport {
   }
 
   protected boolean condition() throws JspTagException {
-    System.err.println("SnipTag: " + id + ", " + snip);
     if (id != null && snip != null) {
       pageContext.setAttribute(id, snip);
       return false;

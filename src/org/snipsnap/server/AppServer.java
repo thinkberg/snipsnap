@@ -81,7 +81,8 @@ public class AppServer {
         System.err.println("AppServer: error caused by: "+e);
       }
       try {
-        WebApplicationContext context = addApplication(config.getContextPath(), "./app");
+        WebApplicationContext context = addApplication(config.getContextPath(), "./app"+config.getContextPath());
+        System.out.println("INFO: starting application "+context);
         context.start();
       } catch (Exception e) {
         System.out.println("WARNING: unable to start your application: "+e);

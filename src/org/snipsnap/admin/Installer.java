@@ -128,7 +128,6 @@ public class Installer extends HttpServlet {
     Server server = null;
     if (it.hasNext()) {
       server = (Server) it.next();
-      System.out.println("servers host map: " + server.getHostMap());
 
       try {
         server.addListener(new SocketListener(addrPort));
@@ -143,7 +142,7 @@ public class Installer extends HttpServlet {
 
     writeMessage(out, "Extracting templates ...");
     try {
-      JarExtractor.extract(new JarFile("./lib/SnipSnap-template.war", true), new File("./app/"), out);
+      JarExtractor.extract(new JarFile("./lib/SnipSnap-template.war", true), new File("./app/"+config.getContextPath()), out);
     } catch (IOException e) {
       errors.put("fatal", "Unable to extract default application, please see server.log for details!");
       sendError(session, errors, request, response);
@@ -168,7 +167,7 @@ public class Installer extends HttpServlet {
     writeMessage(out, "Starting your application ...");
     try {
       WebApplicationContext context =
-        server.addWebApplication(config.getContextPath(), "./app/");
+        server.addWebApplication(config.getContextPath(), "./app"+config.getContextPath());
       context.start();
     } catch (Exception e) {
       System.err.println("Installer: unable to start application: " + e);

@@ -12,12 +12,12 @@
  <head>
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
   <title>Weblog/Wiki</title>
-  <link type="text/css" href="/default.css" rel="STYLESHEET"/>
+  <link type="text/css" href="../default.css" rel="STYLESHEET"/>
  </head>
  <body>
    <table width="800" border="0" cellpadding="0" cellspacing="0"><tr><td valign="top">
    <table border="0" cellpadding="4" cellspacing="1">
-    <tr><td colspan="2"><img src="images/snip.png"/></td></tr>
+    <tr><td colspan="2"><img src="../images/snip.png"/></td></tr>
     <tr><td colspan="2">
      <div id="Header">Bigger. Better. Faster. More.
       <font size="2">[ <a href="../space/start">start</a> |
@@ -44,8 +44,7 @@
    </td></tr>
    <tr><td colspan="2">
    <p align="center">
-   Copyright 2000-2002 Matthias L. Jugel, Stephan J.Schmidt <a href="http://www.snipsnap.org">www.snipsnap.org</a>
-
+    <a href="http://www.snipsnap.org">www.snipsnap.org</a> | Copyright 2000-2002 Matthias L. Jugel, Stephan J.Schmidt
    </p>
    </td></tr>
    </table>

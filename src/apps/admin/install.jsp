@@ -6,9 +6,13 @@
 
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 
+<c:out value="${errors}"/>
+<c:forEach items="${errors.values}" var="error">
+  <span class="error">Error: <c:out value="${error}"/></span><br>
+</c:forEach>
 <h3>Welcome to your SnipSnap Installation</h3>
 
-Please enter the requested information to get your server up and running.
+
 <p>
 <c:choose>
   <c:when test="${config.configured}">
@@ -17,10 +21,7 @@ Please enter the requested information to get your server up and running.
     directories and the <b>conf/local.conf</b> file.
   </c:when>
   <c:otherwise>
-  <c:out value="${errors}"/>
-    <c:forEach items="${errors.values}" var="error">
-      <span class="error">Error: <c:out value="${error}"/></span><br>
-    </c:forEach>
+    Please enter the requested information to get your server up and running.<p>
     <form method="POST" action="/admin/exec/install">
       <table border="0" cellpadding="2" cellspacing="0">
         <tr>

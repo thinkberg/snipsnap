@@ -69,17 +69,18 @@ public class Layouter extends HttpServlet {
 
     String layout = request.getPathInfo();
     if(null == layout || "/".equals(layout)) {
-      System.err.println("redirecting: "+layout);
       response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));
       return;
     }
 
+    System.out.println("--> "+layout);
     request.setAttribute("page", layout);
     RequestDispatcher dispatcher = null;
     if(layout.endsWith(".jsp")) {
       dispatcher = request.getRequestDispatcher("/main.jsp");
     } else {
       dispatcher = request.getRequestDispatcher(layout);
+      System.out.println("--> "+layout+": "+dispatcher.toString());
     }
     dispatcher.forward(request, response);
   }
