@@ -27,12 +27,18 @@ package org.snipsnap.server;
 import org.apache.xmlrpc.XmlRpcException;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.config.ServerConfiguration;
+import org.mortbay.jetty.servlet.WebApplicationContext;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Hashtable;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
@@ -48,6 +54,17 @@ public class AdminXmlRpcHandler extends AuthXmlRpcHandler {
   protected boolean authenticate(String user, String password) {
     boolean isOkay = serverConfig.getProperty(ServerConfiguration.ADMIN_PASS).equals(password);
     return isOkay;
+  }
+
+  public Hashtable getApplications() {
+    Hashtable appList = new Hashtable();
+    Iterator appIt = ApplicationLoader.applications.keySet().iterator();
+    while (appIt.hasNext()) {
+      String appName = (String) appIt.next();
+      WebApplicationContext context = (WebApplicationContext)ApplicationLoader.applications.get(appName);
+      appList.put(appName, "http://"+context.getHosts()[0]+context.getContextPath());
+    }
+    return appList;
   }
 
   public String install(String name, String host, String port, String path) throws XmlRpcException {

@@ -26,6 +26,7 @@ package org.snipsnap.admin;
 
 import org.apache.xmlrpc.XmlRpcException;
 import org.snipsnap.config.ServerConfiguration;
+import org.snipsnap.config.Configuration;
 import org.snipsnap.net.filter.EncRequestWrapper;
 import org.snipsnap.server.AdminXmlRpcClient;
 
@@ -60,9 +61,6 @@ public class AdminInitFilter implements Filter {
 
 
   protected final static String PARAM_INSTALL = "install";
-  protected final static String PARAM_HOST = "app.host";
-  protected final static String PARAM_PORT = "app.port";
-  protected final static String PARAM_PATH = "app.path";
 
   protected AdminXmlRpcClient adminClient;
   private Properties serverConfig = new Properties();
@@ -140,12 +138,37 @@ public class AdminInitFilter implements Filter {
           config.load(AdminInitFilter.class.getResourceAsStream("/org/snipsnap/config/defaults.conf"));
         }
 
-        if(null == request.getParameter(PARAM_INSTALL)) {
+        String host = request.getParameter(Configuration.APP_HOST);
+        String port = request.getParameter(Configuration.APP_PORT);
+        String contextPath = request.getParameter(Configuration.APP_PATH);
+
+        if(null != host && !"".equals(host)) {
+          config.setProperty(Configuration.APP_HOST, host);
+        }
+        if(null != port && !"".equals(port)) {
+          config.setProperty(Configuration.APP_PORT, port);
+        }
+        if(null != contextPath && !"".equals(contextPath)) {
+          config.setProperty(Configuration.APP_PATH, contextPath);
+        }
+
+        Map applications = null;
+        try {
+          applications = adminClient.getApplications();
+        } catch (XmlRpcException e) {
+          System.err.println("AdminInitFilter: error retrieving existing applications: "+e);
+          e.printStackTrace();
+        } catch (IOException e) {
+          System.err.println("AdminInitFilter: unable to contact server: "+e);
+          e.printStackTrace();
+        }
+
+        if(null == request.getParameter(PARAM_INSTALL) && (applications != null && applications.size() > 0)) {
           step = "install";
         } else {
-          URL url = install(request.getParameter(PARAM_HOST),
-                               request.getParameter(PARAM_PORT),
-                               request.getParameter(PARAM_PATH));
+          URL url = install(config.getProperty(Configuration.APP_HOST),
+                            config.getProperty(Configuration.APP_PORT),
+                            config.getProperty(Configuration.APP_PATH));
           if(url != null) {
             ((HttpServletResponse)response).sendRedirect(url.toString());
             return;

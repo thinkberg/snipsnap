@@ -28,6 +28,7 @@ import org.apache.xmlrpc.XmlRpcClient;
 import org.apache.xmlrpc.XmlRpcException;
 
 import java.util.Vector;
+import java.util.Map;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.io.IOException;
@@ -44,6 +45,11 @@ public class AdminXmlRpcClient {
     xmlRpcClient = new XmlRpcClient(xmlRpcUrl);
     xmlRpcClient.setBasicAuthentication("admin", password);
     System.err.println("AdminXmlRpcClient: new client for "+xmlRpcUrl);
+  }
+
+  public Map getApplications() throws XmlRpcException, IOException {
+    Vector args = new Vector();
+    return (Map)xmlRpcClient.execute("getApplications", args);
   }
 
   public URL install(String name, String host, String port, String path) throws XmlRpcException, IOException {

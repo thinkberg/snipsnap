@@ -265,7 +265,13 @@ public class InitializeDatabase {
       (country != null ? "_" + country : "") +
       (variant != null ? "_" + variant : "") +
       "." + ext;
-    InputStream is = InitializeDatabase.class.getResourceAsStream(file);
+    InputStream is = null;
+    try {
+      is = InitializeDatabase.class.getResourceAsStream(file);
+    } catch (Exception e) {
+      System.err.println("InitializeDatabase: attention, no default localized file for: '"+base+"."+ext+"'");
+      is = InitializeDatabase.class.getResourceAsStream(base+"_en."+ext);
+    }
     //System.out.println("InitializeDatabase: find: "+file+": "+(is != null));
     return is;
   }
