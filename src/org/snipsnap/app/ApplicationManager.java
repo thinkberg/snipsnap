@@ -55,11 +55,11 @@ public class ApplicationManager {
   }
 
   public String getPrefix(String oid) {
-    return "/";
+    return props != null ? "/" : null;
   }
 
   public Collection getPrefixes() {
-    return Arrays.asList(new String[]{"/"});
+    return storage.getApplications().keySet();
   }
 
   public Collection getApplications() {
