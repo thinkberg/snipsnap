@@ -29,6 +29,7 @@ import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.container.Components;
 import org.snipsnap.net.filter.MultipartWrapper;
+import org.snipsnap.security.AccessController;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipFormatter;
 import org.snipsnap.snip.SnipLink;
@@ -38,7 +39,6 @@ import org.snipsnap.user.AuthenticationService;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Security;
 import org.snipsnap.user.User;
-import org.snipsnap.security.AccessController;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -79,7 +79,7 @@ public class SnipStoreServlet extends HttpServlet {
     // cancel pressed, return to snip or referer
     if (request.getParameter("cancel") != null) {
       if (null == name || "".equals(name)) {
-        response.sendRedirect(request.getParameter("referer"));
+        response.sendRedirect(sanitize(request.getParameter("referer")));
       } else {
         response.sendRedirect(config.getUrl("/space/" + SnipLink.encode(name)));
       }
@@ -126,7 +126,7 @@ public class SnipStoreServlet extends HttpServlet {
       AccessController accessController = (AccessController) Components.getComponent(AccessController.class);
       String storeHandler = request.getParameter("store_handler");
       if (service.isAuthenticated(user) && (null == snip
-          || accessController.checkPermission(Application.get().getUser(), AccessController.EDIT_SNIP, snip))) {
+                                            || accessController.checkPermission(Application.get().getUser(), AccessController.EDIT_SNIP, snip))) {
         if (null != storeHandler) {
           dispatcher = request.getRequestDispatcher("/plugin/" + storeHandler);
           try {
@@ -152,10 +152,14 @@ public class SnipStoreServlet extends HttpServlet {
     }
 
     if (null == snip && !space.exists(name)) {
-      response.sendRedirect(request.getParameter("referer"));
+      response.sendRedirect(sanitize(request.getParameter("referer")));
       return;
     }
 
     response.sendRedirect(config.getUrl("/space/" + SnipLink.encode(name)));
+  }
+
+  private String sanitize(String parameter) {
+    return parameter.split("[\r\n]")[0];
   }
 }

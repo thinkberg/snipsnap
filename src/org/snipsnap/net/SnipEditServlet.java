@@ -24,10 +24,11 @@
  */
 package org.snipsnap.net;
 
-import org.radeox.util.logging.Logger;
 import org.radeox.util.Encoder;
+import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.container.Components;
+import org.snipsnap.security.AccessController;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.label.Label;
@@ -36,7 +37,6 @@ import org.snipsnap.snip.label.TypeLabel;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.Security;
-import org.snipsnap.security.AccessController;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -61,12 +61,12 @@ public class SnipEditServlet extends HttpServlet {
   private final static Roles authRoles = new Roles(Roles.AUTHENTICATED);
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws IOException, ServletException {
+          throws IOException, ServletException {
     doGet(request, response);
   }
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws IOException, ServletException {
+          throws IOException, ServletException {
 
     String name = request.getParameter("name");
     String content = request.getParameter("content");
@@ -80,20 +80,20 @@ public class SnipEditServlet extends HttpServlet {
     if (name != null && space.exists(name)) {
       snip = space.load(name);
       // get all mime types associated with the snip
-      Collection mimeTypes = snip.getLabels().getLabels("TypeLabel");
-      if (!mimeTypes.isEmpty()) {
-        Iterator handlerIt = mimeTypes.iterator();
+      Collection snipTypes = snip.getLabels().getLabels("TypeLabel");
+      if (!snipTypes.isEmpty()) {
+        Iterator handlerIt = snipTypes.iterator();
         while (handlerIt.hasNext()) {
           TypeLabel typeLabel = (TypeLabel) handlerIt.next();
           editHandler = typeLabel.getEditHandler();
-          if(null == editHandler) {
+          if (null == editHandler) {
             editHandler = TypeLabel.getEditHandler(typeLabel.getTypeValue());
           }
           // check that an edit handler is set
           if (null != editHandler && !"".equals(editHandler)) {
             if (controller.checkPermission(Application.get().getUser(), AccessController.EDIT_SNIP, snip)
-              && Security.hasRoles(Application.get().getUser(), snip, authRoles)) {
-              Logger.log("SnipEditServlet: using edit handler '" + editHandler+"'");
+                && Security.hasRoles(Application.get().getUser(), snip, authRoles)) {
+              Logger.log("SnipEditServlet: using edit handler '" + editHandler + "'");
               type = typeLabel.getTypeValue();
             } else {
               editHandler = null;
@@ -113,6 +113,9 @@ public class SnipEditServlet extends HttpServlet {
       request.setAttribute("parent", parent);
       request.setAttribute("parentBefore", parentBefore);
       request.setAttribute("templates", getTemplates());
+      if (type != null) {
+        editHandler = TypeLabel.getEditHandler(type);
+      }
     }
 
     // copy a template into the content if it was requested
@@ -133,15 +136,15 @@ public class SnipEditServlet extends HttpServlet {
       request.setAttribute("content", snip != null ? snip.getContent() : "");
     }
 
-    if(null != editHandler && !"".equals(editHandler)) {
-      if(Security.hasRoles(Application.get().getUser(), snip, authRoles)) {
+    if (null != editHandler && !"".equals(editHandler)) {
+      if (Security.hasRoles(Application.get().getUser(), snip, authRoles)) {
         request.setAttribute("edit_handler", editHandler);
         request.setAttribute("mime_type", type);
       }
     }
 
-    String referer = request.getParameter("referer");
-    if(null == referer && request.getHeader("REFERER") != null) {
+    String referer = sanitize(request.getParameter("referer"));
+    if (null == referer && request.getHeader("REFERER") != null) {
       referer = Encoder.escape(request.getHeader("REFERER"));
     }
     request.setAttribute("referer", referer == null ? "" : referer);
@@ -176,5 +179,9 @@ public class SnipEditServlet extends HttpServlet {
       }
     }
     return templates;
+  }
+
+  private String sanitize(String parameter) {
+    return parameter.split("[\r\n]")[0];
   }
 }
