@@ -50,19 +50,8 @@ public class UserManager {
     return instance;
   }
 
-  private Set ROLES = new HashSet();
-
-  private UserManager() {
-    ROLES.add("Editor");
-    ROLES.add("NoComment");
-  }
-
   public List getAll() {
     return storageAll();
-  }
-
-  public Set getAllRoles() {
-    return ROLES;
   }
 
   public User getUser(HttpServletRequest request) {

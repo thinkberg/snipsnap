@@ -9,7 +9,7 @@
 <h1>Welcome to your SnipSnap Installation</h1>
 
 <c:forEach items="${errors}" var="error">
-  <span class="error"><c:out value="${error}"/></span><br>
+  <span class="error"><c:out value="${error.value}"/></span><br>
 </c:forEach>
 
 <c:choose>
@@ -24,7 +24,7 @@
         <tr>
           <td colspan="2" class="table-header">Administrator</td>
         </tr>
-        <tr>
+        <tr <c:if test="${errors['login'] != null}">class="error-position"</c:if>>
           <td>User Name:</td>
           <td><input name="username" type="text" value="<c:out value='${config.userName}' default=''/>"></td>
         <tr>
@@ -32,18 +32,18 @@
           <td>Email Address:</td>
           <td><input name="email" type="text" value="<c:out value='${config.email}' default=''/>"></td>
         <tr>
-        <tr>
+        <tr <c:if test="${errors['password'] != null}">class="error-position"</c:if>>
           <td>Password:</td>
           <td><input name="password" type="password" value=""></td>
         <tr>
-        <tr>
+        <tr <c:if test="${errors['password'] != null}">class="error-position"</c:if>>
           <td><nobr>Password (verification):</nobr></td>
           <td><input name="password2" type="password" value=""></td>
         <tr>
         <tr>
           <td colspan="2" class="table-header">Application</td>
         </tr>
-        <tr>
+        <tr <c:if test="${errors['host'] != null}">class="error-position"</c:if>>
           <td valign="top">Virtual Host:</td>
           <td valign="top"><input name="host" type="text" value="<c:out value='${config.host}' default=''/>"></td>
           <td valign="top">(optional)<br>
@@ -52,7 +52,7 @@
 	          host names your server has (default).
 	        </td>
         <tr>
-        <tr>
+        <tr <c:if test="${errors['port'] != null}">class="error-position"</c:if>>
           <td valign="top">Port Number:</td>
           <td valign="top"><input name="port" type="text" value="<c:out value='${config.port}' default='80'/>"></td>
           <td valign="top">(optional)</td>

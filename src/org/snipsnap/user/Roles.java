@@ -25,7 +25,12 @@
 
 package com.neotis.user;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.StringTokenizer;
+import java.util.TreeSet;
 
 /**
  * User roles
@@ -37,6 +42,16 @@ import java.util.*;
 public class Roles {
   private Set roles;
 
+  private static Set ROLES = new TreeSet();
+
+  private static Set getAllRoles() {
+    if (ROLES == null) {
+      ROLES.add("Editor");
+      ROLES.add("NoComment");
+    }
+    return ROLES;
+  }
+
   public Roles(String roleString) {
     this.roles = deserialize(roleString);
   }
@@ -45,8 +60,16 @@ public class Roles {
     roles = new HashSet();
   }
 
+  public Roles(Set roleSet) {
+    this.roles = new HashSet(roleSet);
+  }
+
   public void add(String role) {
     roles.add(role);
+  }
+
+  public void addAll(Roles roles) {
+    this.roles.addAll(roles.getRoleSet());
   }
 
   public Iterator iterator() {
@@ -68,7 +91,7 @@ public class Roles {
     return false;
   }
 
-  public Set roleSet() {
+  public Set getRoleSet() {
     return Collections.unmodifiableSet(roles);
   }
 

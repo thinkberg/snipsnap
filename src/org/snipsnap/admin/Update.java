@@ -25,10 +25,6 @@
 package com.neotis.admin;
 
 import com.neotis.snip.SnipLink;
-import com.neotis.admin.util.ApplicationCommand;
-import org.mortbay.http.HttpContext;
-import org.mortbay.http.HttpServer;
-import org.mortbay.jetty.Server;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -36,14 +32,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Iterator;
 
 /**
  * Application configuration servlet.
  * @author Matthias L. Jugel
  * @version $Id$
  */
-public class Application extends HttpServlet {
+public class Update extends HttpServlet {
 
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
@@ -51,14 +46,8 @@ public class Application extends HttpServlet {
     if (session != null && session.getAttribute("admin") != null) {
       String srv = request.getParameter("server");
       String ctx = request.getParameter("context");
-      String command = request.getPathInfo();
-      if(command != null && command.length() > 0) {
-        ApplicationCommand.execute(srv, ctx, command.toLowerCase().substring(1));
-      }
     }
     response.sendRedirect(SnipLink.absoluteLink(request, "/"));
   }
-
-
 }
 

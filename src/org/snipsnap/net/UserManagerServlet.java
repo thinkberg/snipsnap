@@ -26,6 +26,7 @@ package com.neotis.net;
 
 import com.neotis.user.UserManager;
 import com.neotis.user.User;
+import com.neotis.user.Roles;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -113,15 +114,16 @@ public class UserManagerServlet extends HttpServlet {
       user.setStatus(status);
     }
 
-    Set roleSet = parseRoles(roles);
-    if(!user.getRoles().equals(roleSet)) {
-      if(roleSet.retainAll(um.getAllRoles())) {
-        errors.put("roles", ERR_UNKNOWN_ROLES+um.getAllRoles());
-      } else {
-        modified = true;
-        user.setRoles(roleSet);
-      }
-    }
+    System.err.println("roles: "+roles);
+//    Roles r = new Roles(parseRoles(roles));
+//    if(!user.getRoles().equals(roleSet)) {
+//      if(roleSet.retainAll(um.getAllRoles())) {
+//        errors.put("roles", ERR_UNKNOWN_ROLES+um.getAllRoles());
+//      } else {
+//        modified = true;
+//        user.setRoles();
+//      }
+//    }
 
 
     if(nPass != null && nPass.length() > 0) {

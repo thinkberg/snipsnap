@@ -26,9 +26,9 @@ package com.neotis.admin;
 
 import com.neotis.config.Configuration;
 import com.neotis.config.CreateDB;
-import com.neotis.server.AppServer;
 import com.neotis.snip.SnipLink;
-import com.neotis.util.JarExtractor;
+import com.neotis.util.JarUtil;
+import com.neotis.util.Checksum;
 import org.mortbay.http.SocketListener;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.WebApplicationContext;
@@ -42,12 +42,12 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.reflect.Method;
 import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
 import java.util.jar.JarFile;
 
 /**
@@ -84,8 +84,8 @@ public class Installer extends HttpServlet {
     // set user name and email, check that information
     config.setUserName(request.getParameter("username"));
     if (null == config.getUserName() || config.getUserName().length() == 0) {
-      System.err.println("Installer: empty user name");
-      errors.put("username", "You must enter a user name!");
+      System.err.println("Installer: user name too short");
+      errors.put("login", "You must enter a user name with at least 3 characters!");
     }
     config.setEmail(request.getParameter("email"));
 
@@ -149,7 +149,8 @@ public class Installer extends HttpServlet {
 
     writeMessage(out, "Extracting templates ...");
     try {
-      JarExtractor.extract(new JarFile("./lib/snipsnap-template.war", true), new File("./app/" + config.getContextPath()), out);
+      Checksum checksum = JarUtil.extract(new JarFile("./lib/snipsnap-template.war", true), new File("./app/" + config.getContextPath()), out);
+      checksum.store(new File("./app/" + config.getContextPath()+"/WEB-INF/CHECKSUMS"));
     } catch (IOException e) {
       System.err.println("Installer: error while extracting default template: " + e);
       errors.put("fatal", "Unable to extract default application, please see server.log for details!");

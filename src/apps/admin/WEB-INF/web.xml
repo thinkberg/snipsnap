@@ -37,6 +37,11 @@
   </servlet>
 
   <servlet>
+    <servlet-name>com.neotis.admin.Update</servlet-name>
+    <servlet-class>com.neotis.admin.Update</servlet-class>
+  </servlet>
+
+  <servlet>
     <servlet-name>com.neotis.admin.UserManager</servlet-name>
     <servlet-class>com.neotis.admin.UserManager</servlet-class>
   </servlet>
@@ -69,7 +74,22 @@
 
   <servlet-mapping>
     <servlet-name>com.neotis.admin.Application</servlet-name>
-    <url-pattern>/exec/application</url-pattern>
+    <url-pattern>/exec/app/start</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>com.neotis.admin.Application</servlet-name>
+    <url-pattern>/exec/app/stop</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>com.neotis.admin.Application</servlet-name>
+    <url-pattern>/exec/app/remove</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>com.neotis.admin.Update</servlet-name>
+    <url-pattern>/exec/app/update</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>

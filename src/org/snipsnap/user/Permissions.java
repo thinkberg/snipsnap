@@ -72,16 +72,16 @@ public class Permissions {
     if (! permissions.containsKey(permission)) {
       permissions.put(permission,  new Roles());
     }
-    ((Set) permissions.get(permission)).add(role);
+    ((Roles) permissions.get(permission)).add(role);
     return;
   }
 
   public void add(String permission, Roles roles) {
     init();
     if (! permissions.containsKey(permission)) {
-      permissions.put(permission,  new HashSet());
+      permissions.put(permission,  new Roles());
     }
-    ((Set) permissions.get(permission)).addAll(roles.roleSet());
+    ((Roles) permissions.get(permission)).addAll(roles);
     return;
   }
 

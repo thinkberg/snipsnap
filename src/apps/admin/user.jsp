@@ -35,7 +35,11 @@
   <tr <c:if test="${errors['roles'] != null}">class="error-position"</c:if>>
     <td valign="top">Roles: </td>
     <!-- TODO: use checkboxes here ... -->
-    <td><input type="text" name="roles" value="<c:out value='${user.roles}'/>"></td>
+    <td>
+      <c:forEach items="${user.roles.allRoles}" var="role">
+        <input type="checkbox" name="roles" <c:if test="${user.roleSet[role] != null}">checked="checked"</c:if>>
+      </c:forEach>
+    </td>
   </tr>
   <tr><td colspan="2">
    <input value="Update User" name="ok" type="submit" tabindex="0">
