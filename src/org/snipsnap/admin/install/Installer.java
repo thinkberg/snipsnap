@@ -162,6 +162,11 @@ public class Installer extends HttpServlet {
       return;
     }
 
+    String domain = request.getParameter("domain");
+    if(domain != null) {
+      config.setDomain(domain);
+    }
+
     Collection servers = Server.getHttpServers();
     Iterator it = servers.iterator();
     Server server = null;

@@ -43,7 +43,7 @@ public class AppConfiguration extends Configuration {
   private final static String APP_PORT = "app.port";
   private final static String APP_PATH = "app.path";
   private final static String APP_PERM = "app.perm";
-  private final static String APP_EURL = "app.eurl";
+  private final static String APP_DOMAIN = "app.domain";
   private final static String APP_TAGLINE = "app.tagline";
   private final static String APP_LOGGER = "app.logger";
   private final static String APP_JDBC_URL = "app.jdbc.url";
@@ -116,30 +116,55 @@ public class AppConfiguration extends Configuration {
     return getProperty(AppConfiguration.APP_PATH);
   }
 
-  public String getUrl() {
-    return getUrl("");
+  public void setDomain(String domain) {
+    setProperty(AppConfiguration.APP_DOMAIN, domain);
   }
 
-  public String getUrl(String target) {
+  public String getDomain() {
+    return getProperty(AppConfiguration.APP_DOMAIN);
+  }
+
+  /**
+   * Return root url to Snipsnap instance
+   */
+  public String getUrl() {
     StringBuffer url = new StringBuffer();
-    url.append("http://");
-    try {
-      url.append(getHost() == null ? InetAddress.getLocalHost().getHostName() : getHost());
-    } catch (UnknownHostException e) {
-      url.append(System.getProperty("host", "localhost"));
+    String domain = getProperty(AppConfiguration.APP_DOMAIN);
+    if (null != domain) {
+      url.append(domain);
+    } else {
+      url.append("http://");
+      try {
+        url.append(getHost() == null ? InetAddress.getLocalHost().getHostName() : getHost());
+      } catch (UnknownHostException e) {
+        url.append(System.getProperty("host", "localhost"));
+      }
+      int port = getPort();
+      if (port != 80) {
+        url.append(":");
+        url.append(port);
+      }
+      url.append(getContextPath());
     }
-    int port = getPort();
-    if (port != 80) {
-      url.append(":");
-      url.append(port);
-    }
-    url.append(getContextPath());
-    url.append(target);
     return url.toString();
   }
 
+  /**
+   * Returns an external URL to this instance of SnipSnap
+   *
+   * @target Path to add to url, e.g. "/exec/"
+   */
+  public String getUrl(String target) {
+    return getUrl() + target;
+  }
+
+  /**
+   * Returns an external URL of a snip
+   *
+   * @snipName Name of the snip
+   */
   public String getSnipUrl(String snipName) {
-    return getUrl("space/"+snipName);
+    return getUrl("space/" + snipName);
   }
 
   public void setTagLine(String tagline) {
@@ -176,11 +201,11 @@ public class AppConfiguration extends Configuration {
   }
 
   public boolean allow(String action) {
-    return "allow".equals(getProperty(AppConfiguration.APP_PERM+action));
+    return "allow".equals(getProperty(AppConfiguration.APP_PERM + action));
   }
 
   public boolean deny(String action) {
-    return "deny".equals(getProperty(AppConfiguration.APP_PERM+action));
+    return "deny".equals(getProperty(AppConfiguration.APP_PERM + action));
   }
 
   public boolean allowExternalImages() {
