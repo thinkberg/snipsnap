@@ -1,2 +1,4 @@
 #org.snipsnap.net.handler.TestStoreHandler
+#org/snipsnap/net/handler/TestEditHandler.gsp text/gsp
+#org/snipsnap/net/handler/TestViewHandler.gsp text/gsp
 conf/copyright.txt text/plain

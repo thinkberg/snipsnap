@@ -120,7 +120,7 @@ public class PluginServlet extends HttpServlet {
         BufferedWriter writer = new BufferedWriter(response.getWriter());
         try {
           writer.write(handleGroovyTemplate(getTemplateSource(pluginName)));
-        } catch (IOException e) {
+        } catch (Exception e) {
           writer.write("<span class=\"error\">" + e.getLocalizedMessage() + "</span>");
         }
         writer.flush();
@@ -186,14 +186,14 @@ public class PluginServlet extends HttpServlet {
     return null;
   }
 
-  private String handleGroovyTemplate(String source) {
+  private String handleGroovyTemplate(String source) throws Exception {
     try {
       Template groovyTemplate = templateEngine.createTemplate(source);
       groovyTemplate.setBinding(Application.get().getParameters());
       return groovyTemplate.toString();
-    } catch (Exception e) {
+    } catch(Error e) {
       e.printStackTrace();
-      return e.getMessage();
+      throw new ServletException("groovy error", e);
     }
   }
 

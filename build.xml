@@ -295,6 +295,7 @@
       <fileset dir="${src}" includes="org/snipsnap/config/defaults.conf"/>
       <fileset dir="${src}" includes="org/snipsnap/config/transpose.map"/>
       <fileset dir="${src}" includes="org/snipsnap/snip/storage/SnipSerializer.properties"/>
+      <fileset dir="${src}" includes="org/snipsnap/net/handler/*.gsp"/>
     </copy>
     <jar destfile="${src}/apps/default/WEB-INF/lib/snipsnap-servlets.jar" excludes="**/CVS">
       <fileset dir="${target}/default/WEB-INF/classes" includes="**"/>

@@ -157,7 +157,7 @@ public class Month {
       view.append(SnipLink.getSpaceRoot()).append("/");
       view.append(viewed);
       view.append("?calsnip=");
-      view.append(viewedSnip.getNameEncoded());
+      view.append(SnipLink.encode(viewed));
       view.append("&calmonth=");
       view.append(prevMonth);
       view.append("&amp;calyear=");
@@ -173,14 +173,14 @@ public class Month {
       view.append(SnipLink.getSpaceRoot()).append("/");
       view.append(viewed);
       view.append("?calsnip=");
-      view.append(viewedSnip.getNameEncoded());
+      view.append(SnipLink.encode(viewed));
       view.append("&calmonth=");
       view.append(nextMonth);
       view.append("&amp;calyear=");
       view.append(nextYear);
       view.append("\">&gt;</a>");
     }
-    if (!viewed.equals(config.getStartSnip())) {
+    if (viewedSnip != null && !viewed.equals(config.getStartSnip())) {
       view.append(" (");
       view.append(SnipLink.cutLength(viewedSnip.getTitle(), 20));
       view.append(")");
@@ -230,9 +230,9 @@ public class Month {
       String calBlogNew = viewed + "/" + calBlogOld + "/1";
 
       if (days.contains(calBlogNew)) {
-        day = makeLink(SnipLink.encode(calBlogNew) + "?calsnip=" + viewedSnip.getNameEncoded() + "&calmonth=" + month + "&calyear=" + year, day);
+        day = makeLink(SnipLink.encode(calBlogNew) + "?calsnip=" + SnipLink.encode(viewed) + "&calmonth=" + month + "&calyear=" + year, day);
       } else if (days.contains(calBlogOld)) {
-        day = makeLink(SnipLink.encode(calBlogOld) + "?calsnip=" + viewedSnip.getNameEncoded() + "&calmonth=" + month + "&calyear=" + year, day);
+        day = makeLink(SnipLink.encode(calBlogOld) + "?calsnip=" + SnipLink.encode(viewed) + "&calmonth=" + month + "&calyear=" + year, day);
       }
 
       if (i == todayNumber && month == today.get(Calendar.MONTH) + 1 && year == today.get(Calendar.YEAR)) {
