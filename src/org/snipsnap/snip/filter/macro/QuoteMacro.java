@@ -53,13 +53,12 @@ public class QuoteMacro extends Preserved {
 
   public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
 
-    buffer.append("<div class=\"quote\"><blockquote>");
+    buffer.append("<blockquote class=\"quote\">");
     buffer.append(content);
     if (null!=params && params.length==1) {
       buffer.append(params[0]);
     }
     buffer.append("</blockquote>");
-    buffer.append("</div>");
     return;
   }
 }

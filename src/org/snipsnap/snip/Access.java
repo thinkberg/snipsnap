@@ -79,7 +79,10 @@ public class Access {
             url = url.substring(0, index);
           }
 
-          snipLinks.addLink(SnipLink.decode(url));
+          String name = SnipLink.decode(url);
+          if (! "start".equals(name) && ! snip.getName().equals(name)) {
+            snipLinks.addLink(SnipLink.decode(url));
+          }
         }
       } else {
         // Referrer was external link
