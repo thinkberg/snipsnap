@@ -29,6 +29,8 @@ import org.snipsnap.semanticweb.rss.Rssify;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
 import org.snipsnap.xmlrpc.WeblogsPing;
+import org.snipsnap.app.Application;
+import org.snipsnap.config.Configuration;
 
 import java.sql.Date;
 import java.util.Arrays;
@@ -45,6 +47,7 @@ public class BlogImpl implements Blog {
   private String name;
   private Snip blog;
   private SnipSpace space;
+  private Snip snip;
 
   public BlogImpl(SnipSpace space, String name) {
     this.space = space;
@@ -75,21 +78,36 @@ public class BlogImpl implements Blog {
 
     // Should several posts per day be one snip or
     // several snips?
-    if (false) {
-      if (space.exists(snipName)) {
-        snip = space.load(snipName);
-        snip.setContent(content + "\n\n" + snip.getContent());
-      } else {
-        snip = space.create(snipName, content);
+    if (Application.get().getConfiguration().allow(Configuration.APP_PERM_MULTIPLEPOSTS)) {
+      // if (space.exists(snipName)) {
+      // }
+      // how many children do exist?
+      // get the highest count
+      // e.g. start/2003-05.06
+      Snip[] existing = space.match(snipName+"/");
+      int max = 1;
+      System.out.println("found="+existing.length+" name="+snipName);
+      for (int i = 0; i < existing.length; i++) {
+        Snip post = existing[i];
+        String name = post.getName();
+        int index = name.lastIndexOf('/');
+        System.out.println("name="+name);
+        if (index != -1) {
+          try {
+            System.out.println("parsing="+name.substring(index+1));
+            max = Math.max(Integer.parseInt(name.substring(index + 1)) + 1, max);
+            System.out.println("max="+max);
+          } catch (NumberFormatException e) {
+            //
+          }
+        }
       }
+      snip = snip = space.create(snipName + "/" + max, content);
     } else {
       if (space.exists(snipName)) {
-        // how many children do exist?
-        // get the highest count
         snip = space.load(snipName);
         snip.setContent(content + "\n\n" + snip.getContent());
       } else {
-        // create a new snip
         snip = space.create(snipName, content);
       }
     }

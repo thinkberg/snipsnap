@@ -41,8 +41,8 @@ import java.util.*;
  */
 
 public class PartialSearcher implements Map {
-  Map hash;
-  String[] sortedArray;
+  private Map hash;
+  private String[] sortedArray;
 
    public PartialSearcher(Map h) {
     hash = h;

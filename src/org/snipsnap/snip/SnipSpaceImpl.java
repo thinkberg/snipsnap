@@ -229,7 +229,7 @@ public class SnipSpaceImpl implements SnipSpace {
   }
 
   public Snip[] match(String pattern) {
-    return storage.match(pattern);
+    return storage.match(pattern.toUpperCase());
   }
 
   public Snip load(String name) {
