@@ -82,6 +82,8 @@ public class AppServer {
       }
     }
 
+    serverConfig = parseArguments(args, serverConfig);
+
     String enc = serverConfig.getProperty(Configuration.SERVER_ENCODING);
     if(enc != null && enc.length() > 0) {
       System.setProperty("file.encoding", enc);
@@ -143,19 +145,19 @@ public class AppServer {
    * @param adminConfig the configuration properties of the server
    * @return the possibly changed configuration properties
    */
-  private static Configuration parseArguments(String args[], Configuration adminConfig) {
+  private static Configuration parseArguments(String args[], Configuration serverConfig) {
     for (int i = 0; i < args.length; i++) {
       // the applications root directory
       if ("-appsroot".equals(args[i])) {
         if (args.length >= i + 1 && !args[i + 1].startsWith("-")) {
-          adminConfig.setProperty(Configuration.SERVER_WEBAPP_ROOT, args[i++]);
+          serverConfig.setProperty(Configuration.SERVER_WEBAPP_ROOT, args[i++]);
         } else {
           usage("an argument is required for -appsroot");
         }
         // the port where the server listens for administrative commands
       } else if ("-adminport".equals(args[i]) && !args[i + 1].startsWith("-")) {
         if (args.length >= i + 1) {
-          adminConfig.setProperty(Configuration.SERVER_ADMIN_PORT, args[i++].trim());
+          serverConfig.setProperty(Configuration.SERVER_ADMIN_PORT, args[i++].trim());
         } else {
           usage("a number argument is required for -adminport");
         }
@@ -163,12 +165,12 @@ public class AppServer {
       } else if ("-admin".equals(args[i])) {
         if (args.length >= i + 1) {
           try {
-            if (!AdminServer.execute(Integer.parseInt(adminConfig.getProperty(Configuration.SERVER_ADMIN_PORT).trim()), args[1])) {
+            if (!AdminServer.execute(Integer.parseInt(serverConfig.getProperty(Configuration.SERVER_ADMIN_PORT).trim()), args[1])) {
               System.exit(-1);
             }
             System.exit(0);
           } catch (NumberFormatException e) {
-            System.out.println("ERROR: admin port '" + adminConfig.getProperty(Configuration.SERVER_ADMIN_PORT) + "' is not a number, aborting");
+            System.out.println("ERROR: admin port '" + serverConfig.getProperty(Configuration.SERVER_ADMIN_PORT) + "' is not a number, aborting");
             System.exit(-1);
           }
         } else {
@@ -177,7 +179,7 @@ public class AppServer {
         System.exit(0);
       }
     }
-    return adminConfig;
+    return serverConfig;
   }
 
   /**
