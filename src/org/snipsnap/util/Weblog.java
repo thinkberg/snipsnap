@@ -35,7 +35,7 @@ import java.util.Date;
  * @version $Id$
  */
 
-public class Weblog implements Linkable {
+public class Weblog implements org.snipsnap.render.macro.list.Linkable {
   private String name;
   private String url;
   private Timestamp update;
