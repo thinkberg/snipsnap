@@ -131,7 +131,7 @@ public class RssServlet extends HttpServlet {
       // feed.setEtag(SnipSpaceFactory.getInstance().getETag());
       String url = config.getUrl("/space");
       feed.setTitle(config.getName());
-      feed.setLink(url+snip.getNameEncoded());
+      feed.setLink(url + "/" + snip.getNameEncoded());
       feed.setDescription(config.getTagline());
       feed.setCopyright("Copyright "+year.format(snip.getModified().getmTime()));
       feed.setLanguage(config.getLocale().getLanguage());
@@ -147,7 +147,7 @@ public class RssServlet extends HttpServlet {
 
         entry = new SyndEntry();
         entry.setTitle(rssSnip.getName());
-        entry.setLink(url + rssSnip.getNameEncoded());
+        entry.setLink(url + "/" + rssSnip.getNameEncoded());
         // entry.setPublishedDate();
         description = new SyndContent();
         description.setType("text/html");
