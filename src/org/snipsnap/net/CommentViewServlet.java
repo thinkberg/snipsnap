@@ -58,7 +58,7 @@ public class CommentViewServlet extends HttpServlet {
       name = name.substring(1);
     }
     // TODO 1.4 name = URLDecoder.decode(name, "iso-8859-1");
-    name = URLDecoder.decode(name);
+    name = SnipLink.decode(name);
 
     request.setAttribute("snip", SnipSpace.getInstance().load(name));
     RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/comment.jsp");

@@ -24,23 +24,17 @@
  */
 package org.snipsnap.net;
 
-import org.snipsnap.app.Application;
-import org.snipsnap.user.UserManager;
-import org.snipsnap.user.User;
-import org.snipsnap.snip.SnipSpace;
+import org.apache.lucene.search.Hits;
 import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.SnipSpace;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.net.URLDecoder;
-
-import org.apache.lucene.search.Hits;
 
 /**
  * Load a snip to view.
@@ -50,9 +44,9 @@ import org.apache.lucene.search.Hits;
 public class SnipSearchServlet extends HttpServlet {
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws IOException, ServletException {
+          throws IOException, ServletException {
     String query = request.getParameter("query");
-    if(query != null && query.length() > 0) {
+    if (query != null && query.length() > 0) {
       HttpSession session = request.getSession(true);
       SnipSpace space = SnipSpace.getInstance();
       Hits hits = space.search(query);

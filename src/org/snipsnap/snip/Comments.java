@@ -124,7 +124,7 @@ public class Comments {
 
   public String getPostString() {
     StringBuffer buffer = new StringBuffer();
-    SnipLink.appendLinkWithRoot(buffer, "../comments", snip.getName()+"#post", "post comment");
+    SnipLink.appendLinkWithRoot(buffer, "../comments", SnipLink.encode(snip.getName())+"#post", "post comment");
     return buffer.toString();
   }
 

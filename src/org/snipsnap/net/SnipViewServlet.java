@@ -26,6 +26,7 @@ package org.snipsnap.net;
 
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipLink;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -53,7 +54,7 @@ public class SnipViewServlet extends HttpServlet {
       name = name.substring(1);
     }
     // TODO 1.4 name = URLDecoder.decode(name, "iso-8859-1");
-    name = URLDecoder.decode(name);
+    name = SnipLink.decode(name);
     Snip snip = SnipSpace.getInstance().load(name);
     snip.getAccess().handle(request);
     request.setAttribute("snip", snip);

@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.List;
 import java.net.URLEncoder;
+import java.net.URLDecoder;
 
 /**
  *  Generates links for snips
@@ -68,14 +69,17 @@ public class SnipLink {
   }
 
   public static StringBuffer appendLink(StringBuffer buffer, String name, String view) {
-    return appendLinkWithRoot(buffer, "../space", name, view);
+    return appendLinkWithRoot(buffer, "../space", encode(name), view);
   }
 
+  /**
+   * Create a link with a root and a special view. The name will not be url encoded!
+   */
   public static StringBuffer appendLinkWithRoot(StringBuffer buffer, String root, String name, String view) {
     buffer.append("<a href=\"");
     buffer.append(root);
     buffer.append("/");
-    buffer.append(encode(name));
+    buffer.append(name);
     buffer.append("\">");
     buffer.append(view);
     buffer.append("</a>");
@@ -191,5 +195,18 @@ public class SnipLink {
     */
 
     return URLEncoder.encode(s);
+  }
+
+  public static String decode(String s) {
+    /*
+      try {
+        URLDecoder.decode(s, "ISO-8859-1");
+      } catch (UnsupportedEncodingException e) {
+        cat.error("unsupported encoding", e);
+        return s;
+      }
+    */
+
+    return URLDecoder.decode(s);
   }
 }

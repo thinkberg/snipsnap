@@ -77,7 +77,7 @@
     <delete>
       <fileset dir="${jar}" includes="${appname}.jar"/>
       <fileset dir="${jar}" includes="${appname}-admin.war"/>
-      <fileset dir="${jar}" includes="${appname}-installer.war"/>
+      <fileset dir="${jar}" includes="${appname}-w2installer.war"/>
       <fileset dir="${jar}" includes="${appname}-template.war"/>
     </delete>
   </target>

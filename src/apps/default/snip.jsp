@@ -40,8 +40,16 @@
   <%-- do not display comments on start page, only on posted
         entries --%>
   <c:if test="${snip.notWeblog}">
-   <c:out value="${snip.comments}" escapeXml="false" /> |
-   <c:out value="${snip.comments.postString}" escapeXml="false" />
+    <c:choose>
+      <c:when test="${snip.comment}">
+        <c:out value="${snip.commentedSnip}" escapeXml="false" /> |
+        <c:out value="${snip.commentedSnip.postString}" escapeXml="false" />
+      </c:when>
+      <c:otherwise>
+        <c:out value="${snip.comments}" escapeXml="false" /> |
+        <c:out value="${snip.comments.postString}" escapeXml="false" />
+      </c:otherwise>
+    </c:choose>
   </c:if>
  </td></tr>
  <tr><td>&nbsp;</td></tr>
