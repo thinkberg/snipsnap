@@ -25,11 +25,11 @@
 
 package org.snipsnap.notification;
 
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.notification.jabber.JabberNotifier;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.user.User;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.user.User;
 import org.snipsnap.container.Components;
 
 import java.util.ArrayList;
@@ -101,7 +101,7 @@ public class NotificationService implements Consumer {
 
   public void notify(StringBuffer buffer) {
     buffer.append(" by ");
-    buffer.append(Application.get().getUser().getLogin());
+    buffer.append(snipsnap.api.app.Application.get().getUser().getLogin());
     notify(buffer.toString());
   }
 

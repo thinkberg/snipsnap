@@ -25,13 +25,13 @@
  */
 package org.snipsnap.net.admin;
 
-import org.snipsnap.config.Configuration;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.config.InitializeDatabase;
 import org.snipsnap.net.FileUploadServlet;
 import org.snipsnap.net.filter.MultipartWrapper;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipSpaceFactory;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipSpace;
+import snipsnap.api.snip.SnipSpaceFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -50,12 +50,12 @@ public class SetupApplication implements SetupHandler {
 
   public Map setup(HttpServletRequest request, HttpServletResponse response, Configuration config, Map errors) {
     config.setName(request.getParameter(Configuration.APP_NAME));
-    config.setTagline(request.getParameter(Configuration.APP_TAGLINE));
+    config.setTagline(request.getParameter(snipsnap.api.config.Configuration.APP_TAGLINE));
     if (request instanceof MultipartWrapper) {
       try {
         if (config.isConfigured()) {
-          SnipSpace space = SnipSpaceFactory.getInstance();
-          Snip snip = space.load(Configuration.SNIPSNAP_CONFIG);
+          snipsnap.api.snip.SnipSpace space = snipsnap.api.snip.SnipSpaceFactory.getInstance();
+          snipsnap.api.snip.Snip snip = space.load(Configuration.SNIPSNAP_CONFIG);
           String logoName = uploader.uploadFile(request, snip);
           if (logoName != null && !"".equals(logoName)) {
             config.setLogo(logoName);

@@ -31,17 +31,17 @@ import org.picocontainer.PicoContainer;
 import org.radeox.api.engine.RenderEngine;
 import org.radeox.api.engine.context.RenderContext;
 import org.radeox.util.logging.Logger;
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
 import org.snipsnap.container.Components;
 import org.snipsnap.render.context.SnipRenderContext;
 import org.snipsnap.snip.attachment.Attachments;
-import org.snipsnap.snip.label.Labels;
+import snipsnap.api.label.Labels;
 import org.snipsnap.snip.label.RenderEngineLabel;
 import org.snipsnap.snip.name.NameFormatter;
 import org.snipsnap.snip.name.PathRemoveFormatter;
 import org.snipsnap.snip.name.WeblogNameFormatter;
 import org.snipsnap.user.Permissions;
-import org.snipsnap.user.User;
+import snipsnap.api.user.User;
 
 import javax.servlet.http.HttpServletRequest;
 // import java.io.File;
@@ -49,6 +49,12 @@ import java.io.IOException;
 import java.io.Writer;
 import java.sql.Timestamp;
 import java.util.List;
+
+import snipsnap.api.snip.*;
+import snipsnap.api.snip.SnipSpace;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipLink;
+import snipsnap.api.snip.SnipSpaceFactory;
 
 /**
  * Central class for snips.
@@ -76,7 +82,7 @@ public class SnipImpl implements Snip, ProxyAware {
   // @TODO: Composite Object
   private Permissions permissions;
   private Access access;
-  private Labels labels;
+  private snipsnap.api.label.Labels labels;
   private Attachments attachments;
   private Modified modified;
   private int version = 1;
@@ -196,11 +202,11 @@ public class SnipImpl implements Snip, ProxyAware {
     this.attachments = attachments;
   }
 
-  public Labels getLabels() {
+  public snipsnap.api.label.Labels getLabels() {
     return labels;
   }
 
-  public void setLabels(Labels labels) {
+  public void setLabels(snipsnap.api.label.Labels labels) {
     this.labels = labels;
   }
 
@@ -264,7 +270,7 @@ public class SnipImpl implements Snip, ProxyAware {
     return modified.getmUser();
   }
 
-  public void setMUser(User mUser) {
+  public void setMUser(snipsnap.api.user.User mUser) {
     this.modified.setmUser(mUser.getLogin());
   }
 
@@ -518,7 +524,7 @@ public class SnipImpl implements Snip, ProxyAware {
   }
 
   public Snip copy(String newName) {
-    SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
+    snipsnap.api.snip.SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
     Snip newSnip = space.create(newName, getContent());
     newSnip.setLabels(new Labels(newSnip, getLabels().toString()));
     newSnip.setPermissions(getPermissions());

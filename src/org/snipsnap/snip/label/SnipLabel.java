@@ -25,10 +25,10 @@
 
 package org.snipsnap.snip.label;
 
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
 import org.snipsnap.container.Components;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpaceFactory;
+import snipsnap.api.snip.SnipLink;
+import snipsnap.api.snip.SnipSpaceFactory;
 import org.snipsnap.user.AuthenticationService;
 
 /**
@@ -91,11 +91,11 @@ public class SnipLabel extends BaseLabel {
     AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
 
     if (SnipSpaceFactory.getInstance().exists(name)) {
-      SnipLink.appendLink(buffer, name, name);
+      snipsnap.api.snip.SnipLink.appendLink(buffer, name, name);
     } else if (!service.isAuthenticated(Application.get().getUser())) {
       buffer.append(name);
     } else {
-      SnipLink.appendCreateLink(buffer, name);
+      snipsnap.api.snip.SnipLink.appendCreateLink(buffer, name);
     }
     return buffer;
   }

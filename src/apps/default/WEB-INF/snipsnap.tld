@@ -36,7 +36,7 @@
     <tag-class>org.snipsnap.jsp.PathTag</tag-class>
     <attribute>
       <name>snip</name>
-      <type>org.snipsnap.snip.Snip</type>
+      <type>snipsnap.api.snip.Snip</type>
       <description>snip to get path for</description>
     </attribute>
    </tag>
@@ -46,7 +46,7 @@
     <tag-class>org.snipsnap.jsp.ContentTag</tag-class>
     <attribute>
       <name>snip</name>
-      <type>org.snipsnap.snip.Snip</type>
+      <type>snipsnap.api.snip.Snip</type>
       <description>snip to get content for</description>
     </attribute>
     <attribute>
@@ -68,7 +68,7 @@
     <tag-class>org.snipsnap.jsp.BackLinkTag</tag-class>
     <attribute>
       <name>snip</name>
-      <type>org.snipsnap.snip.Snip</type>
+      <type>snipsnap.api.snip.Snip</type>
       <description>snip to get backlinks for</description>
     </attribute>
     <attribute>
@@ -83,7 +83,7 @@
     <tag-class>org.snipsnap.jsp.SnipLinkTag</tag-class>
     <attribute>
       <name>snip</name>
-      <type>org.snipsnap.snip.Snip</type>
+      <type>snipsnap.api.snip.Snip</type>
       <description>snip to check roles against</description>
     </attribute>
     <attribute>
@@ -110,7 +110,7 @@
     </attribute>
     <attribute>
       <name>context</name>
-      <type>org.snipsnap.snip.Snip</type>
+      <type>snipsnap.api.snip.Snip</type>
       <description>snip to check roles against</description>
     </attribute>
     <attribute>
@@ -133,7 +133,7 @@
     </attribute>
     <attribute>
       <name>snip</name>
-      <type>org.snipsnap.snip.Snip</type>
+      <type>snipsnap.api.snip.Snip</type>
       <description>snip for output</description>
     </attribute>
   </tag>

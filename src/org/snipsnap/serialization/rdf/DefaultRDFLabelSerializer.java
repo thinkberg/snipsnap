@@ -3,7 +3,7 @@ package org.snipsnap.serialization.rdf;
 import java.util.ArrayList;
 import java.util.List;
 import org.snipsnap.serialization.LabelSerializer;
-import org.snipsnap.serialization.LabelContext;
+import snipsnap.api.label.LabelContext;
 import org.snipsnap.serialization.SerializerFactory;
 
 /** @author gis */

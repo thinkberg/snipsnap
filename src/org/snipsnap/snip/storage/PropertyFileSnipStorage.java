@@ -26,8 +26,8 @@
 package org.snipsnap.snip.storage;
 
 import org.radeox.util.logging.Logger;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.app.Application;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.app.Application;
 
 import java.io.*;
 import java.util.Map;
@@ -76,7 +76,7 @@ public class PropertyFileSnipStorage extends TwoFileSnipStorage {
    * @param snip
    * @param out
    */
-  protected void storeContent(Snip snip, OutputStream out) {
+  protected void storeContent(snipsnap.api.snip.Snip snip, OutputStream out) {
     PrintWriter snipWriter = null;
     try {
       String enc = Application.get().getConfiguration().getEncoding();
@@ -98,7 +98,7 @@ public class PropertyFileSnipStorage extends TwoFileSnipStorage {
    * @param snip
    * @param out
    */
-  protected void storeMetadata(Snip snip, OutputStream out) {
+  protected void storeMetadata(snipsnap.api.snip.Snip snip, OutputStream out) {
     // serialize snip, remove content and add application oid
     Properties snipProps = new Properties();
     SnipSerializer serializer = SnipSerializer.getInstance();

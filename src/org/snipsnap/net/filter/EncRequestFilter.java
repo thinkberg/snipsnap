@@ -25,7 +25,7 @@
 package org.snipsnap.net.filter;
 
 import org.radeox.util.logging.Logger;
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
 import org.snipsnap.config.Globals;
 
 import javax.servlet.Filter;

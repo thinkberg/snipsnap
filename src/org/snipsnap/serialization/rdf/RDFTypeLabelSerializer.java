@@ -6,9 +6,9 @@ import com.hp.hpl.mesa.rdf.jena.model.*;
 import com.hp.hpl.mesa.rdf.jena.vocabulary.RDF;
 import com.hp.hpl.mesa.rdf.jena.common.ResourceImpl;
 
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.label.Label;
-import org.snipsnap.serialization.LabelContext;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.label.Label;
+import snipsnap.api.label.LabelContext;
 import org.snipsnap.serialization.LabelSerializer;
 import org.snipsnap.serialization.SerializerFactory;
 import org.snipsnap.serialization.rdf.vocabulary.LABEL;
@@ -20,11 +20,11 @@ import org.snipsnap.serialization.rdf.vocabulary.SNIP;
  */
 public class RDFTypeLabelSerializer implements LabelSerializer {
 
-    public void serialize(LabelContext labelContext) {
+    public void serialize(snipsnap.api.label.LabelContext labelContext) {
         if (!(labelContext instanceof RDFLabelContext))
             throw new RuntimeException("RDFTypeLabelSerializer expects an RDFLabelContext!");
         RDFLabelContext rdfLabelContext = (RDFLabelContext) labelContext;
-        Label label = rdfLabelContext.label;
+        snipsnap.api.label.Label label = rdfLabelContext.label;
         Resource snipResource = rdfLabelContext.snipResource;
 		try {
             snipResource.addProperty(RDF.type, label.getValue());

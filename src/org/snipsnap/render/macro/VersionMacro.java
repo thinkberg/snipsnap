@@ -30,7 +30,7 @@ import org.radeox.macro.Macro;
 import org.radeox.macro.BaseMacro;
 import org.radeox.macro.parameter.MacroParameter;
 import org.radeox.util.i18n.ResourceManager;
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
 
 import java.io.IOException;
 import java.io.Writer;

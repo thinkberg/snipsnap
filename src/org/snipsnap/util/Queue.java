@@ -25,7 +25,7 @@
 package org.snipsnap.util;
 
 import org.radeox.util.logging.Logger;
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.Snip;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -54,12 +54,12 @@ public class Queue {
     queue.addAll(list);
   }
 
-  public Snip add(Snip snip) {
+  public snipsnap.api.snip.Snip add(Snip snip) {
     Logger.debug("Adding snip="+snip);
     Logger.debug("Class="+snip.getClass());
     Iterator iterator = queue.iterator();
     while (iterator.hasNext()) {
-      Snip snip1 = (Snip) iterator.next();
+      snipsnap.api.snip.Snip snip1 = (snipsnap.api.snip.Snip) iterator.next();
     }
     // Queue already contains object, so remove it
     if (queue.contains(snip)) {
@@ -75,7 +75,7 @@ public class Queue {
     return snip;
   }
 
-  public void remove(Snip snip) {
+  public void remove(snipsnap.api.snip.Snip snip) {
     queue.remove(snip);
   }
 

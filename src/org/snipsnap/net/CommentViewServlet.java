@@ -24,11 +24,11 @@
  */
 package org.snipsnap.net;
 
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipLink;
+import snipsnap.api.snip.SnipSpaceFactory;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -50,22 +50,22 @@ public class CommentViewServlet extends HttpServlet {
 
     String name = request.getPathInfo();
     if (null == name) {
-      Configuration config = Application.get().getConfiguration();
+      snipsnap.api.config.Configuration config = snipsnap.api.app.Application.get().getConfiguration();
 
-      response.sendRedirect(config.getUrl("/space/"+Application.get().getConfiguration().getStartSnip()));
+      response.sendRedirect(config.getUrl("/space/"+snipsnap.api.app.Application.get().getConfiguration().getStartSnip()));
       return;
     } else {
       name = name.substring(1);
     }
 
-    Snip snip = SnipSpaceFactory.getInstance().load(name.replace('+', ' '));
+    Snip snip = snipsnap.api.snip.SnipSpaceFactory.getInstance().load(name.replace('+', ' '));
     // Snip does not exist
     if (null == snip) {
       System.err.println("Snip does not exist: name=" + name);
-      snip = SnipSpaceFactory.getInstance().load("snipsnap-notfound");
+      snip = snipsnap.api.snip.SnipSpaceFactory.getInstance().load("snipsnap-notfound");
     }
 
-    Application app = Application.get();
+    snipsnap.api.app.Application app = snipsnap.api.app.Application.get();
     Map params = app.getParameters();
     params.put("viewed", snip);
     params.put("RSS", params.get("RSS") + "?snip=" + snip.getNameEncoded());

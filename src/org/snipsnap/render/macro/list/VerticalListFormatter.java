@@ -25,9 +25,9 @@
 package org.snipsnap.render.macro.list;
 
 import org.snipsnap.container.Components;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpace;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipLink;
+import snipsnap.api.snip.SnipSpace;
 import org.snipsnap.user.UserManagerFactory;
 
 import java.io.IOException;
@@ -72,12 +72,12 @@ public class VerticalListFormatter implements ListFormatter {
       while (nameIterator.hasNext()) {
         Object object = nameIterator.next();
         writer.write("<li>");
-        if (object instanceof Snip) {
+        if (object instanceof snipsnap.api.snip.Snip) {
           formatSnipName(object, writer);
         } else if (object instanceof Linkable) {
           writer.write(((Linkable) object).getLink());
         } else if (object instanceof Nameable) {
-          SnipLink.appendLink(writer, ((Nameable) object).getName());
+          snipsnap.api.snip.SnipLink.appendLink(writer, ((Nameable) object).getName());
         } else {
           writer.write(object.toString());
         }
@@ -92,17 +92,17 @@ public class VerticalListFormatter implements ListFormatter {
   }
 
   private void formatSnipName(Object object, Writer writer) throws IOException {
-    Snip snip = (Snip) object;
+    Snip snip = (snipsnap.api.snip.Snip) object;
     String name = snip.getName();
     String realName = snip.getTitle();
     if (name.startsWith("comment-")) {
       int lastIndex = name.lastIndexOf("-");
-      SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
-      Snip commentedSnip = space.load(name.substring(name.indexOf("-") + 1, lastIndex));
+      SnipSpace space = (SnipSpace) Components.getComponent(snipsnap.api.snip.SnipSpace.class);
+      snipsnap.api.snip.Snip commentedSnip = space.load(name.substring(name.indexOf("-") + 1, lastIndex));
       realName = commentedSnip.getTitle();
-      SnipLink.appendImage(writer, "Icon-Comment", "");
+      snipsnap.api.snip.SnipLink.appendImage(writer, "Icon-Comment", "");
       writer.write(" ");
-      SnipLink.appendLinkWithRoot(writer, SnipLink.getCommentsRoot(),
+      snipsnap.api.snip.SnipLink.appendLinkWithRoot(writer, snipsnap.api.snip.SnipLink.getCommentsRoot(),
                                   SnipLink.encode(commentedSnip.getName()) + "#" + name, realName);
       //SnipLink.appendLink(writer, name, realName);
       writer.write(" (");
@@ -110,7 +110,7 @@ public class VerticalListFormatter implements ListFormatter {
       writer.write(")");
       // @TODO replace with Type Snip check
     } else if (UserManagerFactory.getInstance().exists(name)) {
-      SnipLink.appendImage(writer, "Icon-Person", "");
+      snipsnap.api.snip.SnipLink.appendImage(writer, "Icon-Person", "");
       writer.write(" ");
       SnipLink.appendLink(writer, ((Nameable) object).getName());
       //SnipLink.appendLinkWithRoot(writer, SnipLink.getCommentsRoot(), SnipLink.encode(realName) + "#" + name, realName);

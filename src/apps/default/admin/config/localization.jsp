@@ -1,5 +1,5 @@
 <%@ page import="java.util.*,
-                 org.snipsnap.config.Configuration,
+                 snipsnap.api.config.Configuration,
                  java.text.SimpleDateFormat,
                  java.text.DateFormat"%>
  <%--
@@ -84,7 +84,7 @@
       <c:if test="${!empty errors['app.weblogDateFormat']}"><img src="images/attention.jpg"></c:if>
       <%
         Locale current = Locale.getDefault();
-        Configuration cfg = (Configuration)pageContext.findAttribute("newconfig");
+        snipsnap.api.config.Configuration cfg = (snipsnap.api.config.Configuration)pageContext.findAttribute("newconfig");
         Locale.setDefault(cfg.getLocale());
         try {
           DateFormat df = new SimpleDateFormat(cfg.getWeblogDateFormat());

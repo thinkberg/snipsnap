@@ -25,11 +25,11 @@
 package org.snipsnap.date;
 
 import org.radeox.util.i18n.ResourceManager;
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpaceFactory;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipLink;
+import snipsnap.api.snip.SnipSpaceFactory;
 
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
@@ -104,7 +104,7 @@ public class Month {
     Set days = new HashSet();
 
     while (iterator.hasNext()) {
-      Snip snip = (Snip) iterator.next();
+      snipsnap.api.snip.Snip snip = (Snip) iterator.next();
       days.add(snip.getName());
     }
     return days;
@@ -132,8 +132,8 @@ public class Month {
     }
 
     Application app = Application.get();
-    Configuration config = app.getConfiguration();
-    Snip viewedSnip = (Snip) app.getParameters().get("viewed");
+    snipsnap.api.config.Configuration config = app.getConfiguration();
+    Snip viewedSnip = (snipsnap.api.snip.Snip) app.getParameters().get("viewed");
     String weblogName = (String) app.getParameters().get("weblog");
     String viewed = viewedSnip != null ? viewedSnip.getName() : config.getStartSnip();
     if (weblogName == null) {
@@ -150,10 +150,10 @@ public class Month {
 
     if (navigation) {
       view.append("<a href=\"");
-      view.append(SnipLink.getSpaceRoot()).append("/");
+      view.append(snipsnap.api.snip.SnipLink.getSpaceRoot()).append("/");
       view.append(viewed);
       view.append("?calsnip=");
-      view.append(SnipLink.encode(viewed));
+      view.append(snipsnap.api.snip.SnipLink.encode(viewed));
       view.append("&amp;calmonth=");
       view.append(prevMonth);
       view.append("&amp;calyear=");
@@ -166,10 +166,10 @@ public class Month {
     view.append(" ");
     if (navigation) {
       view.append("<a href=\"");
-      view.append(SnipLink.getSpaceRoot()).append("/");
+      view.append(snipsnap.api.snip.SnipLink.getSpaceRoot()).append("/");
       view.append(viewed);
       view.append("?calsnip=");
-      view.append(SnipLink.encode(viewed));
+      view.append(snipsnap.api.snip.SnipLink.encode(viewed));
       view.append("&amp;calmonth=");
       view.append(nextMonth);
       view.append("&amp;calyear=");
@@ -178,7 +178,7 @@ public class Month {
     }
     if (viewedSnip != null && !weblogName.equals(config.getStartSnip())) {
       view.append(" (");
-      Snip weblogSnip = SnipSpaceFactory.getInstance().load(weblogName);
+      snipsnap.api.snip.Snip weblogSnip = snipsnap.api.snip.SnipSpaceFactory.getInstance().load(weblogName);
       view.append(weblogSnip.getLink());
       view.append(")");
     }
@@ -227,9 +227,9 @@ public class Month {
       String calBlogNew = weblogName + "/" + calBlogOld + "/1";
 
       if (days.contains(calBlogNew)) {
-        day = makeLink(SnipLink.encode(calBlogNew) + "?calsnip=" + SnipLink.encode(viewed) + "&amp;calmonth=" + month + "&amp;calyear=" + year, day);
+        day = makeLink(snipsnap.api.snip.SnipLink.encode(calBlogNew) + "?calsnip=" + snipsnap.api.snip.SnipLink.encode(viewed) + "&amp;calmonth=" + month + "&amp;calyear=" + year, day);
       } else if (days.contains(calBlogOld)) {
-        day = makeLink(SnipLink.encode(calBlogOld) + "?calsnip=" + SnipLink.encode(viewed) + "&amp;calmonth=" + month + "&amp;calyear=" + year, day);
+        day = makeLink(snipsnap.api.snip.SnipLink.encode(calBlogOld) + "?calsnip=" + snipsnap.api.snip.SnipLink.encode(viewed) + "&amp;calmonth=" + month + "&amp;calyear=" + year, day);
       }
 
       if (i == todayNumber && month == today.get(Calendar.MONTH) + 1 && year == today.get(Calendar.YEAR)) {
@@ -271,6 +271,6 @@ public class Month {
 
   private String makeLink(String snipName, String view) {
     StringBuffer linkBuffer = new StringBuffer();
-    return SnipLink.appendLinkWithRoot(linkBuffer, SnipLink.getSpaceRoot(), snipName, view).toString();
+    return snipsnap.api.snip.SnipLink.appendLinkWithRoot(linkBuffer, snipsnap.api.snip.SnipLink.getSpaceRoot(), snipName, view).toString();
   }
 }

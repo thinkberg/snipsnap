@@ -29,8 +29,8 @@ import org.radeox.util.Encoder;
 import org.radeox.util.i18n.ResourceManager;
 import org.snipsnap.net.RenderServlet;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipLink;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipLink;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -61,7 +61,7 @@ public class GraphMacro extends SnipMacro {
 
   public void execute(Writer writer, SnipMacroParameter params)
           throws IllegalArgumentException, IOException {
-    Snip snip = params.getSnipRenderContext().getSnip();
+    snipsnap.api.snip.Snip snip = params.getSnipRenderContext().getSnip();
     String name = snip.getName();
     String handler = params.get("handler", 0);
     writer.write("<img src=\"exec/render?name=");

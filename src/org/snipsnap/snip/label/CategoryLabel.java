@@ -29,15 +29,15 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
 import org.snipsnap.container.Components;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipSpaceFactory;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipLink;
+import snipsnap.api.snip.SnipSpace;
+import snipsnap.api.snip.SnipSpaceFactory;
 import org.snipsnap.snip.label.BaseLabel;
-import org.snipsnap.snip.label.Label;
-import org.snipsnap.snip.label.Labels;
+import snipsnap.api.label.Label;
+import snipsnap.api.label.Labels;
 import org.snipsnap.user.AuthenticationService;
 import org.snipsnap.util.URLEncoderDecoder;
 
@@ -77,7 +77,7 @@ public class CategoryLabel extends BaseLabel {
    */
   public String getInputProxy() {
     StringBuffer buffer = new StringBuffer();
-    SnipSpace snipspace = (SnipSpace) Components.getComponent(SnipSpace.class);
+    snipsnap.api.snip.SnipSpace snipspace = (SnipSpace) Components.getComponent(SnipSpace.class);
     List snipList = snipspace.getAll();
 
     buffer.append("Category: ");
@@ -96,7 +96,7 @@ public class CategoryLabel extends BaseLabel {
           Iterator iter = LabelsCat.iterator();
           while (iter.hasNext()) {
 // We only want snips with a label Type:Category
-            Label label = (Label) iter.next();
+            Label label = (snipsnap.api.label.Label) iter.next();
             if (label.getValue().equals("Category")) {
               String category = snip.getName();
               buffer.append("<option>");
@@ -132,7 +132,7 @@ public class CategoryLabel extends BaseLabel {
       String[] strings = name.split("/");
       String string = strings[strings.length - 1];
       SnipLink.appendLink(buffer, name, string);
-    } else if (!service.isAuthenticated(Application.get().getUser())) {
+    } else if (!service.isAuthenticated(snipsnap.api.app.Application.get().getUser())) {
       buffer.append(name);
     } else {
       SnipLink.appendCreateLink(buffer, name);

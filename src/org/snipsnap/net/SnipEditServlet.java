@@ -26,13 +26,13 @@ package org.snipsnap.net;
 
 import org.radeox.util.Encoder;
 import org.radeox.util.logging.Logger;
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
 import org.snipsnap.container.Components;
 import org.snipsnap.security.AccessController;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.label.Label;
-import org.snipsnap.snip.label.Labels;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipSpace;
+import snipsnap.api.label.Label;
+import snipsnap.api.label.Labels;
 import org.snipsnap.snip.label.TypeLabel;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
@@ -73,10 +73,10 @@ public class SnipEditServlet extends HttpServlet {
     String type = request.getParameter("type");
     String editHandler = request.getParameter("handler");
 
-    SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
+    snipsnap.api.snip.SnipSpace space = (snipsnap.api.snip.SnipSpace) Components.getComponent(snipsnap.api.snip.SnipSpace.class);
     AccessController controller = (AccessController) Components.getComponent(AccessController.class);
 
-    Snip snip = null;
+    snipsnap.api.snip.Snip snip = null;
     if (name != null && space.exists(name)) {
       snip = space.load(name);
       // get all mime types associated with the snip
@@ -156,12 +156,12 @@ public class SnipEditServlet extends HttpServlet {
   private List getTemplates() {
     List templates = new ArrayList();
 
-    SnipSpace snipspace = (SnipSpace) Components.getComponent(SnipSpace.class);
+    snipsnap.api.snip.SnipSpace snipspace = (snipsnap.api.snip.SnipSpace) Components.getComponent(snipsnap.api.snip.SnipSpace.class);
     List snipList = snipspace.getAll();
 
     Iterator iterator = snipList.iterator();
     while (iterator.hasNext()) {
-      Snip snip = (Snip) iterator.next();
+      snipsnap.api.snip.Snip snip = (snipsnap.api.snip.Snip) iterator.next();
       Labels labels = snip.getLabels();
       boolean noLabelsAll = labels.getAll().isEmpty();
 
@@ -170,7 +170,7 @@ public class SnipEditServlet extends HttpServlet {
         if (!labelsCat.isEmpty()) {
           Iterator iter = labelsCat.iterator();
           while (iter.hasNext()) {
-            Label label = (Label) iter.next();
+            snipsnap.api.label.Label label = (Label) iter.next();
             if (label.getValue().equals("Template")) {
               templates.add(snip.getName());
             }

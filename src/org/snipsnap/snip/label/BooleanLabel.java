@@ -27,8 +27,9 @@ package org.snipsnap.snip.label;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.serialization.LabelContext;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.label.*;
+import snipsnap.api.label.LabelContext;
 
 import java.util.Map;
 
@@ -39,7 +40,7 @@ import java.util.Map;
  * @version $Id$
  */
 
-public class BooleanLabel implements Label {
+public class BooleanLabel implements snipsnap.api.label.Label {
   protected String name;
   protected String value;
   protected Snip snip;
@@ -68,11 +69,11 @@ public class BooleanLabel implements Label {
     return new LabelContext(snip, this);
   }
 
-  public void setSnip(Snip snip) {
+  public void setSnip(snipsnap.api.snip.Snip snip) {
     this.snip = snip;
   }
 
-  public Snip getSnip() {
+  public snipsnap.api.snip.Snip getSnip() {
     return snip;
   }
 

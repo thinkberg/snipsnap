@@ -25,15 +25,15 @@
 package org.snipsnap.net;
 
 import org.radeox.util.logging.Logger;
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.container.Components;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipSpace;
 import org.snipsnap.snip.label.TypeLabel;
 import org.snipsnap.user.AuthenticationService;
 import org.snipsnap.user.Roles;
-import org.snipsnap.user.User;
+import snipsnap.api.user.User;
 import org.snipsnap.util.URLEncoderDecoder;
 
 import javax.servlet.RequestDispatcher;
@@ -64,7 +64,7 @@ public class SnipViewServlet extends HttpServlet {
           throws IOException, ServletException {
 
     Configuration config = Application.get().getConfiguration();
-    User user = Application.get().getUser();
+    snipsnap.api.user.User user = snipsnap.api.app.Application.get().getUser();
     AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
 
     if (service.isAuthenticated(user)) {
@@ -85,8 +85,8 @@ public class SnipViewServlet extends HttpServlet {
 //    System.out.println("name='"+name+"'");
 
     // load snip and set attributes for request
-    SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
-    Snip snip = space.load(name);
+    SnipSpace space = (snipsnap.api.snip.SnipSpace) Components.getComponent(snipsnap.api.snip.SnipSpace.class);
+    snipsnap.api.snip.Snip snip = space.load(name);
 
     String subname = null;
     if (null == snip) {

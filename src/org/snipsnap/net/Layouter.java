@@ -24,9 +24,9 @@
  */
 package org.snipsnap.net;
 
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
-import org.snipsnap.snip.SnipLink;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
+import snipsnap.api.snip.SnipLink;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -57,7 +57,7 @@ public class Layouter extends HttpServlet {
     if (null == layout) {
       layout = SnipLink.decode(request.getPathInfo());
     }
-    Configuration config = Application.get().getConfiguration();
+    Configuration config = snipsnap.api.app.Application.get().getConfiguration();
 
     if (null == layout || "/".equals(layout)) {
       response.sendRedirect(config.getUrl("/space/" + config.getStartSnip()));

@@ -1,5 +1,5 @@
 <%@ page import="java.util.*,
-                 org.snipsnap.config.Configuration"%>
+                 snipsnap.api.config.Configuration"%>
  <%--
   ** Mail Settings
   ** @author Matthias L. Jugel

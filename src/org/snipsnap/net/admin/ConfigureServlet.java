@@ -25,17 +25,17 @@
 package org.snipsnap.net.admin;
 
 import org.radeox.util.logging.Logger;
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
 import org.snipsnap.app.ApplicationManager;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.config.ConfigurationManager;
 import org.snipsnap.config.ConfigurationProxy;
 import org.snipsnap.config.InitializeDatabase;
 import org.snipsnap.container.Components;
 import org.snipsnap.net.filter.MultipartWrapper;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.user.User;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipSpace;
+import snipsnap.api.user.User;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -186,7 +186,7 @@ public class ConfigureServlet extends HttpServlet {
 
     String prefix = request.getParameter(ATT_PREFIX);
     if (null == prefix) {
-      prefix = (String) request.getAttribute(Configuration.APP_PREFIX);
+      prefix = (String) request.getAttribute(snipsnap.api.config.Configuration.APP_PREFIX);
     }
     if (prefix != null && config != null && !prefix.equals(config.getPrefix())) {
       session.removeAttribute(ATT_CONFIG);
@@ -221,10 +221,10 @@ public class ConfigureServlet extends HttpServlet {
     request.setAttribute(ATT_PREFIX, prefix);
 
     // TODO same as in InitFilter
-    Application app = Application.get();
+    snipsnap.api.app.Application app = snipsnap.api.app.Application.get();
     String xForwardedHost = request.getHeader("X-Forwarded-Host");
     if (xForwardedHost != null) {
-      String protocol = config.get(Configuration.APP_REAL_PROTOCOL, "http");
+      String protocol = config.get(snipsnap.api.config.Configuration.APP_REAL_PROTOCOL, "http");
       String contextPath = config.get(Configuration.APP_REAL_PATH, "");
 
       int colonIndex = xForwardedHost.indexOf(':');
@@ -232,9 +232,9 @@ public class ConfigureServlet extends HttpServlet {
       if (colonIndex != -1) {
         host = host.substring(0, colonIndex);
         int port = Integer.parseInt(xForwardedHost.substring(colonIndex + 1));
-        app.storeObject(Application.URL, new URL(protocol, host, port, contextPath));
+        app.storeObject(snipsnap.api.app.Application.URL, new URL(protocol, host, port, contextPath));
       } else {
-        app.storeObject(Application.URL, new URL(protocol, host, contextPath));
+        app.storeObject(snipsnap.api.app.Application.URL, new URL(protocol, host, contextPath));
       }
     } else {
       String protocol = new URL(request.getRequestURL().toString()).getProtocol();
@@ -242,10 +242,10 @@ public class ConfigureServlet extends HttpServlet {
       int port = request.getServerPort();
       String contextPath = request.getContextPath() + ("/".equals(prefix) ? "" : prefix);
 
-      app.storeObject(Application.URL, new URL(protocol, host, port, contextPath));
+      app.storeObject(snipsnap.api.app.Application.URL, new URL(protocol, host, port, contextPath));
     }
 
-    Application.get().setConfiguration(config);
+    snipsnap.api.app.Application.get().setConfiguration(config);
     session.setAttribute(ATT_CONFIG, config);
 
 //    if (config.allow(Configuration.APP_PERM_REGISTER) &&
@@ -260,7 +260,7 @@ public class ConfigureServlet extends HttpServlet {
 //      session.setAttribute(ATT_USAGE, "custom");
 //    }
 
-    User user = Application.get().getUser();
+    snipsnap.api.user.User user = snipsnap.api.app.Application.get().getUser();
     if (!config.isInstalled() || !config.isConfigured() || user.isAdmin()) {
       List steps = (List) session.getAttribute(ATT_STEPS);
       if (steps == null) {
@@ -274,7 +274,7 @@ public class ConfigureServlet extends HttpServlet {
           session.setAttribute(ATT_DEFAULTS, "true");
           session.setAttribute(ATT_USER, user);
         } else {
-          String installKey = (String) session.getAttribute(Configuration.APP_INSTALL_KEY);
+          String installKey = (String) session.getAttribute(snipsnap.api.config.Configuration.APP_INSTALL_KEY);
           if (null == installKey) {
             installKey = request.getParameter("key");
             if (null == installKey || !config.getInstallKey().equals(installKey)) {
@@ -285,7 +285,7 @@ public class ConfigureServlet extends HttpServlet {
               session.removeAttribute(ATT_CONFIG);
               return;
             }
-            session.setAttribute(Configuration.APP_INSTALL_KEY, installKey);
+            session.setAttribute(snipsnap.api.config.Configuration.APP_INSTALL_KEY, installKey);
           }
 
           steps = new ArrayList(BASIC_STEPS);
@@ -300,10 +300,10 @@ public class ConfigureServlet extends HttpServlet {
       if (session.getAttribute(ATT_DEFAULTS) == null) {
         Locale locale = request.getLocale();
         if (null != locale.getCountry() && !"".equals(locale.getCountry())) {
-          config.set(Configuration.APP_COUNTRY, locale.getCountry());
+          config.set(snipsnap.api.config.Configuration.APP_COUNTRY, locale.getCountry());
         }
         if (null != locale.getLanguage() && !"".equals(locale.getLanguage())) {
-          config.set(Configuration.APP_LANGUAGE, locale.getLanguage());
+          config.set(snipsnap.api.config.Configuration.APP_LANGUAGE, locale.getLanguage());
         }
         // divide offset (ms) by an hour
         int offset = TimeZone.getDefault().getRawOffset() / (60 * 60 * 1000);
@@ -370,10 +370,10 @@ public class ConfigureServlet extends HttpServlet {
               int idx = steps.indexOf(step);
               step = (String) steps.get(idx - 1);
             } else if (request.getParameter("save") != null) {
-              SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
+              SnipSpace space = (SnipSpace) Components.getComponent(snipsnap.api.snip.SnipSpace.class);
               ByteArrayOutputStream configStream = new ByteArrayOutputStream();
               config.store(configStream);
-              Snip configSnip = space.load(Configuration.SNIPSNAP_CONFIG);
+              snipsnap.api.snip.Snip configSnip = space.load(Configuration.SNIPSNAP_CONFIG);
               configSnip.setContent(new String(configStream.toString("UTF-8")));
               space.store(configSnip);
 

@@ -25,6 +25,9 @@
 
 package org.snipsnap.snip;
 
+import snipsnap.api.snip.*;
+import snipsnap.api.snip.Snip;
+
 import java.sql.Date;
 import java.util.List;
 
@@ -39,7 +42,7 @@ import java.util.List;
 public interface Blog {
   public String getName();
 
-  public Snip post(String content, String title);
+  public snipsnap.api.snip.Snip post(String content, String title);
 
   public Snip post(String content);
 

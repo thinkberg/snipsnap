@@ -29,10 +29,10 @@ package org.snipsnap.render.macro;
 import org.radeox.macro.BaseMacro;
 import org.radeox.macro.parameter.MacroParameter;
 import org.radeox.util.i18n.ResourceManager;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipSpaceFactory;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipLink;
+import snipsnap.api.snip.SnipSpace;
+import snipsnap.api.snip.SnipSpaceFactory;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -56,7 +56,7 @@ public class SnipTreeMacro extends BaseMacro {
   private SnipSpace space;
 
   public SnipTreeMacro() {
-    space = SnipSpaceFactory.getInstance();
+    space = snipsnap.api.snip.SnipSpaceFactory.getInstance();
   }
 
   public String getName() {

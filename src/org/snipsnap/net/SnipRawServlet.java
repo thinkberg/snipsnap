@@ -24,13 +24,13 @@
  */
 package org.snipsnap.net;
 
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.container.Components;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpaceFactory;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipSpaceFactory;
 import org.snipsnap.user.AuthenticationService;
-import org.snipsnap.user.User;
+import snipsnap.api.user.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -49,7 +49,7 @@ public class SnipRawServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
 
-    User user = Application.get().getUser();
+    User user = snipsnap.api.app.Application.get().getUser();
     AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
 
     if (service.isAuthenticated(user)) {
@@ -58,17 +58,17 @@ public class SnipRawServlet extends HttpServlet {
 
     String name = request.getPathInfo();
     if (null == name || "/".equals(name)) {
-      name = Application.get().getConfiguration().getStartSnip();
+      name = snipsnap.api.app.Application.get().getConfiguration().getStartSnip();
     } else {
       name = name.substring(1);
     }
 
-    Configuration config = Application.get().getConfiguration();
+    snipsnap.api.config.Configuration config = Application.get().getConfiguration();
     String encodedSpace = config.getEncodedSpace();
     if (encodedSpace != null && encodedSpace.length() > 0) {
       name = name.replace(encodedSpace.charAt(0), ' ');
     }
-    Snip snip = SnipSpaceFactory.getInstance().load(name);
+    snipsnap.api.snip.Snip snip = SnipSpaceFactory.getInstance().load(name);
 
     response.setContentType("text/plain; charset="+Application.get().getConfiguration().getEncoding());
     PrintWriter out = response.getWriter();

@@ -26,10 +26,10 @@
 package org.snipsnap.xmlrpc;
 
 import org.radeox.util.logging.Logger;
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipSpace;
 import org.snipsnap.xmlrpc.ping.PingHandler;
 import org.snipsnap.notification.Message;
 import org.snipsnap.notification.MessageService;
@@ -58,13 +58,13 @@ import java.util.Map;
 public class WeblogsPing extends Thread implements Consumer {
   private final static String WEBLOGSPING = "SnipSnap/config/weblogsping";
 
-  private Configuration config;
+  private snipsnap.api.config.Configuration config;
   private Map appParams;
 
-  private Snip weblog;
+  private snipsnap.api.snip.Snip weblog;
   private static List handlers;
 
-  public WeblogsPing(Configuration configuration, Snip weblog) {
+  public WeblogsPing(snipsnap.api.config.Configuration configuration, Snip weblog) {
     this.appParams = Application.get().getParameters();
     this.config = configuration;
     this.weblog = weblog;
@@ -84,9 +84,9 @@ public class WeblogsPing extends Thread implements Consumer {
 
   public void run() {
     // ensure the right configuration is set
-    Application.get().setConfiguration(config);
-    Application.get().setParameters(appParams);
-    if (config.allow(Configuration.APP_PERM_WEBLOGSPING)) {
+    snipsnap.api.app.Application.get().setConfiguration(config);
+    snipsnap.api.app.Application.get().setParameters(appParams);
+    if (config.allow(snipsnap.api.config.Configuration.APP_PERM_WEBLOGSPING)) {
       if (handlers.size() > 0) {
         Iterator iterator = handlers.iterator();
         while (iterator.hasNext()) {
@@ -124,7 +124,7 @@ public class WeblogsPing extends Thread implements Consumer {
 
   public void consume(Message message) {
     if (Message.SNIP_MODIFIED.equals(message.getType())) {
-      Snip snip = (Snip) message.getValue();
+      snipsnap.api.snip.Snip snip = (snipsnap.api.snip.Snip) message.getValue();
       if (WEBLOGSPING.equals(snip.getName())) {
         try {
           Logger.log("reloading weblogs ping handler for: " + snip.getApplication());

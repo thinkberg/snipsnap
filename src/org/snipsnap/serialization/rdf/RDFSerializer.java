@@ -9,8 +9,10 @@ import com.hp.hpl.mesa.rdf.jena.vocabulary.*;
 import com.hp.hpl.mesa.rdf.jena.common.*;
 
 import org.snipsnap.snip.Links;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipLink;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.label.*;
+import snipsnap.api.label.Label;
+import snipsnap.api.snip.SnipLink;
 import org.snipsnap.snip.attachment.*;
 import org.snipsnap.snip.label.*;
 import org.snipsnap.serialization.LabelSerializer;
@@ -32,7 +34,7 @@ public class RDFSerializer extends RDFSerializerBase {
    * Subclasses should only need to reimplement this method to add one single snip to the model,
    * and eventually createModel().
    */
-  protected void addSingleSnipToModel(Snip snip, Model model) throws RDFException {
+  protected void addSingleSnipToModel(snipsnap.api.snip.Snip snip, Model model) throws RDFException {
     Resource rootSnipResource = addSnipResource(model, snip);
     // add the Snip's comments to the model:
     rootSnipResource.addProperty(SNIP.comments, addCommentsBag(model, snip));
@@ -44,9 +46,9 @@ public class RDFSerializer extends RDFSerializerBase {
     addLabelsToModel(snip, model);
   }
 
-  protected final void addLabelsToModel(Snip snip, Model model) {
+  protected final void addLabelsToModel(snipsnap.api.snip.Snip snip, Model model) {
     LabelSerializerFactory factory = getLabelSerializerFactory();
-    Labels labels = snip.getLabels();
+    snipsnap.api.label.Labels labels = snip.getLabels();
     Iterator it = labels.getAll().iterator();
     Map serializers = new HashMap();
     while (it.hasNext()) {
@@ -81,7 +83,7 @@ public class RDFSerializer extends RDFSerializerBase {
     Iterator iterator = getLinksIterator(snip);
     if (iterator != null) {
       while (iterator.hasNext()) {
-        recursiveFillModel((Snip) iterator.next(), model, depth);
+        recursiveFillModel((snipsnap.api.snip.Snip) iterator.next(), model, depth);
       }
     }
   }
@@ -94,7 +96,7 @@ public class RDFSerializer extends RDFSerializerBase {
       Iterator iterator = getCommentsIterator(snip);
       if (iterator != null) {
         while (iterator.hasNext()) {
-          Snip comment = (Snip) iterator.next();
+          Snip comment = (snipsnap.api.snip.Snip) iterator.next();
           // add comment to model as new resource:
           Resource commentResource = addCommentResource(model, comment, snip);
           // add comment to the comments Bag:
@@ -164,7 +166,7 @@ public class RDFSerializer extends RDFSerializerBase {
     return snipResource;
   }
 
-  private Resource addCommentResource(Model model, Snip comment, Snip commentedSnip) {
+  private Resource addCommentResource(Model model, snipsnap.api.snip.Snip comment, snipsnap.api.snip.Snip commentedSnip) {
     Resource commentResource = null;
     try {
       commentResource = model.createResource(getSnipResURI(comment));

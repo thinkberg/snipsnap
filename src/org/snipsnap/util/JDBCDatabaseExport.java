@@ -28,7 +28,7 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.snip.storage.SnipDataSerializer;
 import org.snipsnap.snip.storage.Serializer;
 
@@ -116,7 +116,7 @@ public class JDBCDatabaseExport {
     try {
       Class.forName(config.getProperty(Configuration.APP_JDBC_DRIVER));
       Properties jdbcInfo = new Properties();
-      jdbcInfo.setProperty("user", config.getProperty(Configuration.APP_JDBC_USER));
+      jdbcInfo.setProperty("user", config.getProperty(snipsnap.api.config.Configuration.APP_JDBC_USER));
       jdbcInfo.setProperty("password", config.getProperty(Configuration.APP_JDBC_PASSWORD));
       Connection connection = DriverManager.getConnection(config.getProperty(Configuration.APP_JDBC_URL), jdbcInfo);
       store(System.out, appOid, connection);

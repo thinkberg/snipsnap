@@ -25,15 +25,15 @@
 package org.snipsnap.net;
 
 import org.radeox.util.logging.Logger;
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.container.Components;
 import org.snipsnap.net.filter.MultipartWrapper;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.snip.label.Label;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipLink;
+import snipsnap.api.snip.SnipSpace;
+import snipsnap.api.snip.SnipSpaceFactory;
+import snipsnap.api.label.Label;
 import org.snipsnap.snip.label.LabelManager;
 
 import javax.servlet.ServletException;
@@ -55,7 +55,7 @@ import java.util.Map;
 public class StoreLabelServlet extends HttpServlet {
 
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    Configuration config = Application.get().getConfiguration();
+    snipsnap.api.config.Configuration config = Application.get().getConfiguration();
     // If this is not a multipart/form-data request continue
     String type = request.getHeader("Content-Type");
     if (type != null && type.startsWith("multipart/form-data")) {
@@ -71,7 +71,7 @@ public class StoreLabelServlet extends HttpServlet {
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
           throws IOException, ServletException {
-    Configuration config = Application.get().getConfiguration();
+    snipsnap.api.config.Configuration config = snipsnap.api.app.Application.get().getConfiguration();
 
     String snipName = request.getParameter("snipname");
 
@@ -82,10 +82,10 @@ public class StoreLabelServlet extends HttpServlet {
     }
 
     if (null == request.getParameter("back")) {
-      Snip snip = ((SnipSpace) Components.getComponent(SnipSpace.class)).load(snipName);
+      Snip snip = ((SnipSpace) Components.getComponent(snipsnap.api.snip.SnipSpace.class)).load(snipName);
       String labelType = request.getParameter("labeltype");
 
-      Label label = null;
+      snipsnap.api.label.Label label = null;
       if (null != labelType) {
         LabelManager manager = (LabelManager) Components.getComponent(LabelManager.class);
         label = manager.getLabel(labelType);
@@ -98,7 +98,7 @@ public class StoreLabelServlet extends HttpServlet {
     response.sendRedirect(config.getUrl("/exec/labels?snipname=" + SnipLink.encode(snipName)));
   }
 
-  private void handleLabel(Label label, HttpServletRequest request) {
+  private void handleLabel(snipsnap.api.label.Label label, HttpServletRequest request) {
     Map params = new HashMap();
     Enumeration enumeration = request.getParameterNames();
     while (enumeration.hasMoreElements()) {

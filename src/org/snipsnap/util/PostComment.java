@@ -24,11 +24,11 @@
  */
 package org.snipsnap.util;
 
-import org.snipsnap.app.Application;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.user.User;
+import snipsnap.api.app.Application;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipSpace;
+import snipsnap.api.snip.SnipSpaceFactory;
+import snipsnap.api.user.User;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.user.UserManagerFactory;
 
@@ -42,10 +42,10 @@ public class PostComment {
     SnipSpace space = SnipSpaceFactory.getInstance();
 
     Application app = Application.get();
-    User user = UserManagerFactory.getInstance().load("funzel");
+    snipsnap.api.user.User user = UserManagerFactory.getInstance().load("funzel");
     app.setUser(user);
 
-    Snip snip = space.load("about");
+    snipsnap.api.snip.Snip snip = space.load("about");
     snip.getComments().postComment("Hahaha, sowas __bloedes__ ist [das]");
   }
 }

@@ -34,6 +34,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import snipsnap.api.label.*;
+import snipsnap.api.label.Label;
+
 /**
  * Manages the creation and finding of labels, e.g. by type.
  * Delivers a plugin structure to easily add labels.
@@ -44,7 +47,7 @@ public class LabelManager {
   private Map typeMap;
   private String defaultName;
   private static LabelManager instance = null;
-  private static String labelClassName = "org.snipsnap.snip.label.Label";
+  private static String labelClassName = "snipsnap.api.label.Label";
 
   public LabelManager() {
     typeMap = new HashMap();
@@ -97,7 +100,7 @@ public class LabelManager {
     return label;
   }
 
-  public Label getDefaultLabel() {
+  public snipsnap.api.label.Label getDefaultLabel() {
     return getLabel(defaultName);
   }
 

@@ -26,16 +26,16 @@
 package org.snipsnap.util.mail;
 
 import org.radeox.util.logging.Logger;
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
 import org.snipsnap.app.ApplicationManager;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.config.ConfigurationManager;
 import org.snipsnap.container.Components;
 import org.snipsnap.snip.Blog;
 import org.snipsnap.snip.BlogKit;
-import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.user.User;
+import snipsnap.api.snip.SnipSpaceFactory;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.user.User;
 import org.snipsnap.user.UserManagerFactory;
 import org.snipsnap.net.FileUploadServlet;
 
@@ -195,7 +195,7 @@ public class PostDaemon extends TimerTask {
             String user = app.getConfiguration().getAdminLogin();
             Logger.debug(user);
             Logger.debug((String) app.getObject(Application.OID));
-            User admin = UserManagerFactory.getInstance().load(user);
+            snipsnap.api.user.User admin = UserManagerFactory.getInstance().load(user);
             Logger.debug(admin.toString());
             app.setUser(admin);
             Blog blog = SnipSpaceFactory.getInstance().getBlog();

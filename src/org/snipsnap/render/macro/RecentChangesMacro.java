@@ -27,7 +27,7 @@ package org.snipsnap.render.macro;
 import org.radeox.util.logging.Logger;
 import org.radeox.util.i18n.ResourceManager;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
-import org.snipsnap.snip.SnipSpaceFactory;
+import snipsnap.api.snip.SnipSpaceFactory;
 
 import java.io.IOException;
 import java.io.Writer;

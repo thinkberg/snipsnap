@@ -26,8 +26,8 @@
 package org.snipsnap.util.mail;
 
 import org.radeox.util.logging.Logger;
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -64,7 +64,7 @@ public class Mail {
 
   public Mail() {
     Properties props = new Properties();
-    Configuration config = Application.get().getConfiguration();
+    snipsnap.api.config.Configuration config = snipsnap.api.app.Application.get().getConfiguration();
     String mailhost = config.getMailHost();
     InetAddress addr = null;
     try {
@@ -100,7 +100,7 @@ public class Mail {
     Collection recipientList = new ArrayList();
     recipientList.add(recipient);
     //@TODO get admin mail / host
-    Configuration configuration = Application.get().getConfiguration();
+    Configuration configuration = snipsnap.api.app.Application.get().getConfiguration();
     String sender = configuration.getMailDomain();
     if (null == sender) {
       sender = configuration.getUrl();

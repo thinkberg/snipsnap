@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.snipsnap.snip.SnipSpace;
+import snipsnap.api.snip.SnipSpace;
 import org.snipsnap.snip.SnipSpaceImpl;
 import org.snipsnap.snip.label.LabelManager;
 import org.snipsnap.snip.attachment.storage.AttachmentStorage;
@@ -111,7 +111,7 @@ public class PicoContainer implements Container {
         addComponent(ApplicationManager.class);
         addComponent(LabelManager.class);
 
-        addComponent(JmDnsService.class);
+        //addComponent(JmDnsService.class);
         // Feeders
         addComponent(FeederRepository.class, BasicFeederRepository.class);
 
@@ -144,7 +144,7 @@ public class PicoContainer implements Container {
         Iterator iterator = components.iterator();
         while (iterator.hasNext()) {
             Object o = iterator.next();
-            if (o.getClass().equals(c)) {
+            if (c.isAssignableFrom(o.getClass())) {
                 result.add(o);
             }
 

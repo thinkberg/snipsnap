@@ -26,7 +26,9 @@
 package org.snipsnap.user;
 
 import org.snipsnap.snip.Ownable;
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.user.*;
+import snipsnap.api.user.User;
 import org.snipsnap.container.Components;
 
 /**
@@ -60,7 +62,7 @@ public class Security {
    * @param object Object with possible owner
    * @return List of roles for user and object
    */
-  private static Roles getRoles(User user, Snip object) {
+  private static Roles getRoles(User user, snipsnap.api.snip.Snip object) {
     Roles roles = getRoles(user);
 //    if (object instanceof Ownable) {
 //      Ownable o = object;
@@ -81,7 +83,7 @@ public class Security {
    * @param roles Roles object containing the roles
    * @return true if the object has the permission for the roles
    */
-  public static boolean existsPermission(String permission, Snip object, Roles roles) {
+  public static boolean existsPermission(String permission, snipsnap.api.snip.Snip object, Roles roles) {
     Permissions permissions = object.getPermissions();
     return permissions.exists(permission, roles);
   }
@@ -105,7 +107,7 @@ public class Security {
    * @param object the object that should be manipulated
    * @return
    */
-  public static boolean checkPermission(String permission, User user, Snip object) {
+  public static boolean checkPermission(String permission, snipsnap.api.user.User user, snipsnap.api.snip.Snip object) {
     Permissions permissions = object.getPermissions();
     if (null == permissions || permissions.empty()) {
       return true;

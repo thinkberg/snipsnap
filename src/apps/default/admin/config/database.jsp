@@ -1,5 +1,5 @@
 <%@ page import="java.util.*,
-                 org.snipsnap.config.Configuration"%>
+                 snipsnap.api.config.Configuration"%>
  <%--
   ** Database Settings
   ** @author Matthias L. Jugel
@@ -157,7 +157,7 @@
     <td><fmt:message key="config.app.database.file.text"/></td>
     <td>
       <input type="hidden" name="app.file.store"
-        value="<%= ((Configuration) pageContext.findAttribute("newconfig")).getGlobals().getProperty(Configuration.APP_FILE_STORE) %>">
+        value="<%= ((Configuration) pageContext.findAttribute("newconfig")).getGlobals().getProperty(snipsnap.api.config.Configuration.APP_FILE_STORE) %>">
       <fmt:message key="config.app.database.noconfig"/><br/>
     </td>
   </tr>

@@ -24,11 +24,11 @@
  */
 package org.snipsnap.net;
 
-import org.snipsnap.app.Application;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.user.User;
+import snipsnap.api.app.Application;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipSpace;
+import snipsnap.api.snip.SnipSpaceFactory;
+import snipsnap.api.user.User;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.user.AuthenticationService;
 import org.snipsnap.user.UserManagerFactory;
@@ -116,12 +116,12 @@ public class iCalServlet extends HttpServlet {
   }
 
   protected void delete(String name, String file) {
-    SnipSpace space = SnipSpaceFactory.getInstance();
+    snipsnap.api.snip.SnipSpace space = snipsnap.api.snip.SnipSpaceFactory.getInstance();
     if (space.exists(name)) {
-      Snip userSnip = space.load(name);
+      snipsnap.api.snip.Snip userSnip = space.load(name);
       Iterator it = userSnip.getChildren().iterator();
       while (it.hasNext()) {
-        Snip snip = (Snip) it.next();
+        snipsnap.api.snip.Snip snip = (snipsnap.api.snip.Snip) it.next();
         if (snip.getName().equals("calendar-" + name + "-" + file)) {
           space.remove(snip);
         }
@@ -133,9 +133,9 @@ public class iCalServlet extends HttpServlet {
 
   protected void put(String name, String file,
                      HttpServletRequest request, HttpServletResponse response) throws IOException {
-    SnipSpace space = SnipSpaceFactory.getInstance();
+    snipsnap.api.snip.SnipSpace space = snipsnap.api.snip.SnipSpaceFactory.getInstance();
     if (space.exists(name)) {
-      Snip userSnip = space.load(name);
+      snipsnap.api.snip.Snip userSnip = space.load(name);
 
       BufferedReader r = request.getReader();
       content.setLength(0);
@@ -151,13 +151,13 @@ public class iCalServlet extends HttpServlet {
 
   protected void get(String name, String file,
                      HttpServletRequest request, HttpServletResponse response) throws IOException {
-    SnipSpace space = SnipSpaceFactory.getInstance();
+    snipsnap.api.snip.SnipSpace space = snipsnap.api.snip.SnipSpaceFactory.getInstance();
     if (space.exists(name)) {
       PrintWriter w = response.getWriter();
-      Snip userSnip = space.load(name);
+      snipsnap.api.snip.Snip userSnip = space.load(name);
       Iterator it = userSnip.getChildren().iterator();
       while (it.hasNext()) {
-        Snip snip = (Snip) it.next();
+        snipsnap.api.snip.Snip snip = (snipsnap.api.snip.Snip) it.next();
         if (snip.getName().equals("calendar-" + name + "-" + file)) {
           String content = snip.getContent();
           response.setContentLength(content.length());

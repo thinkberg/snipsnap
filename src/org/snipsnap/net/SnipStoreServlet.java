@@ -25,20 +25,20 @@
 package org.snipsnap.net;
 
 import org.radeox.util.logging.Logger;
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.container.Components;
 import org.snipsnap.net.filter.MultipartWrapper;
 import org.snipsnap.security.AccessController;
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.Snip;
 import org.snipsnap.snip.SnipFormatter;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipSpaceFactory;
+import snipsnap.api.snip.SnipLink;
+import snipsnap.api.snip.SnipSpace;
+import snipsnap.api.snip.SnipSpaceFactory;
 import org.snipsnap.user.AuthenticationService;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Security;
-import org.snipsnap.user.User;
+import snipsnap.api.user.User;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -56,12 +56,12 @@ import java.io.IOException;
  */
 public class SnipStoreServlet extends HttpServlet {
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    response.sendRedirect(Application.get().getConfiguration().getUrl());
+    response.sendRedirect(snipsnap.api.app.Application.get().getConfiguration().getUrl());
   }
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
           throws ServletException, IOException {
-    Configuration config = Application.get().getConfiguration();
+    snipsnap.api.config.Configuration config = snipsnap.api.app.Application.get().getConfiguration();
     // If this is not a multipart/form-data request continue
     String type = request.getHeader("Content-Type");
     if (type != null && type.startsWith("multipart/form-data")) {
@@ -99,7 +99,7 @@ public class SnipStoreServlet extends HttpServlet {
     }
 
     SnipSpace space = SnipSpaceFactory.getInstance();
-    Snip snip = space.load(name);
+    snipsnap.api.snip.Snip snip = space.load(name);
 
     RequestDispatcher dispatcher;
 
@@ -121,12 +121,12 @@ public class SnipStoreServlet extends HttpServlet {
     // handle requests that store using their own handler and forward (plugin)
     HttpSession session = request.getSession();
     if (session != null) {
-      User user = Application.get().getUser();
+      User user = snipsnap.api.app.Application.get().getUser();
       AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
       AccessController accessController = (AccessController) Components.getComponent(AccessController.class);
       String storeHandler = request.getParameter("store_handler");
       if (service.isAuthenticated(user) && (null == snip
-                                            || accessController.checkPermission(Application.get().getUser(), AccessController.EDIT_SNIP, snip))) {
+                                            || accessController.checkPermission(snipsnap.api.app.Application.get().getUser(), AccessController.EDIT_SNIP, snip))) {
         if (null != storeHandler) {
           dispatcher = request.getRequestDispatcher("/plugin/" + storeHandler);
           try {

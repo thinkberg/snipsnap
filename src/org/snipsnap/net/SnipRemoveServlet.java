@@ -24,12 +24,12 @@
  */
 package org.snipsnap.net;
 
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.container.Components;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.user.User;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipSpace;
+import snipsnap.api.user.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -47,13 +47,13 @@ public class SnipRemoveServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
           throws ServletException, IOException {
     Application app = Application.get();
-    User user = app.getUser();
+    snipsnap.api.user.User user = app.getUser();
     Configuration config = app.getConfiguration();
 
     String name = request.getParameter("name");
     // TODO include check for current snip (see Access)
     if (user != null && user.isAdmin()) {
-      SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
+      snipsnap.api.snip.SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
       Snip snip = space.load(name);
 
       // check for comment and remove from comment list

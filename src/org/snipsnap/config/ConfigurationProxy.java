@@ -24,6 +24,9 @@
  */
 package org.snipsnap.config;
 
+import snipsnap.api.config.*;
+import snipsnap.api.config.Configuration;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -179,7 +182,7 @@ public class ConfigurationProxy implements InvocationHandler {
   // PROXY FACTORY HANDLING
   public static Configuration proxy = null;
 
-  public static Configuration getInstance() {
+  public static snipsnap.api.config.Configuration getInstance() {
     if (proxy == null) {
       newInstance();
     }

@@ -28,7 +28,7 @@ package org.snipsnap.render.filter.links;
 import org.radeox.util.logging.Logger;
 import org.radeox.util.i18n.ResourceManager;
 import org.snipsnap.snip.Links;
-import org.snipsnap.snip.SnipLink;
+import snipsnap.api.snip.SnipLink;
 import org.snipsnap.util.ColorRange;
 
 import java.io.IOException;

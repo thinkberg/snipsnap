@@ -25,7 +25,7 @@
 
 package org.snipsnap.util;
 
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.Snip;
 
 import java.util.*;
 
@@ -61,13 +61,13 @@ public class PartialSearcher implements Map {
      return match(s, s + '\uFFFF');
   }
 
-  public Snip[] match(String start, String end) {
+  public snipsnap.api.snip.Snip[] match(String start, String end) {
     int startIdx = binarySearch(sortedArray, start, 0, sortedArray.length - 1);
     int endIdx = binarySearch(sortedArray, end, 0, sortedArray.length - 1);
 
-    Snip[] objs = new Snip[endIdx - startIdx];
+    snipsnap.api.snip.Snip[] objs = new snipsnap.api.snip.Snip[endIdx - startIdx];
     for (int i = startIdx; i < endIdx; i++) {
-      objs[i - startIdx] = (Snip) hash.get(sortedArray[i]);
+      objs[i - startIdx] = (snipsnap.api.snip.Snip) hash.get(sortedArray[i]);
     }
     return objs;
   }

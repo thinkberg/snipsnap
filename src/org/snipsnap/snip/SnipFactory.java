@@ -26,6 +26,8 @@
 package org.snipsnap.snip;
 
 import org.snipsnap.interceptor.Aspects;
+import snipsnap.api.snip.*;
+import snipsnap.api.snip.Snip;
 
 
 /**
@@ -40,7 +42,7 @@ public class SnipFactory {
     return new SnipImpl(name, content);
   }
 
-  public static Snip wrap(Snip snip) {
+  public static snipsnap.api.snip.Snip wrap(Snip snip) {
     return (Snip) Aspects.wrap(snip);
   }
 }

@@ -30,8 +30,8 @@ import org.radeox.regex.MatchResult;
 import org.radeox.filter.context.FilterContext;
 import org.radeox.util.StringBufferWriter;
 import org.snipsnap.render.filter.context.SnipFilterContext;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipLink;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipLink;
 
 import java.io.IOException;
 import java.io.Writer;

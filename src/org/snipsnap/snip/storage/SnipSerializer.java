@@ -28,9 +28,9 @@ package org.snipsnap.snip.storage;
 import org.dom4j.Element;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.snip.Links;
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.Snip;
 import org.snipsnap.snip.attachment.Attachments;
-import org.snipsnap.snip.label.Labels;
+import snipsnap.api.label.Labels;
 import org.snipsnap.user.Permissions;
 
 import java.sql.Timestamp;
@@ -67,7 +67,7 @@ public class SnipSerializer extends SnipDataSerializer {
    * @param snip the snip to store
    * @return the serialized snip as XML
    */
-  public Element serialize(Snip snip) {
+  public Element serialize(snipsnap.api.snip.Snip snip) {
     return serialize(createSnipMap(snip));
   }
 
@@ -81,7 +81,7 @@ public class SnipSerializer extends SnipDataSerializer {
     return deserialize(snipMap, snip);
   }
 
-  public Snip deserialize(Map snipMap, Snip snip) {
+  public Snip deserialize(Map snipMap, snipsnap.api.snip.Snip snip) {
 //    System.out.println("deserializing: "+snipMap.get(SNIP_NAME));
     Iterator elementIt = snipMap.keySet().iterator();
     while (elementIt.hasNext()) {
@@ -147,7 +147,7 @@ public class SnipSerializer extends SnipDataSerializer {
     return snip;
   }
 
-  public Map createSnipMap(Snip snip) {
+  public Map createSnipMap(snipsnap.api.snip.Snip snip) {
     Map snipMap = new HashMap();
     snipMap.put(SNIP_NAME, notNull(snip.getName()));
     snipMap.put(SNIP_OUSER, notNull(snip.getOUser()));
@@ -168,7 +168,7 @@ public class SnipSerializer extends SnipDataSerializer {
     // TODO deprecated
     Snip parent = snip.getParent();
     snipMap.put(SNIP_PARENT, null == parent ? "" : parent.getName());
-    Snip comment = snip.getCommentedSnip();
+    snipsnap.api.snip.Snip comment = snip.getCommentedSnip();
     snipMap.put(SNIP_COMMENTED, null == comment ? "" : comment.getName());
     return snipMap;
   }

@@ -25,9 +25,9 @@
 
 package org.snipsnap.semanticweb;
 
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
-import org.snipsnap.snip.Snip;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
+import snipsnap.api.snip.Snip;
 
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -48,8 +48,8 @@ public class DublinCore {
   private static SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
   private static SimpleDateFormat year = new SimpleDateFormat("yyyy");
 
-  public static Map generate(Snip snip) {
-    Configuration conf = Application.get().getConfiguration();
+  public static Map generate(snipsnap.api.snip.Snip snip) {
+    snipsnap.api.config.Configuration conf = snipsnap.api.app.Application.get().getConfiguration();
     sf.setTimeZone(TimeZone.getTimeZone(conf.getTimezone()));
 
     Map dublinCore = new HashMap();
@@ -63,7 +63,7 @@ public class DublinCore {
     }
     dublinCore.put("date", date);
     dublinCore.put("type", "Text");
-    dublinCore.put("identifier", Application.get().getConfiguration().getSnipUrl(snip.getNameEncoded()));
+    dublinCore.put("identifier", snipsnap.api.app.Application.get().getConfiguration().getSnipUrl(snip.getNameEncoded()));
     dublinCore.put("copyright", "Copyright " + year.format(snip.getModified().getmTime()));
     dublinCore.put("language", conf.getLocale().getLanguage());
     return dublinCore;

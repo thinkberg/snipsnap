@@ -25,12 +25,12 @@
 
 package org.snipsnap.net;
 
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.snip.label.Label;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipLink;
+import snipsnap.api.snip.SnipSpaceFactory;
+import snipsnap.api.label.Label;
 import org.snipsnap.snip.label.LabelManager;
 import org.snipsnap.container.Components;
 import org.snipsnap.net.filter.MultipartWrapper;
@@ -51,7 +51,7 @@ import java.io.IOException;
 public class AddLabelServlet extends HttpServlet {
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-    Configuration config = Application.get().getConfiguration();
+    Configuration config = snipsnap.api.app.Application.get().getConfiguration();
     // If this is not a multipart/form-data request continue
     String type = request.getHeader("Content-Type");
     if (type != null && type.startsWith("multipart/form-data")) {
@@ -66,7 +66,7 @@ public class AddLabelServlet extends HttpServlet {
   }
 
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-    Configuration config = Application.get().getConfiguration();
+    snipsnap.api.config.Configuration config = Application.get().getConfiguration();
 
     String snipName = request.getParameter("snipname");
     if (null == snipName) {
@@ -75,16 +75,16 @@ public class AddLabelServlet extends HttpServlet {
     }
     // cancel pressed
     if (null != request.getParameter("cancel")) {
-      response.sendRedirect(config.getUrl("/exec/labels?snipname=" + SnipLink.encode(snipName)));
+      response.sendRedirect(config.getUrl("/exec/labels?snipname=" + snipsnap.api.snip.SnipLink.encode(snipName)));
       return;
     }
 
-    Snip snip = SnipSpaceFactory.getInstance().load(snipName);
+    Snip snip = snipsnap.api.snip.SnipSpaceFactory.getInstance().load(snipName);
     request.setAttribute("snip", snip);
 
     String labelType = request.getParameter("labeltype");
     LabelManager manager = (LabelManager)Components.getComponent(LabelManager.class);
-    Label label = manager.getLabel(labelType);
+    snipsnap.api.label.Label label = manager.getLabel(labelType);
     request.setAttribute("label", label);
 
     RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/addlabel.jsp");

@@ -24,7 +24,8 @@
  */
 package org.snipsnap.user;
 
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.user.*;
 
 /**
  * Manages security and checks if a role has a permission.
@@ -34,6 +35,6 @@ import org.snipsnap.snip.Snip;
  */
 
 public interface PermissionManager {
-  public boolean check(Permission permission, User user, Snip snip);
+  public boolean check(Permission permission, snipsnap.api.user.User user, Snip snip);
 }
 

@@ -32,7 +32,7 @@ import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 import org.radeox.util.logging.Logger;
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.Snip;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -76,7 +76,7 @@ public class XMLFileSnipStorage extends OneFileSnipStorage {
     return null;
   }
 
-  protected void storeSnip(Snip snip, OutputStream out) {
+  protected void storeSnip(snipsnap.api.snip.Snip snip, OutputStream out) {
     Document snipDocument = DocumentHelper.createDocument();
     snipDocument.add(serializer.serialize(snip));
 

@@ -25,10 +25,10 @@
  */
 package org.snipsnap.net.admin;
 
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.container.Components;
-import org.snipsnap.snip.SnipSpace;
+import snipsnap.api.snip.SnipSpace;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -42,7 +42,7 @@ public class ManageSearchEngine implements SetupHandler {
 
   private Map indexerThreads = new HashMap();
 
-  public Map setup(HttpServletRequest request, HttpServletResponse response, Configuration config, Map errors) {
+  public Map setup(HttpServletRequest request, HttpServletResponse response, snipsnap.api.config.Configuration config, Map errors) {
     if (request.getParameter("reset") != null) {
       final String appOid = (String) Application.get().getObject(Application.OID);
       Thread indexerThread = (Thread) indexerThreads.get(appOid);
@@ -58,7 +58,7 @@ public class ManageSearchEngine implements SetupHandler {
       }
       indexerThread = new Thread() {
         public void run() {
-          Application.get().storeObject(Application.OID, appOid);
+          snipsnap.api.app.Application.get().storeObject(snipsnap.api.app.Application.OID, appOid);
           ((SnipSpace) Components.getComponent(SnipSpace.class)).reIndex();
         }
       };

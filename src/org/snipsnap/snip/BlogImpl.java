@@ -27,7 +27,7 @@ package org.snipsnap.snip;
 
 import dynaop.Proxy;
 import dynaop.ProxyAware;
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
 import org.snipsnap.date.Month;
 import org.snipsnap.semanticweb.rss.Rssify;
 import org.snipsnap.user.Permissions;
@@ -38,6 +38,10 @@ import java.sql.Date;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+
+import snipsnap.api.snip.*;
+import snipsnap.api.snip.SnipSpace;
+import snipsnap.api.snip.Snip;
 
 /**
  * BlogImpl for Blog.
@@ -51,7 +55,7 @@ public class BlogImpl implements Blog, ProxyAware {
   private String startName;
   private String name;
   private Snip blog;
-  private SnipSpace space;
+  private snipsnap.api.snip.SnipSpace space;
 
   public BlogImpl(SnipSpace space, String blogName) {
     this.space = space;

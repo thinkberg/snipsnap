@@ -28,10 +28,10 @@ package org.snipsnap.render.context;
 import org.radeox.api.engine.context.RenderContext;
 import org.radeox.engine.context.BaseRenderContext;
 import org.radeox.util.i18n.ResourceManager;
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
 import org.snipsnap.container.Components;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipSpace;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -69,7 +69,7 @@ public class SnipRenderContext extends BaseRenderContext {
 
     HttpServletRequest request =
       (HttpServletRequest) Application.get().getParameters().get("request");
-    Locale locale = Application.get().getConfiguration().getLocale();
+    Locale locale = snipsnap.api.app.Application.get().getConfiguration().getLocale();
     if(null != request && null != request.getLocale()) {
       ResourceManager.get().setLocale(request.getLocale(), request.getLocales());
     } else {
@@ -100,11 +100,11 @@ public class SnipRenderContext extends BaseRenderContext {
     attributes = new HashMap();
     attributes.put(SNIP, snip);
     attributes.put(USER, Application.get().getUser());
-    attributes.put(VIEWED, Application.get().getParameters().get("viewed"));
+    attributes.put(VIEWED, snipsnap.api.app.Application.get().getParameters().get("viewed"));
     attributes.put(CONTAINER, Components.getContainer());
     HttpServletRequest request = (HttpServletRequest)Application.get().getParameters().get("request");
     attributes.put(HTTP_REQUEST, request);
-    attributes.put(HTTP_PARAMS, Application.get().getParameters());
+    attributes.put(HTTP_PARAMS, snipsnap.api.app.Application.get().getParameters());
   }
 
   public void setAttribute(Object key, Object value) {

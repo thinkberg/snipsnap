@@ -26,7 +26,7 @@
 package org.snipsnap.render.macro;
 
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
-import org.snipsnap.snip.SnipSpaceFactory;
+import snipsnap.api.snip.SnipSpaceFactory;
 import org.radeox.util.i18n.ResourceManager;
 
 import java.io.IOException;
@@ -59,7 +59,7 @@ public class UserSnipCountMacro extends ListOutputMacro {
       throws IllegalArgumentException, IOException {
 
     if (params.getLength() == 1) {
-      Collection c = SnipSpaceFactory.getInstance().getByUser(params.get("0"));
+      Collection c = snipsnap.api.snip.SnipSpaceFactory.getInstance().getByUser(params.get("0"));
       writer.write(""+c.size());
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");

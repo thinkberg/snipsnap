@@ -25,7 +25,7 @@
 
 package org.snipsnap.util;
 
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
 import org.radeox.util.logging.Logger;
 
 import java.util.HashMap;
@@ -93,7 +93,7 @@ public class ApplicationAwareMap {
   }
 
   public Object getObject() {
-    String application = (String) Application.get().getObject(Application.OID);
+    String application = (String) snipsnap.api.app.Application.get().getObject(Application.OID);
     return getObject(application);
   }
 

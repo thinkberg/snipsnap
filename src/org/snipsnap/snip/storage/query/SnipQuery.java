@@ -25,7 +25,7 @@
 
 package org.snipsnap.snip.storage.query;
 
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.Snip;
 
 /**
  * Supplies a query interface for snips

@@ -24,11 +24,11 @@
  */
 package org.snipsnap.net;
 
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.container.Components;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipSpace;
 import org.snipsnap.util.ApplicationAwareMap;
 
 import javax.servlet.ServletException;
@@ -63,7 +63,7 @@ public class CssHandlerServlet extends HttpServlet {
     Timestamp cssTimestamp = (Timestamp) timeStamps.getMap().get(themeId);
     if (null == cssSnip || null == cssTimestamp || cssSnip.getMTime().after(cssTimestamp)) {
       SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
-      String snipName = Configuration.SNIPSNAP_THEMES + "/" + theme + ("/default.css".equals(id) ? "/css" : id);
+      String snipName = snipsnap.api.config.Configuration.SNIPSNAP_THEMES + "/" + theme + ("/default.css".equals(id) ? "/css" : id);
       cssSnip = space.load(snipName);
       styleSheets.getMap().put(themeId, cssSnip);
       timeStamps.getMap().put(themeId, cssSnip.getMTime().clone());

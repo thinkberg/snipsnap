@@ -27,20 +27,20 @@ package org.snipsnap.xmlrpc;
 
 import org.apache.xmlrpc.XmlRpcException;
 import org.radeox.util.logging.Logger;
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
 import org.snipsnap.container.Components;
 import org.snipsnap.net.FileUploadServlet;
 import org.snipsnap.feeder.custom.BlogFeeder;
 import org.snipsnap.snip.Blog;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipSpaceFactory;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipSpace;
+import snipsnap.api.snip.SnipSpaceFactory;
 import org.snipsnap.snip.attachment.Attachment;
 import org.snipsnap.snip.attachment.storage.AttachmentStorage;
 import org.snipsnap.user.AuthenticationService;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Security;
-import org.snipsnap.user.User;
+import snipsnap.api.user.User;
 
 import java.io.File;
 import java.io.IOException;
@@ -104,7 +104,7 @@ public class MetaWeblogHandler extends XmlRpcSupport implements MetaWeblogAPI {
     }
 
     public Vector getUsersBlogs(String appkey, String username, String password) throws Exception {
-        User user = authenticate(username, password);
+        snipsnap.api.user.User user = authenticate(username, password);
 
         Hashtable blog = new Hashtable(3);
         blog.put("url", Application.get().getConfiguration().getUrl());
@@ -127,8 +127,8 @@ public class MetaWeblogHandler extends XmlRpcSupport implements MetaWeblogAPI {
                               String username,
                               String password,
                               boolean publish) throws Exception {
-        User user = authenticate(username, password);
-        Snip snip = SnipSpaceFactory.getInstance().load(postId);
+        snipsnap.api.user.User user = authenticate(username, password);
+        snipsnap.api.snip.Snip snip = snipsnap.api.snip.SnipSpaceFactory.getInstance().load(postId);
         SnipSpaceFactory.getInstance().remove(snip);
         return true;
     }
@@ -149,9 +149,9 @@ public class MetaWeblogHandler extends XmlRpcSupport implements MetaWeblogAPI {
 
 
     public String newPost(String blogid, String username, String password, Hashtable postcontent, boolean publish) throws Exception {
-        User user = authenticate(username, password);
+        snipsnap.api.user.User user = authenticate(username, password);
 
-        Blog blog = SnipSpaceFactory.getInstance().getBlog(blogid);
+        Blog blog = snipsnap.api.snip.SnipSpaceFactory.getInstance().getBlog(blogid);
 
         String title = (String) postcontent.get("title");
         String content = (String) postcontent.get("description");
@@ -169,8 +169,8 @@ public class MetaWeblogHandler extends XmlRpcSupport implements MetaWeblogAPI {
     public Hashtable getPost(String postId,
                              String username,
                              String password) throws XmlRpcException {
-        User user = authenticate(username, password);
-        Snip snip = SnipSpaceFactory.getInstance().load(postId);
+        snipsnap.api.user.User user = authenticate(username, password);
+        snipsnap.api.snip.Snip snip = snipsnap.api.snip.SnipSpaceFactory.getInstance().load(postId);
         Hashtable post = new Hashtable();
         post.put("content", snip.getXMLContent());
         post.put("userid", snip.getOUser());  //todo: why does getOUser work here but not with RSSSnip? (see getRecentPosts())
@@ -197,9 +197,9 @@ public class MetaWeblogHandler extends XmlRpcSupport implements MetaWeblogAPI {
     }
 
     public boolean editPost(String postId, String username, String password, Hashtable content, boolean publish) throws Exception {
-        User user = authenticate(username, password);
-        SnipSpace space = SnipSpaceFactory.getInstance();
-        Snip snip = space.load(postId);
+        snipsnap.api.user.User user = authenticate(username, password);
+        snipsnap.api.snip.SnipSpace space = snipsnap.api.snip.SnipSpaceFactory.getInstance();
+        snipsnap.api.snip.Snip snip = space.load(postId);
         String title = (String) content.get("title");
         String body = (String) content.get("description");
         //could deal with "dateCreated" later
@@ -220,7 +220,7 @@ public class MetaWeblogHandler extends XmlRpcSupport implements MetaWeblogAPI {
 
         Vector posts = new Vector(children.size());
         for (Iterator i = children.iterator(); i.hasNext() && numberOfPosts-- > 0;) {
-            Snip snip = (Snip) i.next();
+            snipsnap.api.snip.Snip snip = (snipsnap.api.snip.Snip) i.next();
             Hashtable data = new Hashtable();
             //todo: decide what the policy for null values should be.
             //todo: will require deciding (then comenting) what the postconditions of
@@ -252,7 +252,7 @@ public class MetaWeblogHandler extends XmlRpcSupport implements MetaWeblogAPI {
                                     String username,
                                     String password,
                                     Hashtable content) throws Exception {
-        User user = authenticate(username, password);
+        snipsnap.api.user.User user = authenticate(username, password);
         System.out.println("new media object.");
 
         byte[] data = (byte[]) content.get("bits");
@@ -261,8 +261,8 @@ public class MetaWeblogHandler extends XmlRpcSupport implements MetaWeblogAPI {
         String snipId = (String) content.get("postid");
         System.out.println("the postid is: "+snipId);
 
-        SnipSpace space = SnipSpaceFactory.getInstance();
-        Snip snip = space.load(snipId);
+        snipsnap.api.snip.SnipSpace space = SnipSpaceFactory.getInstance();
+        snipsnap.api.snip.Snip snip = space.load(snipId);
 
         if (!accessController.checkPermission(Application.get().getUser(), AccessController.ADD_ATTACHMENT, snip)) {
             throw new XmlRpcException(0, "Do not have write access to this snip");
@@ -300,7 +300,7 @@ public class MetaWeblogHandler extends XmlRpcSupport implements MetaWeblogAPI {
                 attachment.setSize(data.length);
                 snip.getAttachments().addAttachment(attachment);
 
-                SnipSpaceFactory.getInstance().store(snip);
+                snipsnap.api.snip.SnipSpaceFactory.getInstance().store(snip);
                 Hashtable result = new Hashtable(1);
                 // this most probably does not return an url
                 result.put("url", attachment.getLocation());//does this return a url?

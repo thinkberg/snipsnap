@@ -28,7 +28,7 @@ import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
 import org.radeox.filter.Filter;
 import org.radeox.filter.HtmlRemoveFilter;
 import org.radeox.util.logging.Logger;
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.Snip;
 import org.dom4j.io.XMLWriter;
 import org.dom4j.io.OutputFormat;
 
@@ -48,7 +48,7 @@ import java.io.StringWriter;
  */
 
 public class ContentTag extends TagSupport {
-  Snip snip = null;
+  snipsnap.api.snip.Snip snip = null;
   boolean extract = false;
   boolean removeHtml = false;
   boolean encodeHtml = false;

@@ -31,11 +31,11 @@ import org.radeox.macro.BaseMacro;
 import org.radeox.macro.parameter.MacroParameter;
 import org.radeox.util.logging.Logger;
 import org.radeox.util.i18n.ResourceManager;
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
 import org.snipsnap.container.Components;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipSpaceFactory;
+import snipsnap.api.snip.SnipLink;
+import snipsnap.api.snip.SnipSpace;
+import snipsnap.api.snip.SnipSpaceFactory;
 import org.snipsnap.user.AuthenticationService;
 import org.snipsnap.components.SearchService;
 
@@ -114,7 +114,7 @@ public class SnipXrefMacro extends BaseMacro {
       AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
 
       if (searchString != null && searchString.length() > 0 &&
-        !SnipSpaceFactory.getInstance().exists(searchString) &&
+        !snipsnap.api.snip.SnipSpaceFactory.getInstance().exists(searchString) &&
         service.isAuthenticated(Application.get().getUser())) {
         MessageFormat mf = new MessageFormat(ResourceManager.getString("i18n.messages", "macro.snipxref.norefs"));
         writer.write("<p>");

@@ -32,13 +32,13 @@ import org.dom4j.ElementHandler;
 import org.dom4j.ElementPath;
 import org.dom4j.io.SAXReader;
 import org.radeox.util.logging.Logger;
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.container.Components;
 import org.snipsnap.jdbc.IntHolder;
 import org.snipsnap.snip.storage.SnipSerializer;
 import org.snipsnap.snip.storage.UserSerializer;
-import org.snipsnap.user.User;
+import snipsnap.api.user.User;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.versioning.VersionManager;
 
@@ -53,6 +53,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import snipsnap.api.snip.*;
+import snipsnap.api.snip.SnipSpace;
+import snipsnap.api.snip.Snip;
 
 /**
  * Helper class for importing serialized database backups.
@@ -180,7 +184,7 @@ public class XMLSnipImport {
     String email = (String) userMap.get(UserSerializer.USER_EMAIL);
 
     UserManager userManager = (UserManager) Components.getComponent(UserManager.class);
-    User user = null;
+    snipsnap.api.user.User user = null;
     if (userManager.exists(login)) {
       if ((flags & OVERWRITE) == 0) {
         Logger.log("ignoring to import user '" + login + "'");
@@ -204,7 +208,7 @@ public class XMLSnipImport {
     String name = (String) snipMap.get(SnipSerializer.SNIP_NAME);
     String content = (String) snipMap.get(SnipSerializer.SNIP_CONTENT);
 
-    SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
+    SnipSpace space = (snipsnap.api.snip.SnipSpace) Components.getComponent(SnipSpace.class);
     Snip snip = null;
     if (space.exists(name)) {
       Logger.log("loading existing snip '" + name + "'");
@@ -219,7 +223,7 @@ public class XMLSnipImport {
     }
 
     UserManager um = (UserManager) Components.getComponent(UserManager.class);
-    User importUser = Application.get().getUser();
+    snipsnap.api.user.User importUser = snipsnap.api.app.Application.get().getUser();
 
     // check existing users
     if (!um.exists((String) snipMap.get(SnipSerializer.SNIP_CUSER))) {
@@ -239,7 +243,7 @@ public class XMLSnipImport {
     snip.getBackLinks().getSize();
     // ensure that the configuration snip is stored normally
     // so the configuration is updated
-    if (Configuration.SNIPSNAP_CONFIG.equals(snip.getName())) {
+    if (snipsnap.api.config.Configuration.SNIPSNAP_CONFIG.equals(snip.getName())) {
       space.store(snip);
     } else {
       space.systemStore(snip);
@@ -247,7 +251,7 @@ public class XMLSnipImport {
   }
 
   private static void restoreAttachments(Element snipEl) {
-    Configuration config = Application.get().getConfiguration();
+    Configuration config = snipsnap.api.app.Application.get().getConfiguration();
     File attRoot = config.getFilePath();
     Element attachmentsEl = snipEl.element("attachments");
     if (null != attachmentsEl) {

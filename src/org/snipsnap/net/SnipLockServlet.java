@@ -24,15 +24,15 @@
  */
 package org.snipsnap.net;
 
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipSpaceFactory;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipLink;
+import snipsnap.api.snip.SnipSpace;
+import snipsnap.api.snip.SnipSpaceFactory;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
-import org.snipsnap.user.User;
+import snipsnap.api.user.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -51,8 +51,8 @@ public class SnipLockServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     String name = request.getParameter("name");
-    SnipSpace space = SnipSpaceFactory.getInstance();
-    Snip snip = space.load(name);
+    SnipSpace space = snipsnap.api.snip.SnipSpaceFactory.getInstance();
+    snipsnap.api.snip.Snip snip = space.load(name);
 
     User user = Application.get().getUser();
     if (user != null && user.getRoles().containsAny(ALLOWED_ROLES)) {
@@ -68,7 +68,7 @@ public class SnipLockServlet extends HttpServlet {
       }
       space.store(snip);
     }
-    Configuration config = Application.get().getConfiguration();
-    response.sendRedirect(config.getUrl("/space/" + SnipLink.encode(name)));
+    snipsnap.api.config.Configuration config = Application.get().getConfiguration();
+    response.sendRedirect(config.getUrl("/space/" + snipsnap.api.snip.SnipLink.encode(name)));
   }
 }

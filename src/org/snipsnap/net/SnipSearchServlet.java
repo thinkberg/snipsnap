@@ -25,11 +25,11 @@
 package org.snipsnap.net;
 
 import org.apache.lucene.search.Hits;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.config.Configuration;
-import org.snipsnap.app.Application;
+import snipsnap.api.snip.SnipLink;
+import snipsnap.api.snip.SnipSpace;
+import snipsnap.api.snip.SnipSpaceFactory;
+import snipsnap.api.config.Configuration;
+import snipsnap.api.app.Application;
 import org.snipsnap.components.SearchService;
 import org.snipsnap.container.Components;
 

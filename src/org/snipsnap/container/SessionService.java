@@ -1,6 +1,6 @@
 package org.snipsnap.container;
 
-import org.snipsnap.user.User;
+import snipsnap.api.user.User;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;

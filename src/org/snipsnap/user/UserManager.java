@@ -24,6 +24,9 @@
  */
 package org.snipsnap.user;
 
+import snipsnap.api.user.*;
+import snipsnap.api.user.User;
+
 import java.util.List;
 
 /**
@@ -93,7 +96,7 @@ public interface UserManager {
    * @param login Login of the user to load
    * @return
    */
-  public User load(String login);
+  public snipsnap.api.user.User load(String login);
 
   /**
    * Test if an user in the system exists

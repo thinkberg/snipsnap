@@ -25,7 +25,7 @@
  */
 package org.snipsnap.net.admin;
 
-import org.snipsnap.config.Configuration;
+import snipsnap.api.config.Configuration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -53,7 +53,7 @@ public class SetupMail implements SetupHandler {
           socket.connect(new InetSocketAddress(address, 25), 5 * 1000);
           socket.close();
         } catch (IOException e) {
-          errors.put(Configuration.APP_MAIL_HOST, Configuration.APP_MAIL_HOST + ".connect");
+          errors.put(Configuration.APP_MAIL_HOST, snipsnap.api.config.Configuration.APP_MAIL_HOST + ".connect");
         }
       } catch (UnknownHostException e) {
         errors.put(Configuration.APP_MAIL_HOST, Configuration.APP_MAIL_HOST + ".unknown");

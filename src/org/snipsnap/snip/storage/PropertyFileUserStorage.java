@@ -26,7 +26,7 @@
 package org.snipsnap.snip.storage;
 
 import org.radeox.util.logging.Logger;
-import org.snipsnap.user.User;
+import snipsnap.api.user.User;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -93,7 +93,7 @@ public class PropertyFileUserStorage extends FileUserStorage {
       String fileName = files[i];
       String login = fileName.substring(0, fileName.lastIndexOf("."));
       try {
-        User user = parseUser(loadUser(login, new FileInputStream(new File(userDir, fileName))));
+        snipsnap.api.user.User user = parseUser(loadUser(login, new FileInputStream(new File(userDir, fileName))));
         users.add(user);
       } catch (Exception e) {
         Logger.log("PropertyFileUserStorage: cannot load user "+fileName, e);

@@ -25,11 +25,11 @@
 
 package org.snipsnap.net;
 
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipLink;
+import snipsnap.api.snip.SnipSpaceFactory;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.net.filter.MultipartWrapper;
 import org.radeox.util.logging.Logger;
 
@@ -52,7 +52,7 @@ public class RemoveLabelServlet extends HttpServlet {
   }
 
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-    Configuration config = Application.get().getConfiguration();
+    snipsnap.api.config.Configuration config = snipsnap.api.app.Application.get().getConfiguration();
     // If this is not a multipart/form-data request continue
     String type = request.getHeader("Content-Type");
     if (type != null && type.startsWith("multipart/form-data")) {
@@ -70,16 +70,16 @@ public class RemoveLabelServlet extends HttpServlet {
     }
     // cancel pressed
     if (null != request.getParameter("cancel")) {
-      response.sendRedirect(config.getUrl("/exec/labels?snipname=" + SnipLink.encode(snipName)));
+      response.sendRedirect(config.getUrl("/exec/labels?snipname=" + snipsnap.api.snip.SnipLink.encode(snipName)));
       return;
     }
 
-    Snip snip = SnipSpaceFactory.getInstance().load(snipName);
+    snipsnap.api.snip.Snip snip = SnipSpaceFactory.getInstance().load(snipName);
     String labelName = request.getParameter("labelname");
     String labelValue = request.getParameter("labelvalue");
     snip.getLabels().removeLabel(labelName, labelValue);
 
-    RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/labels?snipname=" + SnipLink.encode(snipName));
+    RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/labels?snipname=" + snipsnap.api.snip.SnipLink.encode(snipName));
     dispatcher.forward(request, response);
   }
 }

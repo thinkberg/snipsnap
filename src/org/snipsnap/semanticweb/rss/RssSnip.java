@@ -27,14 +27,15 @@ package org.snipsnap.semanticweb.rss;
 
 import org.radeox.api.engine.RenderEngine;
 import org.radeox.api.engine.context.RenderContext;
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
 import org.snipsnap.container.Components;
 import org.snipsnap.render.context.SnipRenderContext;
 import org.snipsnap.snip.*;
+import snipsnap.api.snip.Snip;
 import org.snipsnap.snip.attachment.Attachments;
-import org.snipsnap.snip.label.Labels;
+import snipsnap.api.label.Labels;
 import org.snipsnap.user.Permissions;
-import org.snipsnap.user.User;
+import snipsnap.api.user.User;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -43,6 +44,8 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import gabriel.Principal;
+import snipsnap.api.snip.*;
+import snipsnap.api.snip.SnipSpaceFactory;
 
 /**
  * Encapsulates a Snip for RSS as RSS channels are more fine granular
@@ -52,30 +55,30 @@ import gabriel.Principal;
  * @version $Id$
  */
 
-public class RssSnip implements Snip {
-  private Snip snip;
+public class RssSnip implements snipsnap.api.snip.Snip {
+  private snipsnap.api.snip.Snip snip;
   private String url;
   private String title;
   private String content;
 
-  public RssSnip(Snip snip) {
+  public RssSnip(snipsnap.api.snip.Snip snip) {
     this.title = snip.getName();
     this.content = snip.getContent();
     this.snip = snip;
     this.url = "";
   }
 
-  public RssSnip(Snip snip, String content) {
+  public RssSnip(snipsnap.api.snip.Snip snip, String content) {
     this(snip);
     this.content = content;
   }
 
-  public RssSnip(Snip snip, String content, String title) {
+  public RssSnip(snipsnap.api.snip.Snip snip, String content, String title) {
     this(snip, content);
     this.title = title;
   }
 
-  public RssSnip(Snip snip, String content, String title, String url) {
+  public RssSnip(snipsnap.api.snip.Snip snip, String content, String title, String url) {
     this(snip, content, title);
     this.url = "#" + url.replace(' ', '_');
   }
@@ -142,7 +145,7 @@ public class RssSnip implements Snip {
   public String getXMLContent() {
     RenderEngine engine = (RenderEngine) Components.getComponent(Components.DEFAULT_ENGINE);
     RenderContext context = new SnipRenderContext(snip, SnipSpaceFactory.getInstance());
-    context.setParameters(Application.get().getParameters());
+    context.setParameters(snipsnap.api.app.Application.get().getParameters());
     return engine.render(content, context);
   }
 
@@ -195,7 +198,7 @@ public class RssSnip implements Snip {
     return snip.getOUser();
   }
 
-  public void setOUser(User oUser) {
+  public void setOUser(snipsnap.api.user.User oUser) {
     return;
   }
 
@@ -267,7 +270,7 @@ public class RssSnip implements Snip {
     return snip.getCUser();
   }
 
-  public void setCUser(User cUser) {
+  public void setCUser(snipsnap.api.user.User cUser) {
     return;
   }
 
@@ -279,7 +282,7 @@ public class RssSnip implements Snip {
     return snip.getMUser();
   }
 
-  public void setMUser(User mUser) {
+  public void setMUser(snipsnap.api.user.User mUser) {
     return;
   }
 
@@ -291,11 +294,11 @@ public class RssSnip implements Snip {
     return snip.getChildren();
   }
 
-  public void setCommentedSnip(Snip comment) {
+  public void setCommentedSnip(snipsnap.api.snip.Snip comment) {
     return;
   }
 
-  public Snip getCommentedSnip() {
+  public snipsnap.api.snip.Snip getCommentedSnip() {
     return snip.getCommentedSnip();
   }
 
@@ -315,23 +318,23 @@ public class RssSnip implements Snip {
     return snip.getChildrenModifiedOrder();
   }
 
-  public void addSnip(Snip snip) {
+  public void addSnip(snipsnap.api.snip.Snip snip) {
     return;
   }
 
-  public void removeSnip(Snip snip) {
+  public void removeSnip(snipsnap.api.snip.Snip snip) {
     return;
   }
 
-  public Snip getParent() {
+  public snipsnap.api.snip.Snip getParent() {
     return snip.getParent();
   }
 
-  public void setDirectParent(Snip parentSnip) {
+  public void setDirectParent(snipsnap.api.snip.Snip parentSnip) {
     return;
   }
 
-  public void setParent(Snip parentSnip) {
+  public void setParent(snipsnap.api.snip.Snip parentSnip) {
     return;
   }
 
@@ -351,7 +354,7 @@ public class RssSnip implements Snip {
     return snip.getAttachmentString();
   }
 
-  public Snip copy(String newName) {
+  public snipsnap.api.snip.Snip copy(String newName) {
     return new RssSnip(snip, content, title, url);
   }
 }

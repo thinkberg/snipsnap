@@ -32,14 +32,14 @@ import org.radeox.api.engine.context.RenderContext;
 import org.radeox.engine.BaseRenderEngine;
 import org.radeox.filter.context.FilterContext;
 import org.radeox.util.Encoder;
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.render.context.SnipRenderContext;
 import org.snipsnap.render.filter.context.SnipFilterContext;
 import org.snipsnap.serialization.StringBufferWriter;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpaceFactory;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipLink;
+import snipsnap.api.snip.SnipSpaceFactory;
 import org.snipsnap.user.AuthenticationService;
 
 import java.io.IOException;
@@ -75,19 +75,19 @@ public class SnipRenderEngine extends BaseRenderEngine
   }
 
   public boolean showCreate() {
-    return authService.isAuthenticated(Application.get().getUser());
+    return authService.isAuthenticated(snipsnap.api.app.Application.get().getUser());
   }
 
   public void appendLink(StringBuffer buffer, String name, String view, String anchor) {
-    SnipLink.appendLink(buffer, name, view, anchor);
+    snipsnap.api.snip.SnipLink.appendLink(buffer, name, view, anchor);
   }
 
   public void appendLink(StringBuffer buffer, String name, String view) {
-    SnipLink.appendLink(buffer, name, view);
+    snipsnap.api.snip.SnipLink.appendLink(buffer, name, view);
   }
 
   public void appendCreateLink(StringBuffer buffer, String name, String view) {
-    Configuration config = Application.get().getConfiguration();
+    Configuration config = snipsnap.api.app.Application.get().getConfiguration();
     String encodedSpace = config.getEncodedSpace();
 
     if(name.indexOf(encodedSpace.charAt(0)) == -1) {
@@ -98,7 +98,7 @@ public class SnipRenderEngine extends BaseRenderEngine
   }
 
   public String include(String name) {
-    Snip includeSnip = SnipSpaceFactory.getInstance().load(name);
+    snipsnap.api.snip.Snip includeSnip = SnipSpaceFactory.getInstance().load(name);
     if (null != includeSnip) {
       return includeSnip.getContent();
     } else {
@@ -111,7 +111,7 @@ public class SnipRenderEngine extends BaseRenderEngine
     if(null == externalImageLink) {
       Writer writer = new StringBufferWriter();
       try {
-        SnipLink.appendImage(writer, "Icon-Extlink", "&gt;&gt;");
+        snipsnap.api.snip.SnipLink.appendImage(writer, "Icon-Extlink", "&gt;&gt;");
       } catch (IOException e) {
         // ignore
       }

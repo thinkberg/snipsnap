@@ -25,13 +25,13 @@
 package org.snipsnap.net;
 
 import org.radeox.util.logging.Logger;
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.container.Components;
 import org.snipsnap.container.SessionService;
 import org.snipsnap.net.filter.MultipartWrapper;
 import org.snipsnap.user.AuthenticationService;
-import org.snipsnap.user.User;
+import snipsnap.api.user.User;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -52,7 +52,7 @@ public class LoginServlet extends HttpServlet {
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
           throws ServletException, IOException {
-    Configuration config = Application.get().getConfiguration();
+    snipsnap.api.config.Configuration config = Application.get().getConfiguration();
 
     // If this is not a multipart/form-data request continue
     String type = request.getHeader("Content-Type");
@@ -69,7 +69,7 @@ public class LoginServlet extends HttpServlet {
     String referer = sanitize(request.getParameter("referer"));
 
     if (request.getParameter("cancel") == null) {
-      User user = ((AuthenticationService) Components.getComponent(AuthenticationService.class)).authenticate(login, password);
+      snipsnap.api.user.User user = ((AuthenticationService) Components.getComponent(AuthenticationService.class)).authenticate(login, password);
       if (Application.getCurrentUsers().contains(user)) {
         Application.getCurrentUsers().remove(user);
       }
@@ -102,7 +102,7 @@ public class LoginServlet extends HttpServlet {
           throws ServletException, IOException {
     String referer = request.getHeader("REFERER");
     if (referer == null || referer.length() == 0) {
-      Configuration config = Application.get().getConfiguration();
+      snipsnap.api.config.Configuration config = Application.get().getConfiguration();
       referer = config.getSnipUrl(config.getStartSnip());
     }
 

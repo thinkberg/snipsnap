@@ -29,7 +29,7 @@ import org.radeox.macro.Macro;
 import org.radeox.macro.BaseMacro;
 import org.radeox.macro.parameter.MacroParameter;
 import org.radeox.util.i18n.ResourceManager;
-import org.snipsnap.snip.SnipSpaceFactory;
+import snipsnap.api.snip.SnipSpaceFactory;
 
 import java.io.IOException;
 import java.io.Writer;

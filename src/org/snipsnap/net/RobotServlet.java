@@ -24,10 +24,10 @@
  */
 package org.snipsnap.net;
 
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.SnipSpace;
+import snipsnap.api.snip.Snip;
 import org.snipsnap.container.Components;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.config.Configuration;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -51,7 +51,7 @@ public class RobotServlet extends HttpServlet {
 
     SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
     if(space.exists(Configuration.SNIPSNAP_CONFIG_ROBOTS_TXT)) {
-      Snip robotstxt = space.load(Configuration.SNIPSNAP_CONFIG_ROBOTS_TXT);
+      snipsnap.api.snip.Snip robotstxt = space.load(Configuration.SNIPSNAP_CONFIG_ROBOTS_TXT);
       PrintWriter writer = new PrintWriter(response.getOutputStream());
       writer.println(robotstxt.getContent());
       writer.flush();

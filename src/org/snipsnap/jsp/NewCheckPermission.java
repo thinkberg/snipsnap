@@ -27,12 +27,12 @@ package org.snipsnap.jsp;
 import gabriel.Permission;
 import gabriel.components.context.OwnerAccessContext;
 import org.radeox.util.logging.Logger;
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
 import org.snipsnap.container.Components;
 import org.snipsnap.security.AccessController;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.user.User;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipSpaceFactory;
+import snipsnap.api.user.User;
 import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
 
 import javax.servlet.jsp.JspException;
@@ -40,7 +40,7 @@ import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.jstl.core.ConditionalTagSupport;
 
 public class NewCheckPermission extends ConditionalTagSupport {
-  protected Snip snip;
+  protected snipsnap.api.snip.Snip snip;
   protected Permission permission;
   protected boolean invertCheck = false;
 
@@ -52,7 +52,7 @@ public class NewCheckPermission extends ConditionalTagSupport {
   public void setName(String snip) {
     try {
       String snipName = (String) ExpressionEvaluatorManager.evaluate("snip", snip, String.class, this, pageContext);
-      this.snip = SnipSpaceFactory.getInstance().load(snipName);
+      this.snip = snipsnap.api.snip.SnipSpaceFactory.getInstance().load(snipName);
     } catch (JspException e) {
       Logger.warn("unable to evaluate expression", e);
     }
@@ -83,7 +83,7 @@ public class NewCheckPermission extends ConditionalTagSupport {
   protected boolean condition() throws JspTagException {
     AccessController controller = (AccessController) Components.getComponent(AccessController.class);
 
-    Application app = Application.get();
+    Application app = snipsnap.api.app.Application.get();
     User user = app.getUser();
     boolean isTrue = false;
     isTrue = controller.checkPermission(user, permission, new OwnerAccessContext(snip));

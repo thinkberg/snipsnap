@@ -29,10 +29,10 @@ import org.radeox.filter.regex.RegexTokenFilter;
 import org.radeox.regex.MatchResult;
 import org.radeox.filter.context.FilterContext;
 import org.radeox.util.i18n.ResourceManager;
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.render.filter.context.SnipFilterContext;
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.Snip;
 
 import java.text.MessageFormat;
 import java.text.FieldPosition;
@@ -55,10 +55,10 @@ public class CalendarFilter extends RegexTokenFilter {
   private final static int CALENDAR_PREFIX_LENGTH = "calendar-".length();
 
   public void handleMatch(StringBuffer buffer, MatchResult result, FilterContext context) {
-    Snip snip = ((SnipFilterContext) context).getSnip();
-    Application app = Application.get();
-    Configuration config = app.getConfiguration();
-    Snip parent = snip.getParent();
+    snipsnap.api.snip.Snip snip = ((SnipFilterContext) context).getSnip();
+    snipsnap.api.app.Application app = snipsnap.api.app.Application.get();
+    snipsnap.api.config.Configuration config = app.getConfiguration();
+    snipsnap.api.snip.Snip parent = snip.getParent();
 
     StringBuffer linkBuffer = new StringBuffer();
     linkBuffer.append("<a href=\"");

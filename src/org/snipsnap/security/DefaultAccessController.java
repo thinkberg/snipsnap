@@ -36,8 +36,8 @@ import gabriel.components.context.AccessContext;
 import gabriel.components.context.OwnerAccessContext;
 import gabriel.components.io.FileAclStore;
 import gabriel.components.parser.AclParser;
-import org.snipsnap.user.User;
-import org.snipsnap.snip.Snip;
+import snipsnap.api.user.User;
+import snipsnap.api.snip.Snip;
 
 /**
  * Check for access to resources and operations
@@ -54,7 +54,7 @@ public class DefaultAccessController implements AccessController  {
     manager = new AccessManagerImpl(store);
   }
 
-  public boolean checkPermission(User user, Permission permission, Snip snip) {
+  public boolean checkPermission(User user, Permission permission, snipsnap.api.snip.Snip snip) {
     return checkPermission(user, permission, new OwnerAccessContext(snip));
   }
 

@@ -29,7 +29,7 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.user.Roles;
-import org.snipsnap.user.User;
+import snipsnap.api.user.User;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -77,7 +77,7 @@ public class UserSerializer extends SerializerSupport {
    * @param user the user to store
    * @return the serialized user as XML
    */
-  public Element serialize(User user) {
+  public Element serialize(snipsnap.api.user.User user) {
     Element userElement = DocumentHelper.createElement(USER);
     userElement.addElement(USER_NAME).addText(user.getLogin());
     userElement.addElement(USER_PASSWORD).addText(notNull(user.getPasswd()));
@@ -99,12 +99,12 @@ public class UserSerializer extends SerializerSupport {
    * @param userEl the XML node containing the user
    * @return the modified user
    */
-  public User deserialize(Element userEl, User user) {
+  public snipsnap.api.user.User deserialize(Element userEl, snipsnap.api.user.User user) {
     Map snipMap = getElementMap(userEl);
     return deserialize(snipMap, user);
   }
 
-  public User deserialize(Map userMap, User user) {
+  public User deserialize(Map userMap, snipsnap.api.user.User user) {
     Iterator elementIt = userMap.keySet().iterator();
     while (elementIt.hasNext()) {
       String element = (String) elementIt.next();
@@ -144,7 +144,7 @@ public class UserSerializer extends SerializerSupport {
     return user;
   }
 
-  public Map createUserMap(User user) {
+  public Map createUserMap(snipsnap.api.user.User user) {
     Map userMap = new HashMap();
     userMap.put(USER_NAME, user.getLogin());
     userMap.put(USER_PASSWORD, notNull(user.getPasswd()));

@@ -32,10 +32,10 @@ import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 import org.radeox.util.logging.Logger;
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
 import org.snipsnap.container.Components;
 import org.snipsnap.snip.attachment.storage.AttachmentStorage;
-import org.snipsnap.snip.SnipLink;
+import snipsnap.api.snip.SnipLink;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -222,7 +222,7 @@ public class Attachments {
     while (it.hasNext()) {
       Attachment att = (Attachment) it.next();
       if (storage.exists(att)) {
-        tmp.append(SnipLink.createLink(SnipLink.getSpaceRoot() + "/" + SnipLink.encode(name), att.getName(), att.getName()));
+        tmp.append(snipsnap.api.snip.SnipLink.createLink(SnipLink.getSpaceRoot() + "/" + snipsnap.api.snip.SnipLink.encode(name), att.getName(), att.getName()));
         tmp.append(" (").append(att.getSize()).append(")");
         if (it.hasNext()) {
           tmp.append("<br/> ");

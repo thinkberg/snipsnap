@@ -28,9 +28,9 @@ package org.snipsnap.render.macro;
 import org.radeox.util.i18n.ResourceManager;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 import org.snipsnap.render.macro.list.Linkable;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.snip.SnipLink;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipSpaceFactory;
+import snipsnap.api.snip.SnipLink;
 import org.snipsnap.util.collection.Collections;
 import org.snipsnap.util.collection.Filterator;
 

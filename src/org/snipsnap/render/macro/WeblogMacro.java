@@ -26,15 +26,15 @@
 package org.snipsnap.render.macro;
 
 import org.radeox.util.i18n.ResourceManager;
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.render.filter.links.BackLinks;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 import org.snipsnap.snip.Blog;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipSpaceFactory;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipLink;
+import snipsnap.api.snip.SnipSpace;
+import snipsnap.api.snip.SnipSpaceFactory;
 import org.snipsnap.snip.SnipUtil;
 import org.snipsnap.util.StringUtil;
 
@@ -53,10 +53,10 @@ import java.util.List;
  */
 
 public class WeblogMacro extends SnipMacro {
-  private SnipSpace space;
+  private snipsnap.api.snip.SnipSpace space;
 
   public WeblogMacro() {
-    space = SnipSpaceFactory.getInstance();
+    space = snipsnap.api.snip.SnipSpaceFactory.getInstance();
   }
 
   public String getName() {
@@ -122,7 +122,7 @@ public class WeblogMacro extends SnipMacro {
     while (iterator.hasNext()) {
       Object object = iterator.next();
       // System.err.println("Class="+object.getClass());
-      Snip entry = (Snip) object;
+      snipsnap.api.snip.Snip entry = (snipsnap.api.snip.Snip) object;
 
       String[] entryName = StringUtil.split(entry.getName(), "/");
       int slashOffset = entryName.length - 3;
@@ -136,7 +136,7 @@ public class WeblogMacro extends SnipMacro {
         writer.write("</div>");
       }
 
-      Configuration conf = Application.get().getConfiguration();
+      snipsnap.api.config.Configuration conf = Application.get().getConfiguration();
 
       writer.write(entry.getXMLContent());
       writer.write(" <a href=\"");

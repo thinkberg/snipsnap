@@ -26,7 +26,7 @@
 package org.snipsnap.interceptor.custom;
 
 import org.radeox.util.logging.Logger;
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.Snip;
 import dynaop.Interceptor;
 import dynaop.Invocation;
 
@@ -37,7 +37,7 @@ public class StoreInterceptor implements Interceptor {
 
   public Object intercept(Invocation invocation) throws Throwable {
     if (invocation.getMethod().getName().startsWith("store")) {
-      Snip snip = (Snip) invocation.getArguments()[0];
+      Snip snip = (snipsnap.api.snip.Snip) invocation.getArguments()[0];
       if (snip.getName().startsWith("macro-")) {
         Logger.debug("Store on macro called.");
       }

@@ -1,5 +1,8 @@
 package org.snipsnap.user;
 
+import snipsnap.api.user.*;
+import snipsnap.api.user.User;
+
 /*
  * This file is part of "SnipSnap Wiki/Weblog".
  *
@@ -30,5 +33,5 @@ public interface AuthenticationService {
 
   public User authenticate(String login, String passwd, boolean encrypted);
   public User authenticate(String login, String passwd);
-  public boolean isAuthenticated(User user);
+  public boolean isAuthenticated(snipsnap.api.user.User user);
 }

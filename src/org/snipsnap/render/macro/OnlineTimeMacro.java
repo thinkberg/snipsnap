@@ -29,10 +29,10 @@ import org.radeox.macro.Macro;
 import org.radeox.macro.BaseMacro;
 import org.radeox.macro.parameter.MacroParameter;
 import org.radeox.util.i18n.ResourceManager;
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
 import org.snipsnap.snip.Modified;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpaceFactory;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipSpaceFactory;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -58,7 +58,7 @@ public class OnlineTimeMacro extends BaseMacro {
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
 
-    Snip snip = SnipSpaceFactory.getInstance().load(Application.get().getConfiguration().getStartSnip());
+    snipsnap.api.snip.Snip snip = SnipSpaceFactory.getInstance().load(snipsnap.api.app.Application.get().getConfiguration().getStartSnip());
     MessageFormat mf = new MessageFormat(ResourceManager.getString("i18n.messages", "macro.onlinetime.age"),
                                          ResourceManager.getLocale("i18n.messages"));
     writer.write(mf.format(new Object[]{Modified.getNiceTime(snip.getModified().getcTime())}));

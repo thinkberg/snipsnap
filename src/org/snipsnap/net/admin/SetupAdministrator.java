@@ -25,7 +25,7 @@
  */
 package org.snipsnap.net.admin;
 
-import org.snipsnap.config.Configuration;
+import snipsnap.api.config.Configuration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -48,7 +48,7 @@ public class SetupAdministrator implements SetupHandler {
       if (password == null || password.length() == 0) {
         errors.put(Configuration.APP_ADMIN_PASSWORD, Configuration.APP_ADMIN_PASSWORD);
       } else if (!password.equals(verify)) {
-        errors.put(Configuration.APP_ADMIN_PASSWORD, Configuration.APP_ADMIN_PASSWORD + ".match");
+        errors.put(Configuration.APP_ADMIN_PASSWORD, snipsnap.api.config.Configuration.APP_ADMIN_PASSWORD + ".match");
       } else if (password.length() < 3) {
         errors.put(Configuration.APP_ADMIN_PASSWORD, Configuration.APP_ADMIN_PASSWORD + ".length");
       } else {

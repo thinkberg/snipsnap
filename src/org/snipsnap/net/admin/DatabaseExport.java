@@ -25,12 +25,12 @@
  */
 package org.snipsnap.net.admin;
 
-import org.snipsnap.config.Configuration;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.container.Components;
-import org.snipsnap.snip.SnipSpace;
+import snipsnap.api.snip.SnipSpace;
 import org.snipsnap.snip.XMLSnipExport;
 import org.snipsnap.user.UserManager;
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
 import org.snipsnap.jdbc.IntHolder;
 import org.radeox.util.logging.Logger;
 
@@ -57,7 +57,7 @@ public class DatabaseExport implements SetupHandler {
   }
 
   public Map setup(HttpServletRequest request, HttpServletResponse response, Configuration config, Map errors) {
-    String appOid = (String) Application.get().getObject(Application.OID);
+    String appOid = (String) snipsnap.api.app.Application.get().getObject(snipsnap.api.app.Application.OID);
     ExportThread workerThread = (ExportThread) workerThreads.get(appOid);
     if (workerThread != null && workerThread.isAlive()) {
       setRunning(workerThread, request.getSession());
@@ -75,7 +75,7 @@ public class DatabaseExport implements SetupHandler {
     request.setAttribute("exportTypes", exportTypes);
 
     UserManager um = (UserManager) Components.getComponent(UserManager.class);
-    SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
+    snipsnap.api.snip.SnipSpace space = (SnipSpace) Components.getComponent(snipsnap.api.snip.SnipSpace.class);
 
     List users = null;
     List snips = null;

@@ -26,7 +26,7 @@
 package org.snipsnap.snip.storage;
 
 import org.radeox.util.logging.Logger;
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.Snip;
 import org.snipsnap.versioning.VersionInfo;
 
 import java.io.*;
@@ -94,7 +94,7 @@ public abstract class TwoFileSnipStorage extends FileSnipStorage {
    * @param out
    */
 
-  protected abstract void storeContent(Snip snip, OutputStream out);
+  protected abstract void storeContent(snipsnap.api.snip.Snip snip, OutputStream out);
 
   /**
    * Store the metadata of a snip to
@@ -105,7 +105,7 @@ public abstract class TwoFileSnipStorage extends FileSnipStorage {
    * @param snip
    * @param out
    */
-  protected abstract void storeMetadata(Snip snip, OutputStream out);
+  protected abstract void storeMetadata(snipsnap.api.snip.Snip snip, OutputStream out);
 
   /**
    * Return the special checker to get the version number
@@ -147,7 +147,7 @@ public abstract class TwoFileSnipStorage extends FileSnipStorage {
    *
    * @param snip
    */
-  protected void storageRemoveContent(Snip snip, File snipDir) {
+  protected void storageRemoveContent(snipsnap.api.snip.Snip snip, File snipDir) {
     File contentFile = new File(snipDir, getContentFileName());
     Logger.debug(contentFile+": exists? "+contentFile.exists());
     if (contentFile.exists()) {
@@ -163,7 +163,7 @@ public abstract class TwoFileSnipStorage extends FileSnipStorage {
    *
    * @param snip Snip to remove
    */
-  public void storageRemoveFile(Snip snip, File snipDir) {
+  public void storageRemoveFile(snipsnap.api.snip.Snip snip, File snipDir) {
     storageRemoveMetadata(snip, snipDir);
     storageRemoveContent(snip, snipDir);
   }
@@ -248,7 +248,7 @@ public abstract class TwoFileSnipStorage extends FileSnipStorage {
    * @param snip
    * @param snipDir
    */
-  protected void storeSnip(Snip snip, File snipDir) {
+  protected void storeSnip(snipsnap.api.snip.Snip snip, File snipDir) {
     if (!snipDir.exists()) {
       snipDir.mkdirs();
     }

@@ -1,4 +1,4 @@
-<%@ page import="org.snipsnap.config.Configuration"%>
+<%@ page import="snipsnap.api.config.Configuration"%>
  <%--
   ** Basic Settings of the Application
   ** @author Matthias L. Jugel

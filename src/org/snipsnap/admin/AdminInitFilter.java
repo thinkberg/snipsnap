@@ -25,7 +25,7 @@
 package org.snipsnap.admin;
 
 import org.apache.xmlrpc.XmlRpcException;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.config.ServerConfiguration;
 import org.snipsnap.net.filter.EncRequestWrapper;
 import org.snipsnap.server.AdminXmlRpcClient;
@@ -153,7 +153,7 @@ public class AdminInitFilter implements Filter {
           config.setProperty(Configuration.APP_HOST, host);
         }
         if (null != port && !"".equals(port)) {
-          config.setProperty(Configuration.APP_PORT, port);
+          config.setProperty(snipsnap.api.config.Configuration.APP_PORT, port);
         }
         if (null != contextPath && !"".equals(contextPath)) {
           config.setProperty(Configuration.APP_PATH, contextPath);

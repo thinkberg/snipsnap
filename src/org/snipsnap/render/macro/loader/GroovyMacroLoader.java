@@ -33,8 +33,8 @@ import org.snipsnap.container.Components;
 import org.snipsnap.notification.Consumer;
 import org.snipsnap.notification.Message;
 import org.snipsnap.notification.MessageService;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipSpace;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -96,8 +96,8 @@ public class GroovyMacroLoader extends MacroLoader implements Consumer {
    */
   public Repository loadPlugins(Repository repository, Class klass) {
     if (null != repository) {
-      SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
-      Snip[] snips = space.match("SnipSnap/config/macros/");
+      snipsnap.api.snip.SnipSpace space = (snipsnap.api.snip.SnipSpace) Components.getComponent(snipsnap.api.snip.SnipSpace.class);
+      snipsnap.api.snip.Snip[] snips = space.match("SnipSnap/config/macros/");
 
       for (int i = 0; i < snips.length; i++) {
         Snip snip = snips[i];

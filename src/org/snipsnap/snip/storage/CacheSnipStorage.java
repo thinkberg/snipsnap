@@ -25,7 +25,7 @@
 
 package org.snipsnap.snip.storage;
 
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.Snip;
 import org.snipsnap.util.ApplicationAwareMap;
 
 import java.sql.Timestamp;
@@ -58,10 +58,10 @@ public class CacheSnipStorage implements SnipStorage, CacheStorage {
   }
 
   // Basic manipulation methods Load,Store,Create,Remove
-  public Snip storageLoad(String name) {
+  public snipsnap.api.snip.Snip storageLoad(String name) {
     Snip snip;
     if (cache.getMap().containsKey(name)) {
-      snip = (Snip) cache.getMap().get(name);
+      snip = (snipsnap.api.snip.Snip) cache.getMap().get(name);
     } else {
       snip = storage.storageLoad(name);
       cache.getMap().put(snip.getName(), snip);
@@ -133,11 +133,11 @@ public class CacheSnipStorage implements SnipStorage, CacheStorage {
     return storage.storageByParent(parent);
   }
 
-  public List storageByParentNameOrder(Snip parent, int count) {
+  public List storageByParentNameOrder(snipsnap.api.snip.Snip parent, int count) {
     return storage.storageByParentNameOrder(parent, count);
   }
 
-  public List storageByParentModifiedOrder(Snip parent, int count) {
+  public List storageByParentModifiedOrder(snipsnap.api.snip.Snip parent, int count) {
     return storage.storageByParentModifiedOrder(parent, count);
   }
 

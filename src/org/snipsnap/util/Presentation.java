@@ -28,13 +28,13 @@ import org.radeox.filter.FilterPipe;
 import org.radeox.filter.ListFilter;
 import org.radeox.filter.context.FilterContext;
 import org.radeox.util.logging.Logger;
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
 import org.snipsnap.render.filter.context.SnipFilterContext;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipSpaceFactory;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipSpace;
+import snipsnap.api.snip.SnipSpaceFactory;
 import org.snipsnap.config.ServerConfiguration;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.config.ConfigurationProxy;
 
 import java.io.IOException;
@@ -59,7 +59,7 @@ public class Presentation {
       System.exit(-1);
     }
 
-    Application app = Application.get();
+    Application app = snipsnap.api.app.Application.get();
 
     Logger.debug("Loading application config.");
     Configuration config = null;
@@ -72,7 +72,7 @@ public class Presentation {
     }
     app.setConfiguration(config);
 
-    SnipSpace space = SnipSpaceFactory.getInstance();
+    snipsnap.api.snip.SnipSpace space = snipsnap.api.snip.SnipSpaceFactory.getInstance();
     FilterPipe fp = new FilterPipe();
     //fp.addFilter(new EscapeFilter());
     //fp.addFilter(new ParamFilter());
@@ -90,7 +90,7 @@ public class Presentation {
     //fp.addFilter(new MarkFilter());
     //fp.addFilter(new KeyFilter());
 
-    Snip snip = space.load(name);
+    snipsnap.api.snip.Snip snip = space.load(name);
     FilterContext context = new SnipFilterContext(snip);
 
     StringTokenizer st = new StringTokenizer(fp.filter(snip.getContent(), context), "\n");

@@ -25,8 +25,8 @@
 
 package org.snipsnap.snip.storage;
 
-import org.snipsnap.app.Application;
-import org.snipsnap.snip.Snip;
+import snipsnap.api.app.Application;
+import snipsnap.api.snip.Snip;
 import org.snipsnap.snip.SnipPostNameComparator;
 import org.snipsnap.snip.storage.query.QueryKit;
 import org.snipsnap.snip.storage.query.SnipComparator;
@@ -52,7 +52,7 @@ public class QuerySnipStorage implements SnipStorage {
   // Count comparators, make the comparator by default
   // with most usages. Make this dynamic
   private static Comparator nameComparator = new SnipComparator() {
-    public int compare(Snip s1, Snip s2) {
+    public int compare(snipsnap.api.snip.Snip s1, Snip s2) {
       return s1.getName().compareTo(s2.getName());
     }
   };
@@ -60,7 +60,7 @@ public class QuerySnipStorage implements SnipStorage {
   private static Comparator snipPostNameComparator = new SnipPostNameComparator();
 
   private static Comparator nameWithoutPathComparator = new SnipComparator() {
-    public int compare(Snip s1, Snip s2) {
+    public int compare(Snip s1, snipsnap.api.snip.Snip s2) {
       return getName(s1).compareTo(getName(s2));
     }
 
@@ -76,12 +76,12 @@ public class QuerySnipStorage implements SnipStorage {
   };
 
   private static Comparator nameComparatorDesc = new SnipComparator() {
-    public int compare(Snip s1, Snip s2) {
+    public int compare(Snip s1, snipsnap.api.snip.Snip s2) {
       return s2.getName().compareTo(s1.getName());
     }
   };
   private static Comparator mTimeComparatorDesc = new SnipComparator() {
-    public int compare(Snip s1, Snip s2) {
+    public int compare(Snip s1, snipsnap.api.snip.Snip s2) {
       return s2.getMTime().compareTo(s1.getMTime());
     }
   };
@@ -129,7 +129,7 @@ public class QuerySnipStorage implements SnipStorage {
     return storage.storageCreate(name, content);
   }
 
-  public void storageRemove(Snip snip) {
+  public void storageRemove(snipsnap.api.snip.Snip snip) {
     storage.storageRemove(snip);
   }
 

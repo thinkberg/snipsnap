@@ -25,14 +25,14 @@
 
 package org.snipsnap.net;
 
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.snip.label.Label;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipLink;
+import snipsnap.api.snip.SnipSpaceFactory;
+import snipsnap.api.label.Label;
 import org.snipsnap.snip.label.LabelManager;
-import org.snipsnap.snip.label.Labels;
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.label.Labels;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.container.Components;
 import org.snipsnap.net.filter.MultipartWrapper;
 import org.radeox.util.logging.Logger;
@@ -53,7 +53,7 @@ import java.util.Iterator;
 public class LabelsServlet extends HttpServlet {
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-    Configuration config = Application.get().getConfiguration();
+    Configuration config = snipsnap.api.app.Application.get().getConfiguration();
     // If this is not a multipart/form-data request continue
     String type = request.getHeader("Content-Type");
     if (type != null && type.startsWith("multipart/form-data")) {
@@ -68,7 +68,7 @@ public class LabelsServlet extends HttpServlet {
   }
 
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-    Configuration config = Application.get().getConfiguration();
+    snipsnap.api.config.Configuration config = snipsnap.api.app.Application.get().getConfiguration();
 
     String snipName = request.getParameter("snipname");
     if (null == snipName) {
@@ -82,7 +82,7 @@ public class LabelsServlet extends HttpServlet {
       return;
     }
 
-    Snip snip = SnipSpaceFactory.getInstance().load(snipName);
+    snipsnap.api.snip.Snip snip = SnipSpaceFactory.getInstance().load(snipName);
     request.setAttribute("snip", snip);
 
     LabelManager manager = (LabelManager) Components.getComponent(LabelManager.class);

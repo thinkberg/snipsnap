@@ -25,7 +25,7 @@
  */
 package org.snipsnap.net.admin;
 
-import org.snipsnap.config.Configuration;
+import snipsnap.api.config.Configuration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -53,25 +53,25 @@ public class SetupMoblog implements SetupHandler {
           socket.connect(new InetSocketAddress(address, 110), 5 * 1000);
           socket.close();
         } catch (IOException e) {
-          errors.put(Configuration.APP_MAIL_POP3_HOST, Configuration.APP_MAIL_POP3_HOST + ".connect");
+          errors.put(Configuration.APP_MAIL_POP3_HOST, snipsnap.api.config.Configuration.APP_MAIL_POP3_HOST + ".connect");
         }
       } catch (UnknownHostException e) {
-        errors.put(Configuration.APP_MAIL_POP3_HOST, Configuration.APP_MAIL_POP3_HOST + ".unknown");
+        errors.put(snipsnap.api.config.Configuration.APP_MAIL_POP3_HOST, Configuration.APP_MAIL_POP3_HOST + ".unknown");
       }
     }
 
-    String pop3User = request.getParameter(Configuration.APP_MAIL_POP3_USER);
+    String pop3User = request.getParameter(snipsnap.api.config.Configuration.APP_MAIL_POP3_USER);
     config.setMailPop3User(pop3User);
     String pop3Pass = request.getParameter(Configuration.APP_MAIL_POP3_PASSWORD);
     config.setMailPop3Password(pop3Pass);
-    String blogPass = request.getParameter(Configuration.APP_MAIL_BLOG_PASSWORD);
+    String blogPass = request.getParameter(snipsnap.api.config.Configuration.APP_MAIL_BLOG_PASSWORD);
     config.setMailBlogPassword(blogPass);
-    String pop3Interval = request.getParameter(Configuration.APP_MAIL_POP3_INTERVAL);
+    String pop3Interval = request.getParameter(snipsnap.api.config.Configuration.APP_MAIL_POP3_INTERVAL);
     config.setMailPop3Interval(pop3Interval);
 
     if (config.getMailPop3Host() != null && !"".equals(config.getMailPop3Host())) {
       if (pop3User == null || "".equals(pop3User)) {
-        errors.put(Configuration.APP_MAIL_POP3_USER, Configuration.APP_MAIL_POP3_USER);
+        errors.put(snipsnap.api.config.Configuration.APP_MAIL_POP3_USER, snipsnap.api.config.Configuration.APP_MAIL_POP3_USER);
       }
 
       if (blogPass == null || "".equals(blogPass) || blogPass.length() < 3) {
@@ -81,10 +81,10 @@ public class SetupMoblog implements SetupHandler {
       try {
         int interval = Integer.parseInt(pop3Interval);
         if (interval < 5) {
-          errors.put(Configuration.APP_MAIL_POP3_INTERVAL, Configuration.APP_MAIL_POP3_INTERVAL);
+          errors.put(Configuration.APP_MAIL_POP3_INTERVAL, snipsnap.api.config.Configuration.APP_MAIL_POP3_INTERVAL);
         }
       } catch (NumberFormatException e) {
-        errors.put(Configuration.APP_MAIL_POP3_INTERVAL, Configuration.APP_MAIL_POP3_INTERVAL + ".format");
+        errors.put(snipsnap.api.config.Configuration.APP_MAIL_POP3_INTERVAL, snipsnap.api.config.Configuration.APP_MAIL_POP3_INTERVAL + ".format");
       }
     }
 

@@ -27,9 +27,9 @@ package org.snipsnap.test.snip;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.Snip;
 import org.snipsnap.snip.SnipImpl;
-import org.snipsnap.snip.SnipLink;
+import snipsnap.api.snip.SnipLink;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -49,7 +49,7 @@ public class ImageTest extends SnipTestSupport {
 
   public void testImage() throws IOException {
     StringWriter writer = new StringWriter();
-    SnipLink.appendImage(writer, "test", null);
+    snipsnap.api.snip.SnipLink.appendImage(writer, "test", null);
     assertEquals("Image without alt is rendered",
         "<img src=\"theme/images/test.png\" alt=\"test\" border=\"0\"/>", writer.toString());
   }
@@ -63,7 +63,7 @@ public class ImageTest extends SnipTestSupport {
 
   public void testImageAltExtension() throws IOException {
     StringWriter writer = new StringWriter();
-    SnipLink.appendImage(writer, "test", "alttext", "jpg");
+    snipsnap.api.snip.SnipLink.appendImage(writer, "test", "alttext", "jpg");
     assertEquals("Image with alt and extension is rendered",
         "<img src=\"theme/images/test.jpg\" alt=\"alttext\" border=\"0\"/>", writer.toString());
   }
@@ -71,7 +71,7 @@ public class ImageTest extends SnipTestSupport {
   public void testSnipAttachedImage() throws IOException {
     StringWriter writer = new StringWriter();
     Snip snip = new SnipImpl("test", "test");
-    SnipLink.appendImage(writer, snip, "test", "alttext", "jpg", null);
+    snipsnap.api.snip.SnipLink.appendImage(writer, snip, "test", "alttext", "jpg", null);
     assertEquals("Image without position is rendered",
         "<img src=\"space/test/test.jpg\" alt=\"alttext\" border=\"0\"/>", writer.toString());
   }

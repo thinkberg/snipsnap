@@ -1,6 +1,6 @@
 <%@ page import="java.util.*,
-                 org.snipsnap.config.Configuration,
-                 org.snipsnap.app.Application,
+                 snipsnap.api.config.Configuration,
+                 snipsnap.api.app.Application,
                  org.snipsnap.container.Components,
                  org.snipsnap.user.UserManager"%>
  <%--

@@ -26,7 +26,7 @@
 package org.snipsnap.render.macro;
 
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
-import org.snipsnap.snip.SnipLink;
+import snipsnap.api.snip.SnipLink;
 import org.radeox.util.i18n.ResourceManager;
 
 import java.io.IOException;
@@ -65,7 +65,7 @@ public class FieldMacro extends SnipMacro {
       if (params.getLength() >= 3) {
         SnipLink.appendUrl(writer, params.get("2"));
       } else {
-        SnipLink.appendUrl(writer, params.getSnipRenderContext().getSnip().getName());
+        snipsnap.api.snip.SnipLink.appendUrl(writer, params.getSnipRenderContext().getSnip().getName());
       }
       writer.write("\" method=\"get\">");
       writer.write("<input size=\"18\" name=\"");

@@ -6,6 +6,9 @@ import java.util.Random;
 import java.util.Map;
 import java.util.HashMap;
 
+import snipsnap.api.user.*;
+import snipsnap.api.user.User;
+
 /*
  * This file is part of "SnipSnap Wiki/Weblog".
  *
@@ -47,7 +50,7 @@ public class PasswordService {
   }
 
   public User changePassWord(String key, String passwd) {
-    User user = (User) authKeys.get(key);
+    User user = (snipsnap.api.user.User) authKeys.get(key);
     if (null != user) {
       user.setPasswd(passwd);
       storage.storageStore(user);

@@ -28,20 +28,20 @@ package org.snipsnap.xmlrpc;
 import org.apache.xmlrpc.XmlRpcException;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
 import org.snipsnap.app.ApplicationManager;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.config.ConfigurationManager;
 import org.snipsnap.config.ConfigurationProxy;
 import org.snipsnap.config.Globals;
 import org.snipsnap.config.InitializeDatabase;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipSpace;
 import org.snipsnap.snip.XMLSnipExport;
 import org.snipsnap.snip.XMLSnipImport;
 import org.snipsnap.snip.storage.SnipSerializer;
 import org.snipsnap.user.AuthenticationService;
-import org.snipsnap.user.User;
+import snipsnap.api.user.User;
 import org.snipsnap.user.UserManager;
 
 import java.io.ByteArrayInputStream;
@@ -100,7 +100,7 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
       return true;
     }
 
-    User user = authenticationService.authenticate(username, password);
+    snipsnap.api.user.User user = authenticationService.authenticate(username, password);
     if (user != null && user.isAdmin()) {
       Application.get().setUser(user);
       return true;
@@ -123,8 +123,8 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
         if (prefix.equals(vector.get(0))) {
           vector.remove(0);
         }
-        Application.get().setConfiguration(appConfig);
-        Application.get().storeObject(Application.OID, appOid);
+        snipsnap.api.app.Application.get().setConfiguration(appConfig);
+        Application.get().storeObject(snipsnap.api.app.Application.OID, appOid);
         return super.execute(method, vector, user, password);
       }
       throw new Exception("no instance found for prefix '" + prefix + "'");
@@ -137,7 +137,7 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
   }
 
   public String getSnipAsXml(String name) {
-    Snip snip = space.load(name);
+    snipsnap.api.snip.Snip snip = space.load(name);
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     OutputFormat outputFormat = OutputFormat.createCompactFormat();
     outputFormat.setEncoding("UTF-8");
@@ -152,17 +152,17 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
   }
 
   public String getSnip(String name) {
-    Snip snip = space.load(name);
+    snipsnap.api.snip.Snip snip = space.load(name);
     return snip.getContent();
   }
 
   public String createSnip(String name, String content) {
-    Snip snip = space.create(name, content);
+    snipsnap.api.snip.Snip snip = space.create(name, content);
     return name;
   }
 
   public String removeSnip(String name) {
-    Snip snip = space.load(name);
+    snipsnap.api.snip.Snip snip = space.load(name);
     space.remove(snip);
     return name;
   }
@@ -186,7 +186,7 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
    * @return isAuthenticated True when the user can be authenticated
    */
   public boolean authenticateUser(String login, String passwd) throws XmlRpcException {
-    User user = authenticationService.authenticate(login, passwd);
+    snipsnap.api.user.User user = authenticationService.authenticate(login, passwd);
     return (null != user);
   }
 
@@ -199,14 +199,14 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
    * @throws IOException
    */
   public byte[] dumpXml() throws IOException {
-    Configuration config = Application.get().getConfiguration();
+    Configuration config = snipsnap.api.app.Application.get().getConfiguration();
     ByteArrayOutputStream exportStream = new ByteArrayOutputStream();
     XMLSnipExport.store(exportStream, space.getAll(), um.getAll(), null, null, config.getFilePath());
     return exportStream.toByteArray();
   }
 
   public byte[] dumpXml(String match) throws IOException {
-    Configuration config = Application.get().getConfiguration();
+    snipsnap.api.config.Configuration config = snipsnap.api.app.Application.get().getConfiguration();
     ByteArrayOutputStream exportStream = new ByteArrayOutputStream();
     XMLSnipExport.store(exportStream, Arrays.asList(space.match(match)), null, null, null, config.getFilePath());
     return exportStream.toByteArray();
@@ -278,7 +278,7 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
    * @param passwd     admin password
    */
   public String install(String prefix, String adminLogin, String passwd, Hashtable appConfig) throws Exception {
-    appConfig.put(Configuration.APP_ADMIN_LOGIN, adminLogin);
+    appConfig.put(snipsnap.api.config.Configuration.APP_ADMIN_LOGIN, adminLogin);
     appConfig.put(Configuration.APP_ADMIN_PASSWORD, passwd);
     return install(prefix, appConfig);
   }

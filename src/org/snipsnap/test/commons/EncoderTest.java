@@ -27,7 +27,7 @@ package org.snipsnap.test.commons;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import org.snipsnap.snip.SnipLink;
+import snipsnap.api.snip.SnipLink;
 import org.snipsnap.test.snip.SnipTestSupport;
 import org.snipsnap.util.URLEncoderDecoder;
 import org.radeox.util.Encoder;
@@ -81,13 +81,13 @@ public class EncoderTest extends SnipTestSupport {
   }
 
   public void testCutLength() throws UnsupportedEncodingException {
-    assertEquals(unencodedString.substring(0, 7) + "...", SnipLink.cutLength(unencodedString, 10));
+    assertEquals(unencodedString.substring(0, 7) + "...", snipsnap.api.snip.SnipLink.cutLength(unencodedString, 10));
   }
 
   public void testCutLengthLink() throws UnsupportedEncodingException {
     assertEquals("Cutting link text is broken",
                  "<a href=\"space/" + encodedString + "\">" + unencodedString.substring(0, 22) + "...</a>",
-                 SnipLink.createLink(unencodedString, SnipLink.cutLength(unencodedString, 25)));
+                 snipsnap.api.snip.SnipLink.createLink(unencodedString, snipsnap.api.snip.SnipLink.cutLength(unencodedString, 25)));
   }
 
 }

@@ -26,9 +26,9 @@
 package org.snipsnap.snip;
 
 import org.radeox.util.logging.Logger;
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
 import org.snipsnap.container.Components;
-import org.snipsnap.user.User;
+import snipsnap.api.user.User;
 import org.snipsnap.util.ApplicationAwareMap;
 
 import javax.servlet.http.HttpServletRequest;
@@ -44,6 +44,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import snipsnap.api.snip.*;
+import snipsnap.api.snip.SnipSpace;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipLink;
 
 /**
  * Stores Access information for a snip like viewCount, backLinks, ...
@@ -68,11 +73,11 @@ public class Access {
   public static List getReferrerBlackList() {
     List cachedBlackList = (List) blackListCache.getObject();
 
-    SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
+    SnipSpace space = (SnipSpace) Components.getComponent(snipsnap.api.snip.SnipSpace.class);
     if (space.exists(BLACKLIST)) {
       Snip blackListSnip = space.load(BLACKLIST);
       Timestamp mTime = blackListSnip.getMTime();
-      String appOid = (String) Application.get().getObject(Application.OID);
+      String appOid = (String) snipsnap.api.app.Application.get().getObject(snipsnap.api.app.Application.OID);
       Timestamp cachedMTime = (Timestamp) lastModified.get(appOid);
 
       // update blacklist from snip if it does not exist or is new
@@ -117,7 +122,7 @@ public class Access {
 
   // DO NOT store snip in Acess this creates problems with Aspects
   public void handle(String snipName, HttpServletRequest request) {
-    User user = Application.get().getUser();
+    User user = snipsnap.api.app.Application.get().getUser();
     if (!user.isNonUser()) {
       incViewCount();
 //      preparation for better link statistics
@@ -131,7 +136,7 @@ public class Access {
       if (null != referrer) {
         // Decode URL to remove jsessionid for example
         // referrer =
-        String domain = Application.get().getConfiguration().getUrl();
+        String domain = snipsnap.api.app.Application.get().getConfiguration().getUrl();
         if (referrer.startsWith(domain)) {
           int index = referrer.indexOf("/space/");
           // Does the referrer point to a snip ?
@@ -155,7 +160,7 @@ public class Access {
 
             String name = SnipLink.decode(url);
 
-            if (!Application.get().getConfiguration().getStartSnip().equals(name)
+            if (!snipsnap.api.app.Application.get().getConfiguration().getStartSnip().equals(name)
                 && !snipName.equals(name)) {
               snipLinks.addLink(name);
             }

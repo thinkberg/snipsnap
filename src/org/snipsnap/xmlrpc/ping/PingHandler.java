@@ -25,7 +25,7 @@
 
 package org.snipsnap.xmlrpc.ping;
 
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.Snip;
 
 /**
  * Interface for all Weblogs.com style ping handlers

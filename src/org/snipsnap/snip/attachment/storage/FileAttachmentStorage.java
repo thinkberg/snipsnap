@@ -26,8 +26,8 @@
 package org.snipsnap.snip.attachment.storage;
 
 import org.snipsnap.snip.attachment.Attachment;
-import org.snipsnap.config.Configuration;
-import org.snipsnap.app.Application;
+import snipsnap.api.config.Configuration;
+import snipsnap.api.app.Application;
 import org.radeox.util.logging.Logger;
 
 import java.io.*;

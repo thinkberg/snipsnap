@@ -25,7 +25,9 @@
 package org.snipsnap.user;
 
 import org.snipsnap.snip.Ownable;
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.user.*;
+import snipsnap.api.user.User;
 
 import java.util.*;
 
@@ -81,7 +83,7 @@ public class DefaultPermissionManager implements PermissionManager {
     //System.err.println("permissionToRoles="+permissionToRoles);
   }
 
-  public boolean check(Permission permission, User user, Snip snip) {
+  public boolean check(Permission permission, snipsnap.api.user.User user, snipsnap.api.snip.Snip snip) {
     // for all roles of the user
     //    check for all permission of the roles
     //       if permission is in
@@ -121,7 +123,7 @@ public class DefaultPermissionManager implements PermissionManager {
    * @param object Object with possible owner
    * @return List of roles for user and object
    */
-  private Roles getRoles(User user, Snip object) {
+  private Roles getRoles(User user, snipsnap.api.snip.Snip object) {
     Roles roles = getRoles(user);
 //    if (object instanceof Ownable) {
 //      Ownable o = object;

@@ -26,8 +26,8 @@
 package org.snipsnap.snip.storage;
 
 import org.radeox.util.logging.Logger;
-import org.snipsnap.app.Application;
-import org.snipsnap.user.User;
+import snipsnap.api.app.Application;
+import snipsnap.api.user.User;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -138,7 +138,7 @@ public abstract class FileUserStorage implements UserStorage {
     }
     File userFile = new File(userDir, getFileName(login));
 
-    User user = new User(login, passwd, email);
+    User user = new snipsnap.api.user.User(login, passwd, email);
     String applicationOid = (String) Application.get().getObject(Application.OID);
     Timestamp cTime = new Timestamp(new java.util.Date().getTime());
     user.setCTime(cTime);
@@ -160,7 +160,7 @@ public abstract class FileUserStorage implements UserStorage {
    *
    * @param user User to remove
    */
-  public void storageRemove(User user) {
+  public void storageRemove(snipsnap.api.user.User user) {
     removeUser(user, getWorkingDir());
   }
 
@@ -170,7 +170,7 @@ public abstract class FileUserStorage implements UserStorage {
    * @param user User to remove
    * @param userDir Directory which contains the user data
    */
-  protected void removeUser(User user, File userDir) {
+  protected void removeUser(snipsnap.api.user.User user, File userDir) {
     File userFile = new File(userDir, getFileName(user.getLogin()));
     if (userFile.exists()) {
       File backup = new File(userFile.getPath() + ".removed");

@@ -24,18 +24,20 @@
  */
 package org.snipsnap.config;
 
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
 import org.snipsnap.app.ApplicationManager;
 import org.snipsnap.app.ApplicationStorage;
 import org.snipsnap.container.Components;
 import org.snipsnap.snip.HomePage;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipSpace;
 import org.snipsnap.snip.XMLSnipImport;
 import org.snipsnap.snip.label.RenderEngineLabel;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
-import org.snipsnap.user.User;
+import snipsnap.api.user.User;
+import snipsnap.api.config.*;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.user.UserManagerFactory;
 import org.snipsnap.net.admin.ThemeHelper;
@@ -57,7 +59,7 @@ public class InitializeDatabase {
   private static void message(String message) {
     if (null != output.get()) {
       PrintWriter writer = (PrintWriter) output.get();
-      writer.println("[" + Application.get().getConfiguration().getName() + "] " + message);
+      writer.println("[" + snipsnap.api.app.Application.get().getConfiguration().getName() + "] " + message);
       writer.flush();
     }
   }
@@ -79,14 +81,14 @@ public class InitializeDatabase {
     String appOid = prefixProps.getProperty(ApplicationStorage.OID);
     try {
       message("created application oid: " + appOid);
-      app.storeObject(Application.OID, appOid);
+      app.storeObject(snipsnap.api.app.Application.OID, appOid);
 
       new File(config.getFileStore()).mkdirs();
       // automatically created by the indexer
       // (new File(config.getIndexPath())).mkdirs();
 
       // get an instance of the snip space
-      SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
+      SnipSpace space = (snipsnap.api.snip.SnipSpace) Components.getComponent(SnipSpace.class);
 
       createAdministrator(config);
 
@@ -117,7 +119,7 @@ public class InitializeDatabase {
 
       postFirstBlog(config, space);
 
-      config.set(Configuration.APP_PERM_WEBLOGSPING, ping);
+      config.set(snipsnap.api.config.Configuration.APP_PERM_WEBLOGSPING, ping);
       config.set(Configuration.APP_PERM_NOTIFICATION, notify);
 
       ConfigurationManager configManager = ConfigurationManager.getInstance();
@@ -136,12 +138,12 @@ public class InitializeDatabase {
     return appOid;
   }
 
-  public static void createConfigSnipFromFile(String name, String file, SnipSpace space) throws IOException {
+  public static void createConfigSnipFromFile(String name, String file, snipsnap.api.snip.SnipSpace space) throws IOException {
     String content = getResourceAsString(InitializeDatabase.class.getResourceAsStream(file));
     createConfigSnip(name, content, space);
   }
 
-  public static Snip createConfigSnip(String name, String content, SnipSpace space) {
+  public static snipsnap.api.snip.Snip createConfigSnip(String name, String content, snipsnap.api.snip.SnipSpace space) {
     Snip snip = space.create(name, content);
     snip.getPermissions().add(Permissions.EDIT_SNIP, Roles.ADMIN);
     snip.getPermissions().add(Permissions.ATTACH_TO_SNIP, Roles.ADMIN);
@@ -150,7 +152,7 @@ public class InitializeDatabase {
     return snip;
   }
 
-  private static void postFirstBlog(Configuration config, SnipSpace space) throws IOException {
+  private static void postFirstBlog(Configuration config, snipsnap.api.snip.SnipSpace space) throws IOException {
     message("posting initial weblog entry");
     String weblogPost = getResourceAsString(getLocalizedResource("i18n.welcome", "blog", config.getLocale()));
     String title = weblogPost.substring(0, weblogPost.indexOf('\n'));
@@ -161,7 +163,7 @@ public class InitializeDatabase {
   public final static String LOGO_FILE = "_logofile";
   public final static String LOGO_FILE_TYPE = "_logofiletype";
 
-  private static void storeConfiguration(Configuration config, SnipSpace space) throws IOException {
+  private static void storeConfiguration(Configuration config, snipsnap.api.snip.SnipSpace space) throws IOException {
     String logoFileName = config.get(LOGO_FILE);
     String logoFileType = config.get(LOGO_FILE_TYPE);
     config.getProperties().remove(LOGO_FILE);
@@ -195,7 +197,7 @@ public class InitializeDatabase {
     }
   }
 
-  private static User createAdministrator(Configuration config) {
+  private static snipsnap.api.user.User createAdministrator(Configuration config) {
     // create admin account
     message("creating administrator account and snip");
     UserManager um = UserManagerFactory.getInstance();
@@ -213,7 +215,7 @@ public class InitializeDatabase {
     config.setAdminPassword(admin.getPasswd());
 
     // set current user and create it's homepage
-    Application.get().setUser(admin);
+    snipsnap.api.app.Application.get().setUser(admin);
     HomePage.create(config.getAdminLogin());
 
     return admin;

@@ -24,7 +24,7 @@
  */
 package org.snipsnap.net;
 
-import org.snipsnap.config.Configuration;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.config.ConfigurationProxy;
 
 import javax.servlet.RequestDispatcher;

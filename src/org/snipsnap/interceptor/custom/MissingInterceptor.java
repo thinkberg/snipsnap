@@ -26,7 +26,7 @@
 package org.snipsnap.interceptor.custom;
 
 import dynaop.DispatchInterceptor;
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.Snip;
 import org.snipsnap.util.ApplicationAwareMap;
 
 import java.util.HashMap;
@@ -75,7 +75,7 @@ public class MissingInterceptor extends DispatchInterceptor {
       return result.booleanValue();
   }
 
-  public Snip create(String name, String content) throws Throwable {
+  public snipsnap.api.snip.Snip create(String name, String content) throws Throwable {
     Object result = proceed();
 
     if (missing.getMap().containsKey(name)) {
@@ -84,7 +84,7 @@ public class MissingInterceptor extends DispatchInterceptor {
     return (Snip) result;
   }
 
-  public void remove(Snip snip) throws Throwable {
+  public void remove(snipsnap.api.snip.Snip snip) throws Throwable {
     String name = snip.getName().toUpperCase();
 
     Object result = proceed();

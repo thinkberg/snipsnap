@@ -28,10 +28,10 @@ package org.snipsnap.net;
 import org.radeox.util.Service;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.container.Components;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.label.Label;
-import org.snipsnap.snip.label.Labels;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipSpace;
+import snipsnap.api.label.Label;
+import snipsnap.api.label.Labels;
 import org.snipsnap.snip.label.TypeLabel;
 import org.snipsnap.xmlrpc.XmlRpcHandler;
 import org.picocontainer.PicoContainer;
@@ -65,15 +65,15 @@ public class ServletPluginLoader {
    */
   private static Map getSnipPlugins() {
     Map snipPlugins = new HashMap();
-    SnipSpace snipspace = (SnipSpace) Components.getComponent(SnipSpace.class);
+    snipsnap.api.snip.SnipSpace snipspace = (snipsnap.api.snip.SnipSpace) Components.getComponent(snipsnap.api.snip.SnipSpace.class);
     Iterator iterator = snipspace.getAll().iterator();
     while (iterator.hasNext()) {
       Snip snip = (Snip) iterator.next();
-      Labels labels = snip.getLabels();
+      snipsnap.api.label.Labels labels = snip.getLabels();
       boolean noLabelsAll = labels.getAll().isEmpty();
 
       if (!noLabelsAll) {
-        Label label = labels.getLabel("Type");
+        snipsnap.api.label.Label label = labels.getLabel("Type");
         if (null != label && label instanceof TypeLabel) {
           // only add labels that have the type text/gsp
           String type = ((TypeLabel) label).getTypeValue();

@@ -1,4 +1,4 @@
-<%@ page import="org.snipsnap.snip.Snip,
+<%@ page import="snipsnap.api.snip.Snip,
                  java.util.Collection,
                  java.util.Collections,
                  org.radeox.util.Encoder"%>

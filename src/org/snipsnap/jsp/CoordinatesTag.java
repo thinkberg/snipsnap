@@ -25,8 +25,8 @@
 package org.snipsnap.jsp;
 
 import org.radeox.util.logging.Logger;
-import org.snipsnap.app.Application;
-import org.snipsnap.snip.Snip;
+import snipsnap.api.app.Application;
+import snipsnap.api.snip.Snip;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
@@ -34,7 +34,7 @@ import javax.servlet.jsp.tagext.TagSupport;
 import java.io.IOException;
 
 public class CoordinatesTag extends TagSupport {
-  Snip snip = null;
+  snipsnap.api.snip.Snip snip = null;
 
   public int doStartTag() throws JspException {
     try {

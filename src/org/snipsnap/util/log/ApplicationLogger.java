@@ -26,7 +26,7 @@
 package org.snipsnap.util.log;
 
 import org.radeox.util.logging.LogHandler;
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
 
 /**
  * Concrete Logger that logs to Application
@@ -37,10 +37,10 @@ import org.snipsnap.app.Application;
 
 public abstract class ApplicationLogger implements LogHandler {
   public void log(String output) {
-    Application.get().log(output);
+    snipsnap.api.app.Application.get().log(output);
   }
 
   public void log(String output, Throwable e) {
-    Application.get().log(output+": "+e.getMessage());
+    snipsnap.api.app.Application.get().log(output+": "+e.getMessage());
   }
 }

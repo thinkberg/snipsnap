@@ -25,11 +25,11 @@
 
 package org.snipsnap.net;
 
-import org.snipsnap.config.Configuration;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.config.ConfigurationProxy;
 import org.snipsnap.snip.Blog;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpaceFactory;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipSpaceFactory;
 import org.snipsnap.serialization.SerializerFactory;
 import org.snipsnap.serialization.Serializer;
 import javax.servlet.RequestDispatcher;
@@ -48,7 +48,7 @@ import java.util.Properties;
  * @version $Id$
  */
 public class RdfServlet extends HttpServlet {
-    private Configuration config;
+    private snipsnap.api.config.Configuration config;
 
     public void init(ServletConfig servletConfig) throws ServletException {
         config = ConfigurationProxy.getInstance();
@@ -66,7 +66,7 @@ public class RdfServlet extends HttpServlet {
         name = name.replace('+', ' ');
 
         // load snip
-        Snip snip = SnipSpaceFactory.getInstance().load(name);
+        Snip snip = snipsnap.api.snip.SnipSpaceFactory.getInstance().load(name);
 
         // snip doesn't exist
         if (snip == null) {

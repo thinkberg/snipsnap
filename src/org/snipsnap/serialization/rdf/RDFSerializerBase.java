@@ -7,13 +7,13 @@ import java.util.List;
 import com.hp.hpl.mesa.rdf.jena.model.Resource;
 import com.hp.hpl.mesa.rdf.jena.model.Model;
 
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.Snip;
 import org.snipsnap.snip.Links;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.label.Label;
+import snipsnap.api.snip.SnipLink;
+import snipsnap.api.label.Label;
 import org.snipsnap.snip.attachment.*;
 import org.snipsnap.serialization.Serializer;
-import org.snipsnap.serialization.LabelContext;
+import snipsnap.api.label.LabelContext;
 import java.io.Writer;
 import com.hp.hpl.mesa.rdf.jena.model.RDFException;
 
@@ -59,7 +59,7 @@ public abstract class RDFSerializerBase extends Serializer {
     }
 
     /** Hook for subclasses to use a custom LabelContext */
-    protected LabelContext getLabelContext(Label label, Snip snip, Model model) {
+    protected LabelContext getLabelContext(snipsnap.api.label.Label label, Snip snip, Model model) {
         m_labelContext.snip = snip;
         m_labelContext.snipResource = getSnipResource(model, snip);
         m_labelContext.uriPrefix = _uriPrefix;
@@ -79,7 +79,7 @@ public abstract class RDFSerializerBase extends Serializer {
      * @param snip      the Snip to serialize (perhaps only the "entry point" or "root snip")
      * @param writer    a Writer to write generated RDF to
      */
-    public final void serialize(Snip snip, Writer writer) {
+    public final void serialize(snipsnap.api.snip.Snip snip, Writer writer) {
         serialize(snip, writer, 0); // just one level
     }
 
@@ -104,7 +104,7 @@ public abstract class RDFSerializerBase extends Serializer {
     }
 
     protected abstract Model createModel();
-    protected abstract void recursiveFillModel(Snip snip, Model model, int depth) throws RDFException;
+    protected abstract void recursiveFillModel(snipsnap.api.snip.Snip snip, Model model, int depth) throws RDFException;
     protected abstract void writeModel(Model model, Writer writer) throws RDFException;
 
     protected final static Iterator getCommentsIterator(Snip snip) {
@@ -134,7 +134,7 @@ public abstract class RDFSerializerBase extends Serializer {
         }
     }
 
-    protected Resource getSnipResource(Model model, Snip snip) {
+    protected Resource getSnipResource(Model model, snipsnap.api.snip.Snip snip) {
         Resource snipResource = null;
         try {
             snipResource = model.getResource(getSnipResURI(snip));
@@ -144,11 +144,11 @@ public abstract class RDFSerializerBase extends Serializer {
         return snipResource;
     }
 
-    protected String getSnipResURI(Snip snip) {
+    protected String getSnipResURI(snipsnap.api.snip.Snip snip) {
         return _uriPrefix + '#' + snip.getNameEncoded();
     }
 
-    protected String getAttachmentURL(Attachment att, Snip snip) {
+    protected String getAttachmentURL(Attachment att, snipsnap.api.snip.Snip snip) {
         String url = _uriPrefix.substring(0, _uriPrefix.lastIndexOf("/rdf"));
         url = url.concat("/space/" + SnipLink.encode(snip.getName()) + "/" + SnipLink.encode(att.getName()));
         return url;

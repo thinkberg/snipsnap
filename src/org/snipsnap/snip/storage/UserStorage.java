@@ -25,7 +25,7 @@
 
 package org.snipsnap.snip.storage;
 
-import org.snipsnap.user.User;
+import snipsnap.api.user.User;
 
 import java.util.List;
 

@@ -25,7 +25,7 @@
 
 package org.snipsnap.versioning;
 
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.Snip;
 
 import java.util.List;
 
@@ -37,8 +37,8 @@ import java.util.List;
  */
 
 public interface VersionManager {
-  public void storeVersion(Snip snip);
-  public Snip loadVersion(Snip snip, int version);
-  public List getHistory(Snip snip);
-  public List diff(Snip snip, int version1, int version2);
+  public void storeVersion(snipsnap.api.snip.Snip snip);
+  public snipsnap.api.snip.Snip loadVersion(snipsnap.api.snip.Snip snip, int version);
+  public List getHistory(snipsnap.api.snip.Snip snip);
+  public List diff(snipsnap.api.snip.Snip snip, int version1, int version2);
 }

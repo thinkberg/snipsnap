@@ -25,12 +25,12 @@
  */
 package org.snipsnap.net.admin;
 
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.jdbc.IntHolder;
 import org.snipsnap.net.filter.MultipartWrapper;
 import org.snipsnap.snip.XMLSnipImport;
-import org.snipsnap.user.User;
+import snipsnap.api.user.User;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -48,8 +48,8 @@ public class DatabaseImport implements SetupHandler {
     return "import";
   }
 
-  public Map setup(HttpServletRequest request, HttpServletResponse response, Configuration config, Map errors) {
-    String appOid = (String) Application.get().getObject(Application.OID);
+  public Map setup(HttpServletRequest request, HttpServletResponse response, snipsnap.api.config.Configuration config, Map errors) {
+    String appOid = (String) snipsnap.api.app.Application.get().getObject(snipsnap.api.app.Application.OID);
     ImportThread workerThread = (ImportThread) workerThreads.get(appOid);
     if (workerThread != null && workerThread.isAlive()) {
       setRunning(workerThread, request.getSession());
@@ -138,20 +138,20 @@ public class DatabaseImport implements SetupHandler {
     public ImportThread(InputStream file, int mask) {
       this.file = file;
       this.mask = mask;
-      this.appOid = (String)Application.get().getObject(Application.OID);
-      this.user = Application.get().getUser();
+      this.appOid = (String)snipsnap.api.app.Application.get().getObject(snipsnap.api.app.Application.OID);
+      this.user = snipsnap.api.app.Application.get().getUser();
     }
 
     public void run() {
-      Application.get().storeObject(Application.OID, appOid);
-      Application.get().setUser(user);
+      snipsnap.api.app.Application.get().storeObject(snipsnap.api.app.Application.OID, appOid);
+      snipsnap.api.app.Application.get().setUser(user);
 
-      Configuration config = Application.get().getConfiguration();
+      snipsnap.api.config.Configuration config = snipsnap.api.app.Application.get().getConfiguration();
 
       System.err.println("ConfigureServlet: Disabling weblogs ping and jabber notification ...");
       String ping = config.get(Configuration.APP_PERM_WEBLOGSPING);
       String noty = config.get(Configuration.APP_PERM_NOTIFICATION);
-      config.set(Configuration.APP_PERM_WEBLOGSPING, "deny");
+      config.set(snipsnap.api.config.Configuration.APP_PERM_WEBLOGSPING, "deny");
       config.set(Configuration.APP_PERM_NOTIFICATION, "deny");
 
       status = XMLSnipImport.getStatus();
@@ -166,7 +166,7 @@ public class DatabaseImport implements SetupHandler {
       }
 
       System.err.println("ConfigureServlet: Resetting weblogs ping and jabber notification to config settings ...");
-      config.set(Configuration.APP_PERM_WEBLOGSPING, ping);
+      config.set(snipsnap.api.config.Configuration.APP_PERM_WEBLOGSPING, ping);
       config.set(Configuration.APP_PERM_NOTIFICATION, noty);
     }
   }

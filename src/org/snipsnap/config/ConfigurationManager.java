@@ -27,7 +27,9 @@ package org.snipsnap.config;
 import org.snipsnap.notification.Consumer;
 import org.snipsnap.notification.Message;
 import org.snipsnap.notification.MessageService;
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.config.*;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.container.Components;
 import org.radeox.util.logging.Logger;
 
@@ -62,7 +64,7 @@ public class ConfigurationManager implements Consumer {
     prefixMap = new HashMap();
   }
 
-  public Configuration addConfiguration(String oid, Configuration config) {
+  public snipsnap.api.config.Configuration addConfiguration(String oid, Configuration config) {
     if(config.isInstalled()) {
       MessageService service = (MessageService)Components.getComponent(MessageService.class);
       service.register(this);
@@ -94,7 +96,7 @@ public class ConfigurationManager implements Consumer {
 
   public void consume(Message messsage) {
     if(Message.SNIP_MODIFIED.equals(messsage.getType())) {
-      Snip snip = (Snip)messsage.getValue();
+      Snip snip = (snipsnap.api.snip.Snip)messsage.getValue();
       if("SnipSnap/config".equals(snip.getName())) {
         String appOid = snip.getApplication();
         Configuration config = getConfiguration(appOid);

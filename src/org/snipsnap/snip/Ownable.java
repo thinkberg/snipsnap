@@ -25,7 +25,7 @@
 
 package org.snipsnap.snip;
 
-import org.snipsnap.user.User;
+import snipsnap.api.user.User;
 
 /**
  *  Interface for all objects that can be owned

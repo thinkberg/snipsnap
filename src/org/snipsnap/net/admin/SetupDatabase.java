@@ -25,7 +25,7 @@
  */
 package org.snipsnap.net.admin;
 
-import org.snipsnap.config.Configuration;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.config.Globals;
 import org.snipsnap.app.JDBCApplicationStorage;
 import org.snipsnap.snip.storage.JDBCSnipStorage;
@@ -50,7 +50,7 @@ public class SetupDatabase implements SetupHandler {
   /**
    * Set up the database which is the central data store
    */
-  public Map setup(HttpServletRequest request, HttpServletResponse response, Configuration config, Map errors) {
+  public Map setup(HttpServletRequest request, HttpServletResponse response, snipsnap.api.config.Configuration config, Map errors) {
     String database = request.getParameter(Configuration.APP_DATABASE);
     config.setDatabase(database);
 

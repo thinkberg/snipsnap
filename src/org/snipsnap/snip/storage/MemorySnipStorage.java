@@ -25,10 +25,10 @@
 
 package org.snipsnap.snip.storage;
 
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.Snip;
 import org.snipsnap.util.PartialSearcher;
 import org.snipsnap.util.ApplicationAwareMap;
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
 import org.snipsnap.app.ApplicationManager;
 import org.snipsnap.app.ApplicationStorage;
 
@@ -94,12 +94,12 @@ public class MemorySnipStorage implements SnipStorage {
     return ((PartialSearcher) cache.getMap()).match(pattern.toUpperCase());
   }
 
-  public Snip[] match(String start, String end) {
+  public snipsnap.api.snip.Snip[] match(String start, String end) {
     return ((PartialSearcher) cache.getMap()).match(start.toUpperCase(), end.toUpperCase());
   }
 
   public Snip storageLoad(String name) {
-    return (Snip) cache.getMap().get(name.toUpperCase());
+    return (snipsnap.api.snip.Snip) cache.getMap().get(name.toUpperCase());
   }
 
   public Object loadObject(String name) {
@@ -114,7 +114,7 @@ public class MemorySnipStorage implements SnipStorage {
     storage.storageStore(snip);
   }
 
-  public Snip storageCreate(String name, String content) {
+  public snipsnap.api.snip.Snip storageCreate(String name, String content) {
     Snip snip = storage.storageCreate(name, content);
 
     // TODO fix this, the allList is not necessarily correctly initialized!
@@ -130,7 +130,7 @@ public class MemorySnipStorage implements SnipStorage {
     return snip;
   }
 
-  public void storageRemove(Snip snip) {
+  public void storageRemove(snipsnap.api.snip.Snip snip) {
     String applicationOid = snip.getApplication();
     storage.storageRemove(snip);
     List allSnips = (List) allList.get(applicationOid);
@@ -143,7 +143,7 @@ public class MemorySnipStorage implements SnipStorage {
   }
 
   public int storageCount() {
-    String application = (String) Application.get().getObject(Application.OID);
+    String application = (String) snipsnap.api.app.Application.get().getObject(snipsnap.api.app.Application.OID);
     List allSnips = (List) allList.get(application);
     return allSnips != null ? allSnips.size() : 0;
   }
@@ -154,7 +154,7 @@ public class MemorySnipStorage implements SnipStorage {
   }
 
   public List storageAll() {
-    String applicationOid = (String) Application.get().getObject(Application.OID);
+    String applicationOid = (String) Application.get().getObject(snipsnap.api.app.Application.OID);
     return storageAll(applicationOid);
   }
 
@@ -185,7 +185,7 @@ public class MemorySnipStorage implements SnipStorage {
     throw new MethodNotSupportedException(NOT_SUPPORTED_EXCEPTION_MSG);
   }
 
-  public List storageByComments(Snip parent) {
+  public List storageByComments(snipsnap.api.snip.Snip parent) {
     throw new MethodNotSupportedException(NOT_SUPPORTED_EXCEPTION_MSG);
   }
 
@@ -193,7 +193,7 @@ public class MemorySnipStorage implements SnipStorage {
     throw new MethodNotSupportedException(NOT_SUPPORTED_EXCEPTION_MSG);
   }
 
-  public List storageByParentNameOrder(Snip parent, int count) {
+  public List storageByParentNameOrder(snipsnap.api.snip.Snip parent, int count) {
     throw new MethodNotSupportedException(NOT_SUPPORTED_EXCEPTION_MSG);
   }
 

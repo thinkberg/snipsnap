@@ -25,16 +25,16 @@
 package org.snipsnap.net;
 
 import org.radeox.util.logging.Logger;
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.container.Components;
 import org.snipsnap.net.filter.MultipartWrapper;
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.Snip;
 import org.snipsnap.snip.SnipFormatter;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpaceFactory;
+import snipsnap.api.snip.SnipLink;
+import snipsnap.api.snip.SnipSpaceFactory;
 import org.snipsnap.user.AuthenticationService;
-import org.snipsnap.user.User;
+import snipsnap.api.user.User;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -53,7 +53,7 @@ import java.io.IOException;
 public class CommentStoreServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response)
           throws ServletException, IOException {
-    Configuration config = Application.get().getConfiguration();
+    snipsnap.api.config.Configuration config = snipsnap.api.app.Application.get().getConfiguration();
     // If this is not a multipart/form-data request continue
     String type = request.getHeader("Content-Type");
     if (type != null && type.startsWith("multipart/form-data")) {
@@ -66,7 +66,7 @@ public class CommentStoreServlet extends HttpServlet {
 
     String name = request.getParameter("comment");
     String content = request.getParameter("content");
-    Snip snip = SnipSpaceFactory.getInstance().load(name);
+    snipsnap.api.snip.Snip snip = SnipSpaceFactory.getInstance().load(name);
 
     if (request.getParameter("preview") != null) {
       request.setAttribute("snip", snip);
@@ -80,7 +80,7 @@ public class CommentStoreServlet extends HttpServlet {
 
       HttpSession session = request.getSession();
       if (session != null) {
-        User user = Application.get().getUser();
+        snipsnap.api.user.User user = snipsnap.api.app.Application.get().getUser();
         AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
 
         if (snip != null && service.isAuthenticated(user)) {
@@ -96,7 +96,7 @@ public class CommentStoreServlet extends HttpServlet {
       return;
     }
 
-    response.sendRedirect(config.getUrl("/comments/" + SnipLink.encode(name)));
+    response.sendRedirect(config.getUrl("/comments/" + snipsnap.api.snip.SnipLink.encode(name)));
   }
 
   private String sanitize(String parameter) {

@@ -25,7 +25,7 @@
  */
 package org.snipsnap.net.admin;
 
-import org.snipsnap.config.Configuration;
+import snipsnap.api.config.Configuration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -45,27 +45,27 @@ public class SetupLocalization implements SetupHandler {
   private final static List countries = Arrays.asList(Locale.getISOCountries());
   private final static List languages = Arrays.asList(Locale.getISOLanguages());
 
-  public Map setup(HttpServletRequest request, HttpServletResponse response, Configuration config, Map errors) {
+  public Map setup(HttpServletRequest request, HttpServletResponse response, snipsnap.api.config.Configuration config, Map errors) {
     String country = request.getParameter(Configuration.APP_COUNTRY);
     if (countries.contains(country)) {
       config.setCountry(country);
     } else {
-      errors.put(Configuration.APP_COUNTRY, Configuration.APP_COUNTRY);
+      errors.put(snipsnap.api.config.Configuration.APP_COUNTRY, Configuration.APP_COUNTRY);
     }
 
     String language = request.getParameter(Configuration.APP_LANGUAGE);
     if (languages.contains(language)) {
       config.setLanguage(language);
     } else {
-      errors.put(Configuration.APP_LANGUAGE, Configuration.APP_LANGUAGE);
+      errors.put(snipsnap.api.config.Configuration.APP_LANGUAGE, Configuration.APP_LANGUAGE);
     }
-    config.setTimezone(request.getParameter(Configuration.APP_TIMEZONE));
-    config.setWeblogDateFormat(request.getParameter(Configuration.APP_WEBLOGDATEFORMAT));
+    config.setTimezone(request.getParameter(snipsnap.api.config.Configuration.APP_TIMEZONE));
+    config.setWeblogDateFormat(request.getParameter(snipsnap.api.config.Configuration.APP_WEBLOGDATEFORMAT));
     try {
       DateFormat df = new SimpleDateFormat(config.getWeblogDateFormat());
       df.format(new Date());
     } catch (Exception e) {
-      errors.put(Configuration.APP_WEBLOGDATEFORMAT, Configuration.APP_WEBLOGDATEFORMAT);
+      errors.put(snipsnap.api.config.Configuration.APP_WEBLOGDATEFORMAT, snipsnap.api.config.Configuration.APP_WEBLOGDATEFORMAT);
     }
     String geoCoordinates = request.getParameter(Configuration.APP_GEOCOORDINATES);
     if (null != geoCoordinates && !"".equals(geoCoordinates)) {
@@ -75,7 +75,7 @@ public class SetupLocalization implements SetupHandler {
         String latStr = geoCoordinates.substring(0, commaIdx).trim();
         String lonStr = geoCoordinates.substring(commaIdx + 1).trim();
         if (latStr.length() == 0 || lonStr.length() == 0) {
-          errors.put(Configuration.APP_GEOCOORDINATES, Configuration.APP_GEOCOORDINATES);
+          errors.put(snipsnap.api.config.Configuration.APP_GEOCOORDINATES, Configuration.APP_GEOCOORDINATES);
         } else {
           try {
             double latitude = Double.parseDouble(latStr);
@@ -83,15 +83,15 @@ public class SetupLocalization implements SetupHandler {
             if (latitude >= -90 && latitude <= 90 && longitude >= -180 && longitude <= 180) {
               config.setGeoCoordinates(geoCoordinates);
             } else {
-              errors.put(Configuration.APP_GEOCOORDINATES, Configuration.APP_GEOCOORDINATES + ".range");
+              errors.put(snipsnap.api.config.Configuration.APP_GEOCOORDINATES, snipsnap.api.config.Configuration.APP_GEOCOORDINATES + ".range");
             }
           } catch (NumberFormatException e) {
-            errors.put(Configuration.APP_GEOCOORDINATES, Configuration.APP_GEOCOORDINATES + ".format");
+            errors.put(Configuration.APP_GEOCOORDINATES, snipsnap.api.config.Configuration.APP_GEOCOORDINATES + ".format");
             e.printStackTrace();
           }
         }
       } else {
-        errors.put(Configuration.APP_GEOCOORDINATES, Configuration.APP_GEOCOORDINATES);
+        errors.put(Configuration.APP_GEOCOORDINATES, snipsnap.api.config.Configuration.APP_GEOCOORDINATES);
       }
     }
     return errors;

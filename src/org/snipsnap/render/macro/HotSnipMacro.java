@@ -32,9 +32,9 @@ import org.radeox.macro.parameter.MacroParameter;
 import org.radeox.util.logging.Logger;
 import org.radeox.util.i18n.ResourceManager;
 import org.snipsnap.render.context.SnipRenderContext;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpace;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipLink;
+import snipsnap.api.snip.SnipSpace;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -94,7 +94,7 @@ public class HotSnipMacro extends BaseMacro {
         }
         writer.write("</div><ul>");
         while (iterator.hasNext()) {
-          Snip hotSnip = (Snip) iterator.next();
+          snipsnap.api.snip.Snip hotSnip = (Snip) iterator.next();
           writer.write("<li><span class=\"count\">");
           writer.write("" + hotSnip.getViewCount());
           writer.write("</span>");

@@ -25,8 +25,8 @@
 package org.snipsnap.jsp;
 
 import org.radeox.util.logging.Logger;
-import org.snipsnap.app.Application;
-import org.snipsnap.snip.Snip;
+import snipsnap.api.app.Application;
+import snipsnap.api.snip.Snip;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
@@ -40,7 +40,7 @@ public class DebugTag extends TagSupport {
 
   public int doStartTag() throws JspException {
     JspWriter out = pageContext.getOut();
-    Application app = Application.get();
+    snipsnap.api.app.Application app = snipsnap.api.app.Application.get();
     List debug = app.getLog();
     app.clearLog();
     if (!debug.isEmpty()) {

@@ -25,8 +25,8 @@
 
 package org.snipsnap.snip;
 
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
 import org.radeox.util.i18n.ResourceManager;
 
 import java.sql.Date;
@@ -47,7 +47,7 @@ public class SnipUtil {
   }
 
   public static String toDate(String dateString) {
-    Configuration config = Application.get().getConfiguration();
+    snipsnap.api.config.Configuration config = Application.get().getConfiguration();
 
     int index = dateString.lastIndexOf('/');
     //@TODO: replace with regex check

@@ -1,10 +1,11 @@
 package org.snipsnap.test.interceptor.mock;
 
 import org.snipsnap.snip.*;
+import snipsnap.api.snip.Snip;
 import org.snipsnap.snip.attachment.Attachments;
-import org.snipsnap.snip.label.Labels;
+import snipsnap.api.label.Labels;
 import org.snipsnap.user.Permissions;
-import org.snipsnap.user.User;
+import snipsnap.api.user.User;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -13,8 +14,9 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import gabriel.Principal;
+import snipsnap.api.snip.*;
 
-public abstract class MockSnip implements Snip {
+public abstract class MockSnip implements snipsnap.api.snip.Snip {
   public void setParentName(String name) {
   }
 
@@ -87,7 +89,7 @@ public abstract class MockSnip implements Snip {
   public void setAttachments(Attachments attachments) {
   }
 
-  public Labels getLabels() {
+  public snipsnap.api.label.Labels getLabels() {
     return null;
   }
 
@@ -157,10 +159,10 @@ public abstract class MockSnip implements Snip {
     return null;
   }
 
-  public void setCommentedSnip(Snip comment) {
+  public void setCommentedSnip(snipsnap.api.snip.Snip comment) {
   }
 
-  public Snip getCommentedSnip() {
+  public snipsnap.api.snip.Snip getCommentedSnip() {
     return null;
   }
 
@@ -180,20 +182,20 @@ public abstract class MockSnip implements Snip {
     return null;
   }
 
-  public void addSnip(Snip snip) {
+  public void addSnip(snipsnap.api.snip.Snip snip) {
   }
 
-  public void removeSnip(Snip snip) {
+  public void removeSnip(snipsnap.api.snip.Snip snip) {
   }
 
-  public Snip getParent() {
+  public snipsnap.api.snip.Snip getParent() {
     return null;
   }
 
-  public void setDirectParent(Snip parentSnip) {
+  public void setDirectParent(snipsnap.api.snip.Snip parentSnip) {
   }
 
-  public void setParent(Snip parentSnip) {
+  public void setParent(snipsnap.api.snip.Snip parentSnip) {
   }
 
   public String getShortName() {

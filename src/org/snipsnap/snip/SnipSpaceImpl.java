@@ -27,7 +27,7 @@ package org.snipsnap.snip;
 
 import org.apache.lucene.search.Hits;
 import org.radeox.util.logging.Logger;
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
 import org.snipsnap.app.ApplicationManager;
 import org.snipsnap.app.ApplicationStorage;
 import org.snipsnap.container.Components;
@@ -57,6 +57,9 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import snipsnap.api.snip.*;
+import snipsnap.api.snip.Snip;
+
 /**
  * SnipSpace implementation handles all the operations with snips like
  * loading, storing, searching etc.
@@ -69,7 +72,7 @@ import java.util.TimerTask;
  * @version $Id$
  */
 
-public class SnipSpaceImpl implements SnipSpace {
+public class SnipSpaceImpl implements snipsnap.api.snip.SnipSpace {
   private ApplicationAwareMap changed;
     // List of snips that are scheduled for storage
   private List delayed;
@@ -166,7 +169,7 @@ public class SnipSpaceImpl implements SnipSpace {
   }
 
   public Blog getBlog() {
-    return getBlog(Application.get().getConfiguration().getStartSnip());
+    return getBlog(snipsnap.api.app.Application.get().getConfiguration().getStartSnip());
   }
 
   // Perhaps add getBlog(Snip)

@@ -29,15 +29,15 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
 import org.snipsnap.container.Components;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipSpaceFactory;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipLink;
+import snipsnap.api.snip.SnipSpace;
+import snipsnap.api.snip.SnipSpaceFactory;
 import org.snipsnap.snip.label.BaseLabel;
-import org.snipsnap.snip.label.Label;
-import org.snipsnap.snip.label.Labels;
+import snipsnap.api.label.Label;
+import snipsnap.api.label.Labels;
 import org.snipsnap.user.AuthenticationService;
 
 /**
@@ -74,7 +74,7 @@ public class TaxonomyLabel extends BaseLabel {
    */
   public String getInputProxy() {
     StringBuffer buffer = new StringBuffer();
-    SnipSpace snipspace = (SnipSpace) Components.getComponent(SnipSpace.class);
+    snipsnap.api.snip.SnipSpace snipspace = (SnipSpace) Components.getComponent(snipsnap.api.snip.SnipSpace.class);
     List snipList = snipspace.getAll();
 
     buffer.append("Taxonomy: ");
@@ -83,8 +83,8 @@ public class TaxonomyLabel extends BaseLabel {
     Iterator iterator = snipList.iterator();
     buffer.append("<select name=\"label.value\" size=\"1\">");
     while (iterator.hasNext()) {
-      Snip snip = (Snip) iterator.next();
-      Labels labels = snip.getLabels();
+      Snip snip = (snipsnap.api.snip.Snip) iterator.next();
+      snipsnap.api.label.Labels labels = snip.getLabels();
       boolean noLabelsAll = labels.getAll().isEmpty();
       if (!noLabelsAll) {
         Collection LabelsCat;
@@ -92,7 +92,7 @@ public class TaxonomyLabel extends BaseLabel {
         if (!LabelsCat.isEmpty()) {
           Iterator iter = LabelsCat.iterator();
           while (iter.hasNext()) {
-            Label label = (Label) iter.next();
+            snipsnap.api.label.Label label = (snipsnap.api.label.Label) iter.next();
             if (label.getValue().equals("Category")) {
               String category = snip.getName();
               buffer.append("<option>");
@@ -121,9 +121,9 @@ public class TaxonomyLabel extends BaseLabel {
   private StringBuffer getSnipLink(StringBuffer buffer, String name) {
     AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
 
-    if (SnipSpaceFactory.getInstance().exists(name)) {
-      SnipLink.appendLink(buffer, name, name);
-    } else if (!service.isAuthenticated(Application.get().getUser())) {
+    if (snipsnap.api.snip.SnipSpaceFactory.getInstance().exists(name)) {
+      snipsnap.api.snip.SnipLink.appendLink(buffer, name, name);
+    } else if (!service.isAuthenticated(snipsnap.api.app.Application.get().getUser())) {
       buffer.append(name);
     } else {
       SnipLink.appendCreateLink(buffer, name);

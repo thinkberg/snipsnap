@@ -25,16 +25,16 @@ package org.snipsnap.net;
  * --LICENSE NOTICE--
  */
 
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.snip.Blog;
 import org.snipsnap.snip.BlogKit;
 import org.snipsnap.snip.SnipFormatter;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpaceFactory;
+import snipsnap.api.snip.SnipLink;
+import snipsnap.api.snip.SnipSpaceFactory;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.Security;
-import org.snipsnap.user.User;
+import snipsnap.api.user.User;
 import org.snipsnap.net.filter.MultipartWrapper;
 import org.radeox.util.logging.Logger;
 
@@ -62,7 +62,7 @@ public class PostStoreServlet extends HttpServlet {
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-    Configuration config = Application.get().getConfiguration();
+    snipsnap.api.config.Configuration config = snipsnap.api.app.Application.get().getConfiguration();
     // If this is not a multipart/form-data request continue
     String type = request.getHeader("Content-Type");
     if (type != null && type.startsWith("multipart/form-data")) {
@@ -98,7 +98,7 @@ public class PostStoreServlet extends HttpServlet {
       if (session != null) {
         User user = Application.get().getUser();
 //        AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
-        Blog blog = SnipSpaceFactory.getInstance().getBlog(snipName);
+        Blog blog = snipsnap.api.snip.SnipSpaceFactory.getInstance().getBlog(snipName);
 
         if (Security.hasRoles(user, blog.getSnip(), REQUIRED_ROLES)) {
           if (null == title || "".equals(title)) {

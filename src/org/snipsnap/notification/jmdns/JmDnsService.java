@@ -26,7 +26,7 @@
 package org.snipsnap.notification.jmdns;
 
 import org.picocontainer.Startable;
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
 
 import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceInfo;

@@ -26,13 +26,13 @@
 package org.snipsnap.net.admin;
 
 import org.radeox.util.logging.Logger;
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.container.Components;
 import org.snipsnap.snip.Access;
 import org.snipsnap.snip.Links;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipSpace;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -54,7 +54,7 @@ public class Maintenance implements SetupHandler {
   private Map workerThreads = new HashMap();
 
   public Map setup(HttpServletRequest request, HttpServletResponse response, Configuration config, Map errors) {
-    String appOid = (String) Application.get().getObject(Application.OID);
+    String appOid = (String) Application.get().getObject(snipsnap.api.app.Application.OID);
     CheckConsistency workerThread = (CheckConsistency) workerThreads.get(appOid);
     if (workerThread != null && workerThread.isAlive()) {
       setRunning(workerThread, request.getSession());
@@ -134,8 +134,8 @@ public class Maintenance implements SetupHandler {
     }
 
     public void run() {
-      Application.get().storeObject(Application.OID, appOid);
-      SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
+      snipsnap.api.app.Application.get().storeObject(snipsnap.api.app.Application.OID, appOid);
+      SnipSpace space = (snipsnap.api.snip.SnipSpace) Components.getComponent(snipsnap.api.snip.SnipSpace.class);
 
       if (!repair) {
         List allSnips = Collections.unmodifiableList(space.getAll());
@@ -144,7 +144,7 @@ public class Maintenance implements SetupHandler {
         snipCount = allSnips.size();
         Logger.debug("Need to check " + snipCount + " snips.");
         while (snipIt.hasNext()) {
-          Snip snip = (Snip) snipIt.next();
+          snipsnap.api.snip.Snip snip = (snipsnap.api.snip.Snip) snipIt.next();
           check(snip, space);
           if (!uniqeSnipNames.add(snip.getName())) {
             fixDuplicates.add(snip);
@@ -157,7 +157,7 @@ public class Maintenance implements SetupHandler {
         currentCount = 0;
         Iterator parentIt = fixParents.iterator();
         while (parentIt.hasNext()) {
-          Snip snip = (Snip) parentIt.next();
+          snipsnap.api.snip.Snip snip = (snipsnap.api.snip.Snip) parentIt.next();
           fixParent(snip);
           space.systemStore(snip);
           currentCount++;
@@ -165,7 +165,7 @@ public class Maintenance implements SetupHandler {
         }
         Iterator commentIt = fixComments.iterator();
         while (commentIt.hasNext()) {
-          Snip snip = (Snip) commentIt.next();
+          snipsnap.api.snip.Snip snip = (snipsnap.api.snip.Snip) commentIt.next();
           fixComment(snip, space);
           space.systemStore(snip);
           currentCount++;
@@ -174,7 +174,7 @@ public class Maintenance implements SetupHandler {
         List blackList = Access.getReferrerBlackList();
         Iterator spamIt = fixSpam.iterator();
         while (spamIt.hasNext()) {
-          Snip snip = (Snip) spamIt.next();
+          snipsnap.api.snip.Snip snip = (Snip) spamIt.next();
           Links backLinks = snip.getBackLinks();
 
           Iterator blackListIt = blackList.iterator();
@@ -238,7 +238,7 @@ public class Maintenance implements SetupHandler {
       return fixSpam;
     }
 
-    private void check(Snip snip, SnipSpace space) {
+    private void check(snipsnap.api.snip.Snip snip, SnipSpace space) {
       String snipName = snip.getName();
       if (snipName.startsWith("comment-")) {
         if (null == snip.getCommentedSnip() && (null == snip.getCommentedName() || "".equals(snip.getCommentedName()))) {

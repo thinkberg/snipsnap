@@ -25,7 +25,7 @@
  */
 package org.snipsnap.app;
 
-import org.snipsnap.config.Configuration;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.config.Globals;
 import org.snipsnap.jdbc.UIDGenerator;
 import org.radeox.util.logging.Logger;
@@ -40,6 +40,9 @@ import java.util.Properties;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import snipsnap.api.app.*;
+import snipsnap.api.app.Application;
+
 public class PropertyFileApplicationStorage implements ApplicationStorage {
   private final static String PREFIX_FILE = "prefix.properties";
 
@@ -48,7 +51,7 @@ public class PropertyFileApplicationStorage implements ApplicationStorage {
 
   public PropertyFileApplicationStorage() {
     applications = new HashMap();
-    Configuration config = Application.get().getConfiguration();
+    snipsnap.api.config.Configuration config = snipsnap.api.app.Application.get().getConfiguration();
     File fileStore = new File(config.getGlobal(Globals.APP_FILE_STORE));
     File[] instances = fileStore.listFiles(new FileFilter() {
       public boolean accept(File file) {

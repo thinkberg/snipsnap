@@ -1,5 +1,7 @@
 package org.snipsnap.serialization;
 
+import snipsnap.api.label.*;
+
 import java.util.List;
 
 /**
@@ -13,7 +15,7 @@ public interface LabelSerializer {
      * We don't want RDF/Jena specifics in this interface, so pass the serializer around and let LabelSerializer cast
      * it to specific subclasses
      */
-    public void serialize(LabelContext labelContext);
+    public void serialize(snipsnap.api.label.LabelContext labelContext);
 
     /**
      * A LabelSerializer may be able to support more than one type of Labels.

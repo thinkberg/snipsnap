@@ -4,11 +4,11 @@
   ** @version $Id$
   --%>
 
-<%@ page import="org.snipsnap.snip.SnipSpace,
-                 org.snipsnap.app.Application,
-                 org.snipsnap.snip.SnipSpaceFactory,
+<%@ page import="snipsnap.api.snip.SnipSpace,
+                 snipsnap.api.app.Application,
+                 snipsnap.api.snip.SnipSpaceFactory,
                  org.snipsnap.container.Components,
-                 org.snipsnap.snip.Snip"%>
+                 snipsnap.api.snip.Snip"%>
 <%@ page pageEncoding="iso-8859-1" %>
 <% response.setContentType("text/html; charset="+Application.get().getConfiguration().getEncoding()); %>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
@@ -58,7 +58,7 @@
    <%
      SnipSpace space = (SnipSpace)Components.getComponent(SnipSpace.class);
      for(int i = 1; space.exists("snipsnap-portlet-"+i) || space.exists("SnipSnap/portlet/"+i); i++) {
-       Snip snip = space.load("snipsnap-portlet-"+i);
+       snipsnap.api.snip.Snip snip = space.load("snipsnap-portlet-"+i);
        if(null == snip) {
          snip = space.load("SnipSnap/portlet/" + i);
        }

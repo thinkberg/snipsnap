@@ -28,10 +28,10 @@ package org.snipsnap.render.macro;
 import org.radeox.util.i18n.ResourceManager;
 import org.snipsnap.container.Components;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.label.Label;
-import org.snipsnap.snip.label.Labels;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipSpace;
+import snipsnap.api.label.Label;
+import snipsnap.api.label.Labels;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -70,7 +70,7 @@ public class LabelSearchMacro extends ListOutputMacro {
     String name = params.get("name");
     String value = params.get("value");
 
-    SnipSpace snipspace = (SnipSpace) Components.getComponent(SnipSpace.class);
+    SnipSpace snipspace = (snipsnap.api.snip.SnipSpace) Components.getComponent(SnipSpace.class);
     List snipList = snipspace.getAll();
 
     List result = new ArrayList();
@@ -78,7 +78,7 @@ public class LabelSearchMacro extends ListOutputMacro {
     Iterator iterator = snipList.iterator();
     while (iterator.hasNext()) {
       Snip snip = (Snip) iterator.next();
-      Labels labels = snip.getLabels();
+      snipsnap.api.label.Labels labels = snip.getLabels();
       boolean noLabelsAll = labels.getAll().isEmpty();
 
       if (!noLabelsAll) {

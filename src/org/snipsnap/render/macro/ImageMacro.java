@@ -28,12 +28,12 @@ import org.radeox.api.engine.ImageRenderEngine;
 import org.radeox.api.engine.RenderEngine;
 import org.radeox.util.Encoder;
 import org.radeox.util.i18n.ResourceManager;
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpaceFactory;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipLink;
+import snipsnap.api.snip.SnipSpaceFactory;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -62,7 +62,7 @@ public class ImageMacro extends SnipMacro {
   }
 
   public ImageMacro() {
-    config = Application.get().getConfiguration();
+    config = snipsnap.api.app.Application.get().getConfiguration();
   }
 
   public void execute(Writer writer, SnipMacroParameter params)
@@ -102,7 +102,7 @@ public class ImageMacro extends SnipMacro {
         String imageName = img;
 
         if (imageName.startsWith("http://") || imageName.startsWith("https://")) {
-          if (config.allow(Configuration.APP_PERM_EXTERNALIMAGES)) {
+          if (config.allow(snipsnap.api.config.Configuration.APP_PERM_EXTERNALIMAGES)) {
             appendExternalImage(writer, imageName, align);
           }
         } else {
@@ -113,7 +113,7 @@ public class ImageMacro extends SnipMacro {
             imageName = imageName.substring(0, dotIndex);
           }
 
-          Snip snip = params.getSnipRenderContext().getSnip();
+          snipsnap.api.snip.Snip snip = params.getSnipRenderContext().getSnip();
           int slashIndex = imageName.lastIndexOf('/');
           if (-1 != slashIndex) {
             String snipName = imageName.substring(0, slashIndex);

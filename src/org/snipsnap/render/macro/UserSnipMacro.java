@@ -26,7 +26,7 @@
 package org.snipsnap.render.macro;
 
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
-import org.snipsnap.snip.SnipSpaceFactory;
+import snipsnap.api.snip.SnipSpaceFactory;
 import org.radeox.util.i18n.ResourceManager;
 
 import java.io.IOException;
@@ -63,7 +63,7 @@ public class UserSnipMacro extends ListOutputMacro {
     }
 
     if (params.getLength() > 0) {
-      Collection c = SnipSpaceFactory.getInstance().getByUser(params.get("0"));
+      Collection c = snipsnap.api.snip.SnipSpaceFactory.getInstance().getByUser(params.get("0"));
       MessageFormat mf = new MessageFormat(ResourceManager.getString("i18n.messages", "macro.snipsbyuser.title"),
                                            ResourceManager.getLocale("i18n.messages"));
       output(writer, params.getSnipRenderContext().getSnip(),

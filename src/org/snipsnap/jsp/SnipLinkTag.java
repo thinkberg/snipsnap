@@ -28,7 +28,7 @@ import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.render.filter.links.SnipLinks;
 import org.snipsnap.snip.Links;
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.Snip;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;

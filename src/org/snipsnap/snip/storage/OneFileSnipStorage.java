@@ -26,7 +26,7 @@
 package org.snipsnap.snip.storage;
 
 import org.radeox.util.logging.Logger;
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.Snip;
 
 import java.io.*;
 import java.util.Map;

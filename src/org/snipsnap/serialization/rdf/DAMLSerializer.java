@@ -6,7 +6,7 @@ import java.io.Writer;
 import com.hp.hpl.jena.daml.common.*;
 import com.hp.hpl.mesa.rdf.jena.model.*;
 
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.Snip;
 import org.snipsnap.serialization.rdf.vocabulary.*;
 
 public class DAMLSerializer extends RDFSerializerBase {
@@ -19,7 +19,7 @@ public class DAMLSerializer extends RDFSerializerBase {
         return new DAMLModelImpl();
     }
 
-    protected void addSingleSnipToModel(Snip snip, Model m) throws RDFException {
+    protected void addSingleSnipToModel(snipsnap.api.snip.Snip snip, Model m) throws RDFException {
         DAMLModelImpl model = (DAMLModelImpl)m;
         String snipName = snip.getName();
         String snipContent = snip.getContent();
@@ -51,6 +51,6 @@ public class DAMLSerializer extends RDFSerializerBase {
     protected void writeModel(Model model, Writer writer) throws RDFException {
     }
 
-    protected void recursiveFillModel(Snip snip, Model model, int depth) throws RDFException {
+    protected void recursiveFillModel(snipsnap.api.snip.Snip snip, Model model, int depth) throws RDFException {
     }
 }

@@ -25,12 +25,12 @@ import java.util.Collection;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.Snip;
 import org.snipsnap.snip.SnipImpl;
 import org.snipsnap.snip.label.CategoryLabel;
 import org.snipsnap.snip.label.DefaultLabel;
-import org.snipsnap.snip.label.Label;
-import org.snipsnap.snip.label.Labels;
+import snipsnap.api.label.Label;
+import snipsnap.api.label.Labels;
 import org.snipsnap.snip.label.TypeLabel;
 import org.snipsnap.test.snip.SnipTestSupport;
 
@@ -40,8 +40,8 @@ import org.snipsnap.test.snip.SnipTestSupport;
  *
  */
 public class LabelsTest extends SnipTestSupport {
-  private Labels m_emptyLabels;
-  private Labels m_filledLabels;
+  private snipsnap.api.label.Labels m_emptyLabels;
+  private snipsnap.api.label.Labels m_filledLabels;
   private int m_numberOfLabels;
   private Snip m_aSnip;
 
@@ -55,8 +55,8 @@ public class LabelsTest extends SnipTestSupport {
 
   protected void setUp() throws Exception {
     m_aSnip = new SnipImpl("Labeled Snip", "Test Content");
-    m_emptyLabels = new Labels();
-    m_filledLabels = new Labels(m_aSnip, "TypeLabel:Type:Template"
+    m_emptyLabels = new snipsnap.api.label.Labels();
+    m_filledLabels = new snipsnap.api.label.Labels(m_aSnip, "TypeLabel:Type:Template"
         + "|CategoryLabel:Category:zz"
         + "|CategoryLabel:Category:yy"
         + "|CategoryLabel:Category:xx"
@@ -102,11 +102,11 @@ public class LabelsTest extends SnipTestSupport {
   protected void getLabels(Labels aLabels, String name) {
     int before = aLabels.getAll().size();
 
-    Label c1 = new CategoryLabel("1");
-    Label c2 = new CategoryLabel("2");
-    Label c3 = new CategoryLabel("3");
+    snipsnap.api.label.Label c1 = new CategoryLabel("1");
+    snipsnap.api.label.Label c2 = new CategoryLabel("2");
+    snipsnap.api.label.Label c3 = new CategoryLabel("3");
     Label t1 = new TypeLabel("1");
-    Label t2 = new TypeLabel("2");
+    snipsnap.api.label.Label t2 = new TypeLabel("2");
 
     aLabels.addLabel(c1);
     aLabels.addLabel(c2);
@@ -129,12 +129,12 @@ public class LabelsTest extends SnipTestSupport {
     getLabels(m_filledLabels, "m_filledLabels");
   }
 
-  protected void removeLabels(Labels aLabels, String name) {
+  protected void removeLabels(snipsnap.api.label.Labels aLabels, String name) {
     int before = aLabels.getAll().size();
 
-    Label c1 = new CategoryLabel("1");
+    snipsnap.api.label.Label c1 = new CategoryLabel("1");
     Label c2 = new CategoryLabel("2");
-    Label t1 = new TypeLabel("1");
+    snipsnap.api.label.Label t1 = new TypeLabel("1");
 
     aLabels.addLabel(c1);
     aLabels.addLabel(c2);
@@ -164,7 +164,7 @@ public class LabelsTest extends SnipTestSupport {
 
     int before = aLabels.getAll().size();
 
-    Label c1 = new CategoryLabel("1");
+    snipsnap.api.label.Label c1 = new CategoryLabel("1");
     aLabels.addLabel(c1);
 
     aLabels.removeLabel(c1.getName(), c1.getValue());

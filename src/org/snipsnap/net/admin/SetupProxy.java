@@ -25,7 +25,7 @@
  */
 package org.snipsnap.net.admin;
 
-import org.snipsnap.config.Configuration;
+import snipsnap.api.config.Configuration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,7 +41,7 @@ public class SetupProxy implements SetupHandler {
     config.setRealAutodetect(autodetect);
     if ("false".equals(autodetect)) {
       config.setRealHost(request.getParameter(Configuration.APP_REAL_HOST));
-      String portStr = request.getParameter(Configuration.APP_REAL_PORT);
+      String portStr = request.getParameter(snipsnap.api.config.Configuration.APP_REAL_PORT);
       config.setRealPort(request.getParameter(Configuration.APP_REAL_PORT));
       if (portStr != null && !"".equals(portStr)) {
         try {
@@ -51,7 +51,7 @@ public class SetupProxy implements SetupHandler {
         }
       }
     }
-    String realProtocol = request.getParameter(Configuration.APP_REAL_PROTOCOL);
+    String realProtocol = request.getParameter(snipsnap.api.config.Configuration.APP_REAL_PROTOCOL);
     if (null != realProtocol && !"".equals(realProtocol)) {
       config.setRealProtocol(realProtocol.trim());
     }

@@ -28,8 +28,8 @@ import org.snipsnap.container.Components;
 import org.snipsnap.graph.builder.TreeBuilder;
 import org.snipsnap.graph.graph.Tree;
 import org.snipsnap.graph.graph.TreeNode;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipSpace;
 
 public class NameSpaceTreeBuilder implements TreeBuilder {
   private String root;
@@ -39,9 +39,9 @@ public class NameSpaceTreeBuilder implements TreeBuilder {
   }
 
   public Tree build() {
-    SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
+    SnipSpace space = (snipsnap.api.snip.SnipSpace) Components.getComponent(SnipSpace.class);
 
-    Snip[] snips = space.match(root);
+    snipsnap.api.snip.Snip[] snips = space.match(root);
 
     if (root.endsWith("/")) {
       root = root.substring(0, root.length() - 1);

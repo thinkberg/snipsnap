@@ -33,7 +33,7 @@ import org.snipsnap.user.DefaultPermissionManager;
 import org.snipsnap.user.Permission;
 import org.snipsnap.user.PermissionManager;
 import org.snipsnap.user.Roles;
-import org.snipsnap.user.User;
+import snipsnap.api.user.User;
 
 public class DefaultPermissionManagerTest extends TestCase {
 

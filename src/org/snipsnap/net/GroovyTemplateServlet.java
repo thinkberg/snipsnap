@@ -26,9 +26,9 @@ package org.snipsnap.net;
 
 import groovy.text.SimpleTemplateEngine;
 import groovy.text.Template;
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
 import org.snipsnap.container.Components;
-import org.snipsnap.snip.SnipSpace;
+import snipsnap.api.snip.SnipSpace;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -72,7 +72,7 @@ public class GroovyTemplateServlet extends HttpServlet {
    * @throws IOException
    */
   private String getTemplateSource(String name) throws IOException {
-    SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
+    SnipSpace space = (snipsnap.api.snip.SnipSpace) Components.getComponent(snipsnap.api.snip.SnipSpace.class);
     if (space.exists(name)) {
       return space.load(name).getContent();
     }

@@ -27,7 +27,7 @@ package org.snipsnap.semanticweb.rss;
 
 import org.radeox.util.logging.Logger;
 import org.radeox.filter.regex.MatchResult;
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.Snip;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -44,7 +44,7 @@ import java.util.regex.Matcher;
  */
 
 public class Rssify {
-  public static List rssify(Snip snip) {
+  public static List rssify(snipsnap.api.snip.Snip snip) {
     return rssify(snip.getChildrenDateOrder());
   }
 
@@ -61,7 +61,7 @@ public class Rssify {
 
     Iterator iterator = snips.iterator();
     while (iterator.hasNext() && result.size() <= 10) {
-      Snip snip = (Snip) iterator.next();
+      snipsnap.api.snip.Snip snip = (snipsnap.api.snip.Snip) iterator.next();
 
       String content = snip.getContent();
       Matcher matcher = pattern.matcher(content);

@@ -26,7 +26,7 @@
 
 package org.snipsnap.xmlrpc;
 
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
 
 
 /**
@@ -54,6 +54,6 @@ public class GeneratorHandler extends XmlRpcSupport {
    * @return version string
    */
   public String version() {
-    return "SnipSnap/"+Application.get().getConfiguration().getVersion();
+    return "SnipSnap/"+snipsnap.api.app.Application.get().getConfiguration().getVersion();
   }
 }

@@ -25,9 +25,9 @@
 package org.snipsnap.net;
 
 import org.radeox.util.logging.Logger;
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
-import org.snipsnap.snip.Snip;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
+import snipsnap.api.snip.Snip;
 import org.snipsnap.snip.attachment.Attachment;
 import org.snipsnap.snip.attachment.storage.AttachmentStorage;
 import org.snipsnap.container.Components;

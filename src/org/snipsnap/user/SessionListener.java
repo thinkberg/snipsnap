@@ -25,7 +25,7 @@
 
 package org.snipsnap.user;
 
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;

@@ -29,9 +29,9 @@ import org.apache.xmlrpc.Base64;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.radeox.util.logging.Logger;
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
-import org.snipsnap.snip.Snip;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
+import snipsnap.api.snip.Snip;
 import org.snipsnap.snip.attachment.Attachment;
 import org.snipsnap.snip.attachment.storage.AttachmentStorage;
 import org.snipsnap.container.Components;
@@ -57,7 +57,7 @@ public class ThemeImageServlet extends HttpServlet {
     Map installedThemes = ThemeHelper.getInstalledThemes();
     AttachmentStorage storage = (AttachmentStorage) Components.getComponent(AttachmentStorage.class);
     if(installedThemes.containsKey(name)) {
-      Snip themeSnip = (Snip)installedThemes.get(name);
+      Snip themeSnip = (snipsnap.api.snip.Snip)installedThemes.get(name);
       Attachment att = themeSnip.getAttachments().getAttachment("screenshot.png");
       if(att != null) {
         sendImage(response, storage.getInputStream(att),

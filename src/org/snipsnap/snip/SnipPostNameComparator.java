@@ -25,6 +25,9 @@
 
 package org.snipsnap.snip;
 
+import snipsnap.api.snip.*;
+import snipsnap.api.snip.Snip;
+
 import java.util.Comparator;
 
 /**
@@ -45,7 +48,7 @@ public class SnipPostNameComparator implements Comparator {
   private Comparator comparator = new PostNameComparator();
 
   public int compare(Object o1, Object o2) {
-    if (! (o1 instanceof Snip) || !( o2 instanceof Snip)) {
+    if (! (o1 instanceof Snip) || !( o2 instanceof snipsnap.api.snip.Snip)) {
       throw new ClassCastException();
     }
     Snip snip1 = (Snip) o1;

@@ -34,7 +34,7 @@ import org.snipsnap.container.Components;
 import org.snipsnap.jdbc.IntHolder;
 import org.snipsnap.snip.storage.SnipSerializer;
 import org.snipsnap.snip.storage.UserSerializer;
-import org.snipsnap.user.User;
+import snipsnap.api.user.User;
 import org.snipsnap.versioning.VersionInfo;
 import org.snipsnap.versioning.VersionManager;
 
@@ -46,6 +46,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.List;
+
+import snipsnap.api.snip.*;
+import snipsnap.api.snip.Snip;
 
 /**
  * Helper class for exporting Snips and users as XML document.
@@ -100,7 +103,7 @@ public class XMLSnipExport {
 
       Iterator snipListIterator = snips.iterator();
       while (snipListIterator.hasNext()) {
-        Snip snip = (Snip) snipListIterator.next();
+        snipsnap.api.snip.Snip snip = (Snip) snipListIterator.next();
         if (filter == null || !snip.getName().matches(filter)) {
           Element snipEl = snipSerializer.serialize(snip);
           if (null != ignoreElements) {

@@ -25,11 +25,15 @@
 
 package org.snipsnap.snip;
 
-import org.snipsnap.config.Configuration;
-import org.snipsnap.app.Application;
+import snipsnap.api.config.Configuration;
+import snipsnap.api.app.Application;
 
 import java.io.IOException;
 import java.io.Writer;
+
+import snipsnap.api.snip.*;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipLink;
 
 /**
  * Handle trees of snips with paths.
@@ -46,7 +50,7 @@ public class SnipPath {
   }
 
   //@TODO: make this a object not static, return object from Snip
-  public Writer append(Writer writer, SnipSpace space) {
+  public Writer append(Writer writer, snipsnap.api.snip.SnipSpace space) {
     try {
       Configuration config = Application.get().getConfiguration();
       String name = snip.getName();
@@ -64,7 +68,7 @@ public class SnipPath {
         part = name.substring(lastIndex, index);
         snipName = name.substring(0, index);
         if(space.exists(snipName) ||
-           Application.get().getConfiguration().allow(Configuration.APP_PERM_CREATESNIP)) {
+           Application.get().getConfiguration().allow(snipsnap.api.config.Configuration.APP_PERM_CREATESNIP)) {
           SnipLink.appendLink(writer, snipName, part);
         } else {
           writer.write(part);

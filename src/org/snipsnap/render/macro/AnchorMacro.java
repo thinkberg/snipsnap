@@ -27,8 +27,8 @@ package org.snipsnap.render.macro;
 
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 import org.snipsnap.render.context.SnipRenderContext;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipLink;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipLink;
 import org.radeox.util.i18n.ResourceManager;
 
 import java.io.IOException;
@@ -72,15 +72,15 @@ public class AnchorMacro extends SnipMacro {
       writer.write("<a href=\"");
       Snip snip = params.getSnipRenderContext().getSnip();
       if (null != snip) {
-        SnipLink.appendUrl(writer, snip.getName(), anchor);
+        snipsnap.api.snip.SnipLink.appendUrl(writer, snip.getName(), anchor);
       } else {
-        SnipLink.appendUrl(writer, "", anchor);
+        snipsnap.api.snip.SnipLink.appendUrl(writer, "", anchor);
       }
       writer.write("\" title=\"");
       MessageFormat mf = new MessageFormat(ResourceManager.getString("i18n.messages", "macro.anchor.permalink"));
       writer.write(mf.format(new Object[] { anchor }));
       writer.write("\">");
-      SnipLink.appendImage(writer, "Icon-Permalink", "");
+      snipsnap.api.snip.SnipLink.appendImage(writer, "Icon-Permalink", "");
       writer.write("</a>");
     }
     return;

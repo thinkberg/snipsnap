@@ -25,12 +25,12 @@
 package org.snipsnap.net;
 
 import org.radeox.util.logging.Logger;
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.net.filter.MultipartWrapper;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipSpaceFactory;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipSpace;
+import snipsnap.api.snip.SnipSpaceFactory;
 import org.snipsnap.snip.attachment.Attachment;
 import org.snipsnap.snip.attachment.Attachments;
 import org.snipsnap.snip.attachment.storage.AttachmentStorage;
@@ -38,7 +38,7 @@ import org.snipsnap.snip.storage.XMLFileSnipStorage;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.Security;
-import org.snipsnap.user.User;
+import snipsnap.api.user.User;
 import org.snipsnap.container.Components;
 import org.snipsnap.security.AccessController;
 
@@ -95,7 +95,7 @@ public class FileUploadServlet extends HttpServlet {
       return;
     }
 
-    SnipSpace space = SnipSpaceFactory.getInstance();
+    snipsnap.api.snip.SnipSpace space = SnipSpaceFactory.getInstance();
     Snip snip = space.load(snipName);
 
     if (request.getParameter("cancel") != null) {
@@ -143,7 +143,7 @@ public class FileUploadServlet extends HttpServlet {
     dispatcher.forward(request, response);
   }
 
-  public String uploadFile(HttpServletRequest request, Snip snip) throws IOException {
+  public String uploadFile(HttpServletRequest request, snipsnap.api.snip.Snip snip) throws IOException {
     AttachmentStorage attachmentStorage = (AttachmentStorage) Components.getComponent(AttachmentStorage.class);
 
     MultipartWrapper wrapper = (MultipartWrapper) request;
@@ -175,7 +175,7 @@ public class FileUploadServlet extends HttpServlet {
 
       snip.getAttachments().addAttachment(attachment);
 
-      SnipSpaceFactory.getInstance().store(snip);
+      snipsnap.api.snip.SnipSpaceFactory.getInstance().store(snip);
       return fileName;
     }
     return null;

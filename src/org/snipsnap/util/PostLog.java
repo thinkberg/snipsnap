@@ -1,10 +1,10 @@
 package org.snipsnap.util;
 
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
 import org.snipsnap.snip.Blog;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.user.User;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipSpaceFactory;
+import snipsnap.api.user.User;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.user.UserManagerFactory;
 
@@ -14,7 +14,7 @@ public class PostLog {
 
     Application app = Application.get();
 
-    User user = UserManagerFactory.getInstance().load("funzel");
+    snipsnap.api.user.User user = UserManagerFactory.getInstance().load("funzel");
     app.setUser(user);
 
     Snip snip = blog.post("hallo");

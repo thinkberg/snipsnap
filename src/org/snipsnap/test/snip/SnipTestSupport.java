@@ -27,8 +27,8 @@ package org.snipsnap.test.snip;
 
 import org.jmock.core.MockObjectSupportTestCase;
 import org.jmock.MockObjectTestCase;
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.config.ConfigurationProxy;
 
 public class SnipTestSupport extends MockObjectTestCase {
@@ -40,10 +40,10 @@ public class SnipTestSupport extends MockObjectTestCase {
 
   protected void setUp() throws Exception {
     // set some basic properties
-    Configuration config = ConfigurationProxy.newInstance();
-    config.set(Configuration.APP_NAME, "SnipSnap");
-    config.set(Configuration.APP_HOST, "snipsnap.org");
-    config.set(Configuration.APP_PATH, "");
+    snipsnap.api.config.Configuration config = ConfigurationProxy.newInstance();
+    config.set(snipsnap.api.config.Configuration.APP_NAME, "SnipSnap");
+    config.set(snipsnap.api.config.Configuration.APP_HOST, "snipsnap.org");
+    config.set(snipsnap.api.config.Configuration.APP_PATH, "");
     Application.get().setConfiguration(config);
     super.setUp();
   }

@@ -25,7 +25,7 @@
 
 package org.snipsnap.versioning;
 
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.Snip;
 
 import java.util.List;
 import java.util.ArrayList;

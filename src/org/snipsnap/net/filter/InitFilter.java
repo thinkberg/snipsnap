@@ -27,21 +27,21 @@ package org.snipsnap.net.filter;
 import org.radeox.util.i18n.ResourceManager;
 import org.radeox.util.logging.LogHandler;
 import org.radeox.util.logging.Logger;
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
 import org.snipsnap.app.ApplicationManager;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.config.ConfigurationManager;
 import org.snipsnap.config.ConfigurationProxy;
 import org.snipsnap.config.Globals;
 import org.snipsnap.config.ServerConfiguration;
 import org.snipsnap.container.Components;
 import org.snipsnap.container.SessionService;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipSpaceFactory;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipLink;
+import snipsnap.api.snip.SnipSpace;
+import snipsnap.api.snip.SnipSpaceFactory;
 import org.snipsnap.user.Digest;
-import org.snipsnap.user.User;
+import snipsnap.api.user.User;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -156,17 +156,17 @@ public class InitFilter implements Filter {
     ApplicationManager appManager = (ApplicationManager) Components.getComponent(ApplicationManager.class);
     Collection prefixes = appManager.getPrefixes();
     Iterator prefixIt = prefixes.iterator();
-    Application app = Application.get();
+    snipsnap.api.app.Application app = snipsnap.api.app.Application.get();
     int okCount = 0;
     boolean weblogsPing = false;
     while (prefixIt.hasNext()) {
       String prefix = (String) prefixIt.next();
       String appOid = appManager.getApplication(prefix);
-      app.storeObject(Application.OID, appOid);
+      app.storeObject(snipsnap.api.app.Application.OID, appOid);
 
       System.out.print(">> Loading: " + prefix + " ");
       Configuration appConfig = ConfigurationProxy.newInstance();
-      SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
+      snipsnap.api.snip.SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
       if (space.exists(Configuration.SNIPSNAP_CONFIG)) {
         Snip configSnip = space.load(Configuration.SNIPSNAP_CONFIG);
         String configContent = configSnip.getContent();
@@ -212,7 +212,7 @@ public class InitFilter implements Filter {
     String path = request.getServletPath();
 
     HttpSession session = request.getSession();
-    Application app = Application.forceGet();
+    snipsnap.api.app.Application app = snipsnap.api.app.Application.forceGet();
     ConfigurationManager configManager = ConfigurationManager.getInstance();
     ApplicationManager appManager = null;
 
@@ -248,7 +248,7 @@ public class InitFilter implements Filter {
       appOid = appManager.getApplication(prefix);
       appConfig = configManager.getConfiguration(appOid);
       app.setConfiguration(appConfig);
-      app.storeObject(Application.OID, appOid);
+      app.storeObject(snipsnap.api.app.Application.OID, appOid);
     }
 
     // make sure XML-RPC is handled directly after determining the instance
@@ -276,9 +276,9 @@ public class InitFilter implements Filter {
         if (colonIndex != -1) {
           host = host.substring(0, colonIndex);
           int port = Integer.parseInt(xForwardedHost.substring(colonIndex + 1));
-          app.storeObject(Application.URL, new URL(protocol, host, port, contextPath));
+          app.storeObject(snipsnap.api.app.Application.URL, new URL(protocol, host, port, contextPath));
         } else {
-          app.storeObject(Application.URL, new URL(protocol, host, contextPath));
+          app.storeObject(snipsnap.api.app.Application.URL, new URL(protocol, host, contextPath));
         }
       } else {
         String protocol = new URL(request.getRequestURL().toString()).getProtocol();
@@ -287,9 +287,9 @@ public class InitFilter implements Filter {
         String contextPath = request.getContextPath() + ("/".equals(prefix) ? "" : prefix);
 
         if (port != 80) {
-          app.storeObject(Application.URL, new URL(protocol, host, port, contextPath));
+          app.storeObject(snipsnap.api.app.Application.URL, new URL(protocol, host, port, contextPath));
         } else {
-          app.storeObject(Application.URL, new URL(protocol, host, contextPath));
+          app.storeObject(snipsnap.api.app.Application.URL, new URL(protocol, host, contextPath));
         }
       }
 //      System.out.println("autoconfigured url: " + appConfig.getUrl());
@@ -312,7 +312,7 @@ public class InitFilter implements Filter {
       request.setAttribute(Configuration.APP_PREFIX, prefix);
 
       session.setAttribute("app", app);
-      session.setAttribute("space", SnipSpaceFactory.getInstance());
+      session.setAttribute("space", snipsnap.api.snip.SnipSpaceFactory.getInstance());
 
       // check for a logged in user
       SessionService service = (SessionService) Components.getComponent(SessionService.class);

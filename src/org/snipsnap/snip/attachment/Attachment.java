@@ -25,7 +25,7 @@
 
 package org.snipsnap.snip.attachment;
 
-import org.snipsnap.snip.SnipLink;
+import snipsnap.api.snip.SnipLink;
 
 import java.util.Date;
 

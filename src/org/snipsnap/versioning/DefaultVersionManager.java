@@ -25,7 +25,7 @@
 
 package org.snipsnap.versioning;
 
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.Snip;
 import org.snipsnap.snip.SnipFactory;
 
 import java.util.List;
@@ -46,22 +46,22 @@ public class DefaultVersionManager implements VersionManager {
     this.service = service;
   }
 
-  public void storeVersion(Snip snip) {
+  public void storeVersion(snipsnap.api.snip.Snip snip) {
     // Consistently increase the version of the snip
     storage.storeVersion(snip);
   };
 
-  public Snip loadVersion(Snip snip, int version) {
+  public snipsnap.api.snip.Snip loadVersion(snipsnap.api.snip.Snip snip, int version) {
     return SnipFactory.wrap(storage.loadVersion(snip, version));
   };
 
-  public List diff(Snip snip, int version1, int version2) {
+  public List diff(snipsnap.api.snip.Snip snip, int version1, int version2) {
 //    System.err.println("old="+version1);
 //    System.err.println("new="+version2);
     return service.diff(loadVersion(snip, version1).getContent(), loadVersion(snip, version2).getContent());
   }
 
-  public List getHistory(Snip snip) {
+  public List getHistory(snipsnap.api.snip.Snip snip) {
     return storage.getVersionHistory(snip);
   }
 }

@@ -27,9 +27,9 @@ package org.snipsnap.test.snip;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.Snip;
 import org.snipsnap.snip.SnipImpl;
-import org.snipsnap.snip.SnipSpace;
+import snipsnap.api.snip.SnipSpace;
 import org.jmock.Mock;
 
 import java.io.StringWriter;
@@ -46,7 +46,7 @@ public class SnipPathTest extends SnipTestSupport {
   protected void setUp() throws Exception {
     super.setUp();
     writer = new StringWriter();
-    mockSpace = mock(SnipSpace.class);
+    mockSpace = mock(snipsnap.api.snip.SnipSpace.class);
   }
 
   public static Test suite() {
@@ -58,7 +58,7 @@ public class SnipPathTest extends SnipTestSupport {
 
     Snip snip = new SnipImpl("SWT/Stephan/Students", "Test Content");
     try {
-      snip.getPath().append(writer, (SnipSpace) mockSpace.proxy());
+      snip.getPath().append(writer, (snipsnap.api.snip.SnipSpace) mockSpace.proxy());
     } catch (IOException e) {
       fail("Exception thrown "+e.getMessage());
     }

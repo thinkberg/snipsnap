@@ -26,14 +26,14 @@
 package org.snipsnap.container;
 
 import org.radeox.util.logging.Logger;
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipSpace;
 import org.snipsnap.snip.storage.UserStorage;
 import org.snipsnap.user.AuthenticationService;
 import org.snipsnap.user.Digest;
-import org.snipsnap.user.User;
+import snipsnap.api.user.User;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -64,7 +64,7 @@ public class DefaultSessionService implements SessionService {
     this.authService = authService;
 
     try {
-      Snip robots = space.load(Configuration.SNIPSNAP_CONFIG_ROBOTS);
+      snipsnap.api.snip.Snip robots = space.load(snipsnap.api.config.Configuration.SNIPSNAP_CONFIG_ROBOTS);
       if (robots != null) {
         BufferedReader crawler = new BufferedReader(new StringReader(robots.getContent()));
         String line = null;
@@ -205,7 +205,7 @@ public class DefaultSessionService implements SessionService {
 
   private String getCookiePath() {
     String path;
-    Configuration config = Application.get().getConfiguration();
+    snipsnap.api.config.Configuration config = snipsnap.api.app.Application.get().getConfiguration();
     try {
       path = new URL(config.getUrl()).getPath();
       if (path == null || path.length() == 0) {

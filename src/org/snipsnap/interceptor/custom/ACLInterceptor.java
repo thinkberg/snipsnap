@@ -25,11 +25,11 @@
 
 package org.snipsnap.interceptor.custom;
 
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
 
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.Snip;
 import org.snipsnap.user.Roles;
-import org.snipsnap.user.User;
+import snipsnap.api.user.User;
 import org.snipsnap.security.AccessController;
 import org.snipsnap.container.Components;
 
@@ -61,7 +61,7 @@ public class ACLInterceptor implements Interceptor {
     // hack should a.) also check other methods b.) declare security for every method
     String name = invocation.getMethod().getName();
     User user = Application.get().getUser();
-    Snip snip = (Snip) invocation.getProxy().getProxyContext().unwrap();
+    Snip snip = (snipsnap.api.snip.Snip) invocation.getProxy().getProxyContext().unwrap();
     if (invocation.getMethod().getName().startsWith("set")) {
        // if (controller.checkPermission(user, new Permission("CHANGE_SNIP"), new OwnerAccessContext(snip))) {
       //Logger.debug("ACLInterceptor: Method="+invocation.getMethod().getName());

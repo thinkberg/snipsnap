@@ -38,6 +38,11 @@ import java.util.List;
 import java.util.Set;
 import java.text.MessageFormat;
 
+import snipsnap.api.snip.*;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipLink;
+import snipsnap.api.snip.SnipSpaceFactory;
+
 /**
  * Handler for comments added to snips.
  * @author Stephan J. Schmidt
@@ -46,7 +51,7 @@ import java.text.MessageFormat;
 public class Comments {
   private Snip snip;
   private List comments;
-  private SnipSpace space;
+  private snipsnap.api.snip.SnipSpace space;
   private Set users;
 
   public Comments(Snip snip) {

@@ -32,6 +32,9 @@ import org.snipsnap.user.UserManager;
 import java.sql.Timestamp;
 import java.text.MessageFormat;
 
+import snipsnap.api.snip.*;
+import snipsnap.api.snip.SnipLink;
+
 /**
  *  Object with modified information, e.g. for snips
  *  Modified can be pretty printed.
@@ -99,7 +102,7 @@ public class Modified {
     UserManager um = (UserManager) Components.getComponent(UserManager.class);
     return mf.format(new Object[]{
       um.exists(cUser) ? SnipLink.createLink(cUser) : cUser,
-      um.exists(mUser) ? SnipLink.createLink(mUser) : mUser,
+      um.exists(mUser) ? snipsnap.api.snip.SnipLink.createLink(mUser) : mUser,
       getNiceTime(mTime)
     });
   }

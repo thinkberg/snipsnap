@@ -29,7 +29,7 @@ import org.radeox.macro.parameter.MacroParameter;
 import org.radeox.filter.context.BaseFilterContext;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 import org.snipsnap.render.context.SnipRenderContext;
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.Snip;
 
 /**
  * Special implementation of FilterContext to execute
@@ -41,13 +41,13 @@ import org.snipsnap.snip.Snip;
  */
 
 public class SnipFilterContext extends BaseFilterContext {
-  private Snip snip;
+  private snipsnap.api.snip.Snip snip;
 
-  public SnipFilterContext(Snip snip) {
+  public SnipFilterContext(snipsnap.api.snip.Snip snip) {
     this.snip = snip;
   }
 
-  public Snip getSnip() {
+  public snipsnap.api.snip.Snip getSnip() {
     return snip;
   }
 

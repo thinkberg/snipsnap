@@ -29,7 +29,7 @@ import org.radeox.util.Encoder;
 import org.radeox.util.i18n.ResourceManager;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.snip.Links;
-import org.snipsnap.snip.SnipLink;
+import snipsnap.api.snip.SnipLink;
 import org.snipsnap.util.URLEncoderDecoder;
 
 import java.io.IOException;

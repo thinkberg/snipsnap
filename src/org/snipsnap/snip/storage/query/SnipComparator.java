@@ -25,7 +25,7 @@
 
 package org.snipsnap.snip.storage.query;
 
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.Snip;
 
 import java.util.Comparator;
 
@@ -45,10 +45,10 @@ public abstract class SnipComparator implements Comparator {
    * @param o2 Snip to compare
    */
   public int compare(Object o1, Object o2) {
-    if (!((o1 instanceof Snip) && (o2 instanceof Snip))) {
+    if (!((o1 instanceof snipsnap.api.snip.Snip) && (o2 instanceof snipsnap.api.snip.Snip))) {
       throw new ClassCastException();
     }
-    return compare((Snip) o1, (Snip) o2);
+    return compare((snipsnap.api.snip.Snip) o1, (snipsnap.api.snip.Snip) o2);
 
   }
 
@@ -60,5 +60,5 @@ public abstract class SnipComparator implements Comparator {
    * @param s1 Snip to compare
    * @param s2 Snip to compare
    */
-  public abstract int compare(Snip s1, Snip s2);
+  public abstract int compare(snipsnap.api.snip.Snip s1, snipsnap.api.snip.Snip s2);
 }

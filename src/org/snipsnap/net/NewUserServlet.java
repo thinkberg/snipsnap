@@ -25,14 +25,14 @@
 package org.snipsnap.net;
 
 import org.radeox.util.logging.Logger;
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.container.Components;
 import org.snipsnap.container.SessionService;
 import org.snipsnap.net.filter.MultipartWrapper;
 import org.snipsnap.snip.HomePage;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.user.User;
+import snipsnap.api.snip.SnipLink;
+import snipsnap.api.user.User;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.user.UserManagerFactory;
 
@@ -62,7 +62,7 @@ public class NewUserServlet extends HttpServlet {
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
           throws ServletException, IOException {
-    Configuration config = Application.get().getConfiguration();
+    snipsnap.api.config.Configuration config = snipsnap.api.app.Application.get().getConfiguration();
 
     // If this is not a multipart/form-data request continue
     String type = request.getHeader("Content-Type");
@@ -78,7 +78,7 @@ public class NewUserServlet extends HttpServlet {
     session.removeAttribute("errors");
     Map errors = new HashMap();
 
-    if (!config.deny(Configuration.APP_PERM_REGISTER)) {
+    if (!config.deny(snipsnap.api.config.Configuration.APP_PERM_REGISTER)) {
       String login = request.getParameter("login");
       String email = request.getParameter("email");
       String password = request.getParameter("password");

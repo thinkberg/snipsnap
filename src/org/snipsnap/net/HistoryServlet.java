@@ -24,11 +24,11 @@
  */
 package org.snipsnap.net;
 
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.container.Components;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipSpace;
 import org.snipsnap.versioning.VersionManager;
 
 import javax.servlet.RequestDispatcher;
@@ -58,8 +58,8 @@ public class HistoryServlet extends HttpServlet {
       return;
     }
 
-    SnipSpace space = (SnipSpace)Components.getComponent(SnipSpace.class);
-    Snip snip = space.load(name);
+    snipsnap.api.snip.SnipSpace space = (snipsnap.api.snip.SnipSpace)Components.getComponent(SnipSpace.class);
+    snipsnap.api.snip.Snip snip = space.load(name);
 
     VersionManager versionManager = (VersionManager) Components.getComponent(VersionManager.class);
     List history = versionManager.getHistory(snip);

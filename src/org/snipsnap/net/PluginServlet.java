@@ -27,10 +27,10 @@ package org.snipsnap.net;
 import groovy.text.SimpleTemplateEngine;
 import groovy.text.Template;
 import org.radeox.util.logging.Logger;
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
 import org.snipsnap.container.Components;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipSpace;
 import org.snipsnap.snip.label.TypeLabel;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
@@ -86,7 +86,7 @@ public class PluginServlet extends HttpServlet {
     // check for the plugin in the snip space which overrides other plugins
     SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
     if (space.exists(pluginName)) {
-      Snip snip = space.load(pluginName);
+      snipsnap.api.snip.Snip snip = space.load(pluginName);
       // only execute plugins who are locked by an Admin
       if (Security.existsPermission(Permissions.EDIT_SNIP, snip, EXEC_ROLES)) {
         String mimeType = getMIMEType(snip);
@@ -140,7 +140,7 @@ public class PluginServlet extends HttpServlet {
     return (ServletPlugin) pluginClass.newInstance();
   }
 
-  private String getMIMEType(Snip snip) {
+  private String getMIMEType(snipsnap.api.snip.Snip snip) {
     Collection mimeTypes = snip.getLabels().getLabels("TypeLabel");
     if (!mimeTypes.isEmpty()) {
       Iterator handlerIt = mimeTypes.iterator();
@@ -155,7 +155,7 @@ public class PluginServlet extends HttpServlet {
   private void handleGroovyTemplate(String source, Writer out) throws Exception {
     try {
       Template groovyTemplate = templateEngine.createTemplate(source);
-      groovyTemplate.make(Application.get().getParameters()).writeTo(out);
+      groovyTemplate.make(snipsnap.api.app.Application.get().getParameters()).writeTo(out);
     } catch (Error e) {
       e.printStackTrace();
       throw new ServletException("groovy error", e);

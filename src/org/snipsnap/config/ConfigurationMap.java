@@ -24,7 +24,9 @@
  */
 package org.snipsnap.config;
 
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.*;
+import snipsnap.api.config.Configuration;
 
 import java.io.File;
 import java.io.IOException;
@@ -120,7 +122,7 @@ public class ConfigurationMap {
   }
 
   public String getFileStore() {
-    return getFileStore((String)Application.get().getObject(Application.OID)).getPath();
+    return getFileStore((String)snipsnap.api.app.Application.get().getObject(snipsnap.api.app.Application.OID)).getPath();
   }
 
   public File getFileStore(String applicationOid) {
@@ -139,7 +141,7 @@ public class ConfigurationMap {
    * Initialize new configuration map
    * @param init
    */
-  public ConfigurationMap(Configuration init) {
+  public ConfigurationMap(snipsnap.api.config.Configuration init) {
     initDefaults();
     webInfDir = init.getWebInfDir();
     initialize((Properties) init.getProperties().clone());
@@ -320,7 +322,7 @@ public class ConfigurationMap {
   }
 
   public File getFilePath() {
-    return getFilePath((String) Application.get().getObject(Application.OID));
+    return getFilePath((String) snipsnap.api.app.Application.get().getObject(Application.OID));
   }
 
   public File getIndexPath() {
@@ -355,7 +357,7 @@ public class ConfigurationMap {
    * Return base url to Snipsnap instance
    */
   public String getUrl() {
-    URL url = (URL)Application.get().getObject(Application.URL);
+    URL url = (URL)Application.get().getObject(snipsnap.api.app.Application.URL);
     if(null != url) {
       return url.toExternalForm();
     }

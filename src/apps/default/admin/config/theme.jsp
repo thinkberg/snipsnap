@@ -1,5 +1,5 @@
 <%@ page import="java.util.*,
-                 org.snipsnap.config.Configuration,
+                 snipsnap.api.config.Configuration,
                  java.io.File,
                  org.dom4j.Document,
                  org.dom4j.io.SAXReader,
@@ -8,9 +8,9 @@
                  org.dom4j.Element,
                  org.dom4j.Node,
                  java.io.FilenameFilter,
-                 org.snipsnap.snip.Snip,
+                 snipsnap.api.snip.Snip,
                  org.snipsnap.container.Components,
-                 org.snipsnap.snip.SnipSpace,
+                 snipsnap.api.snip.SnipSpace,
                  org.snipsnap.net.admin.ThemeHelper"%>
  <%--
   ** Theme selection.
@@ -24,14 +24,14 @@
 <fmt:setBundle basename="i18n.setup" scope="page" />
 
 <%
-  Configuration conf = (Configuration) session.getAttribute("newconfig");
+  snipsnap.api.config.Configuration conf = (Configuration) session.getAttribute("newconfig");
   Map themes = new HashMap();
   if (conf.isConfigured()) {
     Map installedThemes = ThemeHelper.getInstalledThemes();
     Iterator themeIt = installedThemes.keySet().iterator();
     while (themeIt.hasNext()) {
       String themeName = (String) themeIt.next();
-      themes.put(themeName, ((Snip)installedThemes.get(themeName)).getContent());
+      themes.put(themeName, ((snipsnap.api.snip.Snip)installedThemes.get(themeName)).getContent());
     }
   }
   request.setAttribute("themes", themes);

@@ -24,10 +24,10 @@
  */
 package org.snipsnap.net;
 
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.user.User;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
+import snipsnap.api.snip.SnipLink;
+import snipsnap.api.user.User;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.user.PasswordService;
 import org.snipsnap.user.UserManagerFactory;
@@ -58,7 +58,7 @@ public class MailPasswordKeyServlet extends HttpServlet {
 
     if (request.getParameter("cancel") == null) {
       UserManager um = UserManagerFactory.getInstance();
-      User user = um.load(login);
+      snipsnap.api.user.User user = um.load(login);
 
       if (user == null) {
         request.setAttribute("error", "User name '" + login + "' does not exist!");
@@ -85,7 +85,7 @@ public class MailPasswordKeyServlet extends HttpServlet {
         return;
       }
     } else {
-      Configuration config = Application.get().getConfiguration();
+      snipsnap.api.config.Configuration config = snipsnap.api.app.Application.get().getConfiguration();
       response.sendRedirect(config.getUrl("/space/"+config.getStartSnip()));
       return;
     }

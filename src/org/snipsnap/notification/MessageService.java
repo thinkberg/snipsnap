@@ -25,11 +25,11 @@
 
 package org.snipsnap.notification;
 
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.notification.jabber.JabberNotifier;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.user.User;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.user.User;
 
 import java.util.ArrayList;
 import java.util.Iterator;

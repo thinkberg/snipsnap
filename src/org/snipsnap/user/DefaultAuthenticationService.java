@@ -1,6 +1,8 @@
 package org.snipsnap.user;
 
 import org.snipsnap.snip.storage.UserStorage;
+import snipsnap.api.user.*;
+import snipsnap.api.user.User;
 
 /*
  * This file is part of "SnipSnap Wiki/Weblog".
@@ -34,7 +36,7 @@ public class DefaultAuthenticationService implements AuthenticationService {
     this.storage = storage;
   }
 
-  public User authenticate(String login, String passwd) {
+  public snipsnap.api.user.User authenticate(String login, String passwd) {
     return authenticate(login, passwd, !ENCRYPTED);
   }
 

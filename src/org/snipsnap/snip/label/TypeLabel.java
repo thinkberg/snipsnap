@@ -26,7 +26,7 @@ package org.snipsnap.snip.label;
 
 import org.radeox.util.Service;
 import org.radeox.util.i18n.ResourceManager;
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
 import org.snipsnap.net.ServletPluginLoader;
 
 import java.util.HashMap;
@@ -158,7 +158,7 @@ public class TypeLabel extends BaseLabel {
 
   public String getInputProxy() {
     StringBuffer buffer = new StringBuffer();
-    if (Application.get().getUser().isAdmin()) {
+    if (snipsnap.api.app.Application.get().getUser().isAdmin()) {
       buffer.append("<input type=\"hidden\" name=\"label.name\" value=\"");
       buffer.append(name);
       buffer.append("\"/>");
@@ -254,7 +254,7 @@ public class TypeLabel extends BaseLabel {
 
   public void handleInput(Map input) {
     // ADMIN ONLY!
-    if (Application.get().getUser().isAdmin()) {
+    if (snipsnap.api.app.Application.get().getUser().isAdmin()) {
       super.handleInput(input);
       if (input.containsKey("label.type")) {
         type = (String) input.get("label.type");

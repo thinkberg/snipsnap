@@ -28,10 +28,10 @@ package org.snipsnap.xmlrpc.ping;
 import org.apache.xmlrpc.XmlRpcClient;
 import org.apache.xmlrpc.XmlRpc;
 import org.radeox.util.logging.Logger;
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipLink;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipLink;
 
 import java.util.Vector;
 
@@ -52,8 +52,8 @@ public class SnipSnapPingHandler implements PingHandler {
     this.url = pingUrl;
   }
 
-  public void ping(Snip weblog) {
-    Configuration config = Application.get().getConfiguration();
+  public void ping(snipsnap.api.snip.Snip weblog) {
+    Configuration config = snipsnap.api.app.Application.get().getConfiguration();
     Vector params = new Vector();
     try {
       // Ping blog.gs

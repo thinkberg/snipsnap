@@ -27,7 +27,7 @@ package org.snipsnap.jsp;
 import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.render.filter.links.BackLinks;
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.Snip;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
@@ -35,7 +35,7 @@ import javax.servlet.jsp.tagext.BodyTag;
 import javax.servlet.jsp.tagext.TagSupport;
 
 public class BackLinkTag extends TagSupport {
-  Snip snip = null;
+  snipsnap.api.snip.Snip snip = null;
   int count = 15;
 
   public int doStartTag() throws JspException {

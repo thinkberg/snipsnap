@@ -25,7 +25,7 @@
  */
 package org.snipsnap.net.admin;
 
-import org.snipsnap.config.Configuration;
+import snipsnap.api.config.Configuration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,8 +39,8 @@ public class SetupPermissions implements SetupHandler {
   public Map setup(HttpServletRequest request, HttpServletResponse response, Configuration config, Map errors) {
     config.setPermRegister(allowDeny(request.getParameter(Configuration.APP_PERM_REGISTER)));
     config.setPermWeblogsPing(allowDeny(request.getParameter(Configuration.APP_PERM_WEBLOGSPING)));
-    config.setPermNotification(allowDeny(request.getParameter(Configuration.APP_PERM_NOTIFICATION)));
-    config.setPermExternalImages(allowDeny(request.getParameter(Configuration.APP_PERM_EXTERNALIMAGES)));
+    config.setPermNotification(allowDeny(request.getParameter(snipsnap.api.config.Configuration.APP_PERM_NOTIFICATION)));
+    config.setPermExternalImages(allowDeny(request.getParameter(snipsnap.api.config.Configuration.APP_PERM_EXTERNALIMAGES)));
     config.setPermMultiplePosts(allowDeny(request.getParameter(Configuration.APP_PERM_MULTIPLEPOSTS)));
     return errors;
   }

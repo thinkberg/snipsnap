@@ -26,13 +26,13 @@
 package org.snipsnap.snip.storage;
 
 import org.radeox.util.logging.Logger;
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
 import org.snipsnap.interceptor.Aspects;
 import org.snipsnap.snip.Links;
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.Snip;
 import org.snipsnap.snip.SnipFactory;
 import org.snipsnap.snip.attachment.Attachments;
-import org.snipsnap.snip.label.Labels;
+import snipsnap.api.label.Labels;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.util.ApplicationAwareMap;
 import org.snipsnap.versioning.VersionInfo;
@@ -254,7 +254,7 @@ public abstract class FileSnipStorage implements CacheableStorage, VersionStorag
    * @param snip Snip to store
    * @param snipDir Directory to store the snip in
    */
-  protected abstract void storeSnip(Snip snip, File snipDir);
+  protected abstract void storeSnip(snipsnap.api.snip.Snip snip, File snipDir);
 
   public void storageStore(List snips) {
     Iterator iterator = snips.iterator();
@@ -271,13 +271,13 @@ public abstract class FileSnipStorage implements CacheableStorage, VersionStorag
    *
    * @param snip Snip to store
    */
-  public void storageStore(Snip snip) {
+  public void storageStore(snipsnap.api.snip.Snip snip) {
     File snipDir = new File(getWorkingDir(), snip.getName());
     storeSnip(snip, snipDir);
   }
 
   public Snip storageCreate(String name, String content) {
-    Application app = Application.get();
+    snipsnap.api.app.Application app = Application.get();
     String applicationOid = (String) app.getObject(Application.OID);
     String login = app.getUser().getLogin();
 
@@ -292,14 +292,14 @@ public abstract class FileSnipStorage implements CacheableStorage, VersionStorag
     snip.setPermissions(new Permissions());
     snip.setBackLinks(new Links());
     snip.setSnipLinks(new Links());
-    snip.setLabels(new Labels());
+    snip.setLabels(new snipsnap.api.label.Labels());
     snip.setAttachments(new Attachments());
     snip.setApplication(applicationOid);
     storageStore(snip);
     return SnipFactory.wrap(snip);
   }
 
-  private Snip parseSnip(Map snipMap) {
+  private snipsnap.api.snip.Snip parseSnip(Map snipMap) {
     // the application oid is a special for file snip storage
     String applicationOid = (String) snipMap.get(SnipSerializer.SNIP_APPLICATION);
     String name = (String) snipMap.get(SnipSerializer.SNIP_NAME);
@@ -307,19 +307,19 @@ public abstract class FileSnipStorage implements CacheableStorage, VersionStorag
       return (Snip) cache.getMap(applicationOid).get(name.toUpperCase());
     }
 
-    Snip newSnip = SnipFactory.createSnip(name, (String) snipMap.get(SnipSerializer.SNIP_CONTENT));
+    snipsnap.api.snip.Snip newSnip = SnipFactory.createSnip(name, (String) snipMap.get(SnipSerializer.SNIP_CONTENT));
     Snip snip = serializer.deserialize(snipMap, newSnip);
 
     // Aspects.setTarget(proxy, snip);
     // return proxy;
-    snip = (Snip) Aspects.wrap(snip);
+    snip = (snipsnap.api.snip.Snip) Aspects.wrap(snip);
     cache.getMap(applicationOid).put(name.toUpperCase(), snip);
     return snip;
   }
 
   // SnipStorage
   public List storageAll() {
-    String applicationOid = (String) Application.get().getObject(Application.OID);
+    String applicationOid = (String) Application.get().getObject(snipsnap.api.app.Application.OID);
     return storageAll(applicationOid);
   }
 
@@ -403,7 +403,7 @@ public abstract class FileSnipStorage implements CacheableStorage, VersionStorag
     throw new MethodNotSupportedException(NOT_SUPPORTED_EXCEPTION_MSG);
   }
 
-  public List storageByParentNameOrder(Snip parent, int count) {
+  public List storageByParentNameOrder(snipsnap.api.snip.Snip parent, int count) {
     throw new MethodNotSupportedException(NOT_SUPPORTED_EXCEPTION_MSG);
   }
 
@@ -419,7 +419,7 @@ public abstract class FileSnipStorage implements CacheableStorage, VersionStorag
     throw new MethodNotSupportedException(NOT_SUPPORTED_EXCEPTION_MSG);
   }
 
-  public Snip[] match(String start, String end) {
+  public snipsnap.api.snip.Snip[] match(String start, String end) {
     throw new MethodNotSupportedException(NOT_SUPPORTED_EXCEPTION_MSG);
   }
 

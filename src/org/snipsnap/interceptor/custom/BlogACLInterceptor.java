@@ -25,9 +25,9 @@
 
 package org.snipsnap.interceptor.custom;
 
-import org.snipsnap.app.Application;
+import snipsnap.api.app.Application;
 
-import org.snipsnap.user.User;
+import snipsnap.api.user.User;
 import org.snipsnap.container.Components;
 import org.snipsnap.security.AccessController;
 
@@ -47,7 +47,7 @@ public class BlogACLInterceptor implements Interceptor {
 
   public Object intercept(Invocation invocation) throws Throwable {
     if (invocation.getMethod().getName().startsWith("post")) {
-      User user = Application.get().getUser();
+      snipsnap.api.user.User user = Application.get().getUser();
       if (! access.checkPermission(user, new Permission("POST_BLOG"), new OwnerAccessContext(null))) {
         throw new GeneralSecurityException("Not allowed to post.");
       }

@@ -24,15 +24,15 @@
  */
 package org.snipsnap.net;
 
-import org.snipsnap.app.Application;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.user.User;
+import snipsnap.api.app.Application;
+import snipsnap.api.snip.SnipLink;
+import snipsnap.api.user.User;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.user.PasswordService;
 import org.snipsnap.user.UserManagerFactory;
 import org.snipsnap.container.Components;
 import org.snipsnap.container.SessionService;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.config.Configuration;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -61,7 +61,7 @@ public class ChangePasswordServlet extends HttpServlet {
     String key = request.getParameter("key");
 
     if (request.getParameter("cancel") == null) {
-      User user;
+      snipsnap.api.user.User user;
       if (null != password1 && password1.equals(password2)) {
         PasswordService passwordService = (PasswordService) Components.getComponent(PasswordService.class);
         user = passwordService.changePassWord(key, password1);
@@ -73,15 +73,15 @@ public class ChangePasswordServlet extends HttpServlet {
       }
 
       if (null != user) {
-        if (Application.getCurrentUsers().contains(user)) {
-          Application.getCurrentUsers().remove(user);
+        if (snipsnap.api.app.Application.getCurrentUsers().contains(user)) {
+          snipsnap.api.app.Application.getCurrentUsers().remove(user);
         }
         HttpSession session = request.getSession();
-        Application.get().setUser(user, session);
+        snipsnap.api.app.Application.get().setUser(user, session);
 
         SessionService service = (SessionService) Components.getComponent(SessionService.class);
         service.setUser(request, response, user);
-        response.sendRedirect(config.getUrl("/space/"+SnipLink.encode(user.getLogin())));
+        response.sendRedirect(config.getUrl("/space/"+snipsnap.api.snip.SnipLink.encode(user.getLogin())));
       } else {
         request.setAttribute("error", "user.password.error.keymismatch");
         RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/forgot.jsp");

@@ -1,5 +1,5 @@
 <%@ page import="java.util.*,
-                 org.snipsnap.config.Configuration"%>
+                 snipsnap.api.config.Configuration"%>
  <%--
   ** Proxy Settings
   ** @author Matthias L. Jugel

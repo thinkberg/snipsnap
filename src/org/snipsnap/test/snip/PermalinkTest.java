@@ -27,9 +27,9 @@ package org.snipsnap.test.snip;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import org.snipsnap.snip.Snip;
+import snipsnap.api.snip.Snip;
 import org.snipsnap.snip.SnipImpl;
-import org.snipsnap.snip.SnipLink;
+import snipsnap.api.snip.SnipLink;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -51,10 +51,10 @@ public class PermalinkTest extends SnipTestSupport {
   }
 
   public void testUrl() {
-    Snip snip = new SnipImpl("test", "test");
+    snipsnap.api.snip.Snip snip = new SnipImpl("test", "test");
     String anchor = "anchor";
     try {
-      SnipLink.appendUrl(writer, snip.getName(), anchor);
+      snipsnap.api.snip.SnipLink.appendUrl(writer, snip.getName(), anchor);
     } catch (IOException e) {
       // Ignore
     }

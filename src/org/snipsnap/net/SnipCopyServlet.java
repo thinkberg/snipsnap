@@ -25,13 +25,13 @@
 package org.snipsnap.net;
 
 import org.radeox.util.logging.Logger;
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
 import org.snipsnap.container.Components;
 import org.snipsnap.net.filter.MultipartWrapper;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpace;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipLink;
+import snipsnap.api.snip.SnipSpace;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -74,10 +74,10 @@ public class SnipCopyServlet extends HttpServlet {
       return;
     }
 
-    SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
+    snipsnap.api.snip.SnipSpace space = (SnipSpace) Components.getComponent(snipsnap.api.snip.SnipSpace.class);
 
     if (null != name && space.exists(name)) {
-      Snip snip = space.load(name);
+      snipsnap.api.snip.Snip snip = space.load(name);
       if (request.getParameter("copy") != null) {
         String newName = request.getParameter("name");
         if (newName != null && newName.endsWith("/")) {
@@ -92,13 +92,13 @@ public class SnipCopyServlet extends HttpServlet {
           Snip subSnip = space.load(subSnipName);
           if (subSnip != null && subSnipName.startsWith(name)) {
             String newSubSnipName = newName + "/" + subsnips[s].substring(name.length() + 1);
-            Snip newSubSnip = subSnip.copy(newSubSnipName);
+            snipsnap.api.snip.Snip newSubSnip = subSnip.copy(newSubSnipName);
             Logger.log("SnipCopyServlet: copied " + subSnip.getName() + " to " + newSubSnip.getName());
           } else {
             Logger.warn("SnipCopyServlet: snip does not exist: " + subsnips[s]);
           }
         }
-        response.sendRedirect(config.getUrl("/space/" + SnipLink.encode(newName)));
+        response.sendRedirect(config.getUrl("/space/" + snipsnap.api.snip.SnipLink.encode(newName)));
         return;
       }
       request.setAttribute("name", name);

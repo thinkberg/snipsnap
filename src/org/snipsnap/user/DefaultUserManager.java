@@ -33,6 +33,9 @@ import org.snipsnap.jdbc.IntHolder;
 import java.sql.Timestamp;
 import java.util.*;
 
+import snipsnap.api.user.*;
+import snipsnap.api.user.User;
+
 /**
  * User manager handles all register, creation and authentication of users.
  * Default user manager uses a UserStorage component for storage
@@ -138,7 +141,7 @@ public class DefaultUserManager implements UserManager {
    *
    * @param user User to store
    */
-  public void delayedStore(User user) {
+  public void delayedStore(snipsnap.api.user.User user) {
     synchronized (delayed) {
       if (!delayed.contains(user)) {
         delayed.add(user);

@@ -1,5 +1,5 @@
-<%@ page import="org.snipsnap.app.Application,
-                 org.snipsnap.config.Configuration"%>
+<%@ page import="snipsnap.api.app.Application,
+                 snipsnap.api.config.Configuration"%>
  <%--
   ** Template for redirection the root page to the start page
   ** @author Matthias L. Jugel
@@ -7,7 +7,7 @@
   --%>
 
 <%
-  Configuration snipConfig = Application.get().getConfiguration();
+  snipsnap.api.config.Configuration snipConfig = snipsnap.api.app.Application.get().getConfiguration();
   response.sendRedirect(snipConfig.getSnipUrl(snipConfig.getStartSnip()));
   return;
 %>

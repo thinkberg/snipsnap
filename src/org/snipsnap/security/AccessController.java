@@ -32,8 +32,8 @@ import gabriel.components.AccessManagerImpl;
 import gabriel.components.context.AccessContext;
 import gabriel.components.io.FileAclStore;
 import gabriel.components.parser.AclParser;
-import org.snipsnap.user.User;
-import org.snipsnap.snip.Snip;
+import snipsnap.api.user.User;
+import snipsnap.api.snip.Snip;
 
 /**
  * Check for access to resources and operations
@@ -46,6 +46,6 @@ public interface AccessController {
   public static Permission EDIT_SNIP = new Permission("EDIT_SNIP");
   public static Permission ADD_ATTACHMENT = new Permission("ADD_ATTACHMENT");
 
-  boolean checkPermission(User user, Permission permission, AccessContext context);
-  boolean checkPermission(User user, Permission permission, Snip snip);
+  boolean checkPermission(snipsnap.api.user.User user, Permission permission, AccessContext context);
+  boolean checkPermission(snipsnap.api.user.User user, Permission permission, snipsnap.api.snip.Snip snip);
 }
