@@ -1,5 +1,7 @@
 0.2.8
 
+- Introduced: {logins}, {calendar}
+- Replaced {snips-by-recent} by {recent-changes} macro
 - Defaults snips are now loaded from conf/snipsnap.snip
 - Added Feature: bullet, square, numerated (numbers, alpha, greek, japanese)
 - Changed feature: Post blog prepends to the post
