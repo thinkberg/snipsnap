@@ -8,7 +8,7 @@
 
 .error { color: #ff0000; font-weight: bold; }
 .menu {
-
+  border-bottom: 2px solid #cccccc;
 }
 
 .menuitem-active {

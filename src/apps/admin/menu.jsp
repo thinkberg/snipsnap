@@ -12,13 +12,13 @@
     <tr>
       <!-- overview -->
       <c:choose>
-        <c:when test="${admin != null && page == '/welcome.jsp'}">
-          <td align="center" width="32%" class="menuitem-active">
+        <c:when test="${admin != null && page != '/welcome.jsp'}">
+          <td align="center" width="32%" class="menuitem-inactive">
             <a href="../">Overview</a>
           </td>
         </c:when>
         <c:otherwise>
-          <td align="center" width="32%" class="menuitem-inactive">
+          <td align="center" width="32%" class="menuitem-active">
             Overview
           </td>
         </c:otherwise>
@@ -26,13 +26,13 @@
 
       <!-- user management -->
       <c:choose>
-        <c:when test="${admin != null && page == '/user.jsp' && usermanager != null}">
-          <td align="center" width="32%" class="menuitem-active">
+        <c:when test="${admin != null && page != '/user.jsp' && usermanager != null}">
+          <td align="center" width="32%" class="menuitem-inactive">
             <a href="../exec/user">User Management</a>
           </td>
         </c:when>
         <c:otherwise>
-          <td align="center" width="32%" class="menuitem-inactive">
+          <td align="center" width="32%" class="menuitem-active">
             User Management
           </td>
         </c:otherwise>
@@ -42,7 +42,7 @@
       <c:choose>
         <c:when test="${admin != null && config.configured}">
           <td align="center" width="32%" class="menuitem-inactive">
-            <a href="../">Logoff</a>
+            <a href="../exec/authenticate?logoff=true">Logoff</a>
           </td>
         </c:when>
         <c:otherwise>

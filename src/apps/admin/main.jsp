@@ -20,10 +20,10 @@
           <img src="images/snip.png"/>
         </td>
       </tr>
-      <tr><td><c:import url="/menu.jsp"/></td></tr>
+      <tr><td width="100%" class="menu"><c:import url="/menu.jsp"/></td></tr>
       <tr><td valign="top">
         <table width="100%"border="0" cellpadding="8" cellspacing="0">
-          <tr bgcolor="#cccccc">
+          <tr>
             <td valign="top" width="100%">
               <c:import url="${page}"/>
             </td>
