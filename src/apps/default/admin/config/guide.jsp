@@ -11,14 +11,14 @@
 
 <div class="guide-menu">
   <div class="guide-title">
-    <fmt:message key="admin.config.guide.title">
+    <fmt:message key="config.guide.title">
       <fmt:param><%= ((List)pageContext.findAttribute("steps")).size() %></fmt:param>
     </fmt:message>
   </div>
   <ul>
     <c:forEach items="${steps}" var="current" varStatus="status" >
     <li <c:if test="${step == current}">class="current-step"</c:if>>
-      <fmt:message key="admin.config.step.${current}"/>
+      <fmt:message key="config.step.${current}"/>
     </li>
     </c:forEach>
   </ul>

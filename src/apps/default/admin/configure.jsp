@@ -5,7 +5,7 @@
   ** @version $Id$
   -->
 
-<%@ page pageEncoding="iso-8859-1"  %>
+<%@ page pageEncoding="iso-8859-1" %>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
 
@@ -13,22 +13,31 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-    <title><fmt:message key="admin.config.title"/> :: <fmt:message key="admin.config.step.${step}"/></title>
+    <title><fmt:message key="config.title"/> :: <fmt:message key="config.step.${step}"/></title>
     <link type="text/css" href="css/config.css" rel="STYLESHEET"/>
   </head>
   <body>
     <div class="header">
-      <img src="../images/snipsnap-logo.png"/>
       <c:import url="config/info.jsp"/>
+      <img src="../images/snipsnap-logo.png"/>
     </div>
-    <form action="configure" method="POST">
+    <form action="configure" method="POST" enctype="multipart/form-data">
       <table class="configuration">
         <tr>
           <td rowspan="2" class="guide">
            <c:import url="config/guide.jsp"/>
-           <div class="step-info"><fmt:message key="admin.config.guide.${step}" /></div>
+           <div class="step-info"><fmt:message key="config.guide.${step}" /></div>
           </td>
           <td class="edit">
+            <c:if test="${not empty errors}">
+              <div class="errors">
+                <ul>
+                <c:forEach items="${errors}" var="error">
+                  <li><fmt:message key="error.${error}"/></li>
+                </c:forEach>
+                </ul>
+              </div>
+            </c:if>
             <c:import url="config/${step}.jsp"/>
           </td>
         </tr>

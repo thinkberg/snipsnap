@@ -91,7 +91,6 @@ public class URLEncoderDecoder {
    */
   public static String decode(String s, String enc) throws UnsupportedEncodingException {
     byte[] buf = new byte[s.length()];
-    StringBuffer result = new StringBuffer();
     int length = 0;
     for (int i = 0; i < s.length(); i++) {
       char c = s.charAt(i);

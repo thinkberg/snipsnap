@@ -10,35 +10,35 @@
 <%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
 
 <table>
-  <tr><th colspan="2"><fmt:message key="admin.config.step.permissions"/></th></tr>
+  <tr><th colspan="2"><fmt:message key="config.step.permissions"/></th></tr>
   <tr>
-    <td><fmt:message key="admin.config.app.perm.register.text"/></td>
+    <td><fmt:message key="config.app.perm.register.text"/></td>
     <td>
-      <fmt:message key="admin.config.app.perm.register"/><br/>
+      <fmt:message key="config.app.perm.register"/><br/>
       <input type="checkbox" name="app.perm.register"
         <c:if test="${config.permRegister == 'allow'}">checked="checked"</c:if>>
     </td>
   </tr>
   <tr>
-    <td><fmt:message key="admin.config.app.perm.weblogsPing.text"/></td>
+    <td><fmt:message key="config.app.perm.weblogsPing.text"/></td>
     <td>
-      <fmt:message key="admin.config.app.perm.weblogsPing"/><br/>
+      <fmt:message key="config.app.perm.weblogsPing"/><br/>
       <input type="checkbox" name="app.perm.weblogsPing"
         <c:if test="${config.permWeblogsPing == 'allow'}">checked="checked"</c:if>>
     </td>
   </tr>
     <tr>
-    <td><fmt:message key="admin.config.app.perm.notification.text"/></td>
+    <td><fmt:message key="config.app.perm.notification.text"/></td>
     <td>
-      <fmt:message key="admin.config.app.perm.notification"/><br/>
+      <fmt:message key="config.app.perm.notification"/><br/>
       <input type="checkbox" name="app.perm.notification"
         <c:if test="${config.permNotification == 'allow'}">checked="checked"</c:if>>
     </td>
   </tr>
   <tr>
-    <td><fmt:message key="admin.config.app.perm.externalImages.text"/></td>
+    <td><fmt:message key="config.app.perm.externalImages.text"/></td>
     <td>
-      <fmt:message key="admin.config.app.perm.externalImages"/><br/>
+      <fmt:message key="config.app.perm.externalImages"/><br/>
       <input type="checkbox" name="app.perm.externalImages"
         <c:if test="${config.permExternalImages == 'allow'}">checked="checked"</c:if>>
     </td>

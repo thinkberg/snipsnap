@@ -20,6 +20,7 @@ body {
 }
 
 .info {
+  vertical-align: top;
   float: right;
   color: #999999;
   font-size: x-small;
@@ -30,9 +31,11 @@ body {
 }
 
 .configuration {
+  clear: both;
   padding: 0px;
   border-bottom: 1px solid #999999;
   border-top: 1px solid #999999;
+
 }
 
 .guide {

@@ -105,7 +105,7 @@ public class PropertyConstantBuilder extends Task {
       stubWriter.print("  public final static String " + property.toUpperCase().replace('.', '_'));
       stubWriter.println(" = \"" + property + "\";");
       stubWriter.println("  public String get" + getCamlCase(property, prefix) + "();");
-      //stubWriter.println("  public String set" + getCamlCase(property, prefix) + "(String value);");
+      stubWriter.println("  public String set" + getCamlCase(property, prefix) + "(String value);");
     }
   }
 

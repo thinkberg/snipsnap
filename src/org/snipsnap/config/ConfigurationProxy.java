@@ -33,6 +33,7 @@ import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.Arrays;
 
 public class ConfigurationProxy implements InvocationHandler {
 
@@ -55,12 +56,13 @@ public class ConfigurationProxy implements InvocationHandler {
 
     Field fields[] = Configuration.class.getFields();
     propertyMethodMap = new HashMap();
-    for(int fieldCount = 0; fieldCount < fields.length; fieldCount++) {
+    for (int fieldCount = 0; fieldCount < fields.length; fieldCount++) {
       try {
-        String value = (String)fields[fieldCount].get(Configuration.class);
-        propertyMethodMap.put("get"+getCamlCase(value, "app."), value);
+        String value = (String) fields[fieldCount].get(Configuration.class);
+        propertyMethodMap.put("get" + getCamlCase(value, "app."), value);
+        propertyMethodMap.put("set" + getCamlCase(value, "app."), value);
       } catch (Exception e) {
-        System.err.println("ERROR unable to load property names: "+e);
+        System.err.println("ERROR unable to load property names: " + e);
         e.printStackTrace();
       }
     }
@@ -86,19 +88,20 @@ public class ConfigurationProxy implements InvocationHandler {
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
     Object result = null;
     Method targetMethod = getTargetMethod(method);
-    if(targetMethod == null) {
+    if (targetMethod == null) {
       String methodName = method.getName();
-      //System.out.print(methodName+ "(" + (args != null ? "" + Arrays.asList(args) : "") + ") => ");
-      String property = (String)propertyMethodMap.get(methodName);
-      if(methodName.startsWith("get")) {
+      //System.out.println(methodName + "(" + (args != null ? "" + Arrays.asList(args) : "") + ") ");
+      String property = (String) propertyMethodMap.get(methodName);
+      if (methodName.startsWith("get")) {
         result = config.get(property);
-      } else if(methodName.startsWith("set")) {
+      } else if (methodName.startsWith("set")) {
         Object setArgs[] = new Object[args.length + 1];
         setArgs[0] = property;
-        System.arraycopy(args, 1, setArgs, 0, args.length);
+        System.arraycopy(args, 0, setArgs, 1, args.length);
+        //System.out.println(setMethod.getName() + "(" + Arrays.asList(setArgs) + ")");
         result = setMethod.invoke(config, setArgs);
       } else {
-        System.err.println("FATAL: unknown method "+methodName+" called.");
+        System.err.println("FATAL: unknown method " + methodName + " called.");
       }
     } else {
       //System.out.print(targetMethod.getName() + "(" + (args != null ? "" + Arrays.asList(args) : "") + ") => ");
@@ -112,8 +115,8 @@ public class ConfigurationProxy implements InvocationHandler {
 
   private Method getTargetMethod(Method method) {
     String methodKey = method.toString();
-    if(methodCache.containsKey(methodKey)) {
-      return (Method)methodCache.get(methodKey);
+    if (methodCache.containsKey(methodKey)) {
+      return (Method) methodCache.get(methodKey);
     } else {
       try {
         Method targetMethod = config.getClass().getMethod(method.getName(), method.getParameterTypes());
@@ -132,7 +135,9 @@ public class ConfigurationProxy implements InvocationHandler {
   public static Configuration proxy = null;
 
   public static Configuration getInstance() {
-    if (proxy == null) { newInstance(); }
+    if (proxy == null) {
+      newInstance();
+    }
     return proxy;
   }
 
@@ -150,8 +155,8 @@ public class ConfigurationProxy implements InvocationHandler {
 
   private static Configuration newProxyInstance(ConfigurationMap config) {
     proxy = (Configuration) Proxy.newProxyInstance(config.getClass().getClassLoader(),
-                                                     new Class[]{ Configuration.class },
-                                                     new ConfigurationProxy(config));
+                                                   new Class[]{Configuration.class},
+                                                   new ConfigurationProxy(config));
     return proxy;
   }
 

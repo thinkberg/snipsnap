@@ -11,11 +11,11 @@
 <% pageContext.setAttribute("locales", Locale.getAvailableLocales()); %>
 
 <table>
-  <tr><th colspan="2"><fmt:message key="admin.config.step.localization"/></th></tr>
+  <tr><th colspan="2"><fmt:message key="config.step.localization"/></th></tr>
   <tr>
-    <td><fmt:message key="admin.config.app.country.text"/></td>
+    <td><fmt:message key="config.app.country.text"/></td>
     <td>
-      <fmt:message key="admin.config.app.country"/><br/>
+      <fmt:message key="config.app.country"/><br/>
       <select size="1" name="app.country">
         <c:forEach items="${locales}" var="locale">
           <c:choose>
@@ -31,9 +31,9 @@
     </td>
   </tr>
   <tr>
-    <td><fmt:message key="admin.config.app.language.text"/></td>
+    <td><fmt:message key="config.app.language.text"/></td>
     <td>
-      <fmt:message key="admin.config.app.language"/><br/>
+      <fmt:message key="config.app.language"/><br/>
       <select size="1" name="app.language">
         <%
           Map languages = new TreeMap();
@@ -50,9 +50,9 @@
     </td>
   </tr>
   <tr>
-    <td><fmt:message key="admin.config.app.timezone.text"/></td>
+    <td><fmt:message key="config.app.timezone.text"/></td>
     <td>
-      <fmt:message key="admin.config.app.timezone"/><br/>
+      <fmt:message key="config.app.timezone"/><br/>
       <select size="1" name="app.timezone">
         <%
           Map timezones = new TreeMap();
@@ -75,10 +75,22 @@
     </td>
   </tr>
   <tr>
-    <td><fmt:message key="admin.config.app.geoCoordinates.text"/></td>
+    <td><fmt:message key="config.app.weblogDateFormat.text"/></td>
     <td>
-      <fmt:message key="admin.config.app.geoCoordinates"/><br/>
-      <input type="text" value="<c:out value='${config.geoCoordinates}'/>">
+      <fmt:message key="config.app.weblogDateFormat"/><br/>
+      <input type="text" name="app.weblogDateFormat" value="<c:out value='${config.weblogDateFormat}'/>">
+      <% pageContext.setAttribute("date", new Date());%>
+      <div class="hint">
+        (<c:catch var="error"><fmt:formatDate value="${date}" timeZone="${config.timezone}" pattern="${config.weblogDateFormat}"/></c:catch>
+        <c:if test="${not empty error}">???</c:if>)
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td><fmt:message key="config.app.geoCoordinates.text"/></td>
+    <td>
+      <fmt:message key="config.app.geoCoordinates"/><br/>
+      <input type="text" name="app.geoCoordinates" value="<c:out value='${config.geoCoordinates}'/>">
     </td>
   </tr>
 </table>
