@@ -22,13 +22,13 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-package com.neotis.admin;
+package org.snipsnap.admin;
 
-import com.neotis.config.Configuration;
-import com.neotis.config.CreateDB;
-import com.neotis.snip.SnipLink;
-import com.neotis.util.Checksum;
-import com.neotis.util.JarUtil;
+import org.snipsnap.config.Configuration;
+import org.snipsnap.config.CreateDB;
+import org.snipsnap.snip.SnipLink;
+import org.snipsnap.util.Checksum;
+import org.snipsnap.util.JarUtil;
 import org.mortbay.http.SocketListener;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.WebApplicationContext;

@@ -22,9 +22,9 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-package com.neotis.app;
+package org.snipsnap.app;
 
-import com.neotis.user.User;
+import org.snipsnap.user.User;
 
 import javax.servlet.http.HttpSession;
 

@@ -22,15 +22,15 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-package com.neotis.test.filter;
+package org.snipsnap.test.filter;
 
 import junit.framework.TestCase;
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import com.neotis.snip.Snip;
-import com.neotis.snip.filter.BoldFilter;
-import com.neotis.snip.filter.Filter;
-import com.neotis.snip.filter.ItalicFilter;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.filter.BoldFilter;
+import org.snipsnap.snip.filter.Filter;
+import org.snipsnap.snip.filter.ItalicFilter;
 
 public class FilterTest extends TestCase {
   public FilterTest(String name) {

@@ -22,17 +22,17 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-package com.neotis.snip;
+package org.snipsnap.snip;
 
-import com.neotis.app.Application;
-import com.neotis.cache.Cache;
-import com.neotis.jdbc.Finder;
-import com.neotis.jdbc.Loader;
-import com.neotis.snip.filter.LinkTester;
-import com.neotis.user.Permissions;
-import com.neotis.user.Roles;
-import com.neotis.util.ConnectionManager;
-import com.neotis.util.Queue;
+import org.snipsnap.app.Application;
+import org.snipsnap.cache.Cache;
+import org.snipsnap.jdbc.Finder;
+import org.snipsnap.jdbc.Loader;
+import org.snipsnap.snip.filter.LinkTester;
+import org.snipsnap.user.Permissions;
+import org.snipsnap.user.Roles;
+import org.snipsnap.util.ConnectionManager;
+import org.snipsnap.util.Queue;
 import org.apache.lucene.search.Hits;
 
 import java.sql.*;

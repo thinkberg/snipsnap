@@ -29,13 +29,13 @@
  * @version $Id$
  */
 
-package com.neotis.snip.filter.macro;
+package org.snipsnap.snip.filter.macro;
 
-import com.neotis.snip.Snip;
-import com.neotis.snip.SnipSpace;
-import com.neotis.snip.SnipLink;
-import com.neotis.user.UserManager;
-import com.neotis.user.User;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipLink;
+import org.snipsnap.user.UserManager;
+import org.snipsnap.user.User;
 
 import java.util.Iterator;
 import java.util.List;

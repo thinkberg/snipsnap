@@ -22,9 +22,9 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-package com.neotis.server;
+package org.snipsnap.server;
 
-import com.neotis.config.Configuration;
+import org.snipsnap.config.Configuration;
 import org.mortbay.http.HttpListener;
 import org.mortbay.http.SocketListener;
 import org.mortbay.jetty.Server;

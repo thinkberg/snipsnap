@@ -22,9 +22,9 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-package com.neotis.date;
+package org.snipsnap.date;
 
-import com.neotis.snip.*;
+import org.snipsnap.snip.*;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;

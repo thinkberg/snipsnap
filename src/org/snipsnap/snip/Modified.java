@@ -23,9 +23,9 @@
  * --LICENSE NOTICE--
  */
 
-package com.neotis.snip;
+package org.snipsnap.snip;
 
-import com.neotis.util.StringUtil;
+import org.snipsnap.util.StringUtil;
 
 import java.sql.Timestamp;
 

@@ -32,11 +32,11 @@
  * @version $Id$
  */
 
-package com.neotis.snip.filter;
+package org.snipsnap.snip.filter;
 
-import com.neotis.snip.Snip;
-import com.neotis.snip.filter.macro.*;
-import com.neotis.snip.filter.regex.RegexTokenFilter;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.filter.macro.*;
+import org.snipsnap.snip.filter.regex.RegexTokenFilter;
 import org.apache.oro.text.regex.MatchResult;
 
 import java.util.HashMap;

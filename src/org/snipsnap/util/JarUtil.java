@@ -6,7 +6,7 @@
  * To change template for new class use
  * Code Style | Class Templates options (Tools | IDE Options).
  */
-package com.neotis.util;
+package org.snipsnap.util;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

@@ -23,7 +23,7 @@
  * --LICENSE NOTICE--
  */
 
-package com.neotis.snip;
+package org.snipsnap.snip;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;

@@ -29,11 +29,11 @@
  * @version $Id$
  */
 
-package com.neotis.snip.filter.macro;
+package org.snipsnap.snip.filter.macro;
 
-import com.neotis.snip.Snip;
-import com.neotis.snip.SnipLink;
-import com.neotis.snip.SnipSpace;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.SnipSpace;
 import org.apache.lucene.search.Hits;
 
 import java.io.IOException;

@@ -23,11 +23,11 @@
  * --LICENSE NOTICE--
  */
 
-package com.neotis.cache;
+package org.snipsnap.cache;
 
-import com.neotis.snip.Snip;
-import com.neotis.snip.SnipSpace;
-import com.neotis.jdbc.Loader;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.jdbc.Loader;
 
 import java.util.HashMap;
 import java.util.Map;

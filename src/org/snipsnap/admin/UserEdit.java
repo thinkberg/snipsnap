@@ -22,9 +22,9 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-package com.neotis.admin;
+package org.snipsnap.admin;
 
-import com.neotis.snip.SnipLink;
+import org.snipsnap.snip.SnipLink;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -52,7 +52,7 @@ public class UserEdit extends HttpServlet {
         return;
       }
       String context = request.getParameter("context");
-      RequestDispatcher dispatcher = getServletContext().getContext(context).getNamedDispatcher("com.neotis.net.UserManagerServlet");
+      RequestDispatcher dispatcher = getServletContext().getContext(context).getNamedDispatcher("org.snipsnap.net.UserManagerServlet");
       dispatcher.forward(request, response);
       session.setAttribute("user", request.getAttribute("user"));
       session.setAttribute("errors", request.getAttribute("errors"));

@@ -30,10 +30,10 @@
  * @version $Id$
  */
 
-package com.neotis.snip.filter.macro;
+package org.snipsnap.snip.filter.macro;
 
-import com.neotis.snip.Snip;
-import com.neotis.snip.SnipLink;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipLink;
 
 public class IsbnMacro extends Macro {
   public String getName() {

@@ -1,6 +1,6 @@
-<%@ page import="com.neotis.date.Month,
-                 com.neotis.snip.Snip,
-                 com.neotis.snip.SnipSpace"%>
+<%@ page import="org.snipsnap.date.Month,
+                 org.snipsnap.snip.Snip,
+                 org.snipsnap.snip.SnipSpace"%>
  <%--
   ** Menu template
   ** @author Matthias L. Jugel

@@ -1,4 +1,4 @@
-package com.neotis.snip;
+package org.snipsnap.snip;
 
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.Token;

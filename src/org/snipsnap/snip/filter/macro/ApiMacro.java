@@ -30,9 +30,9 @@
  * @version $Id$
  */
 
-package com.neotis.snip.filter.macro;
+package org.snipsnap.snip.filter.macro;
 
-import com.neotis.snip.Snip;
+import org.snipsnap.snip.Snip;
 
 
 public class ApiMacro extends Macro {

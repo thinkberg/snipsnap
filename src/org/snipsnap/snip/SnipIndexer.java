@@ -23,7 +23,7 @@
  * --LICENSE NOTICE--
  */
 
-package com.neotis.snip;
+package org.snipsnap.snip;
 
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;

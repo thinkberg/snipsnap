@@ -30,9 +30,9 @@
  * @team sonicteam
  * @version $Id$
  */
-package com.neotis.snip.filter;
+package org.snipsnap.snip.filter;
 
-import com.neotis.snip.filter.regex.RegexReplaceFilter;
+import org.snipsnap.snip.filter.regex.RegexReplaceFilter;
 
 public class LineFilter extends RegexReplaceFilter {
 

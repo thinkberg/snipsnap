@@ -30,9 +30,9 @@
  * @team sonicteam
  * @version $Id$
  */
-package com.neotis.snip.filter;
+package org.snipsnap.snip.filter;
 
-import com.neotis.snip.Snip;
+import org.snipsnap.snip.Snip;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -30,10 +30,10 @@
  * @team sonicteam
  * @version $Id$
  */
-package com.neotis.snip.filter;
+package org.snipsnap.snip.filter;
 
-import com.neotis.snip.filter.regex.RegexReplaceFilter;
-import com.neotis.snip.SnipLink;
+import org.snipsnap.snip.filter.regex.RegexReplaceFilter;
+import org.snipsnap.snip.SnipLink;
 
 public class UrlFilter extends RegexReplaceFilter {
 

@@ -10,7 +10,7 @@
 
   <tag>
     <name>checkRoles</name>
-    <tag-class>com.neotis.jsp.UserAuth</tag-class>
+    <tag-class>org.snipsnap.jsp.UserAuth</tag-class>
     <attribute>
       <name>roles</name>
       <required>true</required>
@@ -18,7 +18,7 @@
     </attribute>
     <attribute>
       <name>snip</name>
-      <type>com.neotis.snip.Snip</type>
+      <type>org.snipsnap.snip.Snip</type>
       <description>snip to check roles against</description>
     </attribute>
     <attribute>
@@ -30,7 +30,7 @@
 
   <tag>
     <name>check</name>
-    <tag-class>com.neotis.jsp.CheckPermission</tag-class>
+    <tag-class>org.snipsnap.jsp.CheckPermission</tag-class>
     <attribute>
       <name>permission</name>
       <description>permission to check</description>
@@ -42,7 +42,7 @@
     </attribute>
     <attribute>
       <name>snip</name>
-      <type>com.neotis.snip.Snip</type>
+      <type>org.snipsnap.snip.Snip</type>
       <description>snip to check roles against</description>
     </attribute>
     <attribute>
@@ -54,7 +54,7 @@
 
   <tag>
     <name>checkObject</name>
-    <tag-class>com.neotis.jsp.ObjectAuth</tag-class>
+    <tag-class>org.snipsnap.jsp.ObjectAuth</tag-class>
     <attribute>
       <name>permission</name>
       <description>permission to check</description>
@@ -66,7 +66,7 @@
     </attribute>
     <attribute>
       <name>snip</name>
-      <type>com.neotis.snip.Snip</type>
+      <type>org.snipsnap.snip.Snip</type>
       <description>snip to check roles against</description>
     </attribute>
     <attribute>
@@ -78,7 +78,7 @@
 
   <tag>
     <name>snip</name>
-    <tag-class>com.neotis.jsp.SnipTag</tag-class>
+    <tag-class>org.snipsnap.jsp.SnipTag</tag-class>
     <attribute>
       <name>load</name>
       <required>true</required>
@@ -91,7 +91,7 @@
 
   <tag>
     <name>image</name>
-    <tag-class>com.neotis.jsp.ImageTag</tag-class>
+    <tag-class>org.snipsnap.jsp.ImageTag</tag-class>
     <attribute>
       <name>name</name>
       <required>true</required>

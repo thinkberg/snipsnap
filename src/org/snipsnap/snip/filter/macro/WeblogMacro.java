@@ -29,9 +29,9 @@
  * @author stephan
  * @version $Id$
  */
-package com.neotis.snip.filter.macro;
+package org.snipsnap.snip.filter.macro;
 
-import com.neotis.snip.*;
+import org.snipsnap.snip.*;
 
 import java.util.Iterator;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.neotis.snip;
+package org.snipsnap.snip;
 
 /**
  * Wraps the SnipTokenizer into an analyzer

@@ -1,10 +1,10 @@
-package com.neotis.config;
+package org.snipsnap.config;
 
-import com.neotis.app.Application;
-import com.neotis.snip.Snip;
-import com.neotis.snip.SnipSpace;
-import com.neotis.user.User;
-import com.neotis.user.UserManager;
+import org.snipsnap.app.Application;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.user.User;
+import org.snipsnap.user.UserManager;
 
 public class Indexer {
   public static void main(String[] args) {

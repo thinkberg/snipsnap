@@ -22,11 +22,11 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-package com.neotis.admin;
+package org.snipsnap.admin;
 
-import com.neotis.config.Configuration;
-import com.neotis.snip.SnipLink;
-import com.neotis.user.UserManager;
+import org.snipsnap.config.Configuration;
+import org.snipsnap.snip.SnipLink;
+import org.snipsnap.user.UserManager;
 import org.mortbay.http.HttpContext;
 import org.mortbay.http.HttpServer;
 
@@ -124,7 +124,7 @@ public class AdminServlet extends HttpServlet {
         String contextPath = context[i].getContextPath();
         try {
           RequestDispatcher appUserManagerDispatcher =
-            getServletContext().getContext(contextPath).getNamedDispatcher("com.neotis.net.UserManagerServlet");
+            getServletContext().getContext(contextPath).getNamedDispatcher("org.snipsnap.net.UserManagerServlet");
           appUserManagerDispatcher.forward(request, response);
           usermanagers.put(contextPath, request.getAttribute("usermanager"));
         } catch (Exception e) {

@@ -22,7 +22,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-package com.neotis.snip.filter;
+package org.snipsnap.snip.filter;
 
 /*
  * XmlCodeFilter colourizes Xml Code
@@ -32,7 +32,7 @@ package com.neotis.snip.filter;
  * @version $Id$
  */
 
-import com.neotis.snip.filter.regex.RegexReplaceFilter;
+import org.snipsnap.snip.filter.regex.RegexReplaceFilter;
 
 public class XmlCodeFilter extends RegexReplaceFilter {
 

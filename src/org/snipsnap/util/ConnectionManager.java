@@ -22,10 +22,10 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-package com.neotis.util;
+package org.snipsnap.util;
 
 import com.bitmechanic.sql.ConnectionPoolManager;
-import com.neotis.config.Configuration;
+import org.snipsnap.config.Configuration;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

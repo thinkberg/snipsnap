@@ -22,12 +22,12 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-package com.neotis.test.user;
+package org.snipsnap.test.user;
 
-import com.neotis.user.*;
-import com.neotis.app.Application;
-import com.neotis.snip.Snip;
-import com.neotis.snip.SnipSpace;
+import org.snipsnap.user.*;
+import org.snipsnap.app.Application;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipSpace;
 import junit.framework.*;
 
 public class PermissionsTest extends TestCase {

@@ -23,9 +23,9 @@
  * --LICENSE NOTICE--
  */
 
-package com.neotis.jdbc;
+package org.snipsnap.jdbc;
 
-import com.neotis.snip.Snip;
+import org.snipsnap.snip.Snip;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

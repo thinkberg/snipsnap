@@ -23,7 +23,7 @@
  * --LICENSE NOTICE--
  */
 
-package com.neotis.snip;
+package org.snipsnap.snip;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;

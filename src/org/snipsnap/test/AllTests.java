@@ -22,10 +22,10 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-package com.neotis.test;
+package org.snipsnap.test;
 
-import com.neotis.test.filter.FilterTest;
-import com.neotis.test.snip.AllSnips;
+import org.snipsnap.test.filter.FilterTest;
+import org.snipsnap.test.snip.AllSnips;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

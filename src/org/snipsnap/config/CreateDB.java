@@ -22,13 +22,13 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-package com.neotis.config;
+package org.snipsnap.config;
 
-import com.neotis.app.Application;
-import com.neotis.snip.HomePage;
-import com.neotis.snip.Snip;
-import com.neotis.snip.SnipSpace;
-import com.neotis.user.*;
+import org.snipsnap.app.Application;
+import org.snipsnap.snip.HomePage;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.user.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

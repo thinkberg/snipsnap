@@ -23,9 +23,9 @@
  * --LICENSE NOTICE--
  */
 
-package com.neotis.snip;
+package org.snipsnap.snip;
 
-import com.neotis.user.User;
+import org.snipsnap.user.User;
 
 /**
  *  Interface for all objects that can be owned

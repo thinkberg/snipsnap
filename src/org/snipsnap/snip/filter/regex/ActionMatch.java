@@ -30,10 +30,10 @@
  * @version $Id$
  */
 
-package com.neotis.snip.filter.regex;
+package org.snipsnap.snip.filter.regex;
 
 import org.apache.oro.text.regex.MatchResult;
-import com.neotis.snip.Snip;
+import org.snipsnap.snip.Snip;
 
 public interface ActionMatch {
   public void handleMatch(StringBuffer buffer, MatchResult result, Snip snip);

@@ -33,15 +33,15 @@ if [ "$1" = "stop" ]; then
 fi
 
 if [ "$1" = "index" ]; then
-  $JAVA_HOME/bin/java -cp app/WEB-INF/lib/servlets.jar:$CLASSPATH com.neotis.config.Indexer
+  $JAVA_HOME/bin/java -cp app/WEB-INF/lib/servlets.jar:$CLASSPATH org.snipsnap.config.Indexer
   exit 0
 fi
 
 if [ "$1" = "checksum" ]; then
-  $JAVA_HOME/bin/java -cp $CLASSPATH:lib/snipsnap.jar com.neotis.util.JarUtil $2*
+  $JAVA_HOME/bin/java -cp $CLASSPATH:lib/snipsnap.jar org.snipsnap.util.JarUtil $2*
   exit 0
 fi
 
 # execute application server
-$JAVA_HOME/bin/java -cp $CLASSPATH:lib/snipsnap.jar com.neotis.server.AppServer $cmdline 2> server.log
+$JAVA_HOME/bin/java -cp $CLASSPATH:lib/snipsnap.jar org.snipsnap.server.AppServer $cmdline 2> server.log
 

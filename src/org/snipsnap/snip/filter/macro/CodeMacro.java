@@ -30,13 +30,13 @@
  * @version $Id$
  */
 
-package com.neotis.snip.filter.macro;
+package org.snipsnap.snip.filter.macro;
 
-import com.neotis.snip.Snip;
-import com.neotis.snip.filter.Filter;
-import com.neotis.snip.filter.JavaCodeFilter;
-import com.neotis.snip.filter.SqlCodeFilter;
-import com.neotis.snip.filter.XmlCodeFilter;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.filter.Filter;
+import org.snipsnap.snip.filter.JavaCodeFilter;
+import org.snipsnap.snip.filter.SqlCodeFilter;
+import org.snipsnap.snip.filter.XmlCodeFilter;
 
 import java.util.HashMap;
 import java.util.Map;

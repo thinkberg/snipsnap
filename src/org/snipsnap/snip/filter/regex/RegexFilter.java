@@ -32,15 +32,15 @@
  * @version $Id$
  */
 
-package com.neotis.snip.filter.regex;
+package org.snipsnap.snip.filter.regex;
 
 import org.apache.oro.text.regex.*;
 
 import java.util.List;
 import java.util.ArrayList;
 
-import com.neotis.snip.filter.Filter;
-import com.neotis.snip.Snip;
+import org.snipsnap.snip.filter.Filter;
+import org.snipsnap.snip.Snip;
 
 public abstract class RegexFilter extends Filter {
   int limit = Util.SUBSTITUTE_ALL;

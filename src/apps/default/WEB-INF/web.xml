@@ -12,127 +12,127 @@
   <display-name>SnipSnap</display-name>
 
   <servlet>
-    <servlet-name>com.neotis.net.Layouter</servlet-name>
-    <servlet-class>com.neotis.net.Layouter</servlet-class>
+    <servlet-name>org.snipsnap.net.Layouter</servlet-name>
+    <servlet-class>org.snipsnap.net.Layouter</servlet-class>
   </servlet>
 
   <servlet>
-    <servlet-name>com.neotis.net.SnipViewServlet</servlet-name>
-    <servlet-class>com.neotis.net.SnipViewServlet</servlet-class>
+    <servlet-name>org.snipsnap.net.SnipViewServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.SnipViewServlet</servlet-class>
   </servlet>
 
   <servlet>
-    <servlet-name>com.neotis.net.SnipEditServlet</servlet-name>
-    <servlet-class>com.neotis.net.SnipEditServlet</servlet-class>
+    <servlet-name>org.snipsnap.net.SnipEditServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.SnipEditServlet</servlet-class>
   </servlet>
 
   <servlet>
-    <servlet-name>com.neotis.net.SnipLockServlet</servlet-name>
-    <servlet-class>com.neotis.net.SnipLockServlet</servlet-class>
+    <servlet-name>org.snipsnap.net.SnipLockServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.SnipLockServlet</servlet-class>
   </servlet>
 
   <servlet>
-    <servlet-name>com.neotis.net.SnipStoreServlet</servlet-name>
-    <servlet-class>com.neotis.net.SnipStoreServlet</servlet-class>
+    <servlet-name>org.snipsnap.net.SnipStoreServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.SnipStoreServlet</servlet-class>
   </servlet>
 
   <servlet>
-    <servlet-name>com.neotis.net.SnipRemoveServlet</servlet-name>
-    <servlet-class>com.neotis.net.SnipRemoveServlet</servlet-class>
+    <servlet-name>org.snipsnap.net.SnipRemoveServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.SnipRemoveServlet</servlet-class>
   </servlet>
 
   <servlet>
-    <servlet-name>com.neotis.net.SnipSearchServlet</servlet-name>
-    <servlet-class>com.neotis.net.SnipSearchServlet</servlet-class>
+    <servlet-name>org.snipsnap.net.SnipSearchServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.SnipSearchServlet</servlet-class>
   </servlet>
 
   <servlet>
-    <servlet-name>com.neotis.net.PostStoreServlet</servlet-name>
-    <servlet-class>com.neotis.net.PostStoreServlet</servlet-class>
+    <servlet-name>org.snipsnap.net.PostStoreServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.PostStoreServlet</servlet-class>
   </servlet>
 
   <servlet>
-    <servlet-name>com.neotis.net.CommentViewServlet</servlet-name>
-    <servlet-class>com.neotis.net.CommentViewServlet</servlet-class>
+    <servlet-name>org.snipsnap.net.CommentViewServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.CommentViewServlet</servlet-class>
   </servlet>
 
   <servlet>
-    <servlet-name>com.neotis.net.CommentStoreServlet</servlet-name>
-    <servlet-class>com.neotis.net.CommentStoreServlet</servlet-class>
+    <servlet-name>org.snipsnap.net.CommentStoreServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.CommentStoreServlet</servlet-class>
   </servlet>
 
   <servlet>
-    <servlet-name>com.neotis.net.NewUserServlet</servlet-name>
-    <servlet-class>com.neotis.net.NewUserServlet</servlet-class>
+    <servlet-name>org.snipsnap.net.NewUserServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.NewUserServlet</servlet-class>
   </servlet>
 
   <servlet>
-    <servlet-name>com.neotis.net.LoginServlet</servlet-name>
-    <servlet-class>com.neotis.net.LoginServlet</servlet-class>
+    <servlet-name>org.snipsnap.net.LoginServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.LoginServlet</servlet-class>
   </servlet>
 
   <servlet>
-    <servlet-name>com.neotis.net.UserManagerServlet</servlet-name>
-    <servlet-class>com.neotis.net.UserManagerServlet</servlet-class>
+    <servlet-name>org.snipsnap.net.UserManagerServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.UserManagerServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>
-    <servlet-name>com.neotis.net.SnipViewServlet</servlet-name>
+    <servlet-name>org.snipsnap.net.SnipViewServlet</servlet-name>
     <url-pattern>/space/*</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
-    <servlet-name>com.neotis.net.Layouter</servlet-name>
+    <servlet-name>org.snipsnap.net.Layouter</servlet-name>
     <url-pattern>/exec/*</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
-    <servlet-name>com.neotis.net.SnipLockServlet</servlet-name>
+    <servlet-name>org.snipsnap.net.SnipLockServlet</servlet-name>
     <url-pattern>/exec/lock</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
-    <servlet-name>com.neotis.net.SnipEditServlet</servlet-name>
+    <servlet-name>org.snipsnap.net.SnipEditServlet</servlet-name>
     <url-pattern>/exec/edit</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
-    <servlet-name>com.neotis.net.SnipStoreServlet</servlet-name>
+    <servlet-name>org.snipsnap.net.SnipStoreServlet</servlet-name>
     <url-pattern>/exec/store</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
-    <servlet-name>com.neotis.net.SnipRemoveServlet</servlet-name>
+    <servlet-name>org.snipsnap.net.SnipRemoveServlet</servlet-name>
     <url-pattern>/exec/remove</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
-    <servlet-name>com.neotis.net.SnipSearchServlet</servlet-name>
+    <servlet-name>org.snipsnap.net.SnipSearchServlet</servlet-name>
     <url-pattern>/exec/search</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
-    <servlet-name>com.neotis.net.PostStoreServlet</servlet-name>
+    <servlet-name>org.snipsnap.net.PostStoreServlet</servlet-name>
     <url-pattern>/exec/storepost</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
-    <servlet-name>com.neotis.net.CommentViewServlet</servlet-name>
+    <servlet-name>org.snipsnap.net.CommentViewServlet</servlet-name>
     <url-pattern>/comments/*</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
-    <servlet-name>com.neotis.net.CommentStoreServlet</servlet-name>
+    <servlet-name>org.snipsnap.net.CommentStoreServlet</servlet-name>
     <url-pattern>/exec/storecomment</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
-    <servlet-name>com.neotis.net.NewUserServlet</servlet-name>
+    <servlet-name>org.snipsnap.net.NewUserServlet</servlet-name>
     <url-pattern>/exec/newuser</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
-    <servlet-name>com.neotis.net.LoginServlet</servlet-name>
+    <servlet-name>org.snipsnap.net.LoginServlet</servlet-name>
     <url-pattern>/exec/authenticate</url-pattern>
   </servlet-mapping>
 

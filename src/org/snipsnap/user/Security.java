@@ -23,10 +23,10 @@
  * --LICENSE NOTICE--
  */
 
-package com.neotis.user;
+package org.snipsnap.user;
 
-import com.neotis.snip.Snip;
-import com.neotis.snip.Ownable;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.Ownable;
 
 /**
  * Security manager for checking permission, roles etc.

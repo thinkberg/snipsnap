@@ -23,7 +23,7 @@
  * --LICENSE NOTICE--
  */
 
-package com.neotis.xmlrpc;
+package org.snipsnap.xmlrpc;
 
 import org.apache.xmlrpc.XmlRpcClient;
 

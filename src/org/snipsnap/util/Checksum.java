@@ -22,7 +22,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-package com.neotis.util;
+package org.snipsnap.util;
 
 import java.io.File;
 import java.io.FileInputStream;

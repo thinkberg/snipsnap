@@ -30,7 +30,7 @@
  * To change template for new class use 
  * Code Style | Class Templates options (Tools | IDE Options).
  */
-package com.neotis.snip.filter.macro;
+package org.snipsnap.snip.filter.macro;
 
 import java.util.StringTokenizer;
 import java.util.Map;

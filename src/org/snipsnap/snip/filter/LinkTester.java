@@ -22,7 +22,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-package com.neotis.snip.filter;
+package org.snipsnap.snip.filter;
 
 public interface LinkTester {
   public boolean exists(String link);

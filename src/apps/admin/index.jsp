@@ -1,4 +1,4 @@
-<%@ page import="com.neotis.snip.SnipLink"%>
+<%@ page import="org.snipsnap.snip.SnipLink"%>
  <!--
   ** Template for redirection the root page to the start page
   ** @author Matthias L. Jugel

@@ -12,83 +12,83 @@
   <display-name>SnipSnap Admin</display-name>
 
   <servlet>
-    <servlet-name>com.neotis.admin.AdminServlet</servlet-name>
-    <servlet-class>com.neotis.admin.AdminServlet</servlet-class>
+    <servlet-name>org.snipsnap.admin.AdminServlet</servlet-name>
+    <servlet-class>org.snipsnap.admin.AdminServlet</servlet-class>
   </servlet>
 
   <servlet>
-    <servlet-name>com.neotis.admin.Installer</servlet-name>
-    <servlet-class>com.neotis.admin.Installer</servlet-class>
+    <servlet-name>org.snipsnap.admin.Installer</servlet-name>
+    <servlet-class>org.snipsnap.admin.Installer</servlet-class>
   </servlet>
 
   <servlet>
-    <servlet-name>com.neotis.admin.Shutdown</servlet-name>
-    <servlet-class>com.neotis.admin.Shutdown</servlet-class>
+    <servlet-name>org.snipsnap.admin.Shutdown</servlet-name>
+    <servlet-class>org.snipsnap.admin.Shutdown</servlet-class>
   </servlet>
 
   <servlet>
-    <servlet-name>com.neotis.admin.Authenticate</servlet-name>
-    <servlet-class>com.neotis.admin.Authenticate</servlet-class>
+    <servlet-name>org.snipsnap.admin.Authenticate</servlet-name>
+    <servlet-class>org.snipsnap.admin.Authenticate</servlet-class>
   </servlet>
 
   <servlet>
-    <servlet-name>com.neotis.admin.Application</servlet-name>
-    <servlet-class>com.neotis.admin.Application</servlet-class>
+    <servlet-name>org.snipsnap.admin.Application</servlet-name>
+    <servlet-class>org.snipsnap.admin.Application</servlet-class>
   </servlet>
 
   <servlet>
-    <servlet-name>com.neotis.admin.Update</servlet-name>
-    <servlet-class>com.neotis.admin.Update</servlet-class>
+    <servlet-name>org.snipsnap.admin.Update</servlet-name>
+    <servlet-class>org.snipsnap.admin.Update</servlet-class>
   </servlet>
 
   <servlet>
-    <servlet-name>com.neotis.admin.UserManager</servlet-name>
-    <servlet-class>com.neotis.admin.UserManager</servlet-class>
+    <servlet-name>org.snipsnap.admin.UserManager</servlet-name>
+    <servlet-class>org.snipsnap.admin.UserManager</servlet-class>
   </servlet>
 
   <servlet>
-    <servlet-name>com.neotis.admin.UserEdit</servlet-name>
-    <servlet-class>com.neotis.admin.UserEdit</servlet-class>
+    <servlet-name>org.snipsnap.admin.UserEdit</servlet-name>
+    <servlet-class>org.snipsnap.admin.UserEdit</servlet-class>
   </servlet>
 
 
   <servlet-mapping>
-    <servlet-name>com.neotis.admin.AdminServlet</servlet-name>
+    <servlet-name>org.snipsnap.admin.AdminServlet</servlet-name>
     <url-pattern>/exec/*</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
-    <servlet-name>com.neotis.admin.Installer</servlet-name>
+    <servlet-name>org.snipsnap.admin.Installer</servlet-name>
     <url-pattern>/exec/install</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
-    <servlet-name>com.neotis.admin.Shutdown</servlet-name>
+    <servlet-name>org.snipsnap.admin.Shutdown</servlet-name>
     <url-pattern>/exec/shutdown</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
-    <servlet-name>com.neotis.admin.Authenticate</servlet-name>
+    <servlet-name>org.snipsnap.admin.Authenticate</servlet-name>
     <url-pattern>/exec/authenticate</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
-    <servlet-name>com.neotis.admin.Application</servlet-name>
+    <servlet-name>org.snipsnap.admin.Application</servlet-name>
     <url-pattern>/exec/app/*</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
-    <servlet-name>com.neotis.admin.Update</servlet-name>
+    <servlet-name>org.snipsnap.admin.Update</servlet-name>
     <url-pattern>/exec/app/update</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
-    <servlet-name>com.neotis.admin.UserManager</servlet-name>
+    <servlet-name>org.snipsnap.admin.UserManager</servlet-name>
     <url-pattern>/exec/user</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
-    <servlet-name>com.neotis.admin.UserEdit</servlet-name>
+    <servlet-name>org.snipsnap.admin.UserEdit</servlet-name>
     <url-pattern>/exec/user/edit</url-pattern>
   </servlet-mapping>
 

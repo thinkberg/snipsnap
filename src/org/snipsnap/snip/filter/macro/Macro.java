@@ -29,9 +29,9 @@
  * @version $Id$
  */
 
-package com.neotis.snip.filter.macro;
+package org.snipsnap.snip.filter.macro;
 
-import com.neotis.snip.Snip;
+import org.snipsnap.snip.Snip;
 
 public abstract class Macro {
    public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {

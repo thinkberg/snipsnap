@@ -22,10 +22,10 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-package com.neotis.snip.filter.macro;
+package org.snipsnap.snip.filter.macro;
 
-import com.neotis.snip.Snip;
-import com.neotis.snip.SnipLink;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipLink;
 
 /*
  * Macro that replaces external links

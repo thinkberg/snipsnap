@@ -22,10 +22,10 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-package com.neotis.snip.filter;
+package org.snipsnap.snip.filter;
 
-import com.neotis.snip.SnipSpace;
-import com.neotis.snip.Snip;
+import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.Snip;
 
 /**
  * SnipFormatter supplies some methods for handling Snip Content.

@@ -22,7 +22,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-package com.neotis.exception;
+package org.snipsnap.exception;
 
 /**
  * ChainedException is a base class for Exception and support wrapping original exceptions

@@ -22,10 +22,10 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-package com.neotis.admin;
+package org.snipsnap.admin;
 
-import com.neotis.config.Configuration;
-import com.neotis.snip.SnipLink;
+import org.snipsnap.config.Configuration;
+import org.snipsnap.snip.SnipLink;
 import org.mortbay.http.HttpServer;
 import org.mortbay.util.Code;
 import org.mortbay.util.Log;
@@ -61,7 +61,7 @@ public class Shutdown extends HttpServlet {
         config.getUserName().equals(user) &&
         config.getPassword().equals(pass)) {
         // shut down server ...
-        com.neotis.server.Shutdown.shutdown();
+        org.snipsnap.server.Shutdown.shutdown();
         response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE, "Server has been shut down.");
         return;
       }

@@ -31,10 +31,10 @@
  * @team sonicteam
  * @version $Id$
  */
-package com.neotis.snip.filter;
+package org.snipsnap.snip.filter;
 
-import com.neotis.snip.Snip;
-import com.neotis.util.Transliterate;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.util.Transliterate;
 import org.apache.oro.text.regex.*;
 
 import java.io.UnsupportedEncodingException;

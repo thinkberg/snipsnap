@@ -23,7 +23,7 @@
  * --LICENSE NOTICE--
  */
 
-package com.neotis.user;
+package org.snipsnap.user;
 
 import java.util.HashMap;
 import java.util.Iterator;
