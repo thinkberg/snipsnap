@@ -25,17 +25,26 @@ package org.snipsnap.container;
  * --LICENSE NOTICE--
  */
 
-import picocontainer.Container;
+import com.tirsen.nanning.config.AspectSystem;
 import nanocontainer.StringRegistrationNanoContainer;
 import nanocontainer.StringRegistrationNanoContainerImpl;
+import nanocontainer.nanning.NanningComponentFactory;
+import nanocontainer.reflection.StringToObjectConverter;
+import picocontainer.PicoContainer;
 
 public class Components {
-  private static Container container;
+  private static PicoContainer container;
 
-  public static synchronized Container getContainer() {
+  public static synchronized PicoContainer getContainer() {
     if (null == container) {
+
+      AspectSystem as = new AspectSystem();
+
+      NanningComponentFactory fc =  new nanocontainer.nanning.NanningComponentFactory( as );
+      PicoContainer pc = new picocontainer.defaults.DefaultPicoContainer(fc);
+
       StringRegistrationNanoContainer c =
-          new StringRegistrationNanoContainerImpl.Default();
+          new StringRegistrationNanoContainerImpl(pc, Components.class.getClassLoader(), new StringToObjectConverter());
 
       try {
         c.registerComponent("org.snipsnap.snip.storage.JDBCUserStorage");
@@ -44,11 +53,11 @@ public class Components {
         c.registerComponent("org.snipsnap.user.PasswordService");
         c.registerComponent("org.snipsnap.container.SessionService");
         c.registerComponent("org.radeox.engine.RenderEngine", "org.snipsnap.render.SnipRenderEngine");
-        c.start();
+        container = c;
+        container.instantiateComponents();
       } catch (Exception e) {
         e.printStackTrace();
       }
-      container = c;
     }
 
     return container;

@@ -46,6 +46,8 @@ public class UserManager {
 
   private List delayed;
   private UserStorage storage;
+  public static final int MILISECS_PER_MINUTE = 60 * 1000;
+
 
   public UserManager(UserStorage storage) {
     this.storage = storage;
@@ -66,7 +68,7 @@ public class UserManager {
       }
       // execute after 5 minutes and then
       // every 5 minutes
-    }, 5 * 60 * 1000, 5 * 60 * 1000);
+    }, 5 * MILISECS_PER_MINUTE, 5 * MILISECS_PER_MINUTE);
   }
 
   public List getAll() {
