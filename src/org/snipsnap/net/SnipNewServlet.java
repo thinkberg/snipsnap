@@ -28,6 +28,8 @@ import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.label.Labels;
+import org.snipsnap.snip.label.Label;
 import org.snipsnap.app.Application;
 import org.snipsnap.container.Components;
 
@@ -39,6 +41,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Collection;
 
 /**
  * Create a new Snip
@@ -81,9 +85,29 @@ public class SnipNewServlet extends HttpServlet {
 
   private List getTemplates() {
     List templates = new ArrayList();
-    templates.add("leo");
-    templates.add("two");
-    templates.add("three");
+
+    SnipSpace snipspace = (SnipSpace) Components.getComponent(SnipSpace.class);
+    List snipList = snipspace.getAll();
+
+    Iterator iterator = snipList.iterator();
+    while (iterator.hasNext()) {
+      Snip snip = (Snip) iterator.next();
+      Labels labels = snip.getLabels();
+      boolean noLabelsAll = labels.getAll().isEmpty();
+
+      if (!noLabelsAll) {
+        Collection labelsCat = labels.getLabels("TypeLabel");
+        if (!labelsCat.isEmpty()) {
+          Iterator iter = labelsCat.iterator();
+          while (iter.hasNext()) {
+            Label label = (Label) iter.next();
+            if (label.getValue().equals("Template")) {
+              templates.add(snip.getName());
+            }
+          }
+        }
+      }
+    }
     return templates;
   }
 }

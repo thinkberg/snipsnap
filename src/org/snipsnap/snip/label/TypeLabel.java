@@ -36,7 +36,7 @@ import java.util.List;
  */
 public class TypeLabel extends BaseLabel {
   private static List types = Arrays.asList(
-      new String[]{"Person", "Technology", "Meeting", "Book", "Process", "Summary", "Category"});
+      new String[]{"Person", "Technology", "Meeting", "Book", "Process", "Summary", "Category", "Template"});
 
   public TypeLabel() {
     name = "Type";
