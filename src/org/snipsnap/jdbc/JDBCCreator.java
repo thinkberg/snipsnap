@@ -25,35 +25,17 @@
 
 package org.snipsnap.jdbc;
 
-import org.snipsnap.cache.Cache;
-import org.snipsnap.snip.storage.Storage;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- * Convenience factory to generate Finders
+ * Creates objects from ResultSets, used e.g. by Finder
  *
- * @author stephan
+ * @author Stephan J. Schmidt
  * @version $Id$
  */
-public class FinderFactory {
-  private Cache cache;
-  private Class type;
-  private String statementRoot;
-  private String keyName;
-  private JDBCCreator creator;
 
-  public FinderFactory(String statement, Cache cache, Class type, String keyName, JDBCCreator creator) {
-    this.cache = cache;
-    this.type = type;
-    this.statementRoot = statement + " ";
-    this.keyName = keyName;
-    this.creator = creator;
-  }
+public interface JDBCCreator {
+  public Object createObject(ResultSet result) throws SQLException;
 
-  public Finder getFinder() {
-    return new Finder(statementRoot, cache, keyName, type, creator);
-  }
-
-  public Finder getFinder(String statement) {
-    return new Finder(statementRoot + statement, cache, keyName, type, creator);
-  }
 }

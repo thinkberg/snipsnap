@@ -23,37 +23,19 @@
  * --LICENSE NOTICE--
  */
 
-package org.snipsnap.jdbc;
+package org.snipsnap.xmlrpc;
 
-import org.snipsnap.cache.Cache;
-import org.snipsnap.snip.storage.Storage;
+import org.snipsnap.app.Application;
 
 /**
- * Convenience factory to generate Finders
+ * Handles XML-RPC calls for the SnbipSnap API
  *
- * @author stephan
+ * @author Stephan J. Schmidt
  * @version $Id$
  */
-public class FinderFactory {
-  private Cache cache;
-  private Class type;
-  private String statementRoot;
-  private String keyName;
-  private JDBCCreator creator;
 
-  public FinderFactory(String statement, Cache cache, Class type, String keyName, JDBCCreator creator) {
-    this.cache = cache;
-    this.type = type;
-    this.statementRoot = statement + " ";
-    this.keyName = keyName;
-    this.creator = creator;
-  }
-
-  public Finder getFinder() {
-    return new Finder(statementRoot, cache, keyName, type, creator);
-  }
-
-  public Finder getFinder(String statement) {
-    return new Finder(statementRoot + statement, cache, keyName, type, creator);
+public class SnipSnapHandler {
+  public String getVersion() {
+    return Application.get().getConfiguration().getVersion();
   }
 }

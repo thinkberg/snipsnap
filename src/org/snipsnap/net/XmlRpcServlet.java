@@ -27,6 +27,7 @@ package org.snipsnap.net;
 import org.apache.xmlrpc.XmlRpcServer;
 import org.snipsnap.xmlrpc.BloggerHandler;
 import org.snipsnap.xmlrpc.WeblogsPingHandler;
+import org.snipsnap.xmlrpc.SnipSnapHandler;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -52,9 +53,10 @@ public class XmlRpcServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
 
-        System.out.println("XMLRPC call received.");
+        //System.out.println("XMLRPC call received.");
         XmlRpcServer xmlrpc = new XmlRpcServer();
 
+        xmlrpc.addHandler("snipSnap", new SnipSnapHandler());
         xmlrpc.addHandler("blogger", new BloggerHandler());
         xmlrpc.addHandler("weblogUpdates", new WeblogsPingHandler());
         byte[] result = xmlrpc.execute(request.getInputStream());

@@ -144,7 +144,6 @@ public class CreateDB {
     app.setUser(admin);
 
     System.out.println("Importing default snips.");
-    SnipSpace space = SnipSpace.getInstance();
     try {
       XMLSnipImport.load(data, true);
     } catch (IOException e) {

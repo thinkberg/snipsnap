@@ -32,6 +32,7 @@
 package org.snipsnap.snip.filter.macro;
 
 import org.snipsnap.snip.*;
+import org.snipsnap.snip.storage.SnipStorage;
 
 import java.util.Iterator;
 import java.util.List;

@@ -78,7 +78,7 @@ public class VerticalListFormatter implements ListFormatter {
             SnipLink.appendImage(writer, "comment-icon", "", "png");
             SnipLink.appendLink(writer, name, realName );
             writer.write(" (");
-            SnipLink.appendLink(writer, snip.getMUser());
+            SnipLink.appendLink(writer, snip.getCUser());
             writer.write(")");
           } else {
             SnipLink.appendLink(writer, name, realName);

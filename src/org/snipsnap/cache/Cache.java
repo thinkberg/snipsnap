@@ -25,11 +25,12 @@
 
 package org.snipsnap.cache;
 
-import org.snipsnap.jdbc.Loader;
+import org.snipsnap.snip.storage.Storage;
+import org.snipsnap.snip.storage.query.Query;
+import org.snipsnap.snip.Snip;
 import org.snipsnap.app.Application;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -68,7 +69,7 @@ public class Cache {
     loaders = new HashMap();
   }
 
-  public void setLoader(Class type, Loader loader) {
+  public void setLoader(Class type, Storage loader) {
     loaders.put(type, loader);
     if (!caches.containsKey(type)) {
       caches.put(type, new HashMap());
@@ -90,6 +91,43 @@ public class Cache {
     } else {
       return false;
     }
+  }
+
+  public List getCache(Class type) {
+    //@TODO optimize to use value list, too
+    Map m = (Map) caches.get(type);
+    Iterator iterator = m.keySet().iterator();
+    while (iterator.hasNext()) {
+      String name = (String) iterator.next();
+      Snip snip = (Snip) m.get(name);
+      System.err.println(name+"="+snip.getName());
+    }
+
+    return new ArrayList(((Map) caches.get(type)).values());
+  }
+
+  public List querySorted(Comparator c, int size, Class type) {
+    ArrayList result = new ArrayList(getCache(type));
+    Collections.sort(result, c);
+    return result.subList(0, Math.min(size, result.size()));
+  }
+
+  public List querySorted(Query query, Comparator c, int size, Class type) {
+    List result = query(query, type);
+    Collections.sort(result, c);
+    return result.subList(0, Math.min(size, result.size()));
+  }
+
+  public List query(Query query, Class type) {
+    Iterator iterator = getCache(type).iterator();
+    List result = new ArrayList();
+    while (iterator.hasNext()) {
+      Object object = iterator.next();
+      if (query.fit(object)) {
+        result.add(object);
+      }
+    }
+    return result;
   }
 
   public Object get(Class type, String name) {
@@ -115,10 +153,10 @@ public class Cache {
     if (contains(type, name)) {
       object = get(type, name);
     } else {
-      Loader loader = (Loader) loaders.get(type);
+      Storage loader = (Storage) loaders.get(type);
       object = loader.loadObject(name);
       if (null != object) {
-        cache.put(name, object);
+        put(type, name, object);
       }
     }
     return object;

@@ -28,10 +28,14 @@ import org.apache.lucene.search.Hits;
 import org.snipsnap.app.Application;
 import org.snipsnap.cache.Cache;
 import org.snipsnap.jdbc.Finder;
-import org.snipsnap.jdbc.Loader;
+import org.snipsnap.snip.storage.Storage;
 import org.snipsnap.jdbc.FinderFactory;
+import org.snipsnap.jdbc.JDBCCreator;
 import org.snipsnap.snip.filter.LinkTester;
 import org.snipsnap.snip.label.Labels;
+import org.snipsnap.snip.storage.SnipStorage;
+import org.snipsnap.snip.storage.JDBCSnipStorage;
+import org.snipsnap.snip.storage.MemorySnipStorage;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.Digest;
@@ -52,7 +56,7 @@ import java.security.NoSuchAlgorithmException;
  * @author Stephan J. Schmidt
  * @version $Id$
  */
-public class SnipSpace implements LinkTester, Loader {
+public class SnipSpace implements LinkTester {
   private Map missing;
   private Queue changed;
   private List delayed;
@@ -61,6 +65,7 @@ public class SnipSpace implements LinkTester, Loader {
   private FinderFactory finders;
   private Timer timer;
   private String eTag;
+  private SnipStorage storage;
 
   private static SnipSpace instance;
 
@@ -86,14 +91,27 @@ public class SnipSpace implements LinkTester, Loader {
     missing = new HashMap();
     changed = new Queue(50);
     cache = Cache.getInstance();
-    cache.setLoader(Snip.class, (Loader) this);
-    indexer = new SnipIndexer();
-    delayed = new ArrayList();
+    storage = new JDBCSnipStorage(cache);
     finders = new FinderFactory("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions, " +
                                " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
-                               " FROM Snip ", cache, (Loader) this, "name");
+                               " FROM Snip ", cache, Snip.class, "name", (JDBCCreator) storage);
+    cache.setLoader(Snip.class, (Storage) storage);
 
-    changed.fill(storageByRecent(50));
+    // Fully fill the cache with all Snips
+    if ("full".equals(Application.get().getConfiguration().getCache().toLowerCase())) {
+      Finder finder = finders.getFinder();
+      finder.execute();
+
+     // If we keep all snips in memory we can use queries directly on the snip list
+      storage = new MemorySnipStorage(storage, cache);
+      cache.setLoader(Snip.class, (Storage) storage);
+      System.err.println("Cache strategy is: keep full, using MemorySnipStorage");
+    }
+
+    indexer = new SnipIndexer();
+    delayed = new ArrayList();
+
+    changed.fill(storage.storageByRecent(50));
     setETag();
     timer = new Timer();
     timer.schedule(new TimerTask() {
@@ -127,7 +145,7 @@ public class SnipSpace implements LinkTester, Loader {
   }
 
   public int getSnipCount() {
-    return storageCount();
+    return storage.storageCount();
   }
 
   public List getChanged() {
@@ -139,15 +157,19 @@ public class SnipSpace implements LinkTester, Loader {
   }
 
   public List getAll() {
-    return storageAll();
+    if ("full".equals(Application.get().getConfiguration().getCache().toLowerCase())) {
+      return cache.getCache(Snip.class);
+    } else {
+      return storage.storageAll();
+    }
   }
 
   public List getSince(Timestamp date){
-    return storageByDateSince(date);
+    return storage.storageByDateSince(date);
   }
 
   public List getByDate(String start, String end) {
-    return storageByDateInName(start, end);
+    return storage.storageByDateInName(start, end);
   }
 
   /**
@@ -158,27 +180,27 @@ public class SnipSpace implements LinkTester, Loader {
    * @return List of snips, ordered by hotness
    */
   public List getHot(int count) {
-    return storageByHotness(count);
+    return storage.storageByHotness(count);
   }
 
   public List getComments(Snip snip) {
-    return storageByComments(snip);
+    return storage.storageByComments(snip);
   }
 
   public List getByUser(String login) {
-    return storageByUser(login);
+    return storage.storageByUser(login);
   }
 
   public List getChildren(Snip snip) {
-    return storageByParent(snip);
+    return storage.storageByParent(snip);
   }
 
   public List getChildrenDateOrder(Snip snip, int count) {
-    return storageByParentNameOrder(snip, count);
+    return storage.storageByParentNameOrder(snip, count);
   }
 
   public List getChildrenModifiedOrder(Snip snip, int count) {
-    return storageByParentModifiedOrder(snip, count);
+    return storage.storageByParentModifiedOrder(snip, count);
   }
 
   public Snip post(String content) {
@@ -245,7 +267,7 @@ public class SnipSpace implements LinkTester, Loader {
     snip.setMUser(app.getUser());
     changed(snip);
     snip.setMTime(new Timestamp(new java.util.Date().getTime()));
-    storageStore(snip);
+    storage.storageStore(snip);
     indexer.reIndex(snip);
     app.stop(start, "store - " + snip.getName());
     return;
@@ -262,7 +284,7 @@ public class SnipSpace implements LinkTester, Loader {
     //System.err.println("systemStore - "+snip.getName());
     Application app = Application.get();
     long start = app.start();
-    storageStore(snip);
+    storage.storageStore(snip);
     indexer.reIndex(snip);
     app.stop(start, "systemStore - " + snip.getName());
     return;
@@ -289,7 +311,7 @@ public class SnipSpace implements LinkTester, Loader {
   }
 
   public Snip create(String name, String content) {
-    Snip snip = storageCreate(name, content);
+    Snip snip = storage.storageCreate(name, content);
     cache.put(Snip.class, name, snip);
     if (missing.containsKey(name)) {
       missing.remove(name);
@@ -303,290 +325,11 @@ public class SnipSpace implements LinkTester, Loader {
   public void remove(Snip snip) {
     cache.remove(Snip.class, snip.getName());
     changed.remove(snip);
-    storageRemove(snip);
+    storage.storageRemove(snip);
     indexer.removeIndex(snip);
     return;
   }
 
-  public Class getLoaderType() {
-    return Snip.class;
-  }
+// SnipStorage System dependend Methods
 
-  public Object createObject(ResultSet result) throws SQLException {
-    return createSnip(result);
-  }
-
-  public Object loadObject(String name) {
-    return storageLoad(name);
-  }
-
-// Storage System dependend Methods
-
-  public Snip createSnip(ResultSet result) throws SQLException {
-    String name = result.getString("name");
-    String content = result.getString("content");
-
-    Snip snip = new Snip(name, content);
-    snip.setCTime(result.getTimestamp("cTime"));
-    snip.setMTime(result.getTimestamp("mTime"));
-    snip.setCUser(result.getString("cUser"));
-    snip.setMUser(result.getString("mUser"));
-    String commentString = result.getString("commentSnip");
-    if (!result.wasNull()) {
-      snip.setCommentedSnip(load(commentString));
-    }
-    String parentString = result.getString("parentSnip");
-    if (!result.wasNull()) {
-      snip.parent = load(parentString);
-    }
-    snip.setPermissions(new Permissions(result.getString("permissions")));
-    snip.setBackLinks(new Links(result.getString("backLinks")));
-    snip.setSnipLinks(new Links(result.getString("snipLinks")));
-    snip.setLabels(new Labels(result.getString("labels")));
-    snip.setAttachments(new Attachments(result.getString("attachments")));
-    snip.setViewCount(result.getInt("viewCount"));
-    return snip;
-  }
-
-  private int storageCount() {
-    PreparedStatement statement = null;
-    ResultSet result = null;
-    Connection connection = ConnectionManager.getConnection();
-    int count = -1;
-    try {
-      statement = connection.prepareStatement("SELECT count(*) " +
-                                              " FROM Snip ");
-      result = statement.executeQuery();
-      if (result.next()) {
-        count = result.getInt(1);
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    } finally {
-      ConnectionManager.close(result);
-      ConnectionManager.close(statement);
-      ConnectionManager.close(connection);
-    }
-    return count;
-  }
-
-  private List storageAll() {
-    Finder finder = finders.getFinder("ORDER BY name");
-    return finder.execute();
-  }
-
-  private List storageByHotness(int size) {
-    Finder finder = finders.getFinder("ORDER BY viewCount DESC");
-    return finder.execute(size);
-  }
-
-  private List storageByUser(String login) {
-    Finder finder = finders.getFinder("WHERE cUser=?");
-    finder.setString(1, login);
-    return finder.execute();
-  }
-
-  private List storageByDateSince(Timestamp date) {
-    Finder finder = finders.getFinder("WHERE mTime>=?");
-    finder.setDate(1, date);
-    return finder.execute();
-  }
-
-
-  private List storageByRecent(int size) {
-    Finder finder = finders.getFinder("ORDER by mTime DESC");
-    return finder.execute(size);
-  }
-
-  private List storageByComments(Snip parent) {
-    Finder finder = finders.getFinder("WHERE commentSnip=? ORDER BY cTime");
-    finder.setString(1, parent.getName());
-    return finder.execute();
-  }
-
-  private List storageByParent(Snip parent) {
-    Finder finder = finders.getFinder("WHERE parentSnip=?");
-    finder.setString(1, parent.getName());
-    return finder.execute();
-  }
-
-  private List storageByParentNameOrder(Snip parent, int count) {
-    Finder finder = finders.getFinder("WHERE parentSnip=? ORDER BY name DESC ");
-    finder.setString(1, parent.getName());
-    return finder.execute(count);
-  }
-
-  private List storageByParentModifiedOrder(Snip parent, int count) {
-    Finder finder = finders.getFinder("WHERE parentSnip=? ORDER BY mTime DESC ");
-    finder.setString(1, parent.getName());
-    return finder.execute(count);
-  }
-
-  private List storageByDateInName(String start, String end) {
-    Finder finder = finders.getFinder("WHERE name>=? and name<=? and parentSnip=? " +
-                                      " ORDER BY name");
-    finder.setString(1, start);
-    finder.setString(2, end);
-    finder.setString(3, "start");
-    return finder.execute();
-  }
-
-  public Snip storageLoad(String name) {
-    Application app = Application.get();
-    long start = app.start();
-    Snip snip = null;
-    PreparedStatement statement = null;
-    ResultSet result = null;
-    Connection connection = ConnectionManager.getConnection();
-
-    try {
-      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions, " +
-                                              " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
-                                              " FROM Snip " +
-                                              " WHERE UPPER(name)=?");
-      statement.setString(1, name.toUpperCase());
-
-      result = statement.executeQuery();
-      if (result.next()) {
-        snip = createSnip(result);
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    } finally {
-      ConnectionManager.close(result);
-      ConnectionManager.close(statement);
-      ConnectionManager.close(connection);
-    }
-    app.stop(start, "storageLoad - " + name);
-    return snip;
-  }
-
-  private void storageStore(Snip snip) {
-    PreparedStatement statement = null;
-    Connection connection = ConnectionManager.getConnection();
-
-    try {
-      statement = connection.prepareStatement("UPDATE Snip SET name=?, content=?, cTime=?, mTime=?, " +
-                                              " cUser=?, mUser=?, parentSnip=?, commentSnip=?, permissions=?, " +
-                                              " oUser=?, backLinks=?, snipLinks=?, labels=?, attachments=?, viewCount=? " +
-                                              " WHERE name=?");
-      statement.setString(1, snip.getName());
-      statement.setString(2, snip.getContent());
-      statement.setTimestamp(3, snip.getCTime());
-      statement.setTimestamp(4, snip.getMTime());
-      statement.setString(5, snip.getCUser());
-      statement.setString(6, snip.getMUser());
-      Snip parent = snip.getParent();
-      if (null == parent) {
-        statement.setNull(7, Types.VARCHAR);
-      } else {
-        statement.setString(7, parent.getName());
-      }
-      Snip comment = snip.getCommentedSnip();
-      if (null == comment) {
-        statement.setNull(8, Types.VARCHAR);
-      } else {
-        statement.setString(8, comment.getName());
-      }
-      statement.setString(9, snip.getPermissions().toString());
-      statement.setString(10, snip.getOUser());
-      statement.setString(11, snip.getBackLinks().toString());
-      statement.setString(12, snip.getSnipLinks().toString());
-      statement.setString(13, snip.getLabels().toString());
-      statement.setString(14, snip.getAttachments().toString());
-      statement.setInt(15, snip.getViewCount());
-      statement.setString(16, snip.getName());
-      statement.execute();
-    } catch (SQLException e) {
-      e.printStackTrace();
-    } finally {
-      ConnectionManager.close(statement);
-      ConnectionManager.close(connection);
-    }
-    return;
-  }
-
-  private Snip storageCreate(String name, String content) {
-    PreparedStatement statement = null;
-    ResultSet result = null;
-    Connection connection = ConnectionManager.getConnection();
-
-    Application app = Application.get();
-    String login = app.getUser().getLogin();
-    Snip snip = new Snip(name, content);
-    Timestamp cTime = new Timestamp(new java.util.Date().getTime());
-    Timestamp mTime = (Timestamp) cTime.clone();
-    snip.setCTime(cTime);
-    snip.setMTime(mTime);
-    snip.setCUser(login);
-    snip.setMUser(login);
-    snip.setOUser(login);
-    snip.setPermissions(new Permissions());
-    snip.setBackLinks(new Links());
-    snip.setSnipLinks(new Links());
-    snip.setLabels(new Labels());
-    snip.setAttachments(new Attachments());
-
-    try {
-      statement = connection.prepareStatement("INSERT INTO Snip (name, content, cTime, mTime, " +
-                                              " cUser, mUser, parentSnip, commentSnip, permissions, " +
-                                              " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
-                                              " ) VALUES (?,?,?,?,?,"+
-                                                         "?,?,?,?,?,"+
-                                                         "?,?,?,?,?)");
-      statement.setString(1, name);
-      statement.setString(2, content);
-      statement.setTimestamp(3, cTime);
-      statement.setTimestamp(4, mTime);
-      statement.setString(5, login);
-      statement.setString(6, login);
-      Snip parent = snip.getParent();
-      if (null == parent) {
-        statement.setNull(7, Types.VARCHAR);
-      } else {
-        statement.setString(7, parent.getName());
-      }
-      Snip comment = snip.getCommentedSnip();
-      if (null == comment) {
-        statement.setNull(8, Types.VARCHAR);
-      } else {
-        statement.setString(8, comment.getName());
-      }
-      statement.setString(9, snip.getPermissions().toString());
-      statement.setString(10, login);
-      statement.setString(11, snip.getBackLinks().toString());
-      statement.setString(12, snip.getSnipLinks().toString());
-      statement.setString(13, snip.getLabels().toString());
-      statement.setString(14, snip.getAttachments().toString());
-      statement.setInt(15, snip.getViewCount());
-      statement.execute();
-    } catch (SQLException e) {
-      e.printStackTrace();
-    } finally {
-      ConnectionManager.close(result);
-      ConnectionManager.close(statement);
-      ConnectionManager.close(connection);
-    }
-
-    return snip;
-  }
-
-
-  private void storageRemove(Snip snip) {
-    PreparedStatement statement = null;
-    Connection connection = ConnectionManager.getConnection();
-
-    try {
-      statement = connection.prepareStatement("DELETE FROM Snip WHERE name=?");
-      statement.setString(1, snip.getName());
-
-      statement.execute();
-    } catch (SQLException e) {
-      e.printStackTrace();
-    } finally {
-      ConnectionManager.close(statement);
-      ConnectionManager.close(connection);
-    }
-    return;
-  }
 }

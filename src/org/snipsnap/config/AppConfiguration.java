@@ -38,6 +38,7 @@ import java.net.UnknownHostException;
  */
 public class AppConfiguration extends Configuration {
 
+  public final static String APP_CACHE = "app.cache";
   public final static String APP_WEBLOG_DATE_FORMAT = "app.weblogDateFormat";
   public final static String APP_TIMEZONE = "app.timezone";
   public final static String APP_NAME = "app.name";
@@ -209,6 +210,10 @@ public class AppConfiguration extends Configuration {
 
   public String getJDBCDriver() {
     return getProperty(AppConfiguration.APP_JDBC_DRIVER);
+  }
+
+  public String getCache() {
+    return getProperty(AppConfiguration.APP_CACHE);
   }
 
   public void setLogger(String logger) {

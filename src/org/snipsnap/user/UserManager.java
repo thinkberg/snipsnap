@@ -28,9 +28,10 @@ import org.snipsnap.app.Application;
 import org.snipsnap.cache.Cache;
 import org.snipsnap.jdbc.Finder;
 import org.snipsnap.jdbc.FinderFactory;
-import org.snipsnap.jdbc.Loader;
+import org.snipsnap.snip.storage.Storage;
 import org.snipsnap.util.ConnectionManager;
 import org.snipsnap.util.log.Logger;
+import org.snipsnap.snip.storage.JDBCUserStorage;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -61,7 +62,7 @@ import java.util.TimerTask;
  * @author Stephan J. Schmidt
  * @version $Id$
  */
-public class UserManager implements Loader {
+public class UserManager {
   private static UserManager instance;
 
   public static synchronized UserManager getInstance() {
@@ -75,10 +76,6 @@ public class UserManager implements Loader {
     instance = null;
   }
 
-  public List getAll() {
-    return storageAll();
-  }
-
   private final static String COOKIE_NAME = "SnipSnapUser";
   private final static String ATT_USER = "user";
   private final static int SECONDS_PER_YEAR = 60 * 60 * 24 * 365;
@@ -89,16 +86,15 @@ public class UserManager implements Loader {
   private List delayed;
   private Cache cache;
   private FinderFactory finders;
+  private JDBCUserStorage storage;
 
   protected UserManager() {
     delayed = new LinkedList();
 
-    cache = Cache.getInstance();
-    cache.setLoader(User.class, (Loader) this);
 
-    finders = new FinderFactory("SELECT login, passwd, email, status, roles, " +
-                                " cTime, mTime, lastLogin, lastAccess, lastLogout " +
-                                " FROM SnipUser ", cache, (Loader) this, "login");
+    cache = Cache.getInstance();
+    storage = new JDBCUserStorage(cache);
+    cache.setLoader(User.class, storage);
 
     Timer timer = new Timer();
     timer.schedule(new TimerTask() {
@@ -144,6 +140,9 @@ public class UserManager implements Loader {
     }
   }
 
+  public List getAll() {
+    return storage.storageAll();
+  }
   // update the auth hash by removing all entries and updating from the database
   private void updateAuthHash() {
     authHash.clear();
@@ -155,7 +154,7 @@ public class UserManager implements Loader {
   }
 
   public int getUserCount() {
-    return storageUserCount();
+    return storage.storageUserCount();
   }
 
   /**
@@ -281,7 +280,7 @@ public class UserManager implements Loader {
       (user.getPasswd().equals(passwd) ||
       Digest.authenticate(passwd, user.getPasswd()))) {
       user.lastLogin();
-      storageStore(user);
+      storage.storageStore(user);
       return user;
     } else {
       return null;
@@ -292,12 +291,8 @@ public class UserManager implements Loader {
     return user != null && !(user.isGuest() || user.isNonUser());
   }
 
-  public Object createObject(ResultSet result) throws SQLException {
-    return createUser(result);
-  }
-
   public Object loadObject(String login) {
-    return storageLoad(login);
+    return storage.storageLoad(login);
   }
 
   public Class getLoaderType() {
@@ -306,7 +301,7 @@ public class UserManager implements Loader {
 
   public User create(String login, String passwd, String email) {
     passwd = Digest.getDigest(passwd);
-    User user = storageCreate(login, passwd, email);
+    User user = storage.storageCreate(login, passwd, email);
     cache.put(User.class, login, user);
     // System.err.println("createUser login="+login+" hashcode="+((Object) user).hashCode());
     return user;
@@ -314,7 +309,7 @@ public class UserManager implements Loader {
 
   public void store(User user) {
     user.setMTime(new Timestamp(new java.util.Date().getTime()));
-    storageStore(user);
+    storage.storageStore(user);
     return;
   }
 
@@ -328,13 +323,13 @@ public class UserManager implements Loader {
 
   public void systemStore(User user) {
     // System.err.println("SystemStore User="+user.getLogin());
-    storageStore(user);
+    storage.storageStore(user);
     return;
   }
 
   public void remove(User user) {
     cache.remove(User.class, user.getLogin());
-    storageRemove(user);
+    storage.storageRemove(user);
     return;
   }
 
@@ -342,171 +337,7 @@ public class UserManager implements Loader {
     return (User) cache.load(User.class, login);
   }
 
-  // Storage System dependend Methods
+  // SnipStorage System dependend Methods
 
-  private User createUser(ResultSet result) throws SQLException {
-    String login = result.getString("login");
-    String passwd = result.getString("passwd");
-    String email = result.getString("email");
-    Timestamp cTime = result.getTimestamp("cTime");
-    Timestamp mTime = result.getTimestamp("mTime");
-    Timestamp lastLogin = result.getTimestamp("lastLogin");
-    Timestamp lastAccess = result.getTimestamp("lastAccess");
-    Timestamp lastLogout = result.getTimestamp("lastLogout");
-    String status = result.getString("status");
-    User user = new User(login, passwd, email);
-    user.setStatus(status);
-    user.setRoles(new Roles(result.getString("roles")));
-    user.setCTime(cTime);
-    user.setMTime(mTime);
-    user.setLastLogin(lastLogin);
-    user.setLastAccess(lastAccess);
-    user.setLastLogout(lastLogout);
-    return user;
-  }
-
-  private void storageStore(User user) {
-    PreparedStatement statement = null;
-    Connection connection = ConnectionManager.getConnection();
-
-    try {
-      statement = connection.prepareStatement("UPDATE SnipUser SET login=?, passwd=?, email=?, status=?, roles=?, " +
-                                              " cTime=?, mTime=?, lastLogin=?, lastAccess=?, lastLogout=? " +
-                                              " WHERE login=?");
-
-      statement.setString(1, user.getLogin());
-      statement.setString(2, user.getPasswd());
-      statement.setString(3, user.getEmail());
-      statement.setString(4, user.getStatus());
-      statement.setString(5, user.getRoles().toString());
-      statement.setTimestamp(6, user.getCTime());
-      statement.setTimestamp(7, user.getMTime());
-      statement.setTimestamp(8, user.getLastLogin());
-      statement.setTimestamp(9, user.getLastAccess());
-      statement.setTimestamp(10, user.getLastLogout());
-      statement.setString(11, user.getLogin());
-
-      statement.execute();
-    } catch (SQLException e) {
-      e.printStackTrace();
-    } finally {
-      ConnectionManager.close(statement);
-      ConnectionManager.close(connection);
-    }
-    return;
-  }
-
-  private User storageCreate(String login, String passwd, String email) {
-    PreparedStatement statement = null;
-    ResultSet result = null;
-    Connection connection = ConnectionManager.getConnection();
-
-    User user = new User(login, passwd, email);
-    Timestamp cTime = new Timestamp(new java.util.Date().getTime());
-    user.setCTime(cTime);
-    user.setMTime(cTime);
-    user.setLastLogin(cTime);
-    user.setLastAccess(cTime);
-    user.setLastLogout(cTime);
-
-    try {
-      statement = connection.prepareStatement("INSERT INTO SnipUser " +
-                                              " (login, passwd, email, status, roles, " +
-                                              " cTime, mTime, lastLogin, lastAccess, lastLogout) " +
-                                              " VALUES (?,?,?,?,?,?,?,?,?,?)");
-      statement.setString(1, login);
-      statement.setString(2, passwd);
-      statement.setString(3, email);
-      statement.setString(4, "");
-      statement.setString(5, "");
-      statement.setTimestamp(6, cTime);
-      statement.setTimestamp(7, cTime);
-      statement.setTimestamp(8, cTime);
-      statement.setTimestamp(9, cTime);
-      statement.setTimestamp(10, cTime);
-
-      statement.execute();
-    } catch (SQLException e) {
-      e.printStackTrace();
-    } finally {
-      ConnectionManager.close(result);
-      ConnectionManager.close(statement);
-      ConnectionManager.close(connection);
-    }
-
-    return user;
-  }
-
-
-  private void storageRemove(User user) {
-    PreparedStatement statement = null;
-    Connection connection = ConnectionManager.getConnection();
-
-    try {
-      statement = connection.prepareStatement("DELETE FROM SnipUser WHERE login=?");
-      statement.setString(1, user.getLogin());
-      statement.execute();
-    } catch (SQLException e) {
-      e.printStackTrace();
-    } finally {
-      ConnectionManager.close(statement);
-      ConnectionManager.close(connection);
-    }
-    return;
-  }
-
-  private int storageUserCount() {
-    PreparedStatement statement = null;
-    ResultSet result = null;
-    Connection connection = ConnectionManager.getConnection();
-    int count = -1;
-
-    try {
-      statement = connection.prepareStatement("SELECT count(*) FROM SnipUser");
-      result = statement.executeQuery();
-      if (result.next()) {
-        count = result.getInt(1);
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    } finally {
-      ConnectionManager.close(result);
-      ConnectionManager.close(statement);
-      ConnectionManager.close(connection);
-    }
-    return count;
-  }
-
-  private User storageLoad(String login) {
-    System.err.println("storageLoad() User=" + login);
-    User user = null;
-    PreparedStatement statement = null;
-    ResultSet result = null;
-    Connection connection = ConnectionManager.getConnection();
-
-    try {
-      statement = connection.prepareStatement("SELECT login, passwd, email, status, roles, cTime, mTime, lastLogin, lastAccess, lastLogout " +
-                                              " FROM SnipUser " +
-                                              " WHERE login=?");
-      statement.setString(1, login);
-
-      result = statement.executeQuery();
-      if (result.next()) {
-        user = createUser(result);
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    } finally {
-      ConnectionManager.close(result);
-      ConnectionManager.close(statement);
-      ConnectionManager.close(connection);
-    }
-    return user;
-  }
-
-  private List storageAll() {
-    Finder finder = finders.getFinder(" ORDER BY login");
-    return finder.execute();
-  }
 
 }

@@ -23,37 +23,17 @@
  * --LICENSE NOTICE--
  */
 
-package org.snipsnap.jdbc;
+package org.snipsnap.snip.storage;
 
-import org.snipsnap.cache.Cache;
-import org.snipsnap.snip.storage.Storage;
+import org.snipsnap.snip.Snip;
 
 /**
- * Convenience factory to generate Finders
+ * Interface for loading classes
  *
  * @author stephan
  * @version $Id$
  */
-public class FinderFactory {
-  private Cache cache;
-  private Class type;
-  private String statementRoot;
-  private String keyName;
-  private JDBCCreator creator;
 
-  public FinderFactory(String statement, Cache cache, Class type, String keyName, JDBCCreator creator) {
-    this.cache = cache;
-    this.type = type;
-    this.statementRoot = statement + " ";
-    this.keyName = keyName;
-    this.creator = creator;
-  }
-
-  public Finder getFinder() {
-    return new Finder(statementRoot, cache, keyName, type, creator);
-  }
-
-  public Finder getFinder(String statement) {
-    return new Finder(statementRoot + statement, cache, keyName, type, creator);
-  }
+public interface Storage {
+  public Object loadObject(String name);
 }

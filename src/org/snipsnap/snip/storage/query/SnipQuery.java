@@ -23,37 +23,22 @@
  * --LICENSE NOTICE--
  */
 
-package org.snipsnap.jdbc;
+package org.snipsnap.snip.storage.query;
 
-import org.snipsnap.cache.Cache;
-import org.snipsnap.snip.storage.Storage;
+import org.snipsnap.snip.Snip;
 
 /**
- * Convenience factory to generate Finders
+ * Supplies a query interface for snips
  *
- * @author stephan
+ * @author Stephan J. Schmidt
  * @version $Id$
  */
-public class FinderFactory {
-  private Cache cache;
-  private Class type;
-  private String statementRoot;
-  private String keyName;
-  private JDBCCreator creator;
 
-  public FinderFactory(String statement, Cache cache, Class type, String keyName, JDBCCreator creator) {
-    this.cache = cache;
-    this.type = type;
-    this.statementRoot = statement + " ";
-    this.keyName = keyName;
-    this.creator = creator;
+public abstract class SnipQuery implements Query {
+  public boolean fit(Object object) {
+    if (! (object instanceof Snip)) return false;
+    return fit((Snip) object);
   }
 
-  public Finder getFinder() {
-    return new Finder(statementRoot, cache, keyName, type, creator);
-  }
-
-  public Finder getFinder(String statement) {
-    return new Finder(statementRoot + statement, cache, keyName, type, creator);
-  }
+  public abstract boolean fit(Snip snip);
 }

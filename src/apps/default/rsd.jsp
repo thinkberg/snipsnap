@@ -4,23 +4,17 @@
 --%><%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %><%--
 --%><%@ page contentType="text/xml"%><%--
 --%><!-- name="generator" content="SnipSnap/<c:out value="${config.version}"/>" -->
-<rsd version="0.2">
+<rsd version="0.6" xmlns:rsd="http://archipelago.phrasewise.com/rsd" >
 <service>
-<title><c:out value="${config.name}"/></title>
-<link><c:out value="${url}/${snip.nameEncoded}"/></link>
-<description><c:out value="${config.tagLine}"/></description>
-<docs>http://snipsnap.org/space/snipsnap-xmlrpc</docs>
-<settings>
-  <struct>
-	<member>
-    	<name>API</name>
-		<value>Blogger API</value>
-	</member>
-  </struct>
-  <url><c:out value="${baseurl}"/></url>
-  <siteidentifier></siteidentifier>
-  <pathtoservice>/RPC2</pathtoservice>
-  <notes>SnipSnap will support other SOAP and XML-RPC interfaces in the future, see http://snipsnap.org/space/Interfaces.</notes>
-</settings>
+  <engineName>SnipSnap</engineName>
+  <engineLink>http://snipsnap.org</engineLink>
+  <homePageLink><c:out value="${url}/${snip.nameEncoded}"/></homePageLink>
+  <settings>
+    <docs>http://www.conversant.com/docs/api/ </docs>
+    <notes>SnipSnap will support other XML-RPC and SOAP APIs in the future.</notes>
+  </settings>
+  <apis>
+    <api name="Blogger" preferred="true" rpcLink="<c:out value="${baseurl}"/>/RPC2" blogID="" />
+  </apis>
 </service>
 </rsd>

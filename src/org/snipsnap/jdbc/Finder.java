@@ -27,6 +27,8 @@ package org.snipsnap.jdbc;
 
 import org.snipsnap.cache.Cache;
 import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.storage.JDBCSnipStorage;
+import org.snipsnap.snip.storage.Storage;
 import org.snipsnap.util.ConnectionManager;
 
 import java.sql.*;
@@ -43,25 +45,25 @@ public class Finder {
   private PreparedStatement statement;
   private String statementString;
   private Connection connection;
+  private JDBCCreator creator;
   private Cache cache;
-  private Loader loader;
-  private Class type;
   private String keyName;
   private boolean caching = true;
+  private Class type;
 
-  public Finder(String statement, Cache cache, Loader loader, boolean caching, String key) {
-    this(statement, cache, loader, key);
+  public Finder(String statement, Cache cache, boolean caching, String key, Class type, JDBCCreator creator) {
+    this(statement, cache, key, type, creator);
     this.caching = caching;
   }
 
-  public Finder(String statement, Cache cache, Loader loader, String key) {
+  public Finder(String statement, Cache cache, String key, Class type, JDBCCreator creator) {
     try {
       this.connection = ConnectionManager.getConnection();
       this.statementString = statement;
       this.statement = this.connection.prepareStatement(statement);
-      this.loader = loader;
-      this.type = loader.getLoaderType();
       this.keyName = key;
+      this.type = type;
+      this.creator = creator;
     } catch (SQLException e) {
       System.out.println("Unable to prepare statement: " + statementString);
     }
@@ -111,7 +113,7 @@ public class Finder {
         String name = result.getString(this.keyName);
         object = cache.get(type, name);
         if (null == object) {
-          object = loader.createObject(result);
+          object = creator.createObject(result);
           if (caching) {
             cache.put(type, name, object);
           }

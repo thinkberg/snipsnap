@@ -23,21 +23,29 @@
  * --LICENSE NOTICE--
  */
 
-package org.snipsnap.jdbc;
+package org.snipsnap.snip.storage;
 
-import org.snipsnap.snip.Snip;
+import org.snipsnap.user.User;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.List;
 
 /**
- * Interface for loading classes form a ResultSet
+ * Storage backend for User data
  *
- * @author stephan
+ * @author Stephan J. Schmidt
  * @version $Id$
  */
-public interface Loader {
-  public Object createObject(ResultSet result) throws SQLException;
-  public Object loadObject(String name);
-  public Class getLoaderType();
+
+public interface UserStorage extends Storage {
+  public void storageStore(User user);
+
+  public User storageCreate(String login, String passwd, String email);
+
+  public void storageRemove(User user);
+
+  public int storageUserCount();
+
+  public User storageLoad(String login);
+
+  public List storageAll();
 }
