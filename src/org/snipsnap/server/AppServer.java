@@ -33,6 +33,7 @@ import org.snipsnap.config.Configuration;
 import java.io.IOException;
 import java.util.Iterator;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * Application Server
@@ -102,7 +103,11 @@ public class AppServer {
       HttpListener listener = jettyServer.getListeners()[0];
       String host = listener.getHost();
       if (InetAddrPort.__0_0_0_0.equals(host)) {
-        host = "localhost";
+        try {
+          host = InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException e) {
+          host = System.getProperty("host", "localhost");
+        }
       }
       System.out.println("ATTENTION: http://" + host + ":" + listener.getPort() + "/install");
     } else {

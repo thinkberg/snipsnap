@@ -37,6 +37,9 @@ import org.apache.oro.text.regex.*;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.util.Transliterate;
+import org.snipsnap.app.Application;
+import org.snipsnap.user.User;
+import org.snipsnap.user.UserManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -88,6 +91,7 @@ public class LinkTestFilter extends Filter {
       buffer.append(input.substring(lastmatch, result.beginOffset(0)));
       String targetSnip = result.group(1);
       if (targetSnip.startsWith("&#")) {
+        System.out.println("native2ascii: "+targetSnip);
         targetSnip = trans.nativeToAscii(targetSnip);
       }
 
@@ -107,11 +111,7 @@ public class LinkTestFilter extends Filter {
             targetSnip = targetSnip.substring(0, atIndex);
             buffer.append("<a href=\"");
             buffer.append(wikiSpaces.get(extSpace));
-            try {
-              buffer.append(SnipLink.encode(targetSnip));
-            } catch (Exception e) {
-              buffer.append(targetSnip);
-            }
+            buffer.append(SnipLink.encode(targetSnip));
             buffer.append("\">");
             buffer.append(targetSnip);
             buffer.append("@");
@@ -122,19 +122,18 @@ public class LinkTestFilter extends Filter {
           }
           // internal link
         } else {
+          Application app = Application.get();
           if (linkTester.exists(targetSnip)) {
             SnipLink.appendLink(buffer, targetSnip, result.group(1));
-          } else {
+          } else if(UserManager.getInstance().isAuthenticated(app.getUser())) {
             buffer.append(EscapeFilter.escape('['));
-            buffer.append("create <a href=\"" +
-                          "../exec/edit?name=");
-            try {
-              buffer.append(SnipLink.encode(targetSnip));
-            } catch (Exception e) {
-              buffer.append(targetSnip);
-            }
+            buffer.append("create <a href=\"../exec/edit?name=");
+            buffer.append(SnipLink.encode(targetSnip));
             buffer.append("\">").append(result.group(1)).append("</a>");
             buffer.append(EscapeFilter.escape(']'));
+          } else {
+            // cannot edit/create snip, so just display the text
+            buffer.append(result.group(1));
           }
         }
       } else {

@@ -13,6 +13,6 @@ if [ ! -f $base/$jar/snipsnap.jar ]; then
 fi
 
 # put classpath together
-CLASSPATH=lib/xmlrpc-1.1.jar:lib/jakarta.jar:lib/javax.servlet.jar:lib/mckoidb.jar:lib/org.apache.jasper.jar:lib/org.mortbay.jetty.jar:lib/jdbcpool.jar:lib/lucene-1.2.jar:lib/org.apache.crimson.jar
+CLASSPATH=$base/lib/jakarta.jar:$base/lib/mckoidb.jar:$base/lib/jdbcpool.jar:$base/lib/lucene-1.2.jar:$base/lib/org.apache.crimson.jar
 
-$JAVA_HOME/bin/java -cp $CLASSPATH:lib/snipsnap-utils.jar org.snipsnap.util.DBImport $*
+$JAVA_HOME/bin/java -cp $CLASSPATH:$base/lib/snipsnap-utils.jar org.snipsnap.util.DBImport $*
