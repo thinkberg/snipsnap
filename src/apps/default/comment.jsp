@@ -12,17 +12,12 @@
   <tr>
    <td><span class="snip-name"><c:out value="${snip.name}"/></span></td>
    <td align="right">
-    <s:check roles="Authenticated" permission="Edit" snip="${snip}">
-     [<a href="../exec/edit?name=<c:out value='${snip.name}'/>">edit</a>]
-    </s:check>
-    <s:check roles="Authenticated" permission="Edit" snip="${snip}" invert="true">
-     <span class="inactive">[edit]</span>
-    </s:check>
+     <c:import url="util/buttons.jsp"/>
    </td>
   </tr>
   <tr width="100%">
    <td colspan="2">
-    <span class="snip-modified"><c:out value="${snip.modified}" 
+    <span class="snip-modified"><c:out value="${snip.modified}"
           escapeXml="false"/></span>
    </td>
   </tr>
@@ -39,7 +34,7 @@
     <tr>
      <td><s:image name="comment"/></td>
      <td>
-      <span class="comment-author"><c:out value="${comment.modified.short}" 
+      <span class="comment-author"><c:out value="${comment.modified.short}"
                                       escapeXml="false" /></span>
        <s:check roles="Owner" permission="Edit" snip="${comment}">
         [<a href="../exec/edit?name=<c:out value='${comment.name}'/>">edit</a>]

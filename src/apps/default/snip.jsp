@@ -13,17 +13,12 @@
   <tr>
    <td><span class="snip-name"><c:out value="${snip.name}"/></span></td>
    <td align="right">
-    <s:check roles="Authenticated" permission="Edit" snip="${snip}">
-     [<a href="../exec/edit?name=<c:out value='${snip.name}'/>">edit</a>]
-    </s:check>
-    <s:check roles="Authenticated" permission="Edit" snip="${snip}" invert="true">
-     <span class="inactive">[edit]</span>
-    </s:check>
+     <c:import url="util/buttons.jsp"/>
    </td>
   </tr>
   <tr width="100%">
    <td colspan="2">
-    <span class="snip-modified"><c:out value="${snip.modified}" 
+    <span class="snip-modified"><c:out value="${snip.modified}"
           escapeXml="false"/></span>
    </td>
   </tr>
@@ -40,7 +35,7 @@
   <!-- do not display comments on start page, only on posted
         entries -->
   <c:if test="${snip.notWeblog}">
-   <c:out value="${snip.comments}" escapeXml="false" /> | 
+   <c:out value="${snip.comments}" escapeXml="false" /> |
    <c:out value="${snip.comments.postString}" escapeXml="false" />
   </c:if>
  </td></tr>

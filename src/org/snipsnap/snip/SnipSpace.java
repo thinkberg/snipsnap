@@ -77,6 +77,10 @@ public class SnipSpace implements LinkTester, Loader {
     return changed.get();
   }
 
+  public List getAll() {
+    return storageAll();
+  }
+
   public List getByDate(String start, String end) {
     return storageByDateInName(start, end);
   }
@@ -191,6 +195,13 @@ public class SnipSpace implements LinkTester, Loader {
     }
     snip.setPermissions(new Permissions(result.getString("permissions")));
     return snip;
+  }
+
+  private List storageAll() {
+    Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions " +
+                               " FROM Snip " +
+                               " ORDER BY name", cache, (Loader) this, false);
+    return finder.execute();
   }
 
   private List storageByRecent(int size) {

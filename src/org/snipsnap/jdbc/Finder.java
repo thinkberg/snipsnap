@@ -29,10 +29,7 @@ import com.neotis.cache.Cache;
 import com.neotis.snip.Snip;
 import com.neotis.util.ConnectionManager;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +44,12 @@ public class Finder {
   Connection connection;
   Cache cache;
   Loader loader;
+  private boolean caching = true;
+
+  public Finder(String statement, Cache cache, Loader loader, boolean caching) {
+    this(statement, cache, loader);
+    this.caching = caching;
+  }
 
   public Finder(String statement, Cache cache, Loader loader) {
     try {
@@ -90,9 +93,11 @@ public class Finder {
       while (result.next() && count-- > 0) {
         String name = result.getString("name");
         snip = cache.get(name);
-        if (null == snip ) {
+        if (null == snip) {
           snip = loader.createSnip(result);
-          cache.put(name, snip);
+          if (caching) {
+            cache.put(name, snip);
+          }
         }
         snips.add(snip);
       }

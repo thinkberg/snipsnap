@@ -59,6 +59,7 @@ public class MacroFilter extends RegexTokenFilter {
     macros.put("table", new TableMacro());
     macros.put("snips-by-user", new UserSnipMacro());
     macros.put("weblog", new WeblogMacro());
+    macros.put("index", new IndexSnipMacro());
     macros.put("image", new ImageMacro());
   }
 
