@@ -25,25 +25,28 @@
 package org.snipsnap.server;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 
 /**
  * SnipSnap launcher that takes care of adding the compiler to the classpath before
  * invoking AppServer.
  *
- * @version $Id$
  * @author Matthias L. Jugel
+ * @version $Id$
  */
 public class SnipSnapLauncher extends Launcher {
 
   /**
    * Start SnipSnap after adding the sdk tools.jar or similar to the classpath.
+   *
    * @param args command line arguments
    */
   public static void main(String[] args) {
     // try to add the java compiler path
     File toolsJar = new File(new File(System.getProperty("java.home")), "lib/tools.jar");
-    if(!toolsJar.exists()) {
+    if (!toolsJar.exists()) {
       toolsJar = new File(new File(System.getProperty("java.home")), "../lib/tools.jar");
     }
     if (!toolsJar.exists()) {
@@ -59,18 +62,26 @@ public class SnipSnapLauncher extends Launcher {
     try {
       System.setProperty(Launcher.CLASSPATH, toolsJar.getCanonicalPath());
     } catch (IOException e) {
-      System.out.println("SnipSnapLauncher: unable to add java compiler library: "+e.getMessage());
+      System.out.println("SnipSnapLauncher: unable to add java compiler library: " + e.getMessage());
     }
 
-    // set default server.log
-    if(null == System.getProperty(Launcher.ERRORLOG)) {
-      System.setProperty(Launcher.ERRORLOG, "server.log");
+    try {
+      File errorLog = null;
+      if (System.getProperty("launcher.errlog") != null) {
+        errorLog = new File(System.getProperty("launcher.errlog"));
+      } else {
+        errorLog = File.createTempFile("snipsnap_", ".log");
+      }
+      System.err.println("Launcher: System.err redirected to " + errorLog.getPath());
+      System.setErr(new PrintStream(new FileOutputStream(errorLog)));
+    } catch (IOException e) {
+      System.err.println("Launcher: unable to redirect error log: " + e.getMessage());
     }
 
     try {
       invokeMain("org.snipsnap.server.AppServer", args);
     } catch (Exception e) {
-      System.out.println("SnipSnapLauncher: unable to start server: "+e.getMessage());
+      System.out.println("SnipSnapLauncher: unable to start server: " + e.getMessage());
       e.printStackTrace();
     }
   }

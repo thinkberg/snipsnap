@@ -22,7 +22,7 @@
     <p/>
    </c:if>
    <%-- the login form --%>
-   <form class="form" method="post" action="exec/authenticate">
+   <form class="form" method="post" action="exec/authenticate" enctype="multipart/form-data">
     <table>
      <tr><td><label for="login"><fmt:message key="login.user.name"/></label></td><td><input id="login" name="login" type="text" size="20" value="<c:out value='${tmpLogin}'/>" tabindex="0"/></td></tr>
      <tr><td><label for="password"><fmt:message key="login.password"/></label></td><td><input id="password" name="password" type="password" size="20" value="" tabindex="0"/></td></tr>

@@ -28,10 +28,10 @@ import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.container.Components;
+import org.snipsnap.net.filter.MultipartWrapper;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.net.filter.MultipartWrapper;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -50,12 +50,12 @@ import java.util.Arrays;
 public class SnipCopyServlet extends HttpServlet {
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws IOException, ServletException {
+          throws IOException, ServletException {
     doGet(request, response);
   }
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws IOException, ServletException {
+          throws IOException, ServletException {
     Configuration config = Application.get().getConfiguration();
     // If this is not a multipart/form-data request continue
     String type = request.getHeader("Content-Type");
@@ -69,7 +69,7 @@ public class SnipCopyServlet extends HttpServlet {
 
     String name = request.getParameter("snip");
 
-    if(null != request.getParameter("cancel")) {
+    if (null != request.getParameter("cancel")) {
       response.sendRedirect(config.getSnipUrl(name));
       return;
     }
@@ -80,22 +80,22 @@ public class SnipCopyServlet extends HttpServlet {
       Snip snip = space.load(name);
       if (request.getParameter("copy") != null) {
         String newName = request.getParameter("name");
-        if(newName != null && newName.endsWith("/")) {
+        if (newName != null && newName.endsWith("/")) {
           newName = newName.substring(0, newName.length() - 2);
         }
         String[] subsnips = request.getParameterValues("subsnips");
 
         Snip newSnip = snip.copy(newName);
         Logger.log("SnipCopyServlet: copied " + snip.getName() + " to " + newSnip.getName());
-        for(int s = 0; subsnips != null && s < subsnips.length; s++) {
+        for (int s = 0; subsnips != null && s < subsnips.length; s++) {
           String subSnipName = subsnips[s];
           Snip subSnip = space.load(subSnipName);
-          if(subSnip != null && subSnipName.startsWith(name)) {
-            String newSubSnipName = newName + "/" + subsnips[s].substring(name.length()+1);
+          if (subSnip != null && subSnipName.startsWith(name)) {
+            String newSubSnipName = newName + "/" + subsnips[s].substring(name.length() + 1);
             Snip newSubSnip = subSnip.copy(newSubSnipName);
-            Logger.log("SnipCopyServlet: copied "+subSnip.getName()+" to "+newSubSnip.getName());
+            Logger.log("SnipCopyServlet: copied " + subSnip.getName() + " to " + newSubSnip.getName());
           } else {
-            Logger.warn("SnipCopyServlet: snip does not exist: "+subsnips[s]);
+            Logger.warn("SnipCopyServlet: snip does not exist: " + subsnips[s]);
           }
         }
         response.sendRedirect(config.getUrl("/space/" + SnipLink.encode(newName)));

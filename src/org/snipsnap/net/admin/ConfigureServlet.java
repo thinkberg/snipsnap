@@ -44,10 +44,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.io.FileOutputStream;
-import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -156,7 +156,7 @@ public class ConfigureServlet extends HttpServlet {
         SetupHandler handler = (SetupHandler) Class.forName(className).newInstance();
         String handlerName = handler.getName();
         handlers.put(handlerName, handler);
-        System.err.println("ConfigurServlet: added setup handler: " + handlerName);
+        System.err.println("ConfigureServlet: added setup handler: " + handlerName);
       } catch (Exception e) {
         System.err.println("ConfigureServlet: unable to instantiate setup handler: " + e);
         e.printStackTrace();
@@ -169,7 +169,7 @@ public class ConfigureServlet extends HttpServlet {
   }
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+          throws ServletException, IOException {
 
     // If this is not a multipart/form-data request continue
     String type = request.getHeader("Content-Type");
@@ -185,8 +185,8 @@ public class ConfigureServlet extends HttpServlet {
     Configuration config = (Configuration) session.getAttribute(ATT_CONFIG);
 
     String prefix = request.getParameter(ATT_PREFIX);
-    if(null == prefix) {
-      prefix = (String)request.getAttribute(Configuration.APP_PREFIX);
+    if (null == prefix) {
+      prefix = (String) request.getAttribute(Configuration.APP_PREFIX);
     }
     if (prefix != null && config != null && !prefix.equals(config.getPrefix())) {
       session.removeAttribute(ATT_CONFIG);

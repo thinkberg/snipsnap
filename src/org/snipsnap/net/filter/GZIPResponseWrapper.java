@@ -32,9 +32,11 @@ public class GZIPResponseWrapper extends HttpServletResponseWrapper {
   public void finishResponse() {
     try {
       if (writer != null) {
+        writer.flush();
         writer.close();
       } else {
         if (stream != null) {
+          stream.flush();
           stream.close();
         }
       }
@@ -43,7 +45,13 @@ public class GZIPResponseWrapper extends HttpServletResponseWrapper {
   }
 
   public void flushBuffer() throws IOException {
-    stream.flush();
+    if (writer != null) {
+      writer.flush();
+    } else {
+      if (stream != null) {
+        stream.flush();
+      }
+    }
   }
 
   public ServletOutputStream getOutputStream() throws IOException {
@@ -75,6 +83,6 @@ public class GZIPResponseWrapper extends HttpServletResponseWrapper {
   }
 
   public void setContentType(String s) {
-
+    origResponse.setContentType(s);
   }
 }

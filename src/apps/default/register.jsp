@@ -15,7 +15,7 @@
   <div class="error"><fmt:message key="${error.value}"/></div>
  </c:forEach>
  <div class="snip-content">
-  <form class="form" method="post" action="exec/newuser">
+  <form class="form" method="post" action="exec/newuser" enctype="multipart/form-data">
    <table>
     <tr <c:if test="${errors['login'] != null}">class="error-position"</c:if>>
      <td><label for="login"><fmt:message key="login.user.name"/></label></td><td><input id="login" name="login" type="text" size="20" value="<c:out value="${param['login']}"/>"/></td></tr>

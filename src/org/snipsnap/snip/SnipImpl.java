@@ -24,13 +24,15 @@
  */
 package org.snipsnap.snip;
 
+import dynaop.Proxy;
+import dynaop.ProxyAware;
+import gabriel.Principal;
 import org.picocontainer.PicoContainer;
 import org.radeox.api.engine.RenderEngine;
 import org.radeox.api.engine.context.RenderContext;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.container.Components;
-import org.snipsnap.interceptor.Aspects;
 import org.snipsnap.render.context.SnipRenderContext;
 import org.snipsnap.snip.attachment.Attachment;
 import org.snipsnap.snip.attachment.Attachments;
@@ -53,10 +55,6 @@ import java.io.Writer;
 import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.List;
-
-import dynaop.ProxyAware;
-import dynaop.Proxy;
-import gabriel.Principal;
 
 /**
  * Central class for snips.
@@ -465,9 +463,9 @@ public class SnipImpl implements Snip, ProxyAware {
     //long start = Application.get().start();
     PicoContainer container = Components.getContainer();
 
-//    Label mimeTypeLabel = getLabels().getLabel("TypeLabel");
-//    if(mimeTypeLabel instanceof TypeLabel) {
-//      String viewHandler = ((TypeLabel)mimeTypeLabel).getViewHandler();
+//    Label typeLabel = getLabels().getLabel("Type");
+//    if(typeLabel instanceof TypeLabel) {
+//      String viewHandler = ((TypeLabel)typeLabel).getViewHandler();
 //
 //    }
 
@@ -488,9 +486,8 @@ public class SnipImpl implements Snip, ProxyAware {
     }
 
 
-    RenderContext context = new SnipRenderContext(
-      proxy,
-      (SnipSpace) container.getComponentInstance(SnipSpace.class));
+    RenderContext context = new SnipRenderContext(proxy,
+                                                  (SnipSpace) container.getComponentInstance(SnipSpace.class));
     context.setParameters(Application.get().getParameters());
 
     String xml = "";

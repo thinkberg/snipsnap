@@ -24,26 +24,31 @@
  */
 package org.snipsnap.net;
 
+import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
+import org.snipsnap.container.Components;
+import org.snipsnap.container.SessionService;
+import org.snipsnap.net.filter.MultipartWrapper;
 import org.snipsnap.snip.HomePage;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.user.UserManagerFactory;
-import org.snipsnap.container.SessionService;
-import org.snipsnap.container.Components;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 /**
  * Servlet to register a new user.
+ *
  * @author Matthias L. Jugel
  * @version $Id$
  */
@@ -56,14 +61,22 @@ public class NewUserServlet extends HttpServlet {
   private final static String ERR_NOT_ALLOWED = "login.register.error.not.allowed";
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+          throws ServletException, IOException {
+    Configuration config = Application.get().getConfiguration();
+
+    // If this is not a multipart/form-data request continue
+    String type = request.getHeader("Content-Type");
+    if (type != null && type.startsWith("multipart/form-data")) {
+      try {
+        request = new MultipartWrapper(request, config.getEncoding() != null ? config.getEncoding() : "UTF-8");
+      } catch (IllegalArgumentException e) {
+        Logger.warn("FileUploadServlet: multipart/form-data wrapper:" + e.getMessage());
+      }
+    }
 
     HttpSession session = request.getSession();
     session.removeAttribute("errors");
     Map errors = new HashMap();
-
-    Application app = Application.get();
-    Configuration config = app.get().getConfiguration();
 
     if (!config.deny(Configuration.APP_PERM_REGISTER)) {
       String login = request.getParameter("login");
@@ -91,13 +104,7 @@ public class NewUserServlet extends HttpServlet {
           return;
         }
 
-        // TODO 1.4 if(!login.matches("[A-Za-z0-9._ ]+")) {
-        StringTokenizer tok = new StringTokenizer(login, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._ ");
-        if (login.startsWith(" ") || tok.hasMoreTokens()) {
-          errors.put("login", ERR_ILLEGAL + ": " + (tok.hasMoreTokens() ? tok.nextToken() : ""));
-          sendError(session, errors, request, response);
-          return;
-        }
+        login = login.trim();
 
         // check whether the password is correctly typed
         if (!password.equals(password2)) {
@@ -114,11 +121,11 @@ public class NewUserServlet extends HttpServlet {
 
         // create user ...
         user = um.create(login, password, email);
-        app.setUser(user, session);
+        Application.get().setUser(user, session);
         HomePage.create(login);
 
         // store user name and app in cookie and session
-        SessionService sessionService = (SessionService)Components.getComponent(SessionService.class);
+        SessionService sessionService = (SessionService) Components.getComponent(SessionService.class);
         sessionService.setCookie(request, response, user);
 
         response.sendRedirect(config.getUrl("/space/" + SnipLink.encode(login)));
@@ -126,7 +133,7 @@ public class NewUserServlet extends HttpServlet {
       }
 
       String referer = request.getParameter("referer");
-      response.sendRedirect(referer != null ? referer : config.getUrl("/space/"+config.getStartSnip()));
+      response.sendRedirect(referer != null ? referer : config.getUrl("/space/" + config.getStartSnip()));
     } else {
       errors.put("Fatal", ERR_NOT_ALLOWED);
       sendError(session, errors, request, response);
@@ -134,7 +141,7 @@ public class NewUserServlet extends HttpServlet {
   }
 
   private void sendError(HttpSession session, Map errors, HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+          throws ServletException, IOException {
     session.setAttribute("errors", errors);
     RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/register.jsp");
     dispatcher.forward(request, response);

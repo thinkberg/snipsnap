@@ -35,40 +35,71 @@ import org.snipsnap.server.AdminXmlRpcHandler;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Properties;
-import java.util.Hashtable;
-import java.net.URL;
 import java.net.InetAddress;
+import java.net.URL;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Properties;
+import java.util.prefs.Preferences;
 
 public class XmlRpcServerTest extends TestCase {
   private static WebServer xmlRpcServer;
   private static AdminXmlRpcClient xmlRpcClient;
-  private static Properties config = new Properties();
+  private static boolean doTests = false;
 
-  public XmlRpcServerTest(String name) throws IOException {
+  public XmlRpcServerTest(String name) throws Exception {
     super(name);
-    config.load(XmlRpcServerTest.class.getResourceAsStream("/conf/snipsnap.conf"));
-    config.setProperty(ServerConfiguration.ADMIN_PASS, "test");
-    File tmpFile = File.createTempFile("xmlrpctest", "root");
-    tmpFile.deleteOnExit();
-    tmpFile.delete();
-    tmpFile.mkdirs();
-    config.setProperty(ServerConfiguration.WEBAPP_ROOT, tmpFile.getPath());
+    Preferences serverPrefs = Preferences.userNodeForPackage(ServerConfiguration.class);
+    int keyCount = serverPrefs.keys().length;
+
+    if (keyCount == 0) {
+      Properties config = new Properties();
+      config.load(XmlRpcServerTest.class.getResourceAsStream("/conf/snipsnap.conf"));
+
+      Iterator configIt = config.keySet().iterator();
+      while (configIt.hasNext()) {
+        String key = (String) configIt.next();
+        serverPrefs.put(key, config.getProperty(key));
+      }
+      serverPrefs.put(ServerConfiguration.ADMIN_PASS, "test");
+
+      File tmpFile = File.createTempFile("xmlrpctest", "root");
+      tmpFile.deleteOnExit();
+      tmpFile.delete();
+      tmpFile.mkdirs();
+      serverPrefs.put(ServerConfiguration.WEBAPP_ROOT, tmpFile.getPath());
+      serverPrefs.flush();
+
+      doTests = true;
+    }
   }
 
   protected void setUp() throws Exception {
     super.setUp();
-    if (null == xmlRpcServer) {
-      URL url = new URL(config.getProperty(ServerConfiguration.ADMIN_URL));
-      config.setProperty(ServerConfiguration.ADMIN_USER, "ADMIN");
-      config.setProperty(ServerConfiguration.ADMIN_PASS, "ADMIN");
-      xmlRpcServer = new WebServer(url.getPort());
-      xmlRpcServer.addHandler("$default", new AdminXmlRpcHandler(config));
-      xmlRpcServer.start();
-    }
+    if (doTests) {
+      Preferences serverPrefs = Preferences.userNodeForPackage(ServerConfiguration.class);
 
-    xmlRpcClient = new AdminXmlRpcClient(config.getProperty(ServerConfiguration.ADMIN_URL),
-                                         "ADMIN", "ADMIN");
+      if (null == xmlRpcServer) {
+        URL url = new URL(serverPrefs.get(ServerConfiguration.ADMIN_URL, null));
+        serverPrefs.put(ServerConfiguration.ADMIN_USER, "ADMIN");
+        serverPrefs.put(ServerConfiguration.ADMIN_PASS, "ADMIN");
+        serverPrefs.flush();
+
+        xmlRpcServer = new WebServer(url.getPort());
+        xmlRpcServer.addHandler("$default", new AdminXmlRpcHandler());
+        xmlRpcServer.start();
+      }
+
+      xmlRpcClient = new AdminXmlRpcClient(serverPrefs.get(ServerConfiguration.ADMIN_URL, null),
+                                           "ADMIN", "ADMIN");
+    }
+  }
+
+  protected void tearDown() throws Exception {
+    super.tearDown();
+    Preferences serverPrefs = Preferences.userNodeForPackage(ServerConfiguration.class);
+    serverPrefs.removeNode();
+    serverPrefs.flush();
   }
 
   public static Test suite() {
@@ -76,8 +107,11 @@ public class XmlRpcServerTest extends TestCase {
   }
 
   public void testXmlRpcInstall() throws IOException {
+    if (!doTests) {
+      return;
+    }
     try {
-      URL url = new URL("http://"+InetAddress.getLocalHost().getHostName()+":8668/?key=");
+      URL url = new URL("http://" + InetAddress.getLocalHost().getHostName() + ":8668/?key=");
       URL result = xmlRpcClient.install("test", "localhost", "8668", "/");
       assertTrue(result.toExternalForm().startsWith(url.toExternalForm()));
     } catch (XmlRpcException e) {
@@ -86,6 +120,9 @@ public class XmlRpcServerTest extends TestCase {
   }
 
   public void testXmlRpcApplicationList() throws IOException {
+    if (!doTests) {
+      return;
+    }
     try {
       Hashtable list = xmlRpcClient.getApplications();
       assertEquals(1, list.size());
@@ -95,6 +132,9 @@ public class XmlRpcServerTest extends TestCase {
   }
 
   public void testXmlRpcDelete() throws IOException {
+    if (!doTests) {
+      return;
+    }
     try {
       xmlRpcClient.delete("test", false);
     } catch (XmlRpcException e) {

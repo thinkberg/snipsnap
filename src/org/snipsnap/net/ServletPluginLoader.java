@@ -34,7 +34,6 @@ import org.snipsnap.snip.label.Label;
 import org.snipsnap.snip.label.Labels;
 import org.snipsnap.snip.label.TypeLabel;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -45,6 +44,7 @@ public class ServletPluginLoader {
 
   /**
    * Get a map of all plugins (jar and snip).
+   *
    * @return the map of plugins
    */
   public static Map getPlugins() {
@@ -57,6 +57,7 @@ public class ServletPluginLoader {
 
   /**
    * Fina all snip plugin handlers by checking the mime type.
+   *
    * @return a map with snip name(handler) and type
    */
   private static Map getSnipPlugins() {
@@ -69,9 +70,7 @@ public class ServletPluginLoader {
       boolean noLabelsAll = labels.getAll().isEmpty();
 
       if (!noLabelsAll) {
-        Collection LabelsCat;
-        // Search for all type labels
-        Label label = labels.getLabel("TypeLabel");
+        Label label = labels.getLabel("Type");
         if (null != label && label instanceof TypeLabel) {
           // only add labels that have the type text/gsp
           String type = ((TypeLabel) label).getTypeValue();
@@ -89,14 +88,14 @@ public class ServletPluginLoader {
    * Load servlets from jar resource.
    */
   private static void initServletPlugins() {
-    if(null == pluginServlets) {
+    if (null == pluginServlets) {
       pluginServlets = new HashMap();
 
       // load plugins from services api
       Iterator pluginServletNames = Service.providerNames(ServletPlugin.class);
       while (pluginServletNames.hasNext()) {
         String pluginLine = (String) pluginServletNames.next();
-        if(!pluginLine.startsWith("#")) {
+        if (!pluginLine.startsWith("#")) {
           String[] pluginInfo = pluginLine.split("\\p{Space}+");
           if (pluginInfo.length > 0) {
             pluginServlets.put(pluginInfo[0], pluginInfo.length > 1 ? pluginInfo[1] : null);

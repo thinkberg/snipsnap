@@ -33,18 +33,18 @@ import org.mortbay.util.InetAddrPort;
 import org.mortbay.util.MultiException;
 import org.snipsnap.config.Globals;
 import org.snipsnap.config.ServerConfiguration;
-import org.snipsnap.config.Globals;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 /**
  * Application Server handler that loads, starts, stops and unloads applications.
@@ -60,6 +60,7 @@ public class ApplicationLoader {
   /**
    * Create a new application load that uses the given jetty server and searches for applications in
    * the root directory specified.
+   *
    * @param root the root directory of a number of applications
    */
   public static int loadApplications(String root) {
@@ -84,8 +85,6 @@ public class ApplicationLoader {
           }
         }
       }
-    } else {
-      throw new ExceptionInInitializerError("application root '" + root + "' is not a directory");
     }
     return errors;
   }
@@ -182,10 +181,17 @@ public class ApplicationLoader {
       appRoot = appRoot.getParentFile();
     }
 
+    String snipsnapWar = "lib/snipsnap.war";
+    if (!(new File(snipsnapWar).exists())) {
+      URL warFile = ApplicationLoader.class.getResource("/snipsnap.war");
+      if (warFile != null) {
+        snipsnapWar = warFile.toString();
+      }
+    }
     Server server = findOrCreateServer(host, port, contextPath);
     WebApplicationContext context =
-      server.addWebApplication(null, contextPath,
-                               extract ? "lib/snipsnap.war" : appRoot.getCanonicalPath());
+            server.addWebApplication(null, contextPath,
+                                     extract ? snipsnapWar : appRoot.getCanonicalPath());
 
     if (extract) {
       context.setTempDirectory(appRoot.getCanonicalFile());

@@ -24,13 +24,14 @@
  */
 package org.snipsnap.server;
 
+import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.Policy;
@@ -44,23 +45,16 @@ import java.util.jar.Manifest;
 /**
  * Launcher for Java Applications. Creates the classpath and then starts the application.
  *
- * @version $Id$
  * @author Matthias L. Jugel
+ * @version $Id$
  */
 public class Launcher {
   public final static String CLASSPATH = "launcher.classpath";
-  public final static String ERRORLOG = "launcher.errlog";
 
-  private static boolean debug = false;
+  private final static URL location = Launcher.class.getProtectionDomain().getCodeSource().getLocation();
 
-  public static void invokeMain(String mainClassName, String args[])
-    throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-    // init error log
-    String errorLog = System.getProperty(ERRORLOG);
-    if (errorLog != null && errorLog.length() > 0) {
-      initSystemErr(errorLog);
-    }
-
+  public static void invokeMain(String mainClassName, final String args[])
+          throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
     ClassLoader parentClassLoader = Thread.currentThread().getContextClassLoader();
     if (null == parentClassLoader) {
       parentClassLoader = Launcher.class.getClassLoader();
@@ -68,9 +62,13 @@ public class Launcher {
     if (null == parentClassLoader) {
       parentClassLoader = ClassLoader.getSystemClassLoader();
     }
-    ClassLoader classLoader = new URLClassLoader(initClassPath(System.getProperty(CLASSPATH)),
-                                                 parentClassLoader);
+    URLClassLoader classLoader = new URLClassLoader(initClassPath(System.getProperty(CLASSPATH)),
+                                                    parentClassLoader);
     Thread.currentThread().setContextClassLoader(classLoader);
+    if (System.getSecurityManager() != null) {
+      System.err.println("Launcher: uninstalling security manager ...");
+      System.setSecurityManager(null);
+    }
 
     try {
       Policy.getPolicy().refresh();
@@ -80,37 +78,20 @@ public class Launcher {
 
     // load and start main class
     Class mainClass = classLoader.loadClass(mainClassName);
-    Method main = mainClass.getDeclaredMethod("main", new Class[]{String[].class});
+    final Method main = mainClass.getDeclaredMethod("main", new Class[]{String[].class});
     main.invoke(null, new Object[]{args});
-  }
-
-  protected static void initSystemErr(String fileName) {
-    try {
-      File serverLog = new File(fileName);
-      if (serverLog.exists()) {
-        File serverLogOld = new File(fileName + ".old");
-        serverLog.renameTo(serverLogOld);
-      }
-      System.setErr(new PrintStream(new FileOutputStream(serverLog)));
-    } catch (FileNotFoundException e) {
-      if (debug) {
-        System.err.println("Launcher: System.err not redirected to " + fileName);
-        e.printStackTrace();
-      }
-    }
   }
 
   protected static URL[] initClassPath(String extraClassPath) {
     List urlArray = new ArrayList();
     try {
-      URL location = Launcher.class.getProtectionDomain().getCodeSource().getLocation();
       Manifest launcherManifest = new JarInputStream(location.openStream()).getManifest();
       Attributes launcherAttribs = launcherManifest.getMainAttributes();
-      String mainJar = launcherAttribs.getValue("Launcher-Main-Jar");
-      if(System.getProperty("launcher.main.jar") != null) {
-        mainJar = System.getProperty("launcher.main.jar");
+      String mainJarAttr = launcherAttribs.getValue("Launcher-Main-Jar");
+      if (System.getProperty("launcher.main.jar") != null) {
+        mainJarAttr = System.getProperty("launcher.main.jar");
       }
-      URL mainJarUrl = new URL(location, mainJar);
+      URL mainJarUrl = getResourceUrl(mainJarAttr);
       Manifest mainManifest = new JarInputStream(mainJarUrl.openStream()).getManifest();
       Attributes mainAttributes = mainManifest.getMainAttributes();
       String manifestClassPath = mainAttributes.getValue("Class-Path");
@@ -121,22 +102,64 @@ public class Launcher {
         manifestClassPath += " " + extraClassPath.replace(File.pathSeparatorChar, ' ');
       }
 
-      File directoryBase = new File(location.getFile()).getParentFile();
       StringBuffer classPath = new StringBuffer(location.getFile());
       StringTokenizer tokenizer = new StringTokenizer(manifestClassPath, " \t" + File.pathSeparatorChar, false);
       while (tokenizer.hasMoreTokens()) {
         classPath.append(File.pathSeparatorChar);
-        File file = new File(tokenizer.nextToken());
-        if (!file.isAbsolute()) {
-          file = new File(directoryBase, file.getPath());
-        }
-        urlArray.add(file.toURL());
-        classPath.append(file.getCanonicalPath());
+        URL classPathEntry = getResourceUrl(tokenizer.nextToken());
+        urlArray.add(classPathEntry);
+        classPath.append(classPathEntry.getFile());
       }
       System.setProperty("java.class.path", classPath.toString());
     } catch (IOException e) {
       System.err.println("Error: Set the system property launcher.main.jar to specify the jar file to start.");
     }
     return (URL[]) urlArray.toArray(new URL[0]);
+  }
+
+  private static URL getResourceUrl(String resource) throws IOException {
+    File directoryBase = new File(location.getFile()).getParentFile();
+    File file = new File(resource);
+    // see if this  is an absolute URL
+    if (file.isAbsolute() && file.exists()) {
+      return file.toURL();
+    }
+    // handle non-absolute URLs
+    file = new File(directoryBase, resource);
+    if (file.exists()) {
+      return file.toURL();
+    }
+
+    URL resourceURL = Launcher.class.getResource("/" + resource);
+    if (null != resourceURL) {
+      return extract(resourceURL);
+    }
+
+    throw new MalformedURLException("missing resource: " + resource);
+  }
+
+  /**
+   * Extract file from launcher jar to be able to access is via classpath.
+   *
+   * @param resource the jar resource to be extracted
+   * @return a url pointing to the new file
+   * @throws IOException if the extraction was not possible
+   */
+  private static URL extract(URL resource) throws IOException {
+    System.err.println("Launcher: extracting '" + resource.getFile() + "' ...");
+    File f = File.createTempFile("launcher_", ".jar");
+    f.deleteOnExit();
+    if (f.getParentFile() != null) {
+      f.getParentFile().mkdirs();
+    }
+    InputStream is = new BufferedInputStream(resource.openStream());
+    FileOutputStream os = new FileOutputStream(f);
+    byte[] arr = new byte[8192];
+    for (int i = 0; i >= 0; i = is.read(arr)) {
+      os.write(arr, 0, i);
+    }
+    is.close();
+    os.close();
+    return f.toURL();
   }
 }

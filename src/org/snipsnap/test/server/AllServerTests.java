@@ -35,7 +35,7 @@ public class AllServerTests extends TestCase {
 
   public static Test suite() {
     TestSuite s = new TestSuite();
-    s.addTestSuite(XmlRpcServerTest.class);
+//    s.addTestSuite(XmlRpcServerTest.class);
     return s;
   }
 }

@@ -47,6 +47,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.Writer;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -89,7 +90,7 @@ public class PluginServlet extends HttpServlet {
         if ("text/gsp".equalsIgnoreCase(mimeType)) {
           BufferedWriter writer = new BufferedWriter(response.getWriter());
           try {
-            writer.write(handleGroovyTemplate(snip.getContent()));
+            handleGroovyTemplate(snip.getContent(), writer);
           } catch (Exception e) {
             writer.write("<span class=\"error\">" + e.getLocalizedMessage() + "</span>");
           }
@@ -119,8 +120,9 @@ public class PluginServlet extends HttpServlet {
       if ("text/gsp".equalsIgnoreCase(handlerMIMEType)) {
         BufferedWriter writer = new BufferedWriter(response.getWriter());
         try {
-          writer.write(handleGroovyTemplate(getTemplateSource(pluginName)));
+          handleGroovyTemplate(getTemplateSource(pluginName), writer);
         } catch (Exception e) {
+          e.printStackTrace();
           writer.write("<span class=\"error\">" + e.getLocalizedMessage() + "</span>");
         }
         writer.flush();
@@ -158,11 +160,11 @@ public class PluginServlet extends HttpServlet {
               out.write(buffer, 0, bytes);
             }
             out.flush();
-            return;
           } else {
             throw new ServletException("unable to load servlet plugin: not found");
           }
         }
+        return;
       }
     }
 
@@ -186,12 +188,11 @@ public class PluginServlet extends HttpServlet {
     return null;
   }
 
-  private String handleGroovyTemplate(String source) throws Exception {
+  private void handleGroovyTemplate(String source, Writer out) throws Exception {
     try {
       Template groovyTemplate = templateEngine.createTemplate(source);
-      groovyTemplate.setBinding(Application.get().getParameters());
-      return groovyTemplate.toString();
-    } catch(Error e) {
+      groovyTemplate.make(Application.get().getParameters()).writeTo(out);
+    } catch (Error e) {
       e.printStackTrace();
       throw new ServletException("groovy error", e);
     }

@@ -24,16 +24,20 @@
  */
 package org.snipsnap.net;
 
+import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
-import org.snipsnap.snip.*;
-import org.snipsnap.user.User;
+import org.snipsnap.config.Configuration;
+import org.snipsnap.container.Components;
+import org.snipsnap.net.filter.MultipartWrapper;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipFormatter;
+import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.AuthenticationService;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Security;
-import org.snipsnap.container.Components;
-import org.snipsnap.config.Configuration;
-import org.snipsnap.net.filter.MultipartWrapper;
-import org.radeox.util.logging.Logger;
+import org.snipsnap.user.User;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -45,6 +49,7 @@ import java.io.IOException;
 
 /**
  * Servlet to store snips into the database after they have been edited.
+ *
  * @author Matthias L. Jugel
  * @version $Id$
  */
@@ -54,7 +59,7 @@ public class SnipStoreServlet extends HttpServlet {
   }
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+          throws ServletException, IOException {
     Configuration config = Application.get().getConfiguration();
     // If this is not a multipart/form-data request continue
     String type = request.getHeader("Content-Type");

@@ -55,7 +55,7 @@ public class Month {
 //    "September", "Oktober", "November", "Dezember"
 //  };
   private String[] monthsValue = {
-  "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"
+    "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"
   };
 
   // @TODO Use locale
@@ -68,9 +68,9 @@ public class Month {
    * The days in each month.
    */
   public final static int dom[] = {
-  31, 28, 31, 30, /* jan feb mar apr */
-  31, 30, 31, 31, /* may jun jul aug */
-  30, 31, 30, 31	/* sep oct nov dec */
+    31, 28, 31, 30, /* jan feb mar apr */
+    31, 30, 31, 31, /* may jun jul aug */
+    30, 31, 30, 31	/* sep oct nov dec */
   };
 
   public Month() {
@@ -152,9 +152,9 @@ public class Month {
       view.append("<a href=\"");
       view.append(SnipLink.getSpaceRoot()).append("/");
       view.append(viewed);
-      view.append("?weblog=");
-      view.append(SnipLink.encode(weblogName));
-      view.append("&calmonth=");
+      view.append("?calsnip=");
+      view.append(SnipLink.encode(viewed));
+      view.append("&amp;calmonth=");
       view.append(prevMonth);
       view.append("&amp;calyear=");
       view.append(prevYear);
@@ -168,9 +168,9 @@ public class Month {
       view.append("<a href=\"");
       view.append(SnipLink.getSpaceRoot()).append("/");
       view.append(viewed);
-      view.append("?weblog=");
-      view.append(SnipLink.encode(weblogName));
-      view.append("&calmonth=");
+      view.append("?calsnip=");
+      view.append(SnipLink.encode(viewed));
+      view.append("&amp;calmonth=");
       view.append(nextMonth);
       view.append("&amp;calyear=");
       view.append(nextYear);
@@ -227,9 +227,9 @@ public class Month {
       String calBlogNew = weblogName + "/" + calBlogOld + "/1";
 
       if (days.contains(calBlogNew)) {
-        day = makeLink(SnipLink.encode(calBlogNew) + "?weblog=" + SnipLink.encode(weblogName) + "&calmonth=" + month + "&calyear=" + year, day);
+        day = makeLink(SnipLink.encode(calBlogNew) + "?calsnip=" + SnipLink.encode(viewed) + "&amp;calmonth=" + month + "&amp;calyear=" + year, day);
       } else if (days.contains(calBlogOld)) {
-        day = makeLink(SnipLink.encode(calBlogOld) + "?weblog=" + SnipLink.encode(weblogName) + "&calmonth=" + month + "&calyear=" + year, day);
+        day = makeLink(SnipLink.encode(calBlogOld) + "?calsnip=" + SnipLink.encode(viewed) + "&amp;calmonth=" + month + "&amp;calyear=" + year, day);
       }
 
       if (i == todayNumber && month == today.get(Calendar.MONTH) + 1 && year == today.get(Calendar.YEAR)) {

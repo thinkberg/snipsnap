@@ -1,4 +1,3 @@
-
 /*
  * This file is part of "SnipSnap Wiki/Weblog".
  *
@@ -25,9 +24,14 @@
  */
 package org.snipsnap.graph;
 
+import org.snipsnap.graph.builder.StringDirectedAcyclicGraphBuilder;
+import org.snipsnap.graph.context.GraphRendererContext;
+import org.snipsnap.graph.renderer.DirectedAcyclicGraphRenderer;
+import org.snipsnap.graph.renderer.Renderer;
+
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletOutputStream;
 import java.io.IOException;
 
 public class PSPContentRenderer implements ContentRenderer {
@@ -43,6 +47,6 @@ public class PSPContentRenderer implements ContentRenderer {
 
     StringDirectedAcyclicGraphBuilder builder = new StringDirectedAcyclicGraphBuilder(content);
     Renderer renderer = new DirectedAcyclicGraphRenderer();
-    renderer.render(builder.build(), out, new ImageContext());
+    renderer.render(builder.build(), out, new GraphRendererContext());
   }
 }

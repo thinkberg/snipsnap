@@ -36,8 +36,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class GroovyTemplateServlet extends HttpServlet {
 
@@ -57,8 +57,7 @@ public class GroovyTemplateServlet extends HttpServlet {
     String templateSource = getTemplateSource(groovyFile);
     try {
       Template groovyTemplate = templateEngine.createTemplate(templateSource);
-      groovyTemplate.setBinding(Application.get().getParameters());
-      response.getWriter().write(groovyTemplate.toString());
+      groovyTemplate.make(Application.get().getParameters()).writeTo(response.getWriter());
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -67,6 +66,7 @@ public class GroovyTemplateServlet extends HttpServlet {
   /**
    * Read the template source from either a snip or if not existent try the
    * jar/classpath based file read.
+   *
    * @param name the name of the resource to load
    * @return a string with the template source
    * @throws IOException
@@ -78,7 +78,7 @@ public class GroovyTemplateServlet extends HttpServlet {
     }
 
     InputStream resource = getClass().getResourceAsStream(name);
-    if(null != resource) {
+    if (null != resource) {
       // if there is no snip to load, try jar/classpath based file read
       BufferedReader reader = new BufferedReader(new InputStreamReader(resource));
       StringBuffer content = new StringBuffer();
@@ -90,6 +90,6 @@ public class GroovyTemplateServlet extends HttpServlet {
       return content.toString();
     }
 
-    throw new IOException("unable to load template source: '"+name+"'");
+    throw new IOException("unable to load template source: '" + name + "'");
   }
 }

@@ -59,6 +59,7 @@ public class URLEncoderDecoder {
     dontNeedEncoding.set('.');
     dontNeedEncoding.set('*');
     dontNeedEncoding.set('/');
+    dontNeedEncoding.set(':');
   }
 
 
@@ -82,7 +83,8 @@ public class URLEncoderDecoder {
 
   /**
    * Decode a %xx encoded string into a Java String using the provided encoding.
-   * @param s the string to decode
+   *
+   * @param s   the string to decode
    * @param enc the encoding (default should be UTF8)
    */
   public static String decode(String s, String enc) throws UnsupportedEncodingException {

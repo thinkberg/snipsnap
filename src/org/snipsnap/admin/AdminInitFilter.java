@@ -40,14 +40,13 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.prefs.Preferences;
 
 public class AdminInitFilter implements Filter {
 
@@ -63,22 +62,27 @@ public class AdminInitFilter implements Filter {
   protected final static String PARAM_INSTALL = "install";
   protected final static String PARAM_EXPERT = "expert";
 
+  protected Properties serverPrefsDefaults = new Properties();
   protected AdminXmlRpcClient adminClient;
-  private Properties serverConfig = new Properties();
 
   public void init(FilterConfig config) throws ServletException {
+    // load defaults (should not be necessary ...)
     try {
-      serverConfig.load(new FileInputStream("conf/server.conf"));
+      serverPrefsDefaults.load(AdminInitFilter.class.getResourceAsStream("/conf/snipsnap.conf"));
     } catch (IOException e) {
-      System.err.println("AdminInitFilter: unable to load server config: " + e);
+      System.err.println("AdminInitFilter: Unable to read server defaults: " + e.getMessage());
+      e.printStackTrace();
     }
+
+    Preferences serverPrefs = Preferences.userNodeForPackage(ServerConfiguration.class);
     try {
-      adminClient = new AdminXmlRpcClient(serverConfig.getProperty(ServerConfiguration.ADMIN_URL),
-                                          serverConfig.getProperty(ServerConfiguration.ADMIN_USER, "admin"),
-                                          serverConfig.getProperty(ServerConfiguration.ADMIN_PASS));
-    } catch (MalformedURLException e) {
-      System.out.println("!! Unable to create XML-RPC client, edit conf/server.conf:");
-      System.out.println("!! You may need to add "+ServerConfiguration.ADMIN_URL);
+      String url = serverPrefs.get(ServerConfiguration.ADMIN_URL,
+                                   serverPrefsDefaults.getProperty(ServerConfiguration.ADMIN_URL));
+      String user = serverPrefs.get(ServerConfiguration.ADMIN_USER, "admin");
+      String pass = serverPrefs.get(ServerConfiguration.ADMIN_PASS, null);
+      adminClient = new AdminXmlRpcClient(url, user, pass);
+    } catch (Exception e) {
+      System.out.println("!! Unable to create XML-RPC client, check system preferences:");
       throw new ServletException(e);
     }
   }
@@ -119,7 +123,8 @@ public class AdminInitFilter implements Filter {
 
       // check authentication and verify session
       if (!"true".equals(session.getAttribute(ATT_AUTHENTICATED))) {
-        String serverPass = serverConfig.getProperty(ServerConfiguration.ADMIN_PASS);
+        Preferences serverPrefs = Preferences.userNodeForPackage(ServerConfiguration.class);
+        String serverPass = serverPrefs.get(ServerConfiguration.ADMIN_PASS, "");
         String installPass = path;
         if (installPass == null || "".equals(installPass) || "/".equals(installPass)) {
           installPass = "/" + request.getParameter("password");
@@ -166,7 +171,7 @@ public class AdminInitFilter implements Filter {
         }
 
         if (null != request.getParameter(PARAM_EXPERT) ||
-          (null == request.getParameter(PARAM_INSTALL) && (applications != null && applications.size() > 0))) {
+            (null == request.getParameter(PARAM_INSTALL) && (applications != null && applications.size() > 0))) {
           step = "install";
         } else {
           URL url = null;
@@ -189,7 +194,6 @@ public class AdminInitFilter implements Filter {
         }
       }
 
-      session.setAttribute(ATT_SERVERCONFIG, serverConfig);
       session.setAttribute(ATT_CONFIG, config);
       request.setAttribute(ATT_ERRORS, errors);
       request.setAttribute(ATT_STEP, step);

@@ -24,23 +24,19 @@
  */
 package org.snipsnap.net;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import org.radeox.util.Service;
+import org.snipsnap.graph.ContentRenderer;
+import org.snipsnap.graph.HorizontalContentRenderer;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.radeox.util.Service;
-import org.snipsnap.app.Application;
-import org.snipsnap.graph.ContentRenderer;
-import org.snipsnap.graph.VerticalContentRenderer;
-import org.snipsnap.graph.HorizontalContentRenderer;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpaceFactory;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 /**
  * Get some data from a snip and render the content
@@ -49,51 +45,35 @@ import org.snipsnap.snip.SnipSpaceFactory;
  * @version $Id$
  */
 public class RenderServlet extends HttpServlet {
-	private Map handlers = new HashMap();
-	private final static ContentRenderer DEFAULT_HANDLER = new HorizontalContentRenderer();
+  private static Map contentMap = new WeakHashMap();
+  private Map handlers = new HashMap();
+  private final static ContentRenderer DEFAULT_HANDLER = new HorizontalContentRenderer();
 
-	public void init() throws ServletException {
-		Iterator contentRenderer =
-			Service.providers(org.snipsnap.graph.ContentRenderer.class);
-		while (contentRenderer.hasNext()) {
-			ContentRenderer renderer = (ContentRenderer) contentRenderer.next();
-      //System.out.println("adding content renderer: "+renderer.getName());
-			handlers.put(renderer.getName(), renderer);
-		}
-	}
+  public static void addContent(String id, String content) {
+    contentMap.put(id, content);
+  }
 
-	public void doGet(HttpServletRequest request, HttpServletResponse response)
-		throws IOException, ServletException {
-
-		String handler = request.getParameter("handler");
-		String name = request.getParameter("name");
-    String encodedSpace = Application.get().getConfiguration().getEncodedSpace();
-    if(encodedSpace != null && encodedSpace.length() > 0) {
-      name = name.replace(encodedSpace.charAt(0), ' ');
+  public void init() throws ServletException {
+    Iterator contentRenderer =
+            Service.providers(org.snipsnap.graph.ContentRenderer.class);
+    while (contentRenderer.hasNext()) {
+      ContentRenderer renderer = (ContentRenderer) contentRenderer.next();
+//System.out.println("adding content renderer: "+renderer.getName());
+      handlers.put(renderer.getName(), renderer);
     }
+  }
 
-		Snip snip = SnipSpaceFactory.getInstance().load(name);
-		String content = snip.getContent();
+  public void doGet(HttpServletRequest request, HttpServletResponse response)
+          throws IOException, ServletException {
 
-		int start = 0;
-		int end = 0;
-		try {
-			start = Integer.parseInt(request.getParameter("start"));
-		} catch (NumberFormatException e) {
-			start = 0;
-		}
-		try {
-			end = Integer.parseInt(request.getParameter("end"));
-		} catch (NumberFormatException e) {
-			end = content.length();
-		}
+    String handler = request.getParameter("handler");
+    String id = request.getParameter("id");
+    String content = (String) contentMap.get(id);
 
-		content = content.substring(start, end);
-    
-		ContentRenderer renderer = (ContentRenderer)handlers.get(handler);
-    if(null == renderer) {
+    ContentRenderer renderer = (ContentRenderer) handlers.get(handler);
+    if (null == renderer) {
       renderer = DEFAULT_HANDLER;
     }
-		renderer.render(request, response, content);
-	}
+    renderer.render(request, response, content);
+  }
 }

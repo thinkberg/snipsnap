@@ -22,20 +22,44 @@ public class GZIPFilter implements Filter {
 
   public void doFilter(ServletRequest req, ServletResponse res,
                        FilterChain chain) throws IOException, ServletException {
-    if (req instanceof HttpServletRequest) {
+    // only compress if this is a real http request and if it is HTTP/1.1+ and
+    // not included
+    if (req instanceof HttpServletRequest &&
+        !isHttp10(req) && !isIncludedRequest(req)) {
       HttpServletRequest request = (HttpServletRequest) req;
       HttpServletResponse response = (HttpServletResponse) res;
       String ae = request.getHeader("accept-encoding");
       if (ae != null && ae.indexOf("gzip") != -1) {
-        System.out.println("GZIP supported, compressing.");
+//        System.out.println("GZIP supported, compressing.");
         GZIPResponseWrapper wrappedResponse = new GZIPResponseWrapper(response);
         chain.doFilter(req, wrappedResponse);
         wrappedResponse.finishResponse();
         return;
       }
-      chain.doFilter(req, res);
     }
+    chain.doFilter(req, res);
   }
+
+  /**
+   * Check for old HTTP/1.0 protocol
+   *
+   * @param request the servlet request
+   * @return whether this is an old request
+   */
+  private boolean isHttp10(ServletRequest request) {
+    return "HTTP/1.0".equals(request.getProtocol());
+  }
+
+  /**
+   * Check for included requests by checking the corresponding request attribute
+   *
+   * @param request the servlet request
+   * @return true if the request was included
+   */
+  private boolean isIncludedRequest(ServletRequest request) {
+    return request.getAttribute("javax.servlet.include.request_uri") != null;
+  }
+
 
   public void init(FilterConfig filterConfig) {
     // noop

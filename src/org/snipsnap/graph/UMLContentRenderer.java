@@ -1,7 +1,7 @@
 /*
  * This file is part of "SnipSnap Wiki/Weblog".
  *
- * Copyright (c) 2002 Stephan J. Schmidt, Matthias L. Jugel
+ * Copyright (c) 2004 Fraunhofer Gesellschaft
  * All Rights Reserved.
  *
  * Please visit http://snipsnap.org/ for updates and contact.
@@ -24,21 +24,20 @@
  */
 package org.snipsnap.graph;
 
-import org.snipsnap.graph.builder.StringTreeBuilder;
-import org.snipsnap.graph.builder.TreeBuilder;
-import org.snipsnap.graph.context.GraphRendererContext;
-import org.snipsnap.graph.renderer.MindMapRenderer;
-import org.snipsnap.graph.renderer.Renderer;
+import org.snipsnap.graph.builder.StringUMLBuilder;
+import org.snipsnap.graph.builder.UMLBuilder;
+import org.snipsnap.graph.context.UMLRendererContext;
+import org.snipsnap.graph.renderer.UMLGraphRenderer;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class MindMapContentRenderer implements ContentRenderer {
+public class UMLContentRenderer implements ContentRenderer {
 
   public String getName() {
-    return "mindmap";
+    return "uml";
   }
 
   public void render(HttpServletRequest request, HttpServletResponse response, String content) throws IOException {
@@ -46,8 +45,12 @@ public class MindMapContentRenderer implements ContentRenderer {
 
     ServletOutputStream out = response.getOutputStream();
 
-    TreeBuilder builder = new StringTreeBuilder(content);
-    Renderer renderer = new MindMapRenderer();
-    renderer.render(builder.build(), out, new GraphRendererContext());
+    UMLBuilder builder = new StringUMLBuilder(content);
+    UMLGraphRenderer renderer = new UMLGraphRenderer();
+    try {
+      renderer.render(builder.build(), out, new UMLRendererContext());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 }

@@ -25,6 +25,9 @@
 package org.snipsnap.graph;
 
 import org.snipsnap.container.Components;
+import org.snipsnap.graph.builder.TreeBuilder;
+import org.snipsnap.graph.graph.Tree;
+import org.snipsnap.graph.graph.TreeNode;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 
@@ -41,7 +44,7 @@ public class NameSpaceTreeBuilder implements TreeBuilder {
     Snip[] snips = space.match(root);
 
     if (root.endsWith("/")) {
-      root = root.substring(0, root.length()-1);
+      root = root.substring(0, root.length() - 1);
     }
 
     TreeNode parent = new TreeNode(root);
@@ -77,14 +80,14 @@ public class NameSpaceTreeBuilder implements TreeBuilder {
         lastNode = child;
       }
     }
- //   tree.setRowCounter(tree.getDepth());
-  //  int maxChildren[] = new Maximum().getMaxChildren(tree);
-  //  int maxAttributes[] = new Maximum().getMaxAttributes(tree);
-  //  tree.setMaxChildren(maxChildren);
-  //  tree.setMaxAttributes(maxAttributes);
+    //   tree.setRowCounter(tree.getDepth());
+    //  int maxChildren[] = new Maximum().getMaxChildren(tree);
+    //  int maxAttributes[] = new Maximum().getMaxAttributes(tree);
+    //  tree.setMaxChildren(maxChildren);
+    //  tree.setMaxAttributes(maxAttributes);
 
-    System.err.println("Tree="+tree);
-    System.err.println("Tree depth="+tree.getDepth());
+    System.err.println("Tree=" + tree);
+    System.err.println("Tree depth=" + tree.getDepth());
     return tree;
   }
 }

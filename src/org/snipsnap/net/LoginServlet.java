@@ -24,10 +24,12 @@
  */
 package org.snipsnap.net;
 
+import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.container.Components;
 import org.snipsnap.container.SessionService;
+import org.snipsnap.net.filter.MultipartWrapper;
 import org.snipsnap.user.AuthenticationService;
 import org.snipsnap.user.User;
 
@@ -41,6 +43,7 @@ import java.io.IOException;
 
 /**
  * Servlet to login a user by checking user name and password.
+ *
  * @author Matthias L. Jugel
  * @version $Id$
  */
@@ -48,11 +51,22 @@ public class LoginServlet extends HttpServlet {
   private final static String ERR_PASSWORD = "";
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
+          throws ServletException, IOException {
+    Configuration config = Application.get().getConfiguration();
+
+    // If this is not a multipart/form-data request continue
+    String type = request.getHeader("Content-Type");
+    if (type != null && type.startsWith("multipart/form-data")) {
+      try {
+        request = new MultipartWrapper(request, config.getEncoding() != null ? config.getEncoding() : "UTF-8");
+      } catch (IllegalArgumentException e) {
+        Logger.warn("FileUploadServlet: multipart/form-data wrapper:" + e.getMessage());
+      }
+    }
 
     String login = request.getParameter("login");
     String password = request.getParameter("password");
-    String referer = request.getParameter("referer");
+    String referer = sanitize(request.getParameter("referer"));
 
     if (request.getParameter("cancel") == null) {
       User user = ((AuthenticationService) Components.getComponent(AuthenticationService.class)).authenticate(login, password);
@@ -80,8 +94,12 @@ public class LoginServlet extends HttpServlet {
     response.sendRedirect(referer);
   }
 
+  private String sanitize(String parameter) {
+    return parameter.split("[\r\n]")[0];
+  }
+
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
+          throws ServletException, IOException {
     String referer = request.getHeader("REFERER");
     if (referer == null || referer.length() == 0) {
       Configuration config = Application.get().getConfiguration();

@@ -24,9 +24,9 @@
  */
 package org.snipsnap.net.filter;
 
+import org.radeox.util.i18n.ResourceManager;
 import org.radeox.util.logging.LogHandler;
 import org.radeox.util.logging.Logger;
-import org.radeox.util.i18n.ResourceManager;
 import org.snipsnap.app.Application;
 import org.snipsnap.app.ApplicationManager;
 import org.snipsnap.config.Configuration;
@@ -37,12 +37,11 @@ import org.snipsnap.config.ServerConfiguration;
 import org.snipsnap.container.Components;
 import org.snipsnap.container.SessionService;
 import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.Digest;
 import org.snipsnap.user.User;
-import org.apache.xmlrpc.XmlRpc;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -62,13 +61,12 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.net.URL;
 
 /**
  * A ServletFilter that takes care of uninstalled web applications and creating the
@@ -91,7 +89,7 @@ public class InitFilter implements Filter {
     // check servlet context and then local servlet parameter or assume WEB-INF
     String configParam = (String) context.getAttribute(ServerConfiguration.INIT_PARAM);
     if (null == configParam) {
-      System.out.println("SnipSnap "+globals.getVersion());
+      System.out.println("SnipSnap " + globals.getVersion());
       BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/defaults/copyright.txt")));
       try {
         String line;
@@ -205,24 +203,13 @@ public class InitFilter implements Filter {
     // make sure it's an http servlet request
     HttpServletRequest request = (HttpServletRequest) req;
 
-    if(!startUpDone) {
+    if (!startUpDone) {
       ((HttpServletResponse) response).sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE,
                                                  "Startup in progress, please wait ...");
       return;
     }
 
     String path = request.getServletPath();
-
-    // make sure XML-RPC is handled directly
-    if (path.startsWith("/RPC2")) {
-      if (globals.isInstalled()) {
-        chain.doFilter(request, response);
-      } else {
-        ((HttpServletResponse) response).sendError(HttpServletResponse.SC_PRECONDITION_FAILED,
-                                                   "Please finish database installation first.");
-      }
-      return;
-    }
 
     HttpSession session = request.getSession();
     Application app = Application.forceGet();
@@ -264,6 +251,17 @@ public class InitFilter implements Filter {
       app.storeObject(Application.OID, appOid);
     }
 
+    // make sure XML-RPC is handled directly after determining the instance
+    if (path.startsWith("/RPC2")) {
+      if (globals.isInstalled()) {
+        chain.doFilter(request, response);
+      } else {
+        ((HttpServletResponse) response).sendError(HttpServletResponse.SC_PRECONDITION_FAILED,
+                                                   "Please finish database installation first.");
+      }
+      return;
+    }
+
     // configure the url (base context path) for the current request
     if (appConfig != null && "true".equals(appConfig.getRealAutodetect())) {
       // apache proxies provide the host and port of the original request
@@ -288,7 +286,7 @@ public class InitFilter implements Filter {
         int port = request.getServerPort();
         String contextPath = request.getContextPath() + ("/".equals(prefix) ? "" : prefix);
 
-        if(port != 80) {
+        if (port != 80) {
           app.storeObject(Application.URL, new URL(protocol, host, port, contextPath));
         } else {
           app.storeObject(Application.URL, new URL(protocol, host, contextPath));
@@ -323,8 +321,8 @@ public class InitFilter implements Filter {
 
       Iterator paramIt = request.getParameterMap().keySet().iterator();
       Map paramMap = new HashMap();
-      while(paramIt.hasNext()) {
-        String key = (String)paramIt.next();
+      while (paramIt.hasNext()) {
+        String key = (String) paramIt.next();
         paramMap.put(key, request.getParameter(key));
       }
       String uri = (String) request.getAttribute("URI");
@@ -341,11 +339,11 @@ public class InitFilter implements Filter {
     }
 
     if (!"/".equals(prefix)) {
-      if("".equals(path)) {
+      if ("".equals(path)) {
         path = "index.jsp";
       }
       // TODO: hack, find a way not to re-encode the path request
-      if(request.getClass().getName().startsWith("org.mortbay")) {
+      if (request.getClass().getName().startsWith("org.mortbay")) {
         path = SnipLink.encode(path);
       }
       // try to send this request to the real servlets

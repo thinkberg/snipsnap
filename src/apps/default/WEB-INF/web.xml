@@ -21,7 +21,7 @@
     <error-code>500</error-code>
     <location>/error.jsp</location>
   </error-page>
-    
+
   <error-page>
     <exception-type>javax.servlet.ServletException</exception-type>
     <location>/error.jsp</location>

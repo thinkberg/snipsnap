@@ -61,5 +61,6 @@
         </table>
       </form>
     </div>
+    <div class="version">SnipSnap <c:out value="${newconfig.version}"/></div>
   </body>
 </html>

@@ -77,17 +77,17 @@ public class ConnectionManager {
       }
 
       String jdbcUrl = config.getJdbcUrl();
-      if (jdbcUrl.indexOf("?") != -1) {
-        jdbcUrl = jdbcUrl.concat("&");
-      } else {
-        jdbcUrl = jdbcUrl.concat("?");
-      }
+//      if (jdbcUrl.indexOf("?") != -1) {
+//        jdbcUrl = jdbcUrl.concat("&");
+//      } else {
+//        jdbcUrl = jdbcUrl.concat("?");
+//      }
       String jdbcPassword = config.getJdbcPassword();
-      if (null == jdbcPassword) {
-        jdbcPassword = "";
-      }
-      jdbcUrl = jdbcUrl.concat("user=" + config.getJdbcUser()).concat("&password=" + jdbcPassword);
-      //System.err.println("ConnectionManager: using: "+ jdbcUrl);
+//      if (null == jdbcPassword) {
+//        jdbcPassword = "";
+//      }
+//      jdbcUrl = jdbcUrl.concat("user=" + config.getJdbcUser()).concat("&password=" + jdbcPassword);
+//      System.err.println("ConnectionManager: using: "+ jdbcUrl);
       ObjectPool connectionPool = new GenericObjectPool(null);
       ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(jdbcUrl, config.getJdbcUser(), jdbcPassword);
       PoolableConnectionFactory poolableConnectionFactory = new PoolableConnectionFactory(connectionFactory, connectionPool, null, null, false, true);

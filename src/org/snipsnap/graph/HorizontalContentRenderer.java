@@ -1,4 +1,3 @@
-
 /*
  * This file is part of "SnipSnap Wiki/Weblog".
  *
@@ -25,9 +24,15 @@
  */
 package org.snipsnap.graph;
 
+import org.snipsnap.graph.builder.StringTreeBuilder;
+import org.snipsnap.graph.builder.TreeBuilder;
+import org.snipsnap.graph.context.GraphRendererContext;
+import org.snipsnap.graph.renderer.HorizontalRenderer;
+import org.snipsnap.graph.renderer.Renderer;
+
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletOutputStream;
 import java.io.IOException;
 
 public class HorizontalContentRenderer implements ContentRenderer {
@@ -43,6 +48,6 @@ public class HorizontalContentRenderer implements ContentRenderer {
 
     TreeBuilder builder = new StringTreeBuilder(content);
     Renderer renderer = new HorizontalRenderer();
-    renderer.render(builder.build(), out, new ImageContext());
+    renderer.render(builder.build(), out, new GraphRendererContext());
   }
 }

@@ -25,7 +25,9 @@
 
 package org.snipsnap.render.macro;
 
+import org.radeox.util.Encoder;
 import org.radeox.util.i18n.ResourceManager;
+import org.snipsnap.net.RenderServlet;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
@@ -53,27 +55,24 @@ public class GraphMacro extends SnipMacro {
     return ResourceManager.getString("i18n.messages", "macro.graph.description");
   }
 
+  public String[] getParamDescription() {
+    return ResourceManager.getString("i18n.messages", "macro.graph.params").split(";");
+  }
+
   public void execute(Writer writer, SnipMacroParameter params)
-    throws IllegalArgumentException, IOException {
+          throws IllegalArgumentException, IOException {
     Snip snip = params.getSnipRenderContext().getSnip();
     String name = snip.getName();
     String handler = params.get("handler", 0);
-//    writer.write(""+params.getContentStart());
-//    writer.write(":"+ params.getContentEnd());
-//    writer.write(":"+params.getSnip().getContent().length());
-//    writer.write("<br/>");
     writer.write("<img src=\"exec/render?name=");
     writer.write(SnipLink.encode(name));
     writer.write("&amp;handler=");
     writer.write(handler);
-    // Remove {graph} from start and end offset
-    int start = snip.getContent().indexOf('}', params.getStart() + getName().length()) + 1;
-    int end = params.getEnd() - getName().length() - 2;
-    writer.write("&amp;start=" + start);
-    writer.write("&amp;end=" + end);
 
-//    writer.write("&start="+params.getContentStart());
-//    writer.write("&end="+params.getContentEnd());
+    String content = Encoder.unescape(params.getContent());
+    String id = "" + content.hashCode();
+    RenderServlet.addContent(id, content);
+    writer.write("&amp;id=" + id);
     writer.write("\"/>");
   }
 }

@@ -24,22 +24,17 @@
  */
 package org.snipsnap.net;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import org.snipsnap.graph.NameSpaceTreeBuilder;
+import org.snipsnap.graph.builder.TreeBuilder;
+import org.snipsnap.graph.renderer.ExplorerRenderer;
+import org.snipsnap.graph.renderer.Renderer;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.radeox.util.Service;
-import org.snipsnap.app.Application;
-import org.snipsnap.graph.*;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpaceFactory;
+import java.io.IOException;
 
 /**
  * Get some data from a snip and render the content
@@ -49,13 +44,13 @@ import org.snipsnap.snip.SnipSpaceFactory;
  */
 public class NameSpaceServlet extends HttpServlet {
 
-	public void init() throws ServletException {
-	}
+  public void init() throws ServletException {
+  }
 
-	public void doGet(HttpServletRequest request, HttpServletResponse response)
-		throws IOException, ServletException {
+  public void doGet(HttpServletRequest request, HttpServletResponse response)
+          throws IOException, ServletException {
 
-		String name = request.getParameter("name");
+    String name = request.getParameter("name");
 
     response.setContentType("image/png");
 
@@ -63,7 +58,7 @@ public class NameSpaceServlet extends HttpServlet {
 
     TreeBuilder builder = new NameSpaceTreeBuilder(name);
     Renderer renderer = new ExplorerRenderer();
-    //DrawTree drawTree = new DrawTree();
-    //drawTree.draw(builder.build(), renderer, out);
-	}
+//DrawTree drawTree = new DrawTree();
+//drawTree.draw(builder.build(), renderer, out);
+  }
 }

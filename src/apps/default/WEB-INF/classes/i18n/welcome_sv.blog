@@ -1,0 +1,12 @@
+Välkommen till SnipSnap
+Du kan du logga in och lägga till/ändra din första post. Det finns en __skapa artikel__ länk
+i menyn . För att få hjälp med att formatera ditt inlägg kan du ta en titt på
+[snipsnap-help]. För att skapa en länk till en sida på din site, skriv in länken omgiven av
+\[ och \]. Tecknet \_\_  före och efter ett eller flera ord gör det till __fetstil__ och tecknet \~\~
+före och efter gör det till ~~kursiv text~~. Du kan skapa länkar till Internet
+genom att helt enkelt skriva adressen \(url:en\) t.ex. http://snipsnap.org eller genom att använda \{link:Name|url\}.
+Så \{link:SnipSnap|\http://snipsnap.org\} skapar
+{link:SnipSnap|http://snipsnap.org}. Ha så kul!.
+
+Ping till weblogs.com kan avavktiveras.
+{Länken:FAQ|http://snipsnap.org/space/FAQ} förklarar hur man aktiverar och avaktiverar denna tjänst.

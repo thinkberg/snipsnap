@@ -32,27 +32,30 @@ public class GZIPResponseStream extends ServletOutputStream {
 
   public void close() throws IOException {
     if (closed) {
-      throw new IOException("This output stream has already been closed");
+//      throw new IOException("This output stream has already been closed");
+      return;
     }
     gzipstream.finish();
 
     byte[] bytes = baos.toByteArray();
 
+    // only actually tell the remote end we are compressed if there is any data
+    if (bytes.length > 0) {
+      response.setHeader("Content-Length",
+                         Integer.toString(bytes.length));
+      response.setHeader("Content-Encoding", "gzip");
+      output.write(bytes);
+    }
 
-    response.addHeader("Content-Length",
-                       Integer.toString(bytes.length));
-    response.addHeader("Content-Encoding", "gzip");
-    output.write(bytes);
     output.flush();
     output.close();
     closed = true;
   }
 
   public void flush() throws IOException {
-    if (closed) {
-      throw new IOException("Cannot flush a closed output stream");
+    if (!closed) {
+      gzipstream.flush();
     }
-    gzipstream.flush();
   }
 
   public void write(int b) throws IOException {
@@ -67,7 +70,7 @@ public class GZIPResponseStream extends ServletOutputStream {
   }
 
   public void write(byte b[], int off, int len) throws IOException {
-    System.out.println("writing...");
+//    System.out.println("writing..."+len);
     if (closed) {
       throw new IOException("Cannot write to a closed output stream");
     }

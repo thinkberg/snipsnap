@@ -25,47 +25,38 @@
 package org.snipsnap.server;
 
 import org.snipsnap.config.ServerConfiguration;
-import org.snipsnap.util.XMLSnipRepair;
-import org.snipsnap.util.LocaleComparator;
 import org.snipsnap.util.JDBCDatabaseExport;
+import org.snipsnap.util.LocaleComparator;
+import org.snipsnap.util.XMLSnipRepair;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.File;
-import java.io.FilenameFilter;
+import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import java.util.Vector;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
 import java.util.TreeSet;
-import java.text.NumberFormat;
+import java.util.Vector;
+import java.util.prefs.Preferences;
 
 public class AdminClient {
 
   public static void main(String args[]) {
     printCopyright();
-    Properties config = new Properties();
-    try {
-      config.load(AdminClient.class.getResourceAsStream("/conf/snipsnap.conf"));
-    } catch (Exception e) {
-      System.err.println("AdminClient: unable to load config defaults: " + e);
-    }
-    try {
-      config.load(new FileInputStream("conf/server.conf"));
-    } catch (IOException e) {
-//      System.err.println("AdminClient: unable to load conf/server.conf: " + e);
-    }
+    Preferences serverPrefs = Preferences.userNodeForPackage(ServerConfiguration.class);
 
-    List commands = parseOptions(args, config);
+    List commands = parseOptions(args, serverPrefs);
     if (commands.size() > 0) {
-      execute(commands, config);
+      execute(commands, serverPrefs);
       System.exit(0);
     } else {
       System.err.println("usage: AdminClient command arguments");
@@ -89,7 +80,7 @@ public class AdminClient {
     }
   }
 
-  private static void execute(List commands, Properties config) {
+  private static void execute(List commands, Preferences serverPrefs) {
     if ("repair".equals(commands.get(0))) {
       File in = null, out = null, webapp = null;
       switch (commands.size()) {
@@ -131,17 +122,17 @@ public class AdminClient {
           checkLocaleFiles(localefiles, locale, show);
           break;
       }
-    } else if("dump".equals(commands.get(0))) {
-      switch(commands.size()) {
+    } else if ("dump".equals(commands.get(0))) {
+      switch (commands.size()) {
         case 3:
           Properties appConfig = new Properties();
           try {
-            appConfig.load(new FileInputStream((String)commands.get(1)));
+            appConfig.load(new FileInputStream((String) commands.get(1)));
             JDBCDatabaseExport.export(appConfig,
-                                      (String)commands.get(2),
+                                      (String) commands.get(2),
                                       new File((String) commands.get(1)).getParent());
           } catch (IOException e) {
-            System.err.println("Error exporting data base: "+e.getMessage());
+            System.err.println("Error exporting data base: " + e.getMessage());
           }
           break;
         default:
@@ -152,9 +143,9 @@ public class AdminClient {
     } else {
       try {
         System.err.println("Contacting Remote Server ...");
-        AdminXmlRpcClient client = new AdminXmlRpcClient(config.getProperty(ServerConfiguration.ADMIN_URL),
-                                                         config.getProperty(ServerConfiguration.ADMIN_USER),
-                                                         config.getProperty(ServerConfiguration.ADMIN_PASS));
+        AdminXmlRpcClient client = new AdminXmlRpcClient(serverPrefs.get(ServerConfiguration.ADMIN_URL, null),
+                                                         serverPrefs.get(ServerConfiguration.ADMIN_USER, null),
+                                                         serverPrefs.get(ServerConfiguration.ADMIN_PASS, null));
         String method = (String) commands.get(0);
         Vector args = new Vector();
         for (int i = 1; i < commands.size(); i++) {
@@ -188,7 +179,7 @@ public class AdminClient {
         System.out.println("== Checking bundle " + bundleFile.getName());
         Properties problems[] = LocaleComparator.compareBundles(compareBundle, defaultBundle);
         if (!problems[0].isEmpty()) {
-          System.out.println("== "+bundleFile.getName() + ": " + problems[0].size() + " missing properties.");
+          System.out.println("== " + bundleFile.getName() + ": " + problems[0].size() + " missing properties.");
           if (show) {
             Iterator it = new TreeSet(problems[0].keySet()).iterator();
             while (it.hasNext()) {
@@ -198,7 +189,7 @@ public class AdminClient {
           }
         }
         if (!problems[1].isEmpty()) {
-          System.out.println("== "+bundleFile.getName() + ": " + problems[1].size() + " not translated.");
+          System.out.println("== " + bundleFile.getName() + ": " + problems[1].size() + " not translated.");
           if (show) {
             Iterator it = new TreeSet(problems[1].keySet()).iterator();
             while (it.hasNext()) {
@@ -214,25 +205,18 @@ public class AdminClient {
   }
 
 
-  private static List parseOptions(String args[], Properties config) {
+  private static List parseOptions(String args[], Preferences serverPrefs) {
     int argNo;
     List commands = new ArrayList();
     for (argNo = 0; argNo < args.length; argNo++) {
       if ("-url".equals(args[argNo]) && args.length > argNo + 1) {
-        config.setProperty(ServerConfiguration.ADMIN_URL, args[argNo + 1]);
-        argNo++;
-      } else if ("-config".equals(args[argNo]) && args.length > argNo + 1) {
-        try {
-          config.load(new FileInputStream(args[argNo + 1]));
-        } catch (IOException e) {
-          System.err.println("AdminClient: unable to load configuration: " + e);
-        }
+        serverPrefs.put(ServerConfiguration.ADMIN_URL, args[argNo + 1]);
         argNo++;
       } else if ("-user".equals(args[argNo]) && args.length > argNo + 1) {
-        config.setProperty(ServerConfiguration.ADMIN_USER, args[argNo + 1]);
+        serverPrefs.put(ServerConfiguration.ADMIN_USER, args[argNo + 1]);
         argNo++;
       } else if ("-password".equals(args[argNo]) && args.length > argNo + 1) {
-        config.setProperty(ServerConfiguration.ADMIN_PASS, args[argNo + 1]);
+        serverPrefs.put(ServerConfiguration.ADMIN_PASS, args[argNo + 1]);
         argNo++;
       } else {
         if (args[argNo] != null && args[argNo].startsWith("file:")) {

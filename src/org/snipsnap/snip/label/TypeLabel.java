@@ -70,6 +70,7 @@ public class TypeLabel extends BaseLabel {
 
   /**
    * Get known types.
+   *
    * @return a set of type names
    */
   public static Set getTypes() {
@@ -78,12 +79,13 @@ public class TypeLabel extends BaseLabel {
 
   /**
    * Get a view handler for the provided type name.
+   *
    * @param type the type name
    * @return a view handler or null
    */
   public static String getViewHandler(String type) {
     String[] handlers = (String[]) getTypeMap().get(type);
-    if(null != handlers) {
+    if (null != handlers) {
       return handlers[0];
     }
     return null;
@@ -91,6 +93,7 @@ public class TypeLabel extends BaseLabel {
 
   /**
    * Get an edit handler for the provided type name.
+   *
    * @param type the type name
    * @return an edit handler or null
    */
@@ -124,17 +127,17 @@ public class TypeLabel extends BaseLabel {
     if (null != value && !"".equals(value)) {
       String values[] = value.split(",");
       type = (values.length > 0 ? values[0] : "");
-      editHandler = (values.length > 1 ? values[0] : "");
-      viewHandler = (values.length > 2 ? values[1] : "");
+      editHandler = (values.length > 1 ? values[1] : "");
+      viewHandler = (values.length > 2 ? values[2] : "");
     }
     super.setValue(value);
   }
 
   public String getValue() {
     return
-      (isNull(type) ? "" : type) +
-      (isNull(viewHandler) ? (isNull(editHandler) ? "" : ",") : "," + viewHandler) +
-      (isNull(editHandler) ? "" : "," + editHandler);
+            (isNull(type) ? "" : type) +
+            (isNull(viewHandler) ? (isNull(editHandler) ? "" : ",") : "," + viewHandler) +
+            (isNull(editHandler) ? "" : "," + editHandler);
   }
 
   private boolean isNull(String var) {

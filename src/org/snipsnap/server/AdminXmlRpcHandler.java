@@ -41,17 +41,17 @@ import java.util.Properties;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
+import java.util.prefs.Preferences;
 
 public class AdminXmlRpcHandler extends AuthXmlRpcHandler {
-  private Properties serverConfig = null;
-
-  public AdminXmlRpcHandler(Properties config) {
+  public AdminXmlRpcHandler() {
     super();
-    serverConfig = config;
   }
 
   protected boolean authenticate(String user, String password) {
-    return serverConfig.getProperty(ServerConfiguration.ADMIN_PASS).equals(password);
+    Preferences serverPrefs = Preferences.userNodeForPackage(ServerConfiguration.class);
+    String adminPassword = (String) serverPrefs.get(ServerConfiguration.ADMIN_PASS, null);
+    return null != adminPassword && adminPassword.equals(password);
   }
 
   public Hashtable getApplications() {
@@ -94,7 +94,8 @@ public class AdminXmlRpcHandler extends AuthXmlRpcHandler {
 
   public String install(String name, String host, String port, String path) throws Exception {
     //System.err.println("AdminXmlRpcHandler: install("+name+","+port+","+path+")");
-    File root = new File(serverConfig.getProperty(ServerConfiguration.WEBAPP_ROOT));
+    Preferences serverPrefs = Preferences.userNodeForPackage(ServerConfiguration.class);
+    File root = new File(serverPrefs.get(ServerConfiguration.WEBAPP_ROOT, System.getProperty("user.home")));
     File webAppDir = new File(root, name + "/webapp");
     File webInf = new File(webAppDir, "WEB-INF");
     webInf.mkdirs();
@@ -130,7 +131,8 @@ public class AdminXmlRpcHandler extends AuthXmlRpcHandler {
    */
   public Boolean delete(String name, Boolean backup) throws Exception {
     //System.err.println("AdminXmlRpcHandler: delete(" + name+")");
-    File root = new File(serverConfig.getProperty(ServerConfiguration.WEBAPP_ROOT));
+    Preferences serverPrefs = Preferences.userNodeForPackage(ServerConfiguration.class);
+    File root = new File(serverPrefs.get(ServerConfiguration.WEBAPP_ROOT, System.getProperty("user.home")));
     File app = new File(root, name);
     if (app.exists()) {
       try {
