@@ -92,24 +92,13 @@
   </servlet>
 
   <servlet>
-    <servlet-name>org.snipsnap.net.NewUserServlet</servlet-name>
-    <servlet-class>org.snipsnap.net.NewUserServlet</servlet-class>
-  </servlet>
-
-  <servlet>
     <servlet-name>org.snipsnap.net.LoginServlet</servlet-name>
     <servlet-class>org.snipsnap.net.LoginServlet</servlet-class>
   </servlet>
 
-  <!-- ADMIN -->
   <servlet>
-    <servlet-name>org.snipsnap.net.AdminServlet</servlet-name>
-    <servlet-class>org.snipsnap.net.AdminServlet</servlet-class>
-  </servlet>
-
-  <servlet>
-    <servlet-name>org.snipsnap.net.UserManagerServlet</servlet-name>
-    <servlet-class>org.snipsnap.net.UserManagerServlet</servlet-class>
+    <servlet-name>org.snipsnap.net.NewUserServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.NewUserServlet</servlet-class>
   </servlet>
 
   <servlet>
@@ -120,6 +109,22 @@
   <servlet>
     <servlet-name>org.snipsnap.net.RobotServlet</servlet-name>
     <servlet-class>org.snipsnap.net.RobotServlet</servlet-class>
+  </servlet>
+
+  <!-- ADMIN -->
+  <servlet>
+    <servlet-name>org.snipsnap.net.admin.AdminServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.admin.AdminServlet</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>org.snipsnap.net.admin.UserManagerServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.admin.UserManagerServlet</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>org.snipsnap.net.admin.ExportServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.admin.ExportServlet</servlet-class>
   </servlet>
 
   <!-- servlet mappings -->
@@ -194,13 +199,13 @@
   </servlet-mapping>
 
   <servlet-mapping>
-    <servlet-name>org.snipsnap.net.NewUserServlet</servlet-name>
-    <url-pattern>/exec/newuser</url-pattern>
+    <servlet-name>org.snipsnap.net.LoginServlet</servlet-name>
+    <url-pattern>/exec/authenticate</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
-    <servlet-name>org.snipsnap.net.LoginServlet</servlet-name>
-    <url-pattern>/exec/authenticate</url-pattern>
+    <servlet-name>org.snipsnap.net.NewUserServlet</servlet-name>
+    <url-pattern>/exec/newuser</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
@@ -215,13 +220,18 @@
 
   <!-- ADMIN -->
   <servlet-mapping>
-    <servlet-name>org.snipsnap.net.AdminServlet</servlet-name>
+    <servlet-name>org.snipsnap.net.admin.AdminServlet</servlet-name>
     <url-pattern>/exec/admin/*</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
-    <servlet-name>org.snipsnap.net.UserManagerServlet</servlet-name>
+    <servlet-name>org.snipsnap.net.admin.UserManagerServlet</servlet-name>
     <url-pattern>/exec/admin/user</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>org.snipsnap.net.admin.ExportServlet</servlet-name>
+    <url-pattern>/exec/admin/export</url-pattern>
   </servlet-mapping>
 
   <!-- TAGLIBS -->

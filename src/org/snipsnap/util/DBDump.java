@@ -1,6 +1,8 @@
 package org.snipsnap.util;
 
 import org.snipsnap.config.AppConfiguration;
+import org.snipsnap.app.Application;
+import org.snipsnap.snip.XMLSnipExport;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,103 +61,14 @@ public class DBDump {
       System.exit(-1);
     }
 
-    String URL = config.getJDBCURL();
-
-    String username = config.getAdminLogin();
-    String password = config.getAdminPassword();
-
-    String driverClass = config.getJDBCDriver();
-    try {
-      System.err.println("Loading JDBC Driver: " + driverClass);
-      Class.forName(driverClass);
-    } catch (Exception e) {
-      System.err.println("Failed to load JDBC driver:" + driverClass);
-      e.printStackTrace();
-      return;
-    }
-
-    Properties props = new Properties();
-
-    props.put("user", username);
-    props.put("password", password);
+    Application app = Application.get();
+    app.setConfiguration(config);
 
     try {
-      System.err.println("Connecting to: " + URL);
-      connection = DriverManager.getConnection(URL, props);
-
-    } catch (Exception e) {
-      System.err.println("Problems connecting to " + URL);
-      e.printStackTrace();
-      return;
-    }
-
-    ResultSet results = null;
-
-    try {
-      PrintWriter out = new PrintWriter(new OutputStreamWriter(System.out, "iso-8859-1"));
-      out.println("<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>");
-      out.println("<snipspace>");
-
-      toXml("SnipUser", "user", connection, out);
-      toXml("Snip", "snip", connection, out);
-
-      out.println("</snipspace>");
-      out.flush();
-      out.close();
-    } catch (Exception e) {
-      System.err.println("error writing output");
+      XMLSnipExport.store(System.out);
+    } catch (IOException e) {
+      System.err.println("DBDump: unable to dump database: "+e);
       e.printStackTrace();
     }
-    System.err.println("ATTENTION: Check the encoding of the file!");
-  }
-
-  private static void toXml(String table, String export, Connection connection, PrintWriter out) {
-    ResultSet results;
-    try {
-      PreparedStatement prepStmt = connection.prepareStatement("SELECT * " +
-                                                               " FROM " + table);
-      results = prepStmt.executeQuery();
-      toXml(export, results, out);
-    } catch (SQLException e) {
-      System.err.println("Problems with query ");
-      e.printStackTrace();
-    }
-  }
-
-  private static void toXml(String objectName, ResultSet results, PrintWriter out) throws SQLException {
-    ResultSetMetaData meta = results.getMetaData();
-    int size = meta.getColumnCount();
-    while (results.next()) {
-      out.println("<" + objectName + ">");
-      for (int i = 1; i <= size; i++) {
-        Object object = results.getObject(i);
-        String name = meta.getColumnName(i);
-        if (null != object) {
-          out.print("  <" + name + ">");
-          if (object instanceof Timestamp) {
-            Timestamp time = (Timestamp) object;
-            out.print(time.getTime());
-          } else {
-            out.print(escape(object.toString()));
-          }
-          out.println("</" + name + ">");
-        }
-      }
-      out.println("</" + objectName + ">");
-    }
-  }
-
-  private static String escape(String in) {
-    StringBuffer out = new StringBuffer();
-    StringTokenizer t = new StringTokenizer(in, "<>&", true);
-    while (t.hasMoreTokens()) {
-      String token = t.nextToken();
-      if ("<".equals(token) || ">".equals(token) || "&".equals(token)) {
-        out.append("&#x").append(Integer.toHexString(token.charAt(0))).append(";");
-      } else {
-        out.append(token);
-      }
-    }
-    return out.toString();
   }
 }

@@ -32,6 +32,7 @@ import org.snipsnap.snip.filter.macro.*;
 import org.snipsnap.snip.filter.regex.RegexTokenFilter;
 import org.snipsnap.app.Application;
 import org.snipsnap.serialization.StringBufferWriter;
+import org.snipsnap.util.log.Logger;
 
 import java.util.*;
 import java.io.Writer;
@@ -103,12 +104,12 @@ public class MacroFilter extends RegexTokenFilter {
   public void handleMatch(StringBuffer buffer, MatchResult result, Snip snip) {
     String command = result.group(1);
 
-// System.out.println("Parameter block:" + Application.get().getParameters() );
+    Logger.log("Parameter block:" + Application.get().getParameters() );
 
 // {$peng} are variables not macros.
     if (!command.startsWith("$")) {
 //      for (int i=0; i<result.groups(); i++) {
-//        System.err.println(i+" "+result.group(i));
+//        Logger.log("param("+i+") "+result.group(i));
 //      }
 
       MacroParameter mParams = new MacroParameter();

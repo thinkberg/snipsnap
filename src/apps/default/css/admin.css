@@ -1,0 +1,40 @@
+/**
+ * Debug Stylesheet definitions.
+ * @author Matthias L. Jugel
+ * @version $Id$
+ */
+
+#admin {
+
+}
+
+#admin-menu {
+  font-size: 120%;
+  width: 100%;
+  border-bottom: 3px solid #aaaaaa;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.menu-items {
+  display: table-row;
+}
+
+.menu-active {
+  display: table-cell;
+  font-weight: bold;
+  color: inherit;
+  background-color: #eeeeee;
+  border-left: 1px solid #aaaaaa;
+  border-right: 1px solid #aaaaaa;
+  padding: 5px;
+}
+
+.menu-inactive {
+  display: table-cell;
+  padding: 5px;
+}
+
+#admin th {
+  font-size: 120%;
+}

@@ -8,12 +8,15 @@
 
 <c:import url="/admin/menu.jsp"/>
 
-<table class="snip-table" width="100%" border="0" cellpadding="3" cellspacing="0">
-  <tr class="snip-table-header">
-    <td width="100%">User name</td><td>Last Login</td><td>Email</td><td>Roles</td><td>Status</td><td colspan="2">Action</td>
+<table id="wiki-table" width="100%" border="0" cellpadding="3" cellspacing="0">
+  <tr>
+    <th width="100%">User name</th><th>Last Login</th><th>Email</th><th>Roles</th><th>Status</th><th colspan="2">Action</th>
   </tr>
   <c:forEach items="${usermanager.all}" var="user" varStatus="idx">
-    <tr class="snip-table-<c:out value='${idx.count mod 2}'/>">
+    <tr <c:choose>
+      <c:when test="${idx.count mod 2 == 0}">class="table-odd"</c:when>
+      <c:otherwise>class="table-even"</c:otherwise>
+     </c:choose>>
       <td><b><i><a href="<c:url value='/space/${user.login}'/>"><c:out value="${user.login}"/></a></i></b></td>
       <td><c:out value="${user.lastLogin}"/></td>
       <td>

@@ -27,6 +27,7 @@ package org.snipsnap.snip.filter.macro;
 
 import org.snipsnap.snip.Snip;
 import org.snipsnap.app.Application;
+import org.snipsnap.util.log.Logger;
 
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -63,6 +64,7 @@ public class MacroParameter {
 
   public void setParams(String stringParams) {
     params = split(stringParams, "|");
+    Logger.log(params.toString());
     size = params.size();
    }
 

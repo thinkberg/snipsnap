@@ -46,8 +46,8 @@
     <% pageContext.setAttribute("snip", SnipSpace.getInstance().load("snipsnap-portlet-"+i)); %>
     <div id="page-portlet-<%=i%>"><s:snip snip="${snip}"/></div>
    <% } %>
+   </c:if>
   </div>
-
  </body>
 </html>
 

@@ -14,7 +14,7 @@
   <div class="error"><c:out value="${error.value}"/></div>
 </c:forEach>
 
-<form method="POST" action="<c:url value='/exec/admin/user'/>">
+<form class="form" method="POST" action="<c:url value='/exec/admin/user'/>">
  <input type="hidden" name="command" value="create"/>
  <table class="snip-table" border="0" cellspacing="0" cellpadding="2">
   <tr><td class="snip-table-header" colspan="2">User Information</td></tr>
@@ -45,7 +45,7 @@
       </c:forEach>
     </td>
   </tr>
-  <tr><td colspan="2">
+  <tr><td class="form-buttons" colspan="2">
    <input value="Create User" name="ok" type="submit" tabindex="0"/>
    <input value="Cancel" name="cancel" type="submit" tabindex="0"/>
   </td></tr>
