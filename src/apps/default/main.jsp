@@ -20,7 +20,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="<c:out value='${app.configuration.locale}'/>" xml:lang="<c:out value='${app.configuration.locale}'/>">
  <head>
   <!-- base of this document to make all links relative -->
-  <base href="<c:out value='${app.configuration.url}/'/>">
+  <base href="<c:out value='${app.configuration.url}/'/>"/>
   <!-- content type and generator -->
   <meta http-equiv="Content-Type" content="text/html; charset=<c:out value='${app.configuration.encoding}'/>"/>
   <meta http-equiv="Generator" content="SnipSnap/<c:out value="${app.configuration.version}"/>"/>
@@ -32,8 +32,8 @@
   <link rel="alternate" type="application/rss+xml" title="RSS" href="<c:out value='${app.configuration.url}/exec/rss'/>"/>
   <link rel="index" href="<c:out value='${app.configuration.url}/space/snipsnap-index'/>"/>
   <!-- icons and stylesheet -->
-  <link rel="shortcut icon" href="<c:out value='${app.configuration.url}/favicon.ico'/>">
-  <link rel="icon" href="<c:out value='${app.configuration.url}/favicon.ico'/>">
+  <link rel="shortcut icon" href="<c:out value='${app.configuration.url}/favicon.ico'/>"/>
+  <link rel="icon" href="<c:out value='${app.configuration.url}/favicon.ico'/>"/>
   <link rel="STYLESHEET" type="text/css" href="<c:out value='${app.configuration.url}/theme/default.css'/>" />
   <link rel="STYLESHEET" type="text/css" href="<c:out value='${app.configuration.url}/theme/print.css'/>" media="print" />
   <!-- title of this document -->

@@ -26,6 +26,7 @@ package org.snipsnap.render.macro;
 
 import org.radeox.api.engine.ImageRenderEngine;
 import org.radeox.api.engine.RenderEngine;
+import org.radeox.util.Encoder;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
@@ -86,9 +87,9 @@ public class ImageMacro extends SnipMacro {
 
         String link = params.get("link");
         if (link != null) {
-          writer.write("<a href=\"" + link + "\"");
+          writer.write("<a href=\"" + Encoder.escape(link) + "\"");
           if (target != null) {
-            writer.write("target=\""+target+"\"");
+            writer.write("target=\""+ Encoder.escape(target) +"\"");
           }
           writer.write(">");
         }
