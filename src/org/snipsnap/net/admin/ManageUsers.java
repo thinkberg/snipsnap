@@ -27,11 +27,15 @@ package org.snipsnap.net.admin;
 
 import org.snipsnap.config.Configuration;
 import org.snipsnap.user.UserManager;
+import org.snipsnap.user.User;
+import org.snipsnap.user.Roles;
 import org.snipsnap.container.Components;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
 
 public class ManageUsers implements SetupHandler {
   public String getName() {
@@ -39,20 +43,101 @@ public class ManageUsers implements SetupHandler {
   }
 
   public Map setup(HttpServletRequest request, HttpServletResponse response, Configuration config, Map errors) {
+    UserManager um = (UserManager) Components.getComponent(UserManager.class);
     if (request.getParameter("remove") != null) {
       errors.put("fatal", "fatal");
     } else if (request.getParameter("edit") != null) {
-      UserManager um = (UserManager) Components.getComponent(UserManager.class);
-      request.setAttribute("user", um.load(request.getParameter("edit_login")));
-    } else if (request.getParameter("save") != null) {
+      User user = um.load(request.getParameter("login"));
+      request.setAttribute("editUser", user);
+      request.setAttribute("edit", "true");
+      if(null == user) {
+        request.setAttribute("create", "true");
+      }
+    } else if (request.getParameter("save") != null || request.getParameter("create") != null) {
+      request.setAttribute("edit", "true");
       String login = request.getParameter("config.users.login");
-      String passwd = request.getParameter("config.users.password");
-      String passwdVrfy = request.getParameter("config.users.password.vrfy");
-      String email = request.getParameter("config.users.email");
-      String[] roles = request.getParameterValues("config.users.roles");
-      String status = request.getParameter("config.users.status");
+      User user = um.load(login);
+      if(request.getParameter("create") != null) {
+        request.setAttribute("create", request.getParameter("create"));
+
+        if(user != null || null == login) {
+          errors.put("users.login", "users.login");
+        } else {
+          User tmp = new User(login, "", "");
+          if(update(request, errors, tmp)) {
+            user = um.create(login, tmp.getPasswd(), tmp.getEmail());
+            update(request, errors, user);
+          }
+        }
+      } else if(null == user) {
+        errors.put("users.login", "users.login");
+        return errors;
+      }
+
+      if (update(request, errors, user)) {
+        um.store(user);
+      }
+      request.setAttribute("editUser", user);
+      if(errors.size() == 0) {
+        request.removeAttribute("edit");
+      }
     }
 
     return errors;
+  }
+
+  /**
+   * Update a user, check validity and equality of the input.
+   */
+  private boolean update(HttpServletRequest request, Map errors, User user) {
+
+    String email = request.getParameter("config.users.email");
+    String nPass = request.getParameter("config.users.password");
+    String nPass2 = request.getParameter("config.users.password.vrfy");
+    String status = request.getParameter("config.users.status");
+    String roles[] = request.getParameterValues("config.users.roles");
+
+    boolean modified = false;
+    if ((user.getEmail() == null && email != null) ||
+      (user.getEmail() != null && !user.getEmail().equals(email))) {
+      modified = true;
+      user.setEmail(email);
+    }
+
+    if ((user.getStatus() == null && status != null) ||
+      (user.getStatus() != null && !user.getStatus().equals(status))) {
+      modified = true;
+      user.setStatus(status);
+    }
+
+    Roles newRoles = new Roles(parseRoles(roles));
+    if (!user.getRoles().equals(newRoles)) {
+      if (!newRoles.getRoleSet().isEmpty() && !Roles.allRoles().containsAll(newRoles.getRoleSet())) {
+        errors.put("users.roles", "users.roles");
+      } else {
+        modified = true;
+        user.setRoles(newRoles);
+      }
+    }
+
+
+    if (nPass != null && nPass.length() > 0) {
+      if (nPass.equals(nPass2)) {
+        modified = true;
+        user.setPasswd(nPass);
+      } else {
+        errors.put("users.password", "users.password");
+      }
+    }
+
+    return modified;
+  }
+
+  private Set parseRoles(String roles[]) {
+    Set list = new HashSet();
+    for (int i = 0; roles != null && i < roles.length; i++) {
+      list.add(roles[i]);
+    }
+    return list;
   }
 }

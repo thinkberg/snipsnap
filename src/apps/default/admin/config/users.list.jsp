@@ -11,6 +11,8 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
 
+
+
 <div class="users-pages">
   <fmt:message key="config.users.page"/>
   <%
@@ -52,6 +54,11 @@
     <th><fmt:message key="config.users.lastlogin"/></th>
     <th colspan="2"><fmt:message key="config.users.action"/></th>
   </tr>
+  <tr>
+    <td colspan="5">
+      [<a href="configure?step=users&amp;edit=true&amp;login="><fmt:message key="config.users.create"/></a>]<br/>
+    </td>
+  </tr>
   <c:forEach items="${users}" var="user" varStatus="idx">
     <tr <c:choose>
       <c:when test="${idx.count mod 2 == 0}">class="users-odd"</c:when>
@@ -67,15 +74,17 @@
         </c:if>
       </td>
       <td><span class="nobr"><c:out value="${user.roles}"/></span></td>
-      <td><fmt:formatDate pattern="yyyyMMdd hh:mm" value="${user.lastLogin}"/></td>
+      <td><fmt:formatDate pattern="yyyy-MM-dd hh:mm" value="${user.lastLogin}"/></td>
       <td>
-        <input type="hidden" name="edit_login" value="<c:out value='${user.login}'/>"/>
-        <input type="submit" name="edit" value="<fmt:message key="config.users.edit"/>"/>
+        [<a href="configure?step=users&amp;edit=true&amp;login=<c:out value='${user.login}'/>">
+          <fmt:message key="config.users.edit"/>
+        </a>]
       </td>
       <td>
         <c:if test="${configuser.login != user.login}">
-          <input type="hidden" name="remove_login" value="<c:out value='${user.login}'/>"/>
-          <input style="color: red" type="submit" name="remove" value="<fmt:message key="config.users.remove"/>"/>
+          [<a href="configure?step=users&amp;remove=<c:out value='${user.login}'/>">
+            <fmt:message key="config.users.remove"/>
+          </a>]
         </c:if>
       </td>
     </tr>

@@ -1,10 +1,6 @@
-<%@ page import="org.snipsnap.user.UserManager,
-                 org.snipsnap.container.Components,
-                 java.util.List,
-                 java.util.Set"
- %>
+<%@ page import="java.util.Set"%>
 <%--
-  ** User management: list existing users
+  ** User management: edit/create user
   ** @author Matthias L. Jugel
   ** @version $Id$
   --%>
@@ -17,9 +13,16 @@
     <td><fmt:message key="config.users.login.text"/></td>
     <td>
       <fmt:message key="config.users.login"/><br/>
-      <input type="text" name="config.users.login" value="<c:out value='${user.login}' default=""/>"
-       <c:if test="${empty user}">disabled="disabled"</c:if>>
-      <c:if test="${!empty errors['config.users.login']}"><img src="images/attention.jpg"></c:if>
+      <c:choose>
+        <c:when test="${not empty create}">
+          <input type="text" name="config.users.login" value="<c:out value='${editUser.login}' default=""/>">
+        </c:when>
+        <c:otherwise>
+          <input type="hidden" name="config.users.login" value="<c:out value='${editUser.login}' default=""/>">
+          <input type="text" name="disabled" value="<c:out value='${editUser.login}' default=""/>" disabled="disabled">
+        </c:otherwise>
+      </c:choose>
+      <c:if test="${!empty errors['users.login']}"><img src="images/attention.jpg"></c:if>
     </td>
   </tr>
   <tr>
@@ -27,12 +30,12 @@
     <td>
       <fmt:message key="config.users.password"/><br/>
       <input type="password" name="config.users.password" value="">
-      <c:if test="${!empty errors['config.users.password']}"><img src="images/attention.jpg"></c:if><br/>
+      <c:if test="${!empty errors['users.password']}"><img src="images/attention.jpg"></c:if><br/>
       <fmt:message key="config.users.password.vrfy"/><br/>
       <input type="password" name="config.users.password.vrfy" value="">
-      <c:if test="${!empty errors['config.users.password']}"><img src="images/attention.jpg"></c:if><br/>
+      <c:if test="${!empty errors['users.password']}"><img src="images/attention.jpg"></c:if><br/>
       <div class="hint">
-        <c:if test="${not empty user.passwd}">
+        <c:if test="${not empty editUser.passwd}">
           <fmt:message key="config.password.set" />
         </c:if>
       </div>
@@ -42,17 +45,17 @@
     <td><fmt:message key="config.users.email.text"/></td>
     <td>
       <fmt:message key="config.users.email"/><br/>
-      <input type="text" name="config.users.email" value="<c:out value='${user.email}' default=""/>">
-      <c:if test="${!empty errors['config.users.email']}"><img src="images/attention.jpg"></c:if>
+      <input type="text" name="config.users.email" value="<c:out value='${editUser.email}' default=""/>">
+      <c:if test="${!empty errors['users.email']}"><img src="images/attention.jpg"></c:if>
     </td>
   </tr>
   <tr>
     <td><fmt:message key="config.users.roles.text"/></td>
     <td>
       <fmt:message key="config.users.roles"/><br/>
-       <c:set var="userRoles" value="${user.roles.roleSet}"/>
+       <c:set var="userRoles" value="${editUser.roles.roleSet}"/>
        <% Set userRoles = (Set) pageContext.findAttribute("userRoles"); %>
-       <c:forEach items="${user.roles.allRoles}" var="role">
+       <c:forEach items="${editUser.roles.allRoles}" var="role">
          <input type="checkbox" name="config.users.roles" value="<c:out value='${role}'/>" <%= userRoles.contains(pageContext.findAttribute("role")) ? "checked=\"checked\"" : "" %>/>
          <c:out value="${role}"/><br/>
        </c:forEach>
@@ -62,12 +65,19 @@
     <td><fmt:message key="config.users.status.text"/></td>
     <td>
       <fmt:message key="config.users.status"/><br/>
-      <input name="status" type="text" size="20" value="<c:out value='${user.status}'/>"/>
+      <input name="config.users.status" type="text" size="20" value="<c:out value='${editUser.status}'/>"/>
     </td>
   <tr>
     <td></td>
     <td>
-      <input type="submit" name="save" value="<fmt:message key="config.users.save"/>">
+      <c:choose>
+        <c:when test="${empty create}">
+          <input type="submit" name="save" value="<fmt:message key="config.users.save"/>">
+        </c:when>
+        <c:otherwise>
+          <input type="submit" name="create" value="<fmt:message key="config.users.create"/>">
+        </c:otherwise>
+      </c:choose>
       <input type="submit" name="cancel" value="<fmt:message key="config.users.cancel"/>">
     </td>
   </tr>

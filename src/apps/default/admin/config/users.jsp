@@ -13,7 +13,7 @@
 <%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
 
 <c:choose>
-  <c:when test="${not empty param.edit_login && not empty user}">
+  <c:when test="${not empty edit}">
     <c:import url="config/users.edit.jsp"/>
   </c:when>
   <c:otherwise>
