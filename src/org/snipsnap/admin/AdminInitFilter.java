@@ -27,6 +27,7 @@ package org.snipsnap.admin;
 import org.apache.xmlrpc.XmlRpcException;
 import org.snipsnap.config.ServerConfiguration;
 import org.snipsnap.config.Configuration;
+import org.snipsnap.config.ConfigurationProxy;
 import org.snipsnap.net.filter.EncRequestWrapper;
 import org.snipsnap.server.AdminXmlRpcClient;
 

@@ -77,6 +77,10 @@ public class AdminXmlRpcHandler extends AuthXmlRpcHandler {
     return appList;
   }
 
+  public void shutdown() {
+    Shutdown.shutdown();
+  }
+
   public String install(String name, String host, String port, String path) throws XmlRpcException {
     //System.err.println("AdminXmlRpcHandler: install("+name+","+port+","+path+")");
     File root = new File(serverConfig.getProperty(ServerConfiguration.WEBAPP_ROOT));
@@ -92,8 +96,8 @@ public class AdminXmlRpcHandler extends AuthXmlRpcHandler {
       installConfig.setProperty(Configuration.APP_PATH, path);
       try {
         installConfig.store(new FileOutputStream(applicationConf), " Bootstrap Configuration");
-        ApplicationLoader.loadApplication(root.getPath(), name);
-        return "http://"+host+":"+port+path;
+        Configuration config = ApplicationLoader.loadApplication(root.getPath(), name);
+        return config.getUrl();
       } catch (Exception e) {
         applicationConf.delete();
         throw new XmlRpcException(0, "unable to write '"+applicationConf.getPath()+"'");

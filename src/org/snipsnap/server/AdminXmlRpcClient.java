@@ -27,12 +27,11 @@ package org.snipsnap.server;
 import org.apache.xmlrpc.XmlRpcClient;
 import org.apache.xmlrpc.XmlRpcException;
 
-import java.util.Vector;
-import java.util.Map;
-import java.util.Hashtable;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.io.IOException;
+import java.util.Hashtable;
+import java.util.Vector;
 
 public class AdminXmlRpcClient {
   XmlRpcClient xmlRpcClient = null;
@@ -51,6 +50,10 @@ public class AdminXmlRpcClient {
   public Hashtable getApplications() throws XmlRpcException, IOException {
     Vector args = new Vector();
     return (Hashtable)xmlRpcClient.execute("getApplications", args);
+  }
+
+  public void shutdown() throws XmlRpcException, IOException {
+    xmlRpcClient.execute("shutdown", null);
   }
 
   public URL install(String name, String host, String port, String path) throws XmlRpcException, IOException {

@@ -111,20 +111,25 @@ public class ApplicationLoader {
     return config;
   }
 
-  public static void reloadApplication(String root, String name) throws Exception {
+  public static Configuration reloadApplication(String root, String name) throws Exception {
     File configFile = getConfigFile(root, normalize(name));
     if (configFile != null) {
       Configuration config = loadNewConfiguration(configFile);
       unloadApplication(config);
       loadApplication(config);
+      return config;
     }
+    return null;
   }
 
-  public static void loadApplication(String root, String name) throws Exception {
+  public static Configuration loadApplication(String root, String name) throws Exception {
     File configFile = getConfigFile(root, normalize(name));
     if (configFile != null) {
-      loadApplication(loadNewConfiguration(configFile));
+      Configuration config = loadNewConfiguration(configFile);
+      loadApplication(config);
+      return config;
     }
+    return null;
   }
 
   public static void unloadApplication(String root, String name) throws Exception {
