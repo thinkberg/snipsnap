@@ -79,7 +79,7 @@ public class Aspects implements InvocationHandler {
       aspects.addInterceptor(new BlogACLInterceptor());
     }
     return Proxy.newProxyInstance(targetClass.getClassLoader(),
-        interfaces, new Aspects(target));
+        interfaces, aspects);
   }
 
   public Aspects(Object target) {

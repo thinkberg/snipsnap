@@ -51,9 +51,10 @@ public class ACLInterceptor extends InterceptorSupport {
 
   public Object invoke(Invocation invocation) throws Throwable {
     // hack should a.) also check other methods b.) declare security for every method
+    String name = invocation.getMethod().getName();
+    User user = Application.get().getUser();
+    Snip snip = (Snip) invocation.getTarget();
     if (invocation.getMethod().getName().startsWith("set")) {
-      Snip snip = (Snip) invocation.getTarget();
-      User user = Application.get().getUser();
       //Logger.debug("ACLInterceptor: Method="+invocation.getMethod().getName());
       //Logger.debug("ACLInterceptor: User = "+user);
       //Logger.debug("ACLInterceptor: Snip = "+snip);
@@ -63,6 +64,10 @@ public class ACLInterceptor extends InterceptorSupport {
           //Logger.debug("SECURITY EXCEPTION");
           throw new GeneralSecurityException(snip.getName()+": "+user+" is not allowed to modify object");
         }
+      }
+    } else if ("getContent".equals(name) || "getXMLContent".equals(name)) {
+      if (user != null && "SnipSnap/config".equals(snip.getName()) && ! user.isAdmin() ) {
+        return "content protected";
       }
     }
     return invocation.next();
