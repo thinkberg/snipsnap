@@ -32,6 +32,7 @@ import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.snip.label.Label;
 import org.snipsnap.snip.label.LabelManager;
+import org.snipsnap.container.Components;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -69,7 +70,7 @@ public class AddLabelServlet extends HttpServlet {
     request.setAttribute("snip", snip);
 
     String labelType = request.getParameter("labeltype");
-    LabelManager manager = LabelManager.getInstance();
+    LabelManager manager = (LabelManager)Components.getComponent(LabelManager.class);
     Label label = manager.getLabel(labelType);
     request.setAttribute("label", label);
 

@@ -33,6 +33,7 @@ import org.snipsnap.snip.label.LabelManager;
 import org.snipsnap.snip.label.Labels;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
+import org.snipsnap.container.Components;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -102,7 +103,7 @@ public class LabelsServlet extends HttpServlet {
     StringBuffer typesProxy = new StringBuffer();
     typesProxy.append("Choose label type:<br/><select name=\"labeltype\">");
 
-    LabelManager manager = LabelManager.getInstance();
+    LabelManager manager = (LabelManager)Components.getComponent(LabelManager.class);
     Iterator typesIt = manager.getTypes().iterator();
     while (typesIt.hasNext()) {
       String labelType = (String) typesIt.next();

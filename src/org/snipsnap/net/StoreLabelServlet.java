@@ -31,6 +31,7 @@ import org.snipsnap.snip.label.Label;
 import org.snipsnap.snip.label.LabelManager;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.app.Application;
+import org.snipsnap.container.Components;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -68,7 +69,7 @@ public class StoreLabelServlet extends HttpServlet {
 
     String labelType = request.getParameter("labeltype");
     if (null != labelType) {
-      LabelManager manager = LabelManager.getInstance();
+      LabelManager manager = (LabelManager)Components.getComponent(LabelManager.class);
       Label label = manager.getLabel(labelType);
       Map params = new HashMap();
       Enumeration enumeration = request.getParameterNames();

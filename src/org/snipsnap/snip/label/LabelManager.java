@@ -60,16 +60,7 @@ public class LabelManager {
     }
   }
 
-  /**
-   * @deprecated
-   * @return
-   */
-
-  public synchronized static LabelManager getInstance() {
-    return (LabelManager) Components.getComponent(LabelManager.class);
-  }
-
-  private void addLabelType(String name, String className) {
+   private void addLabelType(String name, String className) {
     // TODO: check if labeltype with same name exists
     // additional parameter 'overwrite' or exception or return value?
     // (decision should to be made by user)

@@ -44,8 +44,8 @@ public class NameSpaceTreeBuilder implements TreeBuilder {
       root = root.substring(0, root.length()-1);
     }
 
-    Node parent = new Node(root);
-    Node lastNode = parent;
+    TreeNode parent = new TreeNode(root);
+    TreeNode lastNode = parent;
     Tree tree = new Tree(parent);
 
     int depth = -1;
@@ -61,18 +61,18 @@ public class NameSpaceTreeBuilder implements TreeBuilder {
       }
       if (currentDepth > depth) {
         depth = currentDepth;
-        Node child = new Node(element, lastNode);
+        TreeNode child = new TreeNode(element, lastNode);
         parent = lastNode;
         parent.addChild(child);
         lastNode = child;
       } else if (currentDepth < depth) {
         depth = currentDepth;
         parent = parent.getParent();
-        Node child = new Node(element, parent);
+        TreeNode child = new TreeNode(element, parent);
         parent.addChild(child);
         lastNode = child;
       } else {
-        Node child = new Node(element, parent);
+        TreeNode child = new TreeNode(element, parent);
         parent.addChild(child);
         lastNode = child;
       }
