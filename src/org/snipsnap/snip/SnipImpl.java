@@ -24,19 +24,16 @@
  */
 package org.snipsnap.snip;
 
-import org.snipsnap.app.Application;
 import org.radeox.EngineManager;
 import org.radeox.engine.context.RenderContext;
 import org.radeox.util.logging.Logger;
-import org.radeox.filter.context.FilterContext;
-import org.snipsnap.snip.label.Labels;
+import org.snipsnap.app.Application;
+import org.snipsnap.interceptor.Aspects;
+import org.snipsnap.render.context.SnipRenderContext;
 import org.snipsnap.snip.attachment.Attachments;
+import org.snipsnap.snip.label.Labels;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.User;
-import org.snipsnap.interceptor.Aspects;
-import org.snipsnap.render.filter.context.SnipFilterContext;
-import org.snipsnap.render.SnipRenderEngine;
-import org.snipsnap.render.context.SnipRenderContext;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -305,7 +302,7 @@ public class SnipImpl implements Snip {
    * @param parentSnip new parent snip of this snip
    */
   public void setDirectParent(Snip parentSnip) {
-     this.parent = parentSnip;
+    this.parent = parentSnip;
   }
 
   public void setParent(Snip parentSnip) {
@@ -401,7 +398,7 @@ public class SnipImpl implements Snip {
   }
 
   public boolean equals(Object obj) {
-    if (! (obj instanceof Snip)) {
+    if (!(obj instanceof Snip)) {
       return false;
     }
 
