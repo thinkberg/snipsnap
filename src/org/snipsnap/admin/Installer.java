@@ -26,6 +26,7 @@ package com.neotis.admin;
 
 import com.neotis.config.Configuration;
 import com.neotis.config.CreateDB;
+import com.neotis.server.AppServer;
 import com.neotis.snip.SnipLink;
 import com.neotis.util.JarExtractor;
 import org.mortbay.http.SocketListener;
@@ -41,6 +42,7 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Method;
 import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -102,7 +104,7 @@ public class Installer extends HttpServlet {
     try {
       config.setPort(Integer.parseInt(request.getParameter("port")));
     } catch (NumberFormatException e) {
-      System.err.println("Installer: port '"+request.getParameter("port")+"' is not a valid number");
+      System.err.println("Installer: port '" + request.getParameter("port") + "' is not a valid number");
       errors.put("port", "The port '" + request.getParameter("port") + "' is not a valid number!");
     }
     config.setContextPath(request.getParameter("context"));
@@ -122,7 +124,7 @@ public class Installer extends HttpServlet {
       }
       addrPort.setPort(config.getPort());
     } catch (UnknownHostException e) {
-      System.err.println("Installer: error binding host name: "+e);
+      System.err.println("Installer: error binding host name: " + e);
       errors.put("host", "The host you entered is unknown, leave blank to bind server to the default host name.");
       sendError(session, errors, request, response);
       return;
@@ -147,9 +149,9 @@ public class Installer extends HttpServlet {
 
     writeMessage(out, "Extracting templates ...");
     try {
-      JarExtractor.extract(new JarFile("./lib/snipsnap-template.war", true), new File("./app/"+config.getContextPath()), out);
+      JarExtractor.extract(new JarFile("./lib/snipsnap-template.war", true), new File("./app/" + config.getContextPath()), out);
     } catch (IOException e) {
-      System.err.println("Installer: error while extracting default template: "+e);
+      System.err.println("Installer: error while extracting default template: " + e);
       errors.put("fatal", "Unable to extract default application, please see server.log for details!");
       sendError(session, errors, request, response);
       return;
@@ -170,10 +172,13 @@ public class Installer extends HttpServlet {
       return;
     }
 
+    writeMessage(out, "Inserting inital data into database ...");
+    CreateDB.insertData(config.getUserName(), password, config.getEmail());
+
     writeMessage(out, "Starting your application ...");
     try {
       WebApplicationContext context =
-        server.addWebApplication(config.getContextPath(), "./app"+config.getContextPath());
+        server.addWebApplication(config.getContextPath(), "./app" + config.getContextPath());
       context.start();
     } catch (Exception e) {
       System.err.println("Installer: unable to start application: " + e);

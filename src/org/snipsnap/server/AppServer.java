@@ -48,20 +48,20 @@ public class AppServer {
   public static void main(String args[]) {
     System.out.println("SnipSnap v0.1-alpha");
     System.out.println("Copyright (c) 2002 Stephan J. Schmidt, Matthias L. Jugel. "
-                       + "All Rights Reserved.");
+                       + "All Rights Resved.");
     System.out.println("See License Agreement for terms and conditions of use.");
-    initServer();
-    checkConfig();
+    Configuration config = new Configuration("./conf/local.conf");
+    initServer(config);
+    checkConfig(config);
   }
 
   /**
    * Initialize Server and load administrative web application.
    */
-  private static void initServer() {
+  private static void initServer(Configuration config) {
     try {
       jettyServer = new Server("./conf/server.conf");
       jettyServer.start();
-
     } catch (IOException e) {
       System.err.println("AppServer: configuration not found: " + e);
     } catch (Exception e) {
@@ -69,13 +69,13 @@ public class AppServer {
     }
     try {
       adminContext = addApplication("/admin", "./lib/snipsnap-admin.war");
+      adminContext.setAttribute(AppServer.class.toString(), AppServer.class);
     } catch (Exception e) {
       System.err.println("AppServer: unable to load servlet class: " + e);
     }
   }
 
-  private static void checkConfig() {
-    Configuration config = new Configuration("./conf/local.conf");
+  private static void checkConfig(Configuration config) {
     if (config.isConfigured()) {
       try {
         jettyServer.addListener(new SocketListener(new InetAddrPort(config.getPort())));

@@ -28,7 +28,9 @@ import com.neotis.app.Application;
 import com.neotis.snip.HomePage;
 import com.neotis.snip.Snip;
 import com.neotis.snip.SnipSpace;
-import com.neotis.user.*;
+import com.neotis.user.Security;
+import com.neotis.user.User;
+import com.neotis.user.UserManager;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -44,13 +46,12 @@ public class CreateDB {
 
   public static void main(String[] args) {
     createDB("funzel", "funzel", "stephan@mud.de");
+    insertData("funzel", "funzel", "stephan@mud.de");
   }
 
   // The username/password for the database.  This will be the username/
   // password for the user that has full control over the database.
   public static void createDB(String username, String password, String email) {
-    System.out.println();
-
     // Register the Mckoi JDBC Driver
     try {
       Class.forName("com.mckoi.JDBCDriver").newInstance();
@@ -67,7 +68,7 @@ public class CreateDB {
     // configuration file for the database is found at './ExampleDB.conf'
     // The 'create=true' argument means we want to create the database.  If
     // the database already exists, it can not be created.
-    String url = "jdbc:mckoi:local://conf/db.conf?create=true";
+    String url = "jdbc:mckoi:local://./conf/db.conf?create=true";
 
     // Make a connection with the database.  This will create the database
     // and log into the newly created database.
@@ -87,7 +88,7 @@ public class CreateDB {
       // Create a Statement object to execute the queries on,
       Statement statement = connection.createStatement();
 
-      System.out.println("-- Creating Tables --");
+      System.out.println("CreateDB: Creating Tables");
 
       // Create a Person table,
       statement.executeQuery(
@@ -110,57 +111,60 @@ public class CreateDB {
         "       status   VARCHAR(50), " +
         "       roles    VARCHAR(200) )");
 
-      System.out.println("-- Inserting Data --");
 
       // Close the statement and the connection.
       statement.close();
       connection.close();
 
-      User admin = UserManager.getInstance().create(username, password, email);
-
-      Application app = new Application();
-      app.setUser(admin);
-
-      System.out.println("Creating admin homepage");
-      HomePage.create(username, app);
-
-      SnipSpace space = SnipSpace.getInstance();
-      Snip snip = null;
-      System.out.print("Creating about...");
-      snip = space.create("about", "[SnipSnap] is a [Weblog] and [Wiki] tool by [funzel] und [arte]", app);
-      if (snip != null) {
-        System.out.println("ok.");
-      } else {
-        System.out.println("failed.");
-      }
-
-      snip = space.create("start", "{weblog}", app);
-
-      String rolling = "__Blogrolling:__\\\\ \n" +
-        "{link:Langreiter|http://www.langreiter.com}\\\\ \n" +
-        "{link:Earl|http://earl.strain.at}\\\\ \n" +
-        "{link:henso|http://www.henso.com}\\\\ \n" +
-        "{link:Lambda|http://lambda.weblogs.com}\\\\ \n" +
-        "{link:e7l3|http://www.e7l3.com}\\\\ \n";
-      snip = space.create("snipsnap-blogrolling", rolling, app);
-      snip.addPermission("Edit", Security.OWNER);
-      space.store(snip);
-
-      space.post("Welcome to [SnipSnap]. You can now login and add/edit your first post", app);
-      System.out.println("--- Complete ---");
-
     } catch (SQLException e) {
       System.out.println(
         "An error occured\n" +
         "The SQLException message is: " + e.getMessage());
-
     }
-
     // Close the the connection.
     try {
       connection.close();
     } catch (SQLException e2) {
       e2.printStackTrace(System.err);
     }
+
+  }
+
+  public static void insertData(String username, String password, String email) {
+
+    System.out.println("CreateDB: Inserting Data");
+
+    User admin = UserManager.getInstance().create(username, password, email);
+
+    Application app = new Application();
+    app.setUser(admin);
+
+    System.out.println("Creating admin homepage");
+    HomePage.create(username, app);
+
+    SnipSpace space = SnipSpace.getInstance();
+    Snip snip = null;
+    System.out.print("Creating about...");
+    snip = space.create("about", "[SnipSnap] is a [Weblog] and [Wiki] tool by [funzel] und [arte]", app);
+    if (snip != null) {
+      System.out.println("ok.");
+    } else {
+      System.out.println("failed.");
+    }
+
+    snip = space.create("start", "{weblog}", app);
+
+    String rolling = "__Blogrolling:__\\\\ \n" +
+      "{link:Langreiter|http://www.langreiter.com}\\\\ \n" +
+      "{link:Earl|http://earl.strain.at}\\\\ \n" +
+      "{link:henso|http://www.henso.com}\\\\ \n" +
+      "{link:Lambda|http://lambda.weblogs.com}\\\\ \n" +
+      "{link:e7l3|http://www.e7l3.com}\\\\ \n";
+    snip = space.create("snipsnap-blogrolling", rolling, app);
+    snip.addPermission("Edit", Security.OWNER);
+    space.store(snip);
+
+    space.post("Welcome to [SnipSnap]. You can now login and add/edit your first post", app);
+    System.out.println("CreateDB: Complete");
   }
 }
