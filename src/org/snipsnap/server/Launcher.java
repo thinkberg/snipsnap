@@ -118,7 +118,7 @@ public class Launcher {
       urlArray.add(mainJarUrl);
       // append extra class path to manifest class path (after replacing separatorchar)
       if (extraClassPath != null && extraClassPath.length() > 0) {
-        manifestClassPath += " " + extraClassPath.replace(':', ' ');
+        manifestClassPath += " " + extraClassPath.replace(File.pathSeparatorChar, ' ');
       }
 
       File directoryBase = new File(location.getFile()).getParentFile();
