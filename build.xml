@@ -118,10 +118,10 @@
 
   <!-- delete compiled class files and created jar/war archives -->
   <target description="clean up compiled code" name="clean">
-    <delete>
-      <fileset dir="." includes="${target}/**" excludes="CVS"/>
+    <delete failonerror="false">
+      <fileset dir="${target}" includes="**" excludes="CVS"/>
     </delete>
-    <delete>
+    <delete failonerror="false">
       <fileset dir="${jar}" includes="${appname}*.jar"/>
       <fileset dir="${jar}" includes="${appname}*.war"/>
       <fileset dir="${src}/apps/default/WEB-INF/lib" includes="${appname}-servlets.jar"/>
