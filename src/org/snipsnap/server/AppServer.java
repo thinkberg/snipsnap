@@ -76,8 +76,6 @@ public class AppServer {
       System.exit(-1);
     }
 
-    System.s
-
     // start the administrative network interface
     try {
       new AdminServer(Integer.parseInt(adminConfig.getProperty(Configuration.SERVER_ADMIN_PORT).trim()));
