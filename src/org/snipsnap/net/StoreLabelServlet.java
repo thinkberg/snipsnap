@@ -77,6 +77,7 @@ public class StoreLabelServlet extends HttpServlet {
       label.handleInput(params);
       Snip snip = SnipSpaceFactory.getInstance().load(snipName);
       snip.getLabels().addLabel(label);
+      SnipSpaceFactory.getInstance().store(snip);
     }
     response.sendRedirect(SnipLink.absoluteLink("/exec/labels?snipname=" + SnipLink.encode(snipName)));
   }

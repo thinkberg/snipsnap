@@ -24,6 +24,8 @@
  */
 package org.snipsnap.util;
 
+import java.util.StringTokenizer;
+
 /**
  * Helper utility for string handling.
  *
@@ -34,6 +36,17 @@ public class StringUtil {
   public static String plural(int i, String s1, String s2) {
     StringBuffer buffer = new StringBuffer();
     return plural(buffer, i, s1, s2).toString();
+  }
+
+  public static String[] split(String string, String delimiter) {
+    //@TODO: use Jakarta Commons lang or JDK1.4
+    StringTokenizer tokenizer = new StringTokenizer(string, delimiter);
+    String[] result = new String[tokenizer.countTokens()];
+    int i=0;
+    while(tokenizer.hasMoreTokens()) {
+      result[i++] = tokenizer.nextToken();
+    }
+    return result;
   }
 
   public static String plural(int i, String s) {

@@ -27,6 +27,10 @@ package org.snipsnap.snip;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.snipsnap.snip.label.Labels;
+import org.snipsnap.snip.label.Label;
+
+import java.util.Iterator;
 
 /**
  * Prepares a snip for indexing by lucene. Lucene needs
@@ -59,6 +63,13 @@ public class SnipDocument {
     doc.add(Field.Text("author", snip.getCUser()));
     doc.add(Field.Text("muser", snip.getMUser()));
     doc.add(Field.Text("owner", snip.getOwner()));
+
+    Labels labels = snip.getLabels();
+    Iterator iterator = labels.getAll().iterator();
+    while (iterator.hasNext()) {
+      Label label = (Label) iterator.next();
+      label.index(doc);
+    }
     return doc;
   }
 }

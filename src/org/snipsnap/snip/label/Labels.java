@@ -25,6 +25,8 @@
 
 package org.snipsnap.snip.label;
 
+import org.snipsnap.util.StringUtil;
+
 import java.util.*;
 
 /**
@@ -74,18 +76,24 @@ public class Labels {
 
   public void removeLabel(String name) {
     cache = null;
-	  labels.remove(name);
+    labels.remove(name);
   }
 
   public Set getIds() {
     return labels.keySet();
   }
 
-  private Label createDefaultLabel(String name, String value)
-  {
+  private Label createDefaultLabel(String name, String value) {
     Label label = LabelManager.getInstance().getDefaultLabel();
-    label.setName( name );
-    label.setValue( value );
+    label.setName(name);
+    label.setValue(value);
+    return label;
+  }
+
+  private Label createLabel(String type, String name, String value) {
+    Label label = LabelManager.getInstance().getLabel(type);
+    label.setName(name);
+    label.setValue(value);
     return label;
   }
 
@@ -96,8 +104,10 @@ public class Labels {
     StringTokenizer tokenizer = new StringTokenizer(labelString, "|");
     while (tokenizer.hasMoreTokens()) {
       String labelToken = tokenizer.nextToken();
-      Label label = createDefaultLabel( getName( labelToken ), getValue( labelToken ) );
-      labels.put( label.getName(), label );
+      String[] data = StringUtil.split(labelToken, ":");
+      //System.out.println("Data="+data);
+      Label label = createLabel(data[0], data[1], data[2]);
+      labels.put(label.getName(), label);
     }
     return;
   }
@@ -113,6 +123,8 @@ public class Labels {
       Label label = (Label) entry.getValue();
       String type = label.getType();
       String value = label.getValue();
+      linkBuffer.append(type);
+      linkBuffer.append(":");
       linkBuffer.append(name);
       linkBuffer.append(":");
       linkBuffer.append(value);
@@ -120,23 +132,8 @@ public class Labels {
         linkBuffer.append("|");
       }
     }
+    //System.out.println("serialize = "+linkBuffer.toString());
     return linkBuffer.toString();
-  }
-
-  private String after(String string, String delimiter) {
-    return string.substring(string.indexOf(delimiter) + 1);
-  }
-
-  private String before(String string, String delimiter) {
-    return string.substring(0, string.indexOf(delimiter));
-  }
-
-  private String getName(String labelString) {
-    return before(labelString, ":");
-  }
-
-  private String getValue(String labelString) {
-    return after(labelString, ":");
   }
 
   public String toString() {

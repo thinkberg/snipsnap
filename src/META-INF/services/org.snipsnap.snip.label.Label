@@ -1,4 +1,4 @@
-org.snipsnap.snip.label.DefaultLabel
+#org.snipsnap.snip.label.DefaultLabel
 org.snipsnap.snip.label.SnipLabel
 org.snipsnap.snip.label.TypeLabel
-org.snipsnap.snip.label.ComplexLabel
+#org.snipsnap.snip.label.ComplexLabel

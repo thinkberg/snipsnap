@@ -25,35 +25,17 @@
 
 package org.snipsnap.snip.label;
 
-import org.apache.lucene.document.Document;
-
 import java.util.Map;
 
 /**
- * Label is attached to Snips
+ * Stores arbitray attributes with name and value
+ *
  * @author Stephan J. Schmidt
  * @version $Id$
  */
-public interface Label {
-    // public String serialize();
 
-    // public void deserialize(String label);
-
-    public String getListProxy();
-
-    public String getInputProxy();
-
-    public void handleInput(Map input);
-
-    public String getType();
-
-    public String getName();
-
-    public String getValue();
-
-    public void setName(String name);
-
-    public void setValue(String value);
-
-    public void index(Document document);
+public class AttributeLabel extends DefaultLabel  {
+  public String getType() {
+    return "AttributeLabel";
+  }
 }

@@ -25,6 +25,9 @@
 
 package org.snipsnap.snip.label;
 
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+
 import java.util.Map;
 
 /**
@@ -94,5 +97,10 @@ public abstract class BaseLabel implements Label {
 
   public void setValue(String value) {
     this.value = value;
+  }
+
+  public void index(Document document) {
+    System.out.println("Label index: "+name+", "+value);
+    document.add(Field.Text(name, value));
   }
 }

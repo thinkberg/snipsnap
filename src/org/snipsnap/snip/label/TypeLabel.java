@@ -25,49 +25,63 @@
 
 package org.snipsnap.snip.label;
 
+import java.util.List;
+import java.util.Arrays;
+import java.util.Iterator;
+
 /**
  * TypeLabel assigns a type to a Snip
  * @author Marco Mosconi
  * @version $Id$
  */
 public class TypeLabel extends BaseLabel {
-    public TypeLabel() {
-        name = "type";
-        value = "";
-    }
+  private static List types = Arrays.asList(
+      new String[]{"Person", "Technology", "Meeting", "Book", "Process", "Summary"});
 
-    public TypeLabel(String value) {
-        this.name = "type";
-        this.value = value;
-    }
+  public TypeLabel() {
+    name = "Type";
+    value = "";
+  }
 
-    public String getType() {
-        return "TypeLabel";
-    }
+  public TypeLabel(String value) {
+    this();
+    this.value = value;
+  }
 
-    public String getInputProxy() {
-        StringBuffer buffer = new StringBuffer();
-        buffer.append("<input type=\"hidden\" value=\"");
-        buffer.append(name);
-        buffer.append("\" name=\"label.name\"/>");
-        buffer.append("Type: ");
-        buffer.append("<input type=\"text\" value=\"");
-        buffer.append(value);
-        buffer.append("\" name=\"label.value\"/>");
-        return buffer.toString();
-    }
+  public String getType() {
+    return "TypeLabel";
+  }
 
-    public String getListProxy() {
-        StringBuffer buffer = new StringBuffer();
-        buffer.append("<td>");
-        buffer.append("Type");
-        buffer.append("</td><td>");
-        buffer.append(value);
-        buffer.append("</td>");
-        return buffer.toString();
+  public String getInputProxy() {
+    StringBuffer buffer = new StringBuffer();
+    buffer.append("<input type=\"hidden\" value=\"");
+    buffer.append(name);
+    buffer.append("\" name=\"label.name\"/>");
+    buffer.append("Type: ");
+    Iterator iterator = types.iterator();
+    buffer.append("<select name=\"label.value\" size=\"1\">");
+    while (iterator.hasNext()) {
+      String type = (String) iterator.next();
+      buffer.append("<option>");
+      // @TODO: Check if type == value
+      buffer.append(type);
+      buffer.append("</option>");
     }
+    buffer.append("</select>");
+    return buffer.toString();
+  }
 
-    public void setName(String name) {
-        // name should not be set manually
-    }
+  public String getListProxy() {
+    StringBuffer buffer = new StringBuffer();
+    buffer.append("<td>");
+    buffer.append("Type");
+    buffer.append("</td><td>");
+    buffer.append(value);
+    buffer.append("</td>");
+    return buffer.toString();
+  }
+
+  public void setName(String name) {
+    // name should not be set manually
+  }
 }

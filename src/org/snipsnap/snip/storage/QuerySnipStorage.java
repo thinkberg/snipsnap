@@ -52,34 +52,34 @@ public class QuerySnipStorage implements SnipStorage {
 
   // Count comparators, make the comparator by default
   // with most usages. Make this dynamic
-  private Comparator nameComparator, nameComparatorDesc, mTimeComparatorDesc, cTimeComparator;
+  private static Comparator nameComparator = new SnipComparator() {
+    public int compare(Snip s1, Snip s2) {
+      return s1.getName().compareTo(s2.getName());
+    }
+  };
+  private static Comparator nameComparatorDesc = new SnipComparator() {
+    public int compare(Snip s1, Snip s2) {
+      return s2.getName().compareTo(s1.getName());
+    }
+  };
+  private static Comparator mTimeComparatorDesc = new SnipComparator() {
+    public int compare(Snip s1, Snip s2) {
+      return s2.getMTime().compareTo(s1.getMTime());
+    }
+  };
+  private static Comparator cTimeComparator = new SnipComparator() {
+    public int compare(Snip s1, Snip s2) {
+      return s1.getCTime().compareTo(s2.getCTime());
+    }
+  };
+  private static Comparator hotnessComparator = new SnipComparator() {
+    public int compare(Snip s1, Snip s2) {
+      return s1.getAccess().getViewCount() < s2.getAccess().getViewCount() ? 1 : -1;
+    }
+  };
 
   public QuerySnipStorage(SnipStorage storage) {
     this.storage = storage;
-
-    this.nameComparator = new SnipComparator() {
-      public int compare(Snip s1, Snip s2) {
-        return s1.getName().compareTo(s2.getName());
-      }
-    };
-
-    this.nameComparatorDesc = new SnipComparator() {
-      public int compare(Snip s1, Snip s2) {
-        return s2.getName().compareTo(s1.getName());
-      }
-    };
-
-    this.cTimeComparator = new SnipComparator() {
-      public int compare(Snip s1, Snip s2) {
-        return s1.getCTime().compareTo(s2.getCTime());
-      }
-    };
-
-    this.mTimeComparatorDesc = new SnipComparator() {
-      public int compare(Snip s1, Snip s2) {
-        return s2.getMTime().compareTo(s1.getMTime());
-      }
-    };
   }
 
   // Basic manipulation methods Load,Store,Create,Remove
@@ -108,13 +108,9 @@ public class QuerySnipStorage implements SnipStorage {
     return storage.storageAll();
   }
 
+
   public List storageByHotness(int size) {
-    return QueryKit.querySorted(storage.storageAll(),
-        new SnipComparator() {
-          public int compare(Snip s1, Snip s2) {
-            return s1.getAccess().getViewCount() < s2.getAccess().getViewCount() ? 1:-1;
-          }
-        }, size);
+    return QueryKit.querySorted(storage.storageAll(), hotnessComparator, size);
   }
 
   public List storageByUser(final String login) {
@@ -134,11 +130,8 @@ public class QuerySnipStorage implements SnipStorage {
   }
 
   public List storageByRecent(int size) {
-    return QueryKit.querySorted(storage.storageAll(), new SnipComparator() {
-      public int compare(Snip s1, Snip s2) {
-        return s2.getMTime().compareTo(s1.getMTime());
-      }
-    }, size);
+    return QueryKit.querySorted(storage.storageAll(),
+        mTimeComparatorDesc, size);
   }
 
   public List storageByComments(final Snip parent) {
@@ -150,7 +143,7 @@ public class QuerySnipStorage implements SnipStorage {
   }
 
   public List storageByParent(final Snip parent) {
-    return QueryKit.query(storage.storageAll(),new SnipQuery() {
+    return QueryKit.query(storage.storageAll(), new SnipQuery() {
       public boolean fit(Snip snip) {
         return (parent == snip.getParent());
       }
@@ -158,9 +151,9 @@ public class QuerySnipStorage implements SnipStorage {
   }
 
   public List storageByParentNameOrder(final Snip parent, int count) {
- //   Logger.debug("Children date order. parent="+parent.getName()+" "+parent);
-    Logger.debug("all = "+storage.storageAll());
-    Logger.debug("children of="+parent);
+    Logger.debug("all = " + storage.storageAll());
+    Logger.debug("childs for=" + parent);
+
     List list = QueryKit.querySorted(storage.storageAll(), new SnipQuery() {
       public boolean fit(Snip snip) {
 //        Logger.debug("snip.parent = "+snip.getParent());
@@ -168,13 +161,13 @@ public class QuerySnipStorage implements SnipStorage {
 //         if (snip.getParent() != null) {
 //          Logger.debug("snip.parent.name = "+snip.getParent().getName());
 //        }
-        Logger.debug("snip="+snip.getParent());
-        Logger.debug("? "+(parent == snip.getParent()));
+//        Logger.debug("snip="+snip.getParent());
+//        Logger.debug("? "+(parent == snip.getParent()));
         return (parent == snip.getParent());
       }
     }, nameComparatorDesc, count);
-   Logger.debug("result = "+list.toString());
-   return list;
+    Logger.debug("result = " + list.toString());
+    return list;
   }
 
   public List storageByParentModifiedOrder(Snip parent, int count) {
