@@ -23,7 +23,7 @@
  * --LICENSE NOTICE--
  */
 
-package org.snipsnap.snip.sFiletorage;
+package org.snipsnap.snip.storage;
 
 import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
