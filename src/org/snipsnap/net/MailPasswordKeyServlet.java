@@ -25,24 +25,20 @@
 package org.snipsnap.net;
 
 import org.snipsnap.app.Application;
+import org.snipsnap.config.AppConfiguration;
+import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
-import org.snipsnap.snip.SnipLink;
 import org.snipsnap.util.mail.Mail;
-import org.snipsnap.config.AppConfiguration;
 
-import javax.servlet.ServletException;
 import javax.servlet.RequestDispatcher;
-import javax.servlet.http.Cookie;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.net.URL;
 import java.net.MalformedURLException;
-import java.util.HashMap;
-import java.util.Map;
+import java.net.URL;
 
 /**
  * Generates a password key to change the password. The key
@@ -64,7 +60,7 @@ public class MailPasswordKeyServlet extends HttpServlet {
       User user = um.load(login);
 
       if (user == null) {
-        request.setAttribute("error", "User name '"+login+"' does not exist!");
+        request.setAttribute("error", "User name '" + login + "' does not exist!");
         RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/forgot.jsp");
         dispatcher.forward(request, response);
         return;
@@ -72,20 +68,13 @@ public class MailPasswordKeyServlet extends HttpServlet {
 
       String key = um.getPassWordKey(user);
       AppConfiguration configuration = Application.get().getConfiguration();
-      String sender = configuration.getUrl();
-      try {
-        sender = new URL(sender).getHost();
-      } catch (MalformedURLException e) {
-        sender = "this-is-a-bug.org";
-      }
-      sender = "do-not-reply@" + sender;
       String receiver = user.getEmail();
       String subject = "Forgotten password";
-      String url = configuration.getUrl("/exec/changepass.jsp?key="+key);
+      String url = configuration.getUrl("/exec/changepass.jsp?key=" + key);
       String content = "To change your password go to <a href=\"" + url +
-          "\">"+ url + "</a>";
+        "\">" + url + "</a>";
 
-      Mail.getInstance().sendMail(sender, receiver, subject, content);
+      Mail.getInstance().sendMail(receiver, subject, content);
     } else {
       response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));
       return;
