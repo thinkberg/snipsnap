@@ -31,6 +31,7 @@ import com.neotis.snip.filter.LinkTester;
 import com.neotis.util.ConnectionManager;
 import com.neotis.util.Queue;
 import com.neotis.cache.Cache;
+import com.neotis.user.Permissions;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -168,69 +169,6 @@ public class SnipSpace implements LinkTester, Loader {
 
   // Storage System dependend Methods
 
-  private String serialize(Map permissions) {
-    if (null==permissions || permissions.isEmpty()) return "";
-
-    StringBuffer permBuffer = new StringBuffer();
-    Iterator iterator = permissions.keySet().iterator();
-    while (iterator.hasNext()) {
-      String permission = (String) iterator.next();
-      permBuffer.append(permission);
-      permBuffer.append(":");
-      Set roles = (Set) permissions.get(permission);
-      Iterator rolesIterator = roles.iterator();
-      while (rolesIterator.hasNext()) {
-        String role = (String) rolesIterator.next();
-        permBuffer.append(role);
-        if (rolesIterator.hasNext()) {
-          permBuffer.append(",");
-        }
-      }
-      if (iterator.hasNext()) {
-        permBuffer.append("|");
-      }
-    }
-    return permBuffer.toString();
-  }
-
-  private String after(String string, String delimiter) {
-    return string.substring(string.indexOf(delimiter));
-  }
-
-  private String before(String string, String delimiter) {
-    return string.substring(0, string.indexOf(delimiter));
-  }
-
-  private Set getRoles(String rolesString) {
-    Set roles = new HashSet();
-    StringTokenizer tokenizer = new StringTokenizer(after(rolesString,":"), ",");
-    while (tokenizer.hasMoreTokens()) {
-      String role = tokenizer.nextToken();
-      roles.add(role);
-    }
-    return roles;
-  }
-
-  private String getPermission(String rolesString) {
-    return before(rolesString, ":");
-  }
-
-  public Map deserialize(String permissions) {
-    if ("".equals(permissions)) return new HashMap();
-
-    Map perms  = new HashMap();
-
-    StringTokenizer tokenizer = new StringTokenizer(permissions, "|");
-    while (tokenizer.hasMoreTokens()) {
-      String permission = tokenizer.nextToken();
-      Set roles = getRoles(permission);
-      permission = getPermission(permission);
-      perms.put(permission, roles);
-    }
-
-    return perms;
-  }
-
   public Snip createSnip(ResultSet result) throws SQLException {
     String name = result.getString("name");
     String content = result.getString("content");
@@ -248,7 +186,7 @@ public class SnipSpace implements LinkTester, Loader {
     if (!result.wasNull()) {
       snip.parent = load(parentString);
     }
-    snip.setPermissions(deserialize(result.getString("permissions")));
+    snip.setPermissions(new Permissions(result.getString("permissions")));
     return snip;
   }
 
@@ -356,7 +294,7 @@ public class SnipSpace implements LinkTester, Loader {
       } else {
         statement.setString(8, comment.getName());
       }
-      statement.setString(9, serialize(snip.getPermissions()));
+      statement.setString(9,  snip.getPermissions().toString());
       statement.setString(10, snip.getName());
       statement.execute();
     } catch (SQLException e) {
@@ -381,6 +319,7 @@ public class SnipSpace implements LinkTester, Loader {
     snip.setMTime(mTime);
     snip.setCUser(login);
     snip.setMUser(login);
+    snip.setPermissions(new Permissions());
 
     try {
       statement = connection.prepareStatement("INSERT INTO Snip (name, content, cTime, mTime, " +
@@ -404,7 +343,7 @@ public class SnipSpace implements LinkTester, Loader {
       } else {
         statement.setString(8, comment.getName());
       }
-      statement.setString(9, serialize(snip.getPermissions()));
+      statement.setString(9, snip.getPermissions().toString());
 
       statement.execute();
     } catch (SQLException e) {

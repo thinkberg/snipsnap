@@ -150,6 +150,7 @@ public class CreateDB {
         "{link:e7l3|http://www.e7l3.com}\\\\ \n";
       space.create("snipsnap-blogrolling", rolling, app);
 
+      space.post("Welcom to [SnipSnap]. You can now login and add your first post", app);
       System.out.println("--- Complete ---");
 
     } catch (SQLException e) {

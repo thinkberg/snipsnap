@@ -26,6 +26,7 @@ package com.neotis.snip;
 
 import com.neotis.snip.filter.SnipFormatter;
 import com.neotis.user.User;
+import com.neotis.user.Permissions;
 import com.neotis.util.StringUtil;
 
 import java.sql.Date;
@@ -33,7 +34,6 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Central class for snips.
@@ -46,7 +46,7 @@ public class Snip implements Ownable {
   private List children;
   private Snip comment;
   private Comments comments;
-  private Map permissions;
+  private Permissions permissions;
   private String name, content;
   private Timestamp cTime, mTime;
   private String cUser, mUser;
@@ -132,11 +132,11 @@ public class Snip implements Ownable {
     return user.getLogin().equals(getOwner());
   }
 
-  public void setPermissions(Map permissions) {
+  public void setPermissions(Permissions permissions) {
     this.permissions = permissions;
   }
 
-  public Map getPermissions() {
+  public Permissions getPermissions() {
     return permissions;
   }
 

@@ -80,10 +80,7 @@ public class Security {
    * @return
    */
   public static boolean checkPermission(String permission, User user, Snip object) {
-    Map permissions = object.getPermissions();
-    Set permRoles = (Set) permissions.get(permission);
-    permRoles.removeAll(getRoles(user, object));
-
-    return !permRoles.isEmpty();
+    Permissions permissions = object.getPermissions();
+    return permissions.check(permission, getRoles(user, object));
   }
 }
