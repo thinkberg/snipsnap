@@ -1,5 +1,7 @@
 0.5
 
+- Fixed bug: display login warning instead of edit field when snip auto-create is on
+- Fixed bug: attachment download working with deep namespace now
 - Added Feature: RenderEngineLabel to change rendering of content
 - Added Feature: /robots.txt editable via Snip
 - Added Feature: moved configuration settings into SnipSpace
