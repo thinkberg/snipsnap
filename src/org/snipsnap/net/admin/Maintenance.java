@@ -265,7 +265,6 @@ public class Maintenance implements SetupHandler {
       while(backLinksIt.hasNext()) {
         String url = (String) backLinksIt.next();
         if(! Access.isValidReferrer(url)) {
-          Logger.warn("invalid referrer url: '"+url+"'");
           fixSpam.add(snip);
           break;
         }

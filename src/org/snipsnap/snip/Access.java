@@ -233,7 +233,7 @@ public class Access {
           } else {
             String host = new URL(url).getHost().toLowerCase();
             if (host.endsWith(entry)) {
-              Logger.warn("invalid referrer url '" + url + "' by pattern '" + entry + "'");
+              Logger.warn("invalid referrer url '" + url + "' by domain '" + entry + "'");
               return false;
             }
           }
