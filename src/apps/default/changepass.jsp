@@ -19,8 +19,8 @@
    <%-- the login form --%>
    <form class="form" method="post" action="exec/changepass">
     <table>
-     <tr><td><label for="password"><fmt:message key="=user.password.new"/></label></td><td><input id="password" name="password" type="password" size="20" value="" tabindex="0"/></td></tr>
-     <tr><td><label for="password"><fmt:message key="=user.password.verify"/></label></td><td><input id="password2" name="password2" type="password" size="20" value="" tabindex="0"/></td></tr>
+     <tr><td><label for="password"><fmt:message key="user.password.new"/></label></td><td><input id="password" name="password" type="password" size="20" value="" tabindex="0"/></td></tr>
+     <tr><td><label for="password"><fmt:message key="user.password.verify"/></label></td><td><input id="password2" name="password2" type="password" size="20" value="" tabindex="0"/></td></tr>
      <tr><td class="form-buttons" colspan="2">
       <input value="Change Password" name="ok" type="submit" tabindex="0"/>
       <input value="Cancel" name="cancel" type="submit" tabindex="0"/>
