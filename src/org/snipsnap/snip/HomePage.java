@@ -25,6 +25,8 @@
 package com.neotis.snip;
 
 import com.neotis.app.Application;
+import com.neotis.user.Security;
+import com.neotis.user.Permissions;
 
 /**
  * Static class to create a home-page snip.
@@ -32,7 +34,6 @@ import com.neotis.app.Application;
  * @version $Id$
  */
 public class HomePage {
-
   /**
    * Create a snip as a homepage for the user. Generates a new
    * one or appends the snip-by-user to existing one.
@@ -52,6 +53,8 @@ public class HomePage {
     } else {
       snip = space.create(login, hp, app);
     }
+//    snip.addPermission(Permissions.EDIT, Security.OWNER);
+//    space.store(snip);
     return;
   }
 }

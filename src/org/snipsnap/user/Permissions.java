@@ -36,6 +36,8 @@ import java.util.*;
  */
 
 public class Permissions {
+  public final static String EDIT = "Edit";
+
   private Map permissions;
 
   public Permissions() {
