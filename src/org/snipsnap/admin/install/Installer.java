@@ -242,11 +242,6 @@ public class Installer extends HttpServlet {
       config.setJDBCURL(jdbcURL);
       writeMessage(out, "Inserting inital data into database ...");
       CreateDB.insertData(config);
-      // finally close database
-      try {
-        MckoiEmbeddedJDBCDriver.stopDatabase(jdbcURL);
-      } catch (IOException e) {
-      }
     } else {
       config.setJDBCURL(jdbcURL);
       config.setJDBCDriver(jdbcDrv);

@@ -108,7 +108,9 @@ public class Configuration {
    * @throws IOException
    */
   public void store(File configFile) throws IOException {
-    store(new FileOutputStream(configFile));
+    FileOutputStream out = new FileOutputStream(configFile);
+    store(out);
+    out.close();
   }
 
   /**
