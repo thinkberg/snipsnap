@@ -19,6 +19,14 @@ import java.sql.Timestamp;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
+/**
+ * Dump current database contents. The database is read directly and meta-data
+ * is used to detect xml tag names. First all users are dumped and then all
+ * snips.
+ *
+ * @author Stephan J. Schmidt
+ * @version $Id$
+ */
 public class DBDump {
 
   public static void main(String[] args) {
@@ -84,7 +92,7 @@ public class DBDump {
     ResultSet results = null;
 
     try {
-      PrintWriter out = new PrintWriter(System.out);
+      PrintWriter out = new PrintWriter(new OutputStreamWriter(System.out, "iso-8859-1"));
       out.println("<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>");
       out.println("<snipspace>");
 
