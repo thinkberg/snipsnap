@@ -65,5 +65,17 @@
      </div>
    </div>
   </c:if>
-  <div><c:out value="${snip.XMLContent}" escapeXml="false" /></div>
+  <div>
+    <%-- if there is a special view handler, use it, else display standard page --%>
+    <c:choose>
+     <c:when test="${not empty(view_handler)}">
+      <c:catch var="error">
+       <c:import url="/plugin/${view_handler}"/>
+      </c:catch>
+     </c:when>
+     <c:otherwise>
+      <c:out value="${snip.XMLContent}" escapeXml="false" />
+     </c:otherwise>
+    </c:choose>
+  </div>
 </div>

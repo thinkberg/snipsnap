@@ -30,8 +30,9 @@ import org.snipsnap.config.Configuration;
 import org.snipsnap.container.Components;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.label.TypeLabel;
 import org.snipsnap.user.AuthenticationService;
+import org.snipsnap.user.Roles;
 import org.snipsnap.user.User;
 import org.snipsnap.util.URLEncoderDecoder;
 
@@ -41,21 +42,26 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
  * Load a snip to view.
+ *
  * @author Matthias L. Jugel
  * @version $Id$
  */
 public class SnipViewServlet extends HttpServlet {
+  private final static Roles authRoles = new Roles(Roles.AUTHENTICATED);
+
   protected void doHead(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+          throws ServletException, IOException {
     doGet(request, response);
   }
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws IOException, ServletException {
+          throws IOException, ServletException {
 
     Configuration config = Application.get().getConfiguration();
     User user = Application.get().getUser();
@@ -79,7 +85,7 @@ public class SnipViewServlet extends HttpServlet {
 //    System.out.println("name='"+name+"'");
 
     // load snip and set attributes for request
-    SnipSpace space = (SnipSpace)Components.getComponent(SnipSpace.class);
+    SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
     Snip snip = space.load(name);
 
     String subname = null;
@@ -101,7 +107,7 @@ public class SnipViewServlet extends HttpServlet {
       try {
         request.setAttribute(FileDownloadServlet.FILENAME, subname);
         RequestDispatcher dispatcher =
-          getServletContext().getNamedDispatcher("org.snipsnap.net.FileDownloadServlet");
+                getServletContext().getNamedDispatcher("org.snipsnap.net.FileDownloadServlet");
         dispatcher.forward(request, response);
         return;
       } catch (ServletException e) {
@@ -112,7 +118,7 @@ public class SnipViewServlet extends HttpServlet {
     }
 
     // stop special processing for HEAD requests
-    if("HEAD".equals(request.getMethod())) {
+    if ("HEAD".equals(request.getMethod())) {
       response.setStatus(HttpServletResponse.SC_OK);
       return;
     }
@@ -133,10 +139,32 @@ public class SnipViewServlet extends HttpServlet {
       return;
     }
 
+    String viewHandler = null;
+    String type = null;
+    Collection mimeTypes = snip.getLabels().getLabels("TypeLabel");
+    if (!mimeTypes.isEmpty()) {
+      Iterator handlerIt = mimeTypes.iterator();
+      while (handlerIt.hasNext()) {
+        TypeLabel typeLabel = (TypeLabel) handlerIt.next();
+        viewHandler = typeLabel.getViewHandler();
+        // search for default handler if non found
+        if (null == viewHandler) {
+          viewHandler = TypeLabel.getViewHandler(typeLabel.getTypeValue());
+        }
+
+        if (null != viewHandler) {
+          type = typeLabel.getTypeValue();
+          request.setAttribute("view_handler", viewHandler);
+          request.setAttribute("mime_type", type);
+          break;
+        }
+      }
+    }
+
     Application app = Application.get();
     Map params = app.getParameters();
     params.put("viewed", snip);
-    params.put("RSS", params.get("RSS")+"?snip="+snip.getNameEncoded());
+    params.put("RSS", params.get("RSS") + "?snip=" + snip.getNameEncoded());
 
     snip.handle(request);
     RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/snip.jsp");
