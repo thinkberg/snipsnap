@@ -25,10 +25,7 @@
 
 package org.snipsnap.snip.label;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.*;
 
 /**
  * Stores Label information for a snip
@@ -48,6 +45,9 @@ public class Labels {
   public Labels(String labelString) {
     cache = labelString;
     deserialize(labelString);
+  }
+
+  public void addLabel(Label label) {
   }
 
   public void addLabel(String name, String value) {

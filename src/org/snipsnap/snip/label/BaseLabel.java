@@ -70,6 +70,12 @@ public abstract class BaseLabel implements Label {
   }
 
   public void handleInput(Map input) {
+    if (input.containsKey("label.name")) {
+      this.name = (String) input.get("label.name");
+    }
+    if (input.containsKey("label.value")) {
+      this.value = (String) input.get("label.value");
+    }
   }
 
   public abstract String getType();

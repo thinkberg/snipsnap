@@ -1,11 +1,15 @@
 0.2.7
 
+- Added feature: a installed blog pings to SnipSnap.org and is featured on SnipSnap.org
+- Added feature: ping blog.gs with extendedPing
+- Added feature: weblogs.ping is now asynchron, so posting is faster with the ping on
+- Fixed bug: weblogs.ping now works and is default on (can be turned of in the configuration)
 - Added feature: Detect search engine bots (Googlebot, Fast Webcrawler)
 - Switched to RSS 2.0 by default
 - Added feature: {version} macro displays SnipSnap version.
 - Added feature: Added description to RSS, remove HTML from snip content
-- Fixed Bug: AdminServer did not receive shutdown command
-- Fixed Bug: application dirs must not contain space (replaced by _ now)
+- Fixed bug: AdminServer did not receive shutdown command
+- Fixed bug: application dirs must not contain space (replaced by _ now)
 
 0.2.6
 

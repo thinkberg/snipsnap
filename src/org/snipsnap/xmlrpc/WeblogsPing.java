@@ -26,9 +26,9 @@
 package org.snipsnap.xmlrpc;
 
 import org.apache.xmlrpc.XmlRpcClient;
+import org.snipsnap.app.Application;
 import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.snip.Snip;
-import org.snipsnap.app.Application;
 
 import java.util.Vector;
 
@@ -51,16 +51,41 @@ public class WeblogsPing extends Thread {
   public void run() {
     try {
       if (config.allow(AppConfiguration.PERM_WEBLOGS_PING)) {
-        XmlRpcClient xmlrpc = new XmlRpcClient("http://rpc.weblogs.com/RPC2");
+        // Ping weblogs.com
+        XmlRpcClient weblogs_com = new XmlRpcClient("http://rpc.weblogs.com/RPC2");
         Vector params = new Vector();
-        // @TODO read name and url from configuration
+        // Name of the weblog
         params.addElement(config.getName());
+        // Url/CheckUrl of the weblog
         params.addElement(config.getSnipUrl(weblog.getName()));
-        Object result = xmlrpc.execute("weblogUpdates.ping", params);
-        System.err.println("weblogs.ping received: " + result);
+        Object result = weblogs_com.execute("weblogUpdates.ping", params);
+        //System.err.println("weblogs.ping received: " + result);
+
+        // Ping blog.gs
+        XmlRpcClient blo_gs = new XmlRpcClient("http://http://ping.blo.gs/");
+        params.clear();
+        // Name of the weblog
+        params.addElement(config.getName());
+        // Url of the weblog
+        params.addElement(config.getUrl());
+        // Url to check for news
+        params.addElement(config.getSnipUrl(weblog.getName()));
+        // RSS feed
+        params.addElement(config.getUrl() + "/exec/rss");
+        result = weblogs_com.execute("weblogUpdates.extendedPing", params);
+        //System.err.println("weblogs.ping received: " + result);
+
+        XmlRpcClient home = new XmlRpcClient("http://www.snipsnap.org/RPC2");
+        params.clear();
+        // Name of the weblog
+        params.addElement(config.getName());
+        // Url/CheckUrl of the weblog
+        params.addElement(config.getSnipUrl(weblog.getName()));
+        result = home.execute("weblogUpdates.ping", params);
+        //System.err.println("xmlrpc result="+result);
+      } catch (Exception e) {
+        System.err.println("Unable to ping weblogs.com " + e);
       }
-    } catch (Exception e) {
-      System.err.println("Unable to ping weblogs.com");
     }
   }
 

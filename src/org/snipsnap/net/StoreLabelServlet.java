@@ -35,6 +35,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Enumeration;
 
 
 /**
@@ -43,7 +47,7 @@ import java.io.IOException;
  * @author Stephan J. Schmidt
  * @version $Id$
  */
-public class AddLabelServlet extends SnipSnapServlet {
+public class StoreLabelServlet extends SnipSnapServlet {
 
   protected void doPost(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
     doGet(httpServletRequest, httpServletResponse);
@@ -52,25 +56,28 @@ public class AddLabelServlet extends SnipSnapServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
 
-    String name = request.getParameter("name");
-    if (null == name) {
-      response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));
-      return;
-    }
+    String snipName = request.getParameter("snip.name");
 
     // cancel pressed
     if (null != request.getParameter("cancel")) {
-      response.sendRedirect(SnipLink.absoluteLink(request, "/space/" + SnipLink.encode(name)));
+      response.sendRedirect(SnipLink.absoluteLink(request, "/space/" + SnipLink.encode(snipName)));
       return;
     }
 
-    LabelManager manager = LabelManager.getInstance();
-    Label label = manager.getDefaulLabel();
-
-    Snip snip = SnipSpace.getInstance().load(name);
-    request.setAttribute("snip", snip);
-    request.setAttribute("label", label);
-    RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/addlabel.jsp");
-    dispatcher.forward(request, response);
+    String type = request.getParameter("label.type");
+    if (null != type) {
+      LabelManager manager = LabelManager.getInstance();
+      Label label = manager.getLabel(type);
+      Map params = new HashMap();
+      Enumeration enumeration = request.getParameterNames();
+      while (enumeration.hasMoreElements()) {
+        String name = (String) enumeration.nextElement();
+        params.put(name, request.getParameter(name));
+      }
+      label.handleInput(params);
+      Snip snip = SnipSpace.getInstance().load(snipName);
+      snip.getLabels().addLabel(label);
+    }
+    response.sendRedirect(SnipLink.absoluteLink(request, "/space/" + SnipLink.encode(snipName)));
   }
 }

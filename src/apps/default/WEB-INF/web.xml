@@ -27,6 +27,11 @@
   </servlet>
 
     <servlet>
+      <servlet-name>org.snipsnap.net.StoreLabelServlet</servlet-name>
+      <servlet-class>org.snipsnap.net.StoreLabelServlet</servlet-class>
+    </servlet>
+
+    <servlet>
       <servlet-name>org.snipsnap.net.AddLabelServlet</servlet-name>
       <servlet-class>org.snipsnap.net.AddLabelServlet</servlet-class>
     </servlet>
@@ -146,6 +151,11 @@
   <servlet-mapping>
     <servlet-name>org.snipsnap.net.AddLabelServlet</servlet-name>
     <url-pattern>/exec/addlabel</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>org.snipsnap.net.StoreLabelServlet</servlet-name>
+    <url-pattern>/exec/storelabel</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
