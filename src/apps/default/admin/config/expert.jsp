@@ -31,17 +31,17 @@
       <fmt:message key="config.app.logger"/><br/>
       <select name="app.logger">
         <option value="org.radeox.util.logging.NullLogger"
-          <c:if test="${newconfig.logger == 'org.radeox.util.logging.NullLogger'}">checked="checked"</c:if>>
+          <c:if test="${newconfig.logger == 'org.radeox.util.logging.NullLogger'}">selected="selected"</c:if>>
           <fmt:message key="config.logger.none"/></option>
         <option value="org.radeox.util.logging.SystemErrLogger"
-          <c:if test="${newconfig.logger == 'org.radeox.util.logging.SystemErrLogger'}">checked="checked"</c:if>>
+          <c:if test="${newconfig.logger == 'org.radeox.util.logging.SystemErrLogger'}">selected="selected"</c:if>>
           <fmt:message key="config.logger.system.err"/></option>
         <option value="org.radeox.util.logging.SystemOutLogger"
-          <c:if test="${newconfig.logger == 'org.radeox.util.logging.SystemOutLogger'}">checked="checked"</c:if>>
+          <c:if test="${newconfig.logger == 'org.radeox.util.logging.SystemOutLogger'}">selected="selected"</c:if>>
           <fmt:message key="config.logger.system.out"/></option>
-        <option value="org.snipsnap.util.log.ApplicationLogger"
-          <c:if test="${newconfig.logger == 'org.snipsnap.util.log.ApplicationLogger'}">checked="checked"</c:if>>
-          <fmt:message key="config.logger.application"/></option>
+<%--        <option value="org.snipsnap.util.log.ApplicationLogger"--%>
+<%--          <c:if test="${newconfig.logger == 'org.snipsnap.util.log.ApplicationLogger'}">selected="selected"</c:if>>--%>
+<%--          <fmt:message key="config.logger.application"/></option>--%>
       </input>
     </td>
   </tr>
