@@ -24,18 +24,22 @@
  */
 package org.snipsnap.net;
 
-import org.snipsnap.graph.ContentRenderer;
-import org.snipsnap.graph.MindMapContentRenderer;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpaceFactory;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
+import org.radeox.util.Service;
+import org.snipsnap.app.Application;
+import org.snipsnap.graph.ContentRenderer;
+import org.snipsnap.graph.VerticalContentRenderer;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipSpaceFactory;
 
 /**
  * Get some data from a snip and render the content
@@ -44,36 +48,51 @@ import java.io.IOException;
  * @version $Id$
  */
 public class RenderServlet extends HttpServlet {
+	private Map handlers = new HashMap();
+	private final static ContentRenderer DEFAULT_HANDLER = new VerticalContentRenderer();
 
-  public void init(ServletConfig servletConfig) throws ServletException {
-  }
+	public void init() throws ServletException {
+		Iterator contentRenderer =
+			Service.providers(org.snipsnap.graph.ContentRenderer.class);
+		while (contentRenderer.hasNext()) {
+			ContentRenderer renderer = (ContentRenderer) contentRenderer.next();
+      //System.out.println("adding content renderer: "+renderer.getName());
+			handlers.put(renderer.getName(), renderer);
+		}
+	}
 
-  public void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws IOException, ServletException {
+	public void doGet(HttpServletRequest request, HttpServletResponse response)
+		throws IOException, ServletException {
 
-    String handler = request.getParameter("handler");
-    String name = request.getParameter("name");
-    name = name.replace('+', ' ');
-
-    Snip snip = SnipSpaceFactory.getInstance().load(name);
-    String content = snip.getContent();
-
-    int start = 0;
-    int end = 0;
-    try {
-      start = Integer.parseInt(request.getParameter("start"));
-    } catch (NumberFormatException e) {
-      start = 0;
-    }
-    try {
-      end = Integer.parseInt(request.getParameter("end"));
-    } catch (NumberFormatException e) {
-      end = content.length();
+		String handler = request.getParameter("handler");
+		String name = request.getParameter("name");
+    String encodedSpace = Application.get().getConfiguration().getEncodedSpace();
+    if(encodedSpace != null && encodedSpace.length() > 0) {
+      name = name.replace(encodedSpace.charAt(0), ' ');
     }
 
-    content = content.substring(start, end);
-    ContentRenderer renderer = new MindMapContentRenderer();
-    renderer.render(request, response, content);
+		Snip snip = SnipSpaceFactory.getInstance().load(name);
+		String content = snip.getContent();
 
-  }
+		int start = 0;
+		int end = 0;
+		try {
+			start = Integer.parseInt(request.getParameter("start"));
+		} catch (NumberFormatException e) {
+			start = 0;
+		}
+		try {
+			end = Integer.parseInt(request.getParameter("end"));
+		} catch (NumberFormatException e) {
+			end = content.length();
+		}
+
+		content = content.substring(start, end);
+    
+		ContentRenderer renderer = (ContentRenderer)handlers.get(handler);
+    if(null == renderer) {
+      renderer = DEFAULT_HANDLER;
+    }
+		renderer.render(request, response, content);
+	}
 }
