@@ -8,6 +8,9 @@
 
 <h1 class="header">Server / Application Overview</h1>
 
+<c:forEach items="${errors}" var="error">
+  <div class="error"><c:out value="${error.value}"/></div>
+</c:forEach>
 <table border="0" cellpadding="3" cellspacing="0">
   <c:forEach items="${servers}" var="server">
     <tr bgcolor="#aaaaaa"><td colspan="8"><c:out value="${server}"/></td></tr>

@@ -7,7 +7,7 @@
 /************************************************/
 
 .error { color: #ff0000; font-weight: bold; }
-.error-position { border: 1px solid #ff0000; }
+.error-position { background-color: #ffaaaa; }
 .menu {
   border-bottom: 2px solid #cccccc;
 }

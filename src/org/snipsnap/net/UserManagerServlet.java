@@ -50,6 +50,7 @@ import java.util.HashSet;
 public class UserManagerServlet extends HttpServlet {
 
   public final static String UPDATE = "update";
+  public final static String REMOVE = "remove";
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
@@ -67,6 +68,9 @@ public class UserManagerServlet extends HttpServlet {
       String command = request.getParameter("command");
       if(UPDATE.equals(command)) {
         update(request);
+      } else if(REMOVE.equals(command)) {
+        um.remove(user);
+        session.removeAttribute("user");
       } else {
         System.err.println("UserManagerServlet: unknown command '"+command+"'");
       }
@@ -77,7 +81,7 @@ public class UserManagerServlet extends HttpServlet {
     doGet(request, response);
   }
 
-  private final static String ERR_UNKNOWN_ROLES = "Acceptable roles include Editor and NoComment!";
+  private final static String ERR_UNKNOWN_ROLES = "Acceptable roles include: ";
   private final static String ERR_WRONG_PASSWORD = "Passwords do not match!";
   private final static String OK_USER_UPDATED = "User information has been updated.";
 
@@ -97,30 +101,39 @@ public class UserManagerServlet extends HttpServlet {
     String status = request.getParameter("status");
     String roles = request.getParameter("roles");
 
+    boolean modified = false;
     Map errors = new HashMap();
     if(!user.getEmail().equals(email)) {
+      modified = true;
       user.setEmail(email);
     }
 
     if(!user.getStatus().equals(status)) {
+      modified = true;
       user.setStatus(status);
     }
 
     Set roleSet = parseRoles(roles);
-    if(!user.getRoles().containsAll(roleSet)) {
-      if(roleSet.retainAll(um.getRoles())) {
-        errors.put("roles", ERR_UNKNOWN_ROLES);
+    if(!user.getRoles().equals(roleSet)) {
+      if(roleSet.retainAll(um.getAllRoles())) {
+        errors.put("roles", ERR_UNKNOWN_ROLES+um.getAllRoles());
+      } else {
+        modified = true;
+        user.setRoles(roleSet);
       }
-      user.setRoles(roleSet);;
     }
 
-    if(nPass != null && nPass.equals(nPass2)) {
-      user.setPasswd(nPass);
-    } else {
-      errors.put("password", ERR_WRONG_PASSWORD);
+
+    if(nPass != null && nPass.length() > 0) {
+      if(nPass.equals(nPass2)) {
+        modified = true;
+        user.setPasswd(nPass);
+      } else {
+        errors.put("password", ERR_WRONG_PASSWORD);
+      }
     }
 
-    if(errors.isEmpty()) {
+    if(modified && errors.isEmpty()) {
       um.store(user);
       errors.put("", OK_USER_UPDATED);
     }

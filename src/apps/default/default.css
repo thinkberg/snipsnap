@@ -7,6 +7,8 @@
 /************************************************/
 
 .error { color: #ff0000; font-weight: bold; }
+.error-position { background-color: #ffaaaa; }
+
 .inactive { color: #aaaaaa; }
 .bold { font-weight: bold; }
 .italic { font-style: italic; }

@@ -68,6 +68,9 @@ public class AdminServlet extends HttpServlet {
       config = new Configuration("./conf/local.conf");
     }
 
+    Map errors = new HashMap();
+    session.setAttribute("errors", errors);
+
     session.setAttribute("servers", servers);
     session.setAttribute("config", config);
 
@@ -99,9 +102,15 @@ public class AdminServlet extends HttpServlet {
       dispatcher = request.getRequestDispatcher(command);
     }
 
-    response.addHeader("Pragma", "no-cache");
-    response.addHeader("Cache-Control", "no-cache, no-store");
-    dispatcher.forward(request, response);
+    if(dispatcher != null) {
+      response.addHeader("Pragma", "no-cache");
+      response.addHeader("Cache-Control", "no-cache, no-store");
+      dispatcher.forward(request, response);
+    } else {
+      errors.put(command, "Function not implemented!");
+      session.setAttribute("errors", errors);
+      response.sendRedirect(SnipLink.absoluteLink(request, "/exec"));
+    }
   }
 
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -122,7 +131,6 @@ public class AdminServlet extends HttpServlet {
             getServletContext().getContext(contextPath).getNamedDispatcher("com.neotis.net.UserManagerServlet");
           appUserManagerDispatcher.forward(request, response);
           usermanagers.put(contextPath, session.getAttribute("usermanager"));
-          System.err.println("usermanagers: "+usermanagers);
         } catch (Exception e) {
           System.err.println("AdminServlet: no user manager servlet available on: "+contextPath);
         }
