@@ -143,10 +143,9 @@ public class Maintenance implements SetupHandler {
         Iterator snipIt = allSnips.iterator();
         snipCount = allSnips.size();
         Logger.debug("Need to check " + snipCount + " snips.");
-        List blackList = Access.getReferrerBlackList();
         while (snipIt.hasNext()) {
           Snip snip = (Snip) snipIt.next();
-          check(snip, space, blackList);
+          check(snip, space);
           if(!uniqeSnipNames.add(snip.getName())) {
             fixDuplicates.add(snip);
           }
@@ -239,7 +238,7 @@ public class Maintenance implements SetupHandler {
       return fixSpam;
     }
 
-    private void check(Snip snip, SnipSpace space, List blackList) {
+    private void check(Snip snip, SnipSpace space) {
       String snipName = snip.getName();
       if (snipName.startsWith("comment-")) {
         if (null == snip.getCommentedSnip() && (null == snip.getCommentedName() || "".equals(snip.getCommentedName()))) {
@@ -262,13 +261,16 @@ public class Maintenance implements SetupHandler {
       }
 
       Iterator backLinksIt =snip.getBackLinks().iterator();
+      boolean foundspam = false;
       while(backLinksIt.hasNext()) {
         String url = (String) backLinksIt.next();
         if(! Access.isValidReferrer(url)) {
+          foundspam = true;
           fixSpam.add(snip);
           break;
         }
       }
+      Logger.debug("Found spam-referrer links at '"+snipName+"'");
     }
 
     private void fixParent(Snip snip) {
