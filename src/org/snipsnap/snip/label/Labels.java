@@ -28,6 +28,7 @@ package org.snipsnap.snip.label;
 import org.snipsnap.util.StringUtil;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.container.Components;
+import org.snipsnap.app.Application;
 
 import java.util.*;
 
@@ -38,7 +39,7 @@ import java.util.*;
  * @version $Id$
  */
 
-public class Labels {
+public class Labels implements Cloneable {
   private Map labels;
   private String cache;
 
@@ -166,6 +167,12 @@ public class Labels {
       cache = serialize();
     }
     return cache;
+  }
+
+  public Object clone() {
+    Labels clone = new Labels();
+    clone.cache = serialize();
+    return clone;
   }
 
 }

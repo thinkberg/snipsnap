@@ -65,13 +65,14 @@
        <td colspan="5" class="form-buttons">
         <s:check roles="Authenticated" permission="Attach" snip="${snip}">
           <input name="file" type="file" maxlength="1000000" accept="*/*"/>
-          <fmt:message key="snip.attachments.file.name"/>
-          <input id="filename" name="filename" type="text" value="" length="10" maxlength="256"/>
-          <fmt:message key="snip.attachments.file.type"/>
-          <input id="mimetype" name="mimetype" type="text" value="" length="10" maxlength="256"/>
           <br/>
+          <fmt:message key="snip.attachments.file.name"/>
+          <input id="filename" name="filename" type="text" value="" size="10" maxlength="256"/>
+          <fmt:message key="snip.attachments.file.type"/>
+          <input id="mimetype" name="mimetype" type="text" value="" size="10" maxlength="256"/>
           <input value="<fmt:message key="snip.attachments.upload"/>" name="upload" type="submit"/>
-          <input id="<fmt:message key="snip.attachments.delete"/>" name="delete" type="submit"/><br/>
+          <br/>
+          <input value="<fmt:message key="snip.attachments.delete"/>" name="delete" type="submit"/>
         </s:check>
         <input value="<fmt:message key="dialog.back.to"><fmt:param value="${snip.name}"/></fmt:message>" name="cancel" type="submit"/>
        </td>

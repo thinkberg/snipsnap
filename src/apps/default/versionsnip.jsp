@@ -27,7 +27,9 @@
           <fmt:message key="snip.version"><fmt:param value="${version+1}"/></fmt:message>
         </a> &gt;
       </c:if>
-      ... <c:out value="${maxVersion}"/>)
+      ... <a href="space/<c:out value='${snip.nameEncoded}'/>"><fmt:message key="snip.version">
+        <fmt:param value="${maxVersion}"/>
+      </fmt:message></a>)
     </h1>
 
     <div class="snip-info">

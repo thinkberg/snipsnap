@@ -72,11 +72,13 @@
 <%--      <c:out value="${diff}"/>--%>
 <%--    </pre>--%>
   </div>
-  <table class="wiki-table">
-    <tr>
-     <td class="form-buttons">
-       <input value="<fmt:message key="dialog.back.to"><fmt:param value="${snip.nameEncoded}"/></fmt:message>" name="cancel" type="submit"/>
-     </td>
-   </tr>
- </table>
+  <form class="form" name="f" method="get" action="space/<c:out value='${snip.nameEncoded}'/>">
+    <table class="wiki-table">
+      <tr>
+       <td class="form-buttons">
+         <input value="<fmt:message key="dialog.back.to"><fmt:param value="${snip.name}"/></fmt:message>" type="submit"/>
+       </td>
+     </tr>
+   </table>
+ </form>
 </div>
