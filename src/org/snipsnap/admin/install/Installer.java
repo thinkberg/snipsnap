@@ -96,7 +96,12 @@ public class Installer extends HttpServlet {
     config.setProperty(AppConfiguration.APP_CACHE, "full");
     config.setProperty(AppConfiguration.APP_TIMEZONE, "+1.00");
     config.setProperty(AppConfiguration.APP_WEBLOG_DATE_FORMAT, "EEEE, dd. MMMM yyyy");
-    config.setProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_WEBLOGS_PING, "allow");
+
+    if(request.getParameter("weblogsPing") != null) {
+      config.setProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_WEBLOGS_PING, "allow");
+    } else {
+      config.setProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_WEBLOGS_PING, "deny");
+    }
 
     // set application name ...
     writeMessage(out, "Checking application name ...");

@@ -40,29 +40,19 @@ public class Shutdown {
    * Shut down complete server ...
    */
   public static void shutdown() {
-    new Thread(new Runnable() {
-      public void run() {
-        try {
-          Thread.sleep(1000);
-        } catch (Exception e) {
-          Code.ignore(e);
-        }
-        Log.event("Application: stopping all servers");
-        System.out.println("INFO: Stopping all servers ...");
-        Iterator s = HttpServer.getHttpServers().iterator();
-        while (s.hasNext()) {
-          HttpServer server = (HttpServer) s.next();
-          try {
-            System.out.println("INFO: stopping " + server);
-            server.stop();
-          } catch (Exception e) {
-            Code.ignore(e);
-          }
-        }
-        System.out.println("Shutting down Java VM (it ends here)!");
-        Log.event("Application: exiting Java VM");
-        System.exit(0);
+    Log.event("Application: stopping all servers");
+    System.out.println("INFO: Stopping all servers ...");
+    Iterator s = HttpServer.getHttpServers().iterator();
+    while (s.hasNext()) {
+      HttpServer server = (HttpServer) s.next();
+      try {
+        System.out.println("INFO: stopping " + server);
+        server.stop();
+      } catch (Exception e) {
+        Code.ignore(e);
       }
-    }).start();
+    }
+    System.out.println("SnipSnap shutdown procedure finished.");
+    Log.event("Application: stopped all servers");
   }
 }

@@ -63,27 +63,24 @@ body {
 
 #page-wrapper {
   width: 100%;
-  /*display: table-row;*/
-  table-layout: fixed;
+  display: table-row;
   background:#FFF;
+  padding: 0px;
 }
 
 #page-content {
+  width: auto;
   float: left;
-  display: table-cell;
   padding-left: 15px;
   padding-right: 15px;
   padding-bottom: 15px;
   margin-bottom:15px;
   background:#FFF;
-  width: 65%;
 }
 
 #page-portlet-1 {
-  float: right;
-  display: table-cell;
-  top: 0px;
   width: 29%;
+  float: right;
   padding-left:15px;
   margin-bottom:15px;
   background:#FFF;
@@ -100,9 +97,8 @@ body {
   display: none; /* hide */
 }
 
-
-/* the actual content */
 #page-bottom {
+  clear: left;
   padding-top: 10px;
   padding-bottom: 10px;
   width: 100%;

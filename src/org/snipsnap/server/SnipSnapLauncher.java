@@ -53,7 +53,7 @@ public class SnipSnapLauncher extends Launcher {
       } else {
         System.out.println("Java SDK not found: " + toolsJar);
         System.out.println("Please set JAVA_HOME to the SDK home directory.");
-        System.exit(-1);
+        System.out.println("SnipSnap will run, but you cannot use source JSP files.");
       }
     }
     try {

@@ -117,7 +117,7 @@ public class AdminServer implements Runnable {
           }
           System.out.println("AdminServer: got command: '" + command + "' '" + args + "'");
           if ("shutdown".equals(command)) {
-            Shutdown.shutdown();
+            System.exit(0);
           } else if ("start".equals(command) && args != null) {
             try {
               ApplicationLoader.loadApplication(config.getProperty(Configuration.WEBAPP_ROOT), args);

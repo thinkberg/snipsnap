@@ -57,20 +57,12 @@ public class Shutdown extends HttpServlet {
       if (config != null &&
           config.getAdminLogin().equals(user) &&
           config.getAdminPassword().equals(pass)) {
-        // shut down server ...
-        org.snipsnap.server.Shutdown.shutdown();
         response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE, "Server has been shut down.");
-        return;
+        System.exit(0);
       }
     }
 
     response.sendRedirect(SnipLink.absoluteLink(request, "/"));
   }
-
-  private void writeMessage(PrintWriter out, String message) {
-    out.println(message);
-    out.flush();
-  }
-
 }
 
