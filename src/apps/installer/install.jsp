@@ -129,7 +129,7 @@
     <tr>
       <td valign="top">Real URL:</td>
       <td valign="top">
-        autodetect real url: <input name="autoUrl" type="checkbox" <c:if test='${config.autoUrl == "true"}'>checked="checked"</c:if>><br/>
+        <%--autodetect real url: <input name="autoUrl" type="checkbox" <c:if test='${config.autoUrl == "true"}'>checked="checked"</c:if>><br/>--%>
         <input name="domain" type="text" value="<c:out value='${config.url}' default=''/>">
       </td>
       <td valign="top"><b>(optional)</b><br/>
