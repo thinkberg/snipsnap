@@ -1,5 +1,6 @@
 0.3.2
 
+- Added feature: uploading of images for a snip
 - Added UNICODE (UTF-8 by default) support
 - Added feature: importing snips from web frontend
 - Fixed bug: referer corrected after multiple login tries
