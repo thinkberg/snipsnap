@@ -31,7 +31,6 @@ import junit.framework.TestSuite;
 import org.snipsnap.test.commons.AllCommonsTests;
 import org.snipsnap.test.components.AllComponentsTests;
 import org.snipsnap.test.interceptor.AllInterceptorTests;
-import org.snipsnap.test.server.AllServerTests;
 import org.snipsnap.test.snip.AllSnipTests;
 
 public class AllTests extends TestCase {
@@ -45,7 +44,6 @@ public class AllTests extends TestCase {
     s.addTest(AllCommonsTests.suite());
     s.addTest(AllComponentsTests.suite());
     s.addTest(AllInterceptorTests.suite());
-    s.addTest(AllServerTests.suite());
     return s;
   }
 }

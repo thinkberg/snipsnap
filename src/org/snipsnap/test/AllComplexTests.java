@@ -28,9 +28,10 @@ package org.snipsnap.test;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import org.snipsnap.test.server.AllServerTests;
 
-public class AllServerTests extends TestCase {
-  public AllServerTests(String name) {
+public class AllComplexTests extends TestCase {
+  public AllComplexTests(String name) {
     super(name);
   }
 
