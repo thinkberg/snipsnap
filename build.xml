@@ -246,7 +246,7 @@
       <include name="org/snipsnap/util/mail/**"/>
       <include name="org/snipsnap/util/*Test.java"/>
       <include name="org/snipsnap/server/AdminClient.java"/>
-      <include name="org/snipsnap/util/XMLSnipRepair"/>
+      <include name="org/snipsnap/util/XMLSnipRepair.java"/>
     </javac>
   </target>
 
