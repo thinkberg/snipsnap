@@ -39,6 +39,7 @@ import org.snipsnap.snip.label.Labels;
 import org.snipsnap.snip.label.RenderLabel;
 import org.snipsnap.snip.label.BooleanLabel;
 import org.snipsnap.snip.label.RenderEngineLabel;
+import org.snipsnap.snip.name.CapitalizeFormatter;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.User;
 import org.picocontainer.PicoContainer;
@@ -459,6 +460,10 @@ public class SnipImpl implements Snip {
     return new SnipPath(this);
   }
 
+  public String getTitle() {
+    return new CapitalizeFormatter().format(name);
+  }
+
   public int hashCode() {
     return name.hashCode();
   }
@@ -478,4 +483,5 @@ public class SnipImpl implements Snip {
   public String toString() {
     return getName();
   }
+
 }

@@ -189,4 +189,6 @@ public interface Snip extends Linkable, Ownable, Nameable, Appendable {
   public String getXMLContent();
 
   public SnipPath getPath() throws IOException;
+
+  public String getTitle();
 }

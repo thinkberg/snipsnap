@@ -1,5 +1,9 @@
 0.5
 
+- Added Feature: Snips can be displayed as RDF
+- Developer: Added interfaces for XML-RPC webservices (MetaWeblog, ...) and stuffed this in Pico
+- Developer: Moved more stuff to Pico
+- Added Feature: Support for NameFormatters to change the look of snip names (like capitalize etc.)
 - Added Label: RenderEngineLabel allows to set a different engine for a snip
 - Fixed bug: display login warning instead of edit field when snip auto-create is on
 - Fixed bug: attachment download working with deep namespace now

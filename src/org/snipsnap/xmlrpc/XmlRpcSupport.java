@@ -45,6 +45,8 @@ import org.snipsnap.container.Components;
  * @version $Id$
  */
 public abstract class XmlRpcSupport implements XmlRpcHandler {
+   protected AuthenticationService authenticationService;
+
    public static final int    AUTHORIZATION_EXCEPTION = 0001;
    public static final String AUTHORIZATION_EXCEPTION_MSG = "Invalid Username and/or Password";
 
@@ -66,7 +68,7 @@ public abstract class XmlRpcSupport implements XmlRpcHandler {
    */
 
   protected User authenticate(String username, String password) throws XmlRpcException {
-    User user = ((AuthenticationService) Components.getComponent(AuthenticationService.class)).authenticate(username, password);
+    User user = authenticationService.authenticate(username, password);
     if (user != null) {
       Application.get().setUser(user);
       return user;

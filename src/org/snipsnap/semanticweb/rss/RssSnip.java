@@ -85,6 +85,10 @@ public class RssSnip implements Snip {
     return title;
   }
 
+  public String getTitle() {
+    return title;
+  }
+
   public String getContent() {
     return content;
   }

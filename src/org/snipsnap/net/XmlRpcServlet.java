@@ -26,6 +26,7 @@ package org.snipsnap.net;
 
 import org.apache.xmlrpc.XmlRpcServer;
 import org.snipsnap.xmlrpc.*;
+import org.snipsnap.container.Components;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -54,10 +55,12 @@ public class XmlRpcServlet extends HttpServlet {
 
     handlers = new ArrayList();
 
+    // Read from Pico
+    handlers.add(Components.getComponent(MetaWeblogAPI.class));
+    handlers.add(Components.getComponent(BloggerAPI.class));
+
     // Read via services plugin
     handlers.add(new SnipSnapHandler());
-    handlers.add(new MetaWeblogHandler());
-    handlers.add(new BloggerHandler());
     handlers.add(new WeblogsPingHandler());
     handlers.add(new GeneratorHandler());
     handlers.add(new WeblogHandler());

@@ -64,6 +64,8 @@ public class Components {
         //nc.registerComponentByClass(org.snipsnap.snip.storage.JDBCSnipStorage.class);
         nc.registerComponent(org.snipsnap.snip.SnipSpace.class, org.snipsnap.snip.SnipSpaceImpl.class);
 
+        nc.registerComponent(org.snipsnap.xmlrpc.BloggerAPI.class, org.snipsnap.xmlrpc.BloggerHandler.class);
+        nc.registerComponent(org.snipsnap.xmlrpc.MetaWeblogAPI.class, org.snipsnap.xmlrpc.MetaWeblogHandler.class);
         nc.instantiateComponents();
 
         container = nc;

@@ -12,7 +12,7 @@ import java.io.Writer;
 import java.sql.Timestamp;
 import java.util.List;
 
-public class MockSnip implements Snip {
+public abstract class MockSnip implements Snip {
   public void handle(HttpServletRequest request) {
   }
 
@@ -219,6 +219,10 @@ public class MockSnip implements Snip {
   }
 
   public String getXMLContent() {
+    return null;
+  }
+
+  public String getTitle() {
     return null;
   }
 }

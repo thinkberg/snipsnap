@@ -31,6 +31,7 @@ import org.snipsnap.snip.Blog;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.User;
+import org.snipsnap.user.AuthenticationService;
 
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -47,8 +48,12 @@ import java.util.Vector;
  * @version $Id$
  */
 
-public class MetaWeblogHandler extends XmlRpcSupport {
-  public static final String API_PREFIX = "metaWeblog";
+public class MetaWeblogHandler extends XmlRpcSupport implements MetaWeblogAPI {
+  public String API_PREFIX = "metaWeblog";
+
+  public MetaWeblogHandler(AuthenticationService authenticationService) {
+    this.authenticationService = authenticationService;
+  }
 
   public String getName() {
     return API_PREFIX;

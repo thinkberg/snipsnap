@@ -31,6 +31,7 @@ import org.snipsnap.app.Application;
 import org.snipsnap.snip.Blog;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpaceFactory;
+import org.snipsnap.user.AuthenticationService;
 import org.snipsnap.user.User;
 
 import java.util.Hashtable;
@@ -47,8 +48,12 @@ import java.util.Vector;
  * @version $Id$
  */
 
-public class BloggerHandler extends XmlRpcSupport {
+public class BloggerHandler extends XmlRpcSupport implements BloggerAPI {
   public static final String API_PREFIX = "blogger";
+
+  public BloggerHandler(AuthenticationService authenticationService) {
+    this.authenticationService = authenticationService;
+  }
 
   public String getName() {
     return API_PREFIX;
