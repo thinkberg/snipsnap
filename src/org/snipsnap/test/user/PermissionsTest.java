@@ -30,8 +30,6 @@ import com.neotis.snip.Snip;
 import com.neotis.snip.SnipSpace;
 import junit.framework.*;
 
-import java.util.*;
-
 public class PermissionsTest extends TestCase {
   public PermissionsTest(String name) {
     super(name);
@@ -44,24 +42,23 @@ public class PermissionsTest extends TestCase {
   }
 
   public void testContainsAny() {
-    Set s1 = new HashSet();
-    Set s2 = new HashSet();
-    Set s3 = new HashSet();
+    Roles s1 = new Roles();
+    Roles s2 = new Roles();
+    Roles s3 = new Roles();
     s1.add("user 1");
     s1.add("user 2");
     s2.add("user 1");
     s3.add("user 3");
-    Permissions perms = new Permissions();
-    assertTrue("Sets contain same items", perms.containsAny(s1, s2));
-    assertTrue("Sets don't contain same items", !perms.containsAny(s1, s3));
+    assertTrue("Sets contain same items", s1.containsAny(s1));
+    assertTrue("Sets don't contain same items", !s1.containsAny(s3));
   }
 
   public void testCheck() {
     Permissions perms = new Permissions();
     perms.add("Edit", "role 1");
-    Set roles = new HashSet();
+    Roles roles = new Roles();
     roles.add("role 1");
-    Set roles2 = new HashSet();
+    Roles roles2 = new Roles();
     roles.add("role x");
 
     assertTrue("User has Edit permission", perms.check("Edit", roles));
@@ -71,15 +68,15 @@ public class PermissionsTest extends TestCase {
   public void testEmptyRoles() {
     Permissions perms = new Permissions();
     perms.add("Edit", "role 1");
-    Set roles = new HashSet();
+    Roles roles = new Roles();
     assertTrue("User has not Edit permission", ! perms.check("Edit", roles));
   }
 
   public void testEmptyPerms() {
     Permissions perms = new Permissions();
-    Set roles = new HashSet();
+    Roles roles = new Roles();
     assertTrue("User with no roles has Edit permission", perms.check("Edit", roles));
-    Set roles2 = new HashSet();
+    Roles roles2 = new Roles();
     roles.add("role x");
     assertTrue("User with roles has Edit permission", perms.check("Edit", roles2));
 
@@ -100,7 +97,7 @@ public class PermissionsTest extends TestCase {
     snip1.setContent("B content");
     SnipSpace.getInstance().store(snip1, app);
 
-    List roles = new ArrayList();
+    Roles roles = new Roles();
     roles.add(Security.OWNER);
     // user1 2 is not owner of snip
     assertTrue(! Security.hasRoles(user2, snip1, roles));
@@ -113,7 +110,7 @@ public class PermissionsTest extends TestCase {
   public void testNoRoles() {
     Permissions perms = new Permissions();
     perms.add("Edit");
-    Set roles = new HashSet();
+    Roles roles = new Roles();
     roles.add("role 1");
     assertTrue("Permission with no roles grants no permissions", ! perms.check("Edit", roles));
   }
@@ -127,7 +124,7 @@ public class PermissionsTest extends TestCase {
   public void testDeserialize() {
     String permString = "Edit:role 1|Remove:role 2";
     Permissions perms = new Permissions(permString);
-    Set roles = new HashSet();
+    Roles roles = new Roles();
     roles.add("role 1");
     roles.add("role 2");
     assertTrue(perms.check("Edit", roles));
