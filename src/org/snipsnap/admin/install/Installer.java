@@ -266,7 +266,10 @@ public class Installer extends HttpServlet {
     session.removeAttribute("config");
     String host = config.getHost();
     host = host == null || host.length() == 0 ? "localhost" : host;
-    response.sendRedirect("http://" + host + ":" + config.getPort() + config.getContextPath());
+    String url = "http://" + host + ":" + config.getPort() 
+               + config.getContextPath();
+    System.out.println("Redirecting to "+url);
+    response.sendRedirect(url);
   }
 
   private void sendError(HttpSession session, Map errors, HttpServletRequest request, HttpServletResponse response)
