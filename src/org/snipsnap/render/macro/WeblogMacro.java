@@ -90,7 +90,7 @@ public class WeblogMacro extends SnipMacro {
         writer.write("\" title=\"Permalink to ");
         writer.write(entry.getName());
         writer.write("\">");
-        SnipLink.appendImage(writer, "permalink", "");
+        SnipLink.appendImage(writer, "permalink", "PermaLink");
         writer.write("</a>");
         writer.write("</div>");
         writer.write(entry.getXMLContent());

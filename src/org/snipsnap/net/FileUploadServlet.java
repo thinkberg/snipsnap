@@ -31,6 +31,7 @@ import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipSpaceFactory;
+import org.radeox.util.logging.Logger;
 
 import javax.mail.BodyPart;
 import javax.mail.MessagingException;
@@ -68,19 +69,22 @@ public class FileUploadServlet extends HttpServlet {
       MultipartWrapper wrapper = (MultipartWrapper) request;
       String contentType = wrapper.getFileContentType("file");
       try {
-        String fileName = wrapper.getFileName("file");
+        // make sure the file name does not contain slashes or backslashes
+        String fileName = getCanonicalFileName(wrapper.getFileName("file"));
+
         InputStream fileInputStream = wrapper.getFileInputStream("file");
-        if (fileInputStream != null && fileName != null && contentType != null) {
+        if (fileInputStream != null && fileName != null && fileName.length() > 0 && contentType != null) {
           AppConfiguration config = Application.get().getConfiguration();
 
           File fileStore = new File(config.getFileStorePath());
           File relativeFileLocation = new File(snip.getName(), fileName);
           File file = new File(fileStore, relativeFileLocation.getPath());
+
           // check and create the directory, where to store the snip attachments
           if(!file.getParentFile().isDirectory()) {
             file.getParentFile().mkdirs();
           }
-          System.err.println("Uploading '" + relativeFileLocation.getName() + "' to '" + file.getCanonicalPath() + "'");
+          Logger.log(Logger.DEBUG, "Uploading '" + relativeFileLocation.getName() + "' to '" + file.getCanonicalPath() + "'");
           int size = storeAttachment(file, fileInputStream);
           snip.getAttachments().addAttachment(relativeFileLocation.getName(),
                                               contentType, size, relativeFileLocation.getPath());
@@ -92,24 +96,31 @@ public class FileUploadServlet extends HttpServlet {
         request.setAttribute("error", "I/O Error while uploading.");
         e.printStackTrace();
       }
+    } else if(request.getParameter("delete") != null) {
+      request.setAttribute("error", "Ask your SnipSnap administrator to delete the files.");
+    } else if(request.getParameter("cancel") != null) {
       response.sendRedirect(SnipLink.absoluteLink(request, "/space/" + snip.getNameEncoded()));
-    } else {
-      request.setAttribute("snip", snip);
-      request.setAttribute("snip_name", snipName);
-      RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/upload.jsp");
-      dispatcher.forward(request, response);
+      return;
     }
+
+    request.setAttribute("snip", snip);
+    request.setAttribute("snip_name", snipName);
+    RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/upload.jsp");
+    dispatcher.forward(request, response);
   }
 
+  // make file name pure without the path
   private String getCanonicalFileName(String fileName) {
-    int slashIndex = fileName.indexOf('\\');
-    if(slashIndex != -1) {
-      fileName = fileName.substring(slashIndex);
+    int slashIndex = fileName.lastIndexOf('\\');
+    if(slashIndex >= 0) {
+      Logger.log(Logger.WARN, "Windows path detected, cutting off: "+fileName);
+      fileName = fileName.substring(slashIndex + 1);
     }
 
-    slashIndex = fileName.indexOf('/');
+    slashIndex = fileName.lastIndexOf('/');
     if(slashIndex != -1) {
-      fileName = fileName.substring(slashIndex);
+      Logger.log(Logger.WARN, "UNIX path detected, cutting off: "+fileName);
+      fileName = fileName.substring(slashIndex + 1);
     }
     return fileName;
   }

@@ -299,40 +299,98 @@
     </jar>
   </target>
 
-  <!-- create web archive of the installer web application -->
-  <target depends="compile-installer" description="build installer war" name="installer-war">
-    <mkdir dir="${src}/apps/installer/WEB-INF/lib"/>
-    <jar destfile="${src}/apps/installer/WEB-INF/lib/installer-servlets.jar" excludes="**/CVS">
-      <fileset dir="${target}/installer/WEB-INF/classes" includes="**"/>
-    </jar>
-    <jar destfile="${jar}/${appname}-installer.war" excludes="**/CVS">
-      <fileset dir="${src}/apps/installer" includes="**"/>
-      <zipfileset dir="${jar}" prefix="WEB-INF/lib">
-        <include name="radeox.jar"/>
-        <include name="mail.jar"/>
-        <include name="activation.jar"/>
-        <include name="mckoidb.jar"/>
-        <include name="jdbcpool.jar"/>
-        <include name="lucene-1.2.jar"/>
-        <include name="xmlrpc-1.1.jar"/>
-        <include name="jdom-b8.jar"/>
-      </zipfileset>
-      <zipfileset dir="${src}/apps/default">
-        <include name="WEB-INF/c.tld"/>
-        <include name="WEB-INF/lib/jstl.jar"/>
-        <include name="WEB-INF/lib/standard.jar"/>
-      </zipfileset>
-    </jar>
+  <target depends="installer-servlets-jar" name="compile-installer-jsp" description="compile installer jsp files">
+    <mkdir dir="${target}/installer/jsp/source"/>
+    <mkdir dir="${target}/installer/jsp/classes"/>
+    <jspc destdir="${target}/installer/jsp/source"
+          verbose="1"
+          classpathref="all.classpath"
+          webinc="${target}/installer/jsp/web.inc">
+      <include name="**/*.jsp" />
+      <webapp basedir="${src}/apps/installer"/>
+    </jspc>
+    <depend
+         srcdir="${target}/installer/jsp/source"
+         destdir="${target}/installer/jsp/classes"
+         cache="${target}/installer/jsp/dependencies"
+         classpathref="all.classpath"/>
+    <javac deprecation="${deprecation}" debug="${debug}"
+      srcdir="${target}/installer/jsp/source"
+      classpath="${target}/installer/webapp/WEB-INF/lib/installer-servlets.jar"
+      classpathref="all.classpath"
+      destdir="${target}/installer/jsp/classes">
+      <include name="**"/>
+    </javac>
   </target>
 
   <target description="compile installer application code" name="compile-installer">
-    <mkdir dir="${target}/installer/WEB-INF/classes"/>
+    <mkdir dir="${target}/installer/servlets"/>
     <javac deprecation="${deprecation}" debug="${debug}"
       srcdir="${src}"
       classpathref="all.classpath"
-      destdir="${target}/installer/WEB-INF/classes"
-      includes="org/snipsnap/admin/CommandHandler.java, org/snipsnap/admin/Authenticate.java, org/snipsnap/admin/install/**"/>
+      destdir="${target}/installer/servlets">
+      <include name="org/snipsnap/admin/CommandHandler.java"/>
+      <include name="org/snipsnap/admin/Authenticate.java"/>
+      <include name="org/snipsnap/admin/install/**"/>
+    </javac>
   </target>
+
+  <target depends="compile-installer-jsp" name="installer-jsp-jar" description="package precompiled installer jsp files">
+    <mkdir dir="${target}/installer/webapp/WEB-INF/lib"/>
+    <jar destfile="${target}/installer/webapp/WEB-INF/lib/installer-jsp.jar" excludes="**/CVS">
+      <fileset dir="${target}/installer/jsp/classes" includes="**"/>
+    </jar>
+  </target>
+
+  <target depends="compile-installer" description="package installer servlets" name="installer-servlets-jar">
+    <mkdir dir="${target}/installer/webapp/WEB-INF/lib"/>
+    <jar destfile="${target}/installer/webapp/WEB-INF/lib/installer-servlets.jar" excludes="**/CVS">
+      <fileset dir="${target}/installer/servlets" includes="**"/>
+    </jar>
+  </target>
+
+  <!-- create web archive of the installer web application -->
+  <target depends="installer-jsp-jar" description="build installer war" name="installer-war">
+    <loadfile property="installer-web.inc" srcfile="${target}/installer/jsp/web.inc"/>
+    <mkdir dir="${target}/installer/webapp"/>
+    <copy todir="${target}/installer/webapp">
+      <fileset dir="${src}/apps/installer">
+        <exclude name="**/CVS"/>
+        <exclude name="**/*.jsp"/>
+        <exclude name="WEB-INF/web-xml.tmpl"/>
+      </fileset>
+      <fileset dir="${src}/apps/default">
+        <include name="WEB-INF/lib/standard.jar"/>
+        <include name="WEB-INF/lib/jstl.jar"/>
+      </fileset>
+    </copy>
+    <copy file="${src}/apps/installer/index.jsp" tofile="${target}/installer/webapp/index.jsp"/>
+    <copy tofile="${target}/installer/webapp/WEB-INF/web.xml"
+          file="${src}/apps/installer/WEB-INF/web-xml.tmpl" overwrite="true">
+      <filterset>
+        <filter token="PRECOMPILED-JSP" value="${installer-web.inc}"/>
+      </filterset>
+    </copy>
+    <copy todir="${target}/installer/webapp/WEB-INF/lib">
+      <fileset dir="${jar}">
+        <include name="radeox.jar"/>
+        <include name="jakarta-oro.jar"/>
+        <include name="lucene-1.2.jar"/>
+        <include name="xmlrpc-1.1.jar"/>
+        <include name="jdom-b8.jar"/>
+        <include name="aspectjrt.jar"/>
+        <include name="jython.jar"/>
+        <include name="mail.jar"/>
+        <include name="activation.jar"/>
+        <include name="j2h.jar"/>
+      </fileset>
+    </copy>
+
+    <jar destfile="${jar}/${appname}-installer.war">
+      <fileset dir="${target}/installer/webapp" includes="**"/>
+    </jar>
+  </target>
+
 
   <target name="test" depends="snipsnap-war">
     <junit printsummary="true">

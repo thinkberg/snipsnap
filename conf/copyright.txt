@@ -1,0 +1,4 @@
+Copyright (c) 2000-2003 Fraunhofer Gesellschaft
+Fraunhofer Institute for Computer Architecture and Software Technology
+All Rights Reserved. See License Agreement for terms and conditions of use.
+Responsible Authors: Stephan J. Schmidt, Matthias L. Jugel.

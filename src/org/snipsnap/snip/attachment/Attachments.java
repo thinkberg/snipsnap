@@ -39,12 +39,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Class for grouping and managing attachments for a snip
@@ -91,6 +86,11 @@ public class Attachments {
   public Iterator iterator() {
     if (null == attachments) deserialize();
     return attachments.values().iterator();
+  }
+
+  public Collection getAll() {
+    if (null == attachments) deserialize();
+    return attachments.values();
   }
 
   public boolean empty() {

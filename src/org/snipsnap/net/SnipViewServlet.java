@@ -31,6 +31,7 @@ import org.snipsnap.snip.attachment.Attachment;
 import org.snipsnap.snip.attachment.Attachments;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
+import org.radeox.util.logging.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -71,7 +72,7 @@ public class SnipViewServlet extends HttpServlet {
     if (slashIndex != -1) {
       subname = name.substring(slashIndex + 1);
       name = name.substring(0, slashIndex);
-      System.err.println("attachment: " + subname);
+      Logger.log(Logger.DEBUG, name+": attachment: " + subname);
     }
 
     // TODO: make load from snipspace work with name spaces
@@ -82,15 +83,13 @@ public class SnipViewServlet extends HttpServlet {
 
     if (subname != null && subname.length() > 0) {
       // TODO work with sub snips as well, not just attachments
-      Attachments attachments = snip.getAttachments();
-      Attachment attachment = attachments.getAttachment(subname);
-      if (attachment != null) {
-        request.setAttribute("attachment", attachment);
+      try {
+        request.setAttribute(FileDownloadServlet.FILENAME, subname);
         RequestDispatcher dispatcher =
                 getServletContext().getNamedDispatcher("org.snipsnap.net.FileDownloadServlet");
         dispatcher.forward(request, response);
         return;
-      } else {
+      } catch (ServletException e) {
         // jump to the not found page
         snip = null;
       }

@@ -28,6 +28,12 @@ package org.snipsnap.test.snip;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.SnipImpl;
+import org.snipsnap.snip.Snip;
+
+import java.io.Writer;
+import java.io.StringWriter;
+import java.io.IOException;
 
 public class ImageTest extends SnipTestSupport {
   public ImageTest(String name) {
@@ -42,16 +48,28 @@ public class ImageTest extends SnipTestSupport {
     return new TestSuite(ImageTest.class);
   }
 
-  public void testImage() {
-    assertEquals("<img src=\"http://snipsnap.org:8668/images/test.png\" alt=\"test\" border=\"0\"/>", SnipLink.createImage("test"));
+  public void testImage() throws IOException {
+    StringWriter writer = new StringWriter();
+    SnipLink.appendImage(writer, "test", null);
+    assertEquals("<img src=\"http://snipsnap.org:8668/images/test.png\" alt=\"test\" border=\"0\"/>", writer.toString());
   }
 
-  public void testImageAlt() {
-    assertEquals("<img src=\"http://snipsnap.org:8668/images/test.png\" alt=\"alttext\" border=\"0\"/>", SnipLink.createImage("test", "alttext"));
+  public void testImageAlt() throws IOException {
+    StringWriter writer = new StringWriter();
+    SnipLink.appendImage(writer, "test", "alttext");
+    assertEquals("<img src=\"http://snipsnap.org:8668/images/test.png\" alt=\"alttext\" border=\"0\"/>", writer.toString());
   }
 
-  public void testImageAltExtension() {
-    assertEquals("<img src=\"http://snipsnap.org:8668/images/test.jpg\" alt=\"alttext\" border=\"0\"/>", SnipLink.createImage("test", "alttext", "jpg"));
+  public void testImageAltExtension() throws IOException {
+    StringWriter writer = new StringWriter();
+    SnipLink.appendImage(writer, "test", "alttext", "jpg");
+    assertEquals("<img src=\"http://snipsnap.org:8668/images/test.jpg\" alt=\"alttext\" border=\"0\"/>", writer.toString());
   }
 
+  public void testSnipAttachedImage() throws IOException {
+    StringWriter writer = new StringWriter();
+    Snip snip = new SnipImpl("test", "test");
+    SnipLink.appendImage(writer, snip, "test", "alttext", "jpg", null);
+    assertEquals("<img src=\"http://snipsnap.org:8668/space/test/test.jpg\" alt=\"alttext\" border=\"0\"/>", writer.toString());
+  }
 }

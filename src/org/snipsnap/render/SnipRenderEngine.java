@@ -39,6 +39,10 @@ import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.UserManager;
+import org.snipsnap.serialization.StringBufferWriter;
+
+import java.io.Writer;
+import java.io.IOException;
 
 /**
  * renderEngine implementation for SnipSnap which understoods e.g.
@@ -91,8 +95,18 @@ public class SnipRenderEngine extends BaseRenderEngine
     }
   }
 
+  private String externalImageLink = null;
   public String getExternalImageLink() {
-    return SnipLink.createImage("external-link", "&gt;&gt;");
+    if(null == externalImageLink) {
+      Writer writer = new StringBufferWriter();
+      try {
+        SnipLink.appendImage(writer, "external-link", "&gt;&gt;");
+      } catch (IOException e) {
+        // ignore
+      }
+      externalImageLink = writer.toString();
+    }
+    return externalImageLink;
   }
 
   public String render(String content, RenderContext context) {

@@ -14,6 +14,6 @@ if [ ! -f $base/$jar/snipsnap.jar ]; then
 fi
 
 # put classpath together
-CLASSPATH=$base/lib/mckoidb.jar:$base/lib/jdbcpool.jar:$base/lib/lucene-1.2.jar:$base/lib/org.apache.crimson.jar
+CLASSPATH=$base/lib/mckoidb.jar:$base/lib/jdbcpool.jar:$base/lib/lucene-1.2.jar:$base/lib/org.apache.crimson.jar:$base/lib/radeox.jar:$base/lib/jdom-b8.jar:$base/lib/javax.servlet.jar
 
 $JAVA_HOME/bin/java -cp $CLASSPATH:$base/lib/snipsnap-utils.jar org.snipsnap.util.DBImport $*

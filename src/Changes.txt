@@ -1,5 +1,7 @@
 0.3.5
 
+- File Upload changed to store files relative to snips
+- Fixed bug: zero bytes when decoding %xx encoded urls
 - Fixed bug: URLs in [...] made the LinkFilter not process any [...]
 - Fixed bug: Sometimes comments were in wrong order
 - Fixed bug: Some urls (search) missed a '/'

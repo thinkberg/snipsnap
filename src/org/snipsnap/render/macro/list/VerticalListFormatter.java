@@ -81,14 +81,14 @@ public class VerticalListFormatter implements ListFormatter {
             int lastIndex = name.lastIndexOf("-");
             // String count = name.substring(lastIndex+1);
             realName = name.substring(name.indexOf("-") + 1, lastIndex);
-            SnipLink.appendImage(writer, "comment-icon", "", "png");
+            SnipLink.appendImage(writer, "comment-icon", "");
             SnipLink.appendLinkWithRoot(writer, "../comments", SnipLink.encode(realName) + "#" + name, realName);
             //SnipLink.appendLink(writer, name, realName);
             writer.write(" (");
             SnipLink.appendLink(writer, snip.getCUser());
             writer.write(")");
           } else if (UserManager.getInstance().load(name) != null) {
-            SnipLink.appendImage(writer, "person-icon", "", "png");
+            SnipLink.appendImage(writer, "person-icon", "");
             SnipLink.appendLink(writer, ((Nameable) object).getName());
             //SnipLink.appendLinkWithRoot(writer, "../comments", SnipLink.encode(realName) + "#" + name, realName);
           } else {

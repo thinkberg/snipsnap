@@ -135,6 +135,7 @@ public class InitFilter implements Filter {
 
     // make sure we do not enter the default web application unless it's fully installed
     if(!config.isInstalled() && !path.startsWith("/install")) {
+      System.out.println("InitFilter: "+config.getName()+" is not configured, redirecting");
       ((HttpServletResponse)response).sendRedirect(request.getServletPath() + "/install");
       return;
     }

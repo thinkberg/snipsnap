@@ -24,7 +24,9 @@
  */
 package org.snipsnap.snip;
 
+import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
+import org.snipsnap.snip.attachment.Attachments;
 import org.snipsnap.snip.label.Labels;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
@@ -34,7 +36,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import org.radeox.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -58,8 +59,8 @@ public class XMLSnipImport {
 
   /**
    * Load snips and users into the SnipSpace from an xml document out of a stream.
-   * @param document the document to load from
-   * @param overwrite whether or not to overwrite existing content
+   * @param in  the input stream to load from
+   * @param flags whether or not to overwrite existing content
    */
   public static void load(InputStream in, int flags) throws IOException {
     DocumentBuilder documentBuilder = null;
@@ -90,7 +91,7 @@ public class XMLSnipImport {
   /**
    * Load snips and users into the SnipSpace from an xml document.
    * @param document the document to load from
-   * @param overwrite whether or not to overwrite existing content
+   * @param flags whether or not to overwrite existing content
    */
   public static void load(Document document, int flags) throws SAXException {
     NodeList children = document.getChildNodes().item(0).getChildNodes();
@@ -213,10 +214,11 @@ public class XMLSnipImport {
    *   <mUser>funzel</mUser>
    *   <backLinks></backLinks>
    *   <snipLinks>Reflection:1|snipsnap-search:1|Java Performance:1</snipLinks>
-   <labels></labels>
-   <viewCount>5</viewCount>
-   <permissions></permissions>
-   </snip>
+   *   <labels></labels>
+   *   <attachments></attachments>
+   *   <viewCount>5</viewCount>
+   *   <permissions></permissions>
+   * </snip>
    */
   private static void insertSnip(Node snipNode, boolean overwrite) throws SAXException {
     SnipSpace space = SnipSpaceFactory.getInstance();
@@ -310,6 +312,10 @@ public class XMLSnipImport {
 
       if ((tmp = (String) elements.get("labels")) != null) {
         snip.setLabels(new Labels(tmp));
+      }
+
+      if((tmp = (String) elements.get("attachments")) != null) {
+        snip.setAttachments(new Attachments(tmp));
       }
 
       if ((tmp = (String) elements.get("viewCount")) != null) {

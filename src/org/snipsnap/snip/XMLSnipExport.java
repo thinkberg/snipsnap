@@ -24,14 +24,19 @@
  */
 package org.snipsnap.snip;
 
-import org.snipsnap.util.ConnectionManager;
 import org.radeox.util.logging.Logger;
+import org.snipsnap.util.ConnectionManager;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.StringTokenizer;
 
 /**
@@ -47,18 +52,18 @@ public class XMLSnipExport {
 
   /**
    * Store snips and users from the SnipSpace to an xml document into a stream.
-   * @param document the document to load from
-   * @param overwrite whether or not to overwrite existing content
+   * @param out outputstream to write to
+   * @param exportMask mask of what to store and what to ignore
    */
-  public static void store(OutputStream out, int exportMask) throws IOException {
+  public static void store(OutputStream out, int exportMask) {
 
     Connection connection = ConnectionManager.getConnection();
     ResultSet results = null;
 
     try {
-      PrintWriter pw = new PrintWriter(new OutputStreamWriter(out, "iso-8859-1"));
-      pw.println("<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>");
-      pw.println("<snipspace>");
+      PrintWriter pw = new PrintWriter(new OutputStreamWriter(out, "UTF-8"));
+      pw.println("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
+      pw.println("<snipACLIspace>");
 
       if ((exportMask & USERS) != 0) toXml("SnipUser", "user", connection, pw);
       if ((exportMask & SNIPS) != 0) toXml("Snip", "snip", connection, pw);
@@ -78,7 +83,7 @@ public class XMLSnipExport {
     ResultSet results;
     try {
       PreparedStatement prepStmt = connection.prepareStatement("SELECT * " +
-          " FROM " + table);
+                                                               " FROM " + table);
       results = prepStmt.executeQuery();
       toXml(export, results, out);
     } catch (SQLException e) {
@@ -113,14 +118,16 @@ public class XMLSnipExport {
   }
 
   /**
-   * Encoder special characters in output.
+   * Encode special characters in output.
    */
   private static String escape(String in) {
     StringBuffer out = new StringBuffer();
-    StringTokenizer t = new StringTokenizer(in, "<>&", true);
+    StringTokenizer t = new StringTokenizer(in, "\0<>&", true);
     while (t.hasMoreTokens()) {
       String token = t.nextToken();
-      if ("<".equals(token) || ">".equals(token) || "&".equals(token)) {
+      if (token.equals("\0")) {
+        Logger.log(Logger.DEBUG, "Found null-byte in data: removing.");
+      } else if ("<".equals(token) || ">".equals(token) || "&".equals(token)) {
         out.append("&#x").append(Integer.toHexString(token.charAt(0))).append(";");
       } else {
         out.append(token);

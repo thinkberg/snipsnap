@@ -24,23 +24,18 @@
  */
 package org.snipsnap.net;
 
+import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.AppConfiguration;
-import org.snipsnap.net.filter.MultipartWrapper;
 import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.attachment.Attachment;
 
-import javax.mail.BodyPart;
-import javax.mail.MessagingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.util.StringTokenizer;
 
 /**
  * Servlet for downloading attachments.
@@ -54,29 +49,49 @@ public class FileDownloadServlet extends HttpServlet {
     doPost(request, response);
   }
 
+  public final static String FILENAME = "filename";
+  public final static String SNIP = "snip";
+
   public void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
 
-    Snip snip = (Snip)request.getAttribute("snip");
-    Attachment attachment = (Attachment)request.getAttribute("attachment");
+    Snip snip = (Snip) request.getAttribute(SNIP);
+    String fileName = (String) request.getAttribute(FILENAME);
+    Attachment attachment = (Attachment) snip.getAttachments().getAttachment(fileName);
 
-    AppConfiguration config = Application.get().getConfiguration();
-    File fileStore = new File(config.getFileStorePath());
+    // make sure the attachment exists
+    if (attachment != null) {
+      AppConfiguration config = Application.get().getConfiguration();
+      File fileStore = new File(config.getFileStorePath());
+      File file = new File(fileStore, attachment.getLocation());
 
-    File file = new File(fileStore, attachment.getLocation());
-
-    response.setContentType(attachment.getContentType());
-    response.setContentLength(attachment.getSize());
-    BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
-    BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
-    byte buf[] = new byte[4096];
-    int length = -1;
-    while((length = in.read(buf)) != -1) {
-      out.write(buf, 0, length);
+      if (file.exists()) {
+        response.setContentType(attachment.getContentType());
+        response.setContentLength(attachment.getSize());
+        BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
+        BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
+        byte buf[] = new byte[4096];
+        int length = -1;
+        while ((length = in.read(buf)) != -1) {
+          out.write(buf, 0, length);
+        }
+        out.flush();
+        in.close();
+        out.close();
+        return;
+      }
+    } else {
+      // legacy: found a default image download
+      Logger.log(Logger.DEBUG, "old style image: " + fileName);
+      String oldStyleFile = "/images/image-"+snip.getName()+"-"+fileName;
+      RequestDispatcher dispatcher = request.getRequestDispatcher(oldStyleFile);
+      if(dispatcher != null) {
+        dispatcher.forward(request, response);
+        return;
+      }
     }
-    out.flush();
-    in.close();
-    out.close();
-  }
 
+    // file does not exist, tell caller
+    throw new ServletException("file does not exist: " + fileName);
+  }
 }

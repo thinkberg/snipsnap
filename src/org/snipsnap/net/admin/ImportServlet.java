@@ -28,11 +28,9 @@ import org.snipsnap.app.Application;
 import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.net.filter.MultipartWrapper;
 import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.XMLSnipExport;
 import org.snipsnap.snip.XMLSnipImport;
 import org.snipsnap.user.User;
 
-import javax.mail.BodyPart;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -40,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,7 +52,7 @@ public class ImportServlet extends HttpServlet {
   private final static String ERR_IOEXCEPTION = "Error while importing!";
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
+    throws ServletException, IOException {
     HttpSession session = request.getSession(false);
     Application.getInstance(session);
     User admin = session != null ? (User) session.getAttribute(AdminServlet.ATT_ADMIN) : null;
@@ -79,27 +78,30 @@ public class ImportServlet extends HttpServlet {
       }
     }
 
-    BodyPart file = req.getBodyPart("input");
+    InputStream file = req.getFileInputStream("input");
+    if (file != null) {
+      System.err.println("Disabling weblogs ping and jabber notification ...");
+      AppConfiguration config = Application.get().getConfiguration();
+      String ping = config.getProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_WEBLOGS_PING);
+      String noty = config.getProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_NOTIFICATION);
+      config.setProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_WEBLOGS_PING, "deny");
+      config.setProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_NOTIFICATION, "deny");
 
-    System.err.println("Disabling weblogs ping and jabber notification ...");
-    AppConfiguration config = Application.get().getConfiguration();
-    String ping = config.getProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_WEBLOGS_PING);
-    String noty = config.getProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_NOTIFICATION);
-    config.setProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_WEBLOGS_PING, "deny");
-    config.setProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_NOTIFICATION, "deny");
+      try {
+        XMLSnipImport.load(req.getFileInputStream("input"), importMask);
+        errors.put("message", OK_IMPORTED);
+      } catch (Exception e) {
+        System.err.println("ImportServlet: unable to import snips: " + e);
+        e.printStackTrace();
+        errors.put("message", ERR_IOEXCEPTION);
+      }
 
-    try {
-      XMLSnipImport.load(file.getInputStream(), importMask);
-      errors.put("message", OK_IMPORTED);
-    } catch (Exception e) {
-      System.err.println("ImportServlet: unable to import snips: " + e);
-      e.printStackTrace();
-      errors.put("message", ERR_IOEXCEPTION);
+      System.err.println("Resetting weblogs ping and jabber notification to config settings ...");
+      config.setProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_WEBLOGS_PING, ping);
+      config.setProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_NOTIFICATION, noty);
+    } else {
+      errors.put("message", "A file must be selected for import.");
     }
-
-    System.err.println("Resetting weblogs ping and jabber notification to config settings ...");
-    config.setProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_WEBLOGS_PING, ping);
-    config.setProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_NOTIFICATION, noty);
 
     RequestDispatcher dispatcher = request.getRequestDispatcher("/manager/import.jsp");
     dispatcher.forward(request, response);

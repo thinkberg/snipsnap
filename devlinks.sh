@@ -10,9 +10,9 @@ fi
 
 if [ -d $app ]; then
   echo Linking code ...
-  ln -sf $base/src/apps/default/WEB-INF/*.tld $app/WEB-INF/
-  ln -sf $base/src/apps/default/WEB-INF/web.xml $app/WEB-INF/
-  ln -sf $base/src/apps/default/WEB-INF/lib/*.jar $app/WEB-INF/lib
+  ln -sf $base/cls/webapp/WEB-INF/*.tld $app/WEB-INF/
+  ln -sf $base/cls/webapp/WEB-INF/web.xml $app/WEB-INF/
+  ln -sf $base/cls/webapp/WEB-INF/lib/*.jar $app/WEB-INF/lib
   ln -sf $base/lib/radeox.jar $app/WEB-INF/lib
   ln -sf $base/lib/aspectjrt.jar $app/WEB-INF/lib
   ln -sf $base/lib/jakarta-oro.jar $app/WEB-INF/lib
@@ -24,10 +24,10 @@ if [ -d $app ]; then
   ln -sf $base/lib/activation.jar $app/WEB-INF/lib
   ln -sf $base/lib/xmlrpc-1.1.jar $app/WEB-INF/lib
   ln -sf $base/lib/j2h.jar $app/WEB-INF/lib
-  echo Linking JSPs ...
-  ln -sf $base/src/apps/default/*.jsp $app/
-  ln -sf $base/src/apps/default/util/*.jsp $app/util/
-  ln -sf $base/src/apps/default/admin/*.jsp $app/admin/
+#  echo Linking JSPs ...
+#  ln -sf $base/src/apps/default/*.jsp $app/
+#  ln -sf $base/src/apps/default/util/*.jsp $app/util/
+#  ln -sf $base/src/apps/default/admin/*.jsp $app/admin/
   if [ ! "$theme" = "" -a -d $base/src/theme/$theme ]; then
     echo Linking theme $theme ...
     ln -sf $base/src/theme/$theme/css/*.css $app/css/

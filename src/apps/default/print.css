@@ -1,0 +1,30 @@
+/**
+ * Print style sheet
+ * @author Matthias L. Jugel
+ * @author (portions) Philipp Meier <meier@meisterbohne.de>
+ * @version $Id$
+ */
+
+@import url(css/wiki.css);
+@import url(css/snip.css);
+@import url(css/general.css);
+@import url(css/page.css);
+
+@import url(css/debug.css);
+@import url(css/admin.css);
+
+#page-buttons { display: none; }
+#page-portlet-1 { display: none; }
+#page-portlet-2 { display: none; }
+#page-portlet-3 { display: none; }
+#page-portlet-4 { display: none; }
+#page-content { margins: 0px; border: 0px; width: auto; }
+
+body { font-size: 12px; }
+a:link:after, a:visited:after {
+  content: " (" attr(href) ") ";
+  font-size: 90%;
+}
+a[href^=".."]:after { content: ""; }
+h1,h2,h3,h4,h5,h6 { color: #000; }
+table.wiki-table { color: #000; }

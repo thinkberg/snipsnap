@@ -41,7 +41,11 @@ public class SnipSnapLauncher extends Launcher {
    * @param args command line arguments
    */
   public static void main(String[] args) {
+    // try to add the java compiler path
     File toolsJar = new File(new File(System.getProperty("java.home")), "lib/tools.jar");
+    if(!toolsJar.exists()) {
+      toolsJar = new File(new File(System.getProperty("java.home")), "../lib/tools.jar");
+    }
     if (!toolsJar.exists()) {
       String system = System.getProperty("os.name");
       if (system.startsWith("Mac OS X")) {
@@ -57,6 +61,8 @@ public class SnipSnapLauncher extends Launcher {
     } catch (IOException e) {
       System.out.println("SnipSnapLauncher: unable to add java compiler library: "+e.getMessage());
     }
+
+    // set default server.log
     System.setProperty(Launcher.ERRORLOG, "server.log");
 
     try {
@@ -66,5 +72,4 @@ public class SnipSnapLauncher extends Launcher {
       e.printStackTrace();
     }
   }
-
 }

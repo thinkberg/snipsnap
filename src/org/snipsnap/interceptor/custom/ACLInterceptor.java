@@ -25,7 +25,6 @@
 
 package org.snipsnap.interceptor.custom;
 
-import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.interceptor.InterceptorSupport;
 import org.snipsnap.interceptor.Invocation;
@@ -52,10 +51,12 @@ public class ACLInterceptor extends InterceptorSupport {
       //Logger.debug("ACLInterceptor: Method="+invocation.getMethod().getName());
       //Logger.debug("ACLInterceptor: User = "+user);
       //Logger.debug("ACLInterceptor: Snip = "+snip);
-      if (!(Security.checkPermission("Edit", user, snip)
-          && Security.hasRoles(user, snip, roles))) {
-        //Logger.debug("SECURITY EXCEPTION");
-        throw new GeneralSecurityException("Not allowed to modify object.");
+      if(!user.isAdmin()) {// TODO: checking for the admin is a hack
+        if (!(Security.checkPermission("Edit", user, snip)
+            && Security.hasRoles(user, snip, roles))) {
+          //Logger.debug("SECURITY EXCEPTION");
+          throw new GeneralSecurityException("Not allowed to modify object.");
+        }
       }
     }
     return invocation.next();

@@ -30,7 +30,9 @@ import java.util.BitSet;
 
 /**
  * Replacement for URLEncoder/URLDecoder of the standard SDK. This was necessary,
- * as the default encoder/decoder used always the platform encoding, not ISO-8859-1
+ * as the default encoder/decoder used always the platform encoding, not UTF-8 or
+ * what has been set in the virtual machine.
+ *
  * @author Matthias L. Jugel
  * @version $Id$
  */
@@ -59,6 +61,10 @@ public class URLEncoderDecoder {
   }
 
 
+  /**
+   * Encode a Java String into a Web encoded String using the %xx encoding and the
+   * character encoding enc.
+   */
   public static String encode(String s, String enc) throws UnsupportedEncodingException {
     byte[] buf = s.getBytes(enc);
     StringBuffer result = new StringBuffer();
@@ -77,20 +83,26 @@ public class URLEncoderDecoder {
     return result.toString();
   }
 
+  /**
+   * Decode a %xx encoded string into a Java String using the provided encoding.
+   * @param s the string to decode
+   * @param enc the encoding (default should be UTF8)
+   */
   public static String decode(String s, String enc) throws UnsupportedEncodingException {
     byte[] buf = new byte[s.length()];
     StringBuffer result = new StringBuffer();
-    for (int pos= 0, i = 0; i < buf.length; i++) {
+    int length = 0;
+    for (int i = 0; i < s.length(); i++) {
       char c = s.charAt(i);
       if (c == '+') {
-        buf[pos++] = (byte) ' ';
+        buf[length++] = (byte) ' ';
       } else if (c == '%') {
-        buf[pos++] = (byte)Integer.parseInt(s.substring(i + 1, i + 3), 16);
+        buf[length++] = (byte)Integer.parseInt(s.substring(i + 1, i + 3), 16);
         i += 2;
       } else {
-        buf[pos++] = (byte) c;
+        buf[length++] = (byte) c;
       }
     }
-    return new String(buf, enc);
+    return new String(buf, 0, length, enc);
   }
 }

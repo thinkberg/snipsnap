@@ -24,19 +24,19 @@
  */
 package org.snipsnap.net.filter;
 
-import org.snipsnap.util.mail.InputStreamDataSource;
 import org.radeox.util.logging.Logger;
+import org.snipsnap.util.mail.InputStreamDataSource;
 
 import javax.mail.BodyPart;
 import javax.mail.MessagingException;
 import javax.mail.internet.ContentDisposition;
+import javax.mail.internet.HeaderTokenizer;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -81,9 +81,8 @@ public class MultipartWrapper extends HttpServletRequestWrapper {
             tmp[tmp.length - 1] = value;
             params.put(name, tmp);
           }
-        } else {
-          files.put(name, body);
         }
+        files.put(name, body);
       }
     } catch (MessagingException e) {
       Logger.warn("Error parsing request (not multipart/form-data)", e);
@@ -124,15 +123,42 @@ public class MultipartWrapper extends HttpServletRequestWrapper {
     return (BodyPart) files.get(name);
   }
 
+  /**
+   * Get file name for uploaded file.
+   * @param name the name of the uploaded file field
+   */
   public String getFileName(String name) throws IOException {
-    BodyPart part = getBodyPart(name);
+
     String fileName = null;
+    MimeBodyPart part = (MimeBodyPart) getBodyPart(name);
     try {
-      fileName = new String(part.getFileName().getBytes("iso-8859-1"), encoding);
+      // HACK: the tokenizer removes backslashes '\' from original input, so we need to
+      // parse ourself, not very nice, but necessary
+      String contentDisposition = new String(part.getHeader("content-disposition", null).getBytes("iso-8859-1"), encoding);
+      Logger.log(Logger.DEBUG, "content-disposition: " + contentDisposition);
+      HeaderTokenizer tokenizer = new HeaderTokenizer(contentDisposition, HeaderTokenizer.MIME, true);
+      HeaderTokenizer.Token token = null;
+      while ((token = tokenizer.next()).getType() != HeaderTokenizer.Token.EOF) {
+        if (token.getType() == HeaderTokenizer.Token.ATOM && "filename".equals(token.getValue())) {
+          String remainder = tokenizer.getRemainder();
+          int quoteStart = remainder.indexOf('"');
+          int quoteEnd = remainder.indexOf('"', quoteStart + 1);
+          fileName = remainder.substring(quoteStart + 1, quoteEnd);
+        }
+      }
     } catch (Exception e) {
-      throw new IOException(e.getMessage());
+      Logger.log(Logger.FATAL, "error parsing uploaded file name: "+e.getMessage());
     }
-    System.out.println("file name: '"+fileName+"'");
+
+    if (null == fileName) {
+      try {
+        fileName = new String(part.getFileName().getBytes("iso-8859-1"), encoding);
+      } catch (Exception e) {
+        e.printStackTrace();
+        throw new IOException(e.getMessage());
+      }
+    }
+    Logger.log(Logger.DEBUG, "file name: '" + fileName + "'");
     return fileName;
   }
 

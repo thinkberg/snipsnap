@@ -45,6 +45,8 @@ public class InitServlet extends GenericServlet {
   public void init(ServletConfig servletConfig) throws ServletException {
     ServletContext context = servletConfig.getServletContext();
 
+    System.out.println(context.getRealPath("/WEB-INF/application.conf"));
+
     // check servlet context and then local servlet parameter or assume WEB-INF
     String config = (String) context.getAttribute(Configuration.INIT_PARAM);
     if (null == config) {

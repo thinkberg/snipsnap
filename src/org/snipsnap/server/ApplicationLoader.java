@@ -58,7 +58,7 @@ public class ApplicationLoader {
         File files[] = rootDir.listFiles();
         for (int i = 0; i < files.length; i++) {
           if (files[i].isDirectory()) {
-            File configFile = new File(files[i], "WEB-INF/application.conf");
+            File configFile = getConfigFile(root, files[i].getName());
             if (configFile.exists()) {
               try {
                 loadApplication(new AppConfiguration(configFile));
@@ -87,7 +87,8 @@ public class ApplicationLoader {
       if (rootDir.isDirectory()) {
         File appDir = new File(rootDir, normalize(name));
         if (appDir.isDirectory()) {
-          return new File(appDir, "WEB-INF/application.conf");
+          // TODO: handle autoextracted web application
+          return new File(appDir, /*"webapp/"+*/"WEB-INF/application.conf");
         }
       }
     }
@@ -174,15 +175,18 @@ public class ApplicationLoader {
 
 
     // start web application context
-    File appRoot = webInf.getParentFile().getAbsoluteFile();
+    File appRoot = webInf.getParentFile()/*.getParentFile()*/.getAbsoluteFile();
     String contextPath = config.getContextPath();
     if (contextPath == null || contextPath.length() == 0) {
       contextPath = "/";
     }
 
+    // TODO: handle autoextracted war
     WebApplicationContext context =
-      installServer.addWebApplication(contextPath, appRoot.getAbsolutePath());
-    context.setAttribute(AppConfiguration.INIT_PARAM, config.getFile().getAbsolutePath());
+      installServer.addWebApplication(null, contextPath, appRoot.getCanonicalPath()/*"lib/snipsnap-template.war"*/);
+    context.setAttribute(AppConfiguration.INIT_PARAM, config.getFile().getCanonicalPath());
+//    context.setTempDirectory(appRoot);
+//    context.setExtractWAR(true);
     context.start();
 
     applications.put(config.getName(), context);

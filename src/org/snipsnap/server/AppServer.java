@@ -24,21 +24,18 @@
  */
 package org.snipsnap.server;
 
-import org.snipsnap.config.Configuration;
-import org.mortbay.jetty.Server;
-import org.mortbay.util.MultiException;
-import org.mortbay.util.InetAddrPort;
 import org.mortbay.http.HttpListener;
+import org.mortbay.jetty.Server;
+import org.mortbay.util.InetAddrPort;
+import org.mortbay.util.MultiException;
 
 import java.io.*;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.Iterator;
-import java.util.StringTokenizer;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
-import java.util.jar.JarInputStream;
+import java.util.Properties;
 
 /**
  * Application Server
@@ -46,8 +43,15 @@ import java.util.jar.JarInputStream;
  * @version $Id$
  */
 public class AppServer {
-  protected static Configuration snipsnapConfig;
-  protected static Configuration serverConfig;
+  protected static Properties serverInfo = new Properties();
+
+  public final static String VERSION = "snipsnap.server.version";
+  public final static String ENCODING = "snipsnap.server.encoding";
+  public final static String ADMIN_USER = "snipsnap.server.admin.user";
+  public final static String ADMIN_PASS = "snipsnap.server.admin.password";
+  public final static String ADMIN_PORT = "snipsnap.server.admin.port";
+  public final static String WEBAPP_ROOT = "snipsnap.server.webapp.root";
+
   protected static Server jettyServer;
 
   /**
@@ -60,50 +64,44 @@ public class AppServer {
       }
     });
 
+    // load server defaults configuration
     try {
-      snipsnapConfig = new Configuration("conf/snipsnap.conf");
-      System.setProperty("snipsnap." + Configuration.SERVER_VERSION, snipsnapConfig.getVersion());
+      serverInfo.load(AppServer.class.getResourceAsStream("/conf/snipsnap.conf"));
     } catch (IOException e) {
-      e.printStackTrace();
-      System.out.println("ERROR: unable to read snipsnap default configuration, aborting");
-      System.exit(-1);
+      // ignore
     }
+    System.setProperty(VERSION, serverInfo.getProperty(VERSION));
 
-    System.out.println("SnipSnap " + snipsnapConfig.getVersion());
-    System.out.println("Copyright (c) 2000-2003 Stephan J. Schmidt, Matthias L. Jugel. "
-        + "\nAll Rights Reserved.");
-    System.out.println("See License Agreement for terms and conditions of use.");
-
-    // if not server.conf exists create one
+    // output version and copyright information
+    System.out.println("SnipSnap " + serverInfo.getProperty(VERSION));
+    BufferedReader copyrightReader = new BufferedReader(new InputStreamReader(AppServer.class.getResourceAsStream("/conf/copyright.txt")));
+    String line = null;
     try {
-      serverConfig = new Configuration("conf/server.conf");
-    } catch (IOException e) {
-      try {
-        serverConfig = new Configuration("conf/snipsnap.conf");
-        serverConfig.store(new File("conf/server.conf"));
-      } catch (IOException e1) {
-        System.err.println("ERROR: unable to store server.conf, aborting");
-        System.exit(-1);
+      while ((line = copyrightReader.readLine()) != null) {
+        System.out.println(line);
       }
+    } catch (IOException e) {
+      // ignore io exception here ...
     }
 
-    serverConfig = parseArguments(args, serverConfig);
-
-    String enc = serverConfig.getProperty(Configuration.SERVER_ENCODING);
-    if (enc != null && enc.length() > 0) {
-      System.setProperty("file.encoding", enc);
-    } else {
-      System.setProperty("file.encoding", "UTF-8");
+    // load additional local configuration
+    try {
+      serverInfo.load(new FileInputStream("conf/snipsnap.conf"));
+    } catch (IOException e) {
+      // ignore local server configuration not found
     }
+    serverInfo = parseArguments(args, serverInfo);
+
+    // set encoding of the JVM
+    String enc = serverInfo.getProperty(ENCODING, "UTF-8");
+    System.setProperty("file.encoding", enc);
 
     // start jetty server and install web application
     try {
-      jettyServer = new Server("./conf/jetty.conf");
+      jettyServer = new Server(getResource("/conf/jetty.conf", "./conf/jetty.conf"));
       jettyServer.start();
-      String hostname = InetAddress.getLocalHost().getHostName();
-      System.out.println("Administrative interface started at http://" + hostname + ":8668/install");
     } catch (IOException e) {
-      System.err.println("AppServer: admin server configuration not found: " + e);
+      System.err.println("WARNING: admin server configuration not found: " + e);
     } catch (MultiException e) {
       Iterator exceptions = e.getExceptions().iterator();
       while (exceptions.hasNext()) {
@@ -114,16 +112,8 @@ public class AppServer {
       System.exit(-1);
     }
 
-    // start the administrative network interface
-    try {
-      new AdminServer(serverConfig);
-    } catch (Exception e) {
-      e.printStackTrace();
-      System.out.println("ERROR: unable to start administration server: " + e);
-    }
-
     // now, after loading all possible services we will look for applications and start them
-    int errors = ApplicationLoader.loadApplications(serverConfig.getProperty(Configuration.SERVER_WEBAPP_ROOT));
+    int errors = ApplicationLoader.loadApplications(serverInfo.getProperty(WEBAPP_ROOT));
     if (errors == 0 && ApplicationLoader.getApplicationCount() == 0) {
       System.out.println("ATTENTION: Server is still unconfigured!");
       System.out.println("ATTENTION: Point your browser to the following address:");
@@ -147,45 +137,45 @@ public class AppServer {
    * Parse argument from command line and exit in case of erroneous options.
    * The server will immedialy exit if there is a problem and display a usage message
    * @param args the command line arguments
-   * @param adminConfig the configuration properties of the server
+   * @param serverInfo the configuration properties of the server
    * @return the possibly changed configuration properties
    */
-  private static Configuration parseArguments(String args[], Configuration serverConfig) {
+  private static Properties parseArguments(String args[], Properties serverInfo) {
     for (int i = 0; i < args.length; i++) {
       // the applications root directory
-      if ("-appsroot".equals(args[i])) {
+      if ("-root".equals(args[i])) {
         if (args.length >= i + 1 && !args[i + 1].startsWith("-")) {
-          serverConfig.setProperty(Configuration.SERVER_WEBAPP_ROOT, args[i++]);
+          serverInfo.setProperty(WEBAPP_ROOT, args[i++]);
         } else {
-          usage("an argument is required for -appsroot");
+          usage("an argument is required for -root");
         }
         // the port where the server listens for administrative commands
-      } else if ("-adminport".equals(args[i]) && !args[i + 1].startsWith("-")) {
-        if (args.length >= i + 1) {
-          serverConfig.setProperty(Configuration.SERVER_ADMIN_PORT, args[i++].trim());
-        } else {
-          usage("a number argument is required for -adminport");
-        }
-        // an administrative command to be sent to the server
-      } else if ("-admin".equals(args[i])) {
-        if (args.length > i + 1) {
-          try {
-            if (!AdminServer.execute(Integer.parseInt(serverConfig.getProperty(Configuration.SERVER_ADMIN_PORT).trim()),
-                args[i + 1], args.length > i + 2 ? args[i + 2] : null)) {
-              System.exit(-1);
-            }
-            System.exit(0);
-          } catch (NumberFormatException e) {
-            System.out.println("ERROR: admin port '" + serverConfig.getProperty(Configuration.SERVER_ADMIN_PORT) + "' is not a number, aborting");
-            System.exit(-1);
-          }
-        } else {
-          usage("an argument is required for -admin");
-        }
-        System.exit(0);
       }
     }
-    return serverConfig;
+    return serverInfo;
+  }
+
+  /**
+   * Get a resource from file if the file exists, else just return the jar resource.
+   * @param jarResource the jar file resource (fallback)
+   * @param fileResource the file resource
+   */
+  private static URL getResource(String jarResource, String fileResource) {
+    File file = new File(fileResource);
+    URL url = null;
+    if (file.exists()) {
+      try {
+        url = file.toURL();
+      } catch (MalformedURLException e) {
+        System.err.println("Warning: unable to load '" + file + "': " + e.getMessage());
+      }
+    }
+
+    if (null == url) {
+      url = AppServer.class.getResource(jarResource);
+    }
+
+    return url;
   }
 
   /**
@@ -194,11 +184,8 @@ public class AppServer {
    */
   private static void usage(String message) {
     System.out.println(message);
-    System.out.println("usage: " + AppServer.class.getName() + " [-appsroot <dir>] [-adminport <port>] [-admin <command>]");
-    System.out.println("  -appsroot   directory, where to find the applications for this server");
-    System.out.println("  -adminport  port number, where the server listens for administrative commands");
-    System.out.println("  -admin      send command to server, allowed commands include:");
-    System.out.println("              " + AdminServer.COMMANDS);
+    System.out.println("usage: " + AppServer.class.getName() + " [-root <dir>]");
+    System.out.println("  -root   directory, where to find the applications for this server");
     System.exit(-1);
   }
 }

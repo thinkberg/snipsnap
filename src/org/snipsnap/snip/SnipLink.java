@@ -171,9 +171,7 @@ public class SnipLink {
     return request.getContextPath() + path;
   }
 
-  //private final static String IMAGES_ROOT = "../images";
-  private static String getImagesRoot() {
-    // return "../images";
+  private static String getImageRoot() {
     return Application.get().getConfiguration().getUrl("/images");
   }
 
@@ -181,56 +179,23 @@ public class SnipLink {
     return Application.get().getConfiguration().getUrl("/space");
   }
 
+  private static String getExecRoot() {
+    return Application.get().getConfiguration().getUrl("/exec");
+  }
+
   private static List extensions = Arrays.asList(new String[]{"png", "jpg", "jpeg", "gif"});
 
-  /**
-   * Create a new img tag with the name as specified. The alt attribute will be the same as the name.
-   * @param name the actual image name
-   * @return a string containing the img tag
-   */
-  public static String createImage(String name) {
-    StringBuffer buffer = new StringBuffer();
-    return appendImage(buffer, name, name).toString();
-  }
 
-  /**
-   * Create a new img tag with the name as specified. The alt attribute will be set as well.
-   * @param name the actual image name
-   * @param alt an alternative text for image-less browsers
-   * @return a string containing the img tag
-   */
-  public static String createImage(String name, String alt) {
-    StringBuffer buffer = new StringBuffer();
-    return appendImage(buffer, name, alt).toString();
-  }
-
-  public static String createImage(String name, String alt, String ext) {
-    StringBuffer buffer = new StringBuffer();
-    return appendImageWithRoot(buffer, getImagesRoot(), name, alt, ext, null).toString();
-  }
-
-  /**
-   * Append and image tag to a string buffer. Additionally takes an alternative text to display
-   * if the browser cannot display the image.
-   * @param buffer the string buffer to append to
-   * @param name the image name
-   * @param alt the alternative text
-   * @return the string buffer
-   */
-  public static StringBuffer appendImage(StringBuffer buffer, String name, String alt) {
-    return appendImageWithRoot(buffer, getImagesRoot(), name, alt, "png", null);
+  public static Writer appendImage(Writer writer, String name, String alt) throws IOException {
+    return appendImageWithRoot(writer, getImageRoot(), name, alt, "png", null);
   }
 
   public static Writer appendImage(Writer writer, String name, String alt, String ext) throws IOException {
-    return appendImageWithRoot(writer, getImagesRoot(), name, alt, ext, null);
+    return appendImageWithRoot(writer, getImageRoot(), name, alt, ext, null);
   }
 
-  public static Writer appendImage(Writer writer, String name, String alt) throws IOException {
-    return appendImageWithRoot(writer, getImagesRoot(), name, alt, "png", null);
-  }
-
-  public static StringBuffer appendImage(StringBuffer buffer, String name, String alt, String ext, String position) {
-    return appendImageWithRoot(buffer, getImagesRoot(), name, alt, ext, position);
+  public static Writer appendImage(Writer writer, Snip snip, String name, String alt, String ext, String position) throws IOException {
+    return appendImageWithRoot(writer, getSpaceRoot()+"/"+snip.getNameEncoded(), name, alt, ext, position);
   }
 
   /**
@@ -269,6 +234,10 @@ public class SnipLink {
       writer.write(" alt=\"");
       writer.write(alt);
       writer.write("\"");
+    } else {
+      writer.write(" alt=\"");
+      writer.write(name);
+      writer.write("\"");
     }
     if (position != null) {
       writer.write(" class=\"");
@@ -278,18 +247,6 @@ public class SnipLink {
     writer.write(" border=\"0\"/>");
     return writer;
   }
-
-
-  public static StringBuffer appendImageWithRoot(StringBuffer buffer, String root,
-                                                 String name, String alt, String ext, String position) {
-    Writer writer = new StringBufferWriter(buffer);
-    try {
-      appendImageWithRoot(writer, root, name, alt, ext, position);
-    } catch (IOException e) {
-    }
-    return buffer;
-  }
-
 
   // TODO 1.4 buffer.append(URLEncoder.encode(key, "iso-8859-1"));
   public static String encode(String s) {

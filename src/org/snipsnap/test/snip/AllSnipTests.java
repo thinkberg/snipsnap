@@ -27,6 +27,7 @@ package org.snipsnap.test.snip;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import org.snipsnap.test.commons.EncoderTest;
 
 public class AllSnipTests extends TestCase {
   public AllSnipTests(String name) {
@@ -37,6 +38,7 @@ public class AllSnipTests extends TestCase {
     TestSuite s = new TestSuite();
     s.addTestSuite(PermalinkTest.class);
     s.addTestSuite(ImageTest.class);
+    s.addTestSuite(EncoderTest.class);
     return s;
   }
 }

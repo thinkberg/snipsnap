@@ -371,17 +371,15 @@ public class SnipImpl implements Snip {
     String fileStorePath = Application.get().getConfiguration().getFileStorePath();
     while (it.hasNext()) {
       Attachment att = (Attachment) it.next();
-      tmp.append(SnipLink.createLink("../space/" + SnipLink.encode(name), att.getName(), att.getName()));
-      tmp.append(" (");
-      tmp.append(att.getSize());
       File file = new File(fileStorePath, att.getLocation());
-      if(!file.exists()) {
+      if(file.exists()) {
+        tmp.append(SnipLink.createLink("../space/" + SnipLink.encode(name), att.getName(), att.getName()));
+        tmp.append(" (").append(att.getSize()).append(")");
+        if (it.hasNext()) {
+          tmp.append("<br/> ");
+        }
+      } else {
         Logger.log(Logger.WARN, file.getAbsolutePath() + " is missing");
-        tmp.append(", missing");
-      }
-      tmp.append(")");
-      if (it.hasNext()) {
-        tmp.append("<br/> ");
       }
     }
     return tmp.toString();

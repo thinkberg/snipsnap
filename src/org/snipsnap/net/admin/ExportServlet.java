@@ -91,13 +91,7 @@ public class ExportServlet extends HttpServlet {
       }
     }
 
-    try {
-      XMLSnipExport.store(out, exportMask);
-    } catch (IOException e) {
-      errors.put("message", ERR_IOEXCEPTION);
-      response.sendRedirect(SnipLink.absoluteLink(request, "/manager/export.jsp"));
-      return;
-    }
+    XMLSnipExport.store(out, exportMask);
 
     if ("application".equals(output)) {
       out.close();

@@ -23,7 +23,7 @@
  * --LICENSE NOTICE--
  */
 
-package org.snipsnap.test.snip;
+package org.snipsnap.test.commons;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -31,6 +31,7 @@ import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipImpl;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.util.URLEncoderDecoder;
+import org.snipsnap.test.snip.SnipTestSupport;
 
 import java.io.Writer;
 import java.io.StringWriter;

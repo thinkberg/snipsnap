@@ -53,7 +53,7 @@ public class ImageTag extends TagSupport {
 
     JspWriter out = pageContext.getOut();
     try {
-      out.print(SnipLink.createImage(name, alt != null ? alt : name, ext != null ? ext : "png"));
+      SnipLink.appendImage(out, name, alt, ext);
     } catch (IOException e) {
       Logger.warn("ImageTag: error writing image tag for " + name);
     }
