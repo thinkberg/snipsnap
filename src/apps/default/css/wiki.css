@@ -87,12 +87,7 @@
   margin-bottom: 25px;
 }
 
-.snip-name { font-weight: bold; font-size: 15px; color: black; background-color: inherit;}
 
-.snip-modified {
-  color: #999999;
-  background-color: inherit;
-}
 
 /* special formatting of a wiki table */
 .snip-table {

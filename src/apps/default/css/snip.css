@@ -1,0 +1,94 @@
+/**
+ * Snip block display stylesheet definitions.
+ * @author Matthias L. Jugel
+ * @version $Id$
+ */
+
+#snip-wrapper {
+}
+
+#snip-header {
+}
+
+#snip-title {
+  text-align: left;
+}
+
+.snip-name {
+  font-weight: bold;
+  font-size: 150%;
+  color: black;
+  background-color: inherit;
+}
+
+.snip-comment {
+}
+
+#snip-buttons {
+  float: right;
+  vertical-align: top;
+}
+
+#snip-info {
+  color: #999999;
+  background-color: inherit;
+}
+
+#snip-content {
+  width: 100%;
+  margin-top: 20px;
+}
+
+#snip-comments {
+  margin-top: 20px;
+}
+
+#snip-sniplinks {
+  margin-top: 20px;
+}
+
+#snip-sniplinks table {
+  width: 100%;
+}
+
+#snip-sniplinks caption {
+  text-align: left;
+  color: #999999;
+  background-color: inherit;
+}
+
+#snip-sniplinks td {
+  padding: 4px;
+}
+
+#snip-backlinks {
+  margin-top: 20px;
+}
+
+#snip-backlinks .list {
+  list-style-type: none;
+  margin-top: 0;
+  padding-left: 0;
+}
+
+#snip-backlinks .caption {
+  text-align: left;
+  color: #999999;
+  background-color: inherit;
+}
+
+#snip-backlinks .url {
+}
+
+#snip-backlinks .count {
+}
+
+#snip-backlinks span.count:before {
+  content: "";
+}
+
+#snip-backlinks span.count:after {
+  content: ": ";
+}
+
+

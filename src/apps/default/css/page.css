@@ -5,14 +5,13 @@
  */
 
 body {
-  margin: 5;
-  padding: 0;
   background: #ffffff;
-  color: #000000;
+  color: #4c4c4c;
   width: 800px;
-  font-size: 100%;
+  font-size: 80%;
   font-family: "Lucida Grande", "Trebuchet MS", Verdana, Geneva, Lucida, Helvetica, sans-serif;
-}
+  margin: 20px;
+  padding: 0px;}
 
 #page-logo {
   display: block;
@@ -49,10 +48,9 @@ body {
 }
 
 #page-wrapper {
-  position:absolute;
+  position: relative;
   margin-top: 10px;
-  left:5px;
-  width:800px;
+  width: 100%;
   height: auto;
 }
 
@@ -68,10 +66,10 @@ body {
   position: absolute;
   left: 600px;
   width: 200px;
-  color: #eeeeee;
+  color: inherit;
   background-color: inherit;
 	border: 1px dashed #999999;
-	line-height:14px;
+	line-height: 14px;
 }
 
 
@@ -82,7 +80,7 @@ body {
   margin-top: 10px;
   text-align: center;
   width: 100%;
-  font-size: 60%;
+  font-size: 100%;
 }
 
 #copyright:before {

@@ -91,6 +91,10 @@ public class DBImport {
 
     boolean overwrite = args.length == 4 && "overwrite".equals(args[3]);
 
+    System.err.println("Disabling weblogs ping and jabber notification ...");
+    config.setProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_WEBLOGS_PING, "deny");
+    config.setProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_NOTIFICATION, "deny");
+
     File in = new File(args[2]);
 
     try {

@@ -25,17 +25,16 @@
 package org.snipsnap.jsp;
 
 import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
-import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.Links;
+import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
-import org.snipsnap.util.ColorRange;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.tagext.TagSupport;
 import javax.servlet.jsp.jstl.core.ConditionalTagSupport;
-import java.util.Iterator;
+import javax.servlet.jsp.tagext.TagSupport;
 import java.io.IOException;
+import java.util.Iterator;
 
 public class BackLinkTag extends TagSupport {
   Snip snip = null;
@@ -46,17 +45,24 @@ public class BackLinkTag extends TagSupport {
     Links backLinks = snip.getAccess().getBackLinks();
     Iterator iterator = backLinks.iterator();
 
+
     try {
+      out.println("<span class=\"caption\">people came here from:</span>");
+      out.println("<ul class=\"list\">");
       int i = this.count;
-      while (iterator.hasNext() && --i>=0) {
+      while (iterator.hasNext() && --i >= 0) {
         String url = (String) iterator.next();
+        out.print("<li>");
+        out.print("<span class=\"count\">");
         out.print(backLinks.getIntCount(url));
-        out.print(": <a href=\"");
+        out.print("</span>");
+        out.print("<span class=\"url\"><a href=\"");
         out.print(url);
         out.print("\">");
         out.print(SnipLink.cutLength(url, 90));
-        out.println("</a><br/>");
+        out.println("</a></span>");
       }
+      out.println("</ul>");
     } catch (IOException e) {
       System.err.println("unable print to JSP writer: " + e);
     }
@@ -64,8 +70,8 @@ public class BackLinkTag extends TagSupport {
   }
 
   public void setCount(int count) {
-      this.count = count;
-      return;
+    this.count = count;
+    return;
   }
 
   public void setSnip(String snip) {

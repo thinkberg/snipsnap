@@ -16,20 +16,31 @@
 
 /* the wiki rendering preview */
 .preview {
-    color: inherit;
-    background-color: inherit;
-    padding: 5px 5px 5px 5px;
+  color: inherit;
+  background-color: inherit;
+  padding: 5px 5px 5px 5px;
+}
+
+.calendar-head {
+  text-align: left;
+  font-weight: bold;
+}
+
+.calendar-today {
+  font-weight: bold;
+}
+
+.calendar-weekday {
 }
 
 /************************************************/
 /* ANCHOR tag                                   */
-
 a {
 	color:#09c;
 	background-color: inherit;
-	text-decoration:none;
-	font-weight:400;
-	font-family:verdana, arial, helvetica, sans-serif;
+	text-decoration: none;
+	font-weight: 400;
+	/* font-family:verdana, arial, helvetica, sans-serif; */
 }
 a:link {
   color:#09c;
@@ -40,22 +51,12 @@ a:visited {
   background-color: inherit;
 }
 a:hover {
-  background-color:#eee;
   color: inherit;
+  background-color: #eeeeee;
 }
 
-pre.nobr {
-	font-family: verdana, sans-serif;
-}
-
-
-td, p {
-	font-size: 11px;
-	color: rgb(76,76,76);
-  /* background-color: inherit; */
-	line-height: 15px;
-}
-
+/************************************************/
+/* table tag                                    */
 table {
 	empty-cells: show;
 }
@@ -66,29 +67,19 @@ table.debug {
 	empty-cells: show;
 }
 
+/************************************************/
+/* input tag                                    */
 input[type=submit] {
   color: inherit;
   background: #eeeeee;
   border: 1px ridge #aaaaaa;
-	font-family: verdana, sans-serif;
+	font-family: inherit;
 }
 
 input, select, textarea {
-  font-size: inherit;
-  font-family: courier, courier new, monospace;
   line-height: inherit;
   vertical-align: middle;
-	border:1px dashed #999;
-}
+	border: 1px dashed #999999;
+  font-size: inherit;
+  font-family: courier, courier new, monospace;}
 
-.calendar-head {
- text-align: left;
- font-weight: bold;
-}
-
-.calendar-today {
- font-weight: bold;
-}
-
-.calendar-weekday {
-}
