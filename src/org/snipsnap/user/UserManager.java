@@ -140,9 +140,10 @@ public class UserManager implements Loader {
       if (null == user) {
         String agent = request.getHeader("User-Agent");
         System.err.println("User agent of unknown user: '"+agent+"'");
-        Iterator it = robots.keySet().iterator();
+        Iterator it = robotIds.keySet().iterator();
         while(agent != null && user == null && it.hasNext()) {
           String key = (String)it.next();
+
           if(agent.toLowerCase().indexOf(key.toLowerCase()) != -1) {
             user = (User)robots.get(key);
             if(null == user) {
@@ -150,10 +151,13 @@ public class UserManager implements Loader {
               user.setNonUser(true);
               robots.put(key, user);
             }
+            break;
           }
         }
 
-        if(null == user) {
+        if(user != null) {
+          System.err.println("Found robot: "+user);
+        } else {
           user = new User("Guest", "Guest", "");
           user.setGuest(true);
         }
