@@ -56,7 +56,7 @@ public class AdminServer implements Runnable {
     });
 
   /**
-   * Execute an administrative command by sendint it to the server on the specified port.
+   * Execute an administrative command by sending it to the server on the specified port.
    * @param port the admin port to send to
    * @param command the actual command
    * @return true if the command was successful

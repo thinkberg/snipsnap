@@ -26,10 +26,10 @@ if [ ! -f $base/$jar/snipsnap.jar ]; then
 fi
 
 # put classpath together (this is a script-local variable)
-CLASSPATH=lib/org.mortbay.jetty.jar:lib/javax.servlet.jar:lib/org.apache.crimson.jar:lib/org.apache.jasper.jar:$TOOLS
+CLASSPATH=lib/org.mortbay.jetty.jar:lib/javax.servlet.jar:lib/org.apache.crimson.jar:lib/org.apache.jasper.jar:lib/jdbcpool.jar:lib/mckoidb.jar:$TOOLS
 
 if [ "$1" = "admin" ]; then
-  java -jar lib/snipsnap.jar -admin "$2" "$3" 
+  $JAVA_HOME/bin/java -cp $CLASSPATH:lib/snipsnap.jar org.snipsnap.server.AppServer -admin "$2" "$3" 
   exit
 fi
 

@@ -61,7 +61,7 @@ public class Shutdown {
         }
         System.out.println("Shutting down Java VM (it ends here)!");
         Log.event("Application: exiting Java VM");
-        System.exit(1);
+        System.exit(0);
       }
     }).start();
   }

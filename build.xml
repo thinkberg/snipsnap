@@ -13,13 +13,13 @@
     <pathelement location="${jar}/org.apache.jasper.jar"/>
     <pathelement location="${jar}/org.apache.crimson.jar"/>
     <pathelement location="${jar}/org.mortbay.jetty.jar"/>
+    <pathelement location="${jar}/jdbcpool.jar"/>
+    <pathelement location="${jar}/mckoidb.jar"/>
   </path>
 
   <!-- the overall class path -->
   <path id="app.classpath">
-    <pathelement location="${jar}/jdbcpool.jar"/>
     <pathelement location="${jar}/jakarta.jar"/>
-    <pathelement location="${jar}/mckoidb.jar"/>
     <pathelement location="${jar}/xmlrpc-1.1.jar"/>
     <pathelement location="${jar}/lucene-1.2.jar"/>
     <pathelement location="${jar}/jython.jar"/>
@@ -145,7 +145,7 @@
       srcdir="${src}"
       destdir="${target}/server"
       classpathref="server.classpath"
-      includes="org/snipsnap/server/**"/>
+      includes="org/snipsnap/server/**,org/snipsnap/util/*JDBC*"/>
   </target>
 
   <!-- create utility code -->
@@ -175,8 +175,6 @@
       <fileset dir="${src}/apps/default" includes="**"/>
       <fileset dir="${src}/theme/blue" includes="**"/>
       <zipfileset dir="${jar}" prefix="WEB-INF/lib">
-        <include name="mckoidb.jar"/>
-        <include name="jdbcpool.jar"/>
         <include name="jakarta.jar"/>
         <include name="lucene-1.2.jar"/>
         <include name="xmlrpc-1.1.jar"/>

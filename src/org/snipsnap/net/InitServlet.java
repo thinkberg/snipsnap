@@ -28,6 +28,7 @@ import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.util.log.Logger;
 import org.snipsnap.util.log.LogHandler;
+import org.snipsnap.util.MckoiEmbeddedJDBCDriver;
 
 import javax.servlet.GenericServlet;
 import javax.servlet.ServletConfig;

@@ -55,6 +55,7 @@ public class MckoiEmbeddedJDBCDriver implements Driver {
 
   public static void register() {
     if (null == driver) {
+      System.err.println("Registering JDBC Driver");
       try {
         java.sql.DriverManager.registerDriver(driver = new MckoiEmbeddedJDBCDriver());
       } catch (SQLException e) {
@@ -64,6 +65,7 @@ public class MckoiEmbeddedJDBCDriver implements Driver {
   }
 
   public static void deregister() throws SQLException {
+    System.err.println("Deregistering JDBC Driver");
     Iterator it = databases.values().iterator();
     while(it.hasNext()) {
       ((DBSystem)it.next()).close();
