@@ -276,7 +276,7 @@ public class SnipImpl implements Snip {
   }
 
   public Snip getCommentedSnip() {
-    if (null != commentedName && null == comment) {
+    if (null != commentedName && !"".equals(commentedName) && null == comment) {
       comment = SnipSpaceFactory.getInstance().load(commentedName);
     }
     return comment;
@@ -337,7 +337,7 @@ public class SnipImpl implements Snip {
   }
 
   public Snip getParent() {
-    if (null != parentName && null == parent) {
+    if (null != parentName && !"".equals(parentName) && null == parent) {
       parent = SnipSpaceFactory.getInstance().load(parentName);
     }
     return parent;
@@ -359,8 +359,16 @@ public class SnipImpl implements Snip {
     this.parentName = name;
   }
 
+  public String getParentName() {
+    return this.parent == null ? parentName : this.parent.getName();
+  }
+
   public void setCommentedName(String name) {
     this.commentedName = name;
+  }
+
+  public String getCommentedName() {
+    return this.parent == null ? commentedName : this.comment.getName();
   }
 
   public void setParent(Snip parentSnip) {
@@ -533,7 +541,7 @@ public class SnipImpl implements Snip {
     SnipSpace space = (SnipSpace)Components.getComponent(SnipSpace.class);
     Snip newSnip = space.create(newName, getContent());
     newSnip.setLabels(getLabels());
-    
+
     List atts = getAttachments().getAll();
     Iterator attsIt = atts.iterator();
     File fileStorePath = new File(Application.get().getConfiguration().getFileStore(), "snips");

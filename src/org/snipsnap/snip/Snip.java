@@ -162,7 +162,11 @@ public interface Snip extends Linkable, Ownable, Nameable, Appendable {
 
   public void setParentName(String name);
 
+  public String getParentName();
+
   public void setCommentedName(String name);
+
+  public String getCommentedName();
 
   public Snip getParent();
 

@@ -25,6 +25,7 @@
 package org.snipsnap.net.admin;
 
 import org.radeox.util.logging.Logger;
+import org.radeox.util.logging.LogHandler;
 import org.snipsnap.app.Application;
 import org.snipsnap.app.ApplicationManager;
 import org.snipsnap.app.JDBCApplicationStorage;
@@ -695,6 +696,12 @@ public class ConfigureServlet extends HttpServlet {
     config.setPermCreateSnip(allowDeny(request.getParameter(Configuration.APP_PERM_CREATESNIP)));
     String logger = request.getParameter(Configuration.APP_LOGGER);
     config.setLogger(logger != null && logger.length() > 0 ? logger : "org.radeox.util.logging.NullLogger");
+    // initalize logger before starting to load configurations
+    try {
+      Logger.setHandler((LogHandler) Class.forName(config.getLogger()).newInstance());
+    } catch (Exception e) {
+      System.err.println("InitFilter: LogHandler not found: " + logger);
+    }
     String cache = request.getParameter(Configuration.APP_CACHE);
     config.setCache(cache != null && cache.length() > 0 ? cache : "full");
     String encoding = request.getParameter(Configuration.APP_ENCODING);
