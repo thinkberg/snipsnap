@@ -38,7 +38,7 @@ import org.apache.oro.text.regex.MatchResult;
 public class EscapeFilter extends RegexTokenFilter {
 
   public EscapeFilter() {
-    super("\\\\(\\\\\\\\)|\\\\(.)|([<>&])");
+    super("\\\\(\\\\\\\\)|\\\\(.)|([<>])");
   }
 
   public void handleMatch(StringBuffer buffer, MatchResult result, Snip snip) {
