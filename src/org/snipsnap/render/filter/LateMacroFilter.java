@@ -67,6 +67,7 @@ public class LateMacroFilter extends MacroFilter {
   };
 
   public void setInitialContext(InitialRenderContext context) {
+    super.setInitialContext(context);
     WeblogMacro weblogMacro = new WeblogMacro();
     macroRepository.put(weblogMacro.getName(), weblogMacro);
   }
