@@ -57,7 +57,7 @@ public class SnipLinkTag extends TagSupport {
       out.println("<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\">");
       out.println("<caption>see also:</caption>");
       out.println("<tr>");
-      while (iterator.hasNext() && i <= 20) {
+      while (iterator.hasNext() && i < 20) {
         if (i % width == 0 && i!= 0 ) {
           out.print("</tr><tr>");
         }
