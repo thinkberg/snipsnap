@@ -41,11 +41,14 @@ import java.util.Set;
  **/
 public class Month {
 
-  private String[] months = {
-    "Januar", "Februar", "Maerz", "April",
-    "Mai", "Juni", "Juli", "August",
-    "September", "Oktober", "November", "Dezember"
-  };
+  private String[] months = { "January", "February", "March", "April", "May", "June", "July", "August", "September",
+                              "October", "November", "December" };
+
+//  private String[] months = {
+//    "Januar", "Februar", "Maerz", "April",
+//    "Mai", "Juni", "Juli", "August",
+//    "September", "Oktober", "November", "Dezember"
+//  };
   private String[] monthsValue = {
     "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"
   };
@@ -122,7 +125,8 @@ public class Month {
     if (calendar.isLeapYear(calendar.get(Calendar.YEAR)) && month == 1)
       ++daysInMonth;
 
-    view.append("<tr><td>Mo</td><td>Di</td><td>Mi</td><td>Do</td><td>Fr</td><td>Sa</td><td>So</td></tr>");
+    view.append("<tr><td>Mo</td><td>Tu</td><td>We</td><td>Th</td><td>Fr</td><td>Sa</td><td>Su</td></tr>");
+    // view.append("<tr><td>Mo</td><td>Di</td><td>Mi</td><td>Do</td><td>Fr</td><td>Sa</td><td>So</td></tr>");
 
     StringBuffer week = new StringBuffer();
     // Blank out the labels before 1st day of month
