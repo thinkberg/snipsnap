@@ -62,10 +62,6 @@ public class Application {
     }
   };
 
-  public Application() {
-    notification = NotificationService.getInstance();
-  }
-
   public void clearLog() {
     log = new ArrayList();
   }
@@ -80,7 +76,10 @@ public class Application {
 
   public void notify(int type, Snip snip) {
     //System.err.println("Application - notify() "+type);
-    if(notification != null) {
+    if(notification == null &&
+       config != null && config.allow(AppConfiguration.PERM_NOTIFICATION)) {
+      notification = NotificationService.getInstance();
+    } else {
       notification.notify(type, snip);
     }
   }
