@@ -144,7 +144,7 @@
       srcdir="${src}"
       classpathref="classpath"
       destdir="${target}/server"
-      includes="org/snipsnap/server/**, org/snipsnap/util/*Util*, org/snipsnap/util/MckoiEmbeddedJDBCDriver.java"/>
+      includes="org/snipsnap/server/**, org/snipsnap/util/*Util*, org/snipsnap/util/DBImport.java, org/snipsnap/util/MckoiEmbeddedJDBCDriver.java"/>
   </target>
 
   <target description="compile template application code" name="build-template-app">
