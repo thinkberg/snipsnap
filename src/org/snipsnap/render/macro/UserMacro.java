@@ -28,6 +28,7 @@ package org.snipsnap.render.macro;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.user.UserManagerFactory;
+import org.radeox.util.i18n.ResourceManager;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -45,7 +46,11 @@ public class UserMacro extends ListOutputMacro {
   }
 
   public String getDescription() {
-    return "Displays a list of all users.";
+    return ResourceManager.getString("i18n.messages", "macro.users.params");
+  }
+
+  public String[] getParamDescription() {
+    return ResourceManager.getString("i18n.messages", "macro.users.params").split(";");
   }
 
   public void execute(Writer writer, SnipMacroParameter params)
@@ -58,7 +63,10 @@ public class UserMacro extends ListOutputMacro {
     showSize = !(params.getLength() > 1 && "nosize".equals(params.get("1")));
     if (params.getLength() <= 2) {
       output(writer, params.getSnipRenderContext().getSnip(),
-             "All Users:", UserManagerFactory.getInstance().getAll(), "no users. not very popular ;-)", type, showSize);
+             ResourceManager.getString("i18n.messages", "macro.users.title"),
+             UserManagerFactory.getInstance().getAll(),
+             ResourceManager.getString("i18n.messages", "macro.users.nouser"),
+             type, showSize);
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

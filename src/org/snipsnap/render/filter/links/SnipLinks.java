@@ -26,6 +26,7 @@
 package org.snipsnap.render.filter.links;
 
 import org.radeox.util.logging.Logger;
+import org.radeox.util.i18n.ResourceManager;
 import org.snipsnap.snip.Links;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.util.ColorRange;
@@ -52,7 +53,9 @@ public class SnipLinks {
       int i = 0;
       if (iterator.hasNext()) {
         writer.write("<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\">\n");
-        writer.write("<caption>see also:</caption>\n");
+        writer.write("<caption>");
+        writer.write(ResourceManager.getString("i18n.messages", "see.also"));
+        writer.write("</caption>\n");
         writer.write("<tr>\n");
         while (iterator.hasNext() && i < 20) {
           if (i % width == 0 && i != 0) {

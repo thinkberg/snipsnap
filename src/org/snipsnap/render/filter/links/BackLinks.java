@@ -26,6 +26,7 @@
 package org.snipsnap.render.filter.links;
 
 import org.radeox.util.Encoder;
+import org.radeox.util.i18n.ResourceManager;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.snip.Links;
 import org.snipsnap.snip.SnipLink;
@@ -63,7 +64,9 @@ public class BackLinks {
 
     try {
       if (iterator.hasNext()) {
-        writer.write("<span class=\"caption\">people came here from:</span>\n");
+        writer.write("<span class=\"caption\">");
+        writer.write(ResourceManager.getString("i18n.messages", "backlinks.title"));
+        writer.write("</span>\n");
         writer.write("<ul class=\"list\">\n");
         while (iterator.hasNext() && --count >= 0) {
           String url = (String) iterator.next();

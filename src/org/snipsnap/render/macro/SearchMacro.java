@@ -31,6 +31,7 @@ import org.radeox.macro.Macro;
 import org.radeox.macro.BaseMacro;
 import org.radeox.macro.parameter.MacroParameter;
 import org.radeox.util.logging.Logger;
+import org.radeox.util.i18n.ResourceManager;
 import org.snipsnap.app.Application;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
@@ -41,6 +42,8 @@ import org.snipsnap.container.Components;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.text.MessageFormat;
+import java.text.FieldPosition;
 
 /*
  * Macro for fulltext searches in SnipSnap. The macro
@@ -55,17 +58,8 @@ import java.io.Writer;
 
 public class SearchMacro extends BaseMacro {
   private SnipSpace space;
-
-  private String[] paramDescription =
-     {"1: string to search",
-      "?2: number of hits to show, defaults to 10"};
-
   public SearchMacro() {
     space = SnipSpaceFactory.getInstance();
-  }
-
-  public String[] getParamDescription() {
-    return paramDescription;
   }
 
   public String getName() {
@@ -73,7 +67,11 @@ public class SearchMacro extends BaseMacro {
   }
 
   public String getDescription() {
-    return "Search for snips containing the word.";
+    return ResourceManager.getString("i18n.messages", "macro.search.description");
+  }
+
+  public String[] getParamDescription() {
+    return ResourceManager.getString("i18n.messages", "macro.search.params").split(";");
   }
 
   public void execute(Writer writer, MacroParameter params)
@@ -93,13 +91,12 @@ public class SearchMacro extends BaseMacro {
         Logger.warn("SearchMacro: exception while searching: " + e);
       }
 
-
       if (hits != null && hits.length() > 0) {
-        writer.write("<div class=\"list\"><div class=\"list-title\">snips with ");
-        writer.write(searchString);
-        writer.write(": (");
-        writer.write("" + hits.length());
-        writer.write(")</div>");
+        writer.write("<div class=\"list\"><div class=\"list-title\">");
+        MessageFormat mf = new MessageFormat(ResourceManager.getString("i18n.messages", "macro.search.title"),
+                                             ResourceManager.getLocale("i18n.messages"));
+        writer.write(mf.format(new Object[] { searchString, new Integer(hits.length()) }));
+        writer.write("</div>");
 
         int start = 0;
         int end = Math.min(maxHits, hits.length());
@@ -116,18 +113,18 @@ public class SearchMacro extends BaseMacro {
           Logger.warn("I/O error while iterating over search results.");
         }
       } else {
-        writer.write("Nothing found.");
+        writer.write(ResourceManager.getString("i18n.messages", "macro.search.notfound"));
       }
       AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
 
       if (searchString != null && searchString.length() > 0 &&
           !SnipSpaceFactory.getInstance().exists(searchString) &&
           service.isAuthenticated(Application.get().getUser())) {
-        writer.write("<p>There is no snip with <b>");
-        writer.write(searchString);
-        writer.write("</b> , would you like to ");
-        SnipLink.appendCreateLink(writer, searchString);
-        writer.write("?</p>");
+        MessageFormat mf = new MessageFormat(ResourceManager.getString("i18n.messages", "macro.search.create"),
+                                             ResourceManager.getLocale("i18n.messages"));
+        writer.write("<p>");
+        writer.write(mf.format(new String[] { searchString, SnipLink.appendCreateLink(new StringBuffer(), searchString).toString() }));
+        writer.write("</p>");
       }
 
       return;

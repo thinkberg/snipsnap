@@ -28,6 +28,7 @@ package org.snipsnap.render.macro;
 import org.radeox.macro.Macro;
 import org.radeox.macro.BaseMacro;
 import org.radeox.macro.parameter.MacroParameter;
+import org.radeox.util.i18n.ResourceManager;
 import org.snipsnap.app.Application;
 import org.snipsnap.snip.Modified;
 import org.snipsnap.snip.Snip;
@@ -45,19 +46,12 @@ import java.io.Writer;
  */
 
 public class OnlineTimeMacro extends BaseMacro {
-  private String[] paramDescription =
-      {"none"};
-
-  public String[] getParamDescription() {
-    return paramDescription;
-  }
-
   public String getName() {
     return "online-time";
   }
 
   public String getDescription() {
-    return "Displays the time since SnipSnap is online.";
+    return ResourceManager.getString("i18n.messages", "macro.online.description");
   }
 
   public void execute(Writer writer, MacroParameter params)
@@ -65,6 +59,5 @@ public class OnlineTimeMacro extends BaseMacro {
 
     Snip snip = SnipSpaceFactory.getInstance().load(Application.get().getConfiguration().getStartSnip());
     writer.write(Modified.getNiceTime(snip.getModified().getcTime()));
-    return;
   }
 }

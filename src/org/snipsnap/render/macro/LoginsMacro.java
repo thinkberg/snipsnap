@@ -24,18 +24,14 @@
  */
 package org.snipsnap.render.macro;
 
+import org.radeox.util.i18n.ResourceManager;
 import org.snipsnap.app.Application;
-import org.snipsnap.render.context.SnipRenderContext;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.text.ChoiceFormat;
 import java.text.MessageFormat;
-import java.text.Format;
-import java.text.NumberFormat;
 import java.util.List;
-import java.util.ResourceBundle;
 
 /*
  * Macro that displays a list of currently logged on users.
@@ -45,25 +41,20 @@ import java.util.ResourceBundle;
  */
 
 public class LoginsMacro extends ListOutputMacro {
-  private String[] paramDescription =
-    {"?1: Lister to render users"};
-
-  public String[] getParamDescription() {
-    return paramDescription;
-  }
-
   public String getName() {
     return "logins";
   }
 
   public String getDescription() {
-    return "Displays all currently logged in users and guests.";
+    return ResourceManager.getString("i18n.messages", "macro.logins.description");
+  }
+
+  public String[] getParamDescription() {
+    return ResourceManager.getString("i18n.messages", "macro.logins.description").split(";");
   }
 
   public void execute(Writer writer, SnipMacroParameter params)
     throws IllegalArgumentException, IOException {
-
-    ResourceBundle bundle = (ResourceBundle) params.getContext().get(SnipRenderContext.LANGUAGE_BUNDLE);
 
     String type = "Vertical";
     boolean showSize = true;
@@ -75,22 +66,12 @@ public class LoginsMacro extends ListOutputMacro {
       users.addAll(Application.getCurrentNonUsers());
 
       output(writer, params.getSnipRenderContext().getSnip(),
-             bundle.getString("macro.logins.users"), users, "", type, showSize);
+             ResourceManager.getString("i18n.messages", "macro.logins.users"), users, "", type, showSize);
       int guests = Application.getGuestCount();
       if (guests > 0) {
-        MessageFormat formatter = new MessageFormat("");
-        ChoiceFormat choice = new ChoiceFormat(new double[]{1, 2},
-                                               new String[]{
-                                                 bundle.getString("macro.logins.guest"),
-                                                 bundle.getString("macro.logins.guests")
-                                               });
-        formatter.applyPattern("{0}");
-        formatter.setFormats(new Format[] {
-          choice, NumberFormat.getInstance()
-        });
-        writer.write(formatter.format(new Object[] {
-          new Integer(guests), new Integer(guests)
-        }));
+        MessageFormat formatter = new MessageFormat(ResourceManager.getString("i18n.messages", "macro.logins.guests"),
+                                                    ResourceManager.getLocale("i18n.messages"));
+        writer.write(formatter.format(new Object[]{new Integer(guests)}));
       }
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");

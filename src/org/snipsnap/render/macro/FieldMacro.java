@@ -27,9 +27,11 @@ package org.snipsnap.render.macro;
 
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 import org.snipsnap.snip.SnipLink;
+import org.radeox.util.i18n.ResourceManager;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ResourceBundle;
 
 /*
  * Macro that creates (HTML) input fields with forms.
@@ -45,7 +47,11 @@ public class FieldMacro extends SnipMacro {
   }
 
   public String getDescription() {
-    return "Display a form input field and submit button.";
+    return ResourceManager.getString("i18n.messages", "macro.field.description");
+  }
+
+  public String[] getParamDescription() {
+    return ResourceManager.getString("i18n.messages", "macro.field.params").split(";");
   }
 
   /**

@@ -27,10 +27,12 @@ package org.snipsnap.render.macro;
 
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 import org.snipsnap.snip.SnipSpaceFactory;
+import org.radeox.util.i18n.ResourceManager;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;
+import java.text.MessageFormat;
 
 /*
  * Macro that displays all Snips by user
@@ -40,19 +42,16 @@ import java.util.Collection;
  */
 
 public class UserSnipMacro extends ListOutputMacro {
-  private String[] paramDescription =
-     {"1: login name"};
-
-  public String[] getParamDescription() {
-    return paramDescription;
-  }
-
   public String getName() {
     return "snips-by-user";
   }
 
   public String getDescription() {
-    return "Show all snips created by a specified user.";
+    return ResourceManager.getString("i18n.messages", "macro.snipsbyuser.description");
+  }
+
+  public String[] getParamDescription() {
+    return ResourceManager.getString("i18n.messages", "macro.snipsbyuser.params").split(";");
   }
 
   public void execute(Writer writer, SnipMacroParameter params)
@@ -65,8 +64,12 @@ public class UserSnipMacro extends ListOutputMacro {
 
     if (params.getLength() > 0) {
       Collection c = SnipSpaceFactory.getInstance().getByUser(params.get("0"));
+      MessageFormat mf = new MessageFormat(ResourceManager.getString("i18n.messages", "macro.snipsbyuser.title"),
+                                           ResourceManager.getLocale("i18n.messages"));
       output(writer, params.getSnipRenderContext().getSnip(),
-             "this user's snips:", c, "none written yet.", type, showSize);
+             mf.format(new Object[] { params.get("0") }),
+             c, ResourceManager.getString("i18n.messages", "macro.snipsbyuser.nosnips"),
+             type, showSize);
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

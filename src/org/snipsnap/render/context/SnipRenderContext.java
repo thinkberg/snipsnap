@@ -27,15 +27,18 @@ package org.snipsnap.render.context;
 
 import org.radeox.api.engine.context.RenderContext;
 import org.radeox.engine.context.BaseRenderContext;
+import org.radeox.util.i18n.ResourceManager;
 import org.snipsnap.app.Application;
 import org.snipsnap.container.Components;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Enumeration;
 
 /**
  * SnipRenderContext implements RenderContext and is used to
@@ -63,15 +66,17 @@ public class SnipRenderContext extends BaseRenderContext {
     super();
     this.space = space;
     this.snip = snip;
+
+    HttpServletRequest request =
+      (HttpServletRequest) Application.get().getParameters().get("request");
     Locale locale = Application.get().getConfiguration().getLocale();
-    //@TODO: optimize lookups perhaps with factory
-    try {
-      set(SnipRenderContext.LANGUAGE_BUNDLE, ResourceBundle.getBundle("i18n.messages", locale));
-    } catch (Exception e) {
-      Locale fallback = new Locale("en", "US");
-      set(SnipRenderContext.LANGUAGE_BUNDLE, ResourceBundle.getBundle("i18n.messages", fallback));
+    if(null != request && null != request.getLocale()) {
+      ResourceManager.get().setLocale(request.getLocale(), request.getLocales());
+    } else {
+      ResourceManager.get().setLocale(locale, null);
     }
-    set(RenderContext.LANGUAGE_LOCALE, locale);
+    set(SnipRenderContext.LANGUAGE_BUNDLE, ResourceManager.getBundle("i18n.messages"));
+    set(SnipRenderContext.LANGUAGE_LOCALE, ResourceManager.getLocale("i18n.messages"));
   }
 
   /**
@@ -97,7 +102,8 @@ public class SnipRenderContext extends BaseRenderContext {
     attributes.put(USER, Application.get().getUser());
     attributes.put(VIEWED, Application.get().getParameters().get("viewed"));
     attributes.put(CONTAINER, Components.getContainer());
-    attributes.put(HTTP_REQUEST, Application.get().getParameters().get("request"));
+    HttpServletRequest request = (HttpServletRequest)Application.get().getParameters().get("request");
+    attributes.put(HTTP_REQUEST, request);
     attributes.put(HTTP_PARAMS, Application.get().getParameters());
   }
 

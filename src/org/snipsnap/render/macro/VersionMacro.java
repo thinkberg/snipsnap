@@ -29,6 +29,7 @@ package org.snipsnap.render.macro;
 import org.radeox.macro.Macro;
 import org.radeox.macro.BaseMacro;
 import org.radeox.macro.parameter.MacroParameter;
+import org.radeox.util.i18n.ResourceManager;
 import org.snipsnap.app.Application;
 
 import java.io.IOException;
@@ -43,20 +44,12 @@ import java.io.Writer;
 
 public class VersionMacro extends BaseMacro {
   private String version;
-
-  private String[] paramDescription =
-     {"none"};
-
-  public String[] getParamDescription() {
-    return paramDescription;
-  }
-
   public VersionMacro() {
     version = Application.get().getConfiguration().getVersion();
   }
 
   public String getDescription() {
-    return "Displays the SnipSnap version.";
+    return ResourceManager.getString("i18n.messages", "macro.version.description");
   }
 
   public String getName() {

@@ -28,8 +28,11 @@ package org.snipsnap.snip;
 import org.snipsnap.util.StringUtil;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.container.Components;
+import org.radeox.util.i18n.ResourceManager;
 
 import java.sql.Timestamp;
+import java.text.MessageFormat;
+import java.util.Calendar;
 
 /**
  *  Object with modified information, e.g. for snips
@@ -92,23 +95,15 @@ public class Modified {
    * @return Pretty print of modified object
    */
   public String toString() {
-    StringBuffer buffer = new StringBuffer();
-    buffer.append("Created by ");
+    MessageFormat mf = new MessageFormat(ResourceManager.getString("i18n.messages", "modified.info"),
+                                         ResourceManager.getLocale("i18n.messages"));
+
     UserManager um = (UserManager) Components.getComponent(UserManager.class);
-    if(um.exists(cUser)) {
-      SnipLink.appendLink(buffer, cUser);
-    } else {
-      buffer.append(cUser);
-    }
-    buffer.append(". Last edited by ");
-    if(um.exists(mUser)) {
-      SnipLink.appendLink(buffer, mUser);
-    } else {
-      buffer.append(mUser);
-    }
-    buffer.append(" ");
-    buffer.append(getNiceTime(mTime));
-    return buffer.toString();
+    return mf.format(new Object[]{
+      um.exists(cUser) ? SnipLink.createLink(cUser) : cUser,
+      um.exists(mUser) ? SnipLink.createLink(mUser) : mUser,
+      getNiceTime(mTime)
+    });
   }
 
   /**
@@ -116,18 +111,13 @@ public class Modified {
    * @return pretty print of the user and modified time
    */
   public String getShort() {
-    StringBuffer buffer = new StringBuffer();
-    buffer.append("<span class=\"snip-name\">");
+    MessageFormat mf = new MessageFormat(ResourceManager.getString("i18n.messages", "modified.info.short"),
+                                         ResourceManager.getLocale("i18n.messages"));
     UserManager um = (UserManager) Components.getComponent(UserManager.class);
-    if(um.exists(cUser)) {
-      SnipLink.appendLink(buffer, cUser);
-    } else {
-      buffer.append(cUser);
-    }
-    buffer.append("</span>");
-    buffer.append(", ");
-    buffer.append(getNiceTime(mTime));
-    return buffer.toString();
+    return mf.format(new Object[] {
+      um.exists(cUser) ? SnipLink.createLink(cUser) : cUser,
+      getNiceTime(mTime)
+    });
   }
 
   // Should go to a date class
@@ -142,7 +132,9 @@ public class Modified {
    * @return Pretty string
    */
   public static String getNiceTime(Timestamp time) {
-    if (time == null) { return ""; }
+    if (time == null) {
+      return "";
+    }
     java.util.Date now = new java.util.Date();
     long secs = (now.getTime() - time.getTime()) / 1000;
     //int sec = (int) secs % 60;
@@ -154,19 +146,22 @@ public class Modified {
     //int years = days / 365;
 
     StringBuffer nice = new StringBuffer();
-    if (mins == 0) {
-      nice.append("Just a blink of an eye ago.");
-    } else if (hours == 0) {
-      StringUtil.plural(nice, min, "minute");
-      nice.append(" ago.");
-    } else if (days == 0) {
-      StringUtil.plural(nice, hour, "hour");
-      nice.append(", ");
-      StringUtil.plural(nice, min, "minute");
-      nice.append(" ago.");
+    if (mins < 60) {
+      nice.append(ResourceManager.getString("i18n.messages", "modified.time.just"));
     } else {
-      StringUtil.plural(nice, days, "day");
-      nice.append(" ago.");
+      if (hours == 0) {
+        MessageFormat mf = new MessageFormat(ResourceManager.getString("i18n.messages", "modified.time.minutes"),
+                                             ResourceManager.getLocale("i18n.messages"));
+        mf.format(new Object[]{new Long(min)}, nice, null);
+      } else if (days == 0) {
+        MessageFormat mf = new MessageFormat(ResourceManager.getString("i18n.messages", "modified.time.hours"),
+                                             ResourceManager.getLocale("i18n.messages"));
+        mf.format(new Object[]{new Long(hour), new Long(min)}, nice, null);
+      } else {
+        MessageFormat mf = new MessageFormat(ResourceManager.getString("i18n.messages", "modified.time.days"),
+                                             ResourceManager.getLocale("i18n.messages"));
+        mf.format(new Object[]{new Long(days)}, nice, null);
+      }
     }
     return nice.toString();
   }

@@ -26,6 +26,7 @@ package org.snipsnap.render.macro;
 
 import org.snipsnap.render.filter.links.SnipLinks;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
+import org.radeox.util.i18n.ResourceManager;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -44,7 +45,11 @@ public class SnipLinkMacro extends ListOutputMacro {
   }
 
   public String getDescription() {
-    return "Renders a table of sniplinks for the snip.";
+    return ResourceManager.getString("i18n.messages", "macro.sniplink.description");
+  }
+
+  public String[] getParamDescription() {
+    return ResourceManager.getString("i18n.messages", "macro.sniplink.params").split(";");
   }
 
   public void execute(Writer writer, SnipMacroParameter params)

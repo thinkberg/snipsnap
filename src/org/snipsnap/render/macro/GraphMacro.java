@@ -25,6 +25,7 @@
 
 package org.snipsnap.render.macro;
 
+import org.radeox.util.i18n.ResourceManager;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 import org.snipsnap.snip.Snip;
 
@@ -48,7 +49,7 @@ public class GraphMacro extends SnipMacro {
   }
 
   public String getDescription() {
-    return "Render a graph like an organigram or mindmap.";
+    return ResourceManager.getString("i18n.messages", "macro.graph.description");
   }
 
   public void execute(Writer writer, SnipMacroParameter params)

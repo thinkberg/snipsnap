@@ -28,9 +28,16 @@ import org.snipsnap.app.Application;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpaceFactory;
+import org.radeox.util.i18n.ResourceManager;
 
 import java.text.DateFormatSymbols;
-import java.util.*;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 /**
  * Object that generates a View of the month
@@ -64,7 +71,7 @@ public class Month {
   };
 
   public Month() {
-    locale = Application.get().getConfiguration().getLocale();
+    locale = ResourceManager.getLocale("i18n.messages");
     DateFormatSymbols symbols = new DateFormatSymbols(locale);
     months = symbols.getMonths();
     weekDaysLong = symbols.getWeekdays();
@@ -130,7 +137,9 @@ public class Month {
 
     StringBuffer view = new StringBuffer();
     view.append("<div class=\"calendar\">");
-    view.append("<table summary=\"Monthly calendar with links to each day's posts\">");
+    view.append("<table summary=\"");
+    view.append(ResourceManager.getString("i18n.messages", "month.summary"));
+    view.append("\">");
     view.append("<caption>");
     if (navigation) {
       view.append("<a href=\"?calmonth=");

@@ -27,6 +27,7 @@ package org.snipsnap.snip;
 
 import org.radeox.util.logging.Logger;
 import org.radeox.util.Encoder;
+import org.radeox.util.i18n.ResourceManager;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.util.URLEncoderDecoder;
@@ -38,6 +39,7 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.Arrays;
 import java.util.List;
+import java.text.MessageFormat;
 
 /**
  *  Generates links for snips
@@ -85,23 +87,26 @@ public class SnipLink {
    * Append a create link for the specified name.
    */
   public static Writer appendCreateLink(Writer writer, String name) throws IOException {
-    writer.write("&#91;create <a href=\"");
-    writer.write(getExecRoot());
-    writer.write("/edit?name=");
-    writer.write(encode(name));
-    writer.write("\">");
-    writer.write(Encoder.escape(name));
-    writer.write("</a>&#93;");
+    writer.write(makeCreateLink(name));
     return writer;
   }
 
   public static StringBuffer appendCreateLink(StringBuffer buffer, String name) {
-    buffer.append("&#91;create <a href=\"");
-    buffer.append(getExecRoot());
-    buffer.append("/edit?name=");
-    buffer.append(encode(name));
-    buffer.append("\">").append(Encoder.escape(name)).append("</a>&#93;");
-    return buffer;
+    return buffer.append(makeCreateLink(name));
+  }
+
+  private static String makeCreateLink(String name) {
+    MessageFormat formatter = new MessageFormat(ResourceManager.getString("i18n.messages", "sniplink.create"),
+                                                ResourceManager.getLocale("i18n.messages"));
+
+    StringBuffer link = new StringBuffer();
+    link.append("<a href=\"");
+    link.append(getExecRoot());
+    link.append("/edit?name=");
+    link.append(encode(name));
+    link.append("\">").append(Encoder.escape(name)).append("</a>");
+
+    return formatter.format(new Object[]{link.toString()});
   }
 
   public static String createLink(String name) {

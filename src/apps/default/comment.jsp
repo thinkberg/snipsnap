@@ -41,9 +41,9 @@
      <table>
       <tr><td><textarea name="content" type="text" cols="80" rows="20" tabindex="0"><c:out value="${content}" escapeXml="true"/></textarea></td></tr>
       <tr><td class="form-buttons">
-       <input value="Preview" name="preview" type="submit"/>
-       <input value="Comment" name="save" type="submit"/>
-       <input value="Cancel" name="cancel" type="submit"/>
+       <input value="<fmt:message key='dialog.preview'/>" name="preview" type="submit"/>
+       <input value="<fmt:message key='post.comment'/>" name="save" type="submit"/>
+       <input value="<fmt:message key='dialog.cancel'/>" name="cancel" type="submit"/>
       </td></tr>
      </table>
      <input name="comment" type="hidden" value="<c:out value="${snip.name}"/>"/>

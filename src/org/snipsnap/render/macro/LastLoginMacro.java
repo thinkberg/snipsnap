@@ -25,12 +25,11 @@
 
 package org.snipsnap.render.macro;
 
-import org.radeox.macro.Macro;
 import org.radeox.macro.BaseMacro;
 import org.radeox.macro.parameter.MacroParameter;
+import org.radeox.util.i18n.ResourceManager;
 import org.snipsnap.snip.Modified;
 import org.snipsnap.user.User;
-import org.snipsnap.user.UserManager;
 import org.snipsnap.user.UserManagerFactory;
 
 import java.io.IOException;
@@ -44,19 +43,16 @@ import java.io.Writer;
  */
 
 public class LastLoginMacro extends BaseMacro {
-  private String[] paramDescription =
-     {"1: login name"};
-
-  public String[] getParamDescription() {
-    return paramDescription;
-  }
-
   public String getName() {
     return "last-login";
   }
 
   public String getDescription() {
-    return "Show the last login of the user.";
+    return ResourceManager.getString("i18n.messages", "macro.lastlogin.description");
+  }
+
+  public String[] getParamDescription() {
+    return ResourceManager.getString("i18n.messages", "macro.lastlogin.params").split(";");
   }
 
   public void execute(Writer writer, MacroParameter params)
@@ -64,7 +60,9 @@ public class LastLoginMacro extends BaseMacro {
 
     if (params.getLength() == 1) {
       User user = UserManagerFactory.getInstance().load(params.get("0"));
-      writer.write("<b>Last login was:</b> ");
+      writer.write("<b>");
+      writer.write(ResourceManager.getString("i18n.messages", "macro.lastlogin.lastlogin"));
+      writer.write("</b> ");
       writer.write(Modified.getNiceTime(user.getLastLogin()));
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");

@@ -26,6 +26,7 @@
 package org.snipsnap.render.macro;
 
 import org.radeox.util.Linkable;
+import org.radeox.util.i18n.ResourceManager;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpaceFactory;
@@ -35,6 +36,7 @@ import org.snipsnap.util.collection.Filterator;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ResourceBundle;
 
 /*
  * Macro that displays all Snips as an index
@@ -44,10 +46,8 @@ import java.io.Writer;
  */
 
 public class IndexSnipMacro extends ListOutputMacro {
-  private String[] paramDescription = {"?1: Lister to render snips"};
-
   public String[] getParamDescription() {
-    return paramDescription;
+    return ResourceManager.getString("i18n.messages", "macro.index.params").split(";");
   }
 
 
@@ -56,7 +56,7 @@ public class IndexSnipMacro extends ListOutputMacro {
   }
 
   public String getDescription() {
-    return "Displays a list of all snips of the system. Comment snips are filtered out.";
+    return ResourceManager.getString("i18n.messages", "macro.index.description");
   }
 
   public void execute(Writer writer, SnipMacroParameter params)
@@ -75,7 +75,7 @@ public class IndexSnipMacro extends ListOutputMacro {
                  return SnipLink.getSpaceRoot()+"/"+snip.getNameEncoded();
                }
              },
-             "All Snips:",
+             ResourceManager.getString("i18n.messages", "macro.index.all.snips"),
              Collections.filter(SnipSpaceFactory.getInstance().getAll(),
                                 new Filterator() {
                                   public boolean filter(Object obj) {
@@ -86,7 +86,7 @@ public class IndexSnipMacro extends ListOutputMacro {
                                     return false;
                                   }
                                 }
-             ), "none written yet.", type, showSize);
+             ), ResourceManager.getString("i18n.messages", "macro.index.none"), type, showSize);
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

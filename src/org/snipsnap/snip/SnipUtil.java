@@ -27,6 +27,7 @@ package org.snipsnap.snip;
 
 import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
+import org.radeox.util.i18n.ResourceManager;
 
 import java.sql.Date;
 import java.text.ParseException;
@@ -54,7 +55,8 @@ public class SnipUtil {
       dateString = dateString.substring(index+1);
     }
     SimpleDateFormat in = new SimpleDateFormat("yyyy-MM-dd");
-    SimpleDateFormat out = new SimpleDateFormat(config.getWeblogDateFormat(), config.getLocale());
+    SimpleDateFormat out = new SimpleDateFormat(config.getWeblogDateFormat(),
+                                                ResourceManager.getLocale("i18n.messages"));
     try {
       return out.format(in.parse(dateString));
     } catch (ParseException e) {

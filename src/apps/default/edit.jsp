@@ -22,9 +22,9 @@
        <table>
         <tr><td><textarea name="content" type="text" cols="80" rows="20"><c:out value="${content}" escapeXml="true"/></textarea></td></tr>
         <tr><td class="form-buttons">
-         <input value="Preview" name="preview" type="submit"/>
-         <input value="Save" name="save" type="submit"/>
-         <input value="Cancel" name="cancel" type="submit"/>
+         <input value="<fmt:message key='dialog.preview'/>" name="preview" type="submit"/>
+         <input value="<fmt:message key='dialog.save'/>" name="save" type="submit"/>
+         <input value="<fmt:message key='dialog.cancel'/>" name="cancel" type="submit"/>
         </td></tr>
        </table>
        <input name="name" type="hidden" value="<c:out value="${snip_name}"/>"/>

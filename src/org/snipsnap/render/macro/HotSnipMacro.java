@@ -30,6 +30,7 @@ import org.radeox.macro.Macro;
 import org.radeox.macro.BaseMacro;
 import org.radeox.macro.parameter.MacroParameter;
 import org.radeox.util.logging.Logger;
+import org.radeox.util.i18n.ResourceManager;
 import org.snipsnap.render.context.SnipRenderContext;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
@@ -39,6 +40,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.ResourceBundle;
 
 /*
  * Macro that displays the hottest snips, currently the most viewed.
@@ -48,14 +50,11 @@ import java.util.Iterator;
  */
 
 public class HotSnipMacro extends BaseMacro {
-  private String[] paramDescription =
-      {"?1: number of snips to show, defaults to 10"};
-
   public HotSnipMacro() {
   }
 
   public String[] getParamDescription() {
-    return paramDescription;
+    return ResourceManager.getString("i18n.messages", "macro.hotsnip.params").split(";");
   }
 
   public String getName() {
@@ -63,7 +62,7 @@ public class HotSnipMacro extends BaseMacro {
   }
 
   public String getDescription() {
-    return "Displays a list of snips sorted by their \"hotness\" (view count).";
+    return ResourceManager.getString("i18n.messages", "macro.hotsnip.description");
   }
 
   public void execute(Writer writer, MacroParameter params)
@@ -86,7 +85,8 @@ public class HotSnipMacro extends BaseMacro {
       if (params.getLength() <= 1) {
         Collection c = space.getHot(length);
         Iterator iterator = c.iterator();
-        writer.write("<div class=\"list\"><div class=\"list-title\">Most viewed:");
+        writer.write("<div class=\"list\"><div class=\"list-title\">");
+        ResourceManager.getString("i18n.messages", "macro.hotsnip.viewed");
         if (showSize) {
           writer.write(" (");
           writer.write("" + length);

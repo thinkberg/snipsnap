@@ -27,6 +27,7 @@ package org.snipsnap.render.macro;
 
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 import org.snipsnap.snip.SnipSpaceFactory;
+import org.radeox.util.i18n.ResourceManager;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -41,19 +42,17 @@ import java.util.Collection;
  */
 
 public class UserSnipCountMacro extends ListOutputMacro {
-  private String[] paramDescription =
-     {"1: login name"};
-
-  public String[] getParamDescription() {
-    return paramDescription;
-  }
-
   public String getName() {
     return "snip-count-by-user";
   }
 
   public String getDescription() {
-    return "Display the number of snips an user wrote.";
+    return ResourceManager.getString("i18n.messages", "macro.usersnips.description");
+
+  }
+
+  public String[] getParamDescription() {
+    return ResourceManager.getString("i18n.messages", "macro.usersnips.params").split(";");
   }
 
   public void execute(Writer writer, SnipMacroParameter params)

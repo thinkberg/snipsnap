@@ -29,6 +29,7 @@ package org.snipsnap.render.macro;
 import org.radeox.macro.Macro;
 import org.radeox.macro.BaseMacro;
 import org.radeox.macro.parameter.MacroParameter;
+import org.radeox.util.i18n.ResourceManager;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
@@ -52,23 +53,20 @@ import java.util.*;
 public class SnipTreeMacro extends BaseMacro {
   private SnipSpace space;
 
-  private String[] paramDescription =
-      {"1: Namespace prefix"};
-
   public SnipTreeMacro() {
     space = SnipSpaceFactory.getInstance();
-  }
-
-  public String[] getParamDescription() {
-    return paramDescription;
   }
 
   public String getName() {
     return "snip-tree";
   }
 
+  public String[] getParamDescription() {
+    return ResourceManager.getString("i18n.messages", "macro.sniptree.params").split(";");
+  }
+
   public String getDescription() {
-    return "Show a tree of snips from the namespace.";
+    return ResourceManager.getString("i18n.messages", "macro.sniptree.description");
   }
 
   private class Node {

@@ -30,6 +30,7 @@ import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.user.UserManagerFactory;
+import org.radeox.util.i18n.ResourceManager;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -46,19 +47,16 @@ import java.util.Collection;
 
 
 public class SinceLastVisitMacro extends ListOutputMacro {
-  private String[] paramDescription =
-     {"1: login name", "?2: Lister to render snips"};
-
-  public String[] getParamDescription() {
-    return paramDescription;
-  }
-
   public String getName() {
     return "since-last-visit";
   }
 
   public String getDescription() {
-    return "Show all snips that have been changed since the last visit of the user.";
+    return ResourceManager.getString("i18n.messages", "macro.sincelastvisit.description");
+  }
+
+  public String[] getParamDescription() {
+    return ResourceManager.getString("i18n.messages", "macro.sincelastvisit.params").split(";");
   }
 
   public void execute(Writer writer, SnipMacroParameter params)
@@ -79,7 +77,9 @@ public class SinceLastVisitMacro extends ListOutputMacro {
       // Logger.debug("SinceLastVisit: " + user.getLastLogout());
       Collection c = SnipSpaceFactory.getInstance().getSince(user.getLastLogout());
       output(writer, params.getSnipRenderContext().getSnip(),
-             "changed snips since last visit", c, "no recent changes.", type, showSize);
+             ResourceManager.getString("i18n.messages", "macro.sincelastvisit.title"),
+             c, ResourceManager.getString("i18n.messages", "macro.sincelastvisit.nochanges"),
+             type, showSize);
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

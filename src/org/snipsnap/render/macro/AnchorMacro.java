@@ -26,12 +26,15 @@
 package org.snipsnap.render.macro;
 
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
+import org.snipsnap.render.context.SnipRenderContext;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
+import org.radeox.util.i18n.ResourceManager;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Map;
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
 
 /*
  * Places a HTML anchor tag into the snip
@@ -42,9 +45,6 @@ import java.util.Map;
  */
 
 public class AnchorMacro extends SnipMacro {
-  private String[] paramDescription = {"1: anchor text"};
-
-  private Map filters;
 
   public AnchorMacro() {
   }
@@ -54,11 +54,11 @@ public class AnchorMacro extends SnipMacro {
   }
 
   public String getDescription() {
-    return "Places a HTML anchor tag in the snip.";
+    return ResourceManager.getString("i18n.messages", "macro.anchor.description");
   }
 
   public String[] getParamDescription() {
-    return paramDescription;
+    return ResourceManager.getString("i18n.messages", "macro.anchor.params").split(";");
   }
 
   public void execute(Writer writer, SnipMacroParameter params)
@@ -76,8 +76,9 @@ public class AnchorMacro extends SnipMacro {
       } else {
         SnipLink.appendUrl(writer, "", anchor);
       }
-      writer.write("\" title=\"Permalink to ");
-      writer.write(anchor);
+      writer.write("\" title=\"");
+      MessageFormat mf = new MessageFormat(ResourceManager.getString("i18n.messages", "macro.anchor.permalink"));
+      writer.write(mf.format(new Object[] { anchor }));
       writer.write("\">");
       SnipLink.appendImage(writer, "Icon-Permalink", "");
       writer.write("</a>");

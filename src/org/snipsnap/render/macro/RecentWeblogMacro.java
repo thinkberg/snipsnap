@@ -26,6 +26,7 @@
 package org.snipsnap.render.macro;
 
 import org.radeox.util.logging.Logger;
+import org.radeox.util.i18n.ResourceManager;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 import org.snipsnap.xmlrpc.SnipSnapPing;
 
@@ -42,20 +43,16 @@ import java.util.Collection;
  */
 
 public class RecentWeblogMacro extends ListOutputMacro {
-  private String[] paramDescription =
-     {"?1: Lister to render weblogs", "?2: number of weblogs to show, defaults to 10"};
-
-  public String[] getParamDescription() {
-    return paramDescription;
-  }
-
   public String getName() {
     return "recent-weblog";
   }
 
   public String getDescription() {
-    return "Displays a list of recently changed weblogs. Only works when the weblogs " +
-           " ping your site.";
+    return ResourceManager.getString("i18n.messages", "macro.weblogs.description");
+  }
+
+  public String[] getParamDescription() {
+    return ResourceManager.getString("i18n.messages", "macro.weblogs.params").split(";");
   }
 
   public void execute(Writer writer, SnipMacroParameter params)
@@ -79,7 +76,9 @@ public class RecentWeblogMacro extends ListOutputMacro {
     if (params == null || params.getLength() <= 2) {
       Collection c = SnipSnapPing.getInstance().getChanged(length);
       output(writer, params.getSnipRenderContext().getSnip(),
-             "Recently Changed Weblogs", c, "No new changes", type, showSize);
+             ResourceManager.getString("i18n.messages", "macro.weblogs.title"),
+             c, ResourceManager.getString("i18n.messages", "macro.weblogs.nochanges"),
+             type, showSize);
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

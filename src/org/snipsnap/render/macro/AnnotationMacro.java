@@ -32,9 +32,9 @@
 
 package org.snipsnap.render.macro;
 
-import org.radeox.macro.Macro;
 import org.radeox.macro.BaseMacro;
 import org.radeox.macro.parameter.MacroParameter;
+import org.radeox.util.i18n.ResourceManager;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -45,7 +45,11 @@ public class AnnotationMacro extends BaseMacro {
   }
 
   public String getDescription() {
-    return "Render a footnote. Not fully implemented and does not work.";
+    return ResourceManager.getString("i18n.messages", "macro.annotation.description");
+  }
+
+  public String[] getParamDescription() {
+    return ResourceManager.getString("i18n.messages", "macro.annotation.params").split(";");
   }
 
   public void execute(Writer writer, MacroParameter params)

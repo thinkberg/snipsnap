@@ -28,6 +28,7 @@ package org.snipsnap.render.macro;
 import org.radeox.macro.Macro;
 import org.radeox.macro.BaseMacro;
 import org.radeox.macro.parameter.MacroParameter;
+import org.radeox.util.i18n.ResourceManager;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.user.UserManagerFactory;
 import org.snipsnap.container.Components;
@@ -43,19 +44,12 @@ import java.io.Writer;
  */
 
 public class UserCountMacro extends BaseMacro {
-  private String[] paramDescription =
-     {"none"};
-
-  public String[] getParamDescription() {
-    return paramDescription;
-  }
-
   public String getName() {
     return "user-count";
   }
 
   public String getDescription() {
-    return "Display the number of users.";
+    return ResourceManager.getString("i18n.messages", "macro.usercount.description");
   }
 
   public void execute(Writer writer, MacroParameter params)

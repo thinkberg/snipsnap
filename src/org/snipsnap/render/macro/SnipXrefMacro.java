@@ -30,6 +30,7 @@ import org.apache.lucene.search.Hits;
 import org.radeox.macro.BaseMacro;
 import org.radeox.macro.parameter.MacroParameter;
 import org.radeox.util.logging.Logger;
+import org.radeox.util.i18n.ResourceManager;
 import org.snipsnap.app.Application;
 import org.snipsnap.container.Components;
 import org.snipsnap.snip.SnipLink;
@@ -39,6 +40,7 @@ import org.snipsnap.user.AuthenticationService;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.text.MessageFormat;
 
 /*
  * Macro for xref searches in SnipSnap. The macro
@@ -51,24 +53,20 @@ import java.io.Writer;
 public class SnipXrefMacro extends BaseMacro {
   private SnipSpace space;
 
-  private String[] paramDescription =
-    {"1: snip that is referenced",
-     "?2: number of hits to show, defaults to 10"};
-
   public SnipXrefMacro() {
     space = SnipSpaceFactory.getInstance();
-  }
-
-  public String[] getParamDescription() {
-    return paramDescription;
   }
 
   public String getName() {
     return "snip-xref";
   }
 
+  public String[] getParamDescription() {
+    return ResourceManager.getString("i18n.messages", "macro.snipxref.params").split(";");
+  }
+
   public String getDescription() {
-    return "Search for snips linking to the given snip.";
+    return ResourceManager.getString("i18n.messages", "macro.snipxref.description");
   }
 
   public void execute(Writer writer, MacroParameter params)
@@ -90,11 +88,10 @@ public class SnipXrefMacro extends BaseMacro {
 
 
       if (hits != null && hits.length() > 0) {
-        writer.write("<div class=\"list\"><div class=\"list-title\">references to snip ");
-        writer.write(searchString);
-        writer.write(": (");
-        writer.write("" + hits.length());
-        writer.write(")</div>");
+        writer.write("<div class=\"list\"><div class=\"list-title\">");
+        MessageFormat mf = new MessageFormat(ResourceManager.getString("i18n.messages", "macro.snipxref.title"));
+        writer.write(mf.format(new Object[] { searchString, new Integer(hits.length()) }));
+        writer.write("</div>");
 
         int start = 0;
         int end = Math.min(maxHits, hits.length());
@@ -118,9 +115,10 @@ public class SnipXrefMacro extends BaseMacro {
       if (searchString != null && searchString.length() > 0 &&
         !SnipSpaceFactory.getInstance().exists(searchString) &&
         service.isAuthenticated(Application.get().getUser())) {
-        writer.write("<p>There is no snip referencing to <b>");
-        writer.write(searchString);
-        writer.write("</b></p>");
+        MessageFormat mf = new MessageFormat(ResourceManager.getString("i18n.messages", "macro.snipxref.norefs"));
+        writer.write("<p>");
+        writer.write(mf.format(searchString));
+        writer.write("</p>");
       }
 
       return;

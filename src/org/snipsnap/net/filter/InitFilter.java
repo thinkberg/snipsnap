@@ -26,6 +26,7 @@ package org.snipsnap.net.filter;
 
 import org.radeox.util.logging.LogHandler;
 import org.radeox.util.logging.Logger;
+import org.radeox.util.i18n.ResourceManager;
 import org.snipsnap.app.Application;
 import org.snipsnap.app.ApplicationManager;
 import org.snipsnap.config.Configuration;
@@ -215,6 +216,10 @@ public class InitFilter implements Filter {
     ConfigurationManager configManager = ConfigurationManager.getInstance();
     ApplicationManager appManager = null;
 
+    // initialize resource manager with the browser locale and fallbacks
+    ResourceManager resourceManager = ResourceManager.forceGet();
+    resourceManager.setLocale(request.getLocale(), request.getLocales());
+
     if (globals.isInstalled()) {
       appManager = (ApplicationManager) Components.getComponent(ApplicationManager.class);
     }
@@ -232,6 +237,8 @@ public class InitFilter implements Filter {
       appConfig = configManager.getConfiguration(appOid);
       app.setConfiguration(appConfig);
       app.storeObject(Application.OID, appOid);
+      // add the applications locale, now that may have it
+      resourceManager.setDefaultLocale(appConfig.getLocale());
     }
 
     // configure the url (base context path) for the current request

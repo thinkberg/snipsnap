@@ -29,11 +29,13 @@ import org.snipsnap.render.filter.links.BackLinks;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 import org.snipsnap.snip.*;
 import org.snipsnap.util.StringUtil;
+import org.radeox.util.i18n.ResourceManager;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Iterator;
 import java.util.List;
+import java.text.MessageFormat;
 
 /*
  * Macro that displays a weblog. All subsnips are read and
@@ -45,8 +47,6 @@ import java.util.List;
 
 public class WeblogMacro extends SnipMacro {
   private SnipSpace space;
-  private String[] paramDescription = {"?1: number of shown posts"};
-
   public WeblogMacro() {
     space = SnipSpaceFactory.getInstance();
   }
@@ -56,11 +56,11 @@ public class WeblogMacro extends SnipMacro {
   }
 
   public String getDescription() {
-    return "Renders the sub-snips from the namespace as a weblog.";
+    return ResourceManager.getString("i18n.messages", "macro.weblog.description");
   }
 
   public String[] getParamDescription() {
-    return paramDescription;
+    return ResourceManager.getString("i18n.messages", "macro.weblog.params").split(";");
   }
 
   public void execute(Writer writer, SnipMacroParameter params)
@@ -124,8 +124,9 @@ public class WeblogMacro extends SnipMacro {
         writer.write(entry.getXMLContent());
         writer.write(" <a href=\"");
         SnipLink.appendUrl(writer, entry.getName());
-        writer.write("\" title=\"Permalink to ");
-        writer.write(entry.getName());
+        writer.write("\" title=\"");
+        MessageFormat mf = new MessageFormat(ResourceManager.getString("i18n.messages", "macro.anchor.permalink"));
+        writer.write(mf.format(new Object[] { entry.getName() }));
         writer.write("\">");
         SnipLink.appendImage(writer, "Icon-Permalink", "PermaLink");
         writer.write("</a>");

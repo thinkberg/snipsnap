@@ -25,6 +25,7 @@
 package org.snipsnap.snip;
 
 import org.radeox.util.logging.Logger;
+import org.radeox.util.i18n.ResourceManager;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
 import org.snipsnap.util.StringUtil;
@@ -35,6 +36,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.text.MessageFormat;
 
 /**
  * Handler for comments added to snips.
@@ -109,13 +111,16 @@ public class Comments {
   public String getCommentString() {
     StringBuffer buffer = new StringBuffer();
     if (getCount() > 0) {
+      MessageFormat mf = new MessageFormat(ResourceManager.getString("i18n.messages", "comments.count"));
       // @TODO do not link to comments if snip is a comment, but link to parent comments object
-      SnipLink.appendLinkWithRoot(buffer, SnipLink.getCommentsRoot(), SnipLink.encode(snip.getName()), StringUtil.plural(getCount(), "comment"));
-      buffer.append(" (by ");
-      appendUserString(buffer);
-      buffer.append(")");
+      SnipLink.appendLinkWithRoot(buffer, SnipLink.getCommentsRoot(),
+                                  SnipLink.encode(snip.getName()),
+                                  mf.format(new Object[]{new Integer(getCount())}));
+      buffer.append(" ");
+      MessageFormat mfBy = new MessageFormat(ResourceManager.getString("i18n.messages", "comments.by"));
+      buffer.append(mfBy.format(new Object[] { getUserString() }));
     } else {
-      buffer.append("no comments");
+      buffer.append(ResourceManager.getString("i18n.messages", "comments.none"));
     }
 
     return buffer.toString();
@@ -129,7 +134,10 @@ public class Comments {
 
   public String getPostString() {
     StringBuffer buffer = new StringBuffer();
-    SnipLink.appendLinkWithRoot(buffer, SnipLink.getCommentsRoot(), SnipLink.encode(snip.getName()) + "#post", "post comment");
+    SnipLink.appendLinkWithRoot(buffer,
+                                SnipLink.getCommentsRoot(),
+                                SnipLink.encode(snip.getName()) + "#post",
+                                ResourceManager.getString("i18n.messages", "comments.post"));
     return buffer.toString();
   }
 
@@ -137,10 +145,10 @@ public class Comments {
    * Append user list "funzel, arte, warg" to
    * buffer.
    *
-   * @param buffer Buffer to append to
    */
-  public void appendUserString(StringBuffer buffer) {
+  public String getUserString() {
     init();
+    StringBuffer buffer = new StringBuffer();
     Iterator userIterator = users.iterator();
     while (userIterator.hasNext()) {
       String s = (String) userIterator.next();
@@ -149,7 +157,7 @@ public class Comments {
         buffer.append(", ");
       }
     }
-    return;
+    return buffer.toString();
   }
 
   /**

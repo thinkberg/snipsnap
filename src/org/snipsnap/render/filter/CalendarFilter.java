@@ -28,10 +28,15 @@ package org.snipsnap.render.filter;
 import org.radeox.filter.regex.RegexTokenFilter;
 import org.radeox.regex.MatchResult;
 import org.radeox.filter.context.FilterContext;
+import org.radeox.util.i18n.ResourceManager;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.render.filter.context.SnipFilterContext;
 import org.snipsnap.snip.Snip;
+
+import java.text.MessageFormat;
+import java.text.FieldPosition;
+import java.util.ResourceBundle;
 
 /*
  * Class that VCAL content
@@ -55,7 +60,8 @@ public class CalendarFilter extends RegexTokenFilter {
     Configuration config = app.getConfiguration();
     Snip parent = snip.getParent();
 
-    buffer.append("subscribe to").append(" <a href=\"");
+    StringBuffer linkBuffer = new StringBuffer();
+    linkBuffer.append("<a href=\"");
 
     String file = null;
     StringBuffer url = new StringBuffer("exec/ical/");
@@ -70,7 +76,11 @@ public class CalendarFilter extends RegexTokenFilter {
 
     String webcalUrl = config.getUrl(url.toString());
     webcalUrl = webcalUrl.substring(webcalUrl.indexOf("//") + 2);
-    buffer.append("webcal://").append(webcalUrl);
-    buffer.append("\">").append("calendar ").append(file).append("</a>");
+    linkBuffer.append("webcal://").append(webcalUrl);
+    linkBuffer.append("\">").append("calendar ").append(file).append("</a>");
+
+    String formatString = ResourceManager.getString("i18n.messages", "filter.calendar.subscribe.to");
+    MessageFormat mf = new MessageFormat(formatString);
+    buffer.append(mf.format(new Object[] { linkBuffer.toString() }));
   }
 }

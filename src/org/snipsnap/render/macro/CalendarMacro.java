@@ -24,9 +24,9 @@
  */
 package org.snipsnap.render.macro;
 
-import org.radeox.macro.Macro;
 import org.radeox.macro.BaseMacro;
 import org.radeox.macro.parameter.MacroParameter;
+import org.radeox.util.i18n.ResourceManager;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.date.Month;
 
@@ -46,7 +46,7 @@ public class CalendarMacro extends BaseMacro {
   }
 
   public String getDescription() {
-    return "Displays a monthly calendar view with links to postings.";
+    return ResourceManager.getString("i18n.messages", "macro.calendar.description");
   }
 
   public void execute(Writer writer, MacroParameter params)
@@ -78,5 +78,4 @@ public class CalendarMacro extends BaseMacro {
       writer.write(m.getView(month, year, paramCount==2));
     }
   }
-
 }

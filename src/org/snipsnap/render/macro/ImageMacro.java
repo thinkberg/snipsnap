@@ -27,6 +27,7 @@ package org.snipsnap.render.macro;
 import org.radeox.api.engine.ImageRenderEngine;
 import org.radeox.api.engine.RenderEngine;
 import org.radeox.util.Encoder;
+import org.radeox.util.i18n.ResourceManager;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
@@ -36,6 +37,7 @@ import org.snipsnap.snip.SnipSpaceFactory;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ResourceBundle;
 
 /*
  * Macro that displays images
@@ -53,7 +55,11 @@ public class ImageMacro extends SnipMacro {
   }
 
   public String getDescription() {
-    return "Displays an image file.";
+    return ResourceManager.getString("i18n.messages", "macro.image.description");
+  }
+
+  public String[] getParamDescription() {
+    return ResourceManager.getString("i18n.messages", "macro.image.params").split(";");
   }
 
   public ImageMacro() {

@@ -25,16 +25,22 @@
 
 package org.snipsnap.render.macro;
 
-import org.snipsnap.render.macro.parameter.SnipMacroParameter;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.label.Labels;
-import org.snipsnap.snip.label.Label;
+import org.radeox.util.i18n.ResourceManager;
 import org.snipsnap.container.Components;
+import org.snipsnap.render.macro.parameter.SnipMacroParameter;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.label.Label;
+import org.snipsnap.snip.label.Labels;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.text.MessageFormat;
 
 /*
  * Macro that displays all Snips with a certain label
@@ -44,19 +50,16 @@ import java.util.*;
  */
 
 public class LabelSearchMacro extends ListOutputMacro {
-  private String[] paramDescription =
-     {"1: labels that should be searched"};
-
-  public String[] getParamDescription() {
-    return paramDescription;
-  }
-
   public String getName() {
     return "label-search";
   }
 
   public String getDescription() {
-    return "Show all snips that have a certain label.";
+    return ResourceManager.getString("i18n.messages", "macro.labelsearch.description");
+  }
+
+  public String[] getParamDescription() {
+    return ResourceManager.getString("i18n.messages", "macro.labelsearch.params").split(";");
   }
 
   public void execute(Writer writer, SnipMacroParameter params)
@@ -96,8 +99,11 @@ public class LabelSearchMacro extends ListOutputMacro {
 //    }
 //
     if (params.getLength() > 1) {
+      MessageFormat mf = new MessageFormat(ResourceManager.getString("i18n.messages", "macro.labelsearch.title"),
+                                           ResourceManager.getLocale("i18n.messages"));
       output(writer, params.getSnipRenderContext().getSnip(),
-             "snips with category:", result, "none found.", type, true);
+             mf.format(new Object[] { name, value }), result,
+             ResourceManager.getString("i18n.messages", "macro.labelsearch.notfound"), type, true);
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

@@ -25,6 +25,7 @@
 package org.snipsnap.render.macro;
 
 import org.radeox.util.logging.Logger;
+import org.radeox.util.i18n.ResourceManager;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 import org.snipsnap.snip.SnipSpaceFactory;
 
@@ -40,19 +41,16 @@ import java.util.List;
  */
 
 public class RecentChangesMacro extends ListOutputMacro {
-  private String[] paramDescription =
-     {"?1: number of snips to show, defaults to 10", "?2: Lister to render users"};
-
-  public String[] getParamDescription() {
-    return paramDescription;
-  }
-
   public String getName() {
     return "recent-changes";
   }
 
   public String getDescription() {
-    return "Displays a list of recently changes snips.";
+    return ResourceManager.getString("i18n.messages", "macro.recentchanges.params");
+  }
+
+  public String[] getParamDescription() {
+    return ResourceManager.getString("i18n.messages", "macro.recentchanges.params").split(";");
   }
 
   public void execute(Writer writer, SnipMacroParameter params)
@@ -75,7 +73,10 @@ public class RecentChangesMacro extends ListOutputMacro {
     if (params.getLength() <= 3) {
       List changed = SnipSpaceFactory.getInstance().getChanged(length);
       output(writer, params.getSnipRenderContext().getSnip(),
-             "Recently Changed:", changed, "No changes yet.", type, showSize);
+             ResourceManager.getString("i18n.messages", "macro.recentchanges.title"),
+             changed,
+             ResourceManager.getString("i18n.messages", "macro.recentchanges.nochanges"),
+             type, showSize);
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

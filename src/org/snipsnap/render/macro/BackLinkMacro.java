@@ -24,6 +24,7 @@
  */
 package org.snipsnap.render.macro;
 
+import org.radeox.util.i18n.ResourceManager;
 import org.snipsnap.render.filter.links.BackLinks;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 
@@ -42,8 +43,12 @@ public class BackLinkMacro extends ListOutputMacro {
     return "backlinks";
   }
 
+  public String[] getParamDescription() {
+    return ResourceManager.getString("i18n.messages", "macro.backlinks.description").split(";");
+  }
+
   public String getDescription() {
-    return "Renders a list of backlinks for the snip.";
+    return ResourceManager.getString("i18n.messages", "macro.backlinks.description");
   }
 
   public void execute(Writer writer, SnipMacroParameter params)
