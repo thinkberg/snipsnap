@@ -119,7 +119,7 @@
   <!-- delete compiled class files and created jar/war archives -->
   <target description="clean up compiled code" name="clean">
     <delete>
-      <fileset includes="${target}/**" excludes="CVS"/>
+      <fileset dir="." includes="${target}/**" excludes="CVS"/>
     </delete>
     <delete>
       <fileset dir="${jar}" includes="${appname}*.jar"/>
