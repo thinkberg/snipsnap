@@ -27,6 +27,7 @@
     <tar destfile="../${appname}-${version}-${DSTAMP}${TSTAMP}-src.tgz" compression="gzip">
       <tarfileset dir="." prefix="${appname}-${version}" mode="566">
         <include name="run.sh"/>
+        <include name="db.sh"/>
       </tarfileset>
       <tarfileset dir="." prefix="${appname}-${version}">
         <include name="**"/>
@@ -40,6 +41,7 @@
     <tar destfile="../${appname}-${version}-${DSTAMP}${TSTAMP}.tgz" compression="gzip">
       <tarfileset dir="." prefix="${appname}-${version}" mode="566">
         <include name="run.sh"/>
+        <include name="db.sh"/>
       </tarfileset>
       <tarfileset dir="." prefix="${appname}-${version}" mode="666">
         <include name="${jar}/${appname}.jar"/>
