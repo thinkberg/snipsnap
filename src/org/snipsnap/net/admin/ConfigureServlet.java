@@ -178,6 +178,9 @@ public class ConfigureServlet extends HttpServlet {
       appManager = (ApplicationManager) Components.getComponent(ApplicationManager.class);
       appOid = appManager.getApplication(prefix != null && !"".equals(prefix) ? prefix : "/");
       Configuration existingConfig = ConfigurationManager.getInstance().getConfiguration(appOid);
+      session.removeAttribute(ATT_USER);
+      session.removeAttribute(ATT_STEP);
+      session.removeAttribute(ATT_STEPS);
       if (existingConfig != null) {
         // make a copy and work on it as long as we are changing
         config = ConfigurationProxy.newInstance(existingConfig);
