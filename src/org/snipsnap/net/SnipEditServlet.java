@@ -24,16 +24,22 @@
  */
 package org.snipsnap.net;
 
+import org.snipsnap.app.Application;
+import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Load a snip to edit. Loads the snip into the request context. In case
@@ -52,7 +58,7 @@ public class SnipEditServlet extends SnipSnapServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
     throws IOException, ServletException {
 
-    String name = request.getParameter("name");
+    final String name = request.getParameter("name");
     if (null == name) {
       response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));
       return;
@@ -61,6 +67,30 @@ public class SnipEditServlet extends SnipSnapServlet {
     Snip snip = SnipSpace.getInstance().load(name);
     request.setAttribute("snip", snip);
     request.setAttribute("snip_name", name);
+
+    AppConfiguration config = Application.get().getConfiguration();
+    File imageDir = new File(config.getFile().getParentFile().getParentFile(), "images");
+
+    final Map ids = new HashMap();
+    final int prefixLength = ("image-"+name+"-").length();
+    String[] images = imageDir.list(new FilenameFilter() {
+      public boolean accept(File dir, String file) {
+        if(file.startsWith("image-" + name) && file.length() > prefixLength) {
+          String ext = file.substring(file.indexOf('.', prefixLength)+1);
+          if("png".equals(ext)) {
+            ids.put(file, file.substring(prefixLength, file.indexOf('.', prefixLength)));
+          } else {
+            ids.put(file, file.substring(prefixLength));
+          }
+          return true;
+        }
+        return false;
+      }
+    });
+    if (images != null) {
+      request.setAttribute("ids", ids);
+      request.setAttribute("images", Arrays.asList(images));
+    }
 
     String content = (String) request.getParameter("content");
     if (null != content) {

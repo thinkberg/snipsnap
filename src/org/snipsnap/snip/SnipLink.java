@@ -237,7 +237,7 @@ public class SnipLink {
     int dotIndex = name.lastIndexOf('.');
     if (dotIndex != -1) {
       String imageExt = name.substring(dotIndex + 1);
-      if (extensions.contains(imageExt)) {
+      if (extensions.contains(imageExt.toLowerCase())) {
         ext = imageExt;
         name = name.substring(0, dotIndex);
       }

@@ -25,31 +25,24 @@
 package org.snipsnap.net;
 
 import org.snipsnap.app.Application;
+import org.snipsnap.config.AppConfiguration;
+import org.snipsnap.net.filter.MultipartWrapper;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.filter.SnipFormatter;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
-import org.snipsnap.util.mail.InputStreamDataSource;
-import org.snipsnap.util.log.Logger;
-import org.snipsnap.net.filter.MultipartWrapper;
 
+import javax.mail.BodyPart;
+import javax.mail.MessagingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMultipart;
-import javax.mail.internet.ParameterList;
-import javax.mail.internet.ContentDisposition;
-import javax.mail.internet.MimeUtility;
-import javax.mail.Multipart;
-import javax.mail.BodyPart;
-import javax.mail.MessagingException;
-import javax.activation.DataSource;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -69,6 +62,37 @@ public class SnipStoreServlet extends SnipSnapServlet {
     String content = request.getParameter("content");
     if (request.getParameter("preview") != null) {
       request.setAttribute("preview", SnipFormatter.toXML(snip, content));
+      RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/edit");
+      dispatcher.forward(request, response);
+      return;
+    } else if (request.getParameter("upload") != null) {
+      // @TODO refactor out of this servlet
+      MultipartWrapper wrapper = (MultipartWrapper) request;
+      BodyPart part = wrapper.getBodyPart("image");
+      try {
+        if (part != null && wrapper.getFileContentType("image") != null && part.getFileName() != null) {
+          AppConfiguration config = Application.get().getConfiguration();
+          File imageDir = new File(config.getFile().getParentFile().getParentFile(), "images");
+          File file = new File(imageDir, "image-" + name + "-" + part.getFileName());
+          System.err.println("Uploading '" + part.getFileName() + "' to '" + file.getAbsolutePath() + "'");
+          FileOutputStream out = new FileOutputStream(file);
+          InputStream in = part.getInputStream();
+          byte[] buf = new byte[4096];
+          int length = 0;
+          while ((length = in.read(buf)) != -1) {
+            out.write(buf, 0, length);
+          }
+          out.close();
+          in.close();
+        } else {
+          request.setAttribute("error", "Please provide an image file for upload.");
+        }
+      } catch (IOException e) {
+        request.setAttribute("error", "I/O Error while uploading image.");
+        e.printStackTrace();
+      } catch (MessagingException e) {
+        request.setAttribute("error", "Uploaded image may be corrupted.");
+      }
       RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/edit");
       dispatcher.forward(request, response);
       return;

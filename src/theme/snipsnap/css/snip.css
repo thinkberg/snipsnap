@@ -107,6 +107,10 @@ span.count:after {
   margin-top: 20px;
 }
 
+.snip-input img {
+  width: 20px
+}
+
 .form {
 }
 

@@ -1,6 +1,6 @@
 0.3.2
 
-- Added full UTF-8 support for complete uni-language capabilities
+- Added UNICODE (UTF-8 by default) support
 - Added feature: importing snips from web frontend
 - Fixed bug: referer corrected after multiple login tries
 - Added feature: upgraded to RSD 1.0

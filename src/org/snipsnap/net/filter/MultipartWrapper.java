@@ -70,8 +70,8 @@ public class MultipartWrapper extends HttpServletRequestWrapper {
         MimeBodyPart body = (MimeBodyPart) multipart.getBodyPart(i);
         ContentDisposition disp = new ContentDisposition(body.getHeader("content-disposition", null));
         String name = disp.getParameter("name");
-        String value = new String(((String)body.getContent()).getBytes("iso-8859-1"), request.getCharacterEncoding());
         if (body.getContentType().startsWith("text")) {
+          String value = new String(((String)body.getContent()).getBytes("iso-8859-1"), request.getCharacterEncoding());
           String[] values = (String[]) params.get(name);
           if (null == values) {
             params.put(name, new String[]{ value });
