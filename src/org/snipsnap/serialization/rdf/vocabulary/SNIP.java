@@ -8,91 +8,90 @@ package org.snipsnap.serialization.rdf.vocabulary;
 import com.hp.hpl.mesa.rdf.jena.common.ErrorHelper;
 import com.hp.hpl.mesa.rdf.jena.common.PropertyImpl;
 import com.hp.hpl.mesa.rdf.jena.common.ResourceImpl;
-import com.hp.hpl.mesa.rdf.jena.model.Model;
-import com.hp.hpl.mesa.rdf.jena.model.Resource;
 import com.hp.hpl.mesa.rdf.jena.model.Property;
-import com.hp.hpl.mesa.rdf.jena.model.RDFException;
+import com.hp.hpl.mesa.rdf.jena.model.Resource;
 
 /** SNIP vocabulary class for namespace http://snipsnap.org/rdf/snip-schema#
  */
 public class SNIP {
 
-    protected static final String uri ="http://snipsnap.org/rdf/snip-schema#";
+  protected static final String uri = "http://snipsnap.org/rdf/snip-schema#";
 
-    /** returns the URI for this schema
-     * @return the URI for this schema
-     */
-    public static String getURI() {
-          return uri;
-    }
-           static String nComment = "Comment";
-    public static Resource Comment;
-           static String nSnip = "Snip";
-    public static Resource Snip;
-           static String nAttachment = "Attachment";
-    public static Resource Attachment;
-           static String nLabel = "Label";
-    public static Resource Label;
-           static String nmUser = "mUser";
-    public static Property mUser;
-           static String ncomments = "comments";
-    public static Property comments;
-           static String ncommentedSnip = "commentedSnip";
-    public static Property commentedSnip;
-           static String nvalue = "value";
-    public static Property value;
-           static String nmTime = "mTime";
-    public static Property mTime;
-           static String nattachments = "attachments";
-    public static Property attachments;
-           static String nsnipLinks = "snipLinks";
-    public static Property snipLinks;
-           static String ntype = "type";
-    public static Property type;
-           static String noUser = "oUser";
-    public static Property oUser;
-           static String ncontent = "content";
-    public static Property content;
-           static String ndate = "date";
-    public static Property date;
-           static String ncontentType = "contentType";
-    public static Property contentType;
-           static String nfileName = "fileName";
-    public static Property fileName;
-           static String ncTime = "cTime";
-    public static Property cTime;
-           static String nsize = "size";
-    public static Property size;
-           static String nname = "name";
-    public static Property name;
-           static String ncUser = "cUser";
-    public static Property cUser;
+  /** returns the URI for this schema
+   * @return the URI for this schema
+   */
+  public static String getURI() {
+    return uri;
+  }
 
-    static {
-        try {
-            Comment = new ResourceImpl(uri, nComment);
-            Snip = new ResourceImpl(uri, nSnip);
-            Attachment = new ResourceImpl(uri, nAttachment);
-            Label = new ResourceImpl(uri, nLabel);
-            mUser = new PropertyImpl(uri, nmUser);
-            comments = new PropertyImpl(uri, ncomments);
-            commentedSnip = new PropertyImpl(uri, ncommentedSnip);
-            value = new PropertyImpl(uri, nvalue);
-            mTime = new PropertyImpl(uri, nmTime);
-            attachments = new PropertyImpl(uri, nattachments);
-            snipLinks = new PropertyImpl(uri, nsnipLinks);
-            type = new PropertyImpl(uri, ntype);
-            oUser = new PropertyImpl(uri, noUser);
-            content = new PropertyImpl(uri, ncontent);
-            date = new PropertyImpl(uri, ndate);
-            contentType = new PropertyImpl(uri, ncontentType);
-            fileName = new PropertyImpl(uri, nfileName);
-            cTime = new PropertyImpl(uri, ncTime);
-            size = new PropertyImpl(uri, nsize);
-            name = new PropertyImpl(uri, nname);
-            cUser = new PropertyImpl(uri, ncUser);
-        } catch (Exception e) {
-            ErrorHelper.logInternalError("RDF", 1, e);
-        }
+  static String nComment = "Comment";
+  public static Resource Comment;
+  static String nSnip = "Snip";
+  public static Resource Snip;
+  static String nAttachment = "Attachment";
+  public static Resource Attachment;
+  static String nLabel = "Label";
+  public static Resource Label;
+  static String nmUser = "mUser";
+  public static Property mUser;
+  static String ncomments = "comments";
+  public static Property comments;
+  static String ncommentedSnip = "commentedSnip";
+  public static Property commentedSnip;
+  static String nvalue = "value";
+  public static Property value;
+  static String nmTime = "mTime";
+  public static Property mTime;
+  static String nattachments = "attachments";
+  public static Property attachments;
+  static String nsnipLinks = "snipLinks";
+  public static Property snipLinks;
+  static String ntype = "type";
+  public static Property type;
+  static String noUser = "oUser";
+  public static Property oUser;
+  static String ncontent = "content";
+  public static Property content;
+  static String ndate = "date";
+  public static Property date;
+  static String ncontentType = "contentType";
+  public static Property contentType;
+  static String nfileName = "fileName";
+  public static Property fileName;
+  static String ncTime = "cTime";
+  public static Property cTime;
+  static String nsize = "size";
+  public static Property size;
+  static String nname = "name";
+  public static Property name;
+  static String ncUser = "cUser";
+  public static Property cUser;
+
+  static {
+    try {
+      Comment = new ResourceImpl(uri, nComment);
+      Snip = new ResourceImpl(uri, nSnip);
+      Attachment = new ResourceImpl(uri, nAttachment);
+      Label = new ResourceImpl(uri, nLabel);
+      mUser = new PropertyImpl(uri, nmUser);
+      comments = new PropertyImpl(uri, ncomments);
+      commentedSnip = new PropertyImpl(uri, ncommentedSnip);
+      value = new PropertyImpl(uri, nvalue);
+      mTime = new PropertyImpl(uri, nmTime);
+      attachments = new PropertyImpl(uri, nattachments);
+      snipLinks = new PropertyImpl(uri, nsnipLinks);
+      type = new PropertyImpl(uri, ntype);
+      oUser = new PropertyImpl(uri, noUser);
+      content = new PropertyImpl(uri, ncontent);
+      date = new PropertyImpl(uri, ndate);
+      contentType = new PropertyImpl(uri, ncontentType);
+      fileName = new PropertyImpl(uri, nfileName);
+      cTime = new PropertyImpl(uri, ncTime);
+      size = new PropertyImpl(uri, nsize);
+      name = new PropertyImpl(uri, nname);
+      cUser = new PropertyImpl(uri, ncUser);
+    } catch (Exception e) {
+      ErrorHelper.logInternalError("RDF", 1, e);
     }
+  }
 }

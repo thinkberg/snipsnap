@@ -29,6 +29,7 @@ import org.snipsnap.app.Application;
 import org.snipsnap.user.User;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -58,6 +59,13 @@ public class Access {
     User user = Application.get().getUser();
     if (!user.isNonUser()) {
       incViewCount();
+//      preparation for better link statistics
+//      HttpSession session = request.getSession();
+//      if(session != null) {
+//        String lastSnip = (String)session.getAttribute("fromSnip");
+//        session.setAttribute("fromSnip", snipName);
+//      }
+
       String referrer = request.getHeader("REFERER");
       if (null != referrer) {
         // Decode URL to remove jsessionid for example

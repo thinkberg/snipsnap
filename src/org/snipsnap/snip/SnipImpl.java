@@ -99,7 +99,7 @@ public class SnipImpl implements Snip {
 
   public void handle(HttpServletRequest request) {
     access.handle(name, request);
-    SnipSpaceFactory.getInstance().delayedStrore((Snip) Aspects.getThis());
+    SnipSpaceFactory.getInstance().delayedStore((Snip) Aspects.getThis());
   }
 
   public Access getAccess() {

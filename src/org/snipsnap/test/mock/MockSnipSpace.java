@@ -115,7 +115,7 @@ public class MockSnipSpace extends MockObject implements SnipSpace {
   public void systemStore(Snip snip) {
   }
 
-  public void delayedStrore(Snip snip) {
+  public void delayedStore(Snip snip) {
   }
 
   public Snip create(String name, String content) {

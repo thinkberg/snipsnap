@@ -48,6 +48,7 @@ public class SnipRemoveServlet extends HttpServlet {
     Application app = Application.get();
     User user = app.getUser();
     String name = request.getParameter("name");
+    // TODO include check for current snip (see Access)
     if(user != null && user.isAdmin()) {
       SnipSpace space = SnipSpaceFactory.getInstance();
       Snip snip = space.load(name);

@@ -66,7 +66,7 @@ public class SnipSerializer {
    * Get an instance of the snip serializer.
    * @return the serializer
    */
-  public static SnipSerializer getInstance() {
+  public synchronized static SnipSerializer getInstance() {
     if(null == serializer) {
       serializer = new SnipSerializer();
     }

@@ -43,6 +43,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ByteArrayInputStream;
 import java.beans.XMLEncoder;
 
 /**
@@ -82,20 +83,25 @@ public class SnipSnapHandler extends XmlRpcSupport {
     return (null != user);
   }
 
-  public byte[] getBackup() throws IOException {
-    ByteArrayOutputStream backupStream = new ByteArrayOutputStream();
-    Document backup = XMLSnipExport.getBackupDocument();
-    StreamResult streamResult = new StreamResult(backupStream);
+  public byte[] exportDatabase() throws IOException {
+    ByteArrayOutputStream exportStream = new ByteArrayOutputStream();
+    Document exportDocument = XMLSnipExport.getBackupDocument();
+    StreamResult streamResult = new StreamResult(exportStream);
     TransformerFactory tf = SAXTransformerFactory.newInstance();
     try {
       Transformer serializer = tf.newTransformer();
       serializer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
       serializer.setOutputProperty(OutputKeys.INDENT, "yes");
-      serializer.transform(new DOMSource(backup), streamResult);
+      serializer.transform(new DOMSource(exportDocument), streamResult);
     } catch (Exception e) {
       e.printStackTrace();
     }
 
-    return backupStream.toByteArray();
+    return exportStream.toByteArray();
+  }
+
+  public void importDatabase(byte[] xmlData) throws IOException {
+//    ByteArrayInputStream importStream = new ByteArrayInputStream(xmlData);
+//    Document importDocument =
   }
 }

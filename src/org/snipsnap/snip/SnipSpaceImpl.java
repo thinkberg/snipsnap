@@ -284,7 +284,7 @@ public class SnipSpaceImpl implements SnipSpace {
    *
    * @param snip Snip to delay for storage
    */
-  public void delayedStrore(Snip snip) {
+  public void delayedStore(Snip snip) {
     //Logger.debug("delayedStore - "+snip.getName());
     Logger.debug("delayedStore");
     synchronized (delayed) {

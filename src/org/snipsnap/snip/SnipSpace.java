@@ -114,7 +114,7 @@ public interface SnipSpace  {
    *
    * @param snip Snip to delay for storage
    */
-  public void delayedStrore(Snip snip);
+  public void delayedStore(Snip snip);
 
   public Snip create(String name, String content);
 

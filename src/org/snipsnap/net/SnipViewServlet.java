@@ -26,13 +26,13 @@ package org.snipsnap.net;
 
 import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.user.User;
-import org.snipsnap.user.AuthenticationService;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.container.Components;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.SnipSpaceFactory;
+import org.snipsnap.user.AuthenticationService;
+import org.snipsnap.user.User;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -40,7 +40,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.Timestamp;
 
 /**
  * Load a snip to view.
@@ -50,7 +49,7 @@ import java.sql.Timestamp;
 public class SnipViewServlet extends HttpServlet {
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws IOException, ServletException {
+    throws IOException, ServletException {
 
     Configuration config = Application.get().getConfiguration();
     User user = Application.get().getUser();
@@ -68,11 +67,11 @@ public class SnipViewServlet extends HttpServlet {
       name = name.substring(1);
     }
     String encodedSpace = config.getEncodedSpace();
-    if(encodedSpace != null && encodedSpace.length() > 0) {
+    if (encodedSpace != null && encodedSpace.length() > 0) {
       name = name.replace(encodedSpace.charAt(0), ' ');
     }
     //System.out.println("name='"+name+"'");
-    
+
     // load snip and set attributes for request
     Snip snip = SnipSpaceFactory.getInstance().load(name);
 
@@ -96,7 +95,7 @@ public class SnipViewServlet extends HttpServlet {
       try {
         request.setAttribute(FileDownloadServlet.FILENAME, subname);
         RequestDispatcher dispatcher =
-            getServletContext().getNamedDispatcher("org.snipsnap.net.FileDownloadServlet");
+          getServletContext().getNamedDispatcher("org.snipsnap.net.FileDownloadServlet");
         dispatcher.forward(request, response);
         return;
       } catch (ServletException e) {
@@ -113,8 +112,8 @@ public class SnipViewServlet extends HttpServlet {
       } else {
         if ("snipsnap-notfound".equals(name)) {
           response.sendError(HttpServletResponse.SC_NOT_FOUND,
-              "Internal Error: could not find snipsnap-notfound page<br>"
-              + "This may indicate that either the installation has failed or the Database is corrupted.");
+                             "Internal Error: could not find snipsnap-notfound page."
+                             + "This may indicate that either the installation has failed or the Database is corrupted.");
           return;
         }
         response.sendRedirect(SnipLink.absoluteLink("/space/snipsnap-notfound?name=" + name));

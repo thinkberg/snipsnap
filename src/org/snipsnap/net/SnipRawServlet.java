@@ -30,6 +30,7 @@ import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.User;
 import org.snipsnap.user.AuthenticationService;
 import org.snipsnap.container.Components;
+import org.snipsnap.config.Configuration;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -62,7 +63,11 @@ public class SnipRawServlet extends HttpServlet {
       name = name.substring(1);
     }
 
-    name = name.replace('+', ' ');
+    Configuration config = Application.get().getConfiguration();
+    String encodedSpace = config.getEncodedSpace();
+    if (encodedSpace != null && encodedSpace.length() > 0) {
+      name = name.replace(encodedSpace.charAt(0), ' ');
+    }
     Snip snip = SnipSpaceFactory.getInstance().load(name);
 
     ServletOutputStream out = response.getOutputStream();
