@@ -87,18 +87,19 @@ public class Launcher {
 
       // append extra class path to manifest class path (after replacing separatorchar)
       if(extraClassPath != null && extraClassPath.length() > 0) {
-        manifestClassPath += " " + extraClassPath;
+        manifestClassPath += " " + extraClassPath.replace(':', ' ');
       }
 
       File directoryBase = new File(location.getFile()).getParentFile();
       StringBuffer classPath = new StringBuffer(location.getFile());
-      StringTokenizer tokenizer = new StringTokenizer(manifestClassPath, " \t"+File.separatorChar, false);
+      StringTokenizer tokenizer = new StringTokenizer(manifestClassPath, " \t"+File.pathSeparatorChar, false);
       while(tokenizer.hasMoreTokens()) {
         classPath.append(File.pathSeparatorChar);
         String file = tokenizer.nextToken();
         classPath.append(new File(directoryBase, file).getCanonicalPath());
       }
       System.setProperty("java.class.path", classPath.toString());
+      System.err.println("SnipSnapLauncher: CLASSPATH=" + classPath.toString());
     } catch (IOException e) {
       System.err.println("Warning: not running from a jar: make sure your CLASSPATH is set correctly.");
     }

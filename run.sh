@@ -6,4 +6,9 @@ fi
 if [ "$1" = "-admin" ]; then
   DBG="-Dlauncher.errlog=admin.log"
 fi
-java -Xmx128m -server $DBG -jar lib/snipsnap.jar $*
+if [ "$JAVA_HOME" != "" ]; then
+  JAVA=$JAVA_HOME/bin/java
+else
+  JAVA=java
+fi
+$JAVA -Xmx128m -server $DBG -jar lib/snipsnap.jar $*
