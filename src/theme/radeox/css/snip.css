@@ -57,6 +57,13 @@
   line-height:16px;
 }
 
+.snip-attachments {
+  float: right;
+  border: 1px solid black;
+  padding: 3px;
+  width: auto;
+}
+
 .snip-post-comments {
   margin-top: 20px;
   margin-bottom: 20px;
