@@ -1,6 +1,7 @@
 <%@ page import="org.snipsnap.snip.Snip,
                  java.util.Collection,
-                 java.util.Collections"%>
+                 java.util.Collections,
+                 org.radeox.util.Encoder"%>
  <%--
   ** Template for editing Snips.
   ** @author Matthias L. Jugel
@@ -39,15 +40,15 @@
     </script>
     <form class="form" name="f" method="post" action="exec/upload" enctype="multipart/form-data">
      <input name="name" type="hidden" value="<c:out value="${snip_name}"/>"/>
-     <input name="referer" type="hidden" value="<%= request.getHeader("REFERER") %>"/>
+     <input name="referer" type="hidden" value="<%= Encoder.escape(request.getHeader("REFERER")) %>"/>
      <table class="wiki-table" border="0" cellpaddin="0" cellspacing="0">
       <tr>
-       <s:check roles="Authenticated"><th><input id="all" type="checkbox" name="allChecked" onClick="return checkAll(this);"></th></s:check>
+       <s:check roles="Authenticated"><th><input id="all" type="checkbox" name="allChecked" onClick="return checkAll(this);"/></th></s:check>
        <th><fmt:message key="snip.attachments.file.name"/></th>
        <th><fmt:message key="snip.attachments.file.size"/></th>
        <th><fmt:message key="snip.attachments.file.date"/></th>
        <th><fmt:message key="snip.attachments.file.type"/></th>
-      <tr>
+      </tr>
       <c:forEach items="${snip.attachments.all}" var="attachment" varStatus="status" >
        <tr>
         <s:check roles="Authenticated"><td><input id="file<c:out value='${status.index}'/>" type="checkbox" name="attfile" value="<c:out value='${attachment.name}' escapeXml="true"/>"/></td></s:check>
@@ -70,7 +71,7 @@
           <input id="mimetype" name="mimetype" type="text" value="" length="10" maxlength="256"/>
           <br/>
           <input value="<fmt:message key="snip.attachments.upload"/>" name="upload" type="submit"/>
-          <input id="<fmt:message key="snip.attachments.delete"/>" value="Delete File(s)" name="delete" type="submit"/></br>
+          <input id="<fmt:message key="snip.attachments.delete"/>" name="delete" type="submit"/><br/>
         </s:check>
         <input value="<fmt:message key="dialog.back.to"><fmt:param value="${snip.name}"/></fmt:message>" name="cancel" type="submit"/>
        </td>
