@@ -228,7 +228,9 @@ public class SnipSpace implements LinkTester {
     List snips = new ArrayList();
 
     try {
-      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip FROM Snip ORDER by mTime DESC");
+      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip " +
+                                              " FROM Snip "+
+                                              " ORDER by mTime DESC");
 
       result = statement.executeQuery();
       Snip snip = null;
@@ -253,7 +255,9 @@ public class SnipSpace implements LinkTester {
     List snips = null;
 
     try {
-      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip FROM Snip WHERE cUser=?");
+      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip " +
+                                              " FROM Snip " +
+                                              " WHERE cUser=?");
       statement.setString(1, login);
 
       snips = find(statement);
@@ -273,7 +277,9 @@ public class SnipSpace implements LinkTester {
     List comments = null;
 
     try {
-      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip FROM Snip WHERE commentSnip=?");
+      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip " +
+                                              " FROM Snip " +
+                                              " WHERE commentSnip=?");
       statement.setString(1, parent.getName());
 
       comments = find(statement);
@@ -292,7 +298,9 @@ public class SnipSpace implements LinkTester {
     List children = null;
 
     try {
-      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip FROM Snip WHERE parentSnip=?");
+      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip " +
+                                              " FROM Snip " +
+                                              " WHERE parentSnip=?");
       statement.setString(1, parent.getName());
 
       children = find(statement);
@@ -311,7 +319,10 @@ public class SnipSpace implements LinkTester {
     List children = null;
 
     try {
-      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip FROM Snip WHERE name>=? and name<=? and parentSnip=? ORDER BY name DESC");
+      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip " +
+                                              " FROM Snip " +
+                                              " WHERE name>=? and name<=? and parentSnip=? " +
+                                              " ORDER BY name");
       statement.setString(1, start);
       statement.setString(2, end);
       statement.setString(3, "start");
@@ -333,7 +344,9 @@ public class SnipSpace implements LinkTester {
     Connection connection = ConnectionManager.getConnection();
 
     try {
-      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip FROM Snip WHERE name=?");
+      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip " +
+                                              " FROM Snip " +
+                                              " WHERE name=?");
       statement.setString(1, name);
 
       result = statement.executeQuery();
@@ -355,8 +368,9 @@ public class SnipSpace implements LinkTester {
     Connection connection = ConnectionManager.getConnection();
 
     try {
-      statement = connection.prepareStatement("UPDATE Snip " +
-                                              "SET name=?, content=?, cTime=?, mTime=?, cUser=?, mUser=?, parentSnip=?, commentSnip=? WHERE name=?");
+      statement = connection.prepareStatement("UPDATE Snip SET name=?, content=?, cTime=?, mTime=?, " +
+                                              " cUser=?, mUser=?, parentSnip=?, commentSnip=? " +
+                                              " WHERE name=?");
       statement.setString(1, snip.getName());
       statement.setString(2, snip.getContent());
       statement.setTimestamp(3, snip.getCTime());
@@ -402,7 +416,9 @@ public class SnipSpace implements LinkTester {
     snip.setMUser(login);
 
     try {
-      statement = connection.prepareStatement("INSERT INTO Snip (name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip) VALUES (?,?,?,?,?,?,?,?)");
+      statement = connection.prepareStatement("INSERT INTO Snip (name, content, cTime, mTime, " +
+                                              " cUser, mUser, parentSnip, commentSnip) " +
+                                              " VALUES (?,?,?,?,?,?,?,?)");
       statement.setString(1, name);
       statement.setString(2, content);
       statement.setTimestamp(3, cTime);
