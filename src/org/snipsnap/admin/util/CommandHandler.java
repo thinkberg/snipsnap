@@ -29,6 +29,7 @@ import org.snipsnap.admin.install.Authenticate;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.User;
+import org.snipsnap.server.AppServer;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -89,7 +90,10 @@ public class CommandHandler extends HttpServlet {
     Configuration config = (Configuration) session.getAttribute(ATT_CONFIG);
     if (null == config) {
       try {
-        config = new Configuration("conf/snipsnap.conf");
+        config = new Configuration();
+        Properties defaults = new Properties();
+        defaults.load(AppServer.class.getResourceAsStream("/conf/snipsnap.conf"));
+        config.load(defaults);
         config.setFile(new File(configFile));
         config.load();
       } catch (IOException e) {

@@ -185,7 +185,7 @@ public class Installer extends HttpServlet {
     }
 
     // create application root directory
-    File webAppRoot = new File(serverConfig.getProperty(Configuration.SERVER_WEBAPP_ROOT) + "/" + normalize(config.getName()));
+    File webAppRoot = new File(serverConfig.getProperty(Configuration.WEBAPP_ROOT) + "/" + normalize(config.getName()));
     writeMessage(out, "Creating web application directories ...");
     if (!webAppRoot.mkdirs()) {
       System.err.println("Installer: error creating applications root directory");

@@ -24,11 +24,12 @@
  */
 package org.snipsnap.config;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Properties;
-import java.lang.reflect.Proxy;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
 
 /**
  * A configuration object. Contains information about server and admin login.
@@ -41,15 +42,13 @@ public class Configuration {
 
   public final static String INIT_PARAM = "config";
 
-  public final static String SERVER_VERSION = "server.version";
-  public final static String SERVER_WEBAPP_ROOT = "server.webapp.root";
-  public final static String SERVER_ADMIN_PORT = "server.admin.port";
-  public final static String SERVER_ENCODING = "server.encoding";
-
-
-  public final static String ADMIN_LOGIN = "admin.login";
-  public final static String ADMIN_PASSWORD = "admin.password";
-  public final static String ADMIN_EMAIL = "admin.email";
+  public final static String VERSION = "snipsnap.server.version";
+  public final static String ENCODING = "snipsnap.server.encoding";
+  public final static String ADMIN_USER = "snipsnap.server.admin.user";
+  public final static String ADMIN_PASS = "snipsnap.server.admin.password";
+  public final static String ADMIN_PORT = "snipsnap.server.admin.port";
+  public final static String ADMIN_EMAIL = "snipsnap.server.admin.email";
+  public final static String WEBAPP_ROOT = "snipsnap.server.webapp.root";
 
   private File file = null;
 
@@ -97,7 +96,7 @@ public class Configuration {
   }
 
   public void load() throws IOException {
-    if(file != null) {
+    if (file != null) {
       load(file);
     } else {
       throw new IOException("no configuration file known, use load(File file)");
@@ -105,7 +104,7 @@ public class Configuration {
   }
 
   public void load(Properties properties) {
-     this.properties = properties;
+    this.properties = properties;
   }
 
   public void load(File configFile) throws IOException {
@@ -155,19 +154,19 @@ public class Configuration {
   }
 
   public void setAdminLogin(String login) {
-    properties.setProperty(ADMIN_LOGIN, login);
+    properties.setProperty(ADMIN_USER, login);
   }
 
   public String getAdminLogin() {
-    return properties.getProperty(ADMIN_LOGIN);
+    return properties.getProperty(ADMIN_USER);
   }
 
   public void setAdminPassword(String password) {
-    properties.setProperty(ADMIN_PASSWORD, password);
+    properties.setProperty(ADMIN_PASS, password);
   }
 
   public String getAdminPassword() {
-    return properties.getProperty(ADMIN_PASSWORD);
+    return properties.getProperty(ADMIN_PASS);
   }
 
 
@@ -180,9 +179,9 @@ public class Configuration {
   }
 
   public String getVersion() {
-    String version = System.getProperty("snipsnap." + SERVER_VERSION);
+    String version = System.getProperty("snipsnap." + VERSION);
     if (null == version) {
-      version = getProperty(SERVER_VERSION);
+      version = getProperty(VERSION);
     }
     return version;
   }

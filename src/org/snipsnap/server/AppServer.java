@@ -28,6 +28,7 @@ import org.mortbay.http.HttpListener;
 import org.mortbay.jetty.Server;
 import org.mortbay.util.InetAddrPort;
 import org.mortbay.util.MultiException;
+import org.snipsnap.config.Configuration;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -45,12 +46,6 @@ import java.util.Properties;
 public class AppServer {
   protected static Properties serverInfo = new Properties();
 
-  public final static String VERSION = "snipsnap.server.version";
-  public final static String ENCODING = "snipsnap.server.encoding";
-  public final static String ADMIN_USER = "snipsnap.server.admin.user";
-  public final static String ADMIN_PASS = "snipsnap.server.admin.password";
-  public final static String ADMIN_PORT = "snipsnap.server.admin.port";
-  public final static String WEBAPP_ROOT = "snipsnap.server.webapp.root";
 
   protected static Server jettyServer;
 
@@ -70,10 +65,10 @@ public class AppServer {
     } catch (IOException e) {
       // ignore
     }
-    System.setProperty(VERSION, serverInfo.getProperty(VERSION));
+    System.setProperty(Configuration.VERSION, serverInfo.getProperty(Configuration.VERSION));
 
     // output version and copyright information
-    System.out.println("SnipSnap " + serverInfo.getProperty(VERSION));
+    System.out.println("SnipSnap " + serverInfo.getProperty(Configuration.VERSION));
     BufferedReader copyrightReader = new BufferedReader(new InputStreamReader(AppServer.class.getResourceAsStream("/conf/copyright.txt")));
     String line = null;
     try {
@@ -93,7 +88,7 @@ public class AppServer {
     serverInfo = parseArguments(args, serverInfo);
 
     // set encoding of the JVM
-    String enc = serverInfo.getProperty(ENCODING, "UTF-8");
+    String enc = serverInfo.getProperty(Configuration.ENCODING, "UTF-8");
     System.setProperty("file.encoding", enc);
 
     // start jetty server and install web application
@@ -113,7 +108,7 @@ public class AppServer {
     }
 
     // now, after loading all possible services we will look for applications and start them
-    int errors = ApplicationLoader.loadApplications(serverInfo.getProperty(WEBAPP_ROOT));
+    int errors = ApplicationLoader.loadApplications(serverInfo.getProperty(Configuration.WEBAPP_ROOT));
     if (errors == 0 && ApplicationLoader.getApplicationCount() == 0) {
       System.out.println("ATTENTION: Server is still unconfigured!");
       System.out.println("ATTENTION: Point your browser to the following address:");
@@ -145,7 +140,7 @@ public class AppServer {
       // the applications root directory
       if ("-root".equals(args[i])) {
         if (args.length >= i + 1 && !args[i + 1].startsWith("-")) {
-          serverInfo.setProperty(WEBAPP_ROOT, args[i++]);
+          serverInfo.setProperty(Configuration.WEBAPP_ROOT, args[i++]);
         } else {
           usage("an argument is required for -root");
         }

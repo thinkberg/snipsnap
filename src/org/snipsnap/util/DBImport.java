@@ -27,30 +27,13 @@ package org.snipsnap.util;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.config.Configuration;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.Links;
 import org.snipsnap.snip.XMLSnipImport;
-import org.snipsnap.snip.label.Labels;
-import org.snipsnap.user.Roles;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
-import org.snipsnap.user.Permissions;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
-import java.io.IOException;
 import java.io.FileInputStream;
-import java.sql.Timestamp;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Iterator;
+import java.io.IOException;
 
 public class DBImport {
 
@@ -72,7 +55,7 @@ public class DBImport {
     AppConfiguration config = null;
     try {
       config = new AppConfiguration(
-        new File(serverConfig.getProperty(Configuration.SERVER_WEBAPP_ROOT) + args[0] + "/WEB-INF/application.conf"));
+        new File(serverConfig.getProperty(Configuration.WEBAPP_ROOT) + args[0] + "/WEB-INF/application.conf"));
     } catch (IOException e) {
       System.out.println("Unable to load application config: " + e);
       System.exit(-1);

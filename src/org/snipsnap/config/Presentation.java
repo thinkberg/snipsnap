@@ -62,7 +62,7 @@ public class Presentation {
     AppConfiguration config = null;
     try {
       config = new AppConfiguration(
-          new File(serverConfig.getProperty(Configuration.SERVER_WEBAPP_ROOT) + args[0] + "/application.conf"));
+          new File(serverConfig.getProperty(Configuration.WEBAPP_ROOT) + args[0] + "/application.conf"));
     } catch (IOException e) {
       Logger.warn("Unable to load application config: " + e);
       System.exit(-1);

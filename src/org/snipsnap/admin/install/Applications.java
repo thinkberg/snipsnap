@@ -50,7 +50,7 @@ public class Applications extends HttpServlet {
     HttpSession session = request.getSession(false);
     if (session != null) {
       Configuration config = (Configuration) session.getAttribute(CommandHandler.ATT_CONFIG);
-      String root = config.getProperty(Configuration.SERVER_WEBAPP_ROOT);
+      String root = config.getProperty(Configuration.WEBAPP_ROOT);
       Map applications = new HashMap();
       File dir = new File(root);
       if (dir.isDirectory()) {
