@@ -42,7 +42,7 @@ public class PSPContentRenderer implements ContentRenderer {
     ServletOutputStream out = response.getOutputStream();
 
     StringDirectedAcyclicGraphBuilder builder = new StringDirectedAcyclicGraphBuilder(content);
-    Renderer renderer = new MindMapRenderer();
+    Renderer renderer = new DirectedAcyclicGraphRenderer();
     renderer.render(builder.build(), out, new ImageContext());
   }
 }
