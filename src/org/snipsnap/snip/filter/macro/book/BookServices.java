@@ -26,6 +26,7 @@
 package org.snipsnap.snip.filter.macro.book;
 
 import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.filter.EscapeFilter;
 
 import java.io.*;
 import java.util.HashMap;
@@ -112,7 +113,7 @@ public class BookServices {
         writer.write((String) entry.getKey());
         writer.write("</a>");
         if (iterator.hasNext()) {
-          writer.write(" | ");
+          writer.write(" &#x7c; ");
         }
       }
       writer.write(")");

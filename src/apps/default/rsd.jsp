@@ -20,7 +20,7 @@
   <url><c:out value="${baseurl}"/></url>
   <siteidentifier></siteidentifier>
   <pathtoservice>/RPC2</pathtoservice>
-  <notes>Additional explanation here.</notes>
+  <notes>SnipSnap will support other SOAP and XML-RPC interfaces in the future, see http://snipsnap.org/space/Interfaces.</notes>
 </settings>
 </service>
 </rsd>

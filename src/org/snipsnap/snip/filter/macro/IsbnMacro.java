@@ -40,7 +40,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 public class IsbnMacro extends Macro {
-  public String getDescription() {
+   public String getDescription() {
     return "Generates links to book dealers or comparison services. Configuration is " +
      " read from ~~conf/bookservices.txt~~.";
   }
