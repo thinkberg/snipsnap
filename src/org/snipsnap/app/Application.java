@@ -27,6 +27,7 @@ package org.snipsnap.app;
 import org.snipsnap.user.User;
 
 import javax.servlet.http.HttpSession;
+import java.util.*;
 
 /**
  * The application object contains information about current users and other
@@ -35,6 +36,8 @@ import javax.servlet.http.HttpSession;
  * @version $Id$
  */
 public class Application {
+  private static Map currentUsers;
+
   private User user;
 
   private static ThreadLocal instance = new ThreadLocal() {
@@ -76,6 +79,33 @@ public class Application {
 
   public void setUser(User user) {
     this.user = user;
+  }
+
+  public void setUser(User user, HttpSession session) {
+    setUser(user);
+    if (this.user != null) {
+      Application.removeCurrentUser(session);
+    }
+    Application.addCurrentUser(user, session);
     return;
+  }
+
+  public static void addCurrentUser(User user, HttpSession session) {
+    if (null == currentUsers) {
+      currentUsers = new HashMap();
+    }
+    currentUsers.put(session,user);
+  }
+
+  public static Collection getCurrentUsers() {
+    return currentUsers.values();
+  }
+
+  public static void removeCurrentUser(HttpSession session) {
+    if (null == currentUsers) return;
+
+    if (currentUsers.containsKey(session)) {
+      currentUsers.remove(session);
+    }
   }
 }

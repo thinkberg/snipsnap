@@ -1,6 +1,7 @@
 <%@ page import="org.snipsnap.date.Month,
                  org.snipsnap.snip.Snip,
-                 org.snipsnap.snip.SnipSpace"%>
+                 org.snipsnap.snip.SnipSpace,
+                 org.snipsnap.app.Application"%>
  <%--
   ** Menu template
   ** @author Matthias L. Jugel
@@ -20,6 +21,13 @@
  <tr><td>
    <s:snip load="snipsnap-intro" id="intro"/>
    <c:out value="${intro.XMLContent}" escapeXml="false"/>
+ </td></tr>
+ <tr><td>
+  </b>Also here are</b>:<br/>
+  <% pageContext.setAttribute("users", Application.getCurrentUsers()); %>
+  <c:forEach var="user" items="${users}">
+   <a href="../space/<c:out value='${user.name}'/>"><c:out value="${user.name}"/></a><br/>
+  </c:forEach>
  </td></tr>
  <tr><td>
   <b>Recent Changes:</b><br>

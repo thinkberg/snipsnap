@@ -11,6 +11,10 @@
 <web-app>
   <display-name>SnipSnap</display-name>
 
+  <listener>
+    <listener-class>org.snipsnap.user.SessionListener</listener-class>
+  </listener>
+
   <servlet>
     <servlet-name>org.snipsnap.net.Layouter</servlet-name>
     <servlet-class>org.snipsnap.net.Layouter</servlet-class>

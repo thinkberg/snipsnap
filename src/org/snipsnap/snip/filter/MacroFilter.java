@@ -34,11 +34,11 @@
 
 package org.snipsnap.snip.filter;
 
+import org.apache.oro.text.regex.MatchResult;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.filter.macro.*;
 import org.snipsnap.snip.filter.regex.RegexTokenFilter;
-import org.apache.oro.text.regex.MatchResult;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,7 +52,7 @@ public class MacroFilter extends RegexTokenFilter {
     super("\\{([^:}]*):?(.*?)\\}(.*?)\\{(\\1)\\}", SINGLELINE);
     addRegex("\\{([^:}]*):?(.*?)\\}", "", MULTILINE);
 
-    synchronized(this) {
+    synchronized (this) {
       if (null == macros) {
         macros = new HashMap();
         add(new LinkMacro());
@@ -102,47 +102,61 @@ public class MacroFilter extends RegexTokenFilter {
     String content = null;
     String command = result.group(1);
 
+    // {$peng} are variables not macros.
+    if (!command.startsWith("$")) {
 //    for (int i=0; i<result.groups(); i++) {
 //      System.err.println(i+" "+result.group(i));
 //    }
 
-    // {tag} ... {tag}
-    if (result.group(1).equals(result.group(result.groups() - 1))) {
-      // {tag:1|2} ... {tag}
-      if (!"".equals(result.group(2))) {
-        params = split(result.group(2), "|");
-      }
-      content = result.group(3);
-    } else {
-      // {tag}
-      if (result.groups() > 1) {
-        params = split(result.group(2), "|");
-      }
-    }
-
-    // @DANGER: recursive calls may replace macros in included source code
-    try {
-      if (macros.containsKey(command)) {
-        Macro macro = (Macro) macros.get(command);
-        // recursively filter macros within macros
-        if (null != content) {
-          content = filter(content, snip);
+      // {tag} ... {tag}
+      if (result.group(1).equals(result.group(result.groups() - 1))) {
+        // {tag:1|2} ... {tag}
+        if (!"".equals(result.group(2))) {
+          params = split(result.group(2), "|");
         }
-        macro.execute(buffer, params, content, snip);
-      } else if (command.startsWith("!")) {
-        // @TODO including of other snips
-        Snip includeSnip = SnipSpace.getInstance().load(command.substring(1));
-        buffer.append(includeSnip.getContent());
-        return;
+        content = result.group(3);
       } else {
-        buffer.append(result.group(0));
-        return;
+        // {tag}
+        if (result.groups() > 1) {
+          params = split(result.group(2), "|");
+        }
       }
-    } catch (Exception e) {
-      System.err.println("unable to format macro: " + result.group(1));
-      e.printStackTrace();
-      buffer.append("?" + command + (result.length() > 1 ? ":" + result.group(2) : "") + "?");
-      return;
+
+      // @DANGER: recursive calls may replace macros in included source code
+      try {
+        if (macros.containsKey(command)) {
+          Macro macro = (Macro) macros.get(command);
+          // recursively filter macros within macros
+          if (null != content) {
+            content = filter(content, snip);
+          }
+          macro.execute(buffer, params, content, snip);
+        } else if (command.startsWith("!")) {
+          // @TODO including of other snips
+          Snip includeSnip = SnipSpace.getInstance().load(command.substring(1));
+          if (null != includeSnip) {
+            String included = includeSnip.getContent();
+            Filter paramFilter = new ParamFilter(params);
+            buffer.append(paramFilter.filter(included, null));
+          } else {
+            buffer.append(command.substring(1) + " not found.");
+          }
+          return;
+        } else {
+          buffer.append(result.group(0));
+          return;
+        }
+      } catch (Exception e) {
+        System.err.println("unable to format macro: " + result.group(1));
+        e.printStackTrace();
+        buffer.append("?" + command + (result.length() > 1 ? ":" + result.group(2) : "") + "?");
+        return;
+
+      }
+    } else {
+      buffer.append("<");
+      buffer.append(command.substring(1));
+      buffer.append(">");
     }
   }
 }

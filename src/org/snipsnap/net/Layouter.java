@@ -67,7 +67,7 @@ public class Layouter extends HttpServlet {
     cookie.setPath(request.getContextPath());
     cookie.setMaxAge(Integer.MAX_VALUE - 2);
     response.addCookie(cookie);
-    app.setUser(user);
+    app.setUser(user, session);
     session.setAttribute("app", app);
     session.setAttribute("space", SnipSpace.getInstance());
 
