@@ -109,7 +109,6 @@
         <include name="${jar}/${appname}-theme-*.jar"/>
         <include name="${jar}/${appname}-installer.war"/>
         <include name="${jar}/${appname}-utils.jar"/>
-        <include name="conf/snipsnap.conf"/>
         <include name="conf/db.conf"/>
         <include name="conf/jetty.conf"/>
         <include name="conf/romaji.properties"/>
