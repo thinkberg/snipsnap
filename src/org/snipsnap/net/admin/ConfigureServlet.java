@@ -128,6 +128,7 @@ public class ConfigureServlet extends HttpServlet {
   });
 
   private final static List HANDLERS = Arrays.asList(new String[]{
+    "org.snipsnap.net.admin.Maintenance",
     "org.snipsnap.net.admin.DatabaseExport",
     "org.snipsnap.net.admin.DatabaseImport",
     "org.snipsnap.net.admin.ManageSearchEngine",

@@ -47,9 +47,12 @@ public class ManageSearchEngine implements SetupHandler {
       final String appOid = (String) Application.get().getObject(Application.OID);
       Thread indexerThread = (Thread) indexerThreads.get(appOid);
       if (indexerThread != null && indexerThread.isAlive()) {
-        errors.put("config.search.running", "config.search.running");
+        if (request.getSession().getAttribute("running") == null) {
+          request.getSession().setAttribute("running", new HashMap());
+        }
         return errors;
       } else if (indexerThread != null) {
+        request.getSession().removeAttribute("running");
         indexerThreads.remove(appOid);
         indexerThread = null;
       }
@@ -61,6 +64,7 @@ public class ManageSearchEngine implements SetupHandler {
       };
       indexerThread.start();
       request.getSession().setAttribute("indexerThread", indexerThread);
+      request.getSession().setAttribute("running", new HashMap());
     }
 
     return errors;

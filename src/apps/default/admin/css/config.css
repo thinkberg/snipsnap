@@ -234,3 +234,18 @@ li.current-step {
 .users-even {
   background: #eeeeee;
 }
+
+.statusbar {
+  width: 200px;
+  border: 1px solid black;
+}
+
+.statusbar td {
+  width: 5px;
+  height: 10px;
+  background-color: #eeeeee;
+}
+
+.statusbar td.completed {
+  background-color: #999999;
+}

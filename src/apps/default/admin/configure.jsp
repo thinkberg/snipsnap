@@ -12,7 +12,10 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <c:if test="${not empty running}">
+      <meta http-equiv="refresh" content="2; URL=configure?step=<c:out value='${step}'/>"/>
+    </c:if>
     <title><fmt:message key="config.title"/> :: <fmt:message key="config.step.${step}"/></title>
     <link type="text/css" href="css/config.css" rel="STYLESHEET"/>
   </head>
