@@ -31,6 +31,8 @@ import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
+import org.snipsnap.user.AuthenticationService;
+import org.snipsnap.container.Components;
 
 /**
  * Utility base class for XML-RPC handlers.
@@ -64,8 +66,7 @@ public abstract class XmlRpcSupport implements XmlRpcHandler {
    */
 
   protected User authenticate(String username, String password) throws XmlRpcException {
-    UserManager um = UserManager.getInstance();
-    User user = um.authenticate(username, password);
+    User user = ((AuthenticationService) Components.getComponent(AuthenticationService.class)).authenticate(username, password);
     if (user != null) {
       Application.get().setUser(user);
       return user;

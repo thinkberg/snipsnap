@@ -2,6 +2,10 @@ package org.snipsnap.user;
 
 import org.snipsnap.snip.storage.UserStorage;
 
+import java.util.Random;
+import java.util.Map;
+import java.util.HashMap;
+
 /*
  * This file is part of "SnipSnap Wiki/Weblog".
  *
@@ -27,34 +31,28 @@ import org.snipsnap.snip.storage.UserStorage;
  * --LICENSE NOTICE--
  */
 
-public class AuthenticationService {
+public class PasswordService {
   private UserStorage storage;
+  private Map authKeys;
 
-  public AuthenticationService(UserStorage storage) {
+  public PasswordService(UserStorage storage) {
     this.storage = storage;
+    authKeys = new HashMap();
   }
 
-  public User authenticate(String login, String passwd) {
-    User user = storage.storageLoad(login);
+  public String getPassWordKey(User user) {
+    String key = Digest.getDigest(Integer.toString((new Random()).nextInt()));
+    authKeys.put(key, user);
+    return key;
+  }
 
-    //System.out.println("user: "+user);
-    //System.out.println("check: unencrypted: "+user.getPasswd().equals(passwd));
-    //System.out.println(passwd+"-"+Digest.getDigest(passwd)+"-"+user.getPasswd());
-    //System.out.println("check: encrypted: "+Digest.authenticate(passwd, user.getPasswd()));
-
-    //@TODO split authenticate and lastLogin
-    if (null != user &&
-        (user.getPasswd().equals(passwd) ||
-        Digest.authenticate(passwd, user.getPasswd()))) {
-      user.lastLogin();
+  public User changePassWord(String key, String passwd) {
+    User user = (User) authKeys.get(key);
+    if (null != user) {
+      user.setPasswd(passwd);
       storage.storageStore(user);
-      return user;
-    } else {
-      return null;
+      authKeys.remove(key);
     }
-  }
-
-  public boolean isAuthenticated(User user) {
-    return user != null && !(user.isGuest() || user.isNonUser());
+    return user;
   }
 }

@@ -29,6 +29,9 @@ import org.snipsnap.net.Layouter;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
+import org.snipsnap.user.AuthenticationService;
+import org.snipsnap.container.Components;
+import org.snipsnap.container.SessionService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -58,10 +61,13 @@ public class AdminServlet extends HttpServlet {
     Application app = Application.getInstance(session);
     User user = app.getUser();
     if (user == null) {
-      user = um.getUser(request, response);
+      SessionService service = (SessionService) Components.getComponent(SessionService.class);
+      user = service.getUser(request, response);
     }
 
-    if (um.isAuthenticated(user) && user.isAdmin() && request.getPathInfo() != null) {
+    AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
+
+    if (service.isAuthenticated(user) && user.isAdmin() && request.getPathInfo() != null) {
       session.setAttribute(ATT_USERMANAGER, um);
       session.setAttribute(ATT_CONFIG, app.getConfiguration());
       session.setAttribute(ATT_ADMIN, user);

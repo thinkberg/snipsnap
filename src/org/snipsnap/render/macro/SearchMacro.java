@@ -35,6 +35,8 @@ import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.UserManager;
+import org.snipsnap.user.AuthenticationService;
+import org.snipsnap.container.Components;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -115,10 +117,11 @@ public class SearchMacro extends Macro {
       } else {
         writer.write("Nothing found.");
       }
+      AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
 
       if (searchString != null && searchString.length() > 0 &&
           !SnipSpaceFactory.getInstance().exists(searchString) &&
-          UserManager.getInstance().isAuthenticated(Application.get().getUser())) {
+          service.isAuthenticated(Application.get().getUser())) {
         writer.write("<p>There is no snip with <b>");
         writer.write(searchString);
         writer.write("</b> , would you like to ");

@@ -29,6 +29,8 @@ import org.snipsnap.app.Application;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.UserManager;
+import org.snipsnap.user.AuthenticationService;
+import org.snipsnap.container.Components;
 
 /**
  * SnipLabel connects a Snip to another Snip (should it be possible to reference more than one Snip?)
@@ -87,9 +89,11 @@ public class SnipLabel extends BaseLabel {
 
   private StringBuffer getSnipLink(StringBuffer buffer, String name) {
     // @TODO: move this to SnipLink or Snip
+    AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
+
     if (SnipSpaceFactory.getInstance().exists(name)) {
       SnipLink.appendLink(buffer, name, name);
-    } else if (!UserManager.getInstance().isAuthenticated(Application.get().getUser())) {
+    } else if (!service.isAuthenticated(Application.get().getUser())) {
       buffer.append(name);
     } else {
       SnipLink.appendCreateLink(buffer, name);

@@ -1,3 +1,5 @@
+package org.snipsnap.net;
+
 /*
  * This file is part of "SnipSnap Wiki/Weblog".
  *
@@ -22,12 +24,12 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-package org.snipsnap.net;
 
 import org.snipsnap.app.Application;
 import org.snipsnap.snip.*;
 import org.snipsnap.user.User;
-import org.snipsnap.user.UserManager;
+import org.snipsnap.user.AuthenticationService;
+import org.snipsnap.container.Components;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -67,7 +69,9 @@ public class PostStoreServlet extends HttpServlet {
       if (session != null) {
         app = Application.getInstance(session);
         User user = app.getUser();
-        if (UserManager.getInstance().isAuthenticated(user)) {
+        AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
+
+        if (service.isAuthenticated(user)) {
           Blog blog = SnipSpaceFactory.getInstance().getBlog();
           if (null == title || "".equals(title)) {
             blog.post(content);

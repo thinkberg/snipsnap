@@ -27,6 +27,7 @@ package org.snipsnap.user;
 
 import org.snipsnap.snip.Ownable;
 import org.snipsnap.snip.Snip;
+import org.snipsnap.container.Components;
 
 /**
  * Security manager for checking permission, roles etc.
@@ -44,7 +45,9 @@ public class Security {
    */
   public static Roles getRoles(User user) {
     Roles userRoles = new Roles(user.getRoles());
-    if (UserManager.getInstance().isAuthenticated(user)) {
+    AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
+
+    if (service.isAuthenticated(user)) {
       userRoles.add(Roles.AUTHENTICATED);
     }
     return userRoles;
@@ -60,7 +63,7 @@ public class Security {
   public static Roles getRoles(User user, Snip object) {
     Roles roles = getRoles(user);
     if (object instanceof Ownable) {
-      Ownable o = (Ownable) object;
+      Ownable o = object;
       if (o.isOwner(user)) {
         roles.add(Roles.OWNER);
       }

@@ -69,6 +69,7 @@ public class SnipSpaceImpl implements SnipSpace {
     storage = new JDBCSnipStorage();
     blogs = new HashMap();
 
+    // @TODO resolve this with components from PicoContainer
     // Fully fill the cache with all Snips
     if ("full".equals(Application.get().getConfiguration().getCache())) {
       Logger.debug("Cache strategy is: keep full, using MemorySnipStorage and QuerySnipStorage");

@@ -39,6 +39,8 @@ import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.UserManager;
+import org.snipsnap.user.AuthenticationService;
+import org.snipsnap.container.Components;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -70,7 +72,9 @@ public class SnipRenderEngine extends BaseRenderEngine
   }
 
   public boolean showCreate() {
-    return UserManager.getInstance().isAuthenticated(Application.get().getUser());
+    //@TODO this could become a component
+    AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
+    return service.isAuthenticated(Application.get().getUser());
   }
 
   public void appendLink(StringBuffer buffer, String name, String view, String anchor) {

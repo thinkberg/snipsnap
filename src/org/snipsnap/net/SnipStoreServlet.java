@@ -27,7 +27,8 @@ package org.snipsnap.net;
 import org.snipsnap.app.Application;
 import org.snipsnap.snip.*;
 import org.snipsnap.user.User;
-import org.snipsnap.user.UserManager;
+import org.snipsnap.user.AuthenticationService;
+import org.snipsnap.container.Components;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -62,7 +63,9 @@ public class SnipStoreServlet extends HttpServlet {
       if (session != null) {
         app = Application.getInstance(session);
         User user = app.getUser();
-        if (UserManager.getInstance().isAuthenticated(user)) {
+        AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
+
+        if (service.isAuthenticated(user)) {
           if (snip != null) {
             snip.setContent(content);
             space.store(snip);

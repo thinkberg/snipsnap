@@ -30,7 +30,8 @@ import org.snipsnap.snip.SnipFormatter;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.User;
-import org.snipsnap.user.UserManager;
+import org.snipsnap.user.AuthenticationService;
+import org.snipsnap.container.Components;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -68,7 +69,9 @@ public class CommentStoreServlet extends HttpServlet {
       if (session != null) {
         app = Application.getInstance(session);
         User user = app.getUser();
-        if (snip != null && UserManager.getInstance().isAuthenticated(user)) {
+        AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
+
+        if (snip != null && service.isAuthenticated(user)) {
           snip.getComments().postComment(content);
         } else {
           response.sendError(HttpServletResponse.SC_FORBIDDEN);

@@ -28,6 +28,9 @@ import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
+import org.snipsnap.user.AuthenticationService;
+import org.snipsnap.container.Components;
+import org.snipsnap.container.SessionService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -54,7 +57,7 @@ public class LoginServlet extends HttpServlet {
 
     if (request.getParameter("cancel") == null) {
       UserManager um = UserManager.getInstance();
-      User user = um.authenticate(login, password);
+      User user = ((AuthenticationService) Components.getComponent(AuthenticationService.class)).authenticate(login, password);
       if (Application.getCurrentUsers().contains(user)) {
         Application.getCurrentUsers().remove(user);
       }
@@ -72,7 +75,8 @@ public class LoginServlet extends HttpServlet {
       Application app = Application.getInstance(session);
       app.setUser(user, session);
 
-      um.setCookie(request, response, user);
+      SessionService service = (SessionService) Components.getComponent(SessionService.class);
+      service.setCookie(request, response, user);
       session.setAttribute("app", app);
     }
 
@@ -89,7 +93,8 @@ public class LoginServlet extends HttpServlet {
 
     if ("true".equals(request.getParameter("logoff"))) {
       HttpSession session = request.getSession(true);
-      UserManager.getInstance().removeCookie(request, response);
+      SessionService service = (SessionService) Components.getComponent(SessionService.class);
+      service.removeCookie(request, response);
       session.invalidate();
     } else if ("true".equals(request.getParameter("timeout"))) {
       HttpSession session = request.getSession(true);

@@ -28,7 +28,8 @@ import org.snipsnap.app.Application;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.User;
-import org.snipsnap.user.UserManager;
+import org.snipsnap.user.AuthenticationService;
+import org.snipsnap.container.Components;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -47,9 +48,10 @@ public class SnipRawServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
 
-    UserManager um = UserManager.getInstance();
     User user = Application.get().getUser();
-    if (um.isAuthenticated(user)) {
+    AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
+
+    if (service.isAuthenticated(user)) {
       user.lastAccess();
     }
 

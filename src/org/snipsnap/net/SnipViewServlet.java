@@ -30,8 +30,9 @@ import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.User;
-import org.snipsnap.user.UserManager;
+import org.snipsnap.user.AuthenticationService;
 import org.snipsnap.config.Configuration;
+import org.snipsnap.container.Components;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -51,9 +52,10 @@ public class SnipViewServlet extends HttpServlet {
       throws IOException, ServletException {
 
     Configuration config = Application.get().getConfiguration();
-    UserManager um = UserManager.getInstance();
     User user = Application.get().getUser();
-    if (um.isAuthenticated(user)) {
+    AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
+
+    if (service.isAuthenticated(user)) {
       user.lastAccess();
     }
 

@@ -28,6 +28,9 @@ import org.snipsnap.app.Application;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
+import org.snipsnap.user.PasswordService;
+import org.snipsnap.container.Components;
+import org.snipsnap.container.SessionService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -58,7 +61,8 @@ public class ChangePasswordServlet extends HttpServlet {
       UserManager um = UserManager.getInstance();
       User user;
       if (null != password1 && password1.equals(password2)) {
-        user = um.changePassWord(key, password1);
+        PasswordService passwordService = (PasswordService) Components.getComponent(PasswordService.class);
+        user = passwordService.changePassWord(key, password1);
       } else {
         request.setAttribute("error", "Passwords do not match.");
         RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/changepass.jsp");
@@ -75,7 +79,8 @@ public class ChangePasswordServlet extends HttpServlet {
         app.setUser(user, session);
         session.setAttribute("app", app);
 
-        um.setCookie(request, response, user);
+        SessionService service = (SessionService) Components.getComponent(SessionService.class);
+        service.setCookie(request, response, user);
         response.sendRedirect(SnipLink.absoluteLink("/space/" + SnipLink.encode(user.getLogin())));
       } else {
         request.setAttribute("error", "Your reset key has been manipulated. Try again, please.");

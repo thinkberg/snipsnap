@@ -29,6 +29,8 @@ import org.snipsnap.config.Configuration;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
+import org.snipsnap.container.SessionService;
+import org.snipsnap.container.Components;
 import org.radeox.util.logging.Logger;
 
 import javax.servlet.*;
@@ -107,10 +109,10 @@ public class InitFilter implements Filter {
     }
 
     // check for a logged in user
-    UserManager um = UserManager.getInstance();
     User user = app.getUser();
     if (user == null) {
-      user = um.getUser(request, (HttpServletResponse) response);
+      SessionService service = (SessionService) Components.getComponent(SessionService.class);
+      user = service.getUser(request, (HttpServletResponse) response);
     }
 
     app.setUser(user, session);

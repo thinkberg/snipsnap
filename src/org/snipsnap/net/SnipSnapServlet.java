@@ -28,6 +28,8 @@ import org.snipsnap.app.Application;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
+import org.snipsnap.container.SessionService;
+import org.snipsnap.container.Components;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -47,11 +49,12 @@ public class SnipSnapServlet extends HttpServlet {
     // get or create session and application object
     HttpSession session = request.getSession(true);
     Application app = Application.getInstance(session);
-    UserManager um = UserManager.getInstance();
+
+    SessionService service = (SessionService) Components.getComponent(SessionService.class);
 
     User user = app.getUser();
     if (user == null) {
-      user = um.getUser(request, response);
+      user = service.getUser(request, response);
     }
 
     app.setUser(user, session);

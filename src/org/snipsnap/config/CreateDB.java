@@ -33,6 +33,8 @@ import org.snipsnap.snip.storage.JDBCUserStorage;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
+import org.snipsnap.user.AuthenticationService;
+import org.snipsnap.container.Components;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -82,7 +84,7 @@ public class CreateDB {
     SnipSpaceFactory.removeInstance();
     UserManager.removeInstance();
 
-    User admin = UserManager.getInstance().authenticate(config.getAdminLogin(),
+    User admin = ((AuthenticationService) Components.getComponent(AuthenticationService.class)).authenticate(config.getAdminLogin(),
                                                         config.getAdminPassword());
     Application app = Application.get();
     app.setUser(admin);
@@ -103,7 +105,7 @@ public class CreateDB {
     SnipSpaceFactory.removeInstance();
     UserManager.removeInstance();
 
-    User admin = UserManager.getInstance().authenticate(config.getAdminLogin(),
+    User admin = ((AuthenticationService) Components.getComponent(AuthenticationService.class)).authenticate(config.getAdminLogin(),
                                                         config.getAdminPassword());
     Application app = Application.get();
     app.setUser(admin);

@@ -28,6 +28,7 @@ package org.snipsnap.container;
 import picocontainer.Container;
 import nanocontainer.StringRegistrationNanoContainer;
 import nanocontainer.StringRegistrationNanoContainerImpl;
+import org.snipsnap.user.PasswordService;
 
 public class Components {
   private static Container container;
@@ -41,6 +42,7 @@ public class Components {
         c.registerComponent("org.snipsnap.snip.storage.JDBCUserStorage");
         c.registerComponent("org.snipsnap.user.UserManager");
         c.registerComponent("org.snipsnap.user.AuthenticationService");
+        c.registerComponent("org.snipsnap.user.PasswordService");
         c.start();
       } catch (Exception e) {
         e.printStackTrace();

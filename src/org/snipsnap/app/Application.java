@@ -31,6 +31,8 @@ import org.snipsnap.notification.NotificationService;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
+import org.snipsnap.user.AuthenticationService;
+import org.snipsnap.container.Components;
 
 import javax.servlet.http.HttpSession;
 import java.util.*;
@@ -188,9 +190,10 @@ public class Application {
     if (null == currentUsers) { return; }
 
     if (currentUsers.containsKey(session)) {
-      UserManager um = UserManager.getInstance();
       User user = (User) currentUsers.get(session);
-      if (um.isAuthenticated(user)) {
+      AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
+
+      if (service.isAuthenticated(user)) {
         Logger.debug("Removing user from session: " + user.getLogin());
         user.setLastLogout(user.getLastAccess());
         UserManager.getInstance().systemStore(user);

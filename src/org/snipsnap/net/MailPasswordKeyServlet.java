@@ -29,7 +29,9 @@ import org.snipsnap.config.Configuration;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
+import org.snipsnap.user.PasswordService;
 import org.snipsnap.util.mail.Mail;
+import org.snipsnap.container.Components;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -64,7 +66,8 @@ public class MailPasswordKeyServlet extends HttpServlet {
         return;
       }
 
-      String key = um.getPassWordKey(user);
+      PasswordService passwordService = (PasswordService) Components.getComponent(PasswordService.class);
+      String key = passwordService.getPassWordKey(user);
       Configuration configuration = Application.get().getConfiguration();
       String receiver = user.getEmail();
       if (receiver != null && receiver.length() > 0) {
