@@ -374,7 +374,7 @@ public class SnipImpl implements Snip {
   public String getLink() {
     return SnipLink.createLink(this.name);
   }
-
+                  C
   public String getAttachmentString() {
     StringBuffer tmp = new StringBuffer();
     Iterator it = attachments.iterator();
@@ -398,13 +398,14 @@ public class SnipImpl implements Snip {
   public String toXML() {
     //long start = Application.get().start();
     Container container = Components.getContainer();
+    RenderEngine engine = (RenderEngine) container.getComponent(RenderEngine.class);
 
     RenderContext context = new SnipRenderContext(
         (Snip) Aspects.getThis(),
         (SnipSpace) container.getComponent(SnipSpace.class));
     context.setParameters(Application.get().getParameters());
 
-    RenderEngine engine = (RenderEngine) container.getComponent(RenderEngine.class);
+    // should the engine be set by the engine to the context?
     String xml = engine.render(content, context);
     //Logger.debug(getName() + " is cacheable: " + context.isCacheable());
     //String xml = SnipFormatter.toXML(this, getContent());

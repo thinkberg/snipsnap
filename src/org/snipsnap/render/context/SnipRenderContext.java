@@ -25,9 +25,7 @@
 
 package org.snipsnap.render.context;
 
-import org.radeox.engine.RenderEngine;
 import org.radeox.engine.context.BaseRenderContext;
-import org.snipsnap.render.SnipRenderEngine;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 
@@ -44,12 +42,9 @@ public class SnipRenderContext extends BaseRenderContext {
   private Snip snip;
   private SnipSpace space;
 
-  private final static RenderEngine engine = new SnipRenderEngine();
-
   public SnipRenderContext(Snip snip, SnipSpace space) {
     this.space = space;
     this.snip = snip;
-    setRenderEngine(engine);
   }
 
   /**

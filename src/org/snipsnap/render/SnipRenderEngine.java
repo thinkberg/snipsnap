@@ -38,6 +38,7 @@ import org.snipsnap.serialization.StringBufferWriter;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpaceFactory;
+import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.user.AuthenticationService;
 import org.snipsnap.container.Components;
@@ -56,25 +57,26 @@ import java.io.Writer;
 public class SnipRenderEngine extends BaseRenderEngine
     implements WikiRenderEngine, IncludeRenderEngine, ImageRenderEngine {
 
+  private SnipSpace space;
+  private AuthenticationService authService;
+
+  public SnipRenderEngine(AuthenticationService authService) {
+    this.authService = authService;
+    // DOES NOT WORK BECAUSE OF ASPECTS
+//    this.space = space;
+  }
+
   public String getName() {
     return "snipsnap";
   }
 
-  // Register this RenderEngine with the EngineManager manager
-  // This enables the use without services file just by
-  // calling Class.forName("org.snipsnap.render.SnipRenderEngine")
-  static {
-    org.radeox.EngineManager.registerEngine(new SnipRenderEngine());
-  }
-
-  public boolean exists(String name) {
+   public boolean exists(String name) {
     return SnipSpaceFactory.getInstance().exists(name);
   }
 
   public boolean showCreate() {
     //@TODO this could become a component
-    AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
-    return service.isAuthenticated(Application.get().getUser());
+    return authService.isAuthenticated(Application.get().getUser());
   }
 
   public void appendLink(StringBuffer buffer, String name, String view, String anchor) {
@@ -116,6 +118,7 @@ public class SnipRenderEngine extends BaseRenderEngine
     init();
     FilterContext filterContext = new SnipFilterContext(((SnipRenderContext) context).getSnip());
     filterContext.setRenderContext(context);
+    context.setRenderEngine(this);
     return fp.filter(content, filterContext);
   }
 }
