@@ -216,6 +216,6 @@ public class AppConfiguration extends Configuration {
   }
 
   public boolean allowExternalImages() {
-    return allow(AppConfiguration.PERM_WEBLOGS_PING);
+    return allow(AppConfiguration.PERM_EXTERNAL_IMAGES);
   }
 }
