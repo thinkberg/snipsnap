@@ -28,14 +28,14 @@ package org.snipsnap.render.context;
 import org.radeox.api.engine.context.RenderContext;
 import org.radeox.engine.context.BaseRenderContext;
 import org.snipsnap.app.Application;
+import org.snipsnap.container.Components;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.container.Components;
 
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.HashMap;
 
 /**
  * SnipRenderContext implements RenderContext and is used to
@@ -49,6 +49,7 @@ import java.util.HashMap;
 public class SnipRenderContext extends BaseRenderContext {
   public static final String LANGUAGE_BUNDLE = "SnipRenderContext.language_bundle";
   public static final String HTTP_REQUEST = "SnipRenderContext.request";
+  public static final String HTTP_PARAMS = "SnipRenderContext.params";
   public static final String USER = "SnipRenderContext.user";
   public static final String SNIP = "SnipRenderContext.snip";
   public static final String CONTAINER = "SnipRenderContext.container";
@@ -89,19 +90,20 @@ public class SnipRenderContext extends BaseRenderContext {
     this.space = space;
   }
 
-   private void initAttributes() {
+  private void initAttributes() {
     attributes = new HashMap();
     attributes.put(SNIP, snip);
     attributes.put(USER, Application.get().getUser());
     attributes.put(CONTAINER, Components.getContainer());
-    attributes.put(HTTP_REQUEST, ((Map) Application.get().getParameters()).get("request"));
+    attributes.put(HTTP_REQUEST, Application.get().getParameters().get("request"));
+    attributes.put(HTTP_PARAMS, Application.get().getParameters());
   }
 
   public void setAttribute(Object key, Object value) {
     if (null == attributes) {
       initAttributes();
     }
-    attributes.put(key,value);
+    attributes.put(key, value);
   }
 
   public Object getAttribute(Object key) {
