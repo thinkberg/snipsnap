@@ -1,0 +1,18 @@
+欢迎进入 SnipSnap
+您现在就可以登录，增加或者编辑您的第一篇帖子。
+在菜单栏里有 __发表 blog__ 的链接。
+您可以参看 [snipsnap-help]，获得如何格式化一段文本帮助。
+用中括号"\[\]"括起一个词，将创建一个页面链接。
+在一个词的前后均添加两个下划线"\_\_"可以使其成为 
+__粗体__ 显示，而两个波浪线"\~\~" 则使它变成 ~~斜体~~。
+直接使用 URL,如 http://snipsnap.org 或 
+这样的格式\{link:Name|url\}. 
+就可以创建一个到外网(internet)的链接。
+当使用第二种格式时, 将在页面上显示 Name. 比如  
+\{link:SnipSnap|http://snipsnap.org\} 就将在页面上显示 
+{link:SnipSnap|http://snipsnap.org}
+
+Pinging weblogs.com 可能已经打开。
+{link:FAQ|http://snipsnap.org/space/FAQ} 解释了如何打开和关闭 ping 
+选项.
+
