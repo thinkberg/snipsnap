@@ -49,6 +49,10 @@ public class AppConfiguration extends Configuration {
   public final static String APP_DOMAIN = "app.domain";
   public final static String APP_MAILHOST = "app.mail.host";
   public final static String APP_MAILDOMAIN = "app.mail.domain";
+  public final static String APP_MAILBLOGPASSWD = "app.mailblog.password";
+  public final static String APP_POP3HOST = "app.pop3.host";
+  public final static String APP_POP3USER = "app.pop3.user";
+  public final static String APP_POP3PASSWD = "app.pop3.password";
   public final static String APP_TAGLINE = "app.tagline";
   public final static String APP_LOGO = "app.logo";
   public final static String APP_LOGGER = "app.logger";
@@ -225,6 +229,22 @@ public class AppConfiguration extends Configuration {
 
   public String getMailDomain() {
     return getProperty(APP_MAILDOMAIN);
+  }
+
+  public String getMailBlogPassword() {
+    return getProperty(APP_MAILBLOGPASSWD);
+  }
+
+  public String getPop3Password() {
+    return getProperty(APP_POP3PASSWD);
+  }
+
+  public String getPop3User() {
+    return getProperty(APP_POP3USER);
+  }
+
+  public String getPop3Host() {
+    return getProperty(APP_POP3HOST);
   }
 
   public void setJDBCURL(String url) {
