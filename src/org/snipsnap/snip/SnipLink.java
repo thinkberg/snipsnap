@@ -43,11 +43,11 @@ public class SnipLink {
   }
 
   public static StringBuffer appendLink(StringBuffer buffer, String name, String view) {
-    buffer.append(" <a href=\"/space/");
+    buffer.append("<a href=\"/space/");
     buffer.append(name);
     buffer.append("\">");
     buffer.append(view);
-    buffer.append("</a> ");
+    buffer.append("</a>");
     return buffer;
   }
 }

@@ -91,10 +91,11 @@ public class Modified {
    */
   public String toString() {
     StringBuffer buffer = new StringBuffer();
-    buffer.append("Created by");
+    buffer.append("Created by ");
     SnipLink.appendLink(buffer, cUser);
-    buffer.append("Last Edited by");
+    buffer.append(". Last edited by ");
     SnipLink.appendLink(buffer, mUser);
+    buffer.append(" ");
     buffer.append(getNiceTime(mTime));
     return buffer.toString();
   }

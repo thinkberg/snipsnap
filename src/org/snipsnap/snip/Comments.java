@@ -108,7 +108,7 @@ public class Comments {
     SnipLink.appendLink(buffer, "comments-" + snip.getName(), StringUtil.plural(getCount(), "comment"));
 
     if (getCount() > 0) {
-      buffer.append("(by ");
+      buffer.append(" (by ");
       appendUserString(buffer);
       buffer.append(")");
     }
@@ -142,5 +142,9 @@ public class Comments {
   public int getCount() {
     init();
     return comments.size();
+  }
+
+  public String toString() {
+    return getCommentString();
   }
 }

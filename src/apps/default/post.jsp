@@ -1,15 +1,12 @@
 <!--
-  ** Snip display template.
+  ** weblog post template.
   ** @author Matthias L. Jugel
   ** @version $Id$
   -->
 
-<jsp:useBean id="user" scope="request" class="com.neotis.jsp.UserBean" >
-  <jsp:setProperty name="user" property="session" value="<%= session %>"/>
-</jsp:useBean>
+<%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %>
 
-
-<% if(user.isAuthenticated()) { %>
+<s:check roles="Authenticated">
  <h1 class="header">Post To Weblog</h1>
  <form method="POST" action="/exec/storepost">
   <input name="post" type="hidden" value="weblog">
@@ -19,6 +16,8 @@
   <input value="Cancel" name="cancel" type="submit">
   <input value="Post" name="save" type="submit">
  </form>
-<% } else { %>
- <a href="/exec/login">Please login!</a>
-<% } %>
+</s:check>
+
+<s:check roles="Authenticaed" invert="true">
+ <a href="/exec/login.jsp">Please login!</a>
+</s:check>
