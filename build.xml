@@ -359,7 +359,7 @@
   </target>
 
   <!-- create web archive of the template application -->
-  <target depends="make-edittest-jsp,jsp-jar" description="build template war" name="snipsnap-war">
+  <target depends="jsp-jar" description="build template war" name="snipsnap-war">
     <mkdir dir="${target}/webapp"/>
     <copy todir="${target}/webapp">
       <fileset dir="${src}/apps/default">
