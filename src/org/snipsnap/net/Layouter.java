@@ -39,6 +39,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Calendar;
+import java.net.URLDecoder;
 
 /**
  * Layouter and main handler for web sites.
@@ -74,7 +75,7 @@ public class Layouter extends HttpServlet {
     session.setAttribute("app", app);
     session.setAttribute("space", SnipSpace.getInstance());
 
-    String layout = request.getPathInfo();
+    String layout = URLDecoder.decode(request.getPathInfo(), "iso-8869-1");
     if(null == layout || "/".equals(layout)) {
       response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));
       return;

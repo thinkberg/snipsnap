@@ -20,7 +20,7 @@
   <b>Recent Changes:</b><br>
   <!-- replace this with a JSTL tag ala  s:recent/> -->
   <c:forEach var="snip" items="${space.changed}">
-   <a href="../space/<c:out value='${snip.name}'/>"><c:out value="${snip.name}"/></a><br/>
+   <a href="../space/<c:out value='${snip.nameEncoded}'/>"><c:out value="${snip.name}"/></a><br/>
   </c:forEach>
  </td></tr>
  <tr><td>

@@ -33,6 +33,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.net.URLEncoder;
 
 /**
  * Central class for snips.
@@ -201,6 +202,14 @@ public class Snip implements Ownable {
 
   public String getName() {
     return name;
+  }
+
+  public String getNameEncoded() {
+    try {
+      return URLEncoder.encode(getName(), "iso-8859-1");
+    } catch(Exception e) {
+      return getName();
+    }
   }
 
   public void setName(String name) {

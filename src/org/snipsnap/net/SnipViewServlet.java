@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.net.URLDecoder;
 
 /**
  * Load a snip to view.
@@ -54,6 +55,8 @@ public class SnipViewServlet extends HttpServlet {
     } else {
       name = name.substring(1);
     }
+    name = URLDecoder.decode(name, "iso-8859-1");
+    System.err.println(name);
 
     request.setAttribute("snip", SnipSpace.getInstance().load(name));
     RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/snip.jsp");
