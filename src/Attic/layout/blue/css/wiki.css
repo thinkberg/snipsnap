@@ -76,8 +76,8 @@ img.float-right {
   margin-bottom: 4px;
   padding: 5px 5px 5px 5px;
   color: inherit;
-  background-color: #F0F0F0;
-  border: 1px dashed #003366;
+  background-color: #eeeeee;
+  border: 1px dotted #003366;
   font-family: courier, courier new, monospace;
   font-size: 12px;
   line-height: 100%;
