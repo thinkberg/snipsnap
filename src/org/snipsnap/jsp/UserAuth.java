@@ -30,10 +30,13 @@ import com.neotis.user.Security;
 import com.neotis.user.User;
 
 import javax.servlet.jsp.JspTagException;
+import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.jstl.core.ConditionalTagSupport;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
+
+import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
 
 
 public class UserAuth extends ConditionalTagSupport {
@@ -41,6 +44,14 @@ public class UserAuth extends ConditionalTagSupport {
   protected Snip snip;
 
   protected boolean invertCheck = false;
+
+  public void setSnip(String snip) {
+    try {
+      this.snip = (Snip)ExpressionEvaluatorManager.evaluate("snip", snip, Snip.class, this, pageContext);
+    } catch (JspException e) {
+      System.err.println("unable to evaluate expression: "+e);
+    }
+  }
 
   public void setRoles(String roles) {
     StringTokenizer tok = new StringTokenizer(roles, ":,");
@@ -51,9 +62,6 @@ public class UserAuth extends ConditionalTagSupport {
     }
   }
 
-  public void setSnip(Snip snip) {
-    this.snip = snip;
-  }
 
   public void setInvert(Boolean value) {
     invertCheck = value.booleanValue();

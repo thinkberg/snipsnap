@@ -265,4 +265,8 @@ public class Snip implements Ownable {
   public String toXML() {
     return SnipFormatter.toXML(this, getContent());
   }
+
+  public String getXMLContent() {
+    return toXML();
+  }
 }

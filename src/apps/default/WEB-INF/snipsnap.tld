@@ -18,7 +18,6 @@
     </attribute>
     <attribute>
       <name>snip</name>
-      <rtexprvalue>true</rtexprvalue>
       <type>com.neotis.snip.Snip</type>
       <description>snip to check roles against</description>
     </attribute>
@@ -50,6 +49,19 @@
       <name>invert</name>
       <type>java.lang.Boolean</type>
       <description>invert the check</description>
+    </attribute>
+  </tag>
+
+  <tag>
+    <name>snip</name>
+    <tag-class>com.neotis.jsp.SnipTag</tag-class>
+    <attribute>
+      <name>load</name>
+      <required>true</required>
+    </attribute>
+    <attribute>
+      <name>id</name>
+      <required>true</required>
     </attribute>
   </tag>
 

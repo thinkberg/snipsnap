@@ -4,7 +4,7 @@
   ** @version $Id$
   -->
 
-<jsp:useBean id="snip" scope="request" class="com.neotis.jsp.SnipBean">
+<jsp:useBean id="snip" scope="request" class="com.neotis.jsp.SnipTag">
   <jsp:setProperty name="snip" property="*"/>
 </jsp:useBean>
 <jsp:useBean id="user" scope="request" class="com.neotis.jsp.UserBean">

@@ -7,35 +7,33 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %>
 
-<jsp:useBean id="snip" scope="request" class="com.neotis.jsp.SnipBean" >
-  <jsp:setProperty name="snip" property="*"/>
-</jsp:useBean>
-
-<c:out value="${snip}"/>
+<s:snip load="${param['name']}" id="snip">
+  <span class="error">Unable to load snip with name '<c:out value="${name}"/>'!</span>
+</s:snip>
 
 <table width="100%" border="0" cellspacing="2" cellpadding="1">
- <% if (! "start".equals(snip.getName())) { %>
-   <tr><td><span class="snip-name"><jsp:getProperty name="snip" property="name" /></span></td></tr>
+ <c:if test="${snip.name} != 'start'" >
+   <tr><td><span class="snip-name"><c:out value="${snip.name}"/></span></td></tr>
    <s:check roles="Authenticated" permission="Edit" snip="${snip}">
-     <tr><td>[<a href="/exec/edit?name=<%= snip.getName() %>">edit</a>]</td></tr>
+     <tr><td>[<a href="/exec/edit?name=<c:out value='${snip.name}'/>">edit</a>]</td></tr>
    </s:check>
    <s:check roles="Authenticated" permission="Edit" snip="${snip}" invert="true">
      <tr><td><span class="inactive">[edit]</span></td></tr>
    </s:check>
-   <tr width="100%"><td><span class="snip-modified"><%= snip.getModified() %></span></td></tr>
- <% } %>
+   <tr width="100%"><td><span class="snip-modified"><c:out value="${snip.modified}"/></span></td></tr>
+ </c:if>
  <tr>
   <td width="100%">
-   <jsp:getProperty name="snip" property="XMLContent" />
+   <c:out value="${snip.XMLContent}" escapeXml="false" />
   </td>
   </tr>
   <tr><td>
    <!-- do not display comments on start page, only on posted
         entries -->
- <% if (! "start".equals(snip.getName())) { %>
-    <jsp:getProperty name="snip" property="comments" /> |
-    <a href="/exec/post?name=<%= snip.getName() %>">post comment</a>
-   <% } %>
+   <c:if test="${snip.name} != 'start'" >
+      <c:out value="${snip.comments}" /> |
+      <a href="/exec/post?name=<c:out value='${snip.name}'/>">post comment</a>
+    </c:if>
   </td></tr>
   <tr>
   <td>Referrer: <%=request.getHeader("REFERER")%></td>

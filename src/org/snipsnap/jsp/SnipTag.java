@@ -26,62 +26,43 @@ package com.neotis.jsp;
 
 import com.neotis.snip.Snip;
 import com.neotis.snip.SnipSpace;
+import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
 
-import javax.servlet.http.HttpServletRequest;
-import java.sql.Timestamp;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspTagException;
+import javax.servlet.jsp.jstl.core.ConditionalTagSupport;
 
-public class SnipBean {
+public class SnipTag extends ConditionalTagSupport {
   Snip snip = null;
+  String id = null;
 
-  HttpServletRequest request = null;
-  String name, content;
+  private String name = null;
 
-  public String getModified() {
-    return snip.getModified();
+  public int doStartTag() throws JspException {
+    try {
+      String snipName = (String) ExpressionEvaluatorManager.evaluate("load", name, Object.class, this, pageContext);
+      System.err.println("SnipTag: " + name + "=" + snipName);
+      snip = SnipSpace.getInstance().load(snipName);
+    } catch (JspException e) {
+      System.err.println("unable to evaluate expression: " + e);
+    }
+    return super.doStartTag();
   }
 
-  public String getComments() {
-    return snip.getComments().getCommentString();
+  public void setId(String id) {
+    this.id = id;
   }
 
-  public Timestamp getCTime() {
-    return snip.getCTime();
-  }
-
-  public Timestamp getMTime() {
-    return snip.getMTime();
-  }
-
-  public void setName(String name) {
+  public void setLoad(String name) {
     this.name = name;
-    snip = SnipSpace.getInstance().load(name);
   }
 
-  public String getName() {
-    if (snip != null) {
-      return snip.getName();
-    } else {
-      return name != null ? name : "";
+  protected boolean condition() throws JspTagException {
+    System.err.println("SnipTag: " + id + ", " + snip);
+    if (id != null && snip != null) {
+      pageContext.setAttribute(id, snip);
+      return false;
     }
+    return true;
   }
-
-  public void setContent(String content) {
-    this.content = content;
-  }
-
-  public String getContent() {
-    if (snip != null) {
-      return snip.getContent();
-    }
-    return content != null ? content : "";
-  }
-
-
-  public String getXMLContent() {
-    if (snip != null) {
-      return snip.toXML();
-    }
-    return "";
-  }
-
 }
