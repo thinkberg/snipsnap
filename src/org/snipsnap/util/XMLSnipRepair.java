@@ -90,7 +90,7 @@ public class XMLSnipRepair {
     final long fileLength = file.length();
     System.err.print("0%");
     SAXReader saxReader = new SAXReader();
-    Document document = saxReader.read(new FileReader(file) {
+    InputStreamReader reader = new InputStreamReader(new FileInputStream(file), "UTF-8") {
       public int read(char[] chars) throws IOException {
         int n = super.read(chars);
         for (int i = 0; i < n; i++) {
@@ -125,7 +125,9 @@ public class XMLSnipRepair {
           System.err.print(NumberFormat.getIntegerInstance().format(percentage) + "%");
         }
       }
-    });
+    };
+
+    Document document = saxReader.read(reader);
     System.err.println();
 
     if(errCount > 0) {
