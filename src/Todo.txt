@@ -1,1 +1,2 @@
 @TODO: Add Timezone, e.g. +1.00 to Appconfiguration. Needed e.g. for RSS, DublinCore.
+@TODO: Refactor Digest code to Digest.digest(String s) and Digest.digest() -> returns MD5/SHA1 of Date();
