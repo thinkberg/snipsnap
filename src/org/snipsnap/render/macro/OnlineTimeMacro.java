@@ -36,6 +36,7 @@ import org.snipsnap.snip.SnipSpaceFactory;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.text.MessageFormat;
 
 /*
  * Macro that displays how long the SnipSnap is online (installed)
@@ -58,6 +59,8 @@ public class OnlineTimeMacro extends BaseMacro {
       throws IllegalArgumentException, IOException {
 
     Snip snip = SnipSpaceFactory.getInstance().load(Application.get().getConfiguration().getStartSnip());
-    writer.write(Modified.getNiceTime(snip.getModified().getcTime()));
+    MessageFormat mf = new MessageFormat(ResourceManager.getString("i18n.messages", "macro.onlinetime.age"),
+                                         ResourceManager.getLocale("i18n.messages"));
+    writer.write(mf.format(new Object[]{Modified.getNiceTime(snip.getModified().getcTime())}));
   }
 }
