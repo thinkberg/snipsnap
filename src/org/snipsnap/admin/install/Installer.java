@@ -44,6 +44,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.net.UnknownHostException;
+import java.net.InetAddress;
 import java.util.*;
 import java.util.jar.JarFile;
 import java.sql.SQLException;
@@ -56,7 +57,7 @@ import java.sql.SQLException;
 public class Installer extends HttpServlet {
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
-          throws ServletException, IOException {
+      throws ServletException, IOException {
 
     // get or create session and application object
     HttpSession session = request.getSession(false);
@@ -109,7 +110,7 @@ public class Installer extends HttpServlet {
     // set user name and email, check that information
     writeMessage(out, "Checking user name and password ...");
     String adminName = request.getParameter("username");
-    if (! checkUserName(adminName)) {
+    if (!checkUserName(adminName)) {
       System.err.println("Installer: user name too short");
       errors.put("login", "You must enter a user name with at least 3 characters!");
     } else {
@@ -119,7 +120,7 @@ public class Installer extends HttpServlet {
 
     String password = request.getParameter("password");
     String password2 = request.getParameter("password2");
-    if (! checkPassword(password, password2)) {
+    if (!checkPassword(password, password2)) {
       System.err.println("Installer: passwords do not match");
       errors.put("password", "Passwords do not match! Passwords have to be at least 6 characters.");
     } else {
@@ -166,6 +167,9 @@ public class Installer extends HttpServlet {
       sendError(session, errors, request, response);
       return;
     }
+
+    String autoUrl = request.getParameter("autoUrl");
+    config.setAutoUrl(autoUrl != null ? "true" : "false");
 
     String domain = request.getParameter("domain");
     if (domain != null) {
@@ -299,7 +303,7 @@ public class Installer extends HttpServlet {
       try {
         MckoiEmbeddedJDBCDriver.deregister();
       } catch (SQLException e) {
-        System.err.println("Installer: error deregistering jdbc driver: "+e);
+        System.err.println("Installer: error deregistering jdbc driver: " + e);
       }
     }
 
@@ -334,13 +338,15 @@ public class Installer extends HttpServlet {
 
     writeMessage(out, "Installation finished.");
     session.removeAttribute("config");
+
+    // redirect to url
     String url = config.getUrl();
     System.out.println("Redirecting to " + url);
     response.sendRedirect(url);
   }
 
   private void sendError(HttpSession session, Map errors, HttpServletRequest request, HttpServletResponse response)
-          throws IOException {
+      throws IOException {
     session.setAttribute("errors", errors);
     response.sendRedirect(SnipLink.absoluteLink(request, "/exec/install.jsp"));
   }
@@ -355,7 +361,7 @@ public class Installer extends HttpServlet {
   }
 
   public static boolean checkPassword(String password, String password2) {
-    return (null != password && password.length() >5
+    return (null != password && password.length() > 5
         && password.equals(password2));
   }
 

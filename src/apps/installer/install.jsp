@@ -1,4 +1,5 @@
-<%--
+<%@ page import="org.snipsnap.config.AppConfiguration"%>
+ <%--
   ** Initial installation ...
   ** @author Matthias L. Jugel
   ** @version $Id$
@@ -84,7 +85,22 @@
       <td><input name="password2" type="password" value=""></td>
     </tr>
     <tr>
-      <td colspan="3" class="table-header">Application</td>
+      <td colspan="3" class="table-header">Notification</td>
+    </tr>
+    <tr>
+      <td valign="top">Weblogs.com Ping</td>
+      <td valign="top">
+       <input name="weblogsPing" type="checkbox"
+         <% AppConfiguration cfg = (AppConfiguration)pageContext.findAttribute("config");
+           if(cfg == null || cfg.allow(AppConfiguration.PERM_WEBLOGS_PING)) { %>checked="checked"<% } %> />
+      </td>
+      <td valign="top">Your SnipSnap installation will send a ping to weblogs.com whenever
+        you post a new message to your weblog. If you are behind a firewall or don't want
+        weblogs.com to be notified of changes uncheck the box.
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3" class="table-header">Server</td>
     </tr>
     <tr <c:if test="${errors['host'] != null}">class="error-position"</c:if>>
       <td valign="top">Virtual Host:</td>
@@ -112,7 +128,10 @@
     </tr>
     <tr>
       <td valign="top">Real URL:</td>
-      <td valign="top"><input name="domain" type="text" value="<c:out value='${config.url}' default=''/>"></td>
+      <td valign="top">
+        autodetect real url: <input name="autoUrl" type="checkbox" <c:if test='${config.autoUrl != "false"}'>checked="checked"</c:if>><br/>
+        <input name="domain" type="text" value="<c:out value='${config.url}' default=''/>">
+      </td>
       <td valign="top"><b>(optional)</b><br/>
         If SnipSnap is running behind a proxy or dyndns set the real world accessible URL to this instance
         of snipsnap, e.g. 'http://snipsnap.org'

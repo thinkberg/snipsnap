@@ -39,6 +39,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Loads the list of installed applications.
@@ -50,6 +51,7 @@ public class Applications extends HttpServlet {
     HttpSession session = request.getSession(false);
     if (session != null) {
       Configuration config = (Configuration) session.getAttribute(CommandHandler.ATT_CONFIG);
+      System.out.println(config);
       String root = config.getProperty(Configuration.WEBAPP_ROOT);
       Map applications = new HashMap();
       File dir = new File(root);

@@ -92,7 +92,7 @@ public class CommandHandler extends HttpServlet {
       try {
         config = new Configuration();
         Properties defaults = new Properties();
-        defaults.load(AppServer.class.getResourceAsStream("/conf/snipsnap.conf"));
+        defaults.load(CommandHandler.class.getResourceAsStream("/conf/snipsnap.conf"));
         config.load(defaults);
         config.setFile(new File(configFile));
         config.load();

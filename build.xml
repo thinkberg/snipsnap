@@ -346,6 +346,7 @@
     <mkdir dir="${target}/installer/webapp/WEB-INF/lib"/>
     <jar destfile="${target}/installer/webapp/WEB-INF/lib/installer-servlets.jar" excludes="**/CVS">
       <fileset dir="${target}/installer/servlets" includes="**"/>
+      <fileset dir="." includes="conf/snipsnap.conf"/>
     </jar>
   </target>
 

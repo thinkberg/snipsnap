@@ -24,14 +24,12 @@
  */
 package org.snipsnap.net;
 
+import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.snip.attachment.Attachment;
-import org.snipsnap.snip.attachment.Attachments;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
-import org.radeox.util.logging.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -48,7 +46,7 @@ import java.io.IOException;
 public class SnipViewServlet extends HttpServlet {
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
-          throws IOException, ServletException {
+      throws IOException, ServletException {
 
     UserManager um = UserManager.getInstance();
     User user = Application.get().getUser();
@@ -64,7 +62,6 @@ public class SnipViewServlet extends HttpServlet {
       name = name.substring(1);
     }
     name = name.replace('+', ' ');
-    //System.err.println("snip: " + name);
 
     // handle sub snips and attachments (TODO: handle more than one level)
     String subname = null;
@@ -72,12 +69,13 @@ public class SnipViewServlet extends HttpServlet {
     if (slashIndex != -1) {
       subname = name.substring(slashIndex + 1);
       name = name.substring(0, slashIndex);
-      Logger.log(Logger.DEBUG, name+": attachment: " + subname);
+      Logger.log(Logger.DEBUG, name + ": attachment: " + subname);
     }
 
     // TODO: make load from snipspace work with name spaces
     // load snip and set attributes for request
     Snip snip = SnipSpaceFactory.getInstance().load(name);
+
     request.setAttribute("snip", snip);
     request.setAttribute("URI", request.getRequestURL().toString());
 
@@ -86,7 +84,7 @@ public class SnipViewServlet extends HttpServlet {
       try {
         request.setAttribute(FileDownloadServlet.FILENAME, subname);
         RequestDispatcher dispatcher =
-                getServletContext().getNamedDispatcher("org.snipsnap.net.FileDownloadServlet");
+            getServletContext().getNamedDispatcher("org.snipsnap.net.FileDownloadServlet");
         dispatcher.forward(request, response);
         return;
       } catch (ServletException e) {
@@ -97,7 +95,8 @@ public class SnipViewServlet extends HttpServlet {
 
     // Snip does not exist
     if (null == snip) {
-      snip = SnipSpaceFactory.getInstance().load("snipsnap-notfound");
+      response.sendRedirect("/space/snipsnap-notfound");
+      return;
     }
 
     snip.handle(request);

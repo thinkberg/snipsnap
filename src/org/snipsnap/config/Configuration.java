@@ -115,7 +115,6 @@ public class Configuration {
   }
 
   public void load(FileInputStream in) throws IOException {
-    properties.clear();
     properties.load(in);
   }
 

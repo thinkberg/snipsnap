@@ -74,21 +74,22 @@ public class InitFilter implements Filter {
     Application app = Application.getInstance(session);
     AppConfiguration config = app.getConfiguration();
 
-    //System.out.println("request: "+request);
+    //System.out.println("request: " + request);
 
-//    String serverName = request.getServerName();
-//    int serverPort = request.getServerPort();
-//    //System.out.println("server: "+serverName+":"+serverPort);
-//    String requestURL = request.getRequestURL().toString();
-//    //System.out.println("request url: "+requestURL);
-//    int postServerNameIndex = requestURL.indexOf(serverName) + serverName.length();
-//    String contextPath = request.getContextPath();
-//    if(contextPath.length() == 0) {
-//      config.setUrl(requestURL.substring(0, requestURL.indexOf("/", postServerNameIndex)));
-//    } else {
-//      config.setUrl(requestURL.substring(0, requestURL.indexOf(contextPath, postServerNameIndex) + contextPath.length()));
-//    }
-//    //System.out.println("url: "+config.getUrl());
+    // autoconfigure getUrl()
+
+    if ("true".equals(config.getAutoUrl())) {
+      String xForwardedHost = request.getHeader("X-Forwarded-Host");
+      if (xForwardedHost != null) {
+        String contextPath = request.getContextPath();
+        config.setUrl("http://" + xForwardedHost + (contextPath != null ? contextPath : ""));
+      } else {
+        String serverName = request.getServerName();
+        int serverPort = request.getServerPort();
+        config.setUrl("http://" + serverName + (serverPort == 80 ? "" : ":" + serverPort) + request.getContextPath());
+      }
+    }
+    System.out.println("url: " + config.getUrl());
 
     // make sure the request has a correct character encoding
     // the enc-wrapper ensures some methods return correct strings too
@@ -104,7 +105,7 @@ public class InitFilter implements Filter {
 
     User user = app.getUser();
     if (user == null) {
-      user = um.getUser(request, (HttpServletResponse)response);
+      user = um.getUser(request, (HttpServletResponse) response);
     }
 
     app.setUser(user, session);
@@ -132,9 +133,9 @@ public class InitFilter implements Filter {
     app.setParameters(paramMap);
 
     // make sure we do not enter the default web application unless it's fully installed
-    if(!config.isInstalled() && !path.startsWith("/install")) {
-      System.out.println("InitFilter: "+config.getName()+" is not configured, redirecting");
-      ((HttpServletResponse)response).sendRedirect(request.getServletPath() + "/install");
+    if (!config.isInstalled() && !path.startsWith("/install")) {
+      System.out.println("InitFilter: " + config.getName() + " is not configured, redirecting");
+      ((HttpServletResponse) response).sendRedirect(request.getServletPath() + "/install");
       return;
     }
 

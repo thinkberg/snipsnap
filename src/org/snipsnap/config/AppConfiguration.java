@@ -48,6 +48,7 @@ public class AppConfiguration extends Configuration {
   public final static String APP_HOST = "app.host";
   public final static String APP_PORT = "app.port";
   public final static String APP_PATH = "app.path";
+  public final static String APP_URL_AUTO = "app.url.auto";
   public final static String APP_URL = "app.url";
   public final static String APP_THEME = "app.theme";
   public final static String APP_PERM = "app.perm";
@@ -177,6 +178,17 @@ public class AppConfiguration extends Configuration {
     return getProperty(AppConfiguration.APP_PATH);
   }
 
+  public void setAutoUrl(String autoUrl) {
+    if("true".equals(autoUrl) || "false".equals(autoUrl)) {
+      setProperty(AppConfiguration.APP_URL_AUTO, autoUrl);
+    }
+  }
+
+  public String getAutoUrl() {
+    String autoUrl = getProperty(AppConfiguration.APP_URL_AUTO);
+    return autoUrl != null ? autoUrl : "false";
+  }
+  
   /**
    *  set the base URL of the application including
    */
@@ -201,6 +213,7 @@ public class AppConfiguration extends Configuration {
         }
       }
     }
+
     if (null == url || url.length() == 0) {
       StringBuffer tmp = new StringBuffer();
       tmp.append("http://");
@@ -217,6 +230,7 @@ public class AppConfiguration extends Configuration {
       tmp.append(getContextPath());
       url = tmp.toString();
     }
+
     return url;
   }
 
