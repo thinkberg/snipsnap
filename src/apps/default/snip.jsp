@@ -12,6 +12,7 @@
 </s:snip>
 
 <table width="100%" border="0" cellspacing="2" cellpadding="1">
+ <!-- do not display header on weblogs -->
  <c:if test="${snip.notWeblog}">
    <tr><td><span class="snip-name"><c:out value="${snip.name}"/></span></td></tr>
    <s:check roles="Authenticated" permission="Edit" snip="${snip}">

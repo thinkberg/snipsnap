@@ -25,6 +25,7 @@
 package com.neotis.user;
 
 import java.util.Set;
+import java.util.HashSet;
 
 /**
  * User class.
@@ -72,6 +73,9 @@ public class User {
   }
 
   public Set getRoles() {
+    if (null == roles) {
+      roles = new HashSet();
+    }
     return roles;
   }
 }

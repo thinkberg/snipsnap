@@ -41,6 +41,12 @@ public class Security {
   public final static String AUTHENTICATED = "Authenticated";
   public final static String OWNER = "Owner";
 
+  /**
+   * Adds authenticated role to user roles
+   *
+   * @param user User to check
+   * @return List of roles
+   */
   public static Set getRoles(User user) {
     Set userRoles = user.getRoles();
     if (UserManager.getInstance().isAuthenticated(user)) {
@@ -49,6 +55,13 @@ public class Security {
     return userRoles;
   }
 
+  /**
+   * Adds owner role to roles list
+   *
+   * @param user User to check
+   * @param object Object with possible owner
+   * @return List of roles for user and object
+   */
   public static Set getRoles(User user, Snip object) {
     Set roles = getRoles(user);
     if (object instanceof Ownable) {
