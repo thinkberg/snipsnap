@@ -37,6 +37,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Arrays;
+import java.util.ArrayList;
 
 /**
  * Wrapper with finders for in-memory searching. Can
@@ -227,13 +228,13 @@ public class QuerySnipStorage implements SnipStorage {
             null != parent && nameSpace.equals(parent.getName()));
         return blogWithParent;
       }
-    }, nameComparator);
-    System.err.println("Parent="+blogWithParent);
+    }, nameComparatorDesc);
+//    System.err.println("Parent="+blogWithParent);
 
-    List blogWithNameSpace = Arrays.asList(match(queryStart, queryEnd));
+    List blogWithNameSpace = new ArrayList(Arrays.asList(match(queryStart, queryEnd)));
     Collections.sort(blogWithNameSpace, snipPostNameComparator);
 
-    System.err.println("NameSpace="+blogWithNameSpace);
+//    System.err.println("NameSpace="+blogWithNameSpace);
 
     blogWithNameSpace.addAll(blogWithParent);
     return blogWithNameSpace;
