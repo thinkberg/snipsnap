@@ -190,8 +190,8 @@ public class SnipLink {
   private static String getCommentsRoot() {
     return Application.get().getConfiguration().getUrl("/comments");
   }
-  private static List extensions = Arrays.asList(new String[]{"png", "jpg", "jpeg", "gif"});
 
+  private static List extensions = Arrays.asList(new String[]{"png", "jpg", "jpeg", "gif"});
 
   public static Writer appendImage(Writer writer, String name, String alt) throws IOException {
     return appendImageWithRoot(writer, getImageRoot(), name, alt, "png", null);

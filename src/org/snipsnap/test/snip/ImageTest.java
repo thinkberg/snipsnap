@@ -30,6 +30,12 @@ import junit.framework.TestSuite;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipImpl;
 import org.snipsnap.snip.Snip;
+import org.snipsnap.app.Application;
+import org.snipsnap.config.AppConfiguration;
+import org.snipsnap.render.SnipRenderEngine;
+import org.radeox.engine.ImageRenderEngine;
+import org.radeox.engine.RenderEngine;
+import org.radeox.EngineManager;
 
 import java.io.Writer;
 import java.io.StringWriter;
