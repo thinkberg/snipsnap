@@ -70,7 +70,7 @@ public class Installer extends HttpServlet {
     // get config from session
     Configuration config = (Configuration) session.getAttribute("config");
     if (null == config || config.isConfigured()) {
-      response.sendRedirect(SnipLink.absoluteLink(request, "/admin");
+      response.sendRedirect(SnipLink.absoluteLink(request, "/admin"));
       return;
     }
 

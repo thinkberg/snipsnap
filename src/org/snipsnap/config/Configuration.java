@@ -62,11 +62,11 @@ public class Configuration {
   }
 
   public void setUserName(String userName) {
-    properties.setProperty("userName", userName);
+    properties.setProperty("user", userName);
   }
 
   public String getUserName() {
-    return properties.getProperty("userName");
+    return properties.getProperty("user");
   }
 
   public void setEmail(String email) {

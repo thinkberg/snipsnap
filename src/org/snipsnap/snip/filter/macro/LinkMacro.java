@@ -22,6 +22,10 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
+package com.neotis.snip.filter.macro;
+
+import com.neotis.snip.Snip;
+
 /*
  * Macro that replaces external links
  *
@@ -29,11 +33,6 @@
  * @team sonicteam
  * @version $Id$
  */
-
-package com.neotis.snip.filter.macro;
-
-import com.neotis.snip.Snip;
-
 public class LinkMacro extends Macro {
   public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {
     StringBuffer buffer = new StringBuffer();
@@ -43,7 +42,7 @@ public class LinkMacro extends Macro {
       buffer.append(params[0]).append("</a>");
     } else if(params.length == 1) {
       // will be catched by UrlFilter
-      buffer.append(append(params[0]));
+      buffer.append(params[0]);
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

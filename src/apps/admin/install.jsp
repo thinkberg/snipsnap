@@ -44,7 +44,7 @@
           <td colspan="2" class="table-header">Application</td>
         </tr>
         <tr>
-          <td>Host Name:</td>
+          <td>Virtual Host:</td>
           <td><input name="host" type="text" value="<c:out value='${config.host}' default=''/>"></td>
           <td>(optional)<br>
 	    The virtual host the server should accept requests for.
