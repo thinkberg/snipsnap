@@ -30,6 +30,7 @@ import org.snipsnap.snip.Snip;
 import org.snipsnap.user.User;
 import org.snipsnap.app.Application;
 import org.snipsnap.notification.jabber.JabberNotifier;
+import org.snipsnap.config.AppConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -116,7 +117,9 @@ public class NotificationService {
   public void notify(String message) {
     queue.add(message);
     synchronized (thread) {
-      thread.notify();
+      if(Application.get().getConfiguration().allow(AppConfiguration.PERM_NOTIFICATION)) {
+        thread.notify();
+      }
     }
   }
 
