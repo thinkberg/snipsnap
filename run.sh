@@ -38,7 +38,12 @@ if [ "$1" = "index" ]; then
 fi
 
 if [ "$1" = "checksum" ]; then
-  $JAVA_HOME/bin/java -cp $CLASSPATH:lib/snipsnap.jar org.snipsnap.util.JarUtil $2*
+  $JAVA_HOME/bin/java -cp $CLASSPATH:lib/snipsnap.jar org.snipsnap.util.JarUtil $2
+  exit 0
+fi
+
+if [ "$1" = "import" ]; then
+  $JAVA_HOME/bin/java -cp $CLASSPATH:lib/snipsnap.jar org.snipsnap.util.DBImport "$2" "$3" "$4"
   exit 0
 fi
 

@@ -82,23 +82,25 @@ public class DBImport {
       System.exit(-1);
     }
 
-    File in = new File(args[0]);
+    File in = new File(args[2]);
 
     try {
       DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
       DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 
       Document document = documentBuilder.parse(in);
-      NodeList children = document.getChildNodes();
+      NodeList children = document.getChildNodes().item(0).getChildNodes();
       for(int i = 0; i < children.getLength(); i++) {
         Node node = children.item(i);
         if(node.getNodeName().equals("snip")) {
-
+          insertSnip(node);
         }
       }
     } catch (Exception e) {
+      e.printStackTrace();
       System.out.println("Error while reading import file: "+e);
     }
+    System.exit(0);
   }
 
   private static void insertSnip(Node snipNode) throws SAXException {
@@ -111,9 +113,19 @@ public class DBImport {
     for(int i = 0; i < children.getLength(); i++) {
       Node node = children.item(i);
       if(node.getNodeName().equals("name")) {
-        name = node.getNodeValue();
+        NodeList cl = node.getChildNodes();
+        for(int c = 0; c < cl.getLength(); c++) {
+          if(cl.item(c).getNodeType() == Node.TEXT_NODE) {
+            name = cl.item(c).getNodeValue();
+          }
+        }
       } else if(node.getNodeName().equals("content")) {
-        content = node.getNodeValue();
+        NodeList cl = node.getChildNodes();
+        for(int c = 0; c < cl.getLength(); c++) {
+          if(cl.item(c).getNodeType() == Node.TEXT_NODE) {
+            content = cl.item(c).getNodeValue();
+          }
+        }
       }
     }
 
@@ -124,7 +136,8 @@ public class DBImport {
         snip = space.load(name);
         snip.setContent(snip.getContent()+"\n"+content);
       } else {
-        snip = new Snip(name, content);
+        System.out.println("creating node '"+name+"'");
+        snip = space.create(name, content);
       }
       space.store(snip);
     }
