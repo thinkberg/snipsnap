@@ -1,5 +1,6 @@
 0.5
 
+- Added feature: new Snip button for Snip creation
 - Fixed Bug: removed hard coded references to 'start' with getStartSnip
 - Added Feature: space encoding (+) is now configurable
 - Added Feature: File system storage for Snips
