@@ -137,12 +137,20 @@ span.count:after {
 
 .comment-title {
   margin-top: 20px;
+  font-weight: normal !important;
+  font-size: 100% !important;
 }
 
-.comment-title h2.comment-name {
+h2.comment-name {
   display: inline;
   font-weight: normal;
-  font-size: 120%;
+  font-size: 110%;
+}
+
+h2.comment-name a {
+  display: inline;
+  font-weight: normal;
+  font-size: 110%;
 }
 
 .comment-buttons {
