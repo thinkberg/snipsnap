@@ -45,6 +45,7 @@ public class AppConfiguration extends Configuration {
   public final static String APP_PERM = "app.perm";
   private final static String APP_DOMAIN = "app.domain";
   private final static String APP_TAGLINE = "app.tagline";
+  private final static String APP_LOGO = "app.logo";
   private final static String APP_LOGGER = "app.logger";
   private final static String APP_JDBC_URL = "app.jdbc.url";
   private final static String APP_JDBC_DRIVER = "app.jdbc.driver";
@@ -182,6 +183,15 @@ public class AppConfiguration extends Configuration {
   public String getTagLine() {
     String tagline = getProperty(APP_TAGLINE);
     return tagline != null ? tagline : "The easy Weblog and Wiki Software.";
+  }
+
+  public void setLogoImage(String image) {
+    setProperty(APP_TAGLINE, image);
+  }
+
+  public String getLogoImage() {
+    String image - getProperty(APP_TAGLINE);
+    return image != null ? image : "snip";
   }
 
   public void setJDBCURL(String url) {
