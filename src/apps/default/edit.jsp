@@ -15,19 +15,24 @@
    <div class="preview"><div class="snip-content"><c:out value="${preview}" escapeXml="false"/></div></div>
   </c:if>
   <div class="snip-content">
-   <div class="snip-input">
-    <form class="form" name="f" method="post" action="<c:out value='${app.configuration.path}'/>/exec/store" enctype="multipart/form-data">
-     <table>
-      <tr><td><textarea name="content" type="text" cols="80" rows="20"><c:out value="${content}" escapeXml="true"/></textarea></td></tr>
-      <tr><td class="form-buttons">
-       <input value="Preview" name="preview" type="submit"/>
-       <input value="Save" name="save" type="submit"/>
-       <input value="Cancel" name="cancel" type="submit"/>
-      </td></tr>
-     </table>
-     <input name="name" type="hidden" value="<c:out value="${snip_name}"/>"/>
-     <input name="referer" type="hidden" value="<%= request.getHeader("REFERER") %>"/>
-    </form>
-   </div>
+   <s:check roles="Authenticated">
+     <div class="snip-input">
+      <form class="form" name="f" method="post" action="<c:out value='${app.configuration.path}'/>/exec/store" enctype="multipart/form-data">
+       <table>
+        <tr><td><textarea name="content" type="text" cols="80" rows="20"><c:out value="${content}" escapeXml="true"/></textarea></td></tr>
+        <tr><td class="form-buttons">
+         <input value="Preview" name="preview" type="submit"/>
+         <input value="Save" name="save" type="submit"/>
+         <input value="Cancel" name="cancel" type="submit"/>
+        </td></tr>
+       </table>
+       <input name="name" type="hidden" value="<c:out value="${snip_name}"/>"/>
+       <input name="referer" type="hidden" value="<%= request.getHeader("REFERER") %>"/>
+      </form>
+     </div>
+   </s:check>
+   <s:check roles="Authenticated" invert="true" >
+    Please <a href="<c:out value='${app.configuration.path}'/>/exec/login.jsp">login</a> to create this snip.
+   </s:check>
   </div>
 </div>
