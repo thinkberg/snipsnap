@@ -161,7 +161,7 @@ public class TypeLabel extends BaseLabel {
         }
         buffer.append(">");
         // @TODO: Check if type == value
-        buffer.append(type);
+        buffer.append(typeString);
         buffer.append("</option>");
       }
       buffer.append("</select>");
