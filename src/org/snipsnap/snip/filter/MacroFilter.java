@@ -22,15 +22,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-/*
- * Class that finds snippets like
- * {link|neotis|http://www.neotis.de} ---> <elink ....>
- * {neotis} -> include neotis wiki
- *
- * @author stephan
- * @team sonicteam
- * @version $Id$
- */
 
 package org.snipsnap.snip.filter;
 
@@ -45,6 +36,15 @@ import org.snipsnap.serialization.StringBufferWriter;
 import java.util.*;
 import java.io.Writer;
 
+/*
+ * Class that finds snippets like
+ * {link|neotis|http://www.neotis.de} ---> <elink ....>
+ * {neotis} -> include neotis wiki
+ *
+ * @author stephan
+ * @team sonicteam
+ * @version $Id$
+ */
 public class MacroFilter extends RegexTokenFilter {
 
   private static MacroFilter instance;
@@ -53,8 +53,8 @@ public class MacroFilter extends RegexTokenFilter {
   private static Object monitor = new Object();
 
   public MacroFilter() {
-    super("\\{([^:}]*):?(.*?)\\}(.*?)\\{(\\1)\\}", SINGLELINE);
-    addRegex("\\{([^:}]*):?(.*?)\\}", "", MULTILINE);
+    super("\\{([^:}]+):?(.*?)\\}(.*?)\\{(\\1)\\}", SINGLELINE);
+    addRegex("\\{([^:}]+):?(.*?)\\}", "", MULTILINE);
 
     macros = new HashMap();
     add(new FieldMacro());

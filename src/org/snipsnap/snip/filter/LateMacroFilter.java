@@ -53,8 +53,8 @@ public class LateMacroFilter extends RegexTokenFilter {
   private static Object monitor = new Object();
 
   public LateMacroFilter() {
-    super("\\{([^:}]*):?(.*?)\\}(.*?)\\{(\\1)\\}", SINGLELINE);
-    addRegex("\\{([^:}]*):?(.*?)\\}", "", MULTILINE);
+    super("\\{([^:}]+):?(.*?)\\}(.*?)\\{(\\1)\\}", SINGLELINE);
+    addRegex("\\{([^:}]+):?(.*?)\\}", "", MULTILINE);
 
     macros = new HashMap();
 
