@@ -137,7 +137,7 @@ public class User implements Linkable {
   // Set passwd of user. Takes unecrypted
   // passwd and then sets an encrypted version
   public void setPasswd(String passwd) {
-    if (passwd.length() > 30) {
+    if (passwd != null && passwd.length() > 30) {
       this.passwd = passwd;
     } else {
       this.passwd = Digest.getDigest(passwd);
