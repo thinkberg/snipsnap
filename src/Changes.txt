@@ -1,5 +1,6 @@
 0.5.2 
 
+- Many other bugfixes, see http://bugs.snipsnap.org/
 - Added Stream based import/export
 - Added Referrer SPAM blacklist
 - Merged multi-instance SnipSnap changes into Trunk
