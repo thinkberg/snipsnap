@@ -39,8 +39,8 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.OutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.List;
 
@@ -55,7 +55,7 @@ public class XMLSnipExport {
       OutputFormat outputFormat = new OutputFormat();
       outputFormat.setEncoding("UTF-8");
       outputFormat.setNewlines(true);
-      XMLWriter xmlWriter = new XMLWriter(out);
+      XMLWriter xmlWriter = new XMLWriter(out, outputFormat);
       xmlWriter.write(exportDocument);
       xmlWriter.flush();
     } catch (Exception e) {
@@ -86,18 +86,27 @@ public class XMLSnipExport {
     store(out, exportDocument);
   }
 
+  public static void store(OutputStream out, List snips, List users, String filter, List ignoreElements, File fileStore) {
+    Document exportDocument = store(users, snips, filter, ignoreElements, fileStore);
+    store(out, exportDocument);
+  }
+
+  public static Document store(List users, List snips, String filter, File fileStore) {
+    return store(users, snips, filter, null, fileStore);
+  }
+
   /**
    * Store a list of users and snips into an XML document.
    * @param users the users to store
    * @param snips the snips to store
    * @return the XML document
    */
-  public static Document store(List users, List snips, String filter, File fileStore) {
+  public static Document store(List users, List snips, String filter, List ignoreElements, File fileStore) {
     Document backupDoc = DocumentHelper.createDocument();
     Element root = backupDoc.addElement("snipspace");
 
     storeUsers(root, users);
-    storeSnips(root, snips, filter, fileStore);
+    storeSnips(root, snips, filter, ignoreElements, fileStore);
 
     return backupDoc;
   }
@@ -113,7 +122,7 @@ public class XMLSnipExport {
     }
   }
 
-  private static void storeSnips(Element root, List snips, String filter, File fileStore) {
+  private static void storeSnips(Element root, List snips, String filter, List ignoreElements, File fileStore) {
     if (snips != null && snips.size() > 0) {
       SnipSerializer snipSerializer = SnipSerializer.getInstance();
       Iterator snipListIterator = snips.iterator();
@@ -121,6 +130,15 @@ public class XMLSnipExport {
         Snip snip = (Snip) snipListIterator.next();
         if(filter == null || !snip.getName().matches(filter)) {
           Element snipEl = snipSerializer.serialize(snip);
+          if(null != ignoreElements) {
+            Iterator filterIt = ignoreElements.iterator();
+            while (filterIt.hasNext()) {
+              String el = (String) filterIt.next();
+              if(snipEl.element(el) != null) {
+                snipEl.remove(snipEl.element(el));
+              }
+            }
+          }
           storeAttachments(snipEl, fileStore);
           root.add(snipEl);
         }

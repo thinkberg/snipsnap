@@ -228,7 +228,7 @@ public class SnipSerializer extends SerializerSupport {
     snipMap.put(SNIP_ATTACHMENTS, snip.getAttachments().toString());
     snipMap.put(SNIP_VIEWCOUNT, "" + snip.getViewCount());
     snipMap.put(SNIP_APPLICATION, notNull(snip.getApplication()));
-
+    
     // TODO deprecated
     Snip parent = snip.getParent();
     snipMap.put(SNIP_PARENT, null == parent ? "" : parent.getName());

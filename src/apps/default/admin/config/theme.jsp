@@ -10,7 +10,8 @@
                  java.io.FilenameFilter,
                  org.snipsnap.snip.Snip,
                  org.snipsnap.container.Components,
-                 org.snipsnap.snip.SnipSpace"%>
+                 org.snipsnap.snip.SnipSpace,
+                 org.snipsnap.net.admin.ThemeHelper"%>
  <%--
   ** Theme selection.
   ** @author Matthias L. Jugel
@@ -21,49 +22,25 @@
 <%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
 
 <%
-  Map themes = new HashMap();
-
   Configuration conf = (Configuration) session.getAttribute("newconfig");
-  // add/overwrite themes already added within the SnipSpace
+  Map themes = new HashMap();
   if (conf.isConfigured()) {
-    SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
-    Snip[] themeSnips = space.match("SnipSnap/themes/");
-    for (int s = 0; s < themeSnips.length; s++) {
-      if (themeSnips[s].getName().indexOf('/', "SnipSnap/themes/".length()) == -1) {
-        String name = themeSnips[s].getName();
-        themes.put(name.substring(name.lastIndexOf('/') + 1), themeSnips[s].getContent());
-      }
+    Map installedThemes = ThemeHelper.getInstalledThemes();
+    Iterator themeIt = installedThemes.keySet().iterator();
+    while (themeIt.hasNext()) {
+      String themeName = (String) themeIt.next();
+      themes.put(themeName, ((Snip)installedThemes.get(themeName)).getContent());
     }
   }
-
   request.setAttribute("themes", themes);
-
-  Map newThemes = new HashMap();
-  // find theme files in filesystem
-  File themeDir = new File(conf.getWebInfDir(), "themes");
-  File[] files = themeDir.listFiles(new FilenameFilter() {
-    public boolean accept(File file, String s) {
-      return s.endsWith(".snip");
-    }
-  });
-
-  SAXReader saxReader = new SAXReader();
-  for (int f = 0; f < files.length; f++) {
-    Document themeDoc = saxReader.read(new FileReader(files[f]));
-    Iterator it = themeDoc.getRootElement().elementIterator("snip");
-    while (it.hasNext()) {
-      Element snipEl = (Element) it.next();
-      String name = snipEl.element("name").getTextTrim();
-      if (name.indexOf('/', "SnipSnap/themes/".length()) == -1) {
-        String content = snipEl.element("content").getText();
-        String themeName = name.substring(name.lastIndexOf('/') + 1);
-        if(!themes.containsKey(themeName)) {
-          newThemes.put(themeName, content);
-        }
-      }
+  Map newThemes = ThemeHelper.getThemeDocuments(conf, ThemeHelper.CONTENT);
+  Iterator instThemeIt = themes.keySet().iterator();
+  while (instThemeIt.hasNext()) {
+    String themeName = (String) instThemeIt.next();
+    if(newThemes.containsKey(themeName)) {
+      newThemes.remove(themeName);
     }
   }
-
   request.setAttribute("newthemes", newThemes);
 %>
 
@@ -102,9 +79,9 @@
         </c:forEach>
         <c:forEach items="${newthemes}" var="theme">
           <option value="<c:out value='${theme.key}'/>"
-            <c:if test="${newconfig.theme == theme.key}">selected="selected"</c:if>><c:if test="${newconfig.configured}"><fmt:message key="config.app.theme.new">
+            <c:if test="${newconfig.theme == theme.key}">selected="selected"</c:if>><fmt:message key="config.app.theme.new">
               <fmt:param><c:out value="${theme.key}" escapeXml="true"/></fmt:param>
-            </fmt:message></c:if></option>
+            </fmt:message></option>
         </c:forEach>
       </select>
     </td>
@@ -114,7 +91,7 @@
       <c:if test="${newconfig.theme != theme.key}">style="visibility:hidden; display:none"</c:if>>
       <td><c:out value="${theme.value}"/></td>
       <td>
-        <c:out value="${theme.key}"/><br/>
+        <c:out value="${theme.key}"/> <input type="submit" name="export" value="<fmt:message key='config.app.theme.export'/>"/><br/>
         <img src="themeimage?name=<c:out value='${theme.key}'/>" alt="<c:out value='${theme.key}'/>" border="0">
       </td>
     </tr>

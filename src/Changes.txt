@@ -1,5 +1,10 @@
 0.5.1
 
+- Added feature: HTTP request added to macro parameters
+- Fixed bug: Country sorting in Setup fixed
+- Fixed bug: UserManager added again
+- Fixed bug: 0.4.2a themes
+- Added feature: copy snips and subsnips
 - Developer: Added javadoc target to build
 - Added feature: Snips with a Type:Template label can be used as templates on snip creation
 - Added feature: Choosing the parent snip for the namespace when creating new snips

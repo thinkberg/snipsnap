@@ -190,7 +190,6 @@ public class Attachments {
 
   private String toString(Element attElement) {
     OutputFormat outputFormat = OutputFormat.createCompactFormat();
-    outputFormat.setEncoding("UTF-8");
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     try {
       XMLWriter xmlWriter = new XMLWriter(out, outputFormat);

@@ -42,8 +42,9 @@ import java.util.Map;
 
 public class ThemeHelper {
   public final static String THEME_PREFIX = "SnipSnap/themes/";
-  public final static boolean DOCUMENTS = false;
-  public final static boolean FILES = true;
+  public final static int FILES = 0;
+  public final static int DOCUMENTS = 1;
+  public final static int CONTENT = 2;
 
   public static Map getInstalledThemes() {
     SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
@@ -58,7 +59,7 @@ public class ThemeHelper {
     return themes;
   }
 
-  public static Map getThemeDocuments(Configuration config, boolean file) {
+  public static Map getThemeDocuments(Configuration config, int valueType) {
     // find theme files in filesystem
     File themeDir = new File(config.getWebInfDir(), "themes");
     File[] files = themeDir.listFiles(new FilenameFilter() {
@@ -75,13 +76,19 @@ public class ThemeHelper {
         Iterator it = themeDoc.getRootElement().elementIterator("snip");
         while (it.hasNext()) {
           Element snipEl = (Element) it.next();
-          String tagName = snipEl.element("name").getTextTrim();
+          String tagName = snipEl.element("name").getText();
           if (tagName.indexOf('/', "SnipSnap/themes/".length()) == -1) {
             String themeName = tagName.substring(tagName.lastIndexOf('/') + 1);
-            if(file) {
-              themeDocs.put(themeName, files[f]);
-            } else {
-              themeDocs.put(themeName, themeDoc);
+            switch(valueType) {
+              case FILES:
+                themeDocs.put(themeName, files[f]);
+                break;
+              case DOCUMENTS:
+                themeDocs.put(themeName, themeDoc);
+                break;
+              case CONTENT:
+                themeDocs.put(themeName, snipEl.elementText("content"));
+                break;
             }
           }
         }

@@ -75,7 +75,9 @@ public class ContentTag extends TagSupport {
       if (encodeHtml) {
         StringWriter stringWriter = new StringWriter();
         try {
-          XMLWriter xmlWriter = new XMLWriter(stringWriter, OutputFormat.createCompactFormat());
+          OutputFormat outputFormat = new OutputFormat();
+          outputFormat.setNewlines(true);
+          XMLWriter xmlWriter = new XMLWriter(stringWriter, outputFormat);
           xmlWriter.write(content);
           xmlWriter.flush();
         } catch (IOException e) {

@@ -38,6 +38,7 @@ import org.snipsnap.user.Roles;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.user.UserManagerFactory;
+import org.snipsnap.net.admin.ThemeHelper;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -51,6 +52,7 @@ import java.io.Writer;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.Map;
 
 /**
  * @author Matthias L. Jugel
@@ -118,7 +120,8 @@ public class InitializeDatabase {
       createConfigSnipFromFile(Configuration.SNIPSNAP_CONFIG_WIKI, "/defaults/intermap.txt", space);
 
       File themeTemplateDir = new File(config.getWebInfDir(), "themes");
-      XMLSnipImport.load(new FileInputStream(new File(themeTemplateDir, "SnipSnap-Theme-" + config.getTheme() + ".snip")),
+      Map themeFiles = ThemeHelper.getThemeDocuments(config, ThemeHelper.FILES);
+      XMLSnipImport.load(new FileInputStream((File) themeFiles.get(config.getTheme())),
                          XMLSnipImport.OVERWRITE | XMLSnipImport.IMPORT_SNIPS);
 
       postFirstBlog(config, space);

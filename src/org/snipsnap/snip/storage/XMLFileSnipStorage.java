@@ -81,7 +81,9 @@ public class XMLFileSnipStorage extends OneFileSnipStorage {
     snipDocument.add(serializer.serialize(snip));
 
     try {
-      XMLWriter xmlWriter = new XMLWriter(out, OutputFormat.createCompactFormat());
+      OutputFormat outputFormat = new OutputFormat();
+      outputFormat.setEncoding("UTF-8");
+      XMLWriter xmlWriter = new XMLWriter(out, outputFormat);
       xmlWriter.write(snipDocument);
       xmlWriter.flush();
     } catch (Exception e) {
