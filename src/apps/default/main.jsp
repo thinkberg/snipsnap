@@ -45,7 +45,7 @@
     <c:when test="${snip.name==app.configuration.startSnip && not(empty app.configuration.logo)}"><s:image root="SnipSnap/config" name="${app.configuration.logo}" alt="${app.configuration.name}"/></c:when>
     <c:when test="${snip.name!=app.configuration.startSnip && not(empty app.configuration.logo)}"><a href="<c:out value='${app.configuration.url}'/>" accesskey="1"><s:image root="SnipSnap/config" name="${app.configuration.logo}" alt="${app.configuration.name}"/></a></c:when>
     <c:when test="${snip.name==app.configuration.startSnip && empty app.configuration.logo}"><c:out value="${app.configuration.name}" default="SnipSnap"/></c:when>
-    <c:otherwise><a href="/" accesskey="1"><c:out value="${app.configuration.name}" default="SnipSnap"/></a></c:otherwise>
+    <c:otherwise><a href="<c:out value='${app.configuration.url}'/>" accesskey="1"><c:out value="${app.configuration.name}" default="SnipSnap"/></a></c:otherwise>
    </c:choose>
   </div>
   <div id="page-title">
