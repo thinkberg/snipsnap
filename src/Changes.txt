@@ -8,7 +8,14 @@
 
 0.4.2
 
+- fixed a major security bug
+- fixed shutdown behaviour to cleanly close database
+
 0.4.1
+
+- fixed performance bug for MacroFilter
+- startup message requiring JAVA_HOME removed (unnecessary)
+- removed -server command line option from startup scripts
 
 0.4
 
