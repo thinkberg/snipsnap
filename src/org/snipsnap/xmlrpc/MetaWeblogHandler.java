@@ -30,7 +30,7 @@ import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.container.Components;
 import org.snipsnap.net.FileUploadServlet;
-import org.snipsnap.semanticweb.rss.BlogFeeder;
+import org.snipsnap.feeder.custom.BlogFeeder;
 import org.snipsnap.snip.Blog;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
@@ -49,6 +49,7 @@ import java.util.*;
 import org.snipsnap.snip.BlogKit;
 import org.snipsnap.snip.attachment.Attachments;
 import org.snipsnap.feeder.Feeder;
+import org.snipsnap.feeder.BasicFeederContext;
 import org.snipsnap.security.AccessController;
 
 /**
@@ -215,7 +216,7 @@ public class MetaWeblogHandler extends XmlRpcSupport implements MetaWeblogAPI {
         User user = authenticate(username, password);
 
         Feeder feeder = new BlogFeeder(blogid);
-        List children = feeder.getFeed();
+        List children = feeder.getFeed(new BasicFeederContext());
 
         Vector posts = new Vector(children.size());
         for (Iterator i = children.iterator(); i.hasNext() && numberOfPosts-- > 0;) {

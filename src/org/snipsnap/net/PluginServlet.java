@@ -35,6 +35,8 @@ import org.snipsnap.snip.label.TypeLabel;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.Security;
+import org.snipsnap.xmlrpc.XmlRpcHandler;
+import org.picocontainer.PicoContainer;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -67,6 +69,7 @@ public class PluginServlet extends HttpServlet {
     // currently supported script types (with extensions)
     extTypeMap.put(".gsp", "text/gsp");
     extTypeMap.put(".groovy", "text/groovy");
+
   }
 
   protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -107,67 +110,28 @@ public class PluginServlet extends HttpServlet {
     // check for registered plugins
     Map plugins = ServletPluginLoader.getPlugins();
     if (plugins.containsKey(pluginName)) {
-      String handlerMIMEType = (String) plugins.get(pluginName);
-
-      // try to find a mime type for the requested plugin
-      if (null == handlerMIMEType) {
-        int extIndex = pluginName.indexOf(".");
-        if (extIndex != -1) {
-          handlerMIMEType = (String) extTypeMap.get(pluginName.substring(extIndex));
-        }
-      }
-
-      if ("text/gsp".equalsIgnoreCase(handlerMIMEType)) {
-        BufferedWriter writer = new BufferedWriter(response.getWriter());
+      // a non-script plugin (i.e. servlet or simply a file)
+      ServletPlugin servletPlugin = (ServletPlugin) plugins.get(pluginName);
+      if (null == servletPlugin) {
         try {
-          handleGroovyTemplate(getTemplateSource(pluginName), writer);
+          servletPlugin = getServletPlugin(pluginName);
+          servletCache.put(pluginName, servletPlugin);
         } catch (Exception e) {
-          e.printStackTrace();
-          writer.write("<span class=\"error\">" + e.getLocalizedMessage() + "</span>");
+          // ignore plugins not found ...
         }
-        writer.flush();
-        return;
-      } else {
-        // a non-script plugin (i.e. servlet or simply a file)
-        ServletPlugin servletPlugin = (ServletPlugin) servletCache.get(pluginName);
-        if (null == servletPlugin) {
-          try {
-            servletPlugin = getServletPlugin(pluginName);
-            servletCache.put(pluginName, servletPlugin);
-          } catch (Exception e) {
-            // ignore plugins not found ...
-          }
-        }
-
-        // a servlet plugin is executed, everything else is included into the response
-        if (null != servletPlugin) {
-          try {
-            servletPlugin.service(request, response);
-          } catch (Exception e) {
-            Logger.warn("error while executing servlet plugin", e);
-            throw new ServletException("error while executing servlet plugin", e);
-          }
-        } else {
-          if (null != handlerMIMEType) {
-            response.setContentType(handlerMIMEType);
-          }
-          OutputStream out = response.getOutputStream();
-          InputStream fileIs = PluginServlet.class.getResourceAsStream("/" + pluginName);
-          if (null != fileIs) {
-            byte[] buffer = new byte[1024];
-            int bytes = 0;
-            while ((bytes = fileIs.read(buffer)) != -1) {
-              out.write(buffer, 0, bytes);
-            }
-            out.flush();
-          } else {
-            throw new ServletException("unable to load servlet plugin: not found");
-          }
-        }
-        return;
       }
-    }
 
+      // a servlet plugin is executed, everything else is included into the response
+      if (null != servletPlugin) {
+        try {
+          servletPlugin.service(request, response);
+        } catch (Exception e) {
+          Logger.warn("error while executing servlet plugin", e);
+          throw new ServletException("error while executing servlet plugin", e);
+        }
+      }
+      return;
+    }
     response.sendError(HttpServletResponse.SC_FORBIDDEN);
   }
 

@@ -1,2 +1,3 @@
 org.snipsnap.container.MessageLogService
-
+org.snipsnap.net.handler.TestStoreHandler
+org.snipsnap.net.RssServlet

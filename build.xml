@@ -6,6 +6,7 @@
 <project basedir="." default="all" name="SnipSnap">
 
   <property file="conf/build.properties"/>
+  <property file="conf/libs.properties"/>
   <property file="conf/snipsnap.conf"/>
 
   <path id="server.classpath">
@@ -14,8 +15,6 @@
     <pathelement location="${jar}/org.apache.crimson.jar"/>
     <pathelement location="${jar}/org.mortbay.jetty.jar"/>
     <pathelement location="${jar}/mckoidb.jar"/>
-    <pathelement location="${jar}/jdbcstorage-1.0-alpha-1.jar"/>
-    <pathelement location="${jar}/rss-ng-1.0-alpha-1.jar"/>
     <pathelement location="${jar}/xmlrpc-1.2-b1.jar"/>
     <pathelement location="${jar}/jdic.jar"/>
   </path>
@@ -26,10 +25,12 @@
 
   <!-- the overall class path -->
   <path id="app.classpath">
+    <pathelement location="${jar}/rss-ng-1.0-alpha-1.jar"/>
+    <pathelement location="${jar}/jdbcstorage-1.0-alpha-1.jar"/>
     <pathelement location="${jar}/gabriel.jar"/>
     <pathelement location="${jar}/jmdns.jar"/>
-    <pathelement location="${jar}/rome-0.3.jar"/>
-    <pathelement location="${jar}/jdom-b10.jar"/>
+    <pathelement location="${jar}/${rome.jar}"/>
+    <pathelement location="${jar}/${jdom.jar}"/>
     <pathelement location="${jar}/asm-1.4.1.jar"/>
     <pathelement location="${jar}/dynaop-1.0-beta.jar"/>
     <pathelement location="${jar}/cglib-asm-1.0.jar"/>
@@ -123,7 +124,8 @@
         <include name="lib/${appname}-utils.jar"/>
         <include name="lib/gabriel.jar"/>
         <include name="lib/jmdns.jar"/>
-        <include name="lib/rome-0.3.jar"/>
+	<include name="lib/${rome.jar}"/>
+	<include name="lib/${jdom.jar}"/>
         <include name="lib/jdom-b10.jar"/>
         <include name="lib/asm-1.4.1.jar"/>
         <include name="lib/dynaop-1.0-beta.jar"/>
@@ -445,8 +447,8 @@
         <include name="asm-1.4.1.jar"/>
         <include name="gabriel.jar"/>
         <include name="jmdns.jar"/>
-        <include name="rome-0.3.jar"/>
-        <include name="jdom-b10.jar"/>
+	<include name="${rome.jar}"/>
+	<include name="${jdom.jar}"/>
         <include name="dynaop-1.0-beta.jar"/>
         <include name="cglib-asm-1.0.jar"/>
         <include name="asm-util-1.4.1.jar"/>
@@ -470,6 +472,8 @@
         <include name="picocontainer-1.0.jar"/>
         <include name="nanocontainer-1.0.jar"/>
         <include name="nanocontainer-dynaop-1.0-beta-1-SNAPSHOT.jar"/>
+        <include name="rss-ng-1.0-alpha-1.jar"/>
+        <include name="jdbcstorage-1.0-alpha-1.jar"/>
       </fileset>
     </copy>
 

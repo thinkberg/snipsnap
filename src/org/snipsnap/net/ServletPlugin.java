@@ -37,4 +37,5 @@ import java.io.IOException;
 public interface ServletPlugin {
   public void service(HttpServletRequest request, HttpServletResponse response)
     throws IOException, ServletException;
+  public String getPath();
 }

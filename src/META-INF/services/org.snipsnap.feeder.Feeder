@@ -1,4 +1,4 @@
-org.snipsnap.semanticweb.rss.BlogFeeder
-org.snipsnap.semanticweb.rss.NewCommentFeeder
-org.snipsnap.semanticweb.rss.NewSnipFeeder
-org.snipsnap.semanticweb.rss.RecentlySnipChangedFeeder
+org.snipsnap.feeder.custom.BlogFeeder
+org.snipsnap.feeder.custom.NewCommentFeeder
+org.snipsnap.feeder.custom.NewSnipFeeder
+org.snipsnap.feeder.custom.RecentlySnipChangedFeeder

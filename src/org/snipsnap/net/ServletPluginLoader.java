@@ -33,6 +33,7 @@ import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.label.Label;
 import org.snipsnap.snip.label.Labels;
 import org.snipsnap.snip.label.TypeLabel;
+import org.picocontainer.PicoContainer;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -91,18 +92,15 @@ public class ServletPluginLoader {
     if (null == pluginServlets) {
       pluginServlets = new HashMap();
 
-      // load plugins from services api
-      Iterator pluginServletNames = Service.providerNames(ServletPlugin.class);
-      while (pluginServletNames.hasNext()) {
-        String pluginLine = (String) pluginServletNames.next();
-        if (!pluginLine.startsWith("#")) {
-          String[] pluginInfo = pluginLine.split("\\p{Space}+");
-          if (pluginInfo.length > 0) {
-            pluginServlets.put(pluginInfo[0], pluginInfo.length > 1 ? pluginInfo[1] : null);
-            Logger.log("found plugin: " + pluginInfo[0]);
-          } else {
-            Logger.warn("ignoring servlet plugin '" + pluginLine + "': missing type or servlet");
-          }
+      PicoContainer container = Components.getContainer();
+      Iterator iterator = container.getComponentInstances().iterator();
+      while (iterator.hasNext()) {
+        Object o = iterator.next();
+        if (o instanceof ServletPlugin) {
+          ServletPlugin plugin = (ServletPlugin) o;
+          // Should probably use again Pico because of
+          // life cyvle dependency management start() stop() ...
+          pluginServlets.put(plugin.getPath(), plugin);
         }
       }
     }

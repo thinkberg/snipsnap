@@ -33,11 +33,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class TestStoreHandler implements ServletPlugin {
+
   public void service(HttpServletRequest request, HttpServletResponse response)
     throws IOException, ServletException {
     String name = request.getParameter("name");
     Logger.debug("test store handler: "+name);
 
     throw new ServletException("This handler cannot store snips ("+name+")");
+  }
+
+  public String getPath() {
+    return this.getClass().getName();
   }
 }
