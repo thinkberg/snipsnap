@@ -46,6 +46,7 @@ import java.util.StringTokenizer;
  * @author stephan
  * @version $Id$
  */
+
 public class SnipLink {
 
   public static void appendUrl(Writer writer, String name) throws IOException {
