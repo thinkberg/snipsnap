@@ -30,6 +30,8 @@ import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.app.Application;
+import org.snipsnap.components.SearchService;
+import org.snipsnap.container.Components;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -48,11 +50,12 @@ public class SnipSearchServlet extends HttpServlet {
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
+
     String query = request.getParameter("query");
     if (query != null && query.length() > 0) {
       HttpSession session = request.getSession();
-      SnipSpace space = SnipSpaceFactory.getInstance();
-      Hits hits = space.search(query);
+      SearchService searchService = (SearchService) Components.getComponent(SearchService.class);
+      Hits hits = searchService.search(query);
       session.setAttribute("query", query);
       session.setAttribute("hits", hits);
       session.setAttribute("startIndex", new Integer(0));

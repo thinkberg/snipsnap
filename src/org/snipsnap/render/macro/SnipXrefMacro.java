@@ -37,6 +37,7 @@ import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.AuthenticationService;
+import org.snipsnap.components.SearchService;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -51,10 +52,10 @@ import java.text.MessageFormat;
  */
 
 public class SnipXrefMacro extends BaseMacro {
-  private SnipSpace space;
+  private SearchService searchService;
 
   public SnipXrefMacro() {
-    space = SnipSpaceFactory.getInstance();
+    searchService = (SearchService) Components.getComponent(SearchService.class);
   }
 
   public String getName() {
@@ -81,7 +82,7 @@ public class SnipXrefMacro extends BaseMacro {
 
       Hits hits = null;
       try {
-        hits = space.search("reference:\"" + searchString + "\"");
+        hits = searchService.search("reference:\"" + searchString + "\"");
       } catch (Exception e) {
         Logger.warn("SnipXrefMacro: exception while searching: " + e);
       }
