@@ -47,7 +47,7 @@
        </table>
        <input name="mime_type" type="hidden" value="<c:out value="${mime_type}"/>"/>
        <input name="edit_handler" type="hidden" value="<c:out value="${edit_handler}"/>"/>
-       <input name="name_name" type="hidden" value="<c:out value="${snip_name}"/>"/>
+       <input name="name" type="hidden" value="<c:out value="${snip_name}"/>"/>
        <input name="referer" type="hidden" value="<%= Encoder.escape(request.getHeader("REFERER")) %>"/>
       </div>
     </div>

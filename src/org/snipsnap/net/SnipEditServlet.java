@@ -30,10 +30,14 @@ import org.snipsnap.config.Configuration;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.label.MIMETypeLabel;
+import org.snipsnap.snip.label.Labels;
+import org.snipsnap.snip.label.Label;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.Security;
+import org.snipsnap.container.Components;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -43,6 +47,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Load a snip to edit. Loads the snip into the request context. In case
@@ -72,17 +78,10 @@ public class SnipEditServlet extends HttpServlet {
 
     // try to load the snip and set the snip_name property in case it is a new
     // snip, so the target store servlet knows how to name the new snip
-    Snip snip = SnipSpaceFactory.getInstance().load(name);
-    request.setAttribute("snip", snip);
-    request.setAttribute("snip_name", name);
+    SnipSpace space = (SnipSpace)Components.getComponent(SnipSpace.class);
+    Snip snip = space.load(name);
 
     String content = request.getParameter("content");
-    if (null != content) {
-      request.setAttribute("content", content);
-    } else {
-      request.setAttribute("content", snip != null ? snip.getContent() : "");
-    }
-
     String mimeType = request.getParameter("mime");
     String editHandler = request.getParameter("handler");
 
@@ -98,7 +97,7 @@ public class SnipEditServlet extends HttpServlet {
           if (null != editHandler && !"".equals(editHandler)) {
             if (Security.checkPermission(Permissions.EDIT_SNIP, Application.get().getUser(), snip) &&
               Security.hasRoles(Application.get().getUser(), snip, authRoles)) {
-              Logger.log("SnipEditServlet: calling " + editHandler);
+              Logger.log("SnipEditServlet: using edit handler '" + editHandler+"'");
               mimeType = mimeTypeLabel.getMIMEType();
             } else {
               editHandler = null;
@@ -107,11 +106,39 @@ public class SnipEditServlet extends HttpServlet {
           }
         }
       }
+    } else {
+      // handle new snips (they can get a parent and a template)
+      String parent = request.getParameter("parent");
+      String parentBefore = request.getParameter("parentBefore");
+      if (null == parentBefore) {
+        parentBefore = parent;
+      }
+      request.setAttribute("parent", parent);
+      request.setAttribute("parentBefore", parentBefore);
+      request.setAttribute("templates", getTemplates());
+    }
+
+    // copy a template into the content if it was requested
+    String template = request.getParameter("template");
+    boolean copyTemplate = request.getParameter("copy.template") != null;
+    if (copyTemplate && template != null) {
+      Snip templateSnip = space.load(template);
+      content = (content != null ? content : "") + templateSnip.getContent();
+    }
+
+    // set the attributes to transport snip and snip name (used when nonexisting snip)
+    request.setAttribute("snip", snip);
+    request.setAttribute("snip_name", name);
+
+    if (null != content) {
+      request.setAttribute("content", content);
+    } else {
+      request.setAttribute("content", snip != null ? snip.getContent() : "");
     }
 
     if(null != editHandler && !"".equals(editHandler)) {
       if(Security.hasRoles(Application.get().getUser(), snip, authRoles)) {
-        request.setAttribute("edit_page", "/exec/" + editHandler);
+        request.setAttribute("edit_handler", editHandler);
         request.setAttribute("mime_type", mimeType);
       }
     }
@@ -120,4 +147,31 @@ public class SnipEditServlet extends HttpServlet {
     dispatcher.forward(request, response);
   }
 
+  private List getTemplates() {
+    List templates = new ArrayList();
+
+    SnipSpace snipspace = (SnipSpace) Components.getComponent(SnipSpace.class);
+    List snipList = snipspace.getAll();
+
+    Iterator iterator = snipList.iterator();
+    while (iterator.hasNext()) {
+      Snip snip = (Snip) iterator.next();
+      Labels labels = snip.getLabels();
+      boolean noLabelsAll = labels.getAll().isEmpty();
+
+      if (!noLabelsAll) {
+        Collection labelsCat = labels.getLabels("TypeLabel");
+        if (!labelsCat.isEmpty()) {
+          Iterator iter = labelsCat.iterator();
+          while (iter.hasNext()) {
+            Label label = (Label) iter.next();
+            if (label.getValue().equals("Template")) {
+              templates.add(snip.getName());
+            }
+          }
+        }
+      }
+    }
+    return templates;
+  }
 }

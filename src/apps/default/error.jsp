@@ -22,7 +22,7 @@
   </head>
   <body>
     <h1>SnipSnap :: <%= exception.getClass().getName() %></h1>
-    <pre><%= exception.getLocalizedMessage() %></pre>
+    <%= exception.getLocalizedMessage() %>
     <p>
       <% if (exception.getCause() != null) { %>
            <h3>Caused by <%= exception.getCause().getClass().getName() %></h3>

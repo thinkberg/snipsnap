@@ -125,8 +125,8 @@ public class PluginServlet extends HttpServlet {
         try {
           servletPlugin = getServletPlugin(pluginName);
         } catch (Exception e) {
-          writer.write("<span class=\"error\">plugin error: '" + e.getLocalizedMessage() + "'</span>");
           Logger.warn("unable to load servlet plugin", e);
+          throw new ServletException("unable to load servlet plugin", e);
         }
         servletCache.put(pluginName, servletPlugin);
       }
@@ -135,7 +135,8 @@ public class PluginServlet extends HttpServlet {
         try {
           servletPlugin.service(request, response);
         } catch (Exception e) {
-          writer.write("<span class=\"error\">plugin error: '" + e.getLocalizedMessage() + "'</span>");
+          Logger.warn("error while executing servlet plugin", e);
+          throw new ServletException("error while executing servlet plugin", e);
         }
       } else {
 

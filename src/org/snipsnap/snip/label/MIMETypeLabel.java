@@ -25,18 +25,19 @@
 package org.snipsnap.snip.label;
 
 import org.radeox.util.i18n.ResourceManager;
+import org.snipsnap.app.Application;
 import org.snipsnap.container.Components;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.app.Application;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.Map;
 
 public class MIMETypeLabel extends BaseLabel {
+  private String type;
   private String viewHandler;
   private String editHandler;
 
@@ -55,19 +56,27 @@ public class MIMETypeLabel extends BaseLabel {
 
   public void setValue(String value) {
     if (null != value && !"".equals(value)) {
-      String values[] = value.split(",");
-      editHandler = (values.length > 0 ? values[0] : "");
-      viewHandler = (values.length > 1 ? values[1] : "");
+      String values[] = value.split(":");
+      type = (values.length > 0 ? values[0] : "");
+      editHandler = (values.length > 1 ? values[0] : "");
+      viewHandler = (values.length > 2 ? values[1] : "");
     }
     super.setValue(value);
   }
 
   public String getValue() {
-    return viewHandler == null ? "" : viewHandler+(editHandler == null ? "" : "," + editHandler);
+    return
+      isNull(type) ? "" : type +
+      (isNull(viewHandler) ? "" : ":" + viewHandler) +
+      (isNull(editHandler) ? "" : ":" + editHandler);
+  }
+
+  private boolean isNull(String var) {
+    return var == null || "".equals(var);
   }
 
   public String getMIMEType() {
-    return getName();
+    return type;
   }
 
   public String getViewHandler() {
@@ -81,6 +90,7 @@ public class MIMETypeLabel extends BaseLabel {
   public String getInputProxy() {
     StringBuffer buffer = new StringBuffer();
     if (Application.get().getUser().isAdmin()) {
+      buffer.append("<input type=\"\" name=\"label.name\" value=\"mime-type\"/>");
       buffer.append("<table border=\"0\" cellpadding=\"0\" cellspacing=\"2\">");
       buffer.append("<tr>");
       buffer.append("<td>");
@@ -88,7 +98,7 @@ public class MIMETypeLabel extends BaseLabel {
       buffer.append("</td>");
       buffer.append("<td><input type=\"text\" value=\"");
       buffer.append(name);
-      buffer.append("\" name=\"label.name\"/></td>");
+      buffer.append("\" name=\"label.type\"/></td>");
       buffer.append("</tr><tr>");
       buffer.append("<td>");
       buffer.append(ResourceManager.getString("i18n.messages", "label.mimetype.view"));
@@ -105,7 +115,7 @@ public class MIMETypeLabel extends BaseLabel {
       while (it.hasNext()) {
         String handlername = (String) it.next();
         buffer.append("<option");
-        if(handlername.equals(getViewHandler())) {
+        if (handlername.equals(getViewHandler())) {
           buffer.append(" selected=\"selected\"");
         }
         buffer.append(">");
@@ -159,17 +169,13 @@ public class MIMETypeLabel extends BaseLabel {
       if (!noLabelsAll) {
         Collection LabelsCat;
         // Search for all mime-type labels
-        LabelsCat = labels.getLabels("mime-type");
-        if (!LabelsCat.isEmpty()) {
-          Iterator iter = LabelsCat.iterator();
-          while (iter.hasNext()) {
-            Label label = (Label) iter.next();
-            // only add labels that have the type text/gsp
-            String name = label.getName();
-            if ("text/gsp".equalsIgnoreCase(name) || "text/groovy".equalsIgnoreCase(name)) {
-              String handler = snip.getName();
-              handlerList.add(handler);
-            }
+        Label label = labels.getLabel("mime-type");
+        if (null != label) {
+          // only add labels that have the type text/gsp
+          String name = label.getName();
+          if ("text/gsp".equalsIgnoreCase(name) || "text/groovy".equalsIgnoreCase(name)) {
+            String handler = snip.getName();
+            handlerList.add(handler);
           }
         }
       }
@@ -179,13 +185,16 @@ public class MIMETypeLabel extends BaseLabel {
 
   public void handleInput(Map input) {
     // ADMIN ONLY!
-    if(Application.get().getUser().isAdmin()) {
+    if (Application.get().getUser().isAdmin()) {
       super.handleInput(input);
-      if(input.containsKey("label.viewhandler")) {
-        viewHandler = (String)input.get("label.viewhandler");
+      if (input.containsKey("label.type")) {
+        type = (String) input.get("label.type");
       }
-      if(input.containsKey("label.edithandler")) {
-        editHandler = (String)input.get("label.edithandler");
+      if (input.containsKey("label.viewhandler")) {
+        viewHandler = (String) input.get("label.viewhandler");
+      }
+      if (input.containsKey("label.edithandler")) {
+        editHandler = (String) input.get("label.edithandler");
       }
       // tricky ... set the actual value by using our own getValue() method
       super.setValue(getValue());

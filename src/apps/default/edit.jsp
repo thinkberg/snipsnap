@@ -10,27 +10,86 @@
 <%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %>
 
 <div class="snip-wrapper">
+  <%-- display snip name or just "create new snip" if there is no existing snip --%>
   <div class="snip-title">
-   <h1 class="snip-name"><c:out value="${snip_name}" escapeXml="true"/></h1>
+   <h1 class="snip-name">
+    <c:choose>
+     <c:when test="${not empty(snip) && not empty(snip_name)}">
+      <c:out value="${snip_name}" escapeXml="true"/>
+     </c:when>
+     <c:otherwise>
+      <fmt:message key='snip.create'/>
+     </c:otherwise>
+    </c:choose>
+   </h1>
   </div>
-  <c:if test="${not empty preview}">
+  <%-- preview existing snip content --%>
+  <c:if test="${not empty(preview)}">
    <div class="preview"><div class="snip-content"><c:out value="${preview}" escapeXml="false"/></div></div>
   </c:if>
+
+  <%-- display edit part --%>
   <div class="snip-content">
    <s:check roles="Authenticated" permission="Edit" >
      <div class="snip-input">
       <form class="form" name="f" method="post" action="exec/store" enctype="multipart/form-data">
-        <c:choose>
-          <c:when test="${not empty(edit_page)}">
-            <c:import url="${edit_page}"/>
-          </c:when>
-          <c:otherwise>
-            <c:import url="/util/edit_default.jsp"/>
-          </c:otherwise>
-        </c:choose>
+        <%-- display parent selector and an editable snip name in case --%>
+        <c:if test="not empty(snip)">
+          <table>
+            <tr>
+              <td><fmt:message key="snip.parent"/></td>
+              <td>
+                <input name="parentBefore" value="<c:out value="${parentBefore}"/>" type="hidden"/>
+                <s:pathSelector parentName="${parentBefore}"/>
+              </td>
+            </tr>
+            <tr>
+              <td><fmt:message key="snip.name"/></td>
+              <td>
+                <input name="name" value="<c:out value="${name}"/>" type="text"/>
+                <c:if test="${error == 'snip.name.empty'}"><span class="error"><fmt:message key="snip.name.empty"/></span></c:if>
+              </td>
+            </tr>
+          </div>
+        </c:if>
+        <table>
+         <tr><td>
+          <%-- if there is a special edit handler, use it, else display standard page --%>
+          <c:choose>
+           <c:when test="${not empty(edit_handler)}">
+            <c:import url="/plugin/${edit_handler}"/>
+           </c:when>
+           <c:otherwise>
+            <textarea name="content" type="text" cols="80" rows="20"><c:out value="${content}" escapeXml="true"/></textarea>
+           </c:otherwise>
+          </c:choose>
+         </td></tr>
+         <%-- display template copy option (only if default edit handler)--%>
+         <tr><td class="form-buttons">
+           <c:if test="${not empty(templates) && empty(edit_handler)}">
+            <fmt:message key="snip.template"/>
+            <select name="template" size="1">
+              <c:forEach items="${templates}" var="template" >
+                <option><c:out value="${template}"/>
+              </c:forEach>
+            </select>
+            <input value="<fmt:message key="dialog.copy.template"/>" name="copy.template" type="submit"/>
+          </c:if>
+          <%-- default buttons when editing a snip --%>
+          <input value="<fmt:message key="snip.edit.help"/>" onClick="showHide('help'); return false;" type="submit">
+          <input value="<fmt:message key='dialog.preview'/>" name="preview" type="submit"/>
+          <input value="<fmt:message key='dialog.save'/>" name="save" type="submit"/>
+          <input value="<fmt:message key='dialog.cancel'/>" name="cancel" type="submit"/>
+          <c:if test="${error == 'snip.store.handler.error'}">
+            <br/><span class="error"><fmt:message key="${error}"/></span>
+          </c:if>
+         </td></tr>
+        </table>
+
+        <%-- keep variables in sync --%>
         <input name="mime_type" type="hidden" value="<c:out value="${mime_type}"/>"/>
         <input name="edit_handler" type="hidden" value="<c:out value="${edit_handler}"/>"/>
-        <input name="snip_name" type="hidden" value="<c:out value="${snip_name}"/>"/>
+        <input name="name" type="hidden" value="<c:out value="${snip_name}"/>"/>
         <input name="referer" type="hidden" value="<%= Encoder.escape(request.getHeader("REFERER")) %>"/>
       </form>
      </div>

@@ -22,25 +22,18 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-package org.snipsnap.net.handler;
 
-import org.snipsnap.net.ServletPlugin;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
-import org.radeox.util.logging.Logger;
+package org.snipsnap.net;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.ServletException;
 import java.io.IOException;
 
-public class TestStoreHandler implements ServletPlugin {
+/**
+ * Interface for servlet plugins
+ */
+public interface ServletPlugin {
   public void service(HttpServletRequest request, HttpServletResponse response)
-    throws IOException, ServletException {
-    String name = request.getParameter("name");
-    Logger.debug("test store handler: "+name);
-
-    throw new ServletException("This handler cannot store snips ("+name+")");
-  }
+    throws IOException, ServletException;
 }

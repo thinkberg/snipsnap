@@ -14,7 +14,7 @@
     <div class="snip-title">
      <h1 class="snip-name">
       <c:choose>
-       <c:when test="${empty edit}">
+       <c:when test="${empty(edit)}">
         <fmt:message key="snip.labels.add.title">
          <fmt:param value="${snip.name}"/>
          <fmt:param value="${label.type}"/>
@@ -44,7 +44,7 @@
             <tr>
               <td colspan="3" class="form-buttons">
                 <c:choose>
-                  <c:when test="${empty edit}">
+                  <c:when test="${empty(edit)}">
                     <input value="<fmt:message key='snip.labels.add'/>" name="add" type="submit"/>
                   </c:when>
                   <c:otherwise>

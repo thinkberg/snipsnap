@@ -56,7 +56,7 @@ public class CssHandlerServlet extends HttpServlet {
     String themeId = config.getTheme() + id;
     Snip cssSnip = (Snip)styleSheets.getMap().get(themeId);
     Timestamp cssTimestamp = (Timestamp)timeStamps.getMap().get(themeId);
-    if (null == cssSnip || cssSnip.getMTime().after(cssTimestamp)) {
+    if (null == cssSnip || null == cssTimestamp || cssSnip.getMTime().after(cssTimestamp)) {
       SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
       String snipName = Configuration.SNIPSNAP_THEMES + "/" + config.getTheme() + ("/default.css".equals(id) ? "/css" : id);
       cssSnip = space.load(snipName);
