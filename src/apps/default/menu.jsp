@@ -10,12 +10,16 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %>
 
-<table class="menu" width="100%" border="0" cellpadding="4" cellspacing="1">
+<table class="menu" width="200" border="0" cellpadding="4" cellspacing="1">
+ <s:check roles="Authenticated">
+   <tr><td>
+     <a href="../exec/post.jsp">post blog</a>
+   </td></tr>
+ </s:check>
  <tr><td>
-  <s:check roles="Authenticated">
-    <a href="../exec/post.jsp">post blog</a>
-  </s:check>
-  </td></tr>
+   <s:snip load="snipsnap-intro" id="intro"/>
+   <c:out value="${intro.XMLContent}" escapeXml="false"/>
+ </td></tr>
  <tr><td>
   <b>Recent Changes:</b><br>
   <!-- replace this with a JSTL tag ala  s:recent/> -->
@@ -35,5 +39,4 @@
    <c:out value="${blogrolling.XMLContent}" escapeXml="false"/>
   </p>
  </td></tr>
-
 </table>

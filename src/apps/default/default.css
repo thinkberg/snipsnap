@@ -11,12 +11,11 @@
 .bold { font-weight: bold; }
 .italic { font-style: italic; }
 
-#Menu {
+.Menu {
     //Cudos to www.lazyatom.com
 	color:#eee;
 	border:1px dashed #999;
 	line-height:14px;
-	width:140px;
 }
 
 .menuitem {

@@ -47,6 +47,7 @@ public class MacroFilter extends RegexTokenFilter {
   private Map macros = new HashMap();
 
   public MacroFilter() {
+    // @TODO replace with singleton/static
     super("\\{([^:}]*):?(.*?)\\}(.*?)\\{(\\1)\\}", SINGLELINE);
     addRegex("\\{([^:}]*):?(.*?)\\}", "", MULTILINE);
 
@@ -60,6 +61,7 @@ public class MacroFilter extends RegexTokenFilter {
     macros.put("snips-by-user", new UserSnipMacro());
     macros.put("snips-by-recent", new RecentSnipMacro());
     macros.put("list-of-users", new UserMacro());
+    macros.put("search", new SearchMacro());
     macros.put("weblog", new WeblogMacro());
     macros.put("index", new IndexSnipMacro());
     macros.put("image", new ImageMacro());

@@ -25,24 +25,20 @@
 package com.neotis.snip;
 
 import com.neotis.app.Application;
+import com.neotis.cache.Cache;
 import com.neotis.jdbc.Finder;
 import com.neotis.jdbc.Loader;
 import com.neotis.snip.filter.LinkTester;
-import com.neotis.util.ConnectionManager;
-import com.neotis.util.Queue;
-import com.neotis.cache.Cache;
 import com.neotis.user.Permissions;
 import com.neotis.user.Security;
-import com.neotis.xmlrpc.WeblogsPing;
+import com.neotis.util.ConnectionManager;
+import com.neotis.util.Queue;
+import org.apache.lucene.search.Hits;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.sql.Types;
-import java.util.*;
+import java.sql.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * SnipSpace handles all the data storage.
@@ -53,6 +49,7 @@ public class SnipSpace implements LinkTester, Loader {
   private Map missing;
   private Queue changed;
   private Cache cache;
+  private SnipIndexer indexer;
 
   private static SnipSpace instance;
 
@@ -72,6 +69,7 @@ public class SnipSpace implements LinkTester, Loader {
     changed = new Queue(50);
     cache = new Cache((Loader) this);
     changed.fill(storageByRecent(50));
+    indexer = new SnipIndexer();
   }
 
   public List getChanged() {
@@ -109,6 +107,10 @@ public class SnipSpace implements LinkTester, Loader {
   public Snip post(String content, Application app) {
     Date date = new Date(new java.util.Date().getTime());
     return post(content, date, app);
+  }
+
+  public Hits search(String queryString) {
+    return indexer.search(queryString);
   }
 
   public Snip post(String content, Date date, Application app) {
@@ -162,6 +164,7 @@ public class SnipSpace implements LinkTester, Loader {
     changed.add(snip);
     snip.setMTime(new Timestamp(new java.util.Date().getTime()));
     storageStore(snip);
+    indexer.index(snip);
     return;
   }
 
@@ -172,6 +175,7 @@ public class SnipSpace implements LinkTester, Loader {
       missing.remove(name);
     }
     changed.add(snip);
+    indexer.index(snip);
     return snip;
   }
 
@@ -179,10 +183,11 @@ public class SnipSpace implements LinkTester, Loader {
     cache.remove(snip.getName());
     changed.remove(snip);
     storageRemove(snip);
+    indexer.removeIndex(snip);
     return;
   }
 
-  // Storage System dependend Methods
+// Storage System dependend Methods
 
   public Snip createSnip(ResultSet result) throws SQLException {
     String name = result.getString("name");
@@ -248,7 +253,7 @@ public class SnipSpace implements LinkTester, Loader {
     Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions " +
                                " FROM Snip " +
                                " WHERE parentSnip=? " +
-                               " ORDER BY name DESC ", cache , (Loader) this);
+                               " ORDER BY name DESC ", cache, (Loader) this);
     finder.setString(1, parent.getName());
     return finder.execute(count);
   }
@@ -316,7 +321,7 @@ public class SnipSpace implements LinkTester, Loader {
       } else {
         statement.setString(8, comment.getName());
       }
-      statement.setString(9,  snip.getPermissions().toString());
+      statement.setString(9, snip.getPermissions().toString());
       statement.setString(10, snip.getName());
       statement.execute();
     } catch (SQLException e) {
