@@ -103,7 +103,7 @@ public class ApiDoc {
 
   public Writer appendTo(Writer writer) throws IOException {
     writer.write("{table}\n");
-    writer.write("Binding|BaseUrl|Name\n");
+    writer.write("Binding|BaseUrl|Converter Name\n");
     Iterator iterator = apiDocs.entrySet().iterator();
     while (iterator.hasNext()) {
       Map.Entry entry = (Map.Entry) iterator.next();

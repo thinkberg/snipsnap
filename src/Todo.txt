@@ -2,3 +2,4 @@
 @TODO: Snip with list version of all external libs, like Lucene, ORO, xml parser, ...
 @TODO: implement preview for comments
 @TODO: correct comments image for blue life
+@TODO: markup/highlighting for snipsnap macros

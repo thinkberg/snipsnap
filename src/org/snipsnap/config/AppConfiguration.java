@@ -38,6 +38,8 @@ import java.net.UnknownHostException;
  */
 public class AppConfiguration extends Configuration {
 
+  public final static String APP_WEBLOG_DATE_FORMAT = "app.weblogDateFormat";
+  public final static String APP_TIMEZONE = "app.timezone";
   public final static String APP_NAME = "app.name";
   public final static String APP_HOST = "app.host";
   public final static String APP_PORT = "app.port";
@@ -49,7 +51,6 @@ public class AppConfiguration extends Configuration {
   public final static String APP_LOGGER = "app.logger";
   public final static String APP_JDBC_URL = "app.jdbc.url";
   public final static String APP_JDBC_DRIVER = "app.jdbc.driver";
-
 
   public final static String PERM_NOTIFICATION = "notification";
   public final static String PERM_WEBLOGS_PING = "weblogsPing";
@@ -216,6 +217,16 @@ public class AppConfiguration extends Configuration {
 
   public String getLogger() {
     return getProperty(AppConfiguration.APP_LOGGER);
+  }
+
+  public String getWeblogDateFormat() {
+    return "EEEE, dd. MMMM yyyy";
+    //return getProperty(AppConfiguration.APP_WEBLOG_DATE_FORMAT);
+  }
+
+  public String getTimeZone() {
+    return "+1.00";
+    //return getProperty(AppConfiguration.APP_TIMEZONE);
   }
 
   public boolean allow(String action) {

@@ -46,6 +46,11 @@
     <servlet-class>org.snipsnap.net.RssServlet</servlet-class>
   </servlet>
 
+  <servlet>
+    <servlet-name>org.snipsnap.net.RsdServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.RsdServlet</servlet-class>
+  </servlet>
+
     <servlet>
       <servlet-name>org.snipsnap.net.XmlRpcServlet</servlet-name>
       <servlet-class>org.snipsnap.net.XmlRpcServlet</servlet-class>
@@ -156,6 +161,11 @@
   <servlet-mapping>
     <servlet-name>org.snipsnap.net.RssServlet</servlet-name>
     <url-pattern>/exec/rss</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>org.snipsnap.net.RsdServlet</servlet-name>
+    <url-pattern>/exec/rsd</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
