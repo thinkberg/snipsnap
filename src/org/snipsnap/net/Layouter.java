@@ -66,7 +66,11 @@ public class Layouter extends HttpServlet {
 
     request.setAttribute(ATT_PAGE, layout);
     RequestDispatcher dispatcher = null;
-    if (layout.endsWith(".jsp")) {
+
+    // layout requests that end with .jsp or .groovy are forwarded through the
+    // main.jsp. all other requests are tried to be served through the servlet
+    // contexts root path
+    if (layout.endsWith(".jsp") || layout.endsWith(".groovy")) {
       dispatcher = request.getRequestDispatcher("/main.jsp");
     } else {
       dispatcher = request.getRequestDispatcher(layout);

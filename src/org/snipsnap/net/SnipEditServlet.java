@@ -27,8 +27,14 @@ package org.snipsnap.net;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpaceFactory;
+import org.snipsnap.snip.label.Label;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
+import org.snipsnap.user.Roles;
+import org.snipsnap.user.Permission;
+import org.snipsnap.user.Security;
+import org.snipsnap.user.Permissions;
+import org.radeox.util.logging.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -45,6 +51,8 @@ import java.io.IOException;
  * @version $Id$
  */
 public class SnipEditServlet extends HttpServlet {
+
+  private final static Roles authRoles = new Roles(Roles.AUTHENTICATED);
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
@@ -70,6 +78,19 @@ public class SnipEditServlet extends HttpServlet {
       request.setAttribute("content", content);
     } else {
       request.setAttribute("content", snip != null ? snip.getContent() : "");
+    }
+
+    if (null != snip) {
+      Label editHandler = snip.getLabels().getLabel("EditHelper");
+      if(Security.checkPermission(Permissions.EDIT_SNIP, Application.get().getUser(), snip) &&
+        Security.hasRoles(Application.get().getUser(), snip, authRoles)) {
+        if (null != editHandler) {
+          Logger.log("SnipEditServlet: calling " + editHandler.getValue()+".gsp");
+          RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/"+editHandler.getValue()+".gsp");
+          dispatcher.forward(request, response);
+          return;
+        }
+      }
     }
 
     RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/edit.jsp");

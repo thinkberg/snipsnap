@@ -331,6 +331,33 @@
     </javac>
   </target>
 
+  <target name="make-edittest-jsp">
+    <mkdir dir="${target}/jsp/source"/>
+    <mkdir dir="${target}/jsp/classes"/>
+    <jspc destdir="${target}/jsp/source"
+      verbose="1" srcdir="${src}"
+      package="org.snipsnap.jsp"
+      classpathref="all.classpath">
+      <include name="**/EditTest.jsp"/>
+    </jspc>
+    <depend
+      srcdir="${target}/jsp/source"
+      destdir="${target}/jsp/classes"
+      cache="${target}/jsp/dependencies"
+      classpathref="all.classpath"/>
+    <javac deprecation="${deprecation}" debug="${debug}"
+      srcdir="${target}/jsp/source"
+      classpath="${src}/apps/default/WEB-INF/lib/snipsnap-servlets.jar"
+      classpathref="all.classpath"
+      destdir="${target}/jsp/classes">
+      <include name="**"/>
+    </javac>
+    <jar destfile="${src}/apps/default/WEB-INF/lib/edittest.jar" excludes="**/CVS">
+      <fileset dir="${target}/jsp/classes" includes="**"/>
+      <!-- <fileset dir="${src}" includesfile="META-INF/services/javax.servlet.HttpServlet"/> -->
+    </jar>
+  </target>
+
   <target if="precompile.jsp" depends="compile-jsp" name="jsp-jar" description="package precompiled jsp files">
     <jar destfile="${src}/apps/default/WEB-INF/lib/snipsnap-jsp.jar" excludes="**/CVS">
       <fileset dir="${target}/jsp/classes" includes="**"/>
@@ -338,7 +365,7 @@
   </target>
 
   <!-- create web archive of the template application -->
-  <target depends="jsp-jar" description="build template war" name="snipsnap-war">
+  <target depends="make-edittest-jsp,jsp-jar" description="build template war" name="snipsnap-war">
     <mkdir dir="${target}/webapp"/>
     <copy todir="${target}/webapp">
       <fileset dir="${src}/apps/default">
@@ -346,15 +373,10 @@
         <exclude name="**/*.jsp" if="precompile.jsp"/>
         <exclude name="WEB-INF/web-xml.tmpl"/>
       </fileset>
-<!--      <fileset dir="${src}/theme/blue" includes="**" excludes="**/CVS"/>-->
     </copy>
     <copy tofile="${target}/webapp/WEB-INF/classes/i18n/messages.properties"
       file="${src}/apps/default/WEB-INF/classes/i18n/messages_en.properties"/> 
 
-<!--    <mkdir dir="${target}/webapp/WEB-INF/themes"/>-->
-<!--    <copy todir="${target}/webapp/WEB-INF/themes">-->
-<!--      <fileset dir="${jar}" includes="${appname}-theme-*.jar"/>-->
-<!--    </copy>-->
     <loadfile property="web.inc" srcfile="${target}/jsp/web.inc" failonerror="false"/>
     <condition property="web.inc" value="">
       <not>
@@ -411,28 +433,6 @@
       <fileset dir="${target}/webapp" includes="**"/>
     </jar>
   </target>
-
-  <!-- create jar archives of all themes -->
-<!--  <target description="build theme jar" name="theme-jar">-->
-<!--    <jar destfile="${jar}/${appname}-theme-blue.jar" excludes="**/CVS">-->
-<!--      <fileset dir="${src}/theme/blue" includes="**"/>-->
-<!--      <zipfileset dir="${src}/theme" prefix="WEB-INF">-->
-<!--        <include name="web.xml"/>-->
-<!--      </zipfileset>-->
-<!--    </jar>-->
-<!--    <jar destfile="${jar}/${appname}-theme-sky.jar" excludes="**/CVS">-->
-<!--      <fileset dir="${src}/theme/sky" includes="**"/>-->
-<!--      <zipfileset dir="${src}/theme" prefix="WEB-INF">-->
-<!--        <include name="web.xml"/>-->
-<!--      </zipfileset>-->
-<!--    </jar>-->
-<!--    <jar destfile="${jar}/${appname}-theme-orange.jar" excludes="**/CVS">-->
-<!--      <fileset dir="${src}/theme/orange" includes="**"/>-->
-<!--      <zipfileset dir="${src}/theme" prefix="WEB-INF">-->
-<!--        <include name="web.xml"/>-->
-<!--      </zipfileset>-->
-<!--    </jar>-->
-<!--  </target>-->
 
   <target if="precompile.jsp" depends="installer-servlets-jar" name="compile-installer-jsp" description="compile installer jsp files">
     <mkdir dir="${target}/installer/jsp/source"/>

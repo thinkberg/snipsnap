@@ -44,6 +44,11 @@
   </listener>
 
   <servlet>
+    <servlet-name>org.snipsnap.net.GroovyTemplateServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.GroovyTemplateServlet</servlet-class>
+  </servlet>
+
+  <servlet>
     <servlet-name>org.snipsnap.net.Layouter</servlet-name>
     <servlet-class>org.snipsnap.net.Layouter</servlet-class>
   </servlet>
@@ -251,6 +256,11 @@
   <!-- servlet mappings -->
 
   <servlet-mapping>
+    <servlet-name>org.snipsnap.net.GroovyTemplateServlet</servlet-name>
+    <url-pattern>*.groovy</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
     <servlet-name>org.snipsnap.net.SnipRawServlet</servlet-name>
     <url-pattern>/raw/*</url-pattern>
   </servlet-mapping>
@@ -258,6 +268,36 @@
   <servlet-mapping>
     <servlet-name>org.snipsnap.net.SnipViewServlet</servlet-name>
     <url-pattern>/space/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>org.snipsnap.net.CommentViewServlet</servlet-name>
+    <url-pattern>/comments/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>org.snipsnap.net.Layouter</servlet-name>
+    <url-pattern>/exec/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>org.snipsnap.net.iCalServlet</servlet-name>
+    <url-pattern>/exec/ical/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>org.snipsnap.net.CssHandlerServlet</servlet-name>
+    <url-pattern>/theme/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>org.snipsnap.net.ThemeImageServlet</servlet-name>
+    <url-pattern>/theme/images/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>org.snipsnap.net.RdfServlet</servlet-name>
+    <url-pattern>/rdf/*</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
@@ -276,11 +316,6 @@
   </servlet-mapping>
 
   <servlet-mapping>
-    <servlet-name>org.snipsnap.net.RdfServlet</servlet-name>
-    <url-pattern>/rdf/*</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
     <servlet-name>org.snipsnap.net.RenderServlet</servlet-name>
     <url-pattern>/exec/render</url-pattern>
   </servlet-mapping>
@@ -288,21 +323,6 @@
   <servlet-mapping>
     <servlet-name>org.snipsnap.net.NameSpaceServlet</servlet-name>
     <url-pattern>/exec/namespace</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>org.snipsnap.net.Layouter</servlet-name>
-    <url-pattern>/exec/*</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>org.snipsnap.net.CssHandlerServlet</servlet-name>
-    <url-pattern>/theme/*</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>org.snipsnap.net.ThemeImageServlet</servlet-name>
-    <url-pattern>/theme/images/*</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
@@ -386,11 +406,6 @@
   </servlet-mapping>
 
   <servlet-mapping>
-    <servlet-name>org.snipsnap.net.CommentViewServlet</servlet-name>
-    <url-pattern>/comments/*</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
     <servlet-name>org.snipsnap.net.CommentStoreServlet</servlet-name>
     <url-pattern>/exec/storecomment</url-pattern>
   </servlet-mapping>
@@ -413,11 +428,6 @@
   <servlet-mapping>
     <servlet-name>org.snipsnap.net.NewUserServlet</servlet-name>
     <url-pattern>/exec/newuser</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>org.snipsnap.net.iCalServlet</servlet-name>
-    <url-pattern>/exec/ical/*</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
@@ -450,6 +460,17 @@
     <welcome-file>index.jsp</welcome-file>
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>
+
+  <!-- ERROR PAGES -->
+  <error-page>
+    <error-code>500</error-code>
+    <location>/error.jsp</location>
+  </error-page>
+
+  <error-page>
+    <exception-type>javax.servlet.ServletException</exception-type>
+    <location>/error.jsp</location>
+  </error-page>
 
   <!-- TAGLIBS -->
   <taglib>
