@@ -54,15 +54,14 @@ public class GraphMacro extends SnipMacro {
 
   public void execute(Writer writer, SnipMacroParameter params)
       throws IllegalArgumentException, IOException {
-//      writer.write("<img src=\"");
     String name = params.getSnip().getName();
-    writer.write("<a href=\"/exec/render?name=");
+    writer.write("<img src=\"/exec/render?name=");
     writer.write(name);
     // Remove {graph} from start and end offset
     int start = params.getStart() + getName().length() + 2;
     int end = params.getEnd() - getName().length() - 2;
     writer.write("&start="+start);
     writer.write("&end="+end);
-    writer.write("\">click</a>");
+    writer.write("\"/>");
   }
 }

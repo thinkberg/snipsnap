@@ -29,6 +29,7 @@ import org.snipsnap.config.ConfigurationProxy;
 import org.snipsnap.snip.Blog;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpaceFactory;
+import org.snipsnap.graph.*;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -74,10 +75,13 @@ public class RenderServlet extends HttpServlet {
       end = content.length();
     }
 
+    response.setContentType("image/png");
+
     ServletOutputStream out = response.getOutputStream();
 
-    response.setContentType("text/plain");
-
-    out.println(snip.getContent().substring(start, end));
+    TreeBuilder builder = new StringTreeBuilder(snip.getContent().substring(start, end));
+    Renderer renderer = new MindMapRenderer();
+    DrawTree drawTree = new DrawTree();
+    drawTree.draw(builder.build(), renderer, out);
   }
 }
