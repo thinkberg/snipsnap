@@ -33,12 +33,9 @@ package com.neotis.snip.filter.macro;
 
 import com.neotis.snip.Snip;
 import com.neotis.snip.SnipSpace;
-import com.neotis.snip.filter.Filter;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
 
 public class WeblogMacro extends Macro {
   StringBuffer buffer;
@@ -62,7 +59,7 @@ public class WeblogMacro extends Macro {
         buffer.append(entry.getContent());
         buffer.append("</p>");
         buffer.append(snip.getComments().getCommentString());
-        buffer.append("<hr/>");
+        buffer.append("<pre>\n</pre><hr size=\"1\"/><pre>\n</pre>");
       }
 
       return buffer.toString();
