@@ -66,19 +66,19 @@ public class ApplicationLoader {
       File files[] = rootDir.listFiles();
       for (int i = 0; i < files.length; i++) {
         if (files[i].isDirectory()) {
-          File configFile = getConfigFile(root, files[i].getName());
-          if (configFile.exists()) {
-            try {
-              loadApplication(loadNewConfiguration(configFile));
-            } catch (Exception e) {
-              errors++;
-              e.printStackTrace();
-              System.out.println("WARNING: unable to load application '" + files[i].getName() + "': " + e.getMessage());
-            } catch (Error err) {
-              errors++;
-              err.printStackTrace();
-              System.out.println("FATAL: unable to load application: '" + files[i].getName() + "': " + err.getMessage());
+          try {
+            Configuration config = getConfiguration(root, files[i].getName());
+            if (config != null) {
+              loadApplication(config);
             }
+          } catch (Exception e) {
+            errors++;
+            e.printStackTrace();
+            System.out.println("WARNING: unable to load application '" + files[i].getName() + "': " + e.getMessage());
+          } catch (Error err) {
+            errors++;
+            err.printStackTrace();
+            System.out.println("FATAL: unable to load application: '" + files[i].getName() + "': " + err.getMessage());
           }
         }
       }
@@ -88,7 +88,11 @@ public class ApplicationLoader {
     return errors;
   }
 
-  private static File getConfigFile(String root, String name) {
+  private static String normalize(String name) {
+    return name.replace(' ', '_');
+  }
+
+  private static Configuration getConfiguration(String root, String name) throws IOException {
     File rootDir = new File(root);
     if (rootDir.exists() && rootDir.isDirectory()) {
       File appDir = new File(rootDir, normalize(name));
@@ -97,24 +101,22 @@ public class ApplicationLoader {
         if (!configFile.exists()) {
           configFile = new File(appDir, "webapp/WEB-INF/application.conf");
         }
-        return configFile;
+
+        if (configFile.exists()) {
+          Configuration config = ConfigurationProxy.newInstance();
+          config.load(new FileInputStream(configFile));
+          config.setWebInfDir(configFile.getParentFile());
+          config.getProperties().setProperty(APPLICATION_NAME, name);
+          return config;
+        }
       }
     }
     return null;
   }
 
-  private static Configuration loadNewConfiguration(File configFile) throws IOException {
-    Configuration config = ConfigurationProxy.newInstance();
-    config.setWebInfDir(configFile.getParentFile());
-    config.load(new FileInputStream(configFile));
-    config.getProperties().setProperty(APPLICATION_NAME, configFile.getName());
-    return config;
-  }
-
   public static Configuration reloadApplication(String root, String name) throws Exception {
-    File configFile = getConfigFile(root, normalize(name));
-    if (configFile != null) {
-      Configuration config = loadNewConfiguration(configFile);
+    Configuration config = getConfiguration(root, name);
+    if (config != null) {
       unloadApplication(config);
       loadApplication(config);
       return config;
@@ -123,9 +125,8 @@ public class ApplicationLoader {
   }
 
   public static Configuration loadApplication(String root, String name) throws Exception {
-    File configFile = getConfigFile(root, normalize(name));
-    if (configFile != null) {
-      Configuration config = loadNewConfiguration(configFile);
+    Configuration config = getConfiguration(root, name);
+    if (config != null) {
       loadApplication(config);
       return config;
     }
@@ -133,15 +134,12 @@ public class ApplicationLoader {
   }
 
   public static void unloadApplication(String root, String name) throws Exception {
-    File configFile = getConfigFile(root, normalize(name));
-    if (configFile != null) {
-      unloadApplication(loadNewConfiguration(configFile));
+    Configuration config = getConfiguration(root, name);
+    if (config != null) {
+      unloadApplication(config);
     }
   }
 
-  private static String normalize(String name) {
-    return name.replace(' ', '_');
-  }
 
   public static int getApplicationErrorCount() {
     return errors;
@@ -210,16 +208,16 @@ public class ApplicationLoader {
     Collection httpServers = Server.getHttpServers();
 
     // try exact match first (host AND port)
-    HttpServer httpServer =  findHost(httpServers, host, port);
+    HttpServer httpServer = findHost(httpServers, host, port);
     //System.out.print(httpServer != null ? "<!>" : "<?>");
     if (null == httpServer) {
       httpServer = new Server();
-      ((Server)httpServer).setRootWebApp("/");
+      ((Server) httpServer).setRootWebApp("/");
       try {
         httpServer.start();
       } catch (MultiException e) {
         e.printStackTrace();
-        throw new IOException("unable to start HTTP Server: "+e.getMessage());
+        throw new IOException("unable to start HTTP Server: " + e.getMessage());
       }
       //System.out.print("(new server)");
 
@@ -231,8 +229,8 @@ public class ApplicationLoader {
       }
       //System.out.print("(port " + port + ")");
     } else {
-      if(getContext(httpServer,  path) != null) {
-        throw new IOException("Conflicting HTTP Server configuration found: '"+host+":"+port+path+"/'");
+      if (getContext(httpServer, path) != null) {
+        throw new IOException("Conflicting HTTP Server configuration found: '" + host + ":" + port + path + "/'");
       }
     }
     //System.out.println();
