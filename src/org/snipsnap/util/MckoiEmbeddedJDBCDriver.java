@@ -74,7 +74,6 @@ public class MckoiEmbeddedJDBCDriver implements Driver {
     driver = null;
   }
 
-
   // we accept embedded (local) databases only
   public final static String MCKOI_PREFIX = "jdbc:mckoi:local://";
 

@@ -58,6 +58,9 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.jar.JarFile;
 
+import com.mckoi.database.control.DBController;
+import com.mckoi.database.control.DBSystem;
+
 /**
  * Installer servlet that installs the application.
  * @author Matthias L. Jugel
@@ -218,7 +221,7 @@ public class Installer extends HttpServlet {
     String jdbcDrv = request.getParameter("driver");
     if (useMcKoi || jdbcURL == null || jdbcURL.length() == 0) {
       File dbConfFile = new File(webAppRoot, "db.conf");
-      jdbcURL = MckoiEmbeddedJDBCDriver.MCKOI_PREFIX + dbConfFile.getAbsolutePath();
+      jdbcURL = MckoiEmbeddedJDBCDriver.MCKOI_PREFIX + dbConfFile.getPath();
       jdbcDrv = "org.snipsnap.util.MckoiEmbeddedJDBCDriver";
 
       config.setJDBCURL(jdbcURL + "?create=true");
@@ -239,7 +242,11 @@ public class Installer extends HttpServlet {
       config.setJDBCURL(jdbcURL);
       writeMessage(out, "Inserting inital data into database ...");
       CreateDB.insertData(config);
-
+      // finally close database
+      try {
+        MckoiEmbeddedJDBCDriver.stopDatabase(jdbcURL);
+      } catch (IOException e) {
+      }
     } else {
       config.setJDBCURL(jdbcURL);
       config.setJDBCDriver(jdbcDrv);
