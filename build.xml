@@ -35,10 +35,6 @@
     <path refid="app.classpath"/>
   </path>
 
-  <target name="init">
-    <mkdir dir="${target}"/>
-  </target>
-
   <!-- build distribution -->
   <target depends="tar-source, tar-binary" name="dist" description="tar complete distribution"/>
 
@@ -123,12 +119,13 @@
   <!-- delete compiled class files and created jar/war archives -->
   <target description="clean up compiled code" name="clean">
     <delete>
-      <fileset dir="${target}" includes="**" excludes="CVS"/>
+      <fileset includes="${target}/**" excludes="CVS"/>
     </delete>
     <delete>
       <fileset dir="${jar}" includes="${appname}*.jar"/>
       <fileset dir="${jar}" includes="${appname}*.war"/>
       <fileset dir="${src}/apps/default/WEB-INF/lib" includes="${appname}-servlets.jar"/>
+      <fileset dir="${src}/apps/installer/WEB-INF/lib" includes="installer-servlets.jar"/>
     </delete>
   </target>
 
