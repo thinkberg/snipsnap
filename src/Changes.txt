@@ -1,5 +1,6 @@
 0.3.5
 
+- Removed URL detection that brakes absolute URLs behind a proxy
 - File Upload changed to store files relative to snips
 - Fixed bug: zero bytes when decoding %xx encoded urls
 - Fixed bug: URLs in [...] made the LinkFilter not process any [...]
