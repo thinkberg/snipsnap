@@ -49,7 +49,7 @@ public class MailPasswordKeyServlet extends HttpServlet {
   private final static String ERR_PASSWORD = "User name and password do not match!";
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
+    throws ServletException, IOException {
 
     String login = request.getParameter("login");
 
@@ -67,19 +67,22 @@ public class MailPasswordKeyServlet extends HttpServlet {
       String key = um.getPassWordKey(user);
       AppConfiguration configuration = Application.get().getConfiguration();
       String receiver = user.getEmail();
-      String subject = "Forgotten password";
-      String url = configuration.getUrl("/exec/changepass.jsp?key=" + key);
-      String content = "To change your password go to <a href=\"" + url +
+      if (receiver != null && receiver.length() > 0) {
+        String subject = "Forgotten password";
+        String url = configuration.getUrl("/exec/changepass.jsp?key=" + key);
+        String content = "To change your password go to <a href=\"" + url +
           "\">" + url + "</a>";
 
-      Mail.getInstance().sendMail(receiver, subject, content);
+        Mail.getInstance().sendMail(receiver, subject, content);
+      }
     } else {
       response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));
       return;
     }
 
 
-    request.setAttribute("error", "Check your inbox. You should receive an email with instructions soon.");
+    request.setAttribute("error", "Check your inbox. You should receive an email with"
+                                  + " instructions soon if you registered with an Email.");
     RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/forgot.jsp");
     dispatcher.forward(request, response);
   }
