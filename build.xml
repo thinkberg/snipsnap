@@ -27,7 +27,7 @@
     <pathelement location="${jar}/gabriel.jar"/>
     <pathelement location="${jar}/jmdns.jar"/>
     <pathelement location="${jar}/rome-0.3.jar"/>
-    <pathelement location="${jar}/jdom-1.0rc1.jar"/>
+    <pathelement location="${jar}/jdom-b10.jar"/>
     <pathelement location="${jar}/asm-1.4.1.jar"/>
     <pathelement location="${jar}/dynaop-1.0-beta.jar"/>
     <pathelement location="${jar}/cglib-asm-1.0.jar"/>
@@ -122,7 +122,7 @@
         <include name="lib/gabriel.jar"/>
         <include name="lib/jmdns.jar"/>
         <include name="lib/rome-0.3.jar"/>
-        <include name="lib/jdom-1.0rc1.jar"/>
+        <include name="lib/jdom-b10.jar"/>
         <include name="lib/asm-1.4.1.jar"/>
         <include name="lib/dynaop-1.0-beta.jar"/>
         <include name="lib/cglib-asm-1.0.jar"/>
@@ -444,7 +444,7 @@
         <include name="gabriel.jar"/>
         <include name="jmdns.jar"/>
         <include name="rome-0.3.jar"/>
-        <include name="jdom-1.0rc1.jar"/>
+        <include name="jdom-b10.jar"/>
         <include name="dynaop-1.0-beta.jar"/>
         <include name="cglib-asm-1.0.jar"/>
         <include name="asm-util-1.4.1.jar"/>
