@@ -59,7 +59,7 @@ public class SnipPathTest extends SnipTestSupport {
     } catch (IOException e) {
       fail("Exception thrown "+e.getMessage());
     }
-    assertEquals("Path without existing snips", "SWT > Stephan > Students",
+    assertEquals("Path without existing snips", "<a href=\"/space/start\">start</a> > SWT > Stephan > Students",
         writer.getBuffer().toString());
   }
 
@@ -73,7 +73,9 @@ public class SnipPathTest extends SnipTestSupport {
     } catch (IOException e) {
       fail("Exception thrown "+e.getMessage());
     }
-    assertEquals("Path with existing snips", "SWT > Stephan > Students",
-        writer.getBuffer().toString());
+    assertEquals("Path with existing snips",
+                 "<a href=\"/space/start\">start</a> > <a href=\"/space/SWT\">SWT</a> > <a href=\"/space/SWT/Stephan\">Stephan</a> > Students",
+                writer.getBuffer().toString());
   }
 }
+
