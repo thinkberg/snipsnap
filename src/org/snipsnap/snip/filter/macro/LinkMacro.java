@@ -48,7 +48,7 @@ public class LinkMacro extends Macro {
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
 
-    if (params.getLength() == 2) {
+    if (params.getLength() >= 2) {
       writer.write("<span class=\"nobr\">");
       writer.write(img);
       writer.write("<a href=\"");
@@ -57,7 +57,7 @@ public class LinkMacro extends Macro {
       writer.write(params.get("0"));
       writer.write("</a>");
       writer.write("</span>");
-    } else if (params.getLength() == 1) {
+    } else if (params.getLength() >= 1) {
       // will be catched by UrlFilter
       writer.write(params.get("0"));
     } else {
