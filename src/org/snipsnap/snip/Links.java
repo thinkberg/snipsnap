@@ -67,7 +67,6 @@ public class Links {
     return linkMap.size();
   }
 
-
   public void addLink(String url) {
     if (null == linkMap) {
       linkMap = deserialize(cache);

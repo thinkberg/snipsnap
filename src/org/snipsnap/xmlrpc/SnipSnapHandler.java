@@ -38,10 +38,12 @@ import org.snipsnap.snip.XMLSnipExport;
 import org.snipsnap.snip.XMLSnipImport;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.Links;
 import org.snipsnap.snip.storage.SnipSerializer;
 import org.snipsnap.user.AuthenticationService;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
+import org.snipsnap.render.filter.links.BackLinks;
 import org.dom4j.io.XMLWriter;
 import org.dom4j.io.OutputFormat;
 
@@ -223,5 +225,17 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
       throw new IOException(e.getMessage());
     }
     return true;
+  }
+
+  public int removeBacklink(String regexp) {
+    Configuration config = Application.get().getConfiguration();
+    SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
+    Iterator allSnipIt = space.getAll().iterator();
+    while(allSnipIt.hasNext()) {
+      Snip snip = (Snip)allSnipIt.next();
+      Links links = snip.getBackLinks();
+      links.iterator();
+    }
+
   }
 }
