@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * Load a snip to view.
@@ -63,6 +64,11 @@ public class CommentViewServlet extends HttpServlet {
       System.err.println("Snip does not exist: name=" + name);
       snip = SnipSpaceFactory.getInstance().load("snipsnap-notfound");
     }
+
+    Application app = Application.get();
+    Map params = app.getParameters();
+    params.put("viewed", snip);
+    params.put("RSS", params.get("RSS") + "?snip=" + snip.getNameEncoded());
 
     request.setAttribute("snip", snip);
     request.setAttribute("URI", request.getRequestURI());
