@@ -1,0 +1,6 @@
+# Bookservices for the {book} macro
+#
+# Examples how to specify the URL. The ISBN is appended to the URL.
+# Amazon.de http://www.amazon.de/exec/obidos/ASIN/
+# Preistester http://www.preistester.de/cgi-bin/pt/buchs.pl?query=profi&isbn=
+# Book-Butler http://book-butler.com/?evt=go&in=

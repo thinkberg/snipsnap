@@ -1,0 +1,5 @@
+# API docs specification for the {api} macro. Put in your changes here.
+#
+# Examples are below. These values are in the radeox implementation by default.
+# J2EE http://java.sun.com/j2ee/sdk_1.3/techdocs/api/ Java
+# Ruby http://www.rubycentral.com/book/ref_c_ Ruby
