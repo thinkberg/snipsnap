@@ -32,6 +32,8 @@ import com.echomine.net.ConnectionFailedException;
 
 import java.net.UnknownHostException;
 
+import org.snipsnap.app.Application;
+
 /**
  * Bot which communicates via Jabber IM. This Bot can
  * receive and send jabber group and private messages.
@@ -89,7 +91,7 @@ public class JabberBot {
     try {
       System.err.print("Sending '"+message+"' to '"+user+"' ...");
       JabberChatMessage msg = new JabberChatMessage(JabberChatMessage.TYPE_HEADLINE);
-      msg.setSubject("SnipSnap.org");
+      msg.setSubject(Application.get().getConfiguration().getName());
       msg.setBody(message);
       msg.setTo(user);
       session.sendMessage(msg);
