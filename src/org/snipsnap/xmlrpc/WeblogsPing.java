@@ -58,7 +58,9 @@ public class WeblogsPing extends Thread {
   public WeblogsPing(AppConfiguration configuration, Snip weblog) {
     this.config = configuration;
     this.weblog = weblog;
+  }
 
+  public void init() {
     if (null == handlers) {
       handlers = new ArrayList();
       boolean fileNotFound = false;
@@ -109,6 +111,9 @@ public class WeblogsPing extends Thread {
 
   public void run() {
     if (config.allow(AppConfiguration.PERM_WEBLOGS_PING) && handlers.size() > 0) {
+      if (null == handlers) {
+        init();
+      }
       Iterator iterator = handlers.iterator();
       while (iterator.hasNext()) {
         PingHandler handler = (PingHandler) iterator.next();
