@@ -29,7 +29,6 @@ import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipSpaceFactory;
 
 import java.text.DateFormatSymbols;
@@ -137,7 +136,7 @@ public class Month {
     Snip viewedSnip = (Snip) app.getParameters().get("viewed");
     String weblogName = (String) app.getParameters().get("weblog");
     String viewed = viewedSnip != null ? viewedSnip.getName() : config.getStartSnip();
-    if(weblogName == null) {
+    if (weblogName == null) {
       weblogName = viewedSnip != null && viewedSnip.isWeblog() ? viewedSnip.getName() : config.getStartSnip();
     }
 
@@ -180,7 +179,7 @@ public class Month {
     if (viewedSnip != null && !weblogName.equals(config.getStartSnip())) {
       view.append(" (");
       Snip weblogSnip = SnipSpaceFactory.getInstance().load(weblogName);
-      view.append(SnipLink.cutLength(weblogSnip.getTitle(), 20));
+      view.append(weblogSnip.getLink());
       view.append(")");
     }
     view.append("</caption>");
@@ -219,13 +218,13 @@ public class Month {
     }
 
     // Fill in numbers for the day of month.
-    Set days = getDays(viewed, month, year);
+    Set days = getDays(weblogName, month, year);
 
     for (int i = 1; i <= daysInMonth; i++) {
       String day = "" + i;
 
       String calBlogOld = toKey(year, month, i);
-      String calBlogNew = viewed + "/" + calBlogOld + "/1";
+      String calBlogNew = weblogName + "/" + calBlogOld + "/1";
 
       if (days.contains(calBlogNew)) {
         day = makeLink(SnipLink.encode(calBlogNew) + "?weblog=" + SnipLink.encode(weblogName) + "&calmonth=" + month + "&calyear=" + year, day);
