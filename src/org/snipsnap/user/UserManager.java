@@ -222,7 +222,6 @@ public class UserManager implements Loader {
       System.err.println("Malformed URL: "+e);
       path = "/";
     }
-    System.out.println("path: '"+path+"'");
     cookie.setPath(path);
     cookie.setComment("SnipSnap User");
     response.addCookie(cookie);
