@@ -26,15 +26,14 @@ package org.snipsnap.net;
 
 import org.snipsnap.config.Configuration;
 import org.snipsnap.config.ConfigurationProxy;
-import org.snipsnap.snip.Blog;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.semanticweb.rss.*;
+import org.snipsnap.container.Components;
 import org.snipsnap.feeder.Feeder;
 import org.snipsnap.feeder.FeederRepository;
-import org.snipsnap.container.Components;
 import org.snipsnap.render.PlainTextRenderEngine;
+import org.snipsnap.semanticweb.rss.BlogFeeder;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipSpaceFactory;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
