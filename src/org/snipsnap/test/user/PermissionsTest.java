@@ -90,4 +90,20 @@ public class PermissionsTest extends TestCase {
     roles.add("role 1");
     assertTrue("Permission with no roles grants no permissions", ! perms.check("Edit", roles));
   }
+
+  public void testSerialize() {
+    Permissions perms = new Permissions();
+    perms.add("Edit", "role 1");
+    assertEquals("Edit:role 1", perms.toString());
+  }
+
+  public void testDeserialize() {
+    String permString = "Edit:role 1|Remove:role 2";
+    Permissions perms = new Permissions(permString);
+    Set roles = new HashSet();
+    roles.add("role 1");
+    roles.add("role 2");
+    assertTrue(perms.check("Edit", roles));
+    assertTrue(perms.check("Remove", roles));
+  }
 }

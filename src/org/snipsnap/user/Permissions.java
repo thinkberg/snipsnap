@@ -143,7 +143,7 @@ public class Permissions {
   }
 
   private String after(String string, String delimiter) {
-    return string.substring(string.indexOf(delimiter));
+    return string.substring(string.indexOf(delimiter)+1);
   }
 
   private String before(String string, String delimiter) {
