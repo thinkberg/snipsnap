@@ -12,7 +12,7 @@
  <div class="snip-title">
    <h1 class="snip-name">
      <fmt:message key="snip.copy">
-       <fmt:param><c:out value="${snip.name}" escapeXml="true" /></fmt:param>
+       <fmt:param value="${snip.name}"/>
      </fmt:message>
    </h1>
  </div>

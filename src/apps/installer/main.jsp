@@ -45,16 +45,14 @@
                 <c:forEach items="${errors}" var="error">
                   <li>
                    <fmt:message key="install.error.${error.value}">
-                     <fmt:param>
-                       <c:choose>
-                         <c:when test="${empty config.properties[error.key]}">
-                           <c:out value="${error.key}"/>
-                         </c:when>
-                         <c:otherwise>
-                          <c:out value="${config.properties[error.key]}"/>
-                         </c:otherwise>
-                       </c:choose>
-                     </fmt:param>
+                     <c:choose>
+                       <c:when test="${empty config.properties[error.key]}">
+                         <fmt:param  value="${error.key}"/>
+                       </c:when>
+                       <c:otherwise>
+                          <fmt:param value="${config.properties[error.key]}"/>
+                       </c:otherwise>
+                     </c:choose>
                    </fmt:message>
                   </li>
                 </c:forEach>

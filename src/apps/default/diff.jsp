@@ -27,7 +27,7 @@
       <c:choose>
         <c:when test="${changeInfo.type=='DELETE'}">
           <fmt:message key="snip.diff.deleted" >
-            <fmt:param><c:out value="${changeInfo.from}"/></fmt:param>
+            <fmt:param value="${changeInfo.from}"/>
           </fmt:message>
           <div class="diff-delete">
             <c:forEach items="${changeInfo.lines}" var="line" varStatus="stat">
@@ -37,7 +37,7 @@
         </c:when>
         <c:when test="${changeInfo.type=='INSERT'}">
           <fmt:message key="snip.diff.inserted" >
-            <fmt:param><c:out value="${changeInfo.from}"/></fmt:param>
+            <fmt:param value="${changeInfo.from}"/>
           </fmt:message>
           <div class="diff-insert">
             <c:forEach items="${changeInfo.lines}" var="line" varStatus="stat">
@@ -47,7 +47,7 @@
         </c:when>
         <c:when test="${changeInfo.type=='CHANGE'}">
           <fmt:message key="snip.diff.changed" >
-            <fmt:param><c:out value="${changeInfo.from}"/></fmt:param>
+            <fmt:param value="${changeInfo.from}"/>
           </fmt:message>
           <div class="diff-change">
             <c:forEach items="${changeInfo.lines}" var="line" varStatus="stat">
@@ -57,8 +57,8 @@
         </c:when>
         <c:when test="${changeInfo.type=='MOVE'}">
           <fmt:message key="snip.diff.moved" >
-            <fmt:param><c:out value="${changeInfo.from}"/></fmt:param>
-            <fmt:param><c:out value="${changeInfo.to}"/></fmt:param>
+            <fmt:param value="${changeInfo.from}"/>
+            <fmt:param value="${changeInfo.to}"/>
           </fmt:message>
           <div class="diff-move">
             <c:forEach items="${changeInfo.lines}" var="line" varStatus="stat">

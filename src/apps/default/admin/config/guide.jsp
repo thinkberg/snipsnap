@@ -22,7 +22,7 @@
       </c:when>
       <c:otherwise>
         <fmt:message key="config.guide.title">
-          <fmt:param><%= ((List) pageContext.findAttribute("steps")).size() %></fmt:param>
+          <fmt:param value='<%= ((List) pageContext.findAttribute("steps")).size() %>'/>
         </fmt:message>
       </c:otherwise>
     </c:choose>

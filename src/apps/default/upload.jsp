@@ -17,7 +17,7 @@
   <div class="snip-title">
    <h1 class="snip-name">
     <fmt:message key="snip.attachments.title">
-     <fmt:param><c:out value="${snip_name}" escapeXml="false"/></fmt:param>
+     <fmt:param value="${snip_name}"/>
     </fmt:message>
    </h1>
   </div>

@@ -11,7 +11,7 @@
 
 <c:set var="percentage" value="${param.statusCurrent * 100 / param.statusMax}" scope="request"/>
 <fmt:message key="${param.statusMessage}">
-  <fmt:param><fmt:formatNumber maxFractionDigits="0" value="${percentage}"/></fmt:param>
+  <fmt:param value="${percentage}"/>
 </fmt:message><br/>
 <table class="statusbar">
   <tr>
