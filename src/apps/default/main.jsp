@@ -32,7 +32,7 @@
     <tr><td colspan="2"><s:image name="snip"/></td></tr>
     <tr><td colspan="2">
      <div id="Header">Bigger. Better. Faster. More.
-      <font size="2">[ <a href="../space/start">start</a> |
+      <font size="2">[ <a href="../space/start">start</a> | <a href="../space/snipsnap-index">index</a> |
        <s:check roles="Authenticated">
           logged in as <a href="../space/<c:out value='${app.user.login}'/>"><c:out value="${app.user.login}"/></a> | <a href="../exec/authenticate?logoff=true">logoff</a>
        </s:check>

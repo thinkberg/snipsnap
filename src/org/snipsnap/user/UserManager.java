@@ -53,6 +53,10 @@ public class UserManager {
   private UserManager() {
   }
 
+  public List getAll() {
+    return storageAll();
+  }
+
   public User getUser(HttpServletRequest request) {
     HttpSession session = request.getSession(true);
     User user = (User) session.getAttribute("user");
@@ -245,6 +249,34 @@ public class UserManager {
       ConnectionManager.close(connection);
     }
     return user;
+  }
+
+  private List storageAll() {
+    List users = new ArrayList();
+
+    ResultSet result = null;
+    PreparedStatement statement = null;
+    Connection connection = ConnectionManager.getConnection();
+
+    try {
+      statement = connection.prepareStatement("SELECT login, passwd, email, status, roles FROM User "+
+                                              " ORDER BY login");
+
+      result = statement.executeQuery();
+      User user = null;
+      while (result.next()) {
+        user = createUser(result);
+        users.add(user);
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    } finally {
+      ConnectionManager.close(result);
+      ConnectionManager.close(statement);
+      ConnectionManager.close(connection);
+    }
+
+    return users;
   }
 
 }
