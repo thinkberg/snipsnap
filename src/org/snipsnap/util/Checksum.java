@@ -88,6 +88,10 @@ public class Checksum {
     return result;
   }
 
+  public Set getFileNames() {
+    return checksums.keySet();
+  }
+
   public Set compareUnchanged(Checksum other) {
     Set result = new TreeSet();
     Iterator it = checksums.keySet().iterator();

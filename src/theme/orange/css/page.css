@@ -1,0 +1,126 @@
+/**
+ * General Stylesheet definitions.
+ * @author Matthias L. Jugel
+ * @version $Id$
+ */
+
+body {
+  font-family: verdana, arial, sans-serif;
+  color: #666;
+  font-size:11px;
+  font-weight:normal;
+  line-height:16px;
+  background: #FFFFFF;
+  margin: 0px;
+}
+
+#page-logo {
+  font-family: georgia, times new roman, times, serif;
+  color:#FFFF00;
+  font-size: 36px;
+  font-weight: normal;
+  background:#FF8800;
+  padding-top: 2.5em;
+  padding-bottom: 0.5em;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+#page-logo * {
+  font-family: georgia, times new roman, times, serif;
+  color:#FFFF00;
+  font-size: 36px;
+  font-weight:normal;
+}
+
+#page-title {
+  font-family:verdana, arial, sans-serif;
+  font-size: 10px;
+  padding: 10px;
+  padding-bottom: 2em;
+  text-align: right;
+  background: #FFAA66;
+  color: #000000;
+}
+
+#page-tagline {
+  display: inline;
+  text-align: right;
+  font-family:verdana, arial, sans-serif;
+  color:#000000;
+  font-size:11px;
+  font-weight:bold;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 5px;
+  padding-bottom: 15px;
+}
+
+#page-buttons {
+  display: inline;
+  background: inherit;
+  width: auto;
+}
+
+#page-buttons .inactive {
+  color:#000000;
+}
+
+#page-buttons a:link {
+  color: #000000;
+  text-decoration: underline;
+}
+#page-buttons a:visited	{
+  color: #000000;
+  text-decoration: underline;
+}
+
+#page-wrapper {
+  width: 100%;
+  display: table-row;
+  table-layout: fixed;
+  background:#FFF;
+}
+
+#page-content {
+  float: left;
+  display: table-cell;
+  padding-top: 2em;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 15px;
+  margin-bottom:15px;
+  background:#FFF;
+  width: 65%;
+}
+
+#page-portlet-1 {
+  float: right;
+  display: table-cell;
+  top: 0px;
+  width: 29%;
+  padding-top: 2em;
+  padding-left:15px;
+  margin-bottom:15px;
+  background:#FCF0E0;
+
+  font-family: verdana, arial, sans-serif;
+  color: #666;
+  font-size:11px;
+  font-weight:normal;
+  line-height:16px;
+}
+
+#page-portlet-2 {
+  display: none; /* hide */
+}
+
+
+/* the actual content */
+#page-bottom {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  width: 100%;
+  background:#FFF;
+  text-align: center;
+}

@@ -51,9 +51,18 @@
     </tr>
     <tr <c:if test="${errors['skin'] != null}">class="error-position"</c:if>>
       <td valign="top"><span class="nobr">Theme:</span></td>
-      <td valign="top"><input name="skin" type="radio" value="blue" checked="checked"> Blue Life<br/>
-      <img src="<c:url value='/images/blue.png'/>" alt="Blue Life Screenshot"/></td>
-      <td valign="top">The theme to use for your installation.</td>
+      <td valign="top" colspan="2">
+        <table border="0" cellpadding="0" cellspacing="2">
+          <tr>
+            <td><input name="theme" type="radio" value="blue" checked="checked"> Blue Life<br/>
+            <img src="<c:url value='/images/blue.png'/>" alt="Blue Life Screenshot"/></td>
+            <td><input name="theme" type="radio" value="sky"> Sky<br/>
+            <img src="<c:url value='/images/sky.png'/>" alt="Sky Screenshot"/></td>
+            <td><input name="theme" type="radio" value="orange"> Orange Valley<br/>
+            <img src="<c:url value='/images/orange.png'/>" alt="Orange Valley Screenshot"/></td>
+          </tr>
+        </table>
+      </td>
     </tr>
     <tr>
       <td colspan="3" class="table-header">Administrator</td>

@@ -56,6 +56,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
+import java.util.List;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.ArrayList;
 import java.util.jar.JarFile;
 
 import com.mckoi.database.control.DBController;
@@ -197,11 +201,24 @@ public class Installer extends HttpServlet {
       return;
     }
 
-    String theme = request.getParameter("skin");
+    String theme = request.getParameter("theme");
     if(theme != null && theme.length() != 0) {
       writeMessage(out, "Extracting theme ...");
       try {
-        Checksum checksum = JarUtil.extract(new JarFile("lib/snipsnap-theme-"+theme+".jar", true), webAppRoot);
+        JarFile themeJar = new JarFile("lib/snipsnap-theme-"+theme+".jar", true);
+        Checksum checksum = JarUtil.checksumJar(themeJar);
+        Set files = checksum.getFileNames();
+        List install = new ArrayList();
+        Iterator it = files.iterator();
+        while(it.hasNext()) {
+          String name = (String)it.next();
+          if(name != null && (name.startsWith("css/") || name.startsWith("images/"))) {
+            install.add(name);
+          }
+        }
+        JarUtil.extract(themeJar, webAppRoot, install, null);
+        install = Arrays.asList(new Object[] { theme + ".snip" });
+        JarUtil.extract(themeJar, webInf, install, null);
         checksum.store(new File(webInf, "CHECKSUMS.theme"));
       } catch (IOException e) {
         System.err.println("Installer: error while extracting theme: " + e);
@@ -244,13 +261,18 @@ public class Installer extends HttpServlet {
         return;
       }
       config.setJDBCURL(jdbcURL);
-      writeMessage(out, "Inserting inital data into database ...");
-      CreateDB.insertData(config);
     } else {
       config.setJDBCURL(jdbcURL);
       config.setJDBCDriver(jdbcDrv);
       CreateDB.createDB(config);
-      CreateDB.insertData(config);
+    }
+
+    writeMessage(out, "Inserting inital data into database ...");
+    CreateDB.insertData(config, new FileInputStream("conf/snipsnap.snip"));
+    File themeSnip = new File(webInf, theme+".snip");
+    if(themeSnip.exists()) {
+      writeMessage(out, "Adding additional data from theme "+theme);
+      CreateDB.insertData(config, new FileInputStream(themeSnip));
     }
 
     String tagline = request.getParameter("tagline");

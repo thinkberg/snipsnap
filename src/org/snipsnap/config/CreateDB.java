@@ -123,7 +123,7 @@ public class CreateDB {
 
   }
 
-  public static void insertData(AppConfiguration config) {
+  public static void insertData(AppConfiguration config, InputStream data) {
     System.out.println("CreateDB: Inserting Data");
     SnipSpace.removeInstance();
     UserManager.removeInstance();
@@ -141,7 +141,7 @@ public class CreateDB {
     System.out.println("Importing default snips.");
     SnipSpace space = SnipSpace.getInstance();
     try {
-      XMLSnipImport.load(new FileInputStream("conf/snipsnap.snip"), true);
+      XMLSnipImport.load(data, true);
     } catch (IOException e) {
       System.out.println("CreateDB: import failed!");
     }

@@ -1,0 +1,59 @@
+/**
+ * General Stylesheet definitions.
+ * @author Matthias L. Jugel
+ * @version $Id$
+ */
+
+/* error messages and error positions should be marked red */
+.error { color: #ff0000; font-weight: bold;	background-color: inherit;}
+.error-position { background-color: #ffaaaa; color: inherit;}
+
+/* inactive buttons are greyed out */
+.inactive { color: #aaaaaa; background-color: inherit;}
+
+/************************************************/
+/* ANCHOR tag                                   */
+a {
+  color: #9A1414;
+  font-family: verdana, arial, sans-serif;
+  font-size:10px;
+  text-decoration: none;
+  font-weight:bold;
+}
+a:link {
+  color: #9A1414;
+  text-decoration: none;
+}
+a:visited	{
+  color: #9A1414;
+  text-decoration: none;
+}
+a:active {
+  color: #FFCC66;
+}
+a:hover {
+  color: #FFCC66;
+}
+
+/************************************************/
+/* table tag                                    */
+table {
+	empty-cells: show;
+}
+
+
+
+/************************************************/
+/* input tag                                    */
+
+input[type=submit] {
+  margin-top: 2px;
+}
+
+input, select, textarea {
+  font-size: inherit;
+  font-family: courier, courier new, monospaced;
+}
+
+
+

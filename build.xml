@@ -200,8 +200,14 @@
   <target description="build theme jar" name="theme-jar">
     <jar destfile="${jar}/${appname}-theme-blue.jar" excludes="**/CVS">
       <fileset dir="${src}/theme/blue" includes="**"/>
-      <fileset dir="${src}/theme" includes="blue.snip"/>
     </jar>
+    <jar destfile="${jar}/${appname}-theme-sky.jar" excludes="**/CVS">
+      <fileset dir="${src}/theme/sky" includes="**"/>
+    </jar>
+    <jar destfile="${jar}/${appname}-theme-orange.jar" excludes="**/CVS">
+      <fileset dir="${src}/theme/orange" includes="**"/>
+    </jar>
+
   </target>
 
   <target name="compile-jsp" description="compile jsp files">

@@ -1,0 +1,129 @@
+/**
+ * General Stylesheet definitions.
+ * @author Matthias L. Jugel
+ * @version $Id$
+ */
+
+body {
+  font-family: verdana, arial, sans-serif;
+  color: #666;
+  font-size:11px;
+  font-weight:normal;
+  line-height:16px;
+
+  margin: 0px;
+  background: #FFFFFF;
+}
+
+#page-logo {
+  font-family:verdana, arial, sans-serif;
+  color: #0066CC;
+  font-size: 30px;
+  font-weight: normal;
+  background:#99CCFF;
+  padding-top: 15px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 10px;
+}
+
+#page-logo * {
+  font-family:verdana, arial, sans-serif;
+  font-size: 30px;
+  font-weight:normal;
+  color: #FFFFCC;
+}
+
+#page-title {
+  font-family:verdana, arial, sans-serif;
+  font-size: 10px;
+}
+
+#page-tagline {
+  font-family:verdana, arial, sans-serif;
+  color:#0066CC;
+  font-size:16px;
+  font-weight:bold;
+  background:#99CCFF;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 5pxs;
+  padding-bottom: 15px;
+  height: 5em;
+}
+
+#page-buttons {
+  padding:5px;
+  background:#EEEEEE;
+  border-bottom: 1px solid black;
+  text-align:left;
+  height: 1.5em;
+  margin-bottom: 2em;
+}
+
+#page-buttons a:link {
+  color: #000000;
+  text-decoration: bold;
+}
+#page-buttons a:visited	{
+  color: #000000;
+  text-decoration: none;
+}
+
+#page-wrapper {
+  width: 100%;
+  display: table-row;
+  table-layout: fixed;
+  background:#FFF;
+}
+
+#page-content {
+  position: absolute;
+  display: block;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 15px;
+  margin-bottom:15px;
+  margin-top: 5px;
+  background:#FFF;
+  width: 55%;
+  left: 22%;
+  overflow: hidden;
+}
+
+#page-portlet-1 {
+  position: absolute;
+  display: block;
+  width: 18%;
+  padding: 10px;
+  margin-bottom: 5px;
+  margin: 5px;
+  background:#FFF;
+  border: 1px solid #FF9900;
+  background: #FFFFCC;
+  font-family: verdana, arial, sans-serif;
+  color: #666;
+  font-size:11px;
+  font-weight:normal;
+  line-height:16px;
+  overflow: hidden;
+}
+
+#page-portlet-2 {
+  position: absolute;
+  display: block;
+  width: 18%;
+  left: 80%;
+  margin-top: 5px;
+  overflow: hidden;
+}
+
+/* the actual content */
+#page-bottom {
+  display: none;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  width: 100%;
+  background:#FFF;
+  text-align: center;
+}
