@@ -52,7 +52,6 @@ public class LoginServlet extends HttpServlet {
     String password = request.getParameter("password");
     String referer = request.getParameter("referer");
 
-    System.err.println("Params: "+request.getParameter("cancel"));
     if (request.getParameter("cancel") == null) {
       UserManager um = UserManager.getInstance();
       User user = um.authenticate(login, password);
@@ -67,7 +66,7 @@ public class LoginServlet extends HttpServlet {
       }
       app.setUser(user);
       Cookie cookie = new Cookie("userName", user.getLogin());
-      cookie.setMaxAge(Integer.MAX_VALUE);
+      cookie.setMaxAge(Integer.MAX_VALUE-2);
       cookie.setPath(request.getContextPath());
       // store user name and app in cookie and session
       response.addCookie(cookie);
@@ -84,10 +83,8 @@ public class LoginServlet extends HttpServlet {
     if("true".equals(request.getParameter("logoff"))) {
       HttpSession session = request.getSession(true);
       Cookie cookie = UserManager.getInstance().getCookie(request, "userName");
-      System.err.println("User: "+cookie);
       if(cookie != null) {
         cookie.setMaxAge(0);
-        cookie.setMaxAge(Integer.MAX_VALUE);
         response.addCookie(cookie);
       }
       response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));

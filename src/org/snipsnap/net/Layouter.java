@@ -66,10 +66,9 @@ public class Layouter extends HttpServlet {
     Cookie cookie = UserManager.getInstance().getCookie(request, "userName");
     if(null == cookie) {
       cookie = new Cookie("userName", user.getLogin());
-      cookie.setMaxAge(Integer.MAX_VALUE);
     }
-    System.err.println("Cookie age: "+cookie.getMaxAge());
     cookie.setPath(request.getContextPath());
+    cookie.setMaxAge(Integer.MAX_VALUE-2);
     response.addCookie(cookie);
     app.setUser(user);
     session.setAttribute("app", app);
