@@ -111,6 +111,7 @@ public class AppConfiguration extends Configuration {
 
   public String getUrl() {
     StringBuffer url = new StringBuffer();
+    url.append("http://");
     url.append(getHost());
     int port = getPort();
     if (port != 80) {
@@ -119,8 +120,13 @@ public class AppConfiguration extends Configuration {
     }
     url.append("/");
     url.append(getContextPath());
-    url.append("/space");
+    url.append("space");
     return url.toString();
+  }
+
+  public String getTagLine() {
+    // @TODO make this real
+    return "Bigger. Better. Faster. More.";
   }
 
   public void setJDBCURL(String url) {

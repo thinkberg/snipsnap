@@ -11,12 +11,10 @@
   ** @author Stephan J. Schmidt
   ** @version $Id$
   --%>
-
   <channel>
     <title><c:out value="${config.name}"/></title>
-    <!-- config needs a tagline -->
-    <description><c:out value="${config.name}"/></description>
-    <!-- usually points to "start" -->
+    <description><c:out value="${config.tagLine}"/></description>
+    <%-- usually points to "start" --%>
     <link><c:out value="${url}/${snip.name}"/></link>
 
     <c:forEach items="${snip.childrenDateOrder}" var="child">
