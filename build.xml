@@ -22,9 +22,12 @@
   </path>
 
   <!-- build binary distribution package -->
-  <target depends="clean,jar" description="build binary package" name="src-tar">
+  <target depends="clean" description="build binary package" name="src-tar">
     <tstamp/>
     <tar destfile="../${appname}-${version}-${DSTAMP}${TSTAMP}-src.tgz" compression="gzip">
+      <tarfileset dir="." prefix="${appname}-${version}" mode="566">
+        <include name="run.sh"/>
+      </tarfileset>
       <tarfileset dir="." prefix="${appname}-${version}">
         <include name="**"/>
         <exclude name="**/CVS"/>

@@ -147,7 +147,7 @@ public class Installer extends HttpServlet {
 
     writeMessage(out, "Extracting templates ...");
     try {
-      JarExtractor.extract(new JarFile("./lib/SnipSnap-template.war", true), new File("./app/"+config.getContextPath()), out);
+      JarExtractor.extract(new JarFile("./lib/snipsnap-template.war", true), new File("./app/"+config.getContextPath()), out);
     } catch (IOException e) {
       System.err.println("Installer: error while extracting default template: "+e);
       errors.put("fatal", "Unable to extract default application, please see server.log for details!");
