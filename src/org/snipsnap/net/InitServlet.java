@@ -77,7 +77,7 @@ public class InitServlet extends GenericServlet {
       configParam = context.getRealPath(context.getInitParameter(ServerConfiguration.INIT_PARAM));
     }
     if (null == configParam) {
-      configParam = context.getRealPath("/WEB-INF/application.conf");
+      configParaInitiam = context.getRealPath("/WEB-INF/application.conf");
     }
 
     // create new configuration instance

@@ -22,7 +22,7 @@
     <td><fmt:message key="config.app.perm.createSnip.text"/></td>
     <td>
       <fmt:message key="config.app.perm.createSnip"/><br/>
-      <input type="checkbox" name="app.perm.createSnip" <c:if test="${config.permCreateSnip == 'allow'}">checked="checked"</c:if>>
+      <input type="checkbox" value="allow" name="app.perm.createSnip" <c:if test="${config.permCreateSnip == 'allow'}">checked="checked"</c:if>>
     </td>
   </tr>
   <tr>
