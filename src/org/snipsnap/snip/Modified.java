@@ -49,7 +49,6 @@ public class Modified {
   }
 
   public Modified() {
-
   }
 
   public String getcUser() {
@@ -84,6 +83,12 @@ public class Modified {
     this.mTime = mTime;
   }
 
+  /**
+   * Generate a pretty print of the modified object,
+   * e.g. "Created by steph - Last edited ..."
+   *
+   * @return Pretty print of modified object
+   */
   public String toString() {
     StringBuffer buffer = new StringBuffer();
     buffer.append("Created by");
@@ -94,6 +99,17 @@ public class Modified {
     return buffer.toString();
   }
 
+  // Should go to a date class
+  /**
+   * Generate a pretty print of the difference
+   * between the timestamp and now.
+   * e.g. show minutes, minutes and hours and
+   * days since now.
+   * "3 hours, 5 minutes ago.", "4 days ago."
+   *
+   * @param time Timestamp to pretty print
+   * @return Pretty string
+   */
   public String getNiceTime(Timestamp time) {
     if (time == null) return "";
     java.util.Date now = new java.util.Date();

@@ -32,6 +32,14 @@ import com.neotis.app.Application;
  * @version $Id$
  */
 public class HomePage {
+
+  /**
+   * Create a snip as a homepage for the user. Generates a new
+   * one or appends the snip-by-user to existing one.
+   *
+   * @param login User for the homepage
+   * @param app Application
+   */
   public static void create(String login, Application app) {
     Snip snip = null;
     String hp = "\n{snips-by-user:"+login+"}";
