@@ -33,22 +33,12 @@
  */
 package com.neotis.snip.filter;
 
-import org.apache.oro.text.regex.MalformedPatternException;
-import org.apache.oro.text.regex.MatchResult;
-import org.apache.oro.text.regex.Pattern;
-import org.apache.oro.text.regex.PatternCompiler;
-import org.apache.oro.text.regex.PatternMatcher;
-import org.apache.oro.text.regex.PatternMatcherInput;
-import org.apache.oro.text.regex.Perl5Compiler;
-import org.apache.oro.text.regex.Perl5Matcher;
-import org.apache.oro.text.regex.Perl5Substitution;
-import org.apache.oro.text.regex.Util;
-
-import java.net.URLEncoder;
-import java.io.UnsupportedEncodingException;
-
-import com.neotis.util.Transliterate;
 import com.neotis.snip.Snip;
+import com.neotis.util.Transliterate;
+import org.apache.oro.text.regex.*;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 public class LinkTestFilter extends Filter {
 
@@ -68,7 +58,7 @@ public class LinkTestFilter extends Filter {
     try {
       pattern = compiler.compile("\\[(.*?)\\]");
     } catch (MalformedPatternException e) {
-      System.err.println("error compiling pattern: "+e);
+      System.err.println("error compiling pattern: " + e);
     }
 
     // super("\\[(.*?)\\]", "<link href=\"$1\"/>");
@@ -88,32 +78,49 @@ public class LinkTestFilter extends Filter {
       result = matcher.getMatch();
       buffer.append(input.substring(lastmatch, result.beginOffset(0)));
       String key = result.group(1);
-      if(key.startsWith("&#")) {
-	key = trans.nativeToAscii(key);
+      if (key.startsWith("&#")) {
+        key = trans.nativeToAscii(key);
       }
 
-      if(key != null) {
-        if(linkTester.exists(key)) {
-          buffer.append("<a href=\"");
-          buffer.append("../space/");
+      if (key != null) {
+        int colonIndex = key.indexOf(':');
+        System.err.println("Colon=" + colonIndex);
+        if (-1 != colonIndex) {
+          String extSpace = key.substring(0, colonIndex);
+          key = key.substring(colonIndex+1);
+          buffer.append("<a href=\"http://www.langreiter.com/space/\"");
           try {
             buffer.append(URLEncoder.encode(key, "iso-8859-1"));
           } catch (UnsupportedEncodingException e) {
             buffer.append(key);
           }
-          buffer.append("\">").append(result.group(1)).append("</a>");
+          buffer.append("\">");
+          buffer.append(key);
+          buffer.append("@");
+          buffer.append(extSpace);
+          buffer.append("</a>");
         } else {
-          buffer.append("[create <a href=\"");
-          buffer.append("../exec/edit?name=");
-          try {
-            buffer.append(URLEncoder.encode(key, "iso-8859-1"));
-          } catch (UnsupportedEncodingException e) {
-            buffer.append(key);
+          if (linkTester.exists(key)) {
+            buffer.append("<a href=\"../space/");
+            try {
+              buffer.append(URLEncoder.encode(key, "iso-8859-1"));
+            } catch (UnsupportedEncodingException e) {
+              buffer.append(key);
+            }
+            buffer.append("\">").append(result.group(1)).append("</a>");
+          } else {
+            buffer.append("[create <a href=\"" +
+                          "../exec/edit?name=");
+            try {
+              buffer.append(URLEncoder.encode(key, "iso-8859-1"));
+            } catch (UnsupportedEncodingException e) {
+              buffer.append(key);
+            }
+            buffer.append("\">").append(result.group(1)).append("</a>]");
           }
-          buffer.append("\">").append(result.group(1)).append("</a>]");
         }
       } else {
-	buffer.append(result.group(1)).append("*link error*");
+        buffer.append(result.group(1)).append("*link error*");
       }
 
 
