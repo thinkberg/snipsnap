@@ -47,8 +47,8 @@
   <!-- build binary distribution package -->
   <target depends="clean" description="tar source package" name="tar-source">
     <tstamp/>
-    <tar destfile="../${appname}-${server.version}-${DSTAMP}-src.tgz" compression="gzip">
-      <tarfileset dir="." prefix="${appname}-${server.version}" mode="700">
+    <tar destfile="../${appname}-${snipsnap.server.version}-${DSTAMP}-src.tgz" compression="gzip">
+      <tarfileset dir="." prefix="${appname}-${snipsnap.server.version}" mode="700">
         <include name="run.sh"/>
         <include name="run.bat"/>
         <include name="db.sh"/>
@@ -59,7 +59,7 @@
         <include name="devlinks.sh"/>
         <include name="renimg.sh"/>
       </tarfileset>
-      <tarfileset dir="." prefix="${appname}-${server.version}">
+      <tarfileset dir="." prefix="${appname}-${snipsnap.server.version}">
         <include name="**"/>
         <exclude name="**/CVS"/>
         <exclude name="applications"/>
@@ -81,8 +81,8 @@
 
   <target depends="clean, all" description="tar binary package" name="tar-binary">
     <tstamp/>
-    <tar destfile="../${appname}-${server.version}-${DSTAMP}.tgz" compression="gzip">
-      <tarfileset dir="." prefix="${appname}-${server.version}" mode="700">
+    <tar destfile="../${appname}-${snipsnap.server.version}-${DSTAMP}.tgz" compression="gzip">
+      <tarfileset dir="." prefix="${appname}-${snipsnap.server.version}" mode="700">
         <include name="run.sh"/>
         <include name="run.bat"/>
         <include name="db.sh"/>
@@ -93,7 +93,7 @@
         <include name="devlinks.sh"/>
         <include name="renimg.sh"/>
       </tarfileset>
-      <tarfileset dir="." prefix="${appname}-${server.version}">
+      <tarfileset dir="." prefix="${appname}-${snipsnap.server.version}">
         <include name="${jar}/${appname}.jar"/>
         <include name="${jar}/javax.servlet.jar"/>
         <include name="${jar}/org.apache.jasper.jar"/>
@@ -149,12 +149,17 @@
   </target>
 
   <!-- create all archives -->
-  <target depends="jar-server,jar-util,template-war" description="create all" name="all"/>
+  <target depends="jar-server,jar-util,snipsnap-war" description="create all" name="all"/>
 
   <!-- create server code -->
   <target depends="compile-server,installer-war" description="create server jar" name="jar-server">
     <jar destfile="${jar}/${appname}.jar" excludes="**/CVS" manifest="conf/manifest">
       <fileset dir="${target}/server" includes="**"/>
+      <fileset dir=".">
+        <include name="conf/snipsnap.conf"/>
+        <include name="conf/jetty.conf"/>
+        <include name="conf/copyright.txt"/>
+      </fileset>
     </jar>
   </target>
 
@@ -183,17 +188,76 @@
       includes="org/snipsnap/util/Test*, org/snipsnap/util/*Util.java, org/snipsnap/util/DB*.java, org/snipsnap/util/*JDBC*.java, org/snipsnap/util/mail/**, org/snipsnap/util/*Test.java"/>
   </target>
 
-  <!-- create web archive of the template application -->
-  <target depends="compile-app,theme-jar" description="build template war" name="template-war">
+
+  <target description="compile template application code" name="compile-servlets">
+    <mkdir dir="${target}/default/WEB-INF/classes"/>
+    <javac deprecation="${deprecation}" debug="${debug}"
+      srcdir="${src}"
+      classpathref="all.classpath"
+      destdir="${target}/default/WEB-INF/classes"
+      excludes="org/snipsnap/admin/**, org/snipsnap/server/**">
+      <src path="${src}"/>
+      <include name="org/snipsnap/**"/>
+    </javac>
+  </target>
+
+  <target depends="compile-servlets" name="servlets-jar">
     <jar destfile="${src}/apps/default/WEB-INF/lib/snipsnap-servlets.jar" excludes="**/CVS">
       <fileset dir="${target}/default/WEB-INF/classes" includes="**"/>
       <fileset dir="${src}" includes="META-INF/**"/>
     </jar>
+  </target>
 
-    <jar destfile="${jar}/${appname}-template.war" excludes="**/CVS">
-      <fileset dir="${src}/apps/default" includes="**"/>
-      <fileset dir="${src}/theme/blue" includes="**"/>
-      <zipfileset dir="${jar}" prefix="WEB-INF/lib">
+  <target depends="servlets-jar" name="compile-jsp" description="compile jsp files">
+    <mkdir dir="${target}/jsp/source"/>
+    <mkdir dir="${target}/jsp/classes"/>
+    <jspc destdir="${target}/jsp/source"
+          verbose="1" srcdir="${src}/apps/default"
+          classpathref="all.classpath"
+          webinc="${target}/jsp/web.inc">
+      <include name="**/*.jsp" />
+      <webapp basedir="${src}/apps/default"/>
+    </jspc>
+    <depend
+         srcdir="${target}/jsp/source"
+         destdir="${target}/jsp/classes"
+         cache="${target}/jsp/dependencies"
+         classpathref="all.classpath"/>
+    <javac deprecation="${deprecation}" debug="${debug}"
+      srcdir="${target}/jsp/source"
+      classpath="${src}/apps/default/WEB-INF/lib/snipsnap-servlets.jar"
+      classpathref="all.classpath"
+      destdir="${target}/jsp/classes">
+      <include name="**"/>
+    </javac>
+  </target>
+
+  <target depends="compile-jsp" name="jsp-jar" description="package precompiled jsp files">
+    <jar destfile="${src}/apps/default/WEB-INF/lib/snipsnap-jsp.jar" excludes="**/CVS">
+      <fileset dir="${target}/jsp/classes" includes="**"/>
+    </jar>
+  </target>
+
+  <!-- create web archive of the template application -->
+  <target depends="jsp-jar,theme-jar" description="build template war" name="snipsnap-war">
+    <loadfile property="web.inc" srcfile="${target}/jsp/web.inc"/>
+    <mkdir dir="${target}/webapp"/>
+    <copy todir="${target}/webapp">
+      <fileset dir="${src}/apps/default">
+        <exclude name="**/CVS"/>
+        <exclude name="**/*.jsp"/>
+        <exclude name="WEB-INF/web-xml.tmpl"/>
+      </fileset>
+      <fileset dir="${src}/theme/blue" includes="**" excludes="**/CVS"/>
+    </copy>
+    <copy tofile="${target}/webapp/WEB-INF/web.xml"
+          file="${src}/apps/default/WEB-INF/web-xml.tmpl" overwrite="true">
+      <filterset>
+        <filter token="PRECOMPILED-JSP" value="${web.inc}"/>
+      </filterset>
+    </copy>
+    <copy todir="${target}/webapp/WEB-INF/lib">
+      <fileset dir="${jar}">
         <include name="radeox.jar"/>
         <include name="jakarta-oro.jar"/>
         <include name="lucene-1.2.jar"/>
@@ -205,7 +269,11 @@
         <include name="mail.jar"/>
         <include name="activation.jar"/>
         <include name="j2h.jar"/>
-      </zipfileset>
+      </fileset>
+    </copy>
+
+    <jar destfile="${jar}/${appname}-template.war">
+      <fileset dir="${target}/webapp" includes="**"/>
     </jar>
   </target>
 
@@ -229,29 +297,6 @@
         <include name="web.xml"/>
       </zipfileset>
     </jar>
-  </target>
-
-  <target name="compile-jsp" description="compile jsp files">
-    <mkdir dir="${target}/jsp"/>
-    <!-- <jspc destdir="${target}/jsp"
-          verbose="1" srcdir="${src}/apps/default"
-          package="org.snipsnap.jsp.pages" classpathref="all.classpath">
-      <include name="**/*.jsp" />
-      <webapp basedir="${src}/apps/default"/>
-    </jspc> -->
-  </target>
-
-  <target depends="compile-jsp" description="compile template application code" name="compile-app">
-    <mkdir dir="${target}/default/WEB-INF/classes"/>
-    <javac deprecation="${deprecation}" debug="${debug}"
-      srcdir="${src}"
-      classpathref="all.classpath"
-      destdir="${target}/default/WEB-INF/classes"
-      excludes="org/snipsnap/admin/**, org/snipsnap/server/**">
-      <src path="${src}"/>
-      <src path="${target}/jsp"/>
-      <include name="org/snipsnap/**"/>
-    </javac>
   </target>
 
   <!-- create web archive of the installer web application -->
@@ -289,7 +334,7 @@
       includes="org/snipsnap/admin/CommandHandler.java, org/snipsnap/admin/Authenticate.java, org/snipsnap/admin/install/**"/>
   </target>
 
-  <target name="test" depends="template-war">
+  <target name="test" depends="snipsnap-war">
     <junit printsummary="true">
        <formatter usefile="false" type="plain"/>
        <test name="org.snipsnap.test.AllTests"/>
