@@ -40,6 +40,12 @@ public class DublinCoreTag extends TagSupport {
   Snip snip = null;
   String format = null;
 
+  private String capitalize(String s) {
+ 	char chars[] = s.toCharArray();
+ 	chars[0] = Character.toUpperCase(chars[0]);
+ 	return new String(chars);
+  }
+
   public int doStartTag() throws JspException {
     if (null != snip) {
       Map dublinCore = DublinCore.generate(snip);
@@ -52,7 +58,7 @@ public class DublinCoreTag extends TagSupport {
             String name = (String) iterator.next();
             String value = (String) dublinCore.get(name);
             out.print("<dc:");
-            out.print(name);
+            out.print(name.toLowerCase());
             out.print(">");
             out.print(value);
             out.print("</dc:");
@@ -66,7 +72,7 @@ public class DublinCoreTag extends TagSupport {
             String name = (String) iterator.next();
             String value = (String) dublinCore.get(name);
             out.print("<meta name=\"DC.");
-            out.print(name);
+            out.print(capitalize(name));
             out.print("\" content=\"");
             out.print(value);
             out.println("\"/>");
@@ -78,6 +84,7 @@ public class DublinCoreTag extends TagSupport {
     }
     return super.doStartTag();
   }
+
 
   public void setFormat(String format) {
     this.format = format;
