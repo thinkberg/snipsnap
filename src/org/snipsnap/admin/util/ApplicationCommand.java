@@ -29,6 +29,7 @@ import org.mortbay.http.HttpServer;
 import org.mortbay.jetty.Server;
 
 import java.util.Iterator;
+import java.io.IOException;
 
 /**
  * Start, stop or remove a web application from the server.
@@ -39,6 +40,7 @@ public class ApplicationCommand {
   public final static String CMD_APPLICATION_START = "start";
   public final static String CMD_APPLICATION_STOP = "stop";
   public final static String CMD_APPLICATION_REMOVE = "remove";
+  public final static String CMD_APPLICATION_ADD = "add";
 
   public static void execute(String srv, String ctx, String command) {
     System.err.println("srv=" + srv + " ctx=" + ctx);
@@ -46,25 +48,35 @@ public class ApplicationCommand {
     while (it.hasNext()) {
       HttpServer server = (HttpServer) it.next();
       if (server.toString().equals(srv)) {
-        HttpContext contexts[] = server.getContexts();
-        for (int c = 0; c < contexts.length; c++) {
-          HttpContext context = contexts[c];
-          if (context.getContextPath().equals(ctx)) {
-            try {
-              if (CMD_APPLICATION_START.equals(command)) {
-                context.start();
-              } else if (CMD_APPLICATION_STOP.equals(command)) {
-                context.stop();
-              } else if (CMD_APPLICATION_REMOVE.equals(command)) {
-                server.removeContext(context);
-              } else {
-                System.err.println("Application: unknown or illegal command: " + command);
-              }
-            } catch (Exception e) {
-              System.err.println("Application: unable to " + command + " server=" + server + ", context=" + context);
-            }
-            return;
+        if (CMD_APPLICATION_ADD.equals(command)) {
+          try {
+            ((Server) server).addWebApplication(ctx, "./app"+ctx);
+          } catch (IOException e) {
+            System.err.println("Application: unable to add context: "+srv+":"+ctx);
           }
+          return;
+        } else {
+          HttpContext contexts[] = server.getContexts();
+          for (int c = 0; c < contexts.length; c++) {
+            HttpContext context = contexts[c];
+            if (context.getContextPath().equals(ctx)) {
+              try {
+                if (CMD_APPLICATION_START.equals(command)) {
+                  context.start();
+                } else if (CMD_APPLICATION_STOP.equals(command)) {
+                  context.stop();
+                } else if (CMD_APPLICATION_REMOVE.equals(command)) {
+                  server.removeContext(context);
+                } else {
+                  System.err.println("Application: unknown or illegal command: " + command);
+                }
+              } catch (Exception e) {
+                System.err.println("Application: unable to " + command + " server=" + server + ", context=" + context);
+              }
+              return;
+            }
+          }
+
         }
       }
     }

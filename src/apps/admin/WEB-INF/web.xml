@@ -74,17 +74,7 @@
 
   <servlet-mapping>
     <servlet-name>com.neotis.admin.Application</servlet-name>
-    <url-pattern>/exec/app/start</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>com.neotis.admin.Application</servlet-name>
-    <url-pattern>/exec/app/stop</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>com.neotis.admin.Application</servlet-name>
-    <url-pattern>/exec/app/remove</url-pattern>
+    <url-pattern>/exec/app/*</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>

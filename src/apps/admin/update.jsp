@@ -23,22 +23,22 @@
       <td>No Update Needed</td><td>Locally Changed</td><td>Updated</td><td>Updated and Locally Changed</td>
     </tr>
     <tr>
-      <td class="table-0" valign="top">
+      <td width="25%" class="table-0" valign="top">
         <c:forEach items="${unchanged}" var="file">
           <span style="color: green"><c:out value="${file}"/></span><br/>
         </c:forEach>
       </td>
-      <td class="table-1" valign="top">
+      <td width="25%" class="table-1" valign="top">
         <c:forEach items="${changed}" var="file">
           <span style="color: red"><c:out value="${file}"/></span><br/>
         </c:forEach>
       </td>
-      <td class="table-0" valign="top">
+      <td width="25%" class="table-0" valign="top">
         <c:forEach items="${installable}" var="file">
           <input type="checkbox" name="install" checked="checked" value="<c:out value='${file}'/>"><span style="color: green"><c:out value="${file}"/></span><br/>
         </c:forEach>
       </td>
-      <td class="table-1" valign="top">
+      <td width="25%" class="table-1" valign="top">
         <c:forEach items="${updated}" var="file">
           <input type="checkbox" name="extract" value="<c:out value='${file}'/>"><span style="color: red"><c:out value="${file}"/></span><br/>
         </c:forEach>
@@ -47,7 +47,7 @@
     <tr>
       <td colspan="4">
         <input type="submit" name="check" value="Check Again">
-        <c:if test="${!empty installable and !empty updated}"><input type="submit" name="update" value="Update Application"></c:if>
+        <c:if test="${!(empty installable) and !(empty updated)}"><input type="submit" name="update" value="Update Application"></c:if>
         <input type="submit" name="cancel" value="Cancel/Back">
       </td>
     </tr>

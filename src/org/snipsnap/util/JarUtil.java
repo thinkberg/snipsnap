@@ -105,7 +105,8 @@ public class JarUtil {
   public static void main(String args[]) {
     try {
       JarFile file = new JarFile(args[0]);
-      System.out.println(checksumJar(file));
+      Checksum checksum = checksumJar(file);
+      checksum.store(new File("./CHECKSUMS"));
     } catch (IOException e) {
       e.printStackTrace();
       System.err.println("JarUtil: usage: JarUtil jarfile");

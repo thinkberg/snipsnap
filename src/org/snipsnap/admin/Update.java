@@ -66,19 +66,21 @@ public class Update extends HttpServlet {
 
       if (request.getParameter("cancel") == null) {
         if (request.getParameter("update") != null) {
-          ApplicationCommand.execute(srv, ctx, ApplicationCommand.CMD_APPLICATION_STOP);
+          ApplicationCommand.execute(srv, ctx, ApplicationCommand.CMD_APPLICATION_REMOVE);
           update(request.getParameterValues("install"), request.getParameterValues("extract"), ctx, errors);
+          ApplicationCommand.execute(srv, ctx, ApplicationCommand.CMD_APPLICATION_ADD);
           ApplicationCommand.execute(srv, ctx, ApplicationCommand.CMD_APPLICATION_START);
         }
         prepare(ctx, session, errors);
+
+        session.setAttribute("errors", errors);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/update.jsp");
+        if (dispatcher != null) {
+          dispatcher.forward(request, response);
+          return;
+        }
       }
 
-      session.setAttribute("errors", errors);
-      RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/update.jsp");
-      if (dispatcher != null) {
-        dispatcher.forward(request, response);
-        return;
-      }
     }
     response.sendRedirect(SnipLink.absoluteLink(request, "/"));
   }
