@@ -50,6 +50,7 @@
         <include name="dbimport.sh"/>
         <include name="dbrepair.sh"/>
         <include name="exportall.sh"/>
+        <include name="devlinks.sh"/>
       </tarfileset>
       <tarfileset dir="." prefix="${appname}-${server.version}">
         <include name="**"/>
@@ -62,6 +63,7 @@
         <exclude name="dbimport.sh"/>
         <exclude name="dbrepair.sh"/>
         <exclude name="exportall.sh"/>
+        <exclude name="devlinks.sh"/>
         <exclude name="src/theme/drrockit/"/>
         <exclude name="src/theme/javangelist/"/>
         <exclude name="src/theme/sib/"/>
@@ -80,6 +82,7 @@
         <include name="dbimport.sh"/>
         <include name="dbrepair.sh"/>
         <include name="exportall.sh"/>
+        <include name="devlinks.sh"/>
       </tarfileset>
       <tarfileset dir="." prefix="${appname}-${server.version}">
         <include name="${jar}/${appname}.jar"/>
@@ -113,6 +116,7 @@
         <exclude name="dbimport.sh"/>
         <exclude name="dbrepair.sh"/>
         <exclude name="exportall.sh"/>
+        <exclude name="devlinks.sh"/>
       </tarfileset>
     </tar>
   </target>
