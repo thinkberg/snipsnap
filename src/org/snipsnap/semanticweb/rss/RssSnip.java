@@ -88,6 +88,14 @@ public class RssSnip implements Snip {
   public void setParentName(String name) {
   }
 
+  public String getParentName() {
+    return snip.getParentName();
+  }
+
+  public String getCommentedName() {
+    return snip.getCommentedName();
+  }
+
   public void setCommentedName(String name) {
   }
 
