@@ -102,7 +102,8 @@ public class VerticalListFormatter implements ListFormatter {
       realName = commentedSnip.getTitle();
       SnipLink.appendImage(writer, "Icon-Comment", "");
       writer.write(" ");
-      SnipLink.appendLinkWithRoot(writer, SnipLink.getCommentsRoot(), SnipLink.encode(realName) + "#" + name, realName);
+      SnipLink.appendLinkWithRoot(writer, SnipLink.getCommentsRoot(),
+                                  SnipLink.encode(commentedSnip.getName()) + "#" + name, realName);
       //SnipLink.appendLink(writer, name, realName);
       writer.write(" (");
       SnipLink.appendLink(writer, snip.getCUser());
