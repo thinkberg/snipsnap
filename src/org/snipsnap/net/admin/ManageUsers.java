@@ -30,6 +30,8 @@ import org.snipsnap.user.UserManager;
 import org.snipsnap.user.User;
 import org.snipsnap.user.Roles;
 import org.snipsnap.container.Components;
+import org.snipsnap.snip.HomePage;
+import org.snipsnap.app.Application;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -45,12 +47,17 @@ public class ManageUsers implements SetupHandler {
   public Map setup(HttpServletRequest request, HttpServletResponse response, Configuration config, Map errors) {
     UserManager um = (UserManager) Components.getComponent(UserManager.class);
     if (request.getParameter("remove") != null) {
-      errors.put("fatal", "fatal");
+      User user = um.load(request.getParameter("remove"));
+      if(user != null) {
+        um.remove(user);
+      }
+      return errors;
     } else if (request.getParameter("edit") != null) {
       User user = um.load(request.getParameter("login"));
       request.setAttribute("editUser", user);
       request.setAttribute("edit", "true");
       if(null == user) {
+        request.setAttribute("editUser", new User());
         request.setAttribute("create", "true");
       }
     } else if (request.getParameter("save") != null || request.getParameter("create") != null) {
@@ -67,6 +74,12 @@ public class ManageUsers implements SetupHandler {
           if(update(request, errors, tmp)) {
             user = um.create(login, tmp.getPasswd(), tmp.getEmail());
             update(request, errors, user);
+            if(errors.size() == 0) {
+              User currUser = Application.get().getUser();
+              Application.get().setUser(user);
+              HomePage.create(user.getLogin());
+              Application.get().setUser(currUser);
+            }
           }
         }
       } else if(null == user) {

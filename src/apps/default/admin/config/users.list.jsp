@@ -65,7 +65,7 @@
       <c:otherwise>class="users-even"</c:otherwise>
      </c:choose>>
       <td>
-        <span class="nobr"><b><a href="space/<c:out value='${user.login}'/>"><c:out value="${user.login}"/></a></b></span>
+        <span class="nobr"><b><a href="../space/<c:out value='${user.login}'/>"><c:out value="${user.login}"/></a></b></span>
         <c:if test="${not empty user.status && user.status != 'not set'}"><br/><fmt:message key="config.users.status"/> <i><c:out value="${user.status}"/></i></c:if><br/>
       </td>
       <td>
@@ -76,15 +76,11 @@
       <td><span class="nobr"><c:out value="${user.roles}"/></span></td>
       <td><fmt:formatDate pattern="yyyy-MM-dd hh:mm" value="${user.lastLogin}"/></td>
       <td>
-        [<a href="configure?step=users&amp;edit=true&amp;login=<c:out value='${user.login}'/>">
-          <fmt:message key="config.users.edit"/>
-        </a>]
+        [<a href="configure?step=users&amp;edit=true&amp;login=<c:out value='${user.login}'/>"><fmt:message key="config.users.edit"/></a>]
       </td>
       <td>
         <c:if test="${configuser.login != user.login}">
-          [<a href="configure?step=users&amp;remove=<c:out value='${user.login}'/>">
-            <fmt:message key="config.users.remove"/>
-          </a>]
+          [<a style="color:red" href="configure?step=users&amp;remove=<c:out value='${user.login}'/>"><fmt:message key="config.users.remove"/></a>]
         </c:if>
       </td>
     </tr>
