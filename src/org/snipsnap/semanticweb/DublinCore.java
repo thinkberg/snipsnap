@@ -32,6 +32,7 @@ import org.snipsnap.snip.Snip;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * Generates a map with dublin core entries
@@ -44,17 +45,23 @@ import java.util.Map;
 
 public class DublinCore {
   // For date and time see http://www.w3.org/TR/NOTE-datetime
-  // @TODO add support for time zone
-  private static SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'-00:00'");
+  private static SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
   private static SimpleDateFormat year = new SimpleDateFormat("yyyy");
-  private static Configuration conf = Application.get().getConfiguration();
 
   public static Map generate(Snip snip) {
+    Configuration conf = Application.get().getConfiguration();
+    sf.setTimeZone(TimeZone.getTimeZone(conf.getTimezone()));
+
     Map dublinCore = new HashMap();
     //@TODO add support for dc:subject, this is best read from a category label
     dublinCore.put("creator", snip.getCUser());
     dublinCore.put("title", snip.getName());
-    dublinCore.put("date", sf.format(snip.getModified().getmTime()));
+    String date = sf.format(snip.getModified().getmTime());
+    String timeZone = conf.getTimezone();
+    if (timeZone != null && timeZone.length() > 3) {
+      date = date + timeZone;
+    }
+    dublinCore.put("date", date);
     dublinCore.put("type", "Text");
     dublinCore.put("identifier", Application.get().getConfiguration().getSnipUrl(snip.getNameEncoded()));
     dublinCore.put("copyright", "Copyright " + year.format(snip.getModified().getmTime()));
