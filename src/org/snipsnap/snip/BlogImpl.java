@@ -141,7 +141,7 @@ public class BlogImpl implements Blog {
     startC.setTime(new java.util.Date());
     Calendar endC = (Calendar)startC.clone();
     endC.add(Calendar.DAY_OF_MONTH, 1);
-    startC.add(Calendar.DAY_OF_MONTH, -60);
+    startC.add(Calendar.MONTH, -3);
 
     String start = name + "/" + Month.toKey(startC) + "/";
     String end = name + "/" + Month.toKey(endC) + "/";
