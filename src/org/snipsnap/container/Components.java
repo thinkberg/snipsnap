@@ -35,6 +35,8 @@ import org.picocontainer.hierarchical.HierarchicalPicoContainer;
 import org.nanocontainer.nanning.NanningNanoContainer;
 
 public class Components {
+  public final static String DEFAULT_ENGINE = "defaultRenderEngine";
+
   private static PicoContainer container;
 
   public static synchronized PicoContainer getContainer() {
@@ -57,7 +59,8 @@ public class Components {
         nc.registerComponentByClass(org.snipsnap.user.AuthenticationService.class);
         nc.registerComponentByClass(org.snipsnap.user.PasswordService.class);
         nc.registerComponentByClass(org.snipsnap.container.SessionService.class);
-        nc.registerComponent(org.radeox.engine.RenderEngine.class, org.snipsnap.render.SnipRenderEngine.class);
+        nc.registerComponent(DEFAULT_ENGINE, org.snipsnap.render.SnipRenderEngine.class);
+        nc.registerComponentByClass(org.snipsnap.render.PlainTextRenderEngine.class);
         nc.registerComponentByClass(org.snipsnap.snip.storage.JDBCSnipStorage.class);
         nc.registerComponent(org.snipsnap.snip.SnipSpace.class, org.snipsnap.snip.SnipSpaceImpl.class);
 

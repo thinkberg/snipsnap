@@ -31,12 +31,14 @@ import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.XMLSnipImport;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.label.RenderLabel;
+import org.snipsnap.snip.label.RenderEngineLabel;
 import org.snipsnap.snip.storage.JDBCSnipStorage;
 import org.snipsnap.snip.storage.JDBCUserStorage;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.util.ConnectionManager;
+import org.snipsnap.render.PlainTextRenderEngine;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -118,7 +120,7 @@ public class InitializeDatabase {
   private static void createSnip(String name, String file, SnipSpace space) throws IOException {
     String content = getResourceAsString(InitializeDatabase.class.getResourceAsStream(file));
     Snip snip = space.create(name, content);
-    snip.getLabels().addLabel(new RenderLabel());
+    snip.getLabels().addLabel(new RenderEngineLabel("RenderEngine", "org.snipsnap.render.PlainTextRenderEngine"));
     space.store(snip);
   }
 
@@ -134,6 +136,7 @@ public class InitializeDatabase {
 
   private static void storeConfiguration(Configuration config, SnipSpace space) throws IOException {
     message("storing configuration file for bootstrapping SnipSnap");
+    config.setInstalled("true");
     File configFile = new File(Application.get().getConfiguration().getWebInfDir(), "application.conf");
     config.storeBootstrap(new FileOutputStream(configFile));
 
@@ -141,7 +144,7 @@ public class InitializeDatabase {
     ByteArrayOutputStream configStream = new ByteArrayOutputStream();
     config.store(configStream);
     Snip snip = space.create(Configuration.SNIPSNAP_CONFIG, new String(configStream.toString("UTF-8")));
-    snip.getLabels().addLabel(new RenderLabel());
+    snip.getLabels().addLabel(new RenderEngineLabel("RenderEngine", "org.snipsnap.render.PlainTextRenderEngine"));
     space.store(snip);
   }
 

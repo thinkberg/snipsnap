@@ -27,6 +27,8 @@ package org.snipsnap.snip.label;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.snipsnap.container.Components;
+import org.radeox.engine.RenderEngine;
 
 import java.util.Map;
 
@@ -37,25 +39,27 @@ import java.util.Map;
  * @version $Id$
  */
 
-public class BooleanLabel implements Label {
+public class RenderEngineLabel implements Label {
   protected String name;
-  protected String value;
+  protected String engine;
 
-  public BooleanLabel() {
+  public RenderEngineLabel() {
     name = "";
-    value = "false";
+    engine = Components.DEFAULT_ENGINE;
   }
 
-  public BooleanLabel(String name, String value) {
+  public RenderEngineLabel(String name, String engine) {
     this.name = name;
-    this.value = value;
+    this.engine = engine;
   }
 
   public String getInputProxy() {
     StringBuffer buffer = new StringBuffer();
-    buffer.append("<input type=\"checkbox\" value=\"");
-    buffer.append(value);
-    buffer.append("\" name=\"label.boolean\"/>");
+    buffer.append("<select name=\"label.renderEngine\">");
+    buffer.append("<option value=\"org.snipsnap.render.PlainTextRenderEngine\">");
+    buffer.append("Plain Text</option>");
+    buffer.append("<option value=\"defaultRenderEngine\">default</option>");
+    buffer.append("</select>");
     return buffer.toString();
   }
 
@@ -64,29 +68,19 @@ public class BooleanLabel implements Label {
     buffer.append("<td>");
     buffer.append(name);
     buffer.append("</td><td>");
-    buffer.append(value);
+    buffer.append(engine.substring(engine.lastIndexOf(".")));
     buffer.append("</td>");
     return buffer.toString();
   }
 
-  protected String checkValue(String value) {
-    String lcValue = value.toLowerCase();
-    if ("true".equals(lcValue) || "yes".equals(lcValue) ||
-      "false".equals(lcValue) || "no".equals(lcValue)) {
-      return lcValue;
-    } else {
-      return "false";
-    }
-  }
-
   public void handleInput(Map input) {
-    if (input.containsKey("label.boolean")) {
-      this.value = checkValue((String) input.get("label.boolean"));
+    if (input.containsKey("label.renderEngine")) {
+      this.engine = (String) input.get("label.renderEngine");
     }
   }
 
   public String getType() {
-    return "Boolean";
+    return "RenderEngine";
   }
 
   public String getName() {
@@ -94,11 +88,7 @@ public class BooleanLabel implements Label {
   }
 
   public String getValue() {
-    return value;
-  }
-
-  public boolean isTrue() {
-    return "true".equals(value) || "yes".equals(value);
+    return engine;
   }
 
   public void setName(String name) {
@@ -106,11 +96,11 @@ public class BooleanLabel implements Label {
   }
 
   public void setValue(String value) {
-    this.value = checkValue(value);
+    this.engine = value;
   }
 
   public void index(Document document) {
-    System.out.println("Label index: " + name + ", " + value);
-    document.add(Field.Text(name, "" + value));
+    System.out.println("Label index: " + name + ", " + engine);
+    document.add(Field.Text(name, "" + engine));
   }
 }

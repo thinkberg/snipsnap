@@ -56,6 +56,7 @@ public class ConfigurationMap {
     Configuration.APP_JDBC_USER,
     Configuration.APP_JDBC_PASSWORD,
     Configuration.APP_CACHE,
+    Configuration.APP_INSTALLED,
   });
 
   private Properties properties = null;
@@ -109,7 +110,9 @@ public class ConfigurationMap {
     Iterator propIt = properties.keySet().iterator();
     while (propIt.hasNext()) {
       String entry = (String) propIt.next();
-      saveProperties.setProperty(entry, properties.getProperty(entry));
+      if(!bootstrap.contains(entry)) {
+        saveProperties.setProperty(entry, properties.getProperty(entry));
+      }
     }
     saveProperties.store(stream, "SnipSnap Configuration $Revision$");
   }
@@ -341,7 +344,7 @@ public class ConfigurationMap {
   }
 
   public boolean isInstalled() {
-    return new File(getWebInfDir(), "application.conf").exists();
+    return "true".equals(properties.getProperty(Configuration.APP_INSTALLED));
   }
 
   public String getVersion() {

@@ -5,6 +5,9 @@ import org.snipsnap.user.AuthenticationService;
 import org.snipsnap.user.Digest;
 import org.snipsnap.app.Application;
 import org.snipsnap.snip.storage.UserStorage;
+import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.config.Configuration;
 import org.radeox.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +23,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.StringReader;
 
 
 /*
@@ -59,34 +63,36 @@ public class SessionService {
   private UserStorage storage;
   private AuthenticationService authService;
 
-  public SessionService(UserStorage storage, AuthenticationService authService) {
+  public SessionService(SnipSpace space, UserStorage storage, AuthenticationService authService) {
     this.storage = storage;
     this.authService = authService;
 
     // TODO read from snip and make dependend from SnipSpace
     try {
-      BufferedReader crawler = new BufferedReader(
-          new InputStreamReader(new FileInputStream("conf/robotdetect.txt")));
-      String line = null;
-      int ln = 0;
-      while ((line = crawler.readLine()) != null) {
-        ln++;
-        if (line.length() > 0 && !line.startsWith("#")) {
-          try {
-            String id = line.substring(0, line.indexOf(' '));
-            String url = line.substring(line.indexOf(' ') + 1);
-            if (url.indexOf("IGNORE") != -1) {
-              robotIds.put(id, "IGNORE");
-            } else {
-              robotIds.put(id, url);
+      Snip robots = space.load(Configuration.SNIPSNAP_CONFIG_ROBOTS);
+      if(robots != null) {
+        BufferedReader crawler = new BufferedReader(new StringReader(robots.getContent()));
+        String line = null;
+        int ln = 0;
+        while ((line = crawler.readLine()) != null) {
+          ln++;
+          if (line.length() > 0 && !line.startsWith("#")) {
+            try {
+              String id = line.substring(0, line.indexOf(' '));
+              String url = line.substring(line.indexOf(' ') + 1);
+              if (url.indexOf("IGNORE") != -1) {
+                robotIds.put(id, "IGNORE");
+              } else {
+                robotIds.put(id, url);
+              }
+            } catch (Exception e) {
+              Logger.warn("SessionService: "+Configuration.SNIPSNAP_CONFIG_ROBOTS+" line " + ln + ": syntax error", e);
             }
-          } catch (Exception e) {
-            Logger.warn("UserManager: conf/robotdetect.txt line " + ln + ": syntax error", e);
           }
         }
       }
-    } catch (IOException e) {
-      Logger.warn("UserManager: unable to read conf/robotdetect.txt", e);
+    } catch (Exception e) {
+      Logger.warn("SessionService: unable to read "+Configuration.SNIPSNAP_CONFIG_ROBOTS, e);
     }
   }
 

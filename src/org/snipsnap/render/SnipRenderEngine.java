@@ -37,11 +37,9 @@ import org.snipsnap.render.filter.context.SnipFilterContext;
 import org.snipsnap.serialization.StringBufferWriter;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.user.UserManager;
+import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.AuthenticationService;
-import org.snipsnap.container.Components;
 
 import java.io.IOException;
 import java.io.Writer;

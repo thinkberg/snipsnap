@@ -27,14 +27,18 @@ package org.snipsnap.snip;
 import org.radeox.engine.RenderEngine;
 import org.radeox.engine.context.RenderContext;
 import org.radeox.util.logging.Logger;
+import org.radeox.EngineManager;
 import org.snipsnap.app.Application;
 import org.snipsnap.container.Components;
 import org.snipsnap.interceptor.Aspects;
 import org.snipsnap.render.context.SnipRenderContext;
+import org.snipsnap.render.SnipRenderEngine;
 import org.snipsnap.snip.attachment.Attachment;
 import org.snipsnap.snip.attachment.Attachments;
 import org.snipsnap.snip.label.Labels;
 import org.snipsnap.snip.label.RenderLabel;
+import org.snipsnap.snip.label.BooleanLabel;
+import org.snipsnap.snip.label.RenderEngineLabel;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.User;
 import org.picocontainer.PicoContainer;
@@ -318,7 +322,9 @@ public class SnipImpl implements Snip {
   }
 
   public void setParent(Snip parentSnip) {
-    if (parentSnip == this.parent) { return; }
+    if (parentSnip == this.parent) {
+      return;
+    }
 
     if (null != this.parent) {
       this.parent.removeSnip((Snip) Aspects.getThis());
@@ -396,24 +402,35 @@ public class SnipImpl implements Snip {
   public String toXML() {
     //long start = Application.get().start();
     PicoContainer container = Components.getContainer();
-    RenderEngine engine = (RenderEngine) container.getComponent(RenderEngine.class);
+
+    RenderEngineLabel reLabel =
+      (RenderEngineLabel) getLabels().getLabel("RenderEngine");
+    RenderEngine engine = null;
+    if (reLabel != null) {
+      try {
+        engine = (RenderEngine) container.getComponent(Class.forName(reLabel.getValue()));
+      } catch (ClassNotFoundException e) {
+        e.printStackTrace();
+      }
+    }
+
+    // make sure we get a render engine
+    if (null == engine) {
+      engine = (RenderEngine) container.getComponent(Components.DEFAULT_ENGINE);
+    }
+
 
     RenderContext context = new SnipRenderContext(
-        (Snip) Aspects.getThis(),
-        (SnipSpace) container.getComponent(SnipSpace.class));
+      (Snip) Aspects.getThis(),
+      (SnipSpace) container.getComponent(SnipSpace.class));
     context.setParameters(Application.get().getParameters());
 
-    RenderLabel label = (RenderLabel)getLabels().getLabel(RenderLabel.NAME);
     String xml = "";
-    if(label == null || label.isTrue()) {
-      // should the engine be set by the engine to the context?
-      xml = engine.render(content, context);
-      //Logger.debug(getName() + " is cacheable: " + context.isCacheable());
-      //String xml = SnipFormatter.toXML(this, getContent());
-      //Application.get().stop(start, "Formatting " + name);
-    } else {
-      xml = new StringBuffer("<div id=\"code\"><pre>").append(content).append("</pre></div>").toString();
-    }
+    // should the engine be set by the engine to the context?
+    xml = engine.render(content, context);
+    //Logger.debug(getName() + " is cacheable: " + context.isCacheable());
+    //String xml = SnipFormatter.toXML(this, getContent());
+    //Application.get().stop(start, "Formatting " + name);
     return xml;
   }
 
