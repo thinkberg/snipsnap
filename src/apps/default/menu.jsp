@@ -1,4 +1,7 @@
-<!--
+<%@ page import="com.neotis.date.Month,
+                 com.neotis.snip.Snip,
+                 com.neotis.snip.SnipSpace"%>
+ <!--
   ** Menu template
   ** @author Matthias L. Jugel
   ** @version $Id$
@@ -6,12 +9,7 @@
 
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 
-<%@ page import="com.neotis.snip.SnipSpace,
-                 java.util.Iterator,
-                 com.neotis.snip.Snip,
-                 com.neotis.date.Month,
-                 com.neotis.app.Application,
-                 com.neotis.user.User"%>
+
 <table class="menu" width="100%" border="0" cellpadding="4" cellspacing="1">
  <tr><td class="menuitem">Start<td></tr>
  <tr><td class="menuitem">Index<td></tr>
@@ -44,8 +42,6 @@
  <tr><td>
   <b>Recent Changes:</b><br>
   <!-- replace this with a JSTL tag ala <s:recent/> -->
-  <% SnipSpace space = SnipSpace.getInstance(); %>
-  <% session.setAttribute("space", space); %>
   <c:forEach var="snip" items="${space.changed}">
    <a href="/space/<c:out value='${snip.name}'/>"><c:out value="${snip.name}"/></a><br/>
   </c:forEach>
@@ -59,6 +55,9 @@
 
   <p>
   <!-- replace this with a JSTL tag ala <s:blogrolling/> -->
+  <!-- or <s:snip name="snipsnap-blogrolling"> -->
+
+   <% SnipSpace space = SnipSpace.getInstance(); %>
    <% Snip rolling = space.load("snipsnap-blogrolling"); %>
    <%= rolling.toXML() %>
   </p>

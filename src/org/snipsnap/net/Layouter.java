@@ -27,6 +27,7 @@ package com.neotis.net;
 import com.neotis.app.Application;
 import com.neotis.user.UserManager;
 import com.neotis.user.User;
+import com.neotis.snip.SnipSpace;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -62,6 +63,7 @@ public class Layouter extends HttpServlet {
     response.addCookie(new Cookie("userName", user.getLogin()));
     app.setUser(user);
     session.setAttribute("app", app);
+    session.setAttribute("space", SnipSpace.getInstance());
 
     String requestURI = request.getRequestURI();
     if(requestURI.startsWith("/space/")) {
