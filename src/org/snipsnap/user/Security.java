@@ -45,6 +45,7 @@ public class Security {
     if (UserManager.getInstance().isAuthenticated(user)) {
       userRoles.add(AUTHENTICATED);
     }
+    return userRoles;
   }
 
   public static Set getRoles(User user, Snip object) {
