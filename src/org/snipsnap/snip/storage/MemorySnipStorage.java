@@ -79,7 +79,6 @@ public class MemorySnipStorage implements SnipStorage {
     allList = storage.storageAll();
   }
 
-
   // Basic manipulation methods Load,Store,Create,Remove
   public Snip[] match(String pattern) {
     return cacheMap.match(pattern);

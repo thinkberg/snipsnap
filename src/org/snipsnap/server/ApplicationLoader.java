@@ -25,14 +25,24 @@
 package org.snipsnap.server;
 
 import org.mortbay.http.HttpListener;
+import org.mortbay.http.HttpServer;
+import org.mortbay.http.HttpContext;
+import org.mortbay.http.SocketListener;
 import org.mortbay.jetty.servlet.WebApplicationContext;
+import org.mortbay.jetty.Server;
+import org.mortbay.util.MultiException;
+import org.mortbay.util.InetAddrPort;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.config.ConfigurationProxy;
 import org.snipsnap.config.ServerConfiguration;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Collection;
+import java.util.Iterator;
+import java.net.UnknownHostException;
 
 /**
  *
@@ -116,6 +126,10 @@ public class ApplicationLoader {
     }
   }
 
+  private static String normalize(String name) {
+    return name.replace(' ', '_');
+  }
+
   public static int getApplicationErrorCount() {
     return errors;
   }
@@ -133,25 +147,12 @@ public class ApplicationLoader {
       }
     }
 
+    String host = config.getHost() == null ? "" : config.getHost();
+    String port = config.getPort() == null ? "8668" : config.getPort();
     // use get() instead of getPath() to be sure to get the local context path
     String contextPath = config.get(Configuration.APP_PATH);
     if (contextPath == null || contextPath.length() == 0) {
       contextPath = "/";
-    }
-
-    HttpListener listener[] = AppServer.jettyServer.getListeners();
-    HttpListener existingListener = null;
-    for (int i = 0; i < listener.length; i++) {
-      int port = Integer.parseInt(config.get(Configuration.APP_PORT));
-      if (listener[i].getPort() == port) {
-        existingListener = listener[i];
-      }
-    }
-
-    if (existingListener == null) {
-      HttpListener newListener = AppServer.jettyServer.addListener(":"+config.getPort());
-      newListener.start();
-      System.err.println("ApplicationLoader: added new listener: " + newListener);
     }
 
     File appRoot = config.getFile().getParentFile().getParentFile();
@@ -160,10 +161,10 @@ public class ApplicationLoader {
       appRoot = appRoot.getParentFile();
     }
 
+    Server server = findOrCreateServer(host, port, contextPath);
     WebApplicationContext context =
-      AppServer.jettyServer.addWebApplication(config.get(Configuration.APP_HOST),
-                                              contextPath,
-                                              extract ? "lib/snipsnap-template.war" : appRoot.getCanonicalPath());
+      server.addWebApplication(null, contextPath,
+                               extract ? "lib/snipsnap-template.war" : appRoot.getCanonicalPath());
 
     if (extract) {
       context.setTempDirectory(appRoot.getCanonicalFile());
@@ -191,7 +192,80 @@ public class ApplicationLoader {
     System.out.println("Stopped application '" + appName + "'");
   }
 
-  private static String normalize(String name) {
-    return name.replace(' ', '_');
+  private static Server findOrCreateServer(String host, String port, String path) throws IOException {
+    //System.out.print("Scanning for " + host + ":" + port + path);
+    Collection httpServers = Server.getHttpServers();
+
+    // try exact match first (host AND port)
+    HttpServer httpServer = (Server) findHost(httpServers, host, port);
+    //System.out.print(httpServer != null ? "<!>" : "<?>");
+    if (null == httpServer) {
+      httpServer = new Server();
+      ((Server)httpServer).setRootWebApp("/");
+      try {
+        httpServer.start();
+      } catch (MultiException e) {
+        e.printStackTrace();
+        throw new IOException("unable to start HTTP Server: "+e.getMessage());
+      }
+      //System.out.print("(new server)");
+
+      try {
+        httpServer.addListener(port).start();
+      } catch (Exception e) {
+        e.printStackTrace();
+        throw new IOException("Unable to create port listener: " + e.getMessage());
+      }
+      //System.out.print("(port " + port + ")");
+    } else {
+      if(getContext(httpServer,  path) != null) {
+        throw new IOException("Conflicting HTTP Server configuration found: '"+host+":"+port+path+"/'");
+      }
+    }
+    //System.out.println();
+    return (Server) httpServer;
+  }
+
+  private static HttpServer findHost(Collection servers, String host, String port) {
+    host = (host == null ? "" : host);
+
+    Iterator it = servers.iterator();
+    while (it.hasNext()) {
+      HttpServer server = (HttpServer) it.next();
+      HttpListener listener[] = server.getListeners();
+      for (int i = 0; i < listener.length; i++) {
+        String listenerHost = listener[i].getHost();
+        listenerHost = (listenerHost == null || listenerHost.equals(InetAddrPort.__0_0_0_0) ? "" : listenerHost);
+        String listenerPort = "" + listener[i].getPort();
+        if (port != null) {
+          //System.out.print("[" + listenerHost + ":" + listenerPort);
+          if (listenerHost.equals(host) && listenerPort.equals(port)) {
+            //System.out.println("!]");
+            return server;
+          }
+        } else {
+          //System.out.print("[" + listenerHost);
+          if (listenerHost.equals(host)) {
+            //System.out.print("!]");
+            return server;
+          }
+        }
+        //System.out.print("]");
+      }
+    }
+    return null;
+  }
+
+  private static HttpContext getContext(HttpServer httpServer, String path) {
+    HttpContext contexts[] = httpServer.getContexts();
+    for (int i = 0; i < contexts.length; i++) {
+      HttpContext context = contexts[i];
+      String contextPath = context.getContextPath();
+      //System.out.print("{" + contextPath + "}");
+      if (contextPath.equals(path) || contextPath.equals(path + "/*")) {
+        return context;
+      }
+    }
+    return null;
   }
 }

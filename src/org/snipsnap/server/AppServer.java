@@ -93,6 +93,10 @@ public class AppServer {
 
     // start jetty server and install web application
     try {
+      File appDir = new File(serverInfo.getProperty(ServerConfiguration.WEBAPP_ROOT));
+      if(!appDir.exists()) {
+        appDir.mkdir();
+      }
       jettyServer = new Server(getResource("/conf/jetty.conf", "./conf/jetty.conf"));
       jettyServer.start();
       new AdminServer(serverInfo);
@@ -126,7 +130,6 @@ public class AppServer {
     } else {
       System.out.println(ApplicationLoader.getApplicationCount() + " applications loaded and running (" + errors + " errors).");
     }
-
   }
 
   /**

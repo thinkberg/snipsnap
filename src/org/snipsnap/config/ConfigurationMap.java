@@ -30,6 +30,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.net.URL;
+import java.net.MalformedURLException;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Properties;
@@ -139,9 +141,14 @@ public class ConfigurationMap {
       if (value != null) {
         if (newProperty != null) {
           if (newProperty.startsWith("@DEPRECATED")) {
-            System.out.println("INFO: Configuration option '" + oldProperty + "' is deprecated:");
-            System.out.println("INFO: "+newProperty.substring("@DEPRECATED".length()));
-            System.out.println("INFO: Please edit configuration file manually.");
+            if (convertDeprecatedProperty(oldProperty, value)) {
+              properties.remove(oldProperty);
+              hasChanged = true;
+            } else {
+              System.out.println("INFO: Configuration option '" + oldProperty + "' is deprecated:");
+              System.out.println("INFO: " + newProperty.substring("@DEPRECATED".length()));
+              System.out.println("INFO: Please edit configuration file manually.");
+            }
           } else {
             System.out.println("INFO: converting '" + oldProperty + "' to '" + newProperty + "'");
             properties.remove(oldProperty);
@@ -152,6 +159,27 @@ public class ConfigurationMap {
       }
     }
     return hasChanged;
+  }
+
+  private boolean convertDeprecatedProperty(String oldProperty, String value) {
+    if ("app.domain".equals(oldProperty) || "app.url".equals(oldProperty)) {
+      if (value != null && value.length() > 0) {
+        try {
+          URL url = new URL(value);
+          System.out.println("INFO: converting '" + oldProperty + "' to 'app.real.*'");
+          properties.setProperty(Configuration.APP_REAL_HOST, url.getHost());
+          if (url.getPort() >= 0 && url.getPort() != 80) {
+            properties.setProperty(Configuration.APP_REAL_PORT, "" + url.getPort());
+          }
+          properties.setProperty(Configuration.APP_REAL_PATH, url.getPath());
+        } catch (MalformedURLException e) {
+          System.out.println("WARNING: unable to convert '" + oldProperty + "': malformed URL: '" + value + "'");
+          return false;
+        }
+      }
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -224,9 +252,9 @@ public class ConfigurationMap {
   }
 
   public String getPath() {
-    if("true".equals(get(Configuration.APP_REAL_AUTODETECT))) {
+    if ("true".equals(get(Configuration.APP_REAL_AUTODETECT))) {
       String realPath = get(Configuration.APP_REAL_PATH);
-      if(null != realPath) {
+      if (null != realPath) {
         return realPath;
       }
     }
@@ -254,7 +282,7 @@ public class ConfigurationMap {
     } catch (UnknownHostException e) {
       tmp.append(System.getProperty("host", "localhost"));
     }
-    if (!"80".equals(port)) {
+    if (port != null && !"80".equals(port)) {
       tmp.append(":");
       tmp.append(port);
     }
@@ -293,7 +321,7 @@ public class ConfigurationMap {
   }
 
   public boolean isInstalled() {
-    if(getFile().exists() && new File(getConfDir(), "db").exists()) {
+    if (getFile().exists() && new File(getConfDir(), "db").exists()) {
       return true;
     }
     return false;

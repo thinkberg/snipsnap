@@ -7,6 +7,10 @@
 .snip-wrapper {
 }
 
+.snip-path {
+  font-height: 10px;
+}
+
 .snip-title {
   display: table;
   width: 100%;
@@ -44,11 +48,37 @@
   margin-top: 10px;
 }
 
-.snip-attachments {
+/* Wrapper for Snip Meta-Information */
+.snip-meta {
+  position: relative;
   float: right;
+  clear: right;
+  min-width: 15%;
+}
+
+.snip-label {
+  padding: 3px;
+  width: auto;
+  background:#ffc;
+  border:1px solid #cc6;
+  font-size: 8px;
+  line-height: 8px;
+  font-weight: bold;
+  margin-bottom: 2px;
+  clear: right;
+  width: 100%;
+}
+
+.snip-attachments {
   border: 1px solid #eeeeee;
   padding: 3px;
   width: auto;
+  font-size: 8px;
+  line-height: 8px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  clear: right;
+  width: 100%;
 }
 
 .snip-post-comments {

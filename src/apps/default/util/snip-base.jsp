@@ -7,7 +7,7 @@
 
 <%-- Snip header, displayed only when snip is not a weblog --%>
 <c:if test="${snip.notWeblog}">
- <s:path snip="${snip}"/>
+ <div class="snip-path"><s:path snip="${snip}"/></div>
  <div class="snip-title">
   <h1 class="snip-name"><c:out value="${snip.name}"/>
 
@@ -21,14 +21,28 @@
 
 </c:if>
 <%-- Snip content --%>
-<div id="snip-content" class="snip-content">
- <div class="snip-label">
-    <table>
-      <c:forEach items="${snip.labels.all}" var="label">
-        <tr><c:out value="${label.listProxy}" escapeXml="false"/></tr>
-      </c:forEach>
-    </table>
- </div>
- <div class="snip-attachments"><c:out value="${snip.attachmentString}" escapeXml="false" /></div>
+<div class="snip-content">
+ <c:if test="${snip.notWeblog}">
+   <div class="snip-meta">
+     <div class="snip-label">
+       <div>
+         <s:check roles="Authenticated" permission="Edit" snip="${snip}">[<a href="<c:out value='${app.configuration.path}'/>/exec/labels?snipname=<c:out value='${snip.nameEncoded}'/>">Add Label</a>]</s:check>
+         <s:check roles="Authenticated" permission="Edit" snip="${snip}" invert="true"><span class="inactive">Labels</span></s:check>
+       </div>
+       <table>
+         <c:forEach items="${snip.labels.all}" var="label">
+           <tr><c:out value="${label.listProxy}" escapeXml="false"/></tr>
+         </c:forEach>
+       </table>
+     </div>
+     <div class="snip-attachments">
+       <div>
+         <s:check roles="Authenticated" permission="Edit" snip="${snip}">[<a href="<c:out value='${app.configuration.path}'/>/exec/upload?name=<c:out value='${snip.nameEncoded}'/>">Attach File</a>]</s:check>
+         <s:check roles="Authenticated" permission="Edit" snip="${snip}" invert="true"><span class="inactive">Attachments</span></s:check>
+       </div>
+       <c:out value="${snip.attachmentString}" escapeXml="false" />
+     </div>
+   </div>
+ </c:if>
  <c:out value="${snip.XMLContent}" escapeXml="false" />
 </div>
