@@ -31,6 +31,8 @@
     <pathelement location="${jar}/jmdns.jar"/>
     <pathelement location="${jar}/${rome.jar}"/>
     <pathelement location="${jar}/${jdom.jar}"/>
+    <pathelement location="${jar}/${spring-core.jar}"/>
+    <pathelement location="${jar}/${spring-beans.jar}"/>
     <pathelement location="${jar}/asm-1.4.1.jar"/>
     <pathelement location="${jar}/dynaop-1.0-beta.jar"/>
     <pathelement location="${jar}/cglib-asm-1.0.jar"/>
@@ -126,6 +128,8 @@
         <include name="lib/jmdns.jar"/>
 	<include name="lib/${rome.jar}"/>
 	<include name="lib/${jdom.jar}"/>
+	<include name="lib/${spring-core.jar}"/>
+	<include name="lib/${spring-beans.jar}"/>
         <include name="lib/jdom-b10.jar"/>
         <include name="lib/asm-1.4.1.jar"/>
         <include name="lib/dynaop-1.0-beta.jar"/>
@@ -449,6 +453,8 @@
         <include name="jmdns.jar"/>
 	<include name="${rome.jar}"/>
 	<include name="${jdom.jar}"/>
+	<include name="${spring-core.jar}"/>
+	<include name="${spring-beans.jar}"/>
         <include name="dynaop-1.0-beta.jar"/>
         <include name="cglib-asm-1.0.jar"/>
         <include name="asm-util-1.4.1.jar"/>
