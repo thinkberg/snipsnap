@@ -156,12 +156,13 @@ li.current-step {
   margin-left: 40px;
   width: 60%;
   text-alignment: center;
+  padding: 7px;
 }
 
-.start {
-  font-size: 130%;
-  padding: 5px;
-  background-color: #999999;
+.start input {
+  font-size: 150%;
+  padding: 3px;
+  background-color: #eeeeee;
   color: green;
 }
 

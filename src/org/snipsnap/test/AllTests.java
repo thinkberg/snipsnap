@@ -42,7 +42,6 @@ public class AllTests extends TestCase {
   public static Test suite() {
     TestSuite s = new TestSuite();
     s.addTest(AllSnipTests.suite());
-    //s.addTest(AllAdminTests.suite());
     s.addTest(AllCommonsTests.suite());
     s.addTest(AllComponentsTests.suite());
     s.addTest(AllInterceptorTests.suite());
