@@ -35,6 +35,7 @@
         <include name="dbexport.sh"/>
         <include name="dbimport.sh"/>
         <include name="dbrepair.sh"/>
+        <include name="exportall.sh"/>
       </tarfileset>
       <tarfileset dir="." prefix="${appname}-${server.version}">
         <include name="**"/>
@@ -47,7 +48,6 @@
         <exclude name="dbimport.sh"/>
         <exclude name="dbrepair.sh"/>
         <exclude name="exportall.sh"/>
-        <exclude name="validate.sh"/>
       </tarfileset>
     </tar>
   </target>
@@ -62,6 +62,7 @@
         <include name="dbexport.sh"/>
         <include name="dbimport.sh"/>
         <include name="dbrepair.sh"/>
+        <include name="exportall.sh"/>
       </tarfileset>
       <tarfileset dir="." prefix="${appname}-${server.version}">
         <include name="${jar}/${appname}.jar"/>
@@ -83,6 +84,7 @@
         <include name="conf/jetty.conf"/>
         <include name="conf/romaji.properties"/>
         <include name="license.txt"/>
+        <include name="validate.xsl"/>
         <include name="README"/>
         <exclude name="**/CVS"/>
         <exclude name="run.sh"/>
@@ -91,6 +93,7 @@
         <exclude name="dbexport.sh"/>
         <exclude name="dbimport.sh"/>
         <exclude name="dbrepair.sh"/>
+        <exclude name="exportall.sh"/>
       </tarfileset>
     </tar>
   </target>
