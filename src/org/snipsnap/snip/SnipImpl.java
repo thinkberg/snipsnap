@@ -540,7 +540,7 @@ public class SnipImpl implements Snip {
   public Snip copy(String newName) {
     SnipSpace space = (SnipSpace)Components.getComponent(SnipSpace.class);
     Snip newSnip = space.create(newName, getContent());
-    newSnip.setLabels((Labels)getLabels().clone());
+    newSnip.setLabels(new Labels(newSnip, getLabels().toString()));
     newSnip.setPermissions(getPermissions());
 
     List atts = getAttachments().getAll();
