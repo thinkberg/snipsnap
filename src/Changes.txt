@@ -1,3 +1,7 @@
+0.5
+
+0.4.1
+
 0.4
 
 - Fixed bug: Added more methods to XML-RPC Blogger API
