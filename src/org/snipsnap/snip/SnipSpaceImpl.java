@@ -345,6 +345,11 @@ public class SnipSpaceImpl implements SnipSpace {
   }
 
   public void remove(Snip snip) {
+    synchronized(delayed) {
+      if (!delayed.contains(snip)) {
+        delayed.remove(snip);
+      }
+    }
     changed.getQueue().remove(snip);
     storage.storageRemove(snip);
     indexer.removeIndex(snip);
