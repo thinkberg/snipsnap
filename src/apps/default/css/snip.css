@@ -14,7 +14,7 @@
   text-align: left;
 }
 
-.snip-name {
+h1.snip-name {
   font-weight: bold;
   font-size: 150%;
   color: black;
@@ -36,7 +36,6 @@
 
 #snip-content {
   width: 100%;
-  margin-top: 20px;
 }
 
 #snip-comments {
@@ -69,6 +68,7 @@
   list-style-type: none;
   margin-top: 0;
   padding-left: 0;
+  margin-left: 0;
 }
 
 #snip-backlinks .caption {
@@ -90,5 +90,6 @@
 #snip-backlinks span.count:after {
   content: ": ";
 }
+
 
 

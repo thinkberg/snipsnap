@@ -88,10 +88,10 @@
 }
 
 
-
 /* special formatting of a wiki table */
 .snip-table {
-  border: 1px solid black;
+  border-style: solid;
+  border-color: black;
   border-width: 0px 1px 1px 1px;
 }
 

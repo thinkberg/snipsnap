@@ -12,7 +12,7 @@
  <c:if test="${snip.notWeblog}">
   <div id="snip-header">
    <div id="snip-title">
-    <span class="snip-name"><c:out value="${snip.name}"/></span>
+    <h1 class="snip-name"><c:out value="${snip.name}"/></h1>
     <c:if test="${snip.comment}">
      <span class="snip-comment"><s:image name="arrow"/> <a href="../comments/<c:out value='${snip.commentedSnip.nameEncoded}'/>"><c:out value='${snip.commentedSnip.name}'/></a></span>
     </c:if>

@@ -33,7 +33,6 @@
    <div id="page-buttons"><c:import url="util/mainbuttons.jsp"/></div>
   </div>
   <div id="page-wrapper">
-   <div id="page-menu"><c:import url="menu.jsp"/></div>
    <div id="page-content">
     <c:import url="${page}"/>
     <div id="page-bottom">
@@ -41,6 +40,7 @@
      <a href="http://snipsnap.org/"><s:image name="logo_small"/></a>
     </div>
    </div>
+   <div id="page-menu"><c:import url="menu.jsp"/></div>
   </div>
   <s:debug/>
  </body>
