@@ -46,7 +46,6 @@ public class WeblogsPing extends Thread {
   public WeblogsPing(AppConfiguration configuration, Snip weblog) {
     this.config = configuration;
     this.weblog = weblog;
-    start();
   }
 
   public void run() {
