@@ -62,35 +62,36 @@ body {
 }
 
 #page-wrapper {
-  width: 100%;
-  display: table-row;
-  background:#FFF;
-  padding: 0px;
+  position: relative;
+	margin: 0px;
+	padding: 0px;
+  background: #FFF;
 }
 
 #page-content {
-  width: auto;
-  float: left;
+  width: 67%;
+  height: 100%;
   padding-left: 15px;
-  padding-right: 15px;
-  padding-bottom: 15px;
-  margin-bottom:15px;
-  background:#FFF;
+  padding-right: 10px;
+  padding-top: 10px;
+  background: #FFF;
 }
 
 #page-portlet-1 {
-  width: 29%;
-  float: right;
-  padding-left:15px;
-  margin-bottom:15px;
-  background:#FFF;
-  border-left: 1px solid #003366;
+  position: absolute;
+  left: 70%;
+  top: 0px;
+  height: 100%;
+  width: 25%;
+  margin: 0px;
+  padding-left: 15px;
+  padding-right: 0px;
+  padding-top: 10px;
+  padding-bottom: -5px;
 
-  font-family: verdana, arial, sans-serif;
-  color: #666;
-  font-size:11px;
-  font-weight:normal;
-  line-height:16px;
+  /* IE (Windows,MAC) do not display the line down to the bottom */
+  border-left: 1px solid #003366;
+  background-color: #FFF;
 }
 
 #page-portlet-2 {
@@ -98,9 +99,10 @@ body {
 }
 
 #page-bottom {
-  clear: left;
-  padding-top: 10px;
+  padding-top: 15px;
   padding-bottom: 10px;
+  margin: 0px;
+  margin-top: -11px;
   width: 100%;
   background:#FFF;
   text-align: center;
