@@ -33,6 +33,7 @@ import java.io.IOException;
 /**
  * Interface for servlet plugins
  */
+
 public interface ServletPlugin {
   public void service(HttpServletRequest request, HttpServletResponse response)
     throws IOException, ServletException;

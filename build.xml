@@ -15,6 +15,7 @@
     <pathelement location="${jar}/org.mortbay.jetty.jar"/>
     <pathelement location="${jar}/mckoidb.jar"/>
     <pathelement location="${jar}/jdbcstorage-1.0-alpha-1.jar"/>
+    <pathelement location="${jar}/rss-ng-1.0-alpha-1.jar"/>
     <pathelement location="${jar}/xmlrpc-1.2-b1.jar"/>
     <pathelement location="${jar}/jdic.jar"/>
   </path>
