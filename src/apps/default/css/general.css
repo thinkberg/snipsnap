@@ -80,3 +80,15 @@ input, select, textarea {
   vertical-align: middle;
 	border:1px dashed #999;
 }
+
+.calendar-head {
+ text-align: left;
+ font-weight: bold;
+}
+
+.calendar-today {
+ font-weight: bold;
+}
+
+.calendar-weekday {
+}
