@@ -84,7 +84,7 @@ public class RssServlet extends HttpServlet {
 
       Feeder feeder = (Feeder) repository.get(type);
 
-      System.out.println("Feeder repository: "+repository.getPlugins());
+//      System.out.println("Feeder repository: "+repository.getPlugins());
       if (null == feeder || "blog".equals(feeder.getName())) {
         if (sourceSnip.isWeblog()) {
           feeder = new BlogFeeder(sourceSnipName);

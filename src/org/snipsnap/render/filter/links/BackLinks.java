@@ -91,11 +91,16 @@ public class BackLinks {
   private static void renderView(Writer writer, String url) throws IOException {
     URL urlInfo = new URL(url);
     String info = null;
-    if(googleHost != null && googleHost.equals(InetAddress.getByName(urlInfo.getHost()))) {
-      info = getQuery(urlInfo.getQuery(), "q");
-      if(info != null) {
-        info = urlInfo.getHost() + ": " + info;
+    try {
+      if(googleHost != null && googleHost.equals(InetAddress.getByName(urlInfo.getHost()))) {
+        info = getQuery(urlInfo.getQuery(), "q");
+        if(info != null) {
+          info = urlInfo.getHost() + ": " + info;
+        }
       }
+    } catch (UnknownHostException e) {
+      // TODO maybe delete such hosts
+      // ignore unknown hosts
     }
 
     if(null == info) {

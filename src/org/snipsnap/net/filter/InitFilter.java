@@ -205,7 +205,7 @@ public class InitFilter implements Filter {
     HttpServletRequest request = (HttpServletRequest) req;
 
     if(!startUpDone) {
-      ((HttpServletResponse) response).sendError(HttpServletResponse.SC_PRECONDITION_FAILED,
+      ((HttpServletResponse) response).sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE,
                                                  "Startup in progress, please wait ...");
       return;
     }
