@@ -70,6 +70,11 @@ public class SnipStoreServlet extends HttpServlet {
       }
       dispatcher.forward(request, response);
       return;
+    } else if (request.getParameter("copy.template") != null) {
+      RequestDispatcher dispatcher;
+      dispatcher = request.getRequestDispatcher("/exec/new");
+      dispatcher.forward(request, response);
+      return;
     } else if (request.getParameter("cancel") == null) {
       HttpSession session = request.getSession();
       if (session != null) {

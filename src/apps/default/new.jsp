@@ -16,7 +16,15 @@
   </div>
   <fmt:message key="snip.parent"/>
   <input name="parentBefore" value="<c:out value="${parentBefore}"/>" type="hidden"/>
-  <s:pathSelector parentName="${parentBefore}"/>
+  <s:pathSelector parentName="${parentBefore}"/><br>
+  <fmt:message key="snip.template"/>
+  <select name="template" size="1">
+    <c:forEach items="${templates}" var="template" >
+      <option><c:out value="${template}"/>
+    </c:forEach>
+  </select>
+  <input value="<fmt:message key="dialog.copy.template"/>" name="copy.template" type="submit"/>
+
   <c:if test="${not empty preview}">
    <div class="preview"><div class="snip-content"><c:out value="${preview}" escapeXml="false"/></div></div>
   </c:if>

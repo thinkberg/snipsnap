@@ -27,7 +27,9 @@ package org.snipsnap.net;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpaceFactory;
+import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.app.Application;
+import org.snipsnap.container.Components;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -35,6 +37,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Create a new Snip
@@ -59,14 +63,27 @@ public class SnipNewServlet extends HttpServlet {
     }
     String content = request.getParameter("content");
     String name = request.getParameter("name");
+    String template = request.getParameter("template");
+    if (template != null) {
+      SnipSpace space = (SnipSpace)Components.getComponent(SnipSpace.class);
+      Snip snip = space.load(template);
+      content = snip.getContent();
+    }
 
     request.setAttribute("parent", parent);
     request.setAttribute("parentBefore", parentBefore);
     request.setAttribute("content", content);
     request.setAttribute("name", name);
-
+    request.setAttribute("templates", getTemplates());
     RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/new.jsp");
     dispatcher.forward(request, response);
   }
 
+  private List getTemplates() {
+    List templates = new ArrayList();
+    templates.add("leo");
+    templates.add("two");
+    templates.add("three");
+    return templates;
+  }
 }
