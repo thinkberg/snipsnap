@@ -1,5 +1,6 @@
 0.3.3
 
+- Fixed bug: multi-value html form parameter recognised for multipart/form-data
 - Fixed bug: RSS feed truncated entities, e.g. &x32...
 - Added feature: RFC macro {rfc:123} or {rfc:123|Great RFC} links to RFCs
 - Fixed bug: RSS was accidently refactored and didn't work
