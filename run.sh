@@ -14,4 +14,12 @@ if [ "$1" = "-admin" ]; then
   $JAVA -jar lib/snipsnap-utils.jar $*
   exit
 fi
-$JAVA -DentityExpansionLimit=1000000 -Djava.awt.headless=true -Xmx512m -server $DBG -jar lib/snipsnap.jar $*
+case "`uname`" in
+  Darwin*|IRIX*)
+    JAVA_OPTS="-server"
+    ;;
+esac
+
+JAVA_OPTS="$JAVA_OPTS -DentityExpansionLimit=1000000 -Djava.awt.headless=true -Xmx512m"
+
+$JAVA $JAVA_OPTS $DBG -jar lib/snipsnap.jar $*
