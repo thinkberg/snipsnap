@@ -51,6 +51,15 @@ public abstract class BaseLabel implements Label {
     this.value = value;
   }
 
+  public void create() {
+  }
+
+  public void remove() {
+  }
+
+  public void change() {
+  }
+
   public String getInputProxy() {
     StringBuffer buffer = new StringBuffer();
     buffer.append("<input type=\"text\" value=\"");
@@ -100,7 +109,7 @@ public abstract class BaseLabel implements Label {
   }
 
   public void index(Document document) {
-    System.out.println("Label index: "+name+", "+value);
+    System.out.println("Label index: " + name + ", " + value);
     document.add(Field.Text(name, value));
   }
 }

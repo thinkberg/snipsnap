@@ -49,6 +49,15 @@ public class RenderEngineLabel implements Label {
     engine = Components.DEFAULT_ENGINE;
   }
 
+  public void create() {
+  }
+
+  public void remove() {
+  }
+
+  public void change() {
+  }
+
   public RenderEngineLabel(String name, String engine) {
     this.name = name;
     this.engine = engine;

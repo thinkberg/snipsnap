@@ -76,6 +76,8 @@ public class Labels {
 
   public void removeLabel(String name) {
     cache = null;
+    Label label = (Label) labels.get(name);
+    label.remove();
     labels.remove(name);
   }
 

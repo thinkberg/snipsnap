@@ -25,8 +25,6 @@
 
 package org.snipsnap.snip.label;
 
-import org.apache.lucene.document.Document;
-
 import java.util.Map;
 
 /**
@@ -34,26 +32,25 @@ import java.util.Map;
  * @author Stephan J. Schmidt
  * @version $Id$
  */
-public interface Label {
-    // public String serialize();
+public interface Label extends Indexable, LifeCycle {
+  // public String serialize();
 
-    // public void deserialize(String label);
+  // public void deserialize(String label);
 
-    public String getListProxy();
+  public String getListProxy();
 
-    public String getInputProxy();
+  public String getInputProxy();
 
-    public void handleInput(Map input);
+  public void handleInput(Map input);
 
-    public String getType();
+  public String getType();
 
-    public String getName();
+  public String getName();
 
-    public String getValue();
+  public String getValue();
 
-    public void setName(String name);
+  public void setName(String name);
 
-    public void setValue(String value);
+  public void setValue(String value);
 
-    public void index(Document document);
 }

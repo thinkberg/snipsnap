@@ -37,7 +37,7 @@ import java.util.Map;
  * @version $Id$
  */
 
-public class BooleanLabel implements Label {
+public abstract class BooleanLabel implements Label {
   protected String name;
   protected String value;
 
@@ -49,6 +49,15 @@ public class BooleanLabel implements Label {
   public BooleanLabel(String name, String value) {
     this.name = name;
     this.value = value;
+  }
+
+  public void create() {
+  }
+
+  public void remove() {
+  }
+
+  public void change() {
   }
 
   public String getInputProxy() {
