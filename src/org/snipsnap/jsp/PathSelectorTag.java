@@ -26,6 +26,7 @@ package org.snipsnap.jsp;
 
 import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
 import org.radeox.util.logging.Logger;
+import org.radeox.util.i18n.ResourceManager;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
@@ -44,12 +45,18 @@ public class PathSelectorTag extends TagSupport {
   String parent = null;
 
   public int doStartTag() throws JspException {
-    if (null != parent) {
+    if (null != parent ) {
       try {
         JspWriter out = pageContext.getOut();
         String[] elements = parent.split("/");
-        out.write("<select name=\"parent\" size=\"1\">");
-        out.write("<option value=\"\"></option>");
+        out.write("<select name=\"parent\" size=\"1\"");
+        if ("".equals(parent)) {
+          out.write(" disabled=\"disabled\"");
+        }
+        out.write(">");
+        out.write("<option value=\"\">");
+        out.write(ResourceManager.getString("i18n.messages", "snip.path.noparent"));
+        out.write("</option>");
         String path = "";
         String value = "";
         for (int i = 0; i < elements.length; i++) {

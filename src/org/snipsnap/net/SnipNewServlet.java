@@ -60,6 +60,8 @@ public class SnipNewServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
 
+    SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
+
     String parent = request.getParameter("parent");
     String parentBefore = request.getParameter("parentBefore");
     if (null == parentBefore) {
@@ -70,7 +72,6 @@ public class SnipNewServlet extends HttpServlet {
     String template = request.getParameter("template");
 	  String copy = request.getParameter("copy.template");
     if ((copy != null) && (template != null)) {
-      SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
       Snip snip = space.load(template);
       content = snip.getContent();
     }

@@ -47,6 +47,25 @@
        <input name="referer" type="hidden" value="<%= request.getHeader("REFERER") %>"/>
      </div>
     </div>
+    <script language="Javascript" type="text/javascript">
+     <!--
+      function showHide(obj) {
+        if (document.layers) {
+          current = (document.layers[obj].display == 'none') ? 'block' : 'none';
+          document.layers[obj].display = current;
+        } else if (document.all) {
+          current = (document.all[obj].style.display == 'none') ? 'block' : 'none';
+          document.all[obj].style.display = current;
+        } else if (document.getElementById) {
+          vista = (document.getElementById(obj).style.display == 'none') ? 'block' : 'none';
+          document.getElementById(obj).style.display = vista;
+        }
+      }
+     // -->
+     </script>
+     <div id="help" class="snip-help" style="display: none">
+       <s:snip name="snipsnap-help"/>
+     </div>
    </s:check>
    <s:check roles="Authenticated" invert="true" >
      <fmt:message key="login.please">

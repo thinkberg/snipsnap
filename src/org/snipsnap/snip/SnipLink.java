@@ -102,7 +102,7 @@ public class SnipLink {
     StringBuffer link = new StringBuffer();
     link.append("<a href=\"");
     link.append(getExecRoot());
-    link.append("/edit?name=");
+    link.append("/new?name=");
     link.append(encode(name));
     link.append("\">").append(Encoder.escape(name)).append("</a>");
 
