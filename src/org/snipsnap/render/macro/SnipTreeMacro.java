@@ -160,7 +160,9 @@ public class SnipTreeMacro extends BaseMacro {
         }
       }
 
+      writer.write("<div class=\"snip-tree\">");
       writeTree(writer, root);
+      writer.write("</div>");
     } else if (params.getLength() == 2) {
       writer.write("<img src=\"/exec/namespace?name=" + params.get(0) + "\"/>");
     } else {
