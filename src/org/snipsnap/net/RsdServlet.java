@@ -55,6 +55,15 @@ public class RsdServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
 
+      String name = "start";
+      Snip snip = SnipSpace.getInstance().load(name);
+
+      request.setAttribute("snip", snip);
+      request.setAttribute("space", SnipSpace.getInstance());
+      request.setAttribute("config", config);
+
+      request.setAttribute("url", config.getUrl("/space"));
+
       RequestDispatcher dispatcher = request.getRequestDispatcher("/rsd.jsp");
       dispatcher.forward(request, response);
     }
