@@ -28,6 +28,24 @@
    </tag>
 
   <tag>
+    <name>content</name>
+    <tag-class>org.snipsnap.jsp.ContentTag</tag-class>
+    <attribute>
+      <name>snip</name>
+      <type>org.snipsnap.snip.Snip</type>
+      <description>snip to get content for</description>
+    </attribute>
+    <attribute>
+      <name>removeHtml</name>
+      <description>true if HTML code should be removed</description>
+    </attribute>
+    <attribute>
+      <name>extract</name>
+      <description>true if only an extract should be displayed</description>
+    </attribute>
+   </tag>
+
+  <tag>
     <name>backLinks</name>
     <tag-class>org.snipsnap.jsp.BackLinkTag</tag-class>
     <attribute>

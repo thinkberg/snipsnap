@@ -45,12 +45,21 @@ import java.util.Iterator;
  */
 
 public class NotificationService {
+  private static NotificationService instance;
+
   private NotificationQueue queue;
   private Thread thread;
 
   private List notifiers;
   private Notifier notifier;
   private Object monitor = new Object();
+
+  public synchronized static NotificationService getInstance() {
+    if (null == instance) {
+      instance = new NotificationService();
+    }
+    return instance;
+  }
 
   public NotificationService() {
     queue = new NotificationQueue();

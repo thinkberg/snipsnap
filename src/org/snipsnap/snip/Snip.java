@@ -289,6 +289,10 @@ public class Snip implements Ownable, Nameable {
     return SnipSpace.getInstance().getChildrenDateOrder(this, 10);
   }
 
+  public List getChildrenModifierOrder() {
+    return SnipSpace.getInstance().getChildrenModifiedOrder(this, 10);
+  }
+
   public Snip getParent() {
     return parent;
   }

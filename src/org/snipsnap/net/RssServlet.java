@@ -66,10 +66,10 @@ public class RssServlet extends HttpServlet {
     RequestDispatcher dispatcher;
     if ("1.0".equals(version)) {
       dispatcher = request.getRequestDispatcher("/rdf.jsp");
-    } else if ("2.0".equals(version)) {
-      dispatcher = request.getRequestDispatcher("/rss2.jsp");
-    } else {
+    } else if ("0.92".equals(version)) {
       dispatcher = request.getRequestDispatcher("/rss.jsp");
+    } else {
+      dispatcher = request.getRequestDispatcher("/rss2.jsp");
     }
     dispatcher.forward(request, response);
   }

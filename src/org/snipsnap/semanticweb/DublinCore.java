@@ -54,7 +54,7 @@ public class DublinCore {
     dublinCore.put("Date", sf.format(snip.getModified().getmTime()));
     dublinCore.put("Type", "Text");
     dublinCore.put("Identifier", Application.get().getConfiguration().getSnipUrl(snip.getName()));
-    dublinCore.put("Coyright", year.format(snip.getModified().getmTime()));
+    dublinCore.put("Coyright", "Copyright " + year.format(snip.getModified().getmTime()));
     dublinCore.put("Language", conf.getLocale());
     return dublinCore;
   }

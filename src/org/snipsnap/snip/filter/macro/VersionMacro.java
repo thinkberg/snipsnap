@@ -23,20 +23,33 @@
  * --LICENSE NOTICE--
  */
 
-package org.snipsnap.snip.filter;
+
+package org.snipsnap.snip.filter.macro;
 
 /*
- * Boldfilter replaces __text__ with bold "text".
+ * Macro that displays the running SnipSnap version
  *
  * @author Stephan J. Schmidt
  * @version $Id$
  */
 
-import org.snipsnap.snip.filter.regex.RegexReplaceFilter;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipLink;
+import org.snipsnap.app.Application;
 
-public class BoldFilter extends RegexReplaceFilter {
+public class VersionMacro extends Macro {
+  String version;
 
-  public BoldFilter() {
-    super("__(.*?)__", "<span class=\"bold\">$1</span>");
-  };
+  public VersionMacro() {
+    version = Application.get().getConfiguration().getVersion();
+  }
+
+  public String getName() {
+    return "version";
+  }
+
+  public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
+      buffer.append(version);
+      return;
+  }
 }

@@ -152,6 +152,10 @@ public class SnipSpace implements LinkTester, Loader {
     return storageByParentNameOrder(snip, count);
   }
 
+  public List getChildrenModifiedOrder(Snip snip, int count) {
+    return storageByParentModifiedOrder(snip, count);
+  }
+
   public Snip post(String content) {
     Date date = new Date(new java.util.Date().getTime());
     return post(content, date);
@@ -361,6 +365,12 @@ public class SnipSpace implements LinkTester, Loader {
 
   private List storageByParentNameOrder(Snip parent, int count) {
     Finder finder = finders.getFinder("WHERE parentSnip=? ORDER BY name DESC ");
+    finder.setString(1, parent.getName());
+    return finder.execute(count);
+  }
+
+  private List storageByParentModifiedOrder(Snip parent, int count) {
+    Finder finder = finders.getFinder("WHERE parentSnip=? ORDER BY mTime DESC ");
     finder.setString(1, parent.getName());
     return finder.execute(count);
   }
