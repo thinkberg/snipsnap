@@ -27,6 +27,7 @@ package org.snipsnap.snip.storage;
 
 import org.snipsnap.app.Application;
 import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipPostNameComparator;
 import org.snipsnap.snip.storage.query.QueryKit;
 import org.snipsnap.snip.storage.query.SnipComparator;
 import org.snipsnap.snip.storage.query.SnipQuery;
@@ -35,6 +36,7 @@ import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Arrays;
 
 /**
  * Wrapper with finders for in-memory searching. Can
@@ -54,6 +56,8 @@ public class QuerySnipStorage implements SnipStorage {
     }
   };
 
+  private static Comparator snipPostNameComparator = new SnipPostNameComparator();
+
   private static Comparator nameWithoutPathComparator = new SnipComparator() {
     public int compare(Snip s1, Snip s2) {
       return getName(s1).compareTo(getName(s2));
@@ -63,7 +67,7 @@ public class QuerySnipStorage implements SnipStorage {
       String name = snip.getName();
       int index = name.lastIndexOf("/");
       if (-1 != index) {
-        return name.substring(index+1);
+        return name.substring(index + 1);
       } else {
         return name;
       }
@@ -88,7 +92,7 @@ public class QuerySnipStorage implements SnipStorage {
   private static Comparator hotnessComparator = new SnipComparator() {
     public int compare(Snip s1, Snip s2) {
       return s1.getAccess().getViewCount()
-           < s2.getAccess().getViewCount() ? 1 : -1;
+          < s2.getAccess().getViewCount() ? 1 : -1;
     }
   };
 
@@ -212,13 +216,27 @@ public class QuerySnipStorage implements SnipStorage {
 
   public List storageByDateInName(final String start, final String end) {
     final String startName = Application.get().getConfiguration().getStartSnip();
-    return QueryKit.querySorted(storage.storageAll(), new SnipQuery() {
+    final String queryStart = startName + "/" + start + "/";
+    final String queryEnd = startName + "/" + end + "/";
+    List blogWithParent = QueryKit.querySorted(storage.storageAll(), new SnipQuery() {
       public boolean fit(Snip snip) {
+        // Return all Snips with the parent matching like
+        // 2001-01-12 ... and parent "start"
         String name = snip.getName();
         Snip parent = snip.getParent();
-        return (start.compareTo(name) <= 0 && end.compareTo(name) >= 0 &&
+        boolean blogWithParent = (start.compareTo(name) <= 0 && end.compareTo(name) >= 0 &&
             null != parent && startName.equals(parent.getName()));
+        return blogWithParent;
       }
     }, nameComparator);
+    System.err.println("Parent="+blogWithParent);
+
+    List blogWithNameSpace = Arrays.asList(match(queryStart, queryEnd));
+    Collections.sort(blogWithNameSpace, snipPostNameComparator);
+
+    System.err.println("NameSpace="+blogWithNameSpace);
+
+    blogWithNameSpace.addAll(blogWithParent);
+    return blogWithNameSpace;
   }
 }

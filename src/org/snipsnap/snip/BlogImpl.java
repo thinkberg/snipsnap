@@ -47,7 +47,6 @@ public class BlogImpl implements Blog {
   private String name;
   private Snip blog;
   private SnipSpace space;
-  private Comparator comparator= new SnipPostNameComparator();
 
   public BlogImpl(SnipSpace space, String blogName) {
     this.space = space;
@@ -143,21 +142,17 @@ public class BlogImpl implements Blog {
     endC.add(Calendar.DAY_OF_MONTH, 1);
     startC.add(Calendar.MONTH, -3);
 
-    String start = name + "/" + Month.toKey(startC) + "/";
-    String end = name + "/" + Month.toKey(endC) + "/";
-
     //@TODO: reduce number of posts to count;
     //@TODO: reorder snips
     //List posts = new ArrayList();
     //space.getChildrenDateOrder(blog, count);
     List posts = new ArrayList();
-    posts.addAll(Arrays.asList(space.match(start, end)));
-    Collections.sort(posts, comparator);
+    //    posts.addAll(Arrays.asList(space.match(start, end)));
+    //    Collections.sort(posts, comparator);
     // sort
     // Add old snips of form '2005-03-01' if name == 'start'
     if (posts.size() < count && name.equals(startName)) {
       List oldPosts = space.getByDate(Month.toKey(startC), Month.toKey(endC));
-      Collections.sort(oldPosts, comparator);
       oldPosts = oldPosts.subList(0, Math.min(oldPosts.size(), count - posts.size()));
       posts.addAll(oldPosts);
     }
