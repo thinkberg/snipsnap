@@ -286,6 +286,9 @@ public class Installer extends HttpServlet {
     }
 
     config.setLogger("org.snipsnap.util.log.NullLogger");
+    config.setProperty(AppConfiguration.APP_CACHE, "full");
+    config.setProperty(AppConfiguration.APP_TIMEZONE, "+1.00");
+    config.setProperty(AppConfiguration.APP_WEBLOG_DATE_FORMAT, "EEEE, dd. MMMM yyyy");
     config.store();
 
     writeMessage(out, "Starting application ...");

@@ -58,10 +58,8 @@ public class CommentViewServlet extends SnipSnapServlet {
     } else {
       name = name.substring(1);
     }
-    // TODO 1.4 name = URLDecoder.decode(name, "iso-8859-1");
-    name = SnipLink.decode(name);
 
-    Snip snip = SnipSpace.getInstance().load(name);
+    Snip snip = SnipSpace.getInstance().load(name.replace('+', ' ')));
     // Snip does not exist
     if (null == snip) {
       System.err.println("Snip does not exist: name=" + name);

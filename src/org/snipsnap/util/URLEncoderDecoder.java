@@ -50,6 +50,7 @@ public class URLEncoderDecoder {
     for (i = '0'; i <= '9'; i++) {
       dontNeedEncoding.set(i);
     }
+    //dontNeedEncoding.set('+');
     dontNeedEncoding.set(' '); /* encoding a space to a + is done in the encode() method */
     dontNeedEncoding.set('-');
     dontNeedEncoding.set('_');
@@ -66,7 +67,9 @@ public class URLEncoderDecoder {
         // @TODO sometimes it is bad to encode space to +
         if (c == ' ') {
           result.append('+');
-        } else {
+        } /*else if (c == '+') {
+          result.append('\0')
+        }*/ else {
           result.append((char) c);
         }
       } else {

@@ -33,5 +33,5 @@ set CLASSPATH=%CLASSPATH%;lib/org.mortbay.jetty.jar;lib/javax.servlet.jar;lib/or
 if $1 == "admin" set cmdline="-admin $1 $2"
 
 rem execute application server
-%JAVA_HOME%/bin/java -cp %CLASSPATH%;lib/snipsnap.jar org.snipsnap.server.AppServer %cmdline% 2> server.log
+%JAVA_HOME%/bin/java -server -cp %CLASSPATH%;lib/snipsnap.jar org.snipsnap.server.AppServer %cmdline% 2> server.log
 

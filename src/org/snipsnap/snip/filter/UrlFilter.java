@@ -41,15 +41,16 @@ import org.apache.oro.text.regex.MatchResult;
 public class UrlFilter extends RegexTokenFilter {
 
   public UrlFilter() {
-    super("(?:[^\"=]|^)((http|ftp)s?://(%[[:digit:]A-Fa-f][[:digit:]A-Fa-f]|[-_.!~*';/?:@#&=+$,[:alnum:]])+)");
+    super("([^\"=]|^)((http|ftp)s?://(%[[:digit:]A-Fa-f][[:digit:]A-Fa-f]|[-_.!~*';/?:@#&=+$,[:alnum:]])+)");
   };
 
   public void handleMatch(StringBuffer buffer, MatchResult result, Snip snip) {
+    buffer.append(result.group(1));
     buffer.append("<span class=\"nobr\">");
     buffer.append(SnipLink.createImage("external-link", "&gt;&gt;"));
-    buffer.append("<a href=\"").append(result.group(1)).append("\">");
-    buffer.append(EscapeFilter.escape(result.group(1).charAt(0)));
-    buffer.append(result.group(1).substring(1));
+    buffer.append("<a href=\"").append(result.group(2)).append("\">");
+    buffer.append(EscapeFilter.escape(result.group(2).charAt(0)));
+    buffer.append(result.group(2).substring(1));
     buffer.append("</a></span>");
   }
 }

@@ -98,7 +98,7 @@ public class SnipSpace implements LinkTester {
     cache.setLoader(Snip.class, (Storage) storage);
 
     // Fully fill the cache with all Snips
-    if ("full".equals(Application.get().getConfiguration().getCache().toLowerCase())) {
+    if ("full".equals(Application.get().getConfiguration().getCache())) {
       Finder finder = finders.getFinder();
       finder.execute();
 

@@ -30,6 +30,8 @@ import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.app.Application;
+import org.snipsnap.util.log.Logger;
+import org.snipsnap.config.AppConfiguration;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -61,9 +63,8 @@ public class SnipViewServlet extends SnipSnapServlet {
     } else {
       name = name.substring(1);
     }
-    // TODO 1.4 name = URLDecoder.decode(name, "iso-8859-1");
-    name = SnipLink.decode(name);
-    Snip snip = SnipSpace.getInstance().load(name);
+
+    Snip snip = SnipSpace.getInstance().load(name.replace('+', ' '));
     // Snip does not exist
     if (null == snip) {
       snip = SnipSpace.getInstance().load("snipsnap-notfound");

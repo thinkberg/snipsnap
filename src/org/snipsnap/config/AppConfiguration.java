@@ -225,13 +225,13 @@ public class AppConfiguration extends Configuration {
   }
 
   public String getWeblogDateFormat() {
-    return "EEEE, dd. MMMM yyyy";
-    //return getProperty(AppConfiguration.APP_WEBLOG_DATE_FORMAT);
+    String format = getProperty(AppConfiguration.APP_WEBLOG_DATE_FORMAT);
+    return format == null ? "EEEE, dd. MMMM yyyy" : format;
   }
 
   public String getTimeZone() {
-    return "+1.00";
-    //return getProperty(AppConfiguration.APP_TIMEZONE);
+    String timezone = getProperty(AppConfiguration.APP_TIMEZONE);
+    return timezone == null ? "+1.00" : timezone;
   }
 
   public boolean allow(String action) {

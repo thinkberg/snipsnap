@@ -12,6 +12,7 @@
 img {
   margin-top: 1px;
   margin-bottom: 1px;
+  vertical-align: middle;
 }
 
 img.left {
