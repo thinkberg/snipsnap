@@ -38,6 +38,7 @@ import org.radeox.util.Service;
 import org.snipsnap.app.Application;
 import org.snipsnap.graph.ContentRenderer;
 import org.snipsnap.graph.VerticalContentRenderer;
+import org.snipsnap.graph.HorizontalContentRenderer;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpaceFactory;
 
@@ -49,7 +50,7 @@ import org.snipsnap.snip.SnipSpaceFactory;
  */
 public class RenderServlet extends HttpServlet {
 	private Map handlers = new HashMap();
-	private final static ContentRenderer DEFAULT_HANDLER = new VerticalContentRenderer();
+	private final static ContentRenderer DEFAULT_HANDLER = new HorizontalContentRenderer();
 
 	public void init() throws ServletException {
 		Iterator contentRenderer =

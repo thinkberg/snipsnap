@@ -43,7 +43,6 @@ public class HorizontalContentRenderer implements ContentRenderer {
 
     TreeBuilder builder = new StringTreeBuilder(content);
     Renderer renderer = new HorizontalRenderer();
-    //DrawTree drawTree = new DrawTree();
-    //drawTree.draw(builder.build(), renderer, out);
+    renderer.render(builder.build(), out, new ImageContext());
   }
 }

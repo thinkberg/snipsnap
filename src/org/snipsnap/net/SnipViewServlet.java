@@ -30,6 +30,7 @@ import org.snipsnap.config.Configuration;
 import org.snipsnap.container.Components;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.AuthenticationService;
 import org.snipsnap.user.User;
 import org.snipsnap.util.URLEncoderDecoder;
@@ -40,6 +41,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * Load a snip to view.
@@ -92,7 +94,11 @@ public class SnipViewServlet extends HttpServlet {
       snip = space.load(name);
     }
 
-    Application.get().getParameters().put("viewed", snip);
+    Application app = Application.get();
+    Map params = app.getParameters();
+    params.put("viewed", snip);
+    params.put("RSS", params.get("RSS")+"?snip="+snip.getNameEncoded());
+
     request.setAttribute("snip", snip);
 //    request.setAttribute("URI", request.getRequestURL().toString());
 
