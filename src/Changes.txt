@@ -1,5 +1,8 @@
 0.3.5
 
+- Fixed bug: Correct date format in Dublin core dc:date
+- Security: Fixed posting and editing by unauthorized users
+
 0.3.4 - 2003-02-21
 
 - Added feature: use Java2Html instead of regex [by Zohar], currently additional as "njava"
