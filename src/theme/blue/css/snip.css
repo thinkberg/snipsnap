@@ -29,6 +29,7 @@
 
 .snip-buttons {
   border: 0;
+  display: table-cell;
   float: right;
   font-family: verdana, arial, sans-serif;
   font-size:10px;
@@ -37,6 +38,7 @@
 
 .snip-info {
   border: 0;
+  display: table-cell;
   float: left;
   font-family: verdana, arial, sans-serif;
   font-size:10px;

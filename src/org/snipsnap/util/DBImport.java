@@ -72,7 +72,7 @@ public class DBImport {
     AppConfiguration config = null;
     try {
       config = new AppConfiguration(
-        new File(serverConfig.getProperty(Configuration.SERVER_WEBAPP_ROOT) + args[0] + "/application.conf"));
+        new File(serverConfig.getProperty(Configuration.SERVER_WEBAPP_ROOT) + args[0] + "/WEB-INF/application.conf"));
     } catch (IOException e) {
       System.out.println("Unable to load application config: " + e);
       System.exit(-1);

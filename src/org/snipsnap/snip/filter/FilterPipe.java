@@ -33,6 +33,7 @@
 package org.snipsnap.snip.filter;
 
 import org.snipsnap.snip.Snip;
+import org.snipsnap.util.log.Logger;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -64,8 +65,8 @@ public class FilterPipe {
       } catch (NoSuchMethodException e) {
         filter = (Filter) filterClass.newInstance();
       }
-      System.err.println("FilterPipe: added "+name);
       addFilter(filter);
+      System.err.println("FilterPipe: added "+name);
     } catch (Exception e) {
       System.err.println("FilterPipe: unable to load '" + name + "' filter "+e);
     }

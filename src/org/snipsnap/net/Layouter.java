@@ -35,6 +35,7 @@ import org.snipsnap.util.log.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.ServletConfig;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -46,6 +47,8 @@ import java.util.Iterator;
 import java.util.HashMap;
 import java.util.Map;
 
+import sun.misc.Service;
+
 /**
  * Layouter and main handler for web sites.
  * @author Matthias L. Jugel
@@ -54,6 +57,28 @@ import java.util.Map;
 public class Layouter extends SnipSnapServlet {
 
   public final static String ATT_PAGE = "page";
+
+  public void init(ServletConfig config) throws ServletException {
+    super.init(config);
+    /* load all macros found in the services plugin control file */
+/*
+    Iterator macroIt = Service.providers(HttpServlet.class);
+    while(macroIt.hasNext()) {
+      try {
+        Macro macro = (Macro)macroIt.next();
+        add(macro);
+        System.err.println("Loaded macro: "+macro.getName());
+      } catch (Exception e) {
+        System.err.println("MacroFilter: unable to load macro: "+e);
+        e.printStackTrace();
+      } catch(ServiceConfigurationError err) {
+        System.err.println("MacroFilter: error loading macro: "+err);
+        err.printStackTrace();
+      }
+    }
+*/
+
+  }
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
     throws IOException, ServletException {

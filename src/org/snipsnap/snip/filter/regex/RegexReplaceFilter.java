@@ -36,6 +36,7 @@ import org.apache.oro.text.regex.Pattern;
 import org.apache.oro.text.regex.Perl5Substitution;
 import org.apache.oro.text.regex.Util;
 import org.snipsnap.snip.Snip;
+import org.snipsnap.util.log.Logger;
 
 public class RegexReplaceFilter extends RegexFilter {
 
@@ -59,7 +60,15 @@ public class RegexReplaceFilter extends RegexFilter {
     for (int i = 0; i < size; i++) {
       Pattern p = (Pattern) pattern.get(i);
       String s = (String) substitute.get(i);
-      result = Util.substitute(matcher, p, new Perl5Substitution(s, interps), result, limit);
+      try {
+        result = Util.substitute(matcher, p, new Perl5Substitution(s, interps), result, limit);
+      } catch (Exception e) {
+        Logger.log("<span class=\"error\">Exception</span>: " + this + ": " + e);
+        e.printStackTrace();
+      } catch (Error err) {
+        Logger.log("<span class=\"error\">Error</span>: " + this + ": " + err);
+        err.printStackTrace();
+      }
     }
     return result;
   }

@@ -8,13 +8,13 @@ if [ "$JAVA_HOME" = "" ]; then
 fi
 
 # check whether the java compiler is available
-if [ ! -f $JAVA_HOME/lib/tools.jar -a ! -f /System/Library/Frameworks/JavaVM.framework/Versions/1.3.1/Classes/classes.jar ]; then
+if [ ! -f $JAVA_HOME/lib/tools.jar -a ! -f /System/Library/Frameworks/JavaVM.framework/Classes/classes.jar ]; then
   echo "$JAVA_HOME/lib/tools.jar or MacOS X pendant not found, cannot compile jsp files"
   echo "Make sure tools.jar or similar from the Java SDK is in the classpath!"
   exit 
 else
-  if [ -f System/Library/Frameworks/JavaVM.framework/Versions/1.3.1/Classes/classes.jar ]; then
-    TOOLS=System/Library/Frameworks/JavaVM.framework/Versions/1.3.1/Classes/classes.jar
+  if [ -f /System/Library/Frameworks/JavaVM.framework/Classes/classes.jar ]; then
+    TOOLS=/System/Library/Frameworks/JavaVM.framework/Classes/classes.jar
   else
     TOOLS=$JAVA_HOME/lib/tools.jar
   fi
@@ -26,9 +26,7 @@ if [ ! -f $base/$jar/snipsnap.jar ]; then
 fi
 
 # put classpath together (this is a script-local variable)
-CLASSPATH=lib/xmlrpc-1.1.jar:lib/jakarta.jar:lib/javax.servlet.jar:lib/mckoidb.jar:lib/org.apache.jasper.jar:lib/org.mortbay.jetty.jar:lib/jdbcpool.jar:lib/lucene-1.2.jar:$TOOLS
-CLASSPATH=$CLASSPATH:lib/jython.jar
-CLASSPATH=$CLASSPATH:lib/muse-jabber-0.8a1.jar:lib/aspectjrt.jar:lib/jdom-b8.jar
+CLASSPATH=lib/org.mortbay.jetty.jar:lib/javax.servlet.jar:lib/org.apache.crimson.jar:lib/org.apache.jasper.jar:$TOOLS
 
 if [ "$1" = "admin" ]; then
   java -jar lib/snipsnap.jar -admin "$2" "$3" 

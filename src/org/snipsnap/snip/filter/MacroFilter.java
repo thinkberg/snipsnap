@@ -36,7 +36,11 @@ import org.snipsnap.util.log.Logger;
 
 import java.util.*;
 import java.io.Writer;
+import java.io.File;
 import java.lang.reflect.Method;
+
+import sun.misc.Service;
+import sun.misc.ServiceConfigurationError;
 
 /*
  * Class that finds snippets like
@@ -60,35 +64,21 @@ public class MacroFilter extends RegexTokenFilter {
     addRegex("\\{([^:}]+):?(.*?)\\}", "", MULTILINE);
 
     macros = new HashMap();
-    add("org.snipsnap.snip.filter.macro.FieldMacro");
-    add("org.snipsnap.snip.filter.macro.LinkMacro");
-    add("org.snipsnap.snip.filter.macro.AnnotationMacro");
-    add("org.snipsnap.snip.filter.macro.CodeMacro");
-    add("org.snipsnap.snip.filter.macro.ScriptMacro");
-    add("org.snipsnap.snip.filter.macro.IsbnMacro");
-    add("org.snipsnap.snip.filter.macro.ApiMacro");
-    add("org.snipsnap.snip.filter.macro.TableMacro");
-    add("org.snipsnap.snip.filter.macro.UserSnipMacro");
-    add("org.snipsnap.snip.filter.macro.RecentWeblogMacro");
-    add("org.snipsnap.snip.filter.macro.UserMacro");
-    add("org.snipsnap.snip.filter.macro.SearchMacro");
-    add("org.snipsnap.snip.filter.macro.IndexSnipMacro");
-    add("org.snipsnap.snip.filter.macro.ImageMacro");
-    add("org.snipsnap.snip.filter.macro.LastLoginMacro");
-    add("org.snipsnap.snip.filter.macro.SinceLastVisitMacro");
-    add("org.snipsnap.snip.filter.macro.LastVisitMacro");
-    add("org.snipsnap.snip.filter.macro.HotSnipMacro");
-    add("org.snipsnap.snip.filter.macro.QuoteMacro");
-    add("org.snipsnap.snip.filter.macro.VersionMacro");
-    add("org.snipsnap.snip.filter.macro.LoginsMacro");
-    add("org.snipsnap.snip.filter.macro.RecentChangesMacro");
-    add("org.snipsnap.snip.filter.macro.CalendarMacro");
-    add("org.snipsnap.snip.filter.macro.MacroListMacro");
-    add("org.snipsnap.snip.filter.macro.InterWikiMacro");
-    add("org.snipsnap.snip.filter.macro.BackLinkMacro");
-    add("org.snipsnap.snip.filter.macro.SnipLinkMacro");
-    add("org.snipsnap.snip.filter.macro.LdapMacro");
-    add("org.snipsnap.snip.filter.macro.ApiDocMacro");
+    /* load all macros found in the services plugin control file */
+    Iterator macroIt = Service.providers(Macro.class);
+    while(macroIt.hasNext()) {
+      try {
+        Macro macro = (Macro)macroIt.next();
+        add(macro);
+        System.err.println("Loaded macro: "+macro.getName());
+      } catch (Exception e) {
+        System.err.println("MacroFilter: unable to load macro: "+e);
+        e.printStackTrace();
+      } catch(ServiceConfigurationError err) {
+        System.err.println("MacroFilter: error loading macro: "+err);
+        err.printStackTrace();
+      }
+    }
   }
 
   public static MacroFilter getInstance() {
@@ -98,25 +88,6 @@ public class MacroFilter extends RegexTokenFilter {
       }
     }
     return instance;
-  }
-
-  public void add(String name) {
-    try {
-      Class macroClass = Class.forName(name);
-      Macro macro;
-      try {
-        Method getInstanceMethod = null;
-        getInstanceMethod = macroClass.getMethod("getInstance",null);
-        macro = (Macro) getInstanceMethod.invoke(null, noArguments);
-      } catch (NoSuchMethodException e) {
-        macro = (Macro) macroClass.newInstance();
-      }
-      // System.err.println("MacroFilter: added "+name);
-      add(macro);
-      System.err.println("Added "+name);
-    } catch (Exception e) {
-      System.err.println("MacroFilter: unable to load '" + name + "' macro "+e);
-    }
   }
 
   public void add(Macro macro) {
