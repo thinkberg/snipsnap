@@ -14,9 +14,9 @@ fi
 #  exit
 #fi
 
-if [ ! -f $JAVA_HOME/lib/tools.jar ]; then
-  echo "$JAVA_HOME/lib/tools.jar not found, cannot compile jsp files"
-  echo "Make sure tools.jar from the Java SDK is in the classpath!"
+if [ ! -f $JAVA_HOME/lib/tools.jar -a ! -f /System/Library/Frameworks/JavaVM.framework/Versions/1.3.1/Classes/classes.jar ]; then
+  echo "$JAVA_HOME/lib/tools.jar or MacOS X pendant not found, cannot compile jsp files"
+  echo "Make sure tools.jar or similar from the Java SDK is in the classpath!"
   exit 
 fi
 
