@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<!--
+  **
+  **
+  ** <section title="TITLE">
+  **  <subsection title="TITLE">
+  **   ... <important>!</important>
+  **   ... <br/>
+  **   ... <i>ITALICS</i>
+  **   ... <b>BOLD</b>
+  **  </subsection>
+  **  <list type="ding">
+  **    <item>....
+  **  ...
+  ** </section>
+  **
+  ** @author leo
+  ** @team other
+  ** @version $Id$
+  -->
+<section title="Introduction">
+SnipSnap CRM is a customer relationship management software.
+</section>
