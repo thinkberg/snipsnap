@@ -51,6 +51,13 @@ public class XMLSnipRepair {
       System.exit(0);
     }
 
+    System.err.print("Press enter to start ...");
+    try {
+      new BufferedReader(new InputStreamReader(System.in)).readLine();
+    } catch (IOException e) {
+      // ignore
+    }
+    repair(new File(args[0]), new File(args[1]), args.length > 2 ? new File(args[2]) : null);
   }
 
   public static void repair(File input, File output, File webAppDir) {
@@ -72,7 +79,7 @@ public class XMLSnipRepair {
     outputFormat.setEncoding("UTF-8");
     outputFormat.setNewlines(true);
     try {
-      XMLWriter xmlWriter = new XMLWriter(null == output ? System.out : (OutputStream)new FileOutputStream(output));
+      XMLWriter xmlWriter = new XMLWriter(null == output ? System.out : (OutputStream) new FileOutputStream(output));
       xmlWriter.write(repaired);
       xmlWriter.flush();
       xmlWriter.close();
@@ -84,6 +91,7 @@ public class XMLSnipRepair {
 
   static int errCount = 0;
   static int curr = 0;
+
   /**
    * Load snips and users into the SnipSpace from an xml document out of a stream.
    * @param file  the file to load from
@@ -93,6 +101,8 @@ public class XMLSnipRepair {
     System.err.print("0%");
     SAXReader saxReader = new SAXReader();
     InputStreamReader reader = new InputStreamReader(new FileInputStream(file), "UTF-8") {
+      private long read = 0;
+
       public int read(char[] chars) throws IOException {
         int n = super.read(chars);
         for (int i = 0; i < n; i++) {
@@ -112,7 +122,7 @@ public class XMLSnipRepair {
 
       private char replaceIfIllegal(char c) {
         if (c < 0x20 && !(c == 0x09 || c == 0x0a || c == 0x0d)) {
-//          System.err.println("Replacing illegal character '" + c + "' by space.");
+          System.err.println("Replacing illegal character '0x" + Integer.toHexString(c) + "' by space.");
           errCount++;
           return (char) 0x20;
         }
@@ -132,8 +142,8 @@ public class XMLSnipRepair {
     Document document = saxReader.read(reader);
     System.err.println();
 
-    if(errCount > 0) {
-      System.err.println("Replaced "+errCount+" illegal characters in input document by a space.");
+    if (errCount > 0) {
+      System.err.println("Replaced " + errCount + " illegal characters in input document by a space.");
       System.err.println("Characters not considered valid in an XML document are considered illegal.");
       System.err.println("This includes all characters with a code below 32 unless its TAB, CR or LF.");
     }
@@ -183,32 +193,34 @@ public class XMLSnipRepair {
             oldDup++;
             System.err.println("Older duplicate found: " + id);
           }
-          if (snipData == data) {
-            String name = idElement.getText();
-            if (name.startsWith("comment-")) {
-              String commentSnip = name.substring("comment-".length(), name.lastIndexOf("-"));
-              Element commentEl = element.element("commentSnip");
-              if (commentEl == null) {
-                commentEl = element.addElement("commentSnip");
-              }
-              if (!commentSnip.equals(commentEl.getText())) {
-                commentEl.addText(commentSnip);
-                System.err.println("Fixing commented snip for '" + name + "' (" + commentSnip + ")");
-              }
-            } else if (name.matches("\\d\\d\\d\\d-\\d\\d-\\d\\d")) {
-              Element parentEl = element.element("parentSnip");
-              if (null == parentEl) {
-                parentEl = element.addElement("parentSnip");
-              }
-              if (!"start".equals(parentEl.getText())) {
-                parentEl.addText("start");
-                System.err.println("Fixing parent snip for '" + name + "'");
-              }
-            }
-
-          }
         } else {
           data.put(id, element);
+        }
+
+        if (snipData == data) {
+          String name = idElement.getText();
+          if (name.startsWith("comment-")) {
+            String commentSnip = name.substring("comment-".length(), name.lastIndexOf("-"));
+            Element commentEl = element.element("commentSnip");
+            if (commentEl == null) {
+              commentEl = element.addElement("commentSnip");
+            }
+//            System.out.println("commentSnip='" + commentSnip.toUpperCase() + "' commentEl='" + commentEl.getText().toUpperCase() + "'");
+            if (!commentSnip.toUpperCase().equals(commentEl.getText().toUpperCase())) {
+              commentEl.addText(commentSnip);
+              System.err.println("Fixing commented snip for '" + name + "' (" + commentSnip + ")");
+            }
+          } else if (name.matches("\\d\\d\\d\\d-\\d\\d-\\d\\d")) {
+            Element parentEl = element.element("parentSnip");
+            if (null == parentEl) {
+              parentEl = element.addElement("parentSnip");
+            }
+            if (!"start".equals(parentEl.getText())) {
+              parentEl.addText("start");
+              System.err.println("Fixing parent snip for '" + name + "'");
+            }
+          }
+
         }
       } else {
         System.err.println("Unknown element '" + element.getName() + "', ignoring ...");
@@ -234,7 +246,7 @@ public class XMLSnipRepair {
 
     int attCount = 0;
     System.err.print("STEP 2.3: fixing snip data (" + snipData.size() + ")");
-    if(webAppRoot != null) {
+    if (webAppRoot != null) {
       System.out.println(" and attachments ...");
     } else {
       System.out.println();
@@ -242,7 +254,7 @@ public class XMLSnipRepair {
     Iterator snipIt = snipData.values().iterator();
     while (snipIt.hasNext()) {
       Element snipEl = (Element) snipIt.next();
-      if(webAppRoot != null) {
+      if (webAppRoot != null) {
         attCount += storeAttachments(snipEl, new File(webAppRoot, "/WEB-INF/files"));
         attCount += storeOldImages(snipEl, new File(webAppRoot, "/images"));
       }

@@ -68,6 +68,10 @@ public class RssServlet extends HttpServlet {
       String type = request.getParameter("type");
       String sourceSnipName = request.getParameter("snip");
 
+      if(null == sourceSnipName) {
+        sourceSnipName = config.getStartSnip();
+      }
+
       Snip sourceSnip = space.load(sourceSnipName);
 
       Feeder feeder = null;
