@@ -55,7 +55,6 @@ public class Application {
 
   private static ThreadLocal instance = new ThreadLocal() {
     protected synchronized Object initialValue() {
-      Logger.debug("creating new initial application value");
       return new Application();
     }
   };
