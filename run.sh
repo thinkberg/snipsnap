@@ -30,13 +30,6 @@ if [ ! -x $base/db/data ]; then
   $JAVA_HOME/bin/java -cp lib/SnipSnap.jar com.neotis.config.CreateDB
 fi
 
-# HACK: copy default app if not existing
-if [ ! -x $base/app ]; then
-  echo "No application found, copying default ..."
-  cp -a $base/src/apps/default $base/app
-  find $base/app -name CVS | xargs rm -r
-fi
-
 # put classpath together
 CLASSPATH=lib/jakarta.jar:lib/javax.servlet.jar:lib/mckoidb.jar:lib/org.apache.jasper.jar:lib/org.mortbay.jetty.jar:$JAVA_HOME/lib/tools.jar
 
