@@ -1,2 +1,2 @@
-Main-Class: com.neotis.server.AppServer
+Main-Class: org.snipsnap.server.AppServer
 Class-Path: xmlrpc-1.1.jar jakarta.jar javax.servlet.jar mckoidb.jar org.apache.jasper.jar org.mortbay.jetty.jar org.apache.crimson.jar jdbcpool.jar 
