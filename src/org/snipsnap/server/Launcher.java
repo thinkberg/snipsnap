@@ -52,26 +52,26 @@ public class Launcher {
 
     // init error log
     String errorLog = System.getProperty(ERRORLOG);
-    if(errorLog != null && errorLog.length() > 0) {
+    if (errorLog != null && errorLog.length() > 0) {
       initSystemErr(errorLog);
     }
 
     Class mainClass = Launcher.class.getClassLoader().loadClass(mainClassName);
-    Method main = mainClass.getDeclaredMethod("main", new Class[] { String[].class });
-    main.invoke(null, new Object[] { args });
+    Method main = mainClass.getDeclaredMethod("main", new Class[]{String[].class});
+    main.invoke(null, new Object[]{args});
   }
 
   protected static void initSystemErr(String fileName) {
     try {
       File serverLog = new File(fileName);
-      if(serverLog.exists()) {
-        File serverLogOld = new File(fileName+".old");
+      if (serverLog.exists()) {
+        File serverLogOld = new File(fileName + ".old");
         serverLog.renameTo(serverLogOld);
       }
       System.setErr(new PrintStream(new FileOutputStream(serverLog)));
     } catch (FileNotFoundException e) {
-      if(debug) {
-        System.err.println("Launcher: System.err not redirected to "+fileName);
+      if (debug) {
+        System.err.println("Launcher: System.err not redirected to " + fileName);
         e.printStackTrace();
       }
     }
@@ -86,17 +86,21 @@ public class Launcher {
       String manifestClassPath = mainAttributes.getValue("Class-Path");
 
       // append extra class path to manifest class path (after replacing separatorchar)
-      if(extraClassPath != null && extraClassPath.length() > 0) {
+      if (extraClassPath != null && extraClassPath.length() > 0) {
         manifestClassPath += " " + extraClassPath.replace(':', ' ');
       }
 
       File directoryBase = new File(location.getFile()).getParentFile();
       StringBuffer classPath = new StringBuffer(location.getFile());
-      StringTokenizer tokenizer = new StringTokenizer(manifestClassPath, " \t"+File.pathSeparatorChar, false);
-      while(tokenizer.hasMoreTokens()) {
+      StringTokenizer tokenizer = new StringTokenizer(manifestClassPath, " \t" + File.pathSeparatorChar, false);
+      while (tokenizer.hasMoreTokens()) {
         classPath.append(File.pathSeparatorChar);
-        String file = tokenizer.nextToken();
-        classPath.append(new File(directoryBase, file).getCanonicalPath());
+        File file = new File(tokenizer.nextToken());
+        if (file.isAbsolute()) {
+          classPath.append(file.getCanonicalPath());
+        } else {
+          classPath.append(new File(directoryBase, file.getPath()).getCanonicalPath());
+        }
       }
       System.setProperty("java.class.path", classPath.toString());
       //System.err.println("SnipSnapLauncher: CLASSPATH=" + classPath.toString());
