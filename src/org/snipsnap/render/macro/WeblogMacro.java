@@ -110,7 +110,9 @@ public class WeblogMacro extends SnipMacro {
       String lastDay = "";
       Iterator iterator = posts.iterator();
       while (iterator.hasNext()) {
-        Snip entry = (Snip) iterator.next();
+        Object object = iterator.next();
+        System.err.println("Class="+object.getClass());
+        Snip entry = (Snip) object;
 
         String[] entryName = StringUtil.split(entry.getName(), "/");
         // New Day?

@@ -33,10 +33,7 @@ import org.snipsnap.user.Roles;
 import org.snipsnap.xmlrpc.WeblogsPing;
 
 import java.sql.Date;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 /**
  * BlogImpl for Blog.
@@ -46,6 +43,7 @@ import java.util.List;
  */
 
 public class BlogImpl implements Blog {
+  private String startName;
   private String name;
   private Snip blog;
   private SnipSpace space;
@@ -53,8 +51,9 @@ public class BlogImpl implements Blog {
   public BlogImpl(SnipSpace space, String blogName) {
     this.space = space;
     // May not be initialized, so set it to something sane
+    this.startName = Application.get().getConfiguration().getStartSnip();
     if (blogName == null || "".equals(blogName)) {
-      blogName = Application.get().getConfiguration().getStartSnip();
+      blogName = startName;
     }
     this.name = blogName;
     this.blog = space.load(name);
@@ -151,8 +150,13 @@ public class BlogImpl implements Blog {
     //@TODO: reorder snips
     //List posts = new ArrayList();
     //space.getChildrenDateOrder(blog, count);
-    List posts = Arrays.asList(space.match(start, end));
+    List posts = new ArrayList();
+    posts.addAll(Arrays.asList(space.match(start, end)));
     // sort
+    // Add old snips of form '2005-03-01' if name == 'start'
+    if (name.equals(startName)) {
+      posts.addAll(space.getByDate(Month.toKey(startC), Month.toKey(endC)));
+    }
     return posts;
   }
 

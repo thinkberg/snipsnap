@@ -75,19 +75,19 @@ public class Labels {
   }
 
   public Collection getLabels(String type) {
-    ArrayList labels = new ArrayList();
+    ArrayList result = new ArrayList();
     if (null == type) {
-      return labels;
+      return result;
     }
 
     Iterator iterator = this.labels.values().iterator();
     while (iterator.hasNext()) {
       Label label = (Label) iterator.next();
-      if(type.equals(label.getType())) {
-        labels.add(label);
+      if(null != label && type.equals(label.getType())) {
+        result.add(label);
       }
     }
-    return labels;
+    return result;
   }
 
   public void removeLabel(String name) {
