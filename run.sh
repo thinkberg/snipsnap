@@ -15,8 +15,11 @@ if [ "$1" = "-admin" ]; then
   exit
 fi
 case "`uname`" in
-  Darwin*|IRIX*)
-    JAVA_OPTS="-server"
+  IRIX*)
+    JAVA_OPTS="$JAVA_OPTS"
+    ;;
+  *)
+    JAVA_OPTS="$JAVA_OPTS -server"
     ;;
 esac
 
