@@ -73,7 +73,7 @@ public class HotSnipMacro extends Macro {
     if (params == null || params.getLength() <= 3) {
       Collection c = space.getHot(length);
       Iterator iterator = c.iterator();
-      writer.write("<div id=\"list\"><div class=\"list-title\">Most viewed:");
+      writer.write("<div class=\"list\"><div class=\"list-title\">Most viewed:");
       if(showSize) {
         writer.write(" (");
         writer.write(""+length);

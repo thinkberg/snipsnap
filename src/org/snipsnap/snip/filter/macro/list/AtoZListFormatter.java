@@ -79,7 +79,7 @@ public class AtoZListFormatter implements ListoutputMacro.ListFormatter {
         }
       }
 
-      writer.write("<table width=\"100%\" id=\"index-top\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
+      writer.write("<table width=\"100%\" class=\"index-top\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
       for(int idxChar = 'A'; idxChar <= 'Z';) {
         writer.write("<tr>");
         for(int i = 0; i < 6 && idxChar + i <= 'Z'; i++) {
@@ -117,7 +117,7 @@ public class AtoZListFormatter implements ListoutputMacro.ListFormatter {
         writer.write(")");
       }
       writer.write("</div>");
-      writer.write("<table width=\"100%\" id=\"index\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
+      writer.write("<table width=\"100%\" class=\"index\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
       for (int ch = 'A'; ch <= 'Z'; ch += 2) {
         String left = "" + (char) ch;
         String right = "" + (char) (ch + 1);

@@ -45,7 +45,7 @@ public class VerticalListFormatter implements ListoutputMacro.ListFormatter {
    */
   public void format(Writer writer, String listComment, Collection c, String emptyText, boolean showSize)
     throws IOException {
-    writer.write("<div id=\"list\"><div class=\"list-title\">");
+    writer.write("<div class=\"list\"><div class=\"list-title\">");
     writer.write(listComment);
     if (showSize) {
       writer.write(" (");

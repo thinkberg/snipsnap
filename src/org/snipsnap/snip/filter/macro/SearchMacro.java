@@ -71,7 +71,7 @@ public class SearchMacro extends Macro {
 
 
       if (hits != null && hits.length() > 0) {
-        writer.write("<div id=\"list\"><div class=\"list-title\">snips with ");
+        writer.write("<div class=\"list\"><div class=\"list-title\">snips with ");
         writer.write(searchString);
         writer.write(": (");
         writer.write(""+hits.length());

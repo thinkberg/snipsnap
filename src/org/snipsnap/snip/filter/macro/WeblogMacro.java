@@ -64,7 +64,7 @@ public class WeblogMacro extends Macro {
       Iterator iterator = snips.iterator();
       while (iterator.hasNext()) {
         Snip entry = (Snip) iterator.next();
-        writer.write("<div id=\"blog-date\">");
+        writer.write("<div class=\"blog-date\">");
         writer.write(Snip.toDate(entry.getName()));
         writer.write(" <a href=\"");
         SnipLink.appendUrl(writer, entry.getName());
@@ -75,7 +75,7 @@ public class WeblogMacro extends Macro {
         writer.write("</a>");
         writer.write("</div>");
         writer.write(entry.getXMLContent());
-        writer.write("<div id=\"snip-post-comments\">");
+        writer.write("<div class=\"snip-post-comments\">");
         writer.write(entry.getComments().getCommentString());
         writer.write(" | ");
         writer.write(entry.getComments().getPostString());

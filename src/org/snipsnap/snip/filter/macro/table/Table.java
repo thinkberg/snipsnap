@@ -69,7 +69,7 @@ public class Table implements Appendable {
   }
 
   public Writer appendTo(Writer writer) throws IOException {
-    writer.write("<table id=\"wiki-table\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
+    writer.write("<table class=\"wiki-table\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
     List[] outputRows = (List[]) rows.toArray(new List[0]);
     int rowSize = outputRows.length;
     boolean odd=true;
