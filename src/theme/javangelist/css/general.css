@@ -47,6 +47,10 @@ input, select, textarea {
   font-family: courier, courier new, monospaced;
   line-height: inherit;
   border: 1px ridge #aaaaaa;
+  width: 100%;
+  overflow: auto;
+  wrap: virtual;
+}
 }
 
 

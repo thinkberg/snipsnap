@@ -79,6 +79,7 @@ img.float-right {
   font-size: 12px;
   line-height: 100%;
   white-space: pre;
+  overflow: auto;
 }
 
 

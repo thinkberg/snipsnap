@@ -55,6 +55,10 @@ input, select, textarea {
 	border: 1px dashed #999999;
   font-size: inherit;
   font-family: courier, courier new, monospaced;
+  width: 100%;
+  overflow: auto;
+  wrap: virtual;
+}
 }
 
 
