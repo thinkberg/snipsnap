@@ -27,6 +27,7 @@
         <title><c:out value="${child.name}"/> <s:content snip="${child}" removeHtml="true" extract="true"/></title>
         <link><c:out value="${url}/${child.nameEncoded}"/></link>
         <description><s:content snip="${child}" removeHtml="true"/></description>
+        <guid isPermaLink="true"><c:out value="${url}/${child.nameEncoded}"/></guid>
         <s:dublinCore snip="${child}" format="xml"/>
       </item>
     </c:forEach>
