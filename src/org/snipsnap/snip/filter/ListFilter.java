@@ -116,7 +116,7 @@ public class ListFilter extends RegexTokenFilter {
     }
     buffer.append(closeList.get(lastBullet));
   }
-
+/*
   public static void main(String args[]) {
     Logger.setHandler(new SystemOutLogger());
     BufferedReader reader = null;
@@ -140,5 +140,5 @@ public class ListFilter extends RegexTokenFilter {
     System.out.println(filter.filter(buf, null));
 
   }
-
+*/
 }

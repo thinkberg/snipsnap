@@ -38,11 +38,7 @@ table {
 	empty-cells: show;
 }
 
-table.debug {
-  color: inherit;
-  background-color: #ffff99;
-	empty-cells: show;
-}
+
 
 /************************************************/
 /* input tag                                    */

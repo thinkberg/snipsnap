@@ -45,15 +45,15 @@ public class DebugTag extends TagSupport {
     if (!debug.isEmpty()) {
       Iterator iterator = debug.iterator();
       try {
-        out.println("<table cellspacing=\"0\" cellpadding=\"0\" class=\"debug\">");
-        out.println("<tr><th>Debug Log:</th></tr>");
+        out.println("<div id=\"debug\">");
+        out.println("<h1 class=\"debug-title\">Debug Log:</h1>");
         while (iterator.hasNext()) {
           String s = (String) iterator.next();
-          out.print("<tr><td><pre>");
+          out.print("<div class=\"debug-entry\">");
           out.print(s);
-          out.print("</pre></td></tr>");
+          out.print("</div>");
         }
-        out.println("</table>");
+        out.println("</div>");
       } catch (IOException e) {
         System.err.println("unable print to JSP writer: " + e);
       }

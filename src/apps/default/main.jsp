@@ -40,13 +40,14 @@
      <a href="<c:out value='${app.configuration.url}'/>"><c:out value="${app.configuration.name}"/></a> | <span id="copyright"></span><br/>
      <a href="http://snipsnap.org/"><s:image name="logo_small"/></a>
     </div>
+    <s:debug/>
    </div>
    <% for(int i = 1; SnipSpace.getInstance().exists("snipsnap-portlet-"+i); i++) { %>
     <% pageContext.setAttribute("snip", SnipSpace.getInstance().load("snipsnap-portlet-"+i)); %>
     <div id="page-portlet-<%=i%>"><s:snip snip="${snip}"/></div>
    <% } %>
   </div>
-  <s:debug/>
+
  </body>
 </html>
 
