@@ -69,7 +69,12 @@ public class Application {
   private Map params;
 
   public static Application get() {
-    return (Application) instance.get();
+    Application app = (Application) instance.get();
+    if (null == app) {
+      app = new Application();
+      instance.set(app);
+    }
+    return app;
   }
 
   public static void set(Application application) {
@@ -171,7 +176,7 @@ public class Application {
     }
 
     Map currentUsersMap = currentUsers.getMap();
-    if(null == currentUsersMap) {
+    if (null == currentUsersMap) {
       currentUsersMap = currentUsers.findMap(session);
     }
 
@@ -190,7 +195,7 @@ public class Application {
       }
       currentUsersMap.remove(session);
     } else {
-      Logger.warn("Unable to remove current user from session '"+session+"'");
+      Logger.warn("Unable to remove current user from session '" + session + "'");
     }
   }
 
