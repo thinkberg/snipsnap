@@ -29,6 +29,12 @@ import groovy.lang.GroovyClassLoader;
 import org.radeox.macro.Macro;
 import org.radeox.macro.MacroLoader;
 import org.radeox.macro.Repository;
+import org.snipsnap.container.Components;
+import org.snipsnap.notification.Consumer;
+import org.snipsnap.notification.Message;
+import org.snipsnap.notification.MessageService;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipSpace;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -41,39 +47,82 @@ import java.io.InputStream;
  * @version $Id$
  */
 
-public class GroovyMacroLoader extends MacroLoader {
+public class GroovyMacroLoader extends MacroLoader implements Consumer {
+  public GroovyMacroLoader() {
+    // We're interested in changed snips
+    MessageService service = (MessageService) Components.getComponent(MessageService.class);
+    service.register(this);
+  }
+
+  public void consume(Message messsage) {
+    if (Message.SNIP_MODIFIED.equals(messsage.getType())) {
+      Snip snip = (Snip) messsage.getValue();
+      if (snip.getName().startsWith("SnipSnap/config/macros/")) {
+        try {
+          Macro macro = compileMacro(snip.getContent());
+          if (null != macro) {
+            add(repository, macro);
+          }
+        } catch (Exception e) {
+          System.err.println("GroovyMacroLoader: unable to reload macros: " + e);
+          e.printStackTrace();
+        }
+      }
+    }
+  }
+
+  private Macro compileMacro(String macroSource) {
+    Macro macro = null;
+    try {
+      GroovyClassLoader gcl = new GroovyClassLoader();
+      InputStream is = new ByteArrayInputStream(macroSource.getBytes());
+      Class clazz = gcl.parseClass(is, "");
+      Object aScript = clazz.newInstance();
+      macro = (Macro) aScript;
+      System.out.println("Script="+macroSource);
+    } catch (Exception e) {
+      System.err.println("Cannot compile groovy macro: " + e.getMessage());
+      e.printStackTrace();
+    }
+    return macro;
+  }
+
+  /**
+   * Load all plugins of Class klass
+   *
+   * @param repository
+   * @param klass
+   * @return
+   */
   public Repository loadPlugins(Repository repository, Class klass) {
     if (null != repository) {
-      try {
-        String macroSource = "import java.io.Writer\n" +
-        "import org.radeox.macro.parameter.MacroParameter\n" +
-        "\n" +
-        "class GroovyMacro extends org.radeox.macro.BaseMacro {\n" +
-        "  void execute(Writer writer, MacroParameter params) {\n" +
-        "    writer.write(\"Yipee ay ey, schweinebacke\")\n" +
-        "  }\n" +
-        "  String getName() {" +
-        "    return \"groovy\"\n" +
-        "  }\n " +
-        "}";
+      SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
+      Snip[] snips = space.match("SnipSnap/config/macros/");
 
-
-        GroovyClassLoader gcl = new GroovyClassLoader();
-        InputStream is = new ByteArrayInputStream(macroSource.getBytes());
-        Class clazz = gcl.parseClass(is, "");
-
-        //System.out.println(clazz.getName());
-        // System.out.println(aScriptSource);
-
-        Object aScript = clazz.newInstance();
-
-        Macro macro = (Macro) aScript;
+      for (int i = 0; i < snips.length; i++) {
+        Snip snip = snips[i];
+        Macro macro = compileMacro(snip.getContent());
         add(repository, macro);
-      } catch (Exception e) {
-        e.printStackTrace();
-        System.err.println("Cannot load groovy macros: " + e.getMessage());
-        //
       }
+
+//      String macroSource = "import java.io.Writer\n" +
+//          "import org.radeox.macro.parameter.MacroParameter\n" +
+//          "\n" +
+//          "class GroovyMacro extends org.radeox.macro.BaseMacro {\n" +
+//          "  void execute(Writer writer, MacroParameter params) {\n" +
+//          "    writer.write(\"Yipee ay ey, schweinebacke\")\n" +
+//          "  }\n" +
+//          "  String getName() {" +
+//          "    return \"groovy\"\n" +
+//          "  }\n " +
+//          "}";
+//      Macro macro = compileMacro(macroSource);
+//      if (null != macro) {
+//        add(repository, macro);
+//      }
+
+      //System.out.println(clazz.getName());
+      // System.out.println(aScriptSource);
     }
     return repository;
   }

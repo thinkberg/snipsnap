@@ -66,7 +66,8 @@ public class SnipSpaceACLAspect implements Aspect {
             Logger.debug("SECURITY EXCEPTION");
             throw new GeneralSecurityException("Not allowed to remove.");
           }
-          return null;
+
+          return invocation.invokeNext();
         }
       });
     }

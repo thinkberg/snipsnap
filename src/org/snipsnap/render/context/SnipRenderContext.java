@@ -30,6 +30,7 @@ import org.radeox.engine.context.BaseRenderContext;
 import org.snipsnap.app.Application;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.container.Components;
 
 import java.util.Locale;
 import java.util.Map;
@@ -83,6 +84,8 @@ public class SnipRenderContext extends BaseRenderContext {
     attributes = new HashMap();
     attributes.put("snip", snip);
     attributes.put("user", Application.get().getUser());
+    attributes.put("container", Components.getContainer());
+    // attributes.put("request", )
   }
 
   public void setAttribute(Object key, Object value) {
