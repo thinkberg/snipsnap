@@ -54,7 +54,7 @@ public class RecentWeblogMacro extends ListOutputMacro {
 
   public String getDescription() {
     return "Displays a list of recently changed weblogs. Only works when the weblogs " +
-        " ping your site.";
+           " ping your site.";
   }
 
   public void execute(Writer writer, SnipMacroParameter params)
