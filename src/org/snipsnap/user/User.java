@@ -132,7 +132,7 @@ public class User implements Nameable {
   }
 
   public boolean equals(Object obj) {
-    if(obj instanceof User) {
+    if(obj instanceof User && obj != null && this.getName() != null) {
       this.getName().equals(((User)obj).getName());
     }
     return super.equals(obj);

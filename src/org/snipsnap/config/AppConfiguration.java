@@ -24,8 +24,11 @@
  */
 package org.snipsnap.config;
 
+import org.snipsnap.snip.SnipLink;
+
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
 
 /**
  * AppConfiguration Object that contains local installation information.
@@ -110,9 +113,13 @@ public class AppConfiguration extends Configuration {
   }
 
   public String getUrl() {
+    return getUrl("");
+  }
+
+  public String getUrl(String target) {
     StringBuffer url = new StringBuffer();
     url.append("http://");
-    url.append(getHost());
+    url.append(getHost() == null ? InetAddress.getLocalHost().getHostName());
     int port = getPort();
     if (port != 80) {
       url.append(":");
@@ -120,8 +127,12 @@ public class AppConfiguration extends Configuration {
     }
     url.append("/");
     url.append(getContextPath());
-    url.append("space");
+    url.append(target);
     return url.toString();
+  }
+
+  public String getSnipUrl(String snipName) {
+    return getUrl("space/"+snipName);
   }
 
   public String getTagLine() {

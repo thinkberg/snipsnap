@@ -27,7 +27,7 @@
   <!-- build binary distribution package -->
   <target depends="clean" description="build binary package" name="src-tar">
     <tstamp/>
-    <tar destfile="../${appname}-${server.version}-${DSTAMP}${TSTAMP}-src.tgz" compression="gzip">
+    <tar destfile="../${appname}-${server.version}-${DSTAMP}-src.tgz" compression="gzip">
       <tarfileset dir="." prefix="${appname}-${server.version}" mode="755">
         <include name="run.sh"/>
         <include name="db.sh"/>
@@ -41,7 +41,7 @@
 
   <target depends="clean, jar" description="build source package" name="bin-tar">
     <tstamp/>
-    <tar destfile="../${appname}-${server.version}-${DSTAMP}${TSTAMP}.tgz" compression="gzip">
+    <tar destfile="../${appname}-${server.version}-${DSTAMP}.tgz" compression="gzip">
       <tarfileset dir="." prefix="${appname}-${server.version}" mode="755">
         <include name="run.sh"/>
         <include name="db.sh"/>

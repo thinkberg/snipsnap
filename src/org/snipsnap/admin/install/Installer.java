@@ -50,6 +50,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.UnknownHostException;
+import java.net.InetAddress;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -264,10 +265,7 @@ public class Installer extends HttpServlet {
 
     writeMessage(out, "Installation finished.");
     session.removeAttribute("config");
-    String host = config.getHost();
-    host = host == null || host.length() == 0 ? "localhost" : host;
-    String url = "http://" + host + ":" + config.getPort() 
-               + config.getContextPath();
+    String url = config.getUrl();
     System.out.println("Redirecting to "+url);
     response.sendRedirect(url);
   }

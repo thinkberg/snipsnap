@@ -32,6 +32,7 @@ import org.snipsnap.config.Configuration;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.net.InetAddress;
 
 /**
  * Application Server
@@ -71,6 +72,8 @@ public class AppServer {
     try {
       jettyServer = new Server("./conf/jetty.conf");
       jettyServer.start();
+      String hostname = InetAddress.getLocalHost().getHostName();
+      System.out.println("Administrative interface started at http://"+hostname+":8668/install");
     } catch (IOException e) {
       System.err.println("AppServer: admin server configuration not found: " + e);
     } catch (MultiException e) {
