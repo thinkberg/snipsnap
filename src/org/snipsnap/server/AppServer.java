@@ -81,7 +81,7 @@ public class AppServer {
 
     // load additional local configuration
     try {
-      serverInfo.load(new FileInputStream("conf/snipsnap.conf"));
+      serverInfo.load(new FileInputStream("conf/server.conf"));
     } catch (IOException e) {
       // ignore local server configuration not found
     }
@@ -95,6 +95,7 @@ public class AppServer {
     try {
       jettyServer = new Server(getResource("/conf/jetty.conf", "./conf/jetty.conf"));
       jettyServer.start();
+      new AdminServer(serverInfo);
     } catch (IOException e) {
       System.err.println("WARNING: admin server configuration not found: " + e);
     } catch (MultiException e) {
@@ -137,6 +138,11 @@ public class AppServer {
    */
   private static Properties parseArguments(String args[], Properties serverInfo) {
     for (int i = 0; i < args.length; i++) {
+      if ("-help".equals(args[i])) {
+        usage("");
+        System.exit(0);
+      }
+
       // the applications root directory
       if ("-root".equals(args[i])) {
         if (args.length >= i + 1 && !args[i + 1].startsWith("-")) {
@@ -144,7 +150,21 @@ public class AppServer {
         } else {
           usage("an argument is required for -root");
         }
-        // the port where the server listens for administrative commands
+      } else if ("-admin".equals(args[i])) {
+        if (args.length > i + 1) {
+          String command = args[i + 1];
+          String argument = null;
+          if (args.length > i + 2) {
+            argument = args[i + 2];
+          }
+          if (!AdminServer.execute(Integer.parseInt(serverInfo.getProperty(Configuration.ADMIN_PORT)), command, argument)) {
+            System.out.println("Cannot execute administrative command: '" + command + "'");
+            System.exit(-1);
+          }
+        } else {
+          usage("an argument is required for -admin");
+        }
+        System.exit(0);
       }
     }
     return serverInfo;
@@ -181,6 +201,10 @@ public class AppServer {
     System.out.println(message);
     System.out.println("usage: " + AppServer.class.getName() + " [-root <dir>]");
     System.out.println("  -root   directory, where to find the applications for this server");
+    Iterator it = AdminServer.COMMANDS.iterator();
+    while (it.hasNext()) {
+      System.out.println("  -admin " + it.next());
+    }
     System.exit(-1);
   }
 }

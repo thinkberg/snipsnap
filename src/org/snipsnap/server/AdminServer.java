@@ -33,6 +33,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * Server for administrative commands that are sent via local host.
@@ -60,6 +61,7 @@ public class AdminServer implements Runnable {
       Socket s = new Socket(InetAddress.getLocalHost(), port);
       BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
       BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
+      System.out.println("Executing command: "+ command + " " + (args != null ? args : ""));
       writer.write(command + " " + args);
       writer.newLine();
       writer.flush();
@@ -78,7 +80,7 @@ public class AdminServer implements Runnable {
     return true;
   }
 
-  private Configuration config = null;
+  private Properties config = null;
   private ServerSocket serverSocket = null;
   private Thread serverThread = null;
 
@@ -88,7 +90,7 @@ public class AdminServer implements Runnable {
    * @throws IOException
    * @throws UnknownHostException
    */
-  public AdminServer(Configuration config) throws NumberFormatException, IOException, UnknownHostException {
+  public AdminServer(Properties config) throws NumberFormatException, IOException, UnknownHostException {
     int port = Integer.parseInt(config.getProperty(Configuration.ADMIN_PORT).trim());
     this.config = config;
     serverSocket = new ServerSocket(port, 1, InetAddress.getLocalHost());
