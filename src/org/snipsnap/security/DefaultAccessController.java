@@ -61,7 +61,7 @@ public class DefaultAccessController implements AccessController  {
   public boolean checkPermission(User user, Permission permission, AccessContext context) {
     Subject subject = user.getSubject();
 
-    System.err.println("Check user="+user.getLogin()+" permission="+permission+" principals="+subject.getPrincipals());
+    System.err.println("Check user="+user.getLogin()+":"+subject.getName() +" permission="+permission+" principals="+subject.getPrincipals());
     boolean hasPermission = manager.checkPermission(subject.getPrincipals(), permission);
     System.err.println("  hasPermission="+hasPermission);
     return hasPermission;

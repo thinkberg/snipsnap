@@ -52,6 +52,7 @@ public class User implements Linkable {
   private String email;
   private String status;
   private Roles roles;
+  private Principal user;
 
   // @TODO: composite object
   private Timestamp lastLogin, lastAccess, lastLogout;
@@ -69,17 +70,23 @@ public class User implements Linkable {
     this.login = login;
     setPasswd(passwd);
     setEmail(email);
+    user = new Principal("User");
   }
 
   public Subject getSubject() {
     if (null == subject) {
       subject = new Subject(this.login);
       Set principals = new HashSet();
-      principals.add(new Principal(this.login));
-      Iterator iterator = roles.getAllRoles().iterator();
+      // SECURITY PROBLEM, what if user CALLS himself "EDITOR"?
+      // So add "user::"
+      principals.add(new Principal("user::"+this.login));
+      Iterator iterator = getRoles().iterator();
       while (iterator.hasNext()) {
         String role = (String) iterator.next();
         principals.add(new Principal(role));
+      }
+      if (! isGuest()) {
+        principals.add(user);
       }
       subject.setPrincipals(principals);
     }
@@ -207,7 +214,6 @@ public class User implements Linkable {
   public Roles getRoles() {
     if (null == roles) {
       roles = new Roles();
-      subject = new Subject(this.login);
     }
     return roles;
   }

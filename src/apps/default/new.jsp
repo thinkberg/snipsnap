@@ -71,7 +71,7 @@
        <s:snip name="snipsnap-help"/>
      </div>
    </s:check>
-   <s:check permsiison="CREATE_SNIP" invert="true" >
+   <s:check permission="CREATE_SNIP" invert="true" >
      <fmt:message key="login.please">
        <fmt:param><fmt:message key="snip.create"/></fmt:param>
      </fmt:message>

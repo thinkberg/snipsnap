@@ -221,6 +221,9 @@
         <exclude name="org/snipsnap/server/*Launcher*"/>
       </fileset>
       <fileset dir=".">
+        <include name="conf/gabriel/access.acl"/>
+        <include name="conf/gabriel/methods.acl"/>
+        <include name="conf/snipsnap.conf"/>
         <include name="conf/snipsnap.conf"/>
         <include name="conf/jetty.conf"/>
       </fileset>

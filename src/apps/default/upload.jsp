@@ -63,7 +63,7 @@
       </c:if>
       <tr>
        <td colspan="5" class="form-buttons">
-        <s:check permission="ADD_ATTACHMENT" context="${snip}"">
+        <s:check permission="ADD_ATTACHMENT" context="${snip}">
           <input name="file" type="file" maxlength="1000000" accept="*/*"/>
           <br/>
           <fmt:message key="snip.attachments.file.name"/>

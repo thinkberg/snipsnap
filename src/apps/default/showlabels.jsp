@@ -10,7 +10,7 @@
 <%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
 
 <div class="snip-wrapper">
-  <s:check permission="EDIT_SNIP" context="${snip}"">
+  <s:check permission="EDIT_SNIP" context="${snip}">
     <div class="snip-title">
      <h1 class="snip-name">
       <fmt:message key="snip.labels.title">
