@@ -203,11 +203,6 @@ public class SnipSpace implements LinkTester {
     return storage.storageByParentModifiedOrder(snip, count);
   }
 
-  public Snip post(String content) {
-    Date date = new Date(new java.util.Date().getTime());
-    return post(content, date);
-  }
-
   public void reIndex() {
     List snips = getAll();
     Iterator iterator = snips.iterator();
@@ -219,6 +214,17 @@ public class SnipSpace implements LinkTester {
 
   public Hits search(String queryString) {
     return indexer.search(queryString);
+  }
+
+  public Snip post(String content, String title) {
+    Date date = new Date(new java.util.Date().getTime());
+    content = "1 " + title + " {anchor:" + title + "}\n" + content;
+    return post(content);
+  }
+
+  public Snip post(String content) {
+    Date date = new Date(new java.util.Date().getTime());
+    return post(content, date);
   }
 
   public Snip post(String content, Date date) {

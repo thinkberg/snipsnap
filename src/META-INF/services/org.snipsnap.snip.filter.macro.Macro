@@ -31,3 +31,4 @@ org.snipsnap.snip.filter.macro.WeblogMacro
 org.snipsnap.snip.filter.macro.UserCountMacro
 org.snipsnap.snip.filter.macro.SnipCountMacro
 org.snipsnap.snip.filter.macro.HelloWorldMacro
+org.snipsnap.snip.filter.macro.AnchorMacro

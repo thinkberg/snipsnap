@@ -33,6 +33,7 @@ import org.snipsnap.snip.storage.query.SnipQuery;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Wrapper with finders for in-memory searching. Can
@@ -49,10 +50,29 @@ public class MemorySnipStorage implements SnipStorage {
   private SnipStorage storage;
   private Cache cache;
   private Class type = Snip.class;
+  private Comparator nameComparator, nameComparatorDesc, mTimeComparatorDesc;
 
   public MemorySnipStorage(SnipStorage storage, Cache cache) {
     this.storage = storage;
     this.cache = cache;
+
+    this.nameComparator = new SnipComparator() {
+          public int compare(Snip s1, Snip s2) {
+            return s1.getName().compareTo(s2.getName());
+          }
+        };
+
+    this.nameComparatorDesc = new SnipComparator() {
+          public int compare(Snip s1, Snip s2) {
+            return s2.getName().compareTo(s1.getName());
+          }
+        };
+
+    this.mTimeComparatorDesc = new SnipComparator() {
+      public int compare(Snip s1, Snip s2) {
+        return s2.getMTime().compareTo(s1.getMTime());
+      }
+    };
   }
 
   // Basic manipulation methods Load,Store,Create,Remove
@@ -139,29 +159,22 @@ public class MemorySnipStorage implements SnipStorage {
       public boolean fit(Snip snip) {
         return (parent == snip.getParent());
       }
-    },
-        new SnipComparator() {
-          public int compare(Snip s1, Snip s2) {
-            return s1.getName().compareTo(s2.getName());
-          }
-        }
-        , count, type);
+    }, nameComparatorDesc , count, type);
   }
 
   public List storageByParentModifiedOrder(Snip parent, int count) {
     List result = storageByParent(parent);
-    Collections.sort(result, new SnipComparator() {
-      public int compare(Snip s1, Snip s2) {
-        return s2.getMTime().compareTo(s1.getMTime());
-      }
-    });
+    Collections.sort(result, mTimeComparatorDesc);
     return result;
   }
 
-  public List storageByDateInName(String start, String end) {
-    // finder.setString(1, start);
-    // finder.setString(2, end);
-    // finder.setString(3, "start");
-    return storage.storageByDateInName(start, end);
+  public List storageByDateInName(final String start, final String end) {
+    return cache.querySorted(new SnipQuery() {
+      public boolean fit(Snip snip) {
+        String name = snip.getName();
+        return (name.compareTo(start) <= 0 && name.compareTo(end) >=0
+                && snip.getParent().getName().equals("start"));
+      }
+    }, nameComparator, type);
   }
 }

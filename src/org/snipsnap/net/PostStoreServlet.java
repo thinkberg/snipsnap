@@ -28,10 +28,12 @@ import org.snipsnap.app.Application;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.filter.SnipFormatter;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 
 import javax.servlet.ServletException;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -47,17 +49,26 @@ public class PostStoreServlet extends SnipSnapServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
 
-    String name = request.getParameter("post");
-    if (request.getParameter("cancel") == null) {
-      String content = request.getParameter("content");
+    String title = request.getParameter("title");
+    String content = request.getParameter("content");
 
+    if (request.getParameter("preview") != null) {
+      request.setAttribute("preview", SnipFormatter.toXML(null, content));
+      RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/storepost");
+      dispatcher.forward(request, response);
+      return;
+    } else if (request.getParameter("cancel") == null) {
       HttpSession session = request.getSession();
       Application app = null;
       if (session != null) {
         app = Application.getInstance(session);
         User user = app.getUser();
         if (UserManager.getInstance().isAuthenticated(user)) {
-          SnipSpace.getInstance().post(content);
+          if (null == title || "".equals(title)) {
+            SnipSpace.getInstance().post(content);
+          } else {
+            SnipSpace.getInstance().post(content, title);
+          }
         } else {
           response.sendError(HttpServletResponse.SC_FORBIDDEN);
         }

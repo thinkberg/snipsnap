@@ -106,10 +106,17 @@ public class Cache {
     return new ArrayList(((Map) caches.get(type)).values());
   }
 
+
   public List querySorted(Comparator c, int size, Class type) {
     ArrayList result = new ArrayList(getCache(type));
     Collections.sort(result, c);
     return result.subList(0, Math.min(size, result.size()));
+  }
+
+  public List querySorted(Query query, Comparator c, Class type) {
+    List result = query(query, type);
+    Collections.sort(result, c);
+    return result;
   }
 
   public List querySorted(Query query, Comparator c, int size, Class type) {

@@ -10,10 +10,15 @@
  <div class="snip-title"><h1 class="snip-name">Post To Weblog</h1></div>
  <div class="snip-content">
   <s:check roles="Editor">
+  <c:if test="${not empty preview}">
+   <div class="preview"><div class="snip-content"><c:out value="${preview}" escapeXml="false"/></div></div>
+  </c:if>
    <form class="form" method="post" action="../exec/storepost">
     <table>
+     <tr><td>Title:<br><input name="title"/></td></tr>
      <tr><td><textarea name="content" type="text" cols="80" rows="20"></textarea></td></tr>
      <tr><td class="form-buttons">
+      <input value="Preview" name="preview" type="submit"/>
       <input value="Post" name="save" type="submit"/>
       <input value="Cancel" name="cancel" type="submit"/>
      </td></tr>
