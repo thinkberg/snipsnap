@@ -22,7 +22,7 @@
      </fmt:message>
    </h1>
   </div>
-  <table class="diff">
+  <div class="diff">
     <c:forEach items="${diff}" var="changeInfo">
       <c:choose>
         <c:when test="${changeInfo.type=='DELETE'}">
