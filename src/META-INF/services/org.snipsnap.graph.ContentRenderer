@@ -4,4 +4,4 @@ org.snipsnap.graph.VerticalContentRenderer
 org.snipsnap.graph.MindMapContentRenderer
 org.snipsnap.graph.HorizontalContentRenderer
 org.snipsnap.graph.ExplorerContentRenderer
-
+org.snipsnap.graph.PSPContentRenderer
