@@ -41,7 +41,7 @@ public class IntHolder {
   }
 
   public synchronized void add(int inc) {
-    value =+ inc;
+    value = value + inc;
   }
 
   public synchronized void inc() {
