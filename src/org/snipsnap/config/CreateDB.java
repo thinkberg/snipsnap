@@ -144,10 +144,7 @@ public class CreateDB {
     SnipSpace.removeInstance();
     UserManager.removeInstance();
 
-    User admin = UserManager.getInstance().create(config.getAdminLogin(), config.getAdminPassword(), config.getAdminEmail());
-    admin.getRoles().add(Roles.EDITOR);
-    UserManager.getInstance().store(admin);
-
+    User admin = UserManager.getInstance().authenticate(config.getAdminLogin(), config.getAdminPassword());
     Application app = Application.get();
     app.setUser(admin);
 
