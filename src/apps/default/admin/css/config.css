@@ -238,6 +238,7 @@ li.current-step {
 }
 
 .statusbar {
+  table-layout: fixed;
   width: 200px;
   border: 1px solid black;
 }
@@ -249,5 +250,7 @@ li.current-step {
 }
 
 .statusbar td.completed {
+  width: 5px;
+  height: 10px;
   background-color: #999999;
 }
