@@ -9,12 +9,22 @@
   [<a href="exec/history?name=<c:out value='${snip.nameEncoded}'/>"><fmt:message key="menu.history"/></a>]
 </c:if>
 <s:check roles="Admin">[<a href="exec/remove?name=<c:out value='${snip.nameEncoded}'/>" onClick="return confirm('<fmt:message key="dialog.deleteSnipSure"/>');"><fmt:message key="menu.delete"/></a>]</s:check>
-<s:check roles="Editor">
- <s:checkObject permission="Edit" roles="Editor" snip="${snip}" invert="true">
+<s:check roles="Admin">
+ <s:checkObject permission="Edit" roles="Admin" snip="${snip}" invert="true">
   [<a href="exec/lock?name=<c:out value='${snip.nameEncoded}'/>"><fmt:message key="menu.lock"/></a>]
  </s:checkObject>
- <s:checkObject permission="Edit" roles="Editor" snip="${snip}">
+ <s:checkObject permission="Edit" roles="Admin" snip="${snip}">
   [<a href="exec/lock?name=<c:out value='${snip.nameEncoded}'/>&amp;unlock=true"><fmt:message key="menu.unlock"/></a>]
+ </s:checkObject>
+</s:check>
+<s:check roles="Editor">
+  <s:checkObject permission="Edit" roles="Admin" snip="${snip}" invert="true">
+   <s:checkObject permission="Edit" roles="Editor" snip="${snip}" invert="true">
+    [<a href="exec/lock?name=<c:out value='${snip.nameEncoded}'/>"><fmt:message key="menu.lock"/></a>]
+   </s:checkObject>
+   <s:checkObject permission="Edit" roles="Editor" snip="${snip}">
+    [<a href="exec/lock?name=<c:out value='${snip.nameEncoded}'/>&amp;unlock=true"><fmt:message key="menu.unlock"/></a>]
+   </s:checkObject>
  </s:checkObject>
 </s:check>
 <s:check roles="Authenticated" permission="Edit" snip="${snip}">[<a href="raw/<c:out value='${snip.nameEncoded}'/>"><fmt:message key="menu.view"/></a>]</s:check>

@@ -25,6 +25,7 @@
 package org.snipsnap.net;
 
 import org.snipsnap.app.Application;
+import org.snipsnap.config.Configuration;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
@@ -32,13 +33,11 @@ import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.User;
-import org.snipsnap.config.Configuration;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
@@ -47,18 +46,25 @@ import java.io.IOException;
  * @version $Id$
  */
 public class SnipLockServlet extends HttpServlet {
+  private final static Roles ALLOWED_ROLES = new Roles("Admin:Editor");
+
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-    HttpSession session = request.getSession(false);
-
     String name = request.getParameter("name");
     SnipSpace space = SnipSpaceFactory.getInstance();
     Snip snip = space.load(name);
-    if (session != null) {
+
+    User user = Application.get().getUser();
+    if (user != null && user.getRoles().containsAny(ALLOWED_ROLES)) {
+      String role = Roles.EDITOR;
+      if(user.getRoles().contains(Roles.ADMIN)) {
+        role = Roles.ADMIN;
+      }
+
       if (request.getParameter("unlock") != null) {
-        snip.getPermissions().remove(Permissions.EDIT_SNIP, Roles.EDITOR);
+        snip.getPermissions().remove(Permissions.EDIT_SNIP, role);
       } else {
-        snip.getPermissions().add(Permissions.EDIT_SNIP, Roles.EDITOR);
+        snip.getPermissions().add(Permissions.EDIT_SNIP, role);
       }
       space.store(snip);
     }

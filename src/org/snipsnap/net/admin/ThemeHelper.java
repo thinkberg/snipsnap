@@ -77,7 +77,8 @@ public class ThemeHelper {
         while (it.hasNext()) {
           Element snipEl = (Element) it.next();
           String tagName = snipEl.element("name").getText();
-          if (tagName.indexOf('/', "SnipSnap/themes/".length()) == -1) {
+          if (tagName.startsWith(THEME_PREFIX) &&
+            tagName.indexOf('/', THEME_PREFIX.length()) == -1) {
             String themeName = tagName.substring(tagName.lastIndexOf('/') + 1);
             switch(valueType) {
               case FILES:

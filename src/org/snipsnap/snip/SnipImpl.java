@@ -541,6 +541,7 @@ public class SnipImpl implements Snip {
     SnipSpace space = (SnipSpace)Components.getComponent(SnipSpace.class);
     Snip newSnip = space.create(newName, getContent());
     newSnip.setLabels(getLabels());
+    newSnip.setPermissions(getPermissions());
 
     List atts = getAttachments().getAll();
     Iterator attsIt = atts.iterator();
