@@ -37,7 +37,7 @@
 
   <target depends="clean, jar" description="build source package" name="bin-tar">
     <tstamp/>
-    <tar destfile="${appname}-${version}-${DSTAMP}${TSTAMP}.tgz" compression="gzip">
+    <tar destfile="../${appname}-${version}-${DSTAMP}${TSTAMP}.tgz" compression="gzip">
       <tarfileset dir="." prefix="${appname}-${version}" mode="566">
         <include name="run.sh"/>
       </tarfileset>
