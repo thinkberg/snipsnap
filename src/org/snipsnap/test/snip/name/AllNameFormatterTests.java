@@ -42,6 +42,7 @@ public class AllNameFormatterTests extends TestCase {
     s.addTestSuite(NoneNameFormatterTest.class);
     s.addTestSuite(CapitalizeNameFormatterTest.class);
     s.addTestSuite(PathRemoveNameFormatterTest.class);
+    s.addTestSuite(PostNameComparatorTest.class);
     return s;
   }
 }
