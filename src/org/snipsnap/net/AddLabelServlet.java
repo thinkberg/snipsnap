@@ -33,6 +33,8 @@ import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.snip.label.Label;
 import org.snipsnap.snip.label.LabelManager;
 import org.snipsnap.container.Components;
+import org.snipsnap.net.filter.MultipartWrapper;
+import org.radeox.util.logging.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -47,9 +49,20 @@ import java.io.IOException;
  * @version $Id$
  */
 public class AddLabelServlet extends HttpServlet {
-  protected void doPost(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-    doGet(httpServletRequest, httpServletResponse);
+    Configuration config = Application.get().getConfiguration();
+    // If this is not a multipart/form-data request continue
+    String type = request.getHeader("Content-Type");
+    if (type != null && type.startsWith("multipart/form-data")) {
+      try {
+        request = new MultipartWrapper(request, config.getEncoding() != null ? config.getEncoding() : "UTF-8");
+      } catch (IllegalArgumentException e) {
+        Logger.warn("AddLabelServlet: multipart/form-data wrapper:" + e.getMessage());
+      }
+    }
+
+    doGet(request, response);
   }
 
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

@@ -62,7 +62,11 @@ public class TypeLabel extends BaseLabel {
     buffer.append("<select name=\"label.value\" size=\"1\">");
     while (iterator.hasNext()) {
       String type = (String) iterator.next();
-      buffer.append("<option>");
+      buffer.append("<option");
+      if(type.equals(value)) {
+        buffer.append(" selected=\"selected\"");
+      }
+      buffer.append(">");
       // @TODO: Check if type == value
       buffer.append(type);
       buffer.append("</option>");

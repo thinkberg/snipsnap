@@ -34,6 +34,8 @@ import org.snipsnap.snip.label.Labels;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.container.Components;
+import org.snipsnap.net.filter.MultipartWrapper;
+import org.radeox.util.logging.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -49,9 +51,20 @@ import java.util.Iterator;
  * @version $Id$
  */
 public class LabelsServlet extends HttpServlet {
-  protected void doPost(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-    doGet(httpServletRequest, httpServletResponse);
+    Configuration config = Application.get().getConfiguration();
+    // If this is not a multipart/form-data request continue
+    String type = request.getHeader("Content-Type");
+    if (type != null && type.startsWith("multipart/form-data")) {
+      try {
+        request = new MultipartWrapper(request, config.getEncoding() != null ? config.getEncoding() : "UTF-8");
+      } catch (IllegalArgumentException e) {
+        Logger.warn("AddLabelServlet: multipart/form-data wrapper:" + e.getMessage());
+      }
+    }
+
+    doGet(request, response);
   }
 
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -72,47 +85,36 @@ public class LabelsServlet extends HttpServlet {
     Snip snip = SnipSpaceFactory.getInstance().load(snipName);
     request.setAttribute("snip", snip);
 
-    // display all labels of current Snip:
-    StringBuffer labelsProxy = new StringBuffer();
-    labelsProxy.append("<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">");
-    labelsProxy.append("<tr><th> Name </th><th> Type </th><th> Value </th></tr>");
-    Labels labels = snip.getLabels();
-    Iterator labelsIt = labels.getIds().iterator();
-    while (labelsIt.hasNext()) {
-      Label lbl = labels.getLabel((String) labelsIt.next());
-      labelsProxy.append("<tr><td>");
-      labelsProxy.append(lbl.getName());
-      labelsProxy.append("</td><td>");
-      labelsProxy.append(lbl.getType());
-      labelsProxy.append("</td><td>");
-      labelsProxy.append(lbl.getValue());
-      labelsProxy.append("</td><td>");
-      labelsProxy.append("[<a href=\"");
-      labelsProxy.append(SnipLink.getExecRoot());
-      labelsProxy.append("/removelabel?snipname=");
-      labelsProxy.append(snip.getNameEncoded());
-      labelsProxy.append("&amp;labelname=");
-      labelsProxy.append(lbl.getName());
-      labelsProxy.append("\">remove</a>]");
-      labelsProxy.append("</td></tr>");
-    }
-    labelsProxy.append("</table>");
-    request.setAttribute("labelsProxy", labelsProxy.toString());
+    LabelManager manager = (LabelManager) Components.getComponent(LabelManager.class);
+    request.setAttribute("labelmanager", manager);
 
-    // selection of label type for adding a new label:
-    StringBuffer typesProxy = new StringBuffer();
-    typesProxy.append("Choose label type:<br/><select name=\"labeltype\">");
-
-    LabelManager manager = (LabelManager)Components.getComponent(LabelManager.class);
-    Iterator typesIt = manager.getTypes().iterator();
-    while (typesIt.hasNext()) {
-      String labelType = (String) typesIt.next();
-      typesProxy.append("<option>");
-      typesProxy.append(labelType);
-      typesProxy.append("</option>");
+    if(null != request.getParameter("add")) {
+      String labelType = request.getParameter("labeltype");
+      Label label = manager.getLabel(labelType);
+      request.setAttribute("label", label);
+      RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/addlabel.jsp");
+      dispatcher.forward(request, response);
+      return;
     }
-    typesProxy.append("</select>");
-    request.setAttribute("typesProxy", typesProxy.toString());
+
+    if(null != request.getParameter("edit")) {
+      String labelName = request.getParameter("labelname");
+      Label label = snip.getLabels().getLabel(labelName);
+      if(null != label) {
+        request.setAttribute("label", label);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/addlabel.jsp");
+        dispatcher.forward(request, response);
+        return;
+      }
+    }
+
+    if(null != request.getParameter("delete")) {
+      String[] labels = request.getParameterValues("label");
+      for (int i = 0; i < labels.length; i++) {
+        String label = labels[i];
+        snip.getLabels().removeLabel(label);
+      }
+    }
 
     RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/showlabels.jsp");
     dispatcher.forward(request, response);
