@@ -25,12 +25,10 @@
 
 package org.snipsnap.render.macro;
 
-import org.python.util.PythonInterpreter;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Map;
 
 /*
  * Macro that renders graphs.
