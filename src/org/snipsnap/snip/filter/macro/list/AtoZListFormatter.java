@@ -27,6 +27,7 @@ package org.snipsnap.snip.filter.macro.list;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.filter.macro.ListOutputMacro;
 import org.snipsnap.util.Nameable;
+import org.snipsnap.util.Linkable;
 import org.snipsnap.serialization.Appendable;
 
 import java.util.ArrayList;
@@ -68,6 +69,9 @@ public class AtoZListFormatter implements ListFormatter {
         } else {
           name = object.toString();
           indexChar = name.substring(0, 1).toUpperCase();
+        }
+        if(object instanceof Linkable) {
+          name = ((Linkable)object).getLink();
         }
 
         if (indexChar.charAt(0) >= 'A' && indexChar.charAt(0) <= 'Z') {

@@ -27,6 +27,7 @@ package org.snipsnap.snip.filter.macro.list;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.filter.macro.ListOutputMacro;
 import org.snipsnap.util.Nameable;
+import org.snipsnap.util.Linkable;
 import org.snipsnap.serialization.Appendable;
 
 import java.io.IOException;
@@ -63,8 +64,8 @@ public class VerticalListFormatter implements ListFormatter {
       while (nameIterator.hasNext()) {
         Object object = nameIterator.next();
         writer.write("<li>");
-        if(object instanceof Appendable) {
-          ((Appendable)object).appendTo(writer);
+        if(object instanceof Linkable) {
+          writer.write(((Linkable)object).getLink());
         } else if(object instanceof Nameable) {
           SnipLink.appendLink(writer, ((Nameable)object).getName());
         } else {

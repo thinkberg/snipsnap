@@ -143,7 +143,7 @@ public class Snip implements Ownable, Nameable, Appendable {
   }
 
   public void setOUser(User oUser) {
-    this.oUser = oUser.getName();
+    this.oUser = oUser.getLogin();
   }
 
   public void setOUser(String oUser) {

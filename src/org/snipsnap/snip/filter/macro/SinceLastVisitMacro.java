@@ -71,7 +71,7 @@ public class SinceLastVisitMacro extends ListOutputMacro {
       User user = UserManager.getInstance().load(userName);
       System.err.println("Hashcode lastVisit="+((Object) user).hashCode());
       System.err.println("SinceLastVisit: "+user.getLastLogout());
-      Collection c = space.getSince(user.getLastLogout());
+      Collection c = SnipSpace.getInstance().getSince(user.getLastLogout());
       output(writer, "changed snips since last visit", c, "no recent changes.", type, showSize);
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");

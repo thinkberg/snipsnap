@@ -24,15 +24,14 @@
  */
 package org.snipsnap.user;
 
-import org.snipsnap.util.Nameable;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.AppConfiguration;
-import org.snipsnap.serialization.Appendable;
 import org.snipsnap.snip.SnipLink;
+import org.snipsnap.util.Linkable;
 
-import java.sql.Timestamp;
-import java.io.Writer;
 import java.io.IOException;
+import java.io.Writer;
+import java.sql.Timestamp;
 
 /**
  * User class.
@@ -40,7 +39,7 @@ import java.io.IOException;
  * @author Stephan J. Schmidt
  * @version $Id$
  */
-public class User implements Nameable, Appendable {
+public class User implements Linkable {
 
   private String login;
   private String passwd;
@@ -140,10 +139,6 @@ public class User implements Nameable, Appendable {
     return passwd;
   }
 
-  public String getName() {
-    return getLogin();
-  }
-
   public String getLogin() {
     return login;
   }
@@ -183,29 +178,30 @@ public class User implements Nameable, Appendable {
   }
 
   public boolean equals(Object obj) {
-    if(obj instanceof User && obj != null && this.getName() != null) {
-      this.getName().equals(((User)obj).getName());
+    if (obj instanceof User && obj != null && this.getLogin() != null) {
+      this.getLogin().equals(((User) obj).getLogin());
     }
     return super.equals(obj);
   }
 
   public String toString() {
-    return "User["+login+","+(passwd != null ? "pass set" : "no pass") +","+email+","+status+","+roles+"]";
+    return "User[" + login + "," + (passwd != null ? "pass set" : "no pass") + "," + email + "," + status + "," + roles + "]";
   }
 
-  public Writer appendTo(Writer writer) throws IOException {
-    if(isNonUser()) {
-      writer.write("<a href=\"");
-      writer.write(getEmail());
-      writer.write("\">");
-      writer.write(getName());
-      writer.write("</a>");
-      return writer;
-    } else if(isGuest()) {
-      writer.write("Guest");
-      return writer;
+  public String getLink() {
+    if (isNonUser()) {
+      StringBuffer tmp = new StringBuffer();
+      tmp.append("<a href=\"");
+      tmp.append(getEmail());
+      tmp.append("\">");
+      tmp.append(getLogin());
+      tmp.append("</a>");
+      return tmp.toString();
+    } else if (isGuest()) {
+      return "Guest";
     } else {
-      return SnipLink.appendLink(writer, getName());
+      return SnipLink.createLink(getLogin());
     }
   }
+
 }

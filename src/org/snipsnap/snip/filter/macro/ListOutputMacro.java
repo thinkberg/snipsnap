@@ -53,7 +53,7 @@ public abstract class ListOutputMacro extends Macro {
 
   static {
     /* load all list formatter found in the services plugin control file */
-    Iterator macroIt = Service.providers(Macro.class);
+    Iterator macroIt = Service.providers(ListFormatter.class);
     while(macroIt.hasNext()) {
       try {
         ListFormatter formatter = (ListFormatter)macroIt.next();
@@ -73,7 +73,7 @@ public abstract class ListOutputMacro extends Macro {
   private final static ListFormatter defaultFormatter = new SimpleList();
 
   public void output(Writer writer, String listComment, Collection c, String emptyText, String style, boolean showSize) throws IOException {
-    ListFormatter formatter = (ListFormatter) ListOutputMacro.formatterMap.get(style.toLowerCase());
+    ListFormatter formatter = (ListFormatter) ListOutputMacro.formatterMap.get(style != null ? style.toLowerCase() : null);
 
     if (formatter != null) {
       formatter.format(writer, listComment, c, emptyText, showSize);

@@ -61,7 +61,7 @@ public class IndexSnipMacro extends ListOutputMacro {
 
     if (params == null || params.getLength() <= 2) {
       output(writer, "All Snips:",
-             Collections.filter(space.getAll(),
+             Collections.filter(SnipSpace.getInstance().getAll(),
                                 new Filterator() {
                                   public boolean filter(Object obj) {
                                     String name = ((Snip) obj).getName();

@@ -22,42 +22,18 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-/*
- * Macro that displays all Snips by user
+
+package org.snipsnap.util;
+
+import java.io.Writer;
+
+/**
+ * Tells the object to create a link to itself.
  *
- * @author stephan
+ * @author Matthias L. Jugel
  * @version $Id$
  */
 
-package org.snipsnap.snip.filter.macro;
-
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
-
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Collection;
-
-public class UserSnipMacro extends ListOutputMacro {
-  public String getName() {
-    return "snips-by-user";
-  }
-
-  public void execute(Writer writer, MacroParameter params)
-    throws IllegalArgumentException, IOException {
-    String type = null;
-    boolean showSize = true;
-    if (params != null) {
-      if (params.getLength() > 1) {
-        type = params.get("1");
-      }
-    }
-
-    if (params.getLength() > 0) {
-      Collection c = SnipSpace.getInstance().getByUser(params.get("0"));
-      output(writer, "this user's snips:", c, "none written yet.", type, showSize);
-    } else {
-      throw new IllegalArgumentException("Number of arguments does not match");
-    }
-  }
+public interface Linkable {
+  public String getLink();
 }
