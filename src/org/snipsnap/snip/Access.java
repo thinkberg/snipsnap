@@ -26,6 +26,7 @@
 package org.snipsnap.snip;
 
 import org.snipsnap.util.log.Logger;
+import org.snipsnap.app.Application;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -57,15 +58,29 @@ public class Access {
     incViewCount();
     String referrer = request.getHeader("REFERER");
     if (null != referrer) {
-      int index = referrer.indexOf("/space/");
-      if (index != -1) {
-        String url = referrer.substring(index + "/space/".length());
-        index = url.indexOf("?");
+      // Decode URL to remove jsessionid for example
+      // referrer =
+      String domain = Application.get().getConfiguration().getDomain();
+      if (referrer.startsWith(domain)) {
+        int index = referrer.indexOf("/space/");
+        // Does the referrer point to a snip ?
+        // Forget otherwise (e.g. "/exec/login.jsp")
         if (index != -1) {
-          url = url.substring(0, index);
+          String url = referrer.substring(index + "/space/".length());
+          index = url.indexOf("?");
+          if (index != -1) {
+            url = url.substring(0, index);
+          }
+          // Hack to remove possible jsessionid
+          index = url.indexOf(";jsessionid");
+          if (index != -1) {
+            url = url.substring(0, index);
+          }
+
+          snipLinks.addLink(SnipLink.decode(url));
         }
-        snipLinks.addLink(SnipLink.decode(url));
       } else {
+        // Referrer was external link
         backLinks.addLink(SnipLink.decode(referrer));
       }
     }
@@ -73,7 +88,7 @@ public class Access {
   }
 
   public void store() {
-   SnipSpace.getInstance().delayedStrore(snip);
+    SnipSpace.getInstance().delayedStrore(snip);
   }
 
   public boolean isModified() {
