@@ -1,4 +1,5 @@
-<!--
+<%@ page import="java.util.Set"%>
+ <!--
   ** User Information display/edit.
   ** @author Matthias L. Jugel
   ** @version $Id$
@@ -36,8 +37,11 @@
     <td valign="top">Roles: </td>
     <!-- TODO: use checkboxes here ... -->
     <td>
+      <c:set var="userRoles" value="${user.roles.roleSet}"/>
+      <% Set userRoles = (Set)pageContext.findAttribute("userRoles"); %>
       <c:forEach items="${user.roles.allRoles}" var="role">
-        <input type="checkbox" name="roles" <c:if test="${user.roleSet[role] != null}">checked="checked"</c:if>>
+        <input type="checkbox" name="roles" value="<c:out value='${role}'/>" <%= userRoles.contains(pageContext.findAttribute("role")) ? "checked=\"checked\"" : "" %>>
+        <c:out value="${role}"/><br>
       </c:forEach>
     </td>
   </tr>

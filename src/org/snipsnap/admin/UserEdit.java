@@ -54,14 +54,16 @@ public class UserEdit extends HttpServlet {
       String context = request.getParameter("context");
       RequestDispatcher dispatcher = getServletContext().getContext(context).getNamedDispatcher("com.neotis.net.UserManagerServlet");
       dispatcher.forward(request, response);
-      if(session.getAttribute("user") != null) {
+      session.setAttribute("user", request.getAttribute("user"));
+      session.setAttribute("errors", request.getAttribute("errors"));
+      if(request.getAttribute("user") != null) {
         dispatcher = request.getRequestDispatcher("/exec/user.jsp");
         dispatcher.forward(request, response);
+        session.removeAttribute("errors");
       } else {
         response.sendRedirect(SnipLink.absoluteLink(request, "/exec/user"));
       }
       return;
-
     }
     response.sendRedirect(SnipLink.absoluteLink(request, "/"));
   }

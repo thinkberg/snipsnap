@@ -24,10 +24,9 @@
  */
 package com.neotis.admin;
 
-import com.neotis.user.User;
-import com.neotis.user.UserManager;
 import com.neotis.config.Configuration;
 import com.neotis.snip.SnipLink;
+import com.neotis.user.UserManager;
 import org.mortbay.http.HttpContext;
 import org.mortbay.http.HttpServer;
 
@@ -38,14 +37,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.io.FileInputStream;
-import java.util.Collection;
-import java.util.Properties;
-import java.util.List;
 import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Main AdminServlet
@@ -54,30 +51,27 @@ import java.util.HashMap;
  */
 public class AdminServlet extends HttpServlet {
 
-  List free = Arrays.asList(new String[] { "/login.jsp", "/install.jsp", "/finished.jsp" });
+  List free = Arrays.asList(new String[]{"/login.jsp", "/install.jsp", "/finished.jsp"});
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
     throws IOException, ServletException {
-
     // get or create session and application object
     HttpSession session = request.getSession(true);
+
     UserManager um = UserManager.getInstance();
     Collection servers = HttpServer.getHttpServers();
     Configuration config = (Configuration) session.getAttribute("config");
-    if(null == config) {
+    if (null == config) {
       config = new Configuration("./conf/local.conf");
     }
-
-    Map errors = new HashMap();
-    session.setAttribute("errors", errors);
 
     session.setAttribute("servers", servers);
     session.setAttribute("config", config);
 
     String command = request.getPathInfo();
     if (null == command || "/".equals(command)) {
-      if(config.isConfigured()) {
-        if(session.getAttribute("admin") != null) {
+      if (config.isConfigured()) {
+        if (session.getAttribute("admin") != null) {
           response.sendRedirect(SnipLink.absoluteLink(request, "/exec/welcome.jsp"));
         } else {
           response.sendRedirect(SnipLink.absoluteLink(request, "/exec/login.jsp"));
@@ -88,25 +82,26 @@ public class AdminServlet extends HttpServlet {
       return;
     }
 
-    if(!free.contains(command) && command.endsWith(".jsp") && session.getAttribute("admin") == null) {
+    if (!free.contains(command) && command.endsWith(".jsp") && session.getAttribute("admin") == null) {
       response.sendRedirect(SnipLink.absoluteLink(request, "/exec/login.jsp"));
       return;
     }
 
     request.setAttribute("page", command);
     RequestDispatcher dispatcher = null;
-    if(command.endsWith(".jsp")) {
+    if (command.endsWith(".jsp")) {
       prepareUserManager(servers, request, response);
       dispatcher = request.getRequestDispatcher("/main.jsp");
     } else {
       dispatcher = request.getRequestDispatcher(command);
     }
 
-    if(dispatcher != null) {
+    if (dispatcher != null) {
       response.addHeader("Pragma", "no-cache");
       response.addHeader("Cache-Control", "no-cache, no-store");
       dispatcher.forward(request, response);
     } else {
+      Map errors = new HashMap();
       errors.put(command, "Function not implemented!");
       session.setAttribute("errors", errors);
       response.sendRedirect(SnipLink.absoluteLink(request, "/exec"));
@@ -120,23 +115,24 @@ public class AdminServlet extends HttpServlet {
   private void prepareUserManager(Collection servers, HttpServletRequest request, HttpServletResponse response) {
     Iterator it = servers.iterator();
     HttpSession session = request.getSession(false);
-    while(it.hasNext()) {
-      HttpServer server = (HttpServer)it.next();
+    request.setAttribute("prepare", "true");
+    while (it.hasNext()) {
+      HttpServer server = (HttpServer) it.next();
       HttpContext context[] = server.getContexts();
       Map usermanagers = new HashMap();
-      for(int i = 0; i < context.length; i++) {
+      for (int i = 0; i < context.length; i++) {
         String contextPath = context[i].getContextPath();
         try {
           RequestDispatcher appUserManagerDispatcher =
             getServletContext().getContext(contextPath).getNamedDispatcher("com.neotis.net.UserManagerServlet");
           appUserManagerDispatcher.forward(request, response);
-          usermanagers.put(contextPath, session.getAttribute("usermanager"));
+          usermanagers.put(contextPath, request.getAttribute("usermanager"));
         } catch (Exception e) {
-          System.err.println("AdminServlet: no user manager servlet available on: "+contextPath);
+          System.err.println("AdminServlet: no user manager servlet available on: " + contextPath);
         }
       }
       session.setAttribute("usermanagers", usermanagers);
     }
-
+    request.removeAttribute("prepare");
   }
 }

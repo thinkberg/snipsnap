@@ -24,23 +24,19 @@
  */
 package com.neotis.net;
 
-import com.neotis.user.UserManager;
-import com.neotis.user.User;
 import com.neotis.user.Roles;
+import com.neotis.user.User;
+import com.neotis.user.UserManager;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Map;
-import java.util.List;
-import java.util.Set;
-import java.util.StringTokenizer;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Servlet used for interfacing to external user management. Sets the current user manager
@@ -55,25 +51,24 @@ public class UserManagerServlet extends HttpServlet {
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-    HttpSession session = request.getSession(false);
     // get user manager and store in session
     UserManager um = UserManager.getInstance();
-    session.setAttribute("usermanager", um);
+    request.setAttribute("usermanager", um);
 
     // get user (if possible) and store in session
     String login = request.getParameter("login");
     User user = um.load(login);
-    session.setAttribute("user", user);
+    request.setAttribute("user", user);
 
-    if(request.getParameter("ok") != null) {
+    if (request.getAttribute("prepare") == null && request.getParameter("ok") != null) {
       String command = request.getParameter("command");
-      if(UPDATE.equals(command)) {
+      if (UPDATE.equals(command)) {
         update(request);
-      } else if(REMOVE.equals(command)) {
+      } else if (REMOVE.equals(command)) {
         um.remove(user);
-        session.removeAttribute("user");
+        request.removeAttribute("user");
       } else {
-        System.err.println("UserManagerServlet: unknown command '"+command+"'");
+        System.err.println("UserManagerServlet: unknown command '" + command + "'");
       }
     }
   }
@@ -90,8 +85,6 @@ public class UserManagerServlet extends HttpServlet {
    * Update a user, check validity and equality of the input.
    */
   private void update(HttpServletRequest request) {
-    System.err.println("update()");
-    HttpSession session = request.getSession(false);
     UserManager um = UserManager.getInstance();
     String login = request.getParameter("login");
     User user = um.load(login);
@@ -100,34 +93,33 @@ public class UserManagerServlet extends HttpServlet {
     String nPass = request.getParameter("password.new");
     String nPass2 = request.getParameter("password2.new");
     String status = request.getParameter("status");
-    String roles = request.getParameter("roles");
+    String roles[] = request.getParameterValues("roles");
 
     boolean modified = false;
     Map errors = new HashMap();
-    if(!user.getEmail().equals(email)) {
+    if (!user.getEmail().equals(email)) {
       modified = true;
       user.setEmail(email);
     }
 
-    if(!user.getStatus().equals(status)) {
+    if (!user.getStatus().equals(status)) {
       modified = true;
       user.setStatus(status);
     }
 
-    System.err.println("roles: "+roles);
-//    Roles r = new Roles(parseRoles(roles));
-//    if(!user.getRoles().equals(roleSet)) {
-//      if(roleSet.retainAll(um.getAllRoles())) {
-//        errors.put("roles", ERR_UNKNOWN_ROLES+um.getAllRoles());
-//      } else {
-//        modified = true;
-//        user.setRoles();
-//      }
-//    }
+    Roles newRoles = new Roles(parseRoles(roles));
+    if (!user.getRoles().equals(newRoles)) {
+      if (!newRoles.getRoleSet().isEmpty() && !Roles.allRoles().containsAll(newRoles.getRoleSet())) {
+        errors.put("roles", ERR_UNKNOWN_ROLES + Roles.allRoles());
+      } else {
+        modified = true;
+        user.setRoles(newRoles);
+      }
+    }
 
 
-    if(nPass != null && nPass.length() > 0) {
-      if(nPass.equals(nPass2)) {
+    if (nPass != null && nPass.length() > 0) {
+      if (nPass.equals(nPass2)) {
         modified = true;
         user.setPasswd(nPass);
       } else {
@@ -135,19 +127,18 @@ public class UserManagerServlet extends HttpServlet {
       }
     }
 
-    if(modified && errors.isEmpty()) {
+    if (modified) {
       um.store(user);
       errors.put("", OK_USER_UPDATED);
     }
-    session.setAttribute("user", user);
-    session.setAttribute("errors", errors);
+    request.setAttribute("user", user);
+    request.setAttribute("errors", errors);
   }
 
-  private Set parseRoles(String roles) {
-    StringTokenizer tok = new StringTokenizer(roles, "[], ", false);
+  private Set parseRoles(String roles[]) {
     Set list = new HashSet();
-    while(tok.hasMoreTokens()) {
-      list.add(tok.nextToken());
+    for (int i = 0; roles != null && i < roles.length; i++) {
+      list.add(roles[i]);
     }
     return list;
   }

@@ -72,16 +72,16 @@ public class ApplicationCommand {
                   context.stop();
                 } else if (CMD_APPLICATION_REMOVE.equals(command)) {
                   server.removeContext(context);
-                  try {
-                    Thread.sleep(5000);
-                  } catch (InterruptedException e) {
-                    System.err.println("Application: interrupted while waiting for application to sync ..." + e);
-                  }
                 } else {
                   System.err.println("Application: unknown or illegal command: " + command);
                 }
               } catch (Exception e) {
                 System.err.println("Application: unable to " + command + " server=" + server + ", context=" + context);
+              }
+              try {
+                Thread.sleep(5000);
+              } catch (InterruptedException e) {
+                System.err.println("Application: interrupted while waiting for application to sync ..." + e);
               }
               return;
             }

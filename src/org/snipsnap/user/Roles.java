@@ -47,14 +47,20 @@ public class Roles {
   public final static String EDITOR = "Editor";
   public final static String NOCOMMENT = "NoComment";
 
-  private static Set ROLES = new TreeSet();
+  private static Set ROLES = null;
 
-  private static Set getAllRoles() {
+  public static Set allRoles() {
     if (ROLES == null) {
+      ROLES = new TreeSet();
       ROLES.add(EDITOR);
       ROLES.add(NOCOMMENT);
+      ROLES = Collections.unmodifiableSet(ROLES);
     }
     return ROLES;
+  }
+
+  public Set getAllRoles() {
+    return Roles.allRoles();
   }
 
   public Roles(Roles roles) {
@@ -142,5 +148,9 @@ public class Roles {
     }
 
     return roles;
+  }
+
+  public boolean equals(Roles obj) {
+    return getRoleSet().equals(obj.getRoleSet());
   }
 }
