@@ -103,6 +103,7 @@ public class ConnectionManager {
       return DriverManager.getConnection(ConnectionPoolManager.URL_PREFIX +
               "snipsnap", null, null);
     } catch (SQLException e) {
+      e.printStackTrace();
       System.out.println("Unable to get connection.");
       return null;
     }

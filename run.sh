@@ -27,7 +27,7 @@ fi
 
 
 # put classpath together
-CLASSPATH=lib/jakarta.jar:lib/javax.servlet.jar:lib/mckoidb.jar:lib/org.apache.jasper.jar:lib/org.mortbay.jetty.jar:lib/jdbcpool.jar:$JAVA_HOME/lib/tools.jar
+CLASSPATH=lib/xmlrpc-1.1.jar:lib/jakarta.jar:lib/javax.servlet.jar:lib/mckoidb.jar:lib/org.apache.jasper.jar:lib/org.mortbay.jetty.jar:lib/jdbcpool.jar:$JAVA_HOME/lib/tools.jar
 
 
 #if [ ! -x $base/db/data ]; then
