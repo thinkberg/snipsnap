@@ -52,6 +52,7 @@ public class MemorySnipStorage implements SnipStorage {
 
   // Use LinkedHashMap in 1.4
   private PartialSearcher cacheMap;
+  private Map map;
 
   // @TODO Keep list sorted with comparator
   private List allList;
@@ -59,14 +60,14 @@ public class MemorySnipStorage implements SnipStorage {
   public MemorySnipStorage(SnipStorage storage) {
     this.storage = storage;
 
-    Map map = new HashMap();
+    map = new HashMap();
 
     if (!(storage instanceof CacheableStorage)) {
       //@TODO optimize with array
       Iterator iterator = allList.iterator();
       while (iterator.hasNext()) {
         Snip snip = (Snip) iterator.next();
-        map.put(snip.getName(), snip);
+        map.put(snip.getName().toUpperCase(), snip);
       }
     }
 
@@ -85,11 +86,11 @@ public class MemorySnipStorage implements SnipStorage {
   }
 
   public Snip storageLoad(String name) {
-    return (Snip) cacheMap.get(name);
+    return (Snip) cacheMap.get(name.toUpperCase());
   }
 
   public Object loadObject(String name) {
-    return (Snip) cacheMap.get(name);
+    return (Snip) cacheMap.get(name.toUpperCase());
   }
 
   public void storageStore(Snip snip) {
@@ -99,14 +100,14 @@ public class MemorySnipStorage implements SnipStorage {
   public Snip storageCreate(String name, String content) {
     Snip snip = storage.storageCreate(name, content);
     allList.add(snip);
-    cacheMap.put(snip.getName(), snip);
+    cacheMap.put(snip.getName().toUpperCase(), snip);
     return snip;
   }
 
   public void storageRemove(Snip snip) {
     storage.storageRemove(snip);
     allList.remove(snip);
-    cacheMap.remove(snip.getName());
+    cacheMap.remove(snip.getName().toUpperCase());
   }
 
   public int storageCount() {

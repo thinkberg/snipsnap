@@ -75,6 +75,7 @@ public class MissingInterceptor extends InterceptorSupport {
         missing.remove(name);
       }
     }
-    return invocation.next();
+    Object result = invocation.next();
+    return result;
   }
 }

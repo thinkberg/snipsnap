@@ -157,8 +157,8 @@ public class QuerySnipStorage implements SnipStorage {
   }
 
   public List storageByParentNameOrder(final Snip parent, int count) {
-    Logger.debug("all = " + storage.storageAll());
-    Logger.debug("childs for=" + parent);
+//    Logger.debug("all = " + storage.storageAll());
+//    Logger.debug("childs for=" + parent);
 
     List list = QueryKit.querySorted(storage.storageAll(), new SnipQuery() {
       public boolean fit(Snip snip) {
@@ -172,7 +172,7 @@ public class QuerySnipStorage implements SnipStorage {
         return (parent == snip.getParent());
       }
     }, nameComparatorDesc, count);
-    Logger.debug("result = " + list.toString());
+//    Logger.debug("result = " + list.toString());
     return list;
   }
 

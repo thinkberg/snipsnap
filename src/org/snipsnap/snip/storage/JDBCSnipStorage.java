@@ -401,8 +401,8 @@ public class JDBCSnipStorage implements SnipStorage, CacheableStorage {
     // if (Apsects.hasTarget(proxy)) {
     //    return proxy;
     // }
-    if (cache.containsKey(name)) {
-      return (Snip) cache.get(name);
+    if (cache.containsKey(name.toUpperCase())) {
+      return (Snip) cache.get(name.toUpperCase());
     }
     String content = result.getString("content");
 
@@ -432,7 +432,7 @@ public class JDBCSnipStorage implements SnipStorage, CacheableStorage {
     // return proxy;
     snip = (Snip) Aspects.newInstance(snip, Snip.class);
 
-    cache.put(name, snip);
+    cache.put(name.toUpperCase(), snip);
     return snip;
   }
 
