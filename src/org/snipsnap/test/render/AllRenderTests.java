@@ -37,7 +37,7 @@ public class AllRenderTests extends TestCase {
 
   public static Test suite() {
     TestSuite s = new TestSuite();
-    s.addTestSuite(AllMacroTests.class);
+    s.addTest(AllMacroTests.suite());
     return s;
   }
 }
