@@ -84,15 +84,19 @@ public class Launcher {
 
   protected static URL[] initClassPath(String extraClassPath) {
     List urlArray = new ArrayList();
+    InputStream manifestIn = null;
+    InputStream jarIn = null;
     try {
-      Manifest launcherManifest = new JarInputStream(location.openStream()).getManifest();
+      manifestIn = location.openStream();
+      Manifest launcherManifest = new JarInputStream(manifestIn).getManifest();
       Attributes launcherAttribs = launcherManifest.getMainAttributes();
       String mainJarAttr = launcherAttribs.getValue("Launcher-Main-Jar");
       if (System.getProperty("launcher.main.jar") != null) {
         mainJarAttr = System.getProperty("launcher.main.jar");
       }
       URL mainJarUrl = getResourceUrl(mainJarAttr);
-      Manifest mainManifest = new JarInputStream(mainJarUrl.openStream()).getManifest();
+      jarIn = mainJarUrl.openStream();
+      Manifest mainManifest = new JarInputStream(jarIn).getManifest();
       Attributes mainAttributes = mainManifest.getMainAttributes();
       String manifestClassPath = mainAttributes.getValue("Class-Path");
 
@@ -113,6 +117,9 @@ public class Launcher {
       System.setProperty("java.class.path", classPath.toString());
     } catch (IOException e) {
       System.err.println("Error: Set the system property launcher.main.jar to specify the jar file to start.");
+    } finally {
+      try { manifestIn.close(); } catch (Throwable ignore) { };
+      try { jarIn.close(); } catch (Throwable ignore) { };
     }
     return (URL[]) urlArray.toArray(new URL[0]);
   }

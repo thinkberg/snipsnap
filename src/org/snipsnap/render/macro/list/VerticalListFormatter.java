@@ -78,7 +78,7 @@ public class VerticalListFormatter implements ListFormatter {
           writer.write(((Linkable) object).getLink());
         } else if (object instanceof Nameable) {
           SnipLink.appendLink(writer, ((Nameable) object).getName());
-        } else {
+        } else {                      S
           writer.write(object.toString());
         }
         writer.write("</li>");

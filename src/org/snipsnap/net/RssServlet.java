@@ -79,6 +79,8 @@ public class RssServlet extends HttpServlet {
       String version = request.getParameter("version");
       String type = request.getParameter("type");
       String sourceSnipName = request.getParameter("snip");
+      int count = 10;
+      count = Integer.parseInt(request.getParameter("count"));
 
       if (null == sourceSnipName) {
         sourceSnipName = config.getStartSnip();
@@ -140,7 +142,7 @@ public class RssServlet extends HttpServlet {
       SyndEntryI entry;
       SyndContentI description;
 
-      List rssSnips = feeder.getFeed();
+      List rssSnips = feeder.getFeed(count);
       Iterator iterator = rssSnips.iterator();
       while (iterator.hasNext()) {
         Snip rssSnip = (Snip) iterator.next();

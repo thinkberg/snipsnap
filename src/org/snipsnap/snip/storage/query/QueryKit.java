@@ -94,4 +94,9 @@ public class QueryKit {
     }
     return result;
   }
+
+  public static List query(List list, Query query, int count) {
+    List result = query(list,query);
+    return result.subList(0, Math.min(count, result.size()));
+  }
 }

@@ -54,9 +54,13 @@ public class RecentlySnipChangedFeeder implements Feeder {
     return "recentlychanged";
   }
 
-  public List getFeed() {
-    List changed = space.getChanged(10);
+  public List getFeed(int count) {
+    List changed = space.getChanged(count);
     return changed;
+  }
+
+  public List getFeed() {
+    return getFeed(10);
   };
 
   public Snip getContextSnip() {

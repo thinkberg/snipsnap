@@ -68,6 +68,11 @@ public class NewSnipFeeder implements Feeder {
     return "newsnipsonly";
   }
 
+  public List getFeed(int count) {
+    List changed = space.getChanged(count);
+    return QueryKit.query(changed, newAndNotCommentQuery, count);
+  }
+
   public List getFeed() {
     List changed = space.getChanged();
     return QueryKit.query(changed, newAndNotCommentQuery);

@@ -41,6 +41,7 @@ import java.util.List;
 
 public interface Feeder {
   public List getFeed();
+  public List getFeed(int count);
   public String getName();
   public Snip getContextSnip();
 }

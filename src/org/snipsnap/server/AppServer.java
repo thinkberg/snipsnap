@@ -33,14 +33,7 @@ import org.mortbay.util.MultiException;
 import org.snipsnap.config.ServerConfiguration;
 import org.snipsnap.user.Digest;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -272,14 +265,18 @@ public class AppServer {
     System.out.println("SnipSnap " + System.getProperty(ServerConfiguration.VERSION));
 
     // output version and copyright information
+    InputStream in = null;
     try {
-      BufferedReader copyrightReader = new BufferedReader(new InputStreamReader(AppServer.class.getResourceAsStream("/conf/copyright.txt")));
+      in = AppServer.class.getResourceAsStream("/conf/copyright.txt");
+      BufferedReader copyrightReader = new BufferedReader(new InputStreamReader(in));
       String line = null;
       while ((line = copyrightReader.readLine()) != null) {
         System.out.println(line);
       }
     } catch (IOException e) {
       // ignore io exception here ...
+    } finally {
+      try { in.close(); } catch (Throwable ignore) { };
     }
   }
 

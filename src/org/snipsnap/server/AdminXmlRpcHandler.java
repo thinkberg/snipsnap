@@ -143,7 +143,7 @@ public class AdminXmlRpcHandler extends AuthXmlRpcHandler {
       if (backup.booleanValue()) {
         createBackupJar(name + ".backup.jar", app);
       }
-      return new Boolean(app.delete());
+      return Boolean.valueOf(app.delete());
     }
     return Boolean.TRUE;
   }

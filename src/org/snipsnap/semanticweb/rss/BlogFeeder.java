@@ -56,6 +56,10 @@ public class BlogFeeder implements Feeder {
     return "blog";
   }
 
+  public List getFeed(int count) {
+    return blog.getFlatPosts();
+  }
+
   public List getFeed() {
       return blog.getFlatPosts();
   };

@@ -72,6 +72,11 @@ public class NewCommentFeeder implements Feeder {
     return QueryKit.query(changed, commentQuery);
   }
 
+  public List getFeed(int count) {
+    List changed = space.getChanged();
+    return QueryKit.query(changed, commentQuery, count);
+  }
+
   public Snip getContextSnip() {
     return space.load(snipName);
   }
