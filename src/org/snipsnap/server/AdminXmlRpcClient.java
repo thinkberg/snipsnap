@@ -34,7 +34,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 public class AdminXmlRpcClient {
-  XmlRpcClient xmlRpcClient = null;
+  protected XmlRpcClient xmlRpcClient = null;
 
   public AdminXmlRpcClient(String host, String port, String password) throws MalformedURLException {
     this(host, Integer.parseInt(port), password);
@@ -47,9 +47,13 @@ public class AdminXmlRpcClient {
     //System.err.println("AdminXmlRpcClient: new client for "+xmlRpcUrl);
   }
 
+  public Object execute(String method, Vector args) throws XmlRpcException, IOException {
+    return xmlRpcClient.execute(method, args);
+  }
+
   public Hashtable getApplications() throws XmlRpcException, IOException {
     Vector args = new Vector();
-    return (Hashtable)xmlRpcClient.execute("getApplications", args);
+    return (Hashtable)execute("getApplications", args);
   }
 
   public void shutdown() throws XmlRpcException, IOException {
@@ -63,7 +67,7 @@ public class AdminXmlRpcClient {
     args.addElement(host);
     args.addElement(port);
     args.addElement(path);
-    return new URL((String)xmlRpcClient.execute("install", args));
+    return new URL((String)execute("install", args));
   }
 
   public void delete(String name, boolean backup) throws XmlRpcException, IOException {
@@ -71,6 +75,6 @@ public class AdminXmlRpcClient {
     Vector args = new Vector();
     args.addElement(name);
     args.addElement(new Boolean(backup));
-    xmlRpcClient.execute("delete", args);
+    execute("delete", args);
   }
 }

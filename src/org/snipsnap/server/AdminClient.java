@@ -31,8 +31,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.Vector;
 
 public class AdminClient {
+
   public static void main(String args[]) {
     Properties config = new Properties();
     try {
@@ -59,11 +61,12 @@ public class AdminClient {
       AdminXmlRpcClient client = new AdminXmlRpcClient(config.getProperty(ServerConfiguration.ADMIN_HOST),
                                                        Integer.parseInt(config.getProperty(ServerConfiguration.ADMIN_PORT)),
                                                        config.getProperty(ServerConfiguration.ADMIN_PASS));
-      if("install".equals(commands.get(0))) {
-        client.install((String)commands.get(1), (String)commands.get(2), (String)commands.get(3), (String)commands.get(4));
-      } else if("delete".equals(commands.get(0))) {
-        client.delete((String)commands.get(1), new Boolean((String)commands.get(2)).booleanValue());
+      String method = (String)commands.get(0);
+      Vector args = new Vector();
+      for(int i = 1; i < commands.size(); i++) {
+        args.addElement(commands.get(i));
       }
+      client.execute(method, args);
     } catch (Exception e) {
       System.err.println("AdminClient: error executing command: " + e);
       e.printStackTrace();
