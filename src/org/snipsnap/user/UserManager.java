@@ -73,16 +73,16 @@ public class UserManager {
 
   protected UserManager() {
     try {
-      md5 =  MessageDigest.getInstance("MD5");
+      md5 =  MessageDigest.getInstance("SHA1");
     } catch (NoSuchAlgorithmException e) {
       System.err.println("UserManager: unable to load MD5 algorithm: "+e);
       md5 = null;
     }
   }
 
-  StringBuffer md5hex = new StringBuffer();
 
   // create a string representation of the MD5 hash of current user
+  StringBuffer md5hex = new StringBuffer();
   private String getMD5Hash(User user) {
     if (md5 != null) {
       String tmp = user.getLogin() + user.getPasswd() + user.getLastLogin().toString();
@@ -97,6 +97,7 @@ public class UserManager {
     return md5hex.toString();
   }
 
+  // update the auth hash by removing all entries and updating from the database
   private void updateAuthHash() {
     authHash.clear();
     Iterator users = getAll().iterator();
@@ -147,6 +148,7 @@ public class UserManager {
     String auth = getMD5Hash(user);
     // @TODO find better solution by removing by value
     updateAuthHash();
+
     authHash.put(auth, user);
     Cookie cookie = new Cookie(COOKIE_NAME, auth);
     cookie.setMaxAge(SECONDS_PER_YEAR);
