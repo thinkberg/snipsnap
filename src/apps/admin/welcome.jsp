@@ -26,7 +26,7 @@
             </c:forEach>
           </td>
           <td>
-            <c:if test="${context.started}">
+            <c:if test="${context.started && context.contextPath != '/admin'}">
               <form method="POST" action="../exec/user">
                 <input type="hidden" name="server" value="<c:out value='${server}'/>">
                 <input type="hidden" name="context" value="<c:out value='${context.contextPath}'/>">

@@ -63,7 +63,6 @@ public class AdminServlet extends HttpServlet {
     if(null == config) {
       config = new Configuration("./conf/local.conf");
     }
-    System.err.println("servers:"+((HttpServer)servers.iterator().next()).getContexts().length);
 
     session.setAttribute("um", um);
     session.setAttribute("servers", servers);
