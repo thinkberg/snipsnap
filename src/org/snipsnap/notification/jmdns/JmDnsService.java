@@ -23,38 +23,28 @@
  * --LICENSE NOTICE--
  */
 
-package org.snipsnap.notification;
+package org.snipsnap.notification.jmdns;
 
+import javax.jmdns.JmDNS;
+import javax.jmdns.ServiceInfo;
+import java.io.IOException;
 
 /**
- * Simple Message to be sent with MessageService
+ * Announce SnipSnaps with JmDns (like Apple Rendezvous)
  *
  * @author Stephan J. Schmidt
  * @version $Id$
  */
 
-public class Message {
-  public final static String SNIP_CREATE="SNIP_CREATE";
-  public final static String SNIP_MODIFIED = "SNIP_MODIFIED";
-  public final static String SNIP_REMOVE = "SNIP_REMOVE";
-
-  private String type;
-  private Object value;
-
-  public Message(String type, Object value) {
-    this.type=type;
-    this.value=value;
-  }
-
-  public String getType() {
-    return type;
-  }
-
-  public Object getValue() {
-    return value;
-  }
-
-  public String toString() {
-    return "("+type+"="+value+")";
+public class JmDnsService {
+  public JmDnsService() {
+    try {
+      JmDNS jmdns = new JmDNS();
+      jmdns.registerService(
+          new ServiceInfo("_http._tcp.local.", "snipsnap._http._tcp.local.", 8668, 0, 0, "path=index.html")
+      );
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 }

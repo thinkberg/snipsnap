@@ -41,6 +41,7 @@ import org.snipsnap.interceptor.custom.MissingInterceptor;
 import org.snipsnap.interceptor.custom.SnipSpaceACLInterceptor;
 import org.snipsnap.jdbc.LazyDataSource;
 import org.snipsnap.notification.MessageService;
+import org.snipsnap.notification.jmdns.JmDnsService;
 import org.snipsnap.render.PlainTextRenderEngine;
 import org.snipsnap.render.SnipRenderEngine;
 import org.snipsnap.snip.SnipSpace;
@@ -124,6 +125,7 @@ public class Components {
         nc.registerComponentImplementation(ApplicationManager.class);
         nc.registerComponentImplementation(LabelManager.class);
 
+        nc.registerComponentImplementation(JmDnsService.class);
         // Feeders
         nc.registerComponentImplementation(FeederRepository.class, BasicFeederRepository.class);
 

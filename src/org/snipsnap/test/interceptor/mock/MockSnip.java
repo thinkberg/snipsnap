@@ -12,6 +12,8 @@ import java.io.Writer;
 import java.sql.Timestamp;
 import java.util.List;
 
+import gabriel.Principal;
+
 public abstract class MockSnip implements Snip {
   public void setParentName(String name) {
   }
@@ -26,7 +28,7 @@ public abstract class MockSnip implements Snip {
     return null;
   }
 
-  public String getOwner() {
+  public Principal getOwner() {
     return null;
   }
 

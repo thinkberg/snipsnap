@@ -42,6 +42,8 @@ import java.io.Writer;
 import java.sql.Timestamp;
 import java.util.List;
 
+import gabriel.Principal;
+
 /**
  * Encapsulates a Snip for RSS as RSS channels are more fine granular
  * than Snip content.
@@ -86,6 +88,13 @@ public class RssSnip implements Snip {
   }
 
   public void setParentName(String name) {
+  }
+
+  public void setOwner(Principal principal) {
+  }
+
+  public boolean isOwner(Principal principal) {
+    return snip.isOwner(principal);
   }
 
   public String getParentName() {
@@ -146,7 +155,7 @@ public class RssSnip implements Snip {
     return null;
   }
 
-  public String getOwner() {
+  public Principal getOwner() {
     return snip.getOwner();
   }
 
@@ -156,10 +165,6 @@ public class RssSnip implements Snip {
 
   public Access getAccess() {
     return snip.getAccess();
-  }
-
-  public boolean isOwner(User user) {
-    return snip.isOwner(user);
   }
 
   public Modified getModified() {

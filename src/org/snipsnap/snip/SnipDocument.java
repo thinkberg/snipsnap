@@ -74,7 +74,7 @@ public class SnipDocument {
     // author instead of CUser is clearer to the user
     doc.add(Field.Text("author", snip.getCUser()));
     doc.add(Field.Text("muser", snip.getMUser()));
-    doc.add(Field.Text("owner", snip.getOwner()));
+    doc.add(Field.Text("owner", snip.getOwner().getName()));
 
     Labels labels = snip.getLabels();
     Iterator iterator = labels.getAll().iterator();

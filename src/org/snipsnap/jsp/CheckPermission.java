@@ -27,9 +27,10 @@ package org.snipsnap.jsp;
 import org.snipsnap.app.Application;
 import org.snipsnap.user.Security;
 import org.snipsnap.user.User;
+import org.snipsnap.container.Components;
+import org.snipsnap.security.AccessController;
 
 import javax.servlet.jsp.JspTagException;
-
 
 public class CheckPermission extends UserAuth {
   protected String permission;

@@ -123,12 +123,12 @@ public class DefaultPermissionManager implements PermissionManager {
    */
   private Roles getRoles(User user, Snip object) {
     Roles roles = getRoles(user);
-    if (object instanceof Ownable) {
-      Ownable o = object;
-      if (o.isOwner(user)) {
-        roles.add(Roles.OWNER);
-      }
-    }
+//    if (object instanceof Ownable) {
+//      Ownable o = object;
+//      if (o.isOwner(user)) {
+//        roles.add(Roles.OWNER);
+//      }
+//    }
     return roles;
   }
 }

@@ -71,9 +71,18 @@ public class User implements Linkable {
   }
 
   public Subject getSubject() {
-    return this.subject;
+    subject = new Subject(this.login);
+    Set principals = new HashSet();
+    principals.add(new Principal(this.login));
+    Iterator iterator = roles.getAllRoles().iterator();
+    while (iterator.hasNext()) {
+      String role = (String) iterator.next();
+      principals.add(new Principal(role));
+    }
+    subject.setPrincipals(principals);
+    return subject;
   }
-
+                   
   public void setApplication(String applicationOid) {
     this.applicationOid = applicationOid;
   }
@@ -188,15 +197,6 @@ public class User implements Linkable {
 
   public void setRoles(Roles roles) {
     this.roles = roles;
-    subject = new Subject(this.login);
-    Set principals = new HashSet();
-    principals.add(new Principal(this.login));
-    Iterator iterator = roles.getAllRoles().iterator();
-    while (iterator.hasNext()) {
-      String role = (String) iterator.next();
-      principals.add(new Principal(role));
-    }
-    subject.setPrincipals(principals);
     return;
   }
 

@@ -56,6 +56,7 @@ import java.util.List;
 
 import dynaop.ProxyAware;
 import dynaop.Proxy;
+import gabriel.Principal;
 
 /**
  * Central class for snips.
@@ -157,12 +158,16 @@ public class SnipImpl implements Snip, ProxyAware {
     return !isWeblog();
   }
 
-  public String getOwner() {
-    return getCUser();
+  public Principal getOwner() {
+    return new Principal(getCUser());
   }
 
-  public boolean isOwner(User user) {
-    return user.getLogin().equals(getOwner());
+  public void setOwner(Principal principal) {
+    // do nothing for now
+  }
+
+  public boolean isOwner(Principal principal) {
+    return principal.equals(getOwner());
   }
 
   public void addPermission(String permission, String role) {

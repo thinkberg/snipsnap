@@ -31,11 +31,15 @@ import org.snipsnap.snip.Snip;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.Security;
 import org.snipsnap.user.User;
+import org.snipsnap.security.AccessController;
 
 import java.security.GeneralSecurityException;
 
 import dynaop.Interceptor;
 import dynaop.Invocation;
+import gabriel.components.AccessManager;
+import gabriel.components.context.OwnerAccessContext;
+import gabriel.Permission;
 
 /**
  * Access Control Interceptor for checking permissions of set operations on objects.
@@ -45,8 +49,9 @@ import dynaop.Invocation;
  */
 public class ACLInterceptor implements Interceptor {
   private Roles roles;
-
+  private AccessController controller;
   public ACLInterceptor() {
+
     super();
     roles = new Roles();
     roles.add("Editor");
@@ -58,6 +63,7 @@ public class ACLInterceptor implements Interceptor {
     User user = Application.get().getUser();
     Snip snip = (Snip) invocation.getProxy().getProxyContext().unwrap();
     if (invocation.getMethod().getName().startsWith("set")) {
+       // if (controller.checkPermission(user, new Permission("CHANGE_SNIP"), new OwnerAccessContext(snip))) {
       //Logger.debug("ACLInterceptor: Method="+invocation.getMethod().getName());
       //Logger.debug("ACLInterceptor: User = "+user);
       //Logger.debug("ACLInterceptor: Snip = "+snip);

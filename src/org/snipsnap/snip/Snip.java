@@ -45,7 +45,7 @@ import java.io.IOException;
  * @version $Id$
  */
 
-public interface Snip extends Linkable, Ownable, Nameable, Appendable {
+public interface Snip extends Linkable, gabriel.components.context.Ownable, Nameable, Appendable {
   public void handle(HttpServletRequest request);
 
   // HACK: looks like java beans framework does not find Nameable

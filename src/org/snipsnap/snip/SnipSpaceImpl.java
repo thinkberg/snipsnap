@@ -370,7 +370,11 @@ public class SnipSpaceImpl implements SnipSpace {
   }
 
   public void remove(Snip snip) {
-    synchronized (delayed) {
+    MessageService service = (MessageService) Components.getComponent(MessageService.class);
+     if (null != service) {
+       service.send(new Message(Message.SNIP_REMOVE, snip));
+     }
+     synchronized (delayed) {
       delayed.remove(snip);
     }
     changed.getQueue().remove(snip);

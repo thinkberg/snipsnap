@@ -27,8 +27,10 @@ package org.snipsnap.security;
 
 import gabriel.Permission;
 import gabriel.Subject;
+import gabriel.Principal;
 import gabriel.components.AccessManager;
 import gabriel.components.AccessManagerImpl;
+import gabriel.components.AclStore;
 import gabriel.components.context.AccessContext;
 import gabriel.components.io.FileAclStore;
 import gabriel.components.parser.AclParser;
@@ -45,13 +47,17 @@ public class DefaultAccessController implements AccessController  {
   private AccessManager manager;
 
   public DefaultAccessController() {
+    AclStore store = new FileAclStore(new AclParser());
+    System.err.println("Acl="+ store.getAcl(new Principal("Owner"),"access"));
     manager = new AccessManagerImpl(new FileAclStore(new AclParser()));
   }
 
   public boolean checkPermission(User user, Permission permission, AccessContext context) {
     Subject subject = user.getSubject();
 
+    System.err.println("Check user="+user.getLogin()+" permission="+permission+" principals="+subject.getPrincipals());
     boolean hasPermission = manager.checkPermission(subject.getPrincipals(), permission);
+    System.err.println("  hasPermission="+hasPermission);
     return hasPermission;
   }
 }

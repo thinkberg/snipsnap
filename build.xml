@@ -24,6 +24,7 @@
   <!-- the overall class path -->
   <path id="app.classpath">
     <pathelement location="${jar}/gabriel.jar"/>
+    <pathelement location="${jar}/jmdns.jar"/>
     <pathelement location="${jar}/asm-1.4.1.jar"/>
     <pathelement location="${jar}/dynaop-1.0-beta.jar"/>
     <pathelement location="${jar}/cglib-asm-1.0.jar"/>
@@ -47,7 +48,6 @@
     <pathelement location="${jar}/mail.jar"/>
     <pathelement location="${jar}/cvslib.jar"/>
     <pathelement location="${jar}/j2h.jar"/>
-    <pathelement location="${jar}/junit.jar"/>
     <pathelement location="${jar}/picocontainer-1.0.jar"/>
     <pathelement location="${jar}/nanocontainer-1.0.jar"/>
     <pathelement location="${jar}/nanocontainer-dynaop-1.0-beta-1-SNAPSHOT.jar"/>
@@ -61,6 +61,7 @@
 
   <path id="test.classpath">
      <path refid="all.classpath"/>
+     <pathelement location="${jar}/junit.jar"/>
   </path>
 
   <!-- build distribution -->
@@ -116,6 +117,7 @@
         <include name="lib/${appname}-installer.war"/>
         <include name="lib/${appname}-utils.jar"/>
         <include name="lib/gabriel.jar"/>
+        <include name="lib/jmdns.jar"/>
         <include name="lib/asm-1.4.1.jar"/>
         <include name="lib/dynaop-1.0-beta.jar"/>
         <include name="lib/cglib-asm-1.0.jar"/>
@@ -314,6 +316,7 @@
     <jar destfile="${src}/apps/default/WEB-INF/lib/snipsnap-servlets.jar" excludes="**/CVS">
       <fileset dir="${target}/default/WEB-INF/classes" includes="**"/>
       <fileset dir="${src}" includes="META-INF/**"/>
+      <fileset dir="./conf/" includes="gabriel/**"/>
     </jar>
   </target>
 
@@ -416,6 +419,7 @@
       <fileset dir="${jar}">
         <include name="asm-1.4.1.jar"/>
         <include name="gabriel.jar"/>
+        <include name="jmdns.jar"/>
         <include name="dynaop-1.0-beta.jar"/>
         <include name="cglib-asm-1.0.jar"/>
         <include name="asm-util-1.4.1.jar"/>
