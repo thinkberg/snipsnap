@@ -52,6 +52,11 @@
   </servlet>
 
   <servlet>
+    <servlet-name>org.snipsnap.net.SnipRawServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.SnipRawServlet</servlet-class>
+  </servlet>
+
+  <servlet>
     <servlet-name>org.snipsnap.net.RssServlet</servlet-name>
     <servlet-class>org.snipsnap.net.RssServlet</servlet-class>
   </servlet>
@@ -158,6 +163,12 @@
   </servlet>
 
   <!-- servlet mappings -->
+
+  <servlet-mapping>
+    <servlet-name>org.snipsnap.net.SnipRawServlet</servlet-name>
+    <url-pattern>/raw/*</url-pattern>
+  </servlet-mapping>
+
   <servlet-mapping>
     <servlet-name>org.snipsnap.net.SnipViewServlet</servlet-name>
     <url-pattern>/space/*</url-pattern>

@@ -1,5 +1,7 @@
 0.3.2
 
+- Fixed bug: RSD <api> was not closed
+- Added feature: /raw/<snip-name> displays the raw content of a snip
 - Added feature: uploading of images for a snip
 - Added UNICODE (UTF-8 by default) support
 - Added feature: importing snips from web frontend
