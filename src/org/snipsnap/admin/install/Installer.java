@@ -134,6 +134,9 @@ public class Installer extends HttpServlet {
     }
     String context = request.getParameter("context");
     if(context != null) {
+      if(context.endsWith("/")) {
+        context = context.substring(0, context.length()-2);
+      }
       config.setContextPath(context);
     }
 
