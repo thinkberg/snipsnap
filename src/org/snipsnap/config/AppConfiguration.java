@@ -186,11 +186,11 @@ public class AppConfiguration extends Configuration {
   }
 
   public void setLogoImage(String image) {
-    setProperty(APP_TAGLINE, image);
+    setProperty(APP_LOGO, image);
   }
 
   public String getLogoImage() {
-    String image = getProperty(APP_TAGLINE);
+    String image = getProperty(APP_LOGO);
     return image != null ? image : "snip";
   }
 
