@@ -1,5 +1,6 @@
 0.5.2 
 
+- Merged multi-instance SnipSnap changes into Trunk
 - Added version information to database dump
 - Fixed compatibility with tomcat (use connector attribute URIEncoding="UTF-8")
 
