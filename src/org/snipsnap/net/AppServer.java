@@ -28,6 +28,8 @@ public class AppServer {
 
         ServletHttpContext context = (ServletHttpContext) jettyServer.getContext(null, "/");
         context.addServlet("SnipServlet", "/space/*", "com.neotis.net.SnipServlet");
+        context.addServlet("JSPServlet", "*.jsp", "org.apache.jasper.servlet.JspServlet");
+        context.setResourceBase("./app");
 
         jettyServer.start();
       } catch (MultiException e) {
