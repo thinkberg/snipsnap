@@ -88,6 +88,6 @@ public class ApplicationAwareMap {
   }
 
   public Map findMap(Object object) {
-    return ((Map)map).containsValue(object) ? (Map) map : null;
+    return ((Map)map).containsKey(object) ? (Map) map : null;
   }
 }
