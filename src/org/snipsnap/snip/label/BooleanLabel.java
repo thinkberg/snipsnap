@@ -39,7 +39,7 @@ import java.util.Map;
  * @version $Id$
  */
 
-public abstract class BooleanLabel implements Label {
+public class BooleanLabel implements Label {
   protected String name;
   protected String value;
   protected Snip snip;

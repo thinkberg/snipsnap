@@ -420,7 +420,7 @@ public class ConfigureServlet extends HttpServlet {
           MultipartWrapper mpRequest = (MultipartWrapper) request;
           String fileName = mpRequest.getFileName("file");
           if (fileName != null && !"".equals(fileName)) {
-            String logoFileName = mpRequest.getFileName("file");
+            String logoFileName = uploader.getCanonicalFileName(mpRequest.getFileName("file"));
             String logoFileType = mpRequest.getFileContentType("file");
             if (logoFileType.startsWith("image")) {
               InputStream logoFileIs = mpRequest.getFileInputStream("file");
@@ -434,7 +434,7 @@ public class ConfigureServlet extends HttpServlet {
               }
               imageOut.close();
               logoFileIs.close();
-              config.setLogo(uploader.getCanonicalFileName(logoFileName));
+              config.setLogo(logoFileName);
               config.set(InitializeDatabase.LOGO_FILE, logoFile.getPath());
               config.set(InitializeDatabase.LOGO_FILE_TYPE, logoFileType);
             } else {

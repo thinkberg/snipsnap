@@ -125,14 +125,14 @@ public class Attachments {
     return null == attachments || attachments.size() == 0;
   }
 
-  private final static String ATTACHMENTS = "attachments";
-  private final static String ATTACHMENT = "attachment";
+  public final static String ATTACHMENTS = "attachments";
+  public final static String ATTACHMENT = "attachment";
 
-  private final static String NAME = "name";
-  private final static String CONTENTTYPE = "content-type";
-  private final static String SIZE = "size";
-  private final static String DATE = "date";
-  private final static String LOCATION = "location";
+  public final static String NAME = "name";
+  public final static String CONTENTTYPE = "content-type";
+  public final static String SIZE = "size";
+  public final static String DATE = "date";
+  public final static String LOCATION = "location";
 
   /**
    * Deserialize the attachments from the database string.

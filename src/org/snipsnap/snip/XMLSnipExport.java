@@ -40,6 +40,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -133,20 +134,23 @@ public class XMLSnipExport {
     while (attIt.hasNext()) {
       Element att = (Element) attIt.next();
       try {
-        File attFile = new File(attRoot, att.elementText("location"));
-        ByteArrayOutputStream data = new ByteArrayOutputStream();
-        BufferedInputStream fileIs = new BufferedInputStream(new FileInputStream(attFile));
-        int count = 0;
-        byte[] buffer = new byte[8192];
-        while ((count = fileIs.read(buffer)) != -1) {
-          data.write(buffer, 0, count);
-        }
-        data.close();
-        att.addElement("data").addText(new String(Base64.encode(data.toByteArray()), "UTF-8"));
+        addAttachmentFile(att, new File(attRoot, att.elementText("location")));
       } catch (Exception e) {
         Logger.fatal("unable to export attachment: " + e);
         e.printStackTrace();
       }
     }
+  }
+
+  public static void addAttachmentFile(Element att, File attFile) throws IOException {
+    ByteArrayOutputStream data = new ByteArrayOutputStream();
+    BufferedInputStream fileIs = new BufferedInputStream(new FileInputStream(attFile));
+    int count = 0;
+    byte[] buffer = new byte[8192];
+    while ((count = fileIs.read(buffer)) != -1) {
+      data.write(buffer, 0, count);
+    }
+    data.close();
+    att.addElement("data").addText(new String(Base64.encode(data.toByteArray()), "UTF-8"));
   }
 }
