@@ -73,7 +73,8 @@ public class MultipartWrapper extends HttpServletRequestWrapper {
           } else {
             String[] tmp = new String[values.length + 1];
             System.arraycopy(values, 0, tmp, 0, values.length);
-            tmp[values.length + 1] = value;
+            tmp[tmp.length - 1] = value;
+            params.put(name, tmp);
           }
         } else {
           files.put(name, body);
