@@ -38,7 +38,7 @@ import org.apache.oro.text.regex.MatchResult;
 public class HeadingFilter extends RegexTokenFilter {
 
   public HeadingFilter() {
-    super("^[[:space:]]*(1(\\.1)*) (.*?)[[:space:]]*$");
+    super("^[[:space:]]*(1(\\.1)*)[[:space:]](.*?)[[:space:]]*$");
   }
 
   public void handleMatch(StringBuffer buffer, MatchResult result, Snip snip) {

@@ -54,7 +54,7 @@ public class ListFilter extends RegexTokenFilter {
   private final static Map closeList = new HashMap();
 
   public ListFilter() {
-    super("^[[:space:]]*([-*]|[iIaA1ghHkK]\\.)[[:space:]]+(\r?\n[[:space:]]*(?:[-*]|[iIaA1ghHkK]\\.)|.)*$", MULTILINE);
+    super("^[[:space:]]*([-*]|[iIaA1ghHkK]\\.)(?:[^-]*)[[:space:]]+(\r?\n[[:space:]]*(?:[-*]|[iIaA1ghHkK]\\.)|.)*$", MULTILINE);
     openList.put("-", "<ul class=\"minus\">");
     openList.put("*", "<ul class=\"star\">");
     openList.put("i", "<ol class=\"roman\">");
