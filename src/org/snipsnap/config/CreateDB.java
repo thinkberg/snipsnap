@@ -50,20 +50,23 @@ public class CreateDB {
 //    insertData("funzel", "funzel", "stephan@mud.de");
   }
 
-  public static void createDB(AppConfiguration config) {
+  public static void createDB(Configuration config) {
     // Make a connection with the database.  This will create the database
     // and log into the newly created database.
 
+    Application.get().setConfiguration(config);
     JDBCSnipStorage.createStorage();
     JDBCUserStorage.createStorage();
   }
 
-  public static void createAdmin(AppConfiguration config) {
+  public static void createAdmin(Configuration config) {
     System.out.println("CreateDB: Creating Admin Home Page");
     SnipSpaceFactory.removeInstance();
     UserManager.removeInstance();
 
-    User admin = UserManager.getInstance().create(config.getAdminLogin(), config.getAdminPassword(), config.getAdminEmail());
+    User admin = UserManager.getInstance().create(config.getAdminLogin(),
+                                                  config.getAdminPassword(),
+                                                  config.getAdminPassword());
     admin.getRoles().add(Roles.EDITOR);
     UserManager.getInstance().store(admin);
 
@@ -74,12 +77,13 @@ public class CreateDB {
     HomePage.create(config.getAdminLogin());
   }
 
-  public static void insertData(AppConfiguration config, InputStream data) {
+  public static void insertData(Configuration config, InputStream data) {
     System.out.println("CreateDB: Inserting Data");
     SnipSpaceFactory.removeInstance();
     UserManager.removeInstance();
 
-    User admin = UserManager.getInstance().authenticate(config.getAdminLogin(), config.getAdminPassword());
+    User admin = UserManager.getInstance().authenticate(config.getAdminLogin(),
+                                                        config.getAdminPassword());
     Application app = Application.get();
     app.setUser(admin);
 
@@ -94,33 +98,34 @@ public class CreateDB {
     System.out.println("CreateDB: Complete");
   }
 
-  public static void postFirst(AppConfiguration config) {
+  public static void postFirst(Configuration config) {
     System.out.println("CreateDB: Posting first entry");
     SnipSpaceFactory.removeInstance();
     UserManager.removeInstance();
 
-    User admin = UserManager.getInstance().authenticate(config.getAdminLogin(), config.getAdminPassword());
+    User admin = UserManager.getInstance().authenticate(config.getAdminLogin(),
+                                                        config.getAdminPassword());
     Application app = Application.get();
     app.setUser(admin);
 
-    String ping = config.getProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_WEBLOGS_PING);
-    String notify = config.getProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_NOTIFICATION);
+    String ping = config.get(Configuration.APP_PERM_WEBLOGSPING);
+    String notify = config.get(Configuration.APP_PERM_NOTIFICATION);
 
-    config.setProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_WEBLOGS_PING, "deny");
-    config.setProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_NOTIFICATION, "deny");
+    config.set(Configuration.APP_PERM_WEBLOGSPING, "deny");
+    config.set(Configuration.APP_PERM_NOTIFICATION, "deny");
 
     SnipSpaceFactory.getInstance().getBlog().post("Welcome to [SnipSnap]." +
-           " You can now login and add/edit your first post. There is a __post blog__ link in the menu bar. For help with formatting your post" +
-           " take a look at [snipsnap-help]. To create a link to a page on your site surround a word with \\[ and \\]." +
-           " Putting \\_\\_ around a phrase makes it __bold__ and putting \\~\\~ around it makes the" +
-           " phrase ~~italics~~. You can create links to the internet by just writing the url like "+
-           " http://snipsnap.org or by using \\{link:Name|url\\}. So \\{link:SnipSnap|\\http://snipsnap.org\\} produces " +
-           " {link:SnipSnap|http://snipsnap.org}. Have fun.\n\n" +
-           " Pinging weblogs.com may be turned on. The {link:FAQ|http://snipsnap.org/space/FAQ}" +
-           " explains how to turn this on or off.",
-           "Welcome to SnipSnap");
+                                                  " You can now login and add/edit your first post. There is a __post blog__ link in the menu bar. For help with formatting your post" +
+                                                  " take a look at [snipsnap-help]. To create a link to a page on your site surround a word with \\[ and \\]." +
+                                                  " Putting \\_\\_ around a phrase makes it __bold__ and putting \\~\\~ around it makes the" +
+                                                  " phrase ~~italics~~. You can create links to the internet by just writing the url like " +
+                                                  " http://snipsnap.org or by using \\{link:Name|url\\}. So \\{link:SnipSnap|\\http://snipsnap.org\\} produces " +
+                                                  " {link:SnipSnap|http://snipsnap.org}. Have fun.\n\n" +
+                                                  " Pinging weblogs.com may be turned on. The {link:FAQ|http://snipsnap.org/space/FAQ}" +
+                                                  " explains how to turn this on or off.",
+                                                  "Welcome to SnipSnap");
 
-    config.setProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_WEBLOGS_PING, ping);
-    config.setProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_NOTIFICATION, notify);
+    config.set(Configuration.APP_PERM_WEBLOGSPING, ping);
+    config.set(Configuration.APP_PERM_NOTIFICATION, notify);
   }
 }

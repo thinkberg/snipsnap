@@ -76,14 +76,14 @@ public class ChangePasswordServlet extends HttpServlet {
         session.setAttribute("app", app);
 
         um.setCookie(request, response, user);
-        response.sendRedirect(SnipLink.absoluteLink(request, "/space/" + SnipLink.encode(user.getLogin())));
+        response.sendRedirect(SnipLink.absoluteLink("/space/" + SnipLink.encode(user.getLogin())));
       } else {
         request.setAttribute("error", "Your reset key has been manipulated. Try again, please.");
         RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/forgot.jsp");
         dispatcher.forward(request, response);
       }
     } else {
-      response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));
+      response.sendRedirect(SnipLink.absoluteLink("/space/start"));
     }
   }
 }

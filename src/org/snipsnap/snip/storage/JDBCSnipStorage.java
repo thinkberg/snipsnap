@@ -208,7 +208,7 @@ public class JDBCSnipStorage implements SnipStorage, CacheableStorage {
         " ORDER BY name")
           .setString(1, start)
           .setString(2, end)
-          .setString(3, Application.get().getConfiguration().getStartName());
+          .setString(3, Application.get().getConfiguration().getStartSnip());
     List list = createObjects(finder.execute());
     finder.close();
     return list;

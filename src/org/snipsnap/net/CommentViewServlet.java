@@ -48,7 +48,7 @@ public class CommentViewServlet extends HttpServlet {
 
     String name = request.getPathInfo();
     if (null == name) {
-      response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));
+      response.sendRedirect(SnipLink.absoluteLink("/space/start"));
       return;
     } else {
       name = name.substring(1);

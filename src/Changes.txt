@@ -1,5 +1,9 @@
 0.5
 
+- Fixed bug: links and images no longer contain complete URLs
+- Fixed bug: Reworked URL detection
+- Developer: completely reorganized Configuration (macros need recompile!)
+- Developer: separated Server and AppConfiguration
 - Developer: JSP precompilation switch (build.properties)
 - Added feature: Label support (Carsten Pfeiffer, Marco Mosconi)
 - Added feature: Support for nested lists (Davar)

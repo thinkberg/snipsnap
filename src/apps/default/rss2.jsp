@@ -23,7 +23,7 @@
     <title><c:out value="${config.name}"/></title>
     <%-- usually points to "start" --%>
     <link><c:out value="${url}/${snip.nameEncoded}"/></link>
-    <description><c:out value="${config.tagLine}"/></description>
+    <description><c:out value="${config.tagline}"/></description>
     <s:dublinCore snip="${snip}" format="xml"/>
     <!-- <blogChannel:changes>http://www.weblogs.com/rssUpdates/changes.xml</changes> -->
     <admin:generatorAgent rdf:resource="http://www.snipsnap.org/space/version-<c:out value='${config.version}'/>"/>

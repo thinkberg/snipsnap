@@ -47,7 +47,7 @@ import java.util.List;
 /**
  * Central class for snips.
  *
- * @TODO: cUser, mUser, cTime, ... -> modified to composite object
+ * TODO: cUser, mUser, cTime, ... -> modified to composite object
  *
  * @author Stephan J. Schmidt
  * @version $Id$
@@ -373,7 +373,7 @@ public class SnipImpl implements Snip {
   public String getAttachmentString() {
     StringBuffer tmp = new StringBuffer();
     Iterator it = attachments.iterator();
-    String fileStorePath = Application.get().getConfiguration().getFileStorePath();
+    String fileStorePath = Application.get().getConfiguration().getFilePath();
     while (it.hasNext()) {
       Attachment att = (Attachment) it.next();
       File file = new File(fileStorePath, att.getLocation());
@@ -436,5 +436,9 @@ public class SnipImpl implements Snip {
     }
 
     return ((Snip) obj).getName().equals((this.name));
+  }
+
+  public String toString() {
+    return getName();
   }
 }

@@ -25,7 +25,8 @@
 package org.snipsnap.app;
 
 import org.radeox.util.logging.Logger;
-import org.snipsnap.config.AppConfiguration;
+import org.snipsnap.config.Configuration;
+import org.snipsnap.config.ConfigurationProxy;
 import org.snipsnap.notification.NotificationService;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.user.User;
@@ -49,7 +50,7 @@ public class Application {
   private static Map globalStore = new HashMap();
 
   private User user;
-  private AppConfiguration config;
+  private Configuration config;
   private List log = new ArrayList();
   private NotificationService notification;
   private Map params;
@@ -76,7 +77,7 @@ public class Application {
   public void notify(int type, Snip snip) {
     //Logger.debug("Application - notify() "+type);
     if (notification == null &&
-        config != null && config.allow(AppConfiguration.PERM_NOTIFICATION)) {
+        config != null && config.allow(Configuration.APP_PERM_NOTIFICATION)) {
       notification = NotificationService.getInstance();
     }
     if (notification != null) {
@@ -211,13 +212,13 @@ public class Application {
     return Application.globalStore.get(key);
   }
 
-  public void setConfiguration(AppConfiguration config) {
+  public void setConfiguration(Configuration config) {
     this.config = config;
   }
 
-  public AppConfiguration getConfiguration() {
+  public Configuration getConfiguration() {
     if (null == config) {
-      config = AppConfiguration.getInstance();
+      config = ConfigurationProxy.getInstance();
     }
     return config;
   }

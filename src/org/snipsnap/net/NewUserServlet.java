@@ -25,6 +25,7 @@
 package org.snipsnap.net;
 
 import org.snipsnap.app.Application;
+import org.snipsnap.config.Configuration;
 import org.snipsnap.snip.HomePage;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.User;
@@ -32,7 +33,11 @@ import org.snipsnap.user.UserManager;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.http.*;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,7 +57,7 @@ public class NewUserServlet extends HttpServlet {
   private final static String ERR_NOT_ALLOWED = "Not allowed to register new users!";
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
+    throws ServletException, IOException {
 
     HttpSession session = request.getSession(true);
     session.removeAttribute("errors");
@@ -60,78 +65,78 @@ public class NewUserServlet extends HttpServlet {
 
     Application app = Application.getInstance(session);
 
-    if (app.getConfiguration().allowRegister()) {
-    String login = request.getParameter("login");
-    String email = request.getParameter("email");
-    String password = request.getParameter("password");
-    String password2 = request.getParameter("password2");
+    if (!app.getConfiguration().deny(Configuration.APP_PERM_REGISTER)) {
+      String login = request.getParameter("login");
+      String email = request.getParameter("email");
+      String password = request.getParameter("password");
+      String password2 = request.getParameter("password2");
 
-    login = login != null ? login : "";
-    email = email != null ? email : "";
+      login = login != null ? login : "";
+      email = email != null ? email : "";
 
 
-    if (request.getParameter("cancel") == null) {
-      UserManager um = UserManager.getInstance();
-      User user = um.load(login);
-      // check whether user exists or not
-      if (user != null) {
-        errors.put("login", ERR_EXISTS);
-        sendError(session, errors, request, response);
+      if (request.getParameter("cancel") == null) {
+        UserManager um = UserManager.getInstance();
+        User user = um.load(login);
+        // check whether user exists or not
+        if (user != null) {
+          errors.put("login", ERR_EXISTS);
+          sendError(session, errors, request, response);
+          return;
+        }
+
+        if (login.length() < 3) {
+          errors.put("login", ERR_TOO_SHORT);
+          sendError(session, errors, request, response);
+          return;
+        }
+
+        // TODO 1.4 if(!login.matches("[A-Za-z0-9._ ]+")) {
+        StringTokenizer tok = new StringTokenizer(login, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._ ");
+        if (login.startsWith(" ") || tok.hasMoreTokens()) {
+          errors.put("login", ERR_ILLEGAL + ": " + (tok.hasMoreTokens() ? tok.nextToken() : ""));
+          sendError(session, errors, request, response);
+          return;
+        }
+
+        // check whether the password is correctly typed
+        if (!password.equals(password2)) {
+          errors.put("password", ERR_PASSWORD);
+          sendError(session, errors, request, response);
+          return;
+        }
+
+        if (password.length() < 3) {
+          errors.put("password", ERR_PASSWORD_TOO_SHORT);
+          sendError(session, errors, request, response);
+          return;
+        }
+
+        // create user ...
+        user = um.create(login, password, email);
+        app.setUser(user, session);
+        HomePage.create(login);
+
+        // store user name and app in cookie and session
+        Cookie cookie = new Cookie("userName", user.getLogin());
+        cookie.setMaxAge(43200000);
+        cookie.setPath(request.getContextPath());
+        response.addCookie(cookie);
+        session.setAttribute("app", app);
+        response.sendRedirect(SnipLink.absoluteLink("/space/" + SnipLink.encode(login)));
         return;
       }
 
-      if (login.length() < 3) {
-        errors.put("login", ERR_TOO_SHORT);
-        sendError(session, errors, request, response);
-        return;
-      }
-
-      // TODO 1.4 if(!login.matches("[A-Za-z0-9._ ]+")) {
-      StringTokenizer tok = new StringTokenizer(login, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._ ");
-      if (login.startsWith(" ") || tok.hasMoreTokens()) {
-        errors.put("login", ERR_ILLEGAL + ": " + (tok.hasMoreTokens() ? tok.nextToken() : ""));
-        sendError(session, errors, request, response);
-        return;
-      }
-
-      // check whether the password is correctly typed
-      if (!password.equals(password2)) {
-        errors.put("password", ERR_PASSWORD);
-        sendError(session, errors, request, response);
-        return;
-      }
-
-      if (password.length() < 3) {
-        errors.put("password", ERR_PASSWORD_TOO_SHORT);
-        sendError(session, errors, request, response);
-        return;
-      }
-
-      // create user ...
-      user = um.create(login, password, email);
-      app.setUser(user, session);
-      HomePage.create(login);
-
-      // store user name and app in cookie and session
-      Cookie cookie = new Cookie("userName", user.getLogin());
-      cookie.setMaxAge(43200000);
-      cookie.setPath(request.getContextPath());
-      response.addCookie(cookie);
-      session.setAttribute("app", app);
-      response.sendRedirect(SnipLink.absoluteLink(request, "/space/" + SnipLink.encode(login)));
-      return;
-    }
-
-    String referer = request.getParameter("referer");
-    response.sendRedirect(referer != null ? referer : SnipLink.absoluteLink(request, "/space/start"));
-  } else {
+      String referer = request.getParameter("referer");
+      response.sendRedirect(referer != null ? referer : SnipLink.absoluteLink("/space/start"));
+    } else {
       errors.put("Fatal", ERR_NOT_ALLOWED);
       sendError(session, errors, request, response);
     }
   }
 
   private void sendError(HttpSession session, Map errors, HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
+    throws ServletException, IOException {
     session.setAttribute("errors", errors);
     RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/register.jsp");
     dispatcher.forward(request, response);

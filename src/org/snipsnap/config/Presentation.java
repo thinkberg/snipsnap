@@ -48,9 +48,9 @@ public class Presentation {
     String name = args[1];
 
     Logger.debug("Loading server config.");
-    Configuration serverConfig = null;
+    ServerConfiguration serverConfig = null;
     try {
-      serverConfig = new Configuration("./conf/server.conf");
+      serverConfig = new ServerConfiguration("./conf/server.conf");
     } catch (IOException e) {
       Logger.warn("Unable to load server config: " + e);
       System.exit(-1);
@@ -59,10 +59,10 @@ public class Presentation {
     Application app = Application.get();
 
     Logger.debug("Loading application config.");
-    AppConfiguration config = null;
+    Configuration config = null;
     try {
-      config = new AppConfiguration(
-          new File(serverConfig.getProperty(Configuration.WEBAPP_ROOT) + args[0] + "/application.conf"));
+      config = ConfigurationProxy.newInstance(
+        new File(serverConfig.getProperty(ServerConfiguration.WEBAPP_ROOT) + args[0] + "/application.conf"));
     } catch (IOException e) {
       Logger.warn("Unable to load application config: " + e);
       System.exit(-1);
@@ -83,7 +83,7 @@ public class Presentation {
     //fp.addFilter(new BoldFilter());
     //fp.addFilter(new ItalicFilter());
     //fp.addFilter(new UrlFilter());
-    //fp.addFilter(new LinkTestFilter(SnipSpace.getInstance()));
+    //fp.addFilter(new LinkTestFilter(SnipSpace.newInstance()));
     //fp.addFilter(new MarkFilter());
     //fp.addFilter(new KeyFilter());
 

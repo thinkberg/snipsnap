@@ -25,23 +25,19 @@
 
 package org.snipsnap.xmlrpc;
 
-import org.snipsnap.app.Application;
-import org.snipsnap.config.AppConfiguration;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.xmlrpc.ping.ExtendedPingHandler;
-import org.snipsnap.xmlrpc.ping.PingHandler;
-import org.snipsnap.xmlrpc.ping.RssPingHandler;
-import org.snipsnap.xmlrpc.ping.SimplePingHandler;
 import org.radeox.util.logging.Logger;
-import org.radeox.util.Encoder;
+import org.snipsnap.app.Application;
+import org.snipsnap.config.Configuration;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.xmlrpc.ping.PingHandler;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.io.InputStreamReader;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.FileInputStream;
 
 /**
  * Pings weblogs.com
@@ -51,11 +47,11 @@ import java.io.FileInputStream;
  */
 
 public class WeblogsPing extends Thread {
-  private AppConfiguration config;
+  private Configuration config;
   private Snip weblog;
   private static List handlers;
 
-  public WeblogsPing(AppConfiguration configuration, Snip weblog) {
+  public WeblogsPing(Configuration configuration, Snip weblog) {
     this.config = configuration;
     this.weblog = weblog;
   }
@@ -111,7 +107,7 @@ public class WeblogsPing extends Thread {
 
   public void run() {
     Logger.debug("Config="+config);
-    if (config.allow(AppConfiguration.PERM_WEBLOGS_PING)) {
+    if (config.allow(Configuration.APP_PERM_WEBLOGSPING)) {
       if (null == handlers) {
         init();
       }

@@ -26,7 +26,7 @@ package org.snipsnap.util;
 
 import com.bitmechanic.sql.ConnectionPoolManager;
 import org.snipsnap.app.Application;
-import org.snipsnap.config.AppConfiguration;
+import org.snipsnap.config.Configuration;
 import org.radeox.util.logging.Logger;
 
 import java.sql.Connection;
@@ -65,10 +65,10 @@ public class ConnectionManager {
 
   private Set names = new HashSet();
 
-  private void update(AppConfiguration config) {
+  private void update(Configuration config) {
     if (!names.contains(config.getName())) {
       try {
-        Class.forName(config.getJDBCDriver());
+        Class.forName(config.getJdbcDriver());
       } catch (Exception e) {
         System.out.println(
           "Unable to register the JDBC Driver.\n" +
@@ -81,13 +81,14 @@ public class ConnectionManager {
       // This URL specifies we are connecting with a local database.  The
       // configuration file for the database is found at './ExampleDB.conf'
       //String url = "jdbc:mckoi:local://./conf/db.conf";
-      String url = config.getJDBCURL();
+      String url = config.getJdbcUrl();
       String name = config.getName();
 
       try {
-        mgr.addAlias(name, config.getJDBCDriver(),
+        mgr.addAlias(name, config.getJdbcDriver(),
                      url,
-                     config.getAdminLogin(), config.getAdminPassword(),
+                     config.getAdminLogin(),
+                     config.getAdminPassword(),
                      10, // max connections to open
                      300, // seconds a connection can be idle before it is closed
                      120, // seconds a connection can be checked out by a thread
@@ -96,7 +97,7 @@ public class ConnectionManager {
                      // connection to database is closed and re-opened
                      // (optional parameter)
                      false); // specifies whether to cache statements
-        names.add(config.getName());
+        names.add(name);
       } catch (Exception e) {
         Logger.warn("Unable to add connection alias", e);
       }
@@ -105,13 +106,14 @@ public class ConnectionManager {
 
   private Connection connection() {
     Application app = Application.get();
-    AppConfiguration config = app.getConfiguration();
+    Configuration config = app.getConfiguration();
+    String appName = config.getName();
     // make sure a pool exists for this config
     update(config);
     try {
-      return DriverManager.getConnection(ConnectionPoolManager.URL_PREFIX + config.getName());
+      return DriverManager.getConnection(ConnectionPoolManager.URL_PREFIX + appName);
     } catch (SQLException e) {
-      Logger.warn("Unable to get connection", e);
+      Logger.warn("Unable to get connection for application '"+appName+"':", e);
       return null;
     }
   }

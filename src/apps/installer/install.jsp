@@ -1,4 +1,4 @@
-<%@ page import="org.snipsnap.config.AppConfiguration"%>
+<%@ page import="org.snipsnap.config.Configuration"%>
  <%--
   ** Initial installation ...
   ** @author Matthias L. Jugel
@@ -91,8 +91,8 @@
       <td valign="top">Weblogs.com Ping</td>
       <td valign="top">
        <input name="weblogsPing" type="checkbox"
-         <% AppConfiguration cfg = (AppConfiguration)pageContext.findAttribute("config");
-           if(cfg == null || cfg.allow(AppConfiguration.PERM_WEBLOGS_PING)) { %>checked="checked"<% } %> />
+         <% Configuration cfg = (Configuration)pageContext.findAttribute("config");
+           if(cfg == null || cfg.allow(Configuration.APP_PERM_WEBLOGSPING)) { %>checked="checked"<% } %> />
       </td>
       <td valign="top">Your SnipSnap installation will send a ping to weblogs.com whenever
         you post a new message to your weblog. If you are behind a firewall or don't want

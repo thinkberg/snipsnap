@@ -25,9 +25,9 @@
 package org.snipsnap.admin.install;
 
 import org.snipsnap.admin.util.CommandHandler;
-import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.config.Configuration;
-import org.snipsnap.snip.SnipLink;
+import org.snipsnap.config.ConfigurationProxy;
+import org.snipsnap.config.ServerConfiguration;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -39,7 +39,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * Loads the list of installed applications.
@@ -50,15 +49,15 @@ public class Applications extends HttpServlet {
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     HttpSession session = request.getSession(false);
     if (session != null) {
-      Configuration config = (Configuration) session.getAttribute(CommandHandler.ATT_CONFIG);
-      String root = config.getProperty(Configuration.WEBAPP_ROOT);
+      ServerConfiguration config = (ServerConfiguration) session.getAttribute(CommandHandler.ATT_CONFIG);
+      String root = config.getProperty(ServerConfiguration.WEBAPP_ROOT);
       Map applications = new HashMap();
       File dir = new File(root);
       if (dir.isDirectory()) {
         File[] apps = dir.listFiles();
         for (int i = 0; i < apps.length; i++) {
           try {
-            AppConfiguration appConfig = loadApp(apps[i]);
+            Configuration appConfig = loadApp(apps[i]);
             String name = appConfig.getName();
             applications.put(name != null ? name : apps[i].getName(), appConfig);
           } catch (IOException e) {
@@ -76,14 +75,14 @@ public class Applications extends HttpServlet {
         dispatcher.forward(request, response);
       }
     } else {
-      response.sendRedirect(SnipLink.absoluteLink(request, "/"));
+      response.sendRedirect(request.getContextPath() + "/");
     }
   }
 
-  private AppConfiguration loadApp(File dir) throws IOException {
+  private Configuration loadApp(File dir) throws IOException {
     File configFile = new File(dir, "WEB-INF/application.conf");
     if (configFile.exists() && !configFile.isDirectory()) {
-      return new AppConfiguration(configFile);
+      return ConfigurationProxy.newInstance(configFile);
     } else {
       throw new IOException(configFile.getAbsolutePath() + " is not a configuration file");
     }

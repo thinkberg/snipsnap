@@ -82,6 +82,6 @@ public class CommentStoreServlet extends HttpServlet {
       return;
     }
 
-    response.sendRedirect(SnipLink.absoluteLink(request, "/comments/" + SnipLink.encode(name)));
+    response.sendRedirect(SnipLink.absoluteLink("/comments/" + SnipLink.encode(name)));
   }
 }

@@ -25,12 +25,13 @@
 package org.snipsnap.util;
 
 import org.snipsnap.app.Application;
-import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.config.Configuration;
+import org.snipsnap.config.ConfigurationProxy;
+import org.snipsnap.config.ServerConfiguration;
+import org.snipsnap.server.Shutdown;
 import org.snipsnap.snip.XMLSnipImport;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
-import org.snipsnap.server.Shutdown;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -50,19 +51,19 @@ public class DBImport {
       System.exit(-1);
     }
 
-    Configuration serverConfig = null;
+    ServerConfiguration serverConfig = null;
     try {
-      serverConfig = new Configuration("./conf/server.conf");
+      serverConfig = new ServerConfiguration("./conf/server.conf");
     } catch (IOException e) {
       System.out.println("Unable to load server config: " + e);
       System.exit(-1);
     }
 
     Application app = Application.get();
-    AppConfiguration config = null;
+    Configuration config = null;
     try {
-      config = new AppConfiguration(
-        new File(serverConfig.getProperty(Configuration.WEBAPP_ROOT) + "/" + args[0] + "/WEB-INF/application.conf"));
+      config = ConfigurationProxy.newInstance(
+        new File(serverConfig.getProperty(ServerConfiguration.WEBAPP_ROOT) + "/" + args[0] + "/WEB-INF/application.conf"));
     } catch (IOException e) {
       System.out.println("Unable to load application config: " + e);
       System.exit(-1);
@@ -82,8 +83,8 @@ public class DBImport {
     importMask += (args.length == 4 && "overwrite".equals(args[3]) ? XMLSnipImport.OVERWRITE : 0);
 
     System.err.println("Disabling weblogs ping and jabber notification ...");
-    config.setProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_WEBLOGS_PING, "deny");
-    config.setProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_NOTIFICATION, "deny");
+    config.set(Configuration.APP_PERM_WEBLOGSPING, "deny");
+    config.set(Configuration.APP_PERM_NOTIFICATION, "deny");
 
     try {
       XMLSnipImport.load(new FileInputStream(args[2]), importMask);

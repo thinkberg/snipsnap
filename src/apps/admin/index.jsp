@@ -5,4 +5,4 @@
   ** @version $Id$
   -->
 
-<% response.sendRedirect(SnipLink.absoluteLink(request, "/exec/")); return; %>
+<% response.sendRedirect(request.getContextPath() + "/exec/"); return; %>

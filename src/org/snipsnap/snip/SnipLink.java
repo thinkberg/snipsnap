@@ -25,20 +25,16 @@
 
 package org.snipsnap.snip;
 
-import org.snipsnap.app.Application;
-import org.snipsnap.config.AppConfiguration;
-import org.snipsnap.util.URLEncoderDecoder;
 import org.radeox.util.logging.Logger;
-import org.radeox.util.StringBufferWriter;
+import org.snipsnap.app.Application;
+import org.snipsnap.config.Configuration;
+import org.snipsnap.util.URLEncoderDecoder;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.Arrays;
 import java.util.List;
-import java.util.StringTokenizer;
-import java.net.URL;
 
 /**
  *  Generates links for snips
@@ -171,24 +167,26 @@ public class SnipLink {
     return buffer;
   }
 
-  public static String absoluteLink(HttpServletRequest request, String path) {
-    return request.getContextPath() + path;
+  public static String absoluteLink(String path) {
+    String contextPath = Application.get().getConfiguration().getPath();
+    System.out.println("--> " + contextPath);
+    return (contextPath != null ? contextPath : "")  + path;
   }
 
   private static String getImageRoot() {
-    return Application.get().getConfiguration().getUrl("/images");
+    return absoluteLink("/images");
   }
 
   private static String getSpaceRoot() {
-    return Application.get().getConfiguration().getUrl("/space");
+    return absoluteLink("/space");
   }
 
   private static String getExecRoot() {
-    return Application.get().getConfiguration().getUrl("/exec");
+    return absoluteLink("/exec");
   }
 
   private static String getCommentsRoot() {
-    return Application.get().getConfiguration().getUrl("/comments");
+    return absoluteLink("/comments");
   }
 
   private static List extensions = Arrays.asList(new String[]{"png", "jpg", "jpeg", "gif"});
@@ -258,7 +256,7 @@ public class SnipLink {
   // TODO 1.4 buffer.append(URLEncoder.encode(key, "iso-8859-1"));
   public static String encode(String s) {
     try {
-      AppConfiguration config = Application.get().getConfiguration();
+      Configuration config = Application.get().getConfiguration();
       return URLEncoderDecoder.encode(s, config.getEncoding());
     } catch (UnsupportedEncodingException e) {
       Logger.log(Logger.FATAL, "unsupported encoding: " + e);
@@ -268,7 +266,7 @@ public class SnipLink {
 
   public static String decode(String s) {
     try {
-      AppConfiguration config = Application.get().getConfiguration();
+      Configuration config = Application.get().getConfiguration();
       return URLEncoderDecoder.decode(s, config.getEncoding());
     } catch (UnsupportedEncodingException e) {
       Logger.log(Logger.FATAL, "unsupported encoding: " + e);

@@ -29,7 +29,7 @@
       <c:forEach items="${snip.attachments.all}" var="attachment">
        <tr>
         <s:check roles="Admin"><td><input type="checkbox" name="${attachment.name}"/></td></s:check>
-        <td><a href="<c:url value='/space/${snip.nameEncoded}/${attachment.name}'/>"><c:out value="${attachment.name}"/></a></td>
+        <td><a href="<c:url value='../space/${snip.nameEncoded}/${attachment.name}'/>"><c:out value="${attachment.name}"/></a></td>
         <td><c:out value="${attachment.size}"/></td>
         <td><c:out value="${attachment.date}"/></td>
         <td><c:out value="${attachment.contentType}"/></td>
@@ -37,13 +37,12 @@
       </c:forEach>
       <tr>
        <td colspan="5" class="form-buttons">
-        <s:check roles="Editor" permission="Edit" snip="${snip}">
+        <s:check roles="Authenticated" permission="Attach" snip="${snip}">
          <input name="file" type="file" maxlength="1000000" accept="*/*"/>
          <input value="Upload Document" name="upload" type="submit"/><br/>
         </s:check>
         <input value="Back/Cancel" name="cancel" type="submit"/>
-        <%--<input value="Scan File Store" name="scan" type="submit"/>
-        <input value="Delete File(s)" name="delete" type="submit"/>--%>
+        <%--<s:check roles="Admin"><input value="Delete File(s)" name="delete" type="submit"/><s:/check>--%>
        </td>
       </tr>
      </table>

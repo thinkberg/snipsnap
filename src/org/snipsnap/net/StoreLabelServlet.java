@@ -60,7 +60,7 @@ public class StoreLabelServlet extends HttpServlet {
 
     // cancel pressed
     if (null != request.getParameter("cancel")) {
-      response.sendRedirect(SnipLink.absoluteLink(request, "/exec/labels?snipname=" + SnipLink.encode(snipName)));
+      response.sendRedirect(SnipLink.absoluteLink("/exec/labels?snipname=" + SnipLink.encode(snipName)));
       return;
     }
 
@@ -78,6 +78,6 @@ public class StoreLabelServlet extends HttpServlet {
       Snip snip = SnipSpaceFactory.getInstance().load(snipName);
       snip.getLabels().addLabel(label);
     }
-    response.sendRedirect(SnipLink.absoluteLink(request, "/exec/labels?snipname=" + SnipLink.encode(snipName)));
+    response.sendRedirect(SnipLink.absoluteLink("/exec/labels?snipname=" + SnipLink.encode(snipName)));
   }
 }

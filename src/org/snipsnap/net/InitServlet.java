@@ -26,8 +26,9 @@ package org.snipsnap.net;
 
 import org.radeox.util.logging.LogHandler;
 import org.radeox.util.logging.Logger;
-import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.config.Configuration;
+import org.snipsnap.config.ServerConfiguration;
+import org.snipsnap.config.ConfigurationProxy;
 
 import javax.servlet.GenericServlet;
 import javax.servlet.ServletConfig;
@@ -50,31 +51,31 @@ public class InitServlet extends GenericServlet {
     ServletContext context = servletConfig.getServletContext();
 
     // check servlet context and then local servlet parameter or assume WEB-INF
-    String config = (String) context.getAttribute(Configuration.INIT_PARAM);
-    if (null == config) {
-      config = context.getRealPath(context.getInitParameter(Configuration.INIT_PARAM));
+    String configParam = (String) context.getAttribute(ServerConfiguration.INIT_PARAM);
+    if (null == configParam) {
+      configParam = context.getRealPath(context.getInitParameter(ServerConfiguration.INIT_PARAM));
     }
-    if (null == config) {
-      config = context.getRealPath("/WEB-INF/application.conf");
+    if (null == configParam) {
+      configParam = context.getRealPath("/WEB-INF/application.conf");
     }
-    File configFile = new File(config);
+    File configFile = new File(configParam);
 
     // create new configuration instance
     try {
-      AppConfiguration appConfiguration = AppConfiguration.getInstance();
+      Configuration config = ConfigurationProxy.newInstance();
       if (configFile.exists()) {
-        appConfiguration.load(configFile);
+        config.load(configFile);
       } else {
-        appConfiguration.setFile(configFile);
+        config.setFile(configFile);
       }
       try {
-        Logger.setHandler((LogHandler) Class.forName(appConfiguration.getLogger()).newInstance());
+        Logger.setHandler((LogHandler) Class.forName(config.getLogger()).newInstance());
       } catch (Exception e) {
-        System.err.println("InitServlet: LogHandler not found: " + appConfiguration.getLogger());
+        System.err.println("InitServlet: LogHandler not found: " + config.getLogger());
       }
 
-      if (appConfiguration.allow(AppConfiguration.PERM_WEBLOGS_PING)) {
-        System.out.println("WARNING: " + appConfiguration.getName() + ": Weblogs ping is enabled.\n" +
+      if (config.allow(Configuration.APP_PERM_WEBLOGSPING)) {
+        System.out.println("WARNING: " + config.getName() + ": Weblogs ping is enabled.\n" +
                            "This means that SnipSnap sends notifications to hosts on the internet\n" +
                            "when your weblog changes. To turn this off take a look at the FAQ at\n" +
                            ">> http://snipsnap.org/space/faq <<\n");

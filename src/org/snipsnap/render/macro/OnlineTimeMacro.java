@@ -27,10 +27,10 @@ package org.snipsnap.render.macro;
 
 import org.radeox.macro.Macro;
 import org.radeox.macro.parameter.MacroParameter;
+import org.snipsnap.app.Application;
 import org.snipsnap.snip.Modified;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.app.Application;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -62,7 +62,7 @@ public class OnlineTimeMacro extends Macro {
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
 
-    Snip snip = SnipSpaceFactory.getInstance().load(Application.get().getConfiguration().getStartName());
+    Snip snip = SnipSpaceFactory.getInstance().load(Application.get().getConfiguration().getStartSnip());
     writer.write(Modified.getNiceTime(snip.getModified().getcTime()));
     return;
   }

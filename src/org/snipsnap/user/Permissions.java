@@ -42,6 +42,8 @@ import java.util.StringTokenizer;
 
 public class Permissions {
   public final static String EDIT = "Edit";
+  public final static String ATTACH = "Attach";
+  public final static String POST = "Post";
 
   private Map permissions;
 

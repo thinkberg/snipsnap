@@ -12,7 +12,7 @@
   --%>
   <channel>
     <title><c:out value="${config.name}"/></title>
-    <description><c:out value="${config.tagLine}"/></description>
+    <description><c:out value="${config.tagline}"/></description>
     <%-- usually points to "start" --%>
     <link><c:out value="${url}/${snip.nameEncoded}"/></link>
     <c:forEach items="${snip.childrenDateOrder}" var="child">

@@ -26,7 +26,7 @@ package org.snipsnap.admin.util;
 
 import org.mortbay.jetty.Server;
 import org.snipsnap.admin.install.Authenticate;
-import org.snipsnap.config.Configuration;
+import org.snipsnap.config.ServerConfiguration;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.User;
 import org.snipsnap.server.AppServer;
@@ -87,10 +87,10 @@ public class CommandHandler extends HttpServlet {
     HttpSession session = request.getSession(true);
 
     // check configuration ...
-    Configuration config = (Configuration) session.getAttribute(ATT_CONFIG);
+    ServerConfiguration config = (ServerConfiguration) session.getAttribute(ATT_CONFIG);
     if (null == config) {
       try {
-        config = new Configuration();
+        config = new ServerConfiguration();
         Properties defaults = new Properties();
         defaults.load(CommandHandler.class.getResourceAsStream("/conf/snipsnap.conf"));
         config.load(defaults);
@@ -138,7 +138,7 @@ public class CommandHandler extends HttpServlet {
       Map errors = new HashMap();
       errors.put(command, "Function not implemented!");
       session.setAttribute("errors", errors);
-      response.sendRedirect(SnipLink.absoluteLink(request, "/exec"));
+      response.sendRedirect(SnipLink.absoluteLink("/exec"));
     }
   }
 

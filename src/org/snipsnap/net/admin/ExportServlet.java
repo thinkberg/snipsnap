@@ -25,7 +25,7 @@
 package org.snipsnap.net.admin;
 
 import org.snipsnap.app.Application;
-import org.snipsnap.config.AppConfiguration;
+import org.snipsnap.config.Configuration;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.XMLSnipExport;
 import org.snipsnap.user.User;
@@ -57,7 +57,7 @@ public class ExportServlet extends HttpServlet {
     HttpSession session = request.getSession(false);
     User admin = session != null ? (User) session.getAttribute(AdminServlet.ATT_ADMIN) : null;
     if (null == admin) {
-      response.sendRedirect("/manager");
+      response.sendRedirect(SnipLink.absoluteLink("/manager/"));
       return;
     }
 
@@ -69,15 +69,16 @@ public class ExportServlet extends HttpServlet {
 
     OutputStream out = null;
     if ("application".equals(output)) {
-      AppConfiguration config = Application.get().getConfiguration();
-      File outFile = new File(config.getFile().getParentFile(), config.getName() + ".snip");
+      Configuration config = Application.get().getConfiguration();
+      File outFile = new File(config.getFile().getParentFile(),
+                              config.getName() + ".snip");
       out = new FileOutputStream(outFile);
     } else if ("web".equals(output)) {
       response.setContentType("text/xml");
       out = response.getOutputStream();
     } else {
       errors.put("message", ERR_WRONG_OUTPUT);
-      response.sendRedirect(SnipLink.absoluteLink(request, "/manager/export.jsp"));
+      response.sendRedirect(SnipLink.absoluteLink("/manager/export.jsp"));
       return;
     }
 
@@ -96,7 +97,7 @@ public class ExportServlet extends HttpServlet {
     if ("application".equals(output)) {
       out.close();
       errors.put("message", OK_EXPORTED);
-      response.sendRedirect(SnipLink.absoluteLink(request, "/manager/export.jsp"));
+      response.sendRedirect(SnipLink.absoluteLink("/manager/export.jsp"));
     }
   }
 }

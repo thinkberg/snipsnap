@@ -28,7 +28,7 @@ import org.mortbay.http.HttpListener;
 import org.mortbay.jetty.Server;
 import org.mortbay.util.InetAddrPort;
 import org.mortbay.util.MultiException;
-import org.snipsnap.config.Configuration;
+import org.snipsnap.config.ServerConfiguration;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -65,10 +65,10 @@ public class AppServer {
     } catch (IOException e) {
       // ignore
     }
-    System.setProperty(Configuration.VERSION, serverInfo.getProperty(Configuration.VERSION));
+    System.setProperty(ServerConfiguration.VERSION, serverInfo.getProperty(ServerConfiguration.VERSION));
 
     // output version and copyright information
-    System.out.println("SnipSnap " + serverInfo.getProperty(Configuration.VERSION));
+    System.out.println("SnipSnap " + serverInfo.getProperty(ServerConfiguration.VERSION));
     BufferedReader copyrightReader = new BufferedReader(new InputStreamReader(AppServer.class.getResourceAsStream("/conf/copyright.txt")));
     String line = null;
     try {
@@ -88,7 +88,7 @@ public class AppServer {
     serverInfo = parseArguments(args, serverInfo);
 
     // set encoding of the JVM
-    String enc = serverInfo.getProperty(Configuration.ENCODING, "UTF-8");
+    String enc = serverInfo.getProperty(ServerConfiguration.ENCODING, "UTF-8");
     System.setProperty("file.encoding", enc);
 
     // start jetty server and install web application
@@ -109,7 +109,7 @@ public class AppServer {
     }
 
     // now, after loading all possible services we will look for applications and start them
-    int errors = ApplicationLoader.loadApplications(serverInfo.getProperty(Configuration.WEBAPP_ROOT));
+    int errors = ApplicationLoader.loadApplications(serverInfo.getProperty(ServerConfiguration.WEBAPP_ROOT));
     if (errors == 0 && ApplicationLoader.getApplicationCount() == 0) {
       System.out.println("ATTENTION: Server is still unconfigured!");
       System.out.println("ATTENTION: Point your browser to the following address:");
@@ -146,7 +146,7 @@ public class AppServer {
       // the applications root directory
       if ("-root".equals(args[i])) {
         if (args.length >= i + 1 && !args[i + 1].startsWith("-")) {
-          serverInfo.setProperty(Configuration.WEBAPP_ROOT, args[i++]);
+          serverInfo.setProperty(ServerConfiguration.WEBAPP_ROOT, args[i++]);
         } else {
           usage("an argument is required for -root");
         }
@@ -157,7 +157,7 @@ public class AppServer {
           if (args.length > i + 2) {
             argument = args[i + 2];
           }
-          if (!AdminServer.execute(Integer.parseInt(serverInfo.getProperty(Configuration.ADMIN_PORT)), command, argument)) {
+          if (!AdminServer.execute(Integer.parseInt(serverInfo.getProperty(ServerConfiguration.ADMIN_PORT)), command, argument)) {
             System.out.println("Cannot execute administrative command: '" + command + "'");
             System.exit(-1);
           }

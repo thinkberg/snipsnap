@@ -25,12 +25,12 @@
 
 package org.snipsnap.snip.storage;
 
+import org.radeox.util.logging.Logger;
+import org.snipsnap.app.Application;
 import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.storage.query.QueryKit;
 import org.snipsnap.snip.storage.query.SnipComparator;
 import org.snipsnap.snip.storage.query.SnipQuery;
-import org.snipsnap.snip.storage.query.QueryKit;
-import org.snipsnap.app.Application;
-import org.radeox.util.logging.Logger;
 
 import java.sql.Timestamp;
 import java.util.Collections;
@@ -160,7 +160,7 @@ public class QuerySnipStorage implements SnipStorage {
   public List storageByParentNameOrder(final Snip parent, int count) {
  //   Logger.debug("Children date order. parent="+parent.getName()+" "+parent);
     Logger.debug("all = "+storage.storageAll());
-    Logger.debug("childs for="+parent);
+    Logger.debug("children of="+parent);
     List list = QueryKit.querySorted(storage.storageAll(), new SnipQuery() {
       public boolean fit(Snip snip) {
 //        Logger.debug("snip.parent = "+snip.getParent());
@@ -184,7 +184,7 @@ public class QuerySnipStorage implements SnipStorage {
   }
 
   public List storageByDateInName(final String start, final String end) {
-    final String startName = Application.get().getConfiguration().getStartName();
+    final String startName = Application.get().getConfiguration().getStartSnip();
     return QueryKit.querySorted(storage.storageAll(), new SnipQuery() {
       public boolean fit(Snip snip) {
         String name = snip.getName();

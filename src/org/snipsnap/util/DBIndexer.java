@@ -25,8 +25,9 @@
 package org.snipsnap.util;
 
 import org.snipsnap.app.Application;
-import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.config.Configuration;
+import org.snipsnap.config.ServerConfiguration;
+import org.snipsnap.config.ConfigurationProxy;
 import org.snipsnap.snip.SnipSpaceFactory;
 
 import java.io.File;
@@ -40,19 +41,19 @@ public class DBIndexer {
       System.exit(-1);
     }
 
-    Configuration serverConfig = null;
+    ServerConfiguration serverConfig = null;
     try {
-      serverConfig = new Configuration("./conf/server.conf");
+      serverConfig = new ServerConfiguration("./conf/server.conf");
     } catch (IOException e) {
       System.out.println("Unable to load server config: " + e);
       System.exit(-1);
     }
 
     Application app = Application.get();
-    AppConfiguration config = null;
+    Configuration config = null;
     try {
-      config = new AppConfiguration(
-        new File(serverConfig.getProperty(Configuration.WEBAPP_ROOT) + args[0] + "/WEB-INF/application.conf"));
+      config = ConfigurationProxy.newInstance(
+        new File(serverConfig.getProperty(ServerConfiguration.WEBAPP_ROOT) + args[0] + "/WEB-INF/application.conf"));
     } catch (IOException e) {
       System.out.println("Unable to load application config: " + e);
       System.exit(-1);

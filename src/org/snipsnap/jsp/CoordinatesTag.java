@@ -24,16 +24,14 @@
  */
 package org.snipsnap.jsp;
 
+import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.snip.Snip;
-import org.radeox.util.logging.Logger;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
 
 public class CoordinatesTag extends TagSupport {
   Snip snip = null;
@@ -42,7 +40,7 @@ public class CoordinatesTag extends TagSupport {
     try {
       JspWriter out = pageContext.getOut();
       Application app = Application.get();
-      String coordinates = app.getConfiguration().getCoordinates();
+      String coordinates = app.getConfiguration().getGeoCoordinates();
       //Logger.debug("Coordinates="+coordinates);
       if (null != coordinates) {
         out.print("<meta name=\"ICBM\" content=\"");

@@ -58,7 +58,7 @@ public class SnipSearchServlet extends HttpServlet {
       dispatcher.forward(request, response);
       return;
     }
-    response.sendRedirect(SnipLink.absoluteLink(request, "/"));
+    response.sendRedirect(SnipLink.absoluteLink("/"));
   }
 
 }

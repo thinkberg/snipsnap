@@ -24,11 +24,8 @@
  */
 package org.snipsnap.server;
 
-import org.mortbay.http.HttpServer;
 import org.mortbay.util.Code;
 import org.mortbay.util.Log;
-
-import java.util.Iterator;
 
 /**
  * Helper class for shutting down the Server
@@ -40,19 +37,16 @@ public class Shutdown {
    * Shut down complete server ...
    */
   public static void shutdown() {
-    Log.event("Application: stopping all servers");
-    System.out.println("INFO: Stopping all servers ...");
-    Iterator s = HttpServer.getHttpServers().iterator();
-    while (s.hasNext()) {
-      HttpServer server = (HttpServer) s.next();
+    if (AppServer.jettyServer.isStarted()) {
+      Log.event("Application: stopping server");
+      System.out.println("INFO: Stopping server ...");
       try {
-        System.out.println("INFO: stopping " + server);
-        server.stop();
+        AppServer.jettyServer.stop();
       } catch (Exception e) {
         Code.ignore(e);
       }
+      System.out.println("SnipSnap shutdown procedure finished.");
+      Log.event("Application: stopped server");
     }
-    System.out.println("SnipSnap shutdown procedure finished.");
-    Log.event("Application: stopped all servers");
   }
 }

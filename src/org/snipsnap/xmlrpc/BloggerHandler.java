@@ -28,10 +28,9 @@ package org.snipsnap.xmlrpc;
 import org.apache.xmlrpc.XmlRpcException;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.snip.Blog;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.User;
 
 import java.util.Hashtable;

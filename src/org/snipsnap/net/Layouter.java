@@ -25,20 +25,15 @@
 package org.snipsnap.net;
 
 import org.snipsnap.app.Application;
-import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.snip.SnipLink;
-import org.radeox.util.logging.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServlet;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * Layouter and main handler for web sites.
@@ -54,7 +49,7 @@ public class Layouter extends HttpServlet {
   }
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws IOException, ServletException {
+    throws IOException, ServletException {
 
     // page attribute overrides pathinfo
     String layout = (String) request.getAttribute(ATT_PAGE);
@@ -63,7 +58,7 @@ public class Layouter extends HttpServlet {
     }
 
     if (null == layout || "/".equals(layout)) {
-      response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));
+      response.sendRedirect(SnipLink.absoluteLink("/space/start"));
       return;
     }
 
@@ -79,7 +74,7 @@ public class Layouter extends HttpServlet {
       dispatcher.forward(request, response);
       Application.set(null);
     } else {
-      response.sendRedirect(SnipLink.absoluteLink(request, "/"));
+      response.sendRedirect(SnipLink.absoluteLink("/"));
     }
   }
 

@@ -54,9 +54,9 @@ import java.util.TimerTask;
  * SnipSpace implementation handles all the operations with snips like
  * loading, storing, searching etc.
  *
- * @TODO move indexing to Interceptor
- * @TODO move ETag / changed handling to Interceptor
- * @TODO move changed to Interceptor
+ * TODO move indexing to Interceptor
+ * TODO move ETag / changed handling to Interceptor
+ * TODO move changed to Interceptor
  *
  * @author Stephan J. Schmidt
  * @version $Id$
@@ -84,13 +84,14 @@ public class SnipSpaceImpl implements SnipSpace {
 
     // Fully fill the cache with all Snips
     if ("full".equals(Application.get().getConfiguration().getCache())) {
+      Logger.debug("Cache strategy is: keep full, using MemorySnipStorage and QuerySnipStorage");
       // If we keep all snips in memory we can use queries directly on the snip list
       // Wrap the real storage with the memory storage wrapper and an in-memory
       // query class
       storage = new QuerySnipStorage(new MemorySnipStorage(storage));
-      Logger.debug("Cache strategy is: keep full, using MemorySnipStorage and QuerySnipStorage");
     } else if ("cache".equals(Application.get().getConfiguration().getCache())
         && storage instanceof CacheableStorage) {
+      Logger.debug("Cache strategy is: cache, using CacheSnipStorage");
       // Otherwise at least wrap the persistence store
       // with a cache that does not need to load and create objects
       CacheableStorage old = (CacheableStorage) storage;
@@ -98,8 +99,6 @@ public class SnipSpaceImpl implements SnipSpace {
       // We have to tell CacheStorage (JDBCSnipStorage) where to get
       // it's cache from for checking
       old.setCache(((CacheStorage) storage).getCache());
-
-      Logger.debug("Cache strategy is: cache, using CacheSnipStorage");
     }
 
     indexer = new SnipIndexer();
@@ -135,7 +134,7 @@ public class SnipSpaceImpl implements SnipSpace {
   }
 
   public Blog getBlog() {
-    return getBlog(Application.get().getConfiguration().getStartName());
+    return getBlog(Application.get().getConfiguration().getStartSnip());
   }
 
   // Perhaps add getBlog(Wnip)

@@ -56,12 +56,12 @@ public class RemoveLabelServlet extends HttpServlet {
 
         String snipName = request.getParameter("snipname");
         if (null == snipName) {
-            response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));
+            response.sendRedirect(SnipLink.absoluteLink("/space/start"));
             return;
         }
         // cancel pressed
         if (null != request.getParameter("cancel")) {
-            response.sendRedirect(SnipLink.absoluteLink(request, "/exec/labels?snipname=" + SnipLink.encode(snipName)));
+            response.sendRedirect(SnipLink.absoluteLink("/exec/labels?snipname=" + SnipLink.encode(snipName)));
             return;
         }
 

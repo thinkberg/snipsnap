@@ -75,7 +75,7 @@ public class AdminServlet extends HttpServlet {
       dispatcher.forward(request, response);
       return;
     }
-    response.sendRedirect(SnipLink.absoluteLink(request, "/"));
+    response.sendRedirect(SnipLink.absoluteLink("/"));
   }
 
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -25,7 +25,7 @@
 package org.snipsnap.net.filter;
 
 import org.snipsnap.app.Application;
-import org.snipsnap.config.AppConfiguration;
+import org.snipsnap.config.Configuration;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
@@ -54,14 +54,14 @@ import java.util.Map;
  */
 public class InitFilter implements Filter {
 
-  private FilterConfig config = null;
+  //private FilterConfig config = null;
 
   public void init(FilterConfig config) throws ServletException {
-    this.config = config;
+    //this.config = config;
   }
 
   public void destroy() {
-    config = null;
+    //config = null;
   }
 
   public void doFilter(ServletRequest req, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -72,24 +72,30 @@ public class InitFilter implements Filter {
     // create/get instance of current application
     HttpSession session = request.getSession(true);
     Application app = Application.getInstance(session);
-    AppConfiguration config = app.getConfiguration();
+    Configuration config = app.getConfiguration();
 
-    //System.out.println("request: " + request);
-
-    // autoconfigure getUrl()
-
-    if ("true".equals(config.getAutoUrl())) {
+    session.setAttribute("app", app);
+    if ("true".equals(config.getRealAutodetect())) {
       String xForwardedHost = request.getHeader("X-Forwarded-Host");
       if (xForwardedHost != null) {
-        String contextPath = request.getContextPath();
-        config.setUrl("http://" + xForwardedHost + (contextPath != null ? contextPath : ""));
+        int colonIndex = xForwardedHost.indexOf(':');
+        String host = xForwardedHost;
+        String port = null;
+        if(colonIndex != -1) {
+          host = host.substring(0, colonIndex);
+          port = xForwardedHost.substring(colonIndex + 1);
+        }
+        config.set(Configuration.APP_REAL_HOST, host);
+        config.set(Configuration.APP_REAL_PORT, port == null ? "80" : port);
       } else {
-        String serverName = request.getServerName();
-        int serverPort = request.getServerPort();
-        config.setUrl("http://" + serverName + (serverPort == 80 ? "" : ":" + serverPort) + request.getContextPath());
+        String host = request.getServerName();
+        String port = ""+request.getServerPort();
+        config.set(Configuration.APP_REAL_HOST, host);
+        config.set(Configuration.APP_REAL_PORT, port);
+        config.set(Configuration.APP_REAL_PATH, request.getContextPath());
       }
+      System.err.println("autoconfigured url: " + config.getUrl());
     }
-    // System.out.println("url: " + config.getUrl());
 
     // make sure the request has a correct character encoding
     // the enc-wrapper ensures some methods return correct strings too
@@ -109,10 +115,23 @@ public class InitFilter implements Filter {
     }
 
     app.setUser(user, session);
-    session.setAttribute("app", app);
-    session.setAttribute("space", SnipSpaceFactory.getInstance());
 
-    // why copy? because, getParamMap returns an unmodifyable map
+    String path = request.getServletPath();
+    // make sure we do not enter the default web application unless it's fully installed
+    if (!config.isInstalled()) {
+      if (path == null || !path.startsWith("/install")) {
+        String name = config.getName();
+        System.out.println((name == null ? "SnipSnap" : name ) + " is not (fully) configured, redirecting to installer");
+        ((HttpServletResponse) response).sendRedirect(request.getContextPath() + "/install/installer");
+        return;
+      }
+    }
+
+    if (config.isInstalled()) {
+      session.setAttribute("space", SnipSpaceFactory.getInstance());
+    }
+
+    // why copy? because, getParameterMap() returns an unmodifyable map
     Map params = request.getParameterMap();
     Iterator iterator = params.keySet().iterator();
     Map paramMap = new HashMap();
@@ -122,22 +141,14 @@ public class InitFilter implements Filter {
       paramMap.put(key, values[0]);
     }
 
-    String path = request.getPathInfo();
     String uri = (String) request.getAttribute("URI");
     if (uri != null) {
       paramMap.put("URI", config.getUrl(uri));
     } else {
-      paramMap.put("URI", config.getUrl(request.getServletPath() + (path != null ? path : "")));
+      paramMap.put("URI", config.getUrl(request.getContextPath() + (path != null ? path : "")));
     }
     paramMap.put("RSS", config.getUrl("/exec/rss"));
     app.setParameters(paramMap);
-
-    // make sure we do not enter the default web application unless it's fully installed
-    if (!config.isInstalled() && !path.startsWith("/install")) {
-      System.out.println("InitFilter: " + config.getName() + " is not configured, redirecting");
-      ((HttpServletResponse) response).sendRedirect(request.getServletPath() + "/install");
-      return;
-    }
 
     // apply the chain
     chain.doFilter(request, response);

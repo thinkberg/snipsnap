@@ -83,6 +83,6 @@ public class SnipStoreServlet extends HttpServlet {
       return;
     }
 
-    response.sendRedirect(SnipLink.absoluteLink(request, "/space/" + SnipLink.encode(name)));
+    response.sendRedirect(SnipLink.absoluteLink("/space/" + SnipLink.encode(name)));
   }
 }

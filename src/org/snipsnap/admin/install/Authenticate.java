@@ -25,7 +25,7 @@
 package org.snipsnap.admin.install;
 
 import org.snipsnap.admin.util.CommandHandler;
-import org.snipsnap.config.Configuration;
+import org.snipsnap.config.ServerConfiguration;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.User;
 
@@ -54,7 +54,7 @@ public class Authenticate extends HttpServlet {
     String password = request.getParameter("password");
 
     HttpSession session = request.getSession(false);
-    Configuration config = (Configuration) session.getAttribute(CommandHandler.ATT_CONFIG);
+    ServerConfiguration config = (ServerConfiguration) session.getAttribute(CommandHandler.ATT_CONFIG);
     User checkUser = (User) session.getAttribute(ATT_CHECK_USER);
 
     // request to create a new user, but make sure there is no password set already
@@ -82,7 +82,7 @@ public class Authenticate extends HttpServlet {
       }
     }
 
-    response.sendRedirect(SnipLink.absoluteLink(request, "/"));
+    response.sendRedirect(request.getContextPath() + "/");
   }
 
   /**
@@ -108,6 +108,6 @@ public class Authenticate extends HttpServlet {
       }
     }
 
-    response.sendRedirect(SnipLink.absoluteLink(request, "/"));
+    response.sendRedirect(request.getContextPath() + "/");
   }
 }

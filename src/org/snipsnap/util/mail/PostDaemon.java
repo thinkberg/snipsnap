@@ -25,17 +25,28 @@
 
 package org.snipsnap.util.mail;
 
-import org.snipsnap.app.Application;
-import org.snipsnap.config.AppConfiguration;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.snip.Blog;
-import org.snipsnap.snip.BlogKit;
-import org.snipsnap.user.UserManager;
 import org.radeox.util.logging.Logger;
+import org.snipsnap.app.Application;
+import org.snipsnap.config.Configuration;
+import org.snipsnap.snip.BlogKit;
+import org.snipsnap.snip.SnipSpaceFactory;
+import org.snipsnap.user.UserManager;
 
-import javax.mail.*;
-import java.io.*;
+import javax.mail.Address;
+import javax.mail.Flags;
+import javax.mail.Folder;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.Part;
+import javax.mail.Session;
+import javax.mail.Store;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -63,10 +74,10 @@ public class PostDaemon {
   }
 
   public PostDaemon() {
-    AppConfiguration conf = Application.get().getConfiguration();
-    host = conf.getPop3Host();
-    username = conf.getPop3User();
-    password = conf.getPop3Password();
+    Configuration conf = Application.get().getConfiguration();
+    host = conf.getMailPop3Host();
+    username = conf.getMailPop3User();
+    password = conf.getMailPop3Password();
     mailPassword = conf.getMailBlogPassword();
     if (null == host || null == username || null == password || null == mailPassword) {
       active = false;
@@ -185,7 +196,7 @@ public class PostDaemon {
   public void storeImage(Part part, String name) {
     try {
       if (part != null  && part.getFileName() != null) {
-        AppConfiguration config = Application.get().getConfiguration();
+        Configuration config = Application.get().getConfiguration();
         File imageDir = new File(config.getFile().getParentFile().getParentFile(), "images");
         File file = new File(imageDir, "image-" + name + "-" + part.getFileName());
         Logger.debug("Uploading '" + part.getFileName() + "' to '" + file.getAbsolutePath() + "'");

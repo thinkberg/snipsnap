@@ -26,7 +26,7 @@
 package org.snipsnap.semanticweb;
 
 import org.snipsnap.app.Application;
-import org.snipsnap.config.AppConfiguration;
+import org.snipsnap.config.Configuration;
 import org.snipsnap.snip.Snip;
 
 import java.text.SimpleDateFormat;
@@ -47,7 +47,7 @@ public class DublinCore {
   // @TODO add support for time zone
   private static SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'-00:00'");
   private static SimpleDateFormat year = new SimpleDateFormat("yyyy");
-  private static AppConfiguration conf = Application.get().getConfiguration();
+  private static Configuration conf = Application.get().getConfiguration();
 
   public static Map generate(Snip snip) {
     Map dublinCore = new HashMap();
@@ -58,7 +58,7 @@ public class DublinCore {
     dublinCore.put("type", "Text");
     dublinCore.put("identifier", Application.get().getConfiguration().getSnipUrl(snip.getNameEncoded()));
     dublinCore.put("copyright", "Copyright " + year.format(snip.getModified().getmTime()));
-    dublinCore.put("language", conf.getLocaleString());
+    dublinCore.put("language", conf.getLocale().getLanguage());
     return dublinCore;
   }
 

@@ -27,7 +27,7 @@ package org.snipsnap.render.filter;
 
 import org.apache.oro.text.regex.MatchResult;
 import org.snipsnap.app.Application;
-import org.snipsnap.config.AppConfiguration;
+import org.snipsnap.config.Configuration;
 import org.snipsnap.snip.Snip;
 import org.radeox.filter.regex.RegexTokenFilter;
 import org.snipsnap.render.filter.context.SnipFilterContext;
@@ -52,7 +52,7 @@ public class CalendarFilter extends RegexTokenFilter {
   public void handleMatch(StringBuffer buffer, MatchResult result, FilterContext context) {
     Snip snip = ((SnipFilterContext) context).getSnip();
     Application app = Application.get();
-    AppConfiguration config = app.getConfiguration();
+    Configuration config = app.getConfiguration();
     Snip parent = snip.getParent();
 
     buffer.append("subscribe to").append(" <a href=\"");

@@ -27,11 +27,11 @@ package org.snipsnap.admin.install;
 import org.mortbay.util.InetAddrPort;
 import org.snipsnap.admin.util.CommandHandler;
 import org.snipsnap.app.Application;
-import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.config.Configuration;
+import org.snipsnap.config.ConfigurationProxy;
 import org.snipsnap.config.CreateDB;
+import org.snipsnap.config.ServerConfiguration;
 import org.snipsnap.server.ApplicationLoader;
-import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.User;
 import org.snipsnap.util.Checksum;
 import org.snipsnap.util.JarUtil;
@@ -42,12 +42,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.*;
-import java.net.UnknownHostException;
-import java.net.InetAddress;
-import java.util.*;
-import java.util.jar.JarFile;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.jar.JarFile;
 
 /**
  * Installer servlet that installs the application.
@@ -62,22 +71,22 @@ public class Installer extends HttpServlet {
     // get or create session and application object
     HttpSession session = request.getSession(false);
     if (null == session) {
-      response.sendRedirect(SnipLink.absoluteLink(request, "/"));
+      response.sendRedirect(request.getContextPath() + "/");
       return;
     }
     Map errors = new HashMap();
     session.removeAttribute("errors");
 
     // get config from session
-    Configuration serverConfig = (Configuration) session.getAttribute(CommandHandler.ATT_CONFIG);
+    ServerConfiguration serverConfig = (ServerConfiguration) session.getAttribute(CommandHandler.ATT_CONFIG);
     User admin = (User) session.getAttribute(CommandHandler.ATT_ADMIN);
     if (null == serverConfig || (serverConfig.getAdminLogin() != null && admin == null)) {
-      response.sendRedirect(SnipLink.absoluteLink(request, "/"));
+      response.sendRedirect(request.getContextPath() + "/");
       return;
     }
 
     // create a new configuration object
-    AppConfiguration config = new AppConfiguration();
+    Configuration config = ConfigurationProxy.newInstance();
     session.setAttribute("config", config);
 
     // change this to response.getWriter() to enable display on webpage
@@ -85,22 +94,22 @@ public class Installer extends HttpServlet {
     writeMessage(out, "Installing SnipSnap ...");
 
     String tagline = request.getParameter("tagline");
-    config.setTagLine(tagline != null && tagline.length() > 0 ? tagline : "The easy Weblog and Wiki Software.");
+    config.set(Configuration.APP_TAGLINE, tagline != null && tagline.length() > 0 ? tagline : "The easy Weblog and Wiki Software.");
 
     String logo = request.getParameter("logoimage");
     if (logo != null && logo.length() > 0) {
-      config.setLogoImage(logo);
+      config.set(Configuration.APP_LOGO, logo);
     }
 
-    config.setLogger("org.radeox.util.logging.NullLogger");
-    config.setProperty(AppConfiguration.APP_CACHE, "full");
-    config.setProperty(AppConfiguration.APP_TIMEZONE, "+1.00");
-    config.setProperty(AppConfiguration.APP_WEBLOG_DATE_FORMAT, "EEEE, dd. MMMM yyyy");
+    config.set(Configuration.APP_LOGGER, "org.radeox.util.logging.NullLogger");
+    config.set(Configuration.APP_CACHE, "full");
+    config.set(Configuration.APP_TIMEZONE, "+1.00");
+    config.set(Configuration.APP_WEBLOGDATEFORMAT, "EEEE, dd. MMMM yyyy");
 
     if(request.getParameter("weblogsPing") != null) {
-      config.setProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_WEBLOGS_PING, "allow");
+      config.set(Configuration.APP_PERM_WEBLOGSPING, "allow");
     } else {
-      config.setProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_WEBLOGS_PING, "deny");
+      config.set(Configuration.APP_PERM_WEBLOGSPING, "deny");
     }
 
     // set application name ...
@@ -110,7 +119,7 @@ public class Installer extends HttpServlet {
       System.err.println("Installer: application name too short");
       errors.put("appname", "An application name is required!");
     }
-    config.setName(appName != null ? appName : "");
+    config.set(Configuration.APP_NAME, appName != null ? appName : "");
 
     // set user name and email, check that information
     writeMessage(out, "Checking user name and password ...");
@@ -119,9 +128,9 @@ public class Installer extends HttpServlet {
       System.err.println("Installer: user name too short");
       errors.put("login", "You must enter a user name with at least 3 characters!");
     } else {
-      config.setAdminLogin(adminName);
+      config.set(Configuration.APP_ADMIN_LOGIN, adminName);
     }
-    config.setAdminEmail(request.getParameter("email"));
+    config.set(Configuration.APP_ADMIN_EMAIL, request.getParameter("email"));
 
     String password = request.getParameter("password");
     String password2 = request.getParameter("password2");
@@ -129,14 +138,15 @@ public class Installer extends HttpServlet {
       System.err.println("Installer: passwords do not match");
       errors.put("password", "Passwords do not match! Passwords have to be at least 6 characters.");
     } else {
-      config.setAdminPassword(password);
+      config.set(Configuration.APP_ADMIN_PASSWORD, password);
     }
 
     writeMessage(out, "Checking server host and port information ...");
     // set host name and port if provided
-    config.setHost(request.getParameter("host"));
+    config.set(Configuration.APP_HOST, request.getParameter("host"));
     try {
-      config.setPort(Integer.parseInt(request.getParameter("port")));
+      // the parsing is a test to make sure that this is an integer
+      config.set(Configuration.APP_PORT, ""+Integer.parseInt(request.getParameter("port")));
     } catch (NumberFormatException e) {
       System.err.println("Installer: port '" + request.getParameter("port") + "' is not a valid number");
       errors.put("port", "The port '" + request.getParameter("port") + "' is not a valid number!");
@@ -149,7 +159,7 @@ public class Installer extends HttpServlet {
       if (context.endsWith("/")) {
         context = context.substring(0, context.length() - 2);
       }
-      config.setContextPath(context);
+      config.set(Configuration.APP_PATH, context);
     }
 
     if (errors.size() != 0) {
@@ -159,14 +169,14 @@ public class Installer extends HttpServlet {
 
     InetAddrPort addrPort = new InetAddrPort();
     try {
-      String host = config.getHost();
+      String host = config.get(Configuration.APP_HOST);
       if (host != null && host.length() > 0) {
         addrPort.setHost(host);
       } else {
         addrPort.setHost(InetAddrPort.__0_0_0_0);
       }
-      addrPort.setPort(config.getPort());
-    } catch (UnknownHostException e) {
+      addrPort.setPort(Integer.parseInt(config.get(Configuration.APP_PORT)));
+    } catch (Exception e) {
       System.err.println("Installer: error binding host name: " + e);
       errors.put("host", "The host you entered is unknown, leave blank to bind server to the default host name.");
       sendError(session, errors, request, response);
@@ -174,27 +184,37 @@ public class Installer extends HttpServlet {
     }
 
     String autoUrl = request.getParameter("autoUrl");
-    config.setAutoUrl(autoUrl != null ? "true" : "false");
+    config.set(Configuration.APP_REAL_AUTODETECT, autoUrl != null ? "true" : "false");
 
-    String domain = request.getParameter("domain");
-    if (domain != null) {
-      config.setUrl(domain);
+    // TODO handle installation jsp file correctly
+    String realHost = request.getParameter("realhost");
+    if (realHost != null) {
+      config.set(Configuration.APP_REAL_HOST, realHost);
+    }
+    String realPort = request.getParameter("realport");
+    if (realPort != null) {
+      config.set(Configuration.APP_REAL_PORT, realPort);
+    }
+    String realPath = request.getParameter("realpath");
+    if (realPath != null) {
+      config.set(Configuration.APP_REAL_PATH, realPath);
     }
 
     String mailhost = request.getParameter("mailhost");
     if (mailhost != null) {
-      config.setMailHost(mailhost);
+      config.set(Configuration.APP_MAIL_HOST, mailhost);
     } else {
       writeMessage(out, "No mail host defined, we will try to find one or you will not be able to mail.");
     }
 
     String maildomain = request.getParameter("maildomain");
     if (maildomain != null) {
-      config.setMailDomain(maildomain);
+      config.set(Configuration.APP_MAIL_DOMAIN, maildomain);
     }
 
     // create application root directory
-    File webAppRoot = new File(serverConfig.getProperty(Configuration.WEBAPP_ROOT) + "/" + normalize(config.getName()));
+    File webAppRoot = new File(serverConfig.getProperty(ServerConfiguration.WEBAPP_ROOT) +
+                               "/" + normalize(config.get(Configuration.APP_NAME)));
     writeMessage(out, "Creating web application directories ...");
     if (!webAppRoot.mkdirs()) {
       System.err.println("Installer: error creating applications root directory");
@@ -227,7 +247,7 @@ public class Installer extends HttpServlet {
       sendError(session, errors, request, response);
     }
     if (theme != null && theme.length() != 0) {
-      config.setProperty(AppConfiguration.APP_THEME, "/" + theme);
+      config.set(Configuration.APP_THEME, "/" + theme);
       writeMessage(out, "Extracting theme ...");
       try {
         JarFile themeJar = new JarFile("lib/snipsnap-theme-" + theme + ".jar", true);
@@ -255,7 +275,6 @@ public class Installer extends HttpServlet {
 
     // store configuration in thread, for database creation
     Application app = Application.getInstance(session);
-    System.out.println("app: " + app);
     app.setConfiguration(config);
 
     writeMessage(out, "Saving local configuration ...");
@@ -273,13 +292,13 @@ public class Installer extends HttpServlet {
       jdbcURL = MckoiEmbeddedJDBCDriver.MCKOI_PREFIX + dbConfFile.getPath();
       jdbcDrv = "org.snipsnap.util.MckoiEmbeddedJDBCDriver";
 
-      config.setJDBCURL(jdbcURL + "?create=true");
-      config.setJDBCDriver(jdbcDrv);
+      config.set(Configuration.APP_JDBC_URL, jdbcURL + "?create=true");
+      config.set(Configuration.APP_JDBC_DRIVER, jdbcDrv);
 
       try {
         Properties dbConf = new Properties();
         dbConf.load(new FileInputStream("conf/db.conf"));
-        dbConf.store(new FileOutputStream(dbConfFile), "SnipSnap Database configuration: " + config.getName());
+        dbConf.store(new FileOutputStream(dbConfFile), "SnipSnap Database configuration: " + config.get(Configuration.APP_NAME));
 
         CreateDB.createDB(config);
       } catch (IOException e) {
@@ -288,10 +307,10 @@ public class Installer extends HttpServlet {
         sendError(session, errors, request, response);
         return;
       }
-      config.setJDBCURL(jdbcURL);
+      config.set(Configuration.APP_JDBC_URL, jdbcURL);
     } else {
-      config.setJDBCURL(jdbcURL);
-      config.setJDBCDriver(jdbcDrv);
+      config.set(Configuration.APP_JDBC_URL, jdbcURL);
+      config.set(Configuration.APP_JDBC_DRIVER, jdbcDrv);
       CreateDB.createDB(config);
     }
 
@@ -334,10 +353,10 @@ public class Installer extends HttpServlet {
 
 
     if (serverConfig.getAdminLogin() == null && serverConfig.getAdminPassword() == null) {
-      System.out.println("Installer: Creating System Installer Account using " + config.getAdminLogin());
-      serverConfig.setAdminLogin(config.getAdminLogin());
-      serverConfig.setAdminPassword(config.getAdminPassword());
-      serverConfig.setAdminEmail(config.getAdminEmail());
+      System.out.println("Installer: Creating System Installer Account using " + config.get(Configuration.APP_ADMIN_LOGIN));
+      serverConfig.setAdminLogin(config.get(Configuration.APP_ADMIN_LOGIN));
+      serverConfig.setAdminPassword(config.get(Configuration.APP_ADMIN_PASSWORD));
+      serverConfig.setAdminEmail(config.get(Configuration.APP_ADMIN_EMAIL));
       serverConfig.store();
     }
 
@@ -353,7 +372,7 @@ public class Installer extends HttpServlet {
   private void sendError(HttpSession session, Map errors, HttpServletRequest request, HttpServletResponse response)
       throws IOException {
     session.setAttribute("errors", errors);
-    response.sendRedirect(SnipLink.absoluteLink(request, "/exec/install.jsp"));
+    response.sendRedirect(request.getContextPath() + "/exec/install.jsp");
   }
 
   private void writeMessage(PrintWriter out, String message) {

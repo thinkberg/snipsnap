@@ -25,7 +25,7 @@
 package org.snipsnap.admin.install;
 
 import org.snipsnap.admin.util.CommandHandler;
-import org.snipsnap.config.Configuration;
+import org.snipsnap.config.ServerConfiguration;
 import org.snipsnap.snip.SnipLink;
 
 import javax.servlet.ServletException;
@@ -51,7 +51,7 @@ public class Shutdown extends HttpServlet {
       String user = request.getParameter("login");
       String pass = request.getParameter("password");
 
-      Configuration config = (Configuration) session.getAttribute(CommandHandler.ATT_CONFIG);
+      ServerConfiguration config = (ServerConfiguration) session.getAttribute(CommandHandler.ATT_CONFIG);
 
       // don't do anything before user name and password are checked
       if (config != null &&
@@ -62,7 +62,7 @@ public class Shutdown extends HttpServlet {
       }
     }
 
-    response.sendRedirect(SnipLink.absoluteLink(request, "/"));
+    response.sendRedirect(request.getContextPath() + "/");
   }
 }
 

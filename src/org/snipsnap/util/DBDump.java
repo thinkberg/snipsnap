@@ -1,26 +1,13 @@
 package org.snipsnap.util;
 
-import org.snipsnap.config.AppConfiguration;
-import org.snipsnap.app.Application;
-import org.snipsnap.snip.XMLSnipExport;
 import org.radeox.util.logging.Logger;
+import org.snipsnap.app.Application;
+import org.snipsnap.config.Configuration;
+import org.snipsnap.config.ConfigurationProxy;
+import org.snipsnap.snip.XMLSnipExport;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.FileOutputStream;
-import java.io.BufferedOutputStream;
-import java.io.PrintWriter;
-import java.io.FileWriter;
-import java.io.OutputStreamWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.Properties;
-import java.util.StringTokenizer;
 
 /**
  * Dump current database contents. The database is read directly and meta-data
@@ -34,13 +21,12 @@ public class DBDump {
 
   public static void main(String[] args) {
 
-    Connection connection;
-    AppConfiguration config = null;
+    Configuration config = null;
 
     if (args.length > 0 && "-config".equals(args[0])) {
       if (args.length > 1) {
         try {
-          config = new AppConfiguration(new File(args[1]));
+          config = ConfigurationProxy.newInstance(new File(args[1]));
         } catch (IOException e) {
           System.err.println("DBDump: unable to read configuration file: " + e);
           System.exit(-1);
@@ -50,11 +36,11 @@ public class DBDump {
 
 
     if (args.length > 0 && "-db".equals(args[0])) {
-      config = new AppConfiguration();
-      config.setJDBCDriver("org.snipsnap.util.MckoiEmbeddedJDBCDriver");
-      config.setJDBCURL("jdbc:mckoi:local://" + args[1]);
-      config.setAdminLogin(args[2]);
-      config.setAdminPassword(args[3]);
+      config = ConfigurationProxy.newInstance();
+      config.set(Configuration.APP_JDBC_DRIVER, "org.snipsnap.util.MckoiEmbeddedJDBCDriver");
+      config.set(Configuration.APP_JDBC_URL, "jdbc:mckoi:local://" + args[1]);
+      config.set(Configuration.APP_ADMIN_LOGIN, args[2]);
+      config.set(Configuration.APP_ADMIN_PASSWORD, args[3]);
     }
 
     if (config == null) {

@@ -61,7 +61,7 @@ public class UserManagerServlet extends HttpServlet {
     HttpSession session = request.getSession(false);
     User admin = session != null ? (User) session.getAttribute(AdminServlet.ATT_ADMIN) : null;
     if (null == admin) {
-      response.sendRedirect("/manager");
+      response.sendRedirect(SnipLink.absoluteLink("/manager/"));
       return;
     }
     String command = request.getParameter("command");
@@ -88,7 +88,7 @@ public class UserManagerServlet extends HttpServlet {
           if (update(request, errors, user)) {
             um.store(user);
             errors.put("", OK_USER_UPDATED);
-            response.sendRedirect(SnipLink.absoluteLink(request, "/manager/usermanager.jsp"));
+            response.sendRedirect(SnipLink.absoluteLink("/manager/usermanager.jsp"));
             return;
           } else {
             dispatcher = request.getRequestDispatcher("/manager/user.jsp");
@@ -106,7 +106,7 @@ public class UserManagerServlet extends HttpServlet {
             Application.get().setUser(user);
             HomePage.create(user.getLogin());
             errors.put("", OK_USER_CREATED);
-            response.sendRedirect(SnipLink.absoluteLink(request, "/manager/usermanager.jsp"));
+            response.sendRedirect(SnipLink.absoluteLink("/manager/usermanager.jsp"));
             return;
           }
         }

@@ -26,16 +26,15 @@ package org.snipsnap.net;
 
 import org.snipsnap.app.Application;
 import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServlet;
 import java.io.IOException;
 
 /**
@@ -56,7 +55,7 @@ public class SnipRawServlet extends HttpServlet {
 
     String name = request.getPathInfo();
     if (null == name || "/".equals(name)) {
-      name = Application.get().getConfiguration().getStartName();
+      name = Application.get().getConfiguration().getStartSnip();
     } else {
       name = name.substring(1);
     }

@@ -24,7 +24,7 @@
  */
 package org.snipsnap.server;
 
-import org.snipsnap.config.Configuration;
+import org.snipsnap.config.ServerConfiguration;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -91,7 +91,7 @@ public class AdminServer implements Runnable {
    * @throws UnknownHostException
    */
   public AdminServer(Properties config) throws NumberFormatException, IOException, UnknownHostException {
-    int port = Integer.parseInt(config.getProperty(Configuration.ADMIN_PORT).trim());
+    int port = Integer.parseInt(config.getProperty(ServerConfiguration.ADMIN_PORT).trim());
     this.config = config;
     serverSocket = new ServerSocket(port, 1, InetAddress.getLocalHost());
     serverThread = new Thread(this);
@@ -120,21 +120,21 @@ public class AdminServer implements Runnable {
             System.exit(0);
           } else if ("start".equals(command) && args != null) {
             try {
-              ApplicationLoader.loadApplication(config.getProperty(Configuration.WEBAPP_ROOT), args);
+              ApplicationLoader.loadApplication(config.getProperty(ServerConfiguration.WEBAPP_ROOT), args);
             } catch (Exception e) {
               e.printStackTrace(new PrintWriter(writer));
               writer.newLine();
             }
           } else if ("stop".equals(command) && args != null) {
             try {
-              ApplicationLoader.unloadApplication(config.getProperty(Configuration.WEBAPP_ROOT), args);
+              ApplicationLoader.unloadApplication(config.getProperty(ServerConfiguration.WEBAPP_ROOT), args);
             } catch (Exception e) {
               e.printStackTrace(new PrintWriter(writer));
               writer.newLine();
             }
           } else if ("reload".equals(command) && args != null) {
             try {
-              ApplicationLoader.reloadApplication(config.getProperty(Configuration.WEBAPP_ROOT), args);
+              ApplicationLoader.reloadApplication(config.getProperty(ServerConfiguration.WEBAPP_ROOT), args);
             } catch (Exception e) {
               e.printStackTrace(new PrintWriter(writer));
               writer.newLine();

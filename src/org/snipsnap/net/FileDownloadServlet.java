@@ -26,7 +26,7 @@ package org.snipsnap.net;
 
 import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
-import org.snipsnap.config.AppConfiguration;
+import org.snipsnap.config.Configuration;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.attachment.Attachment;
 
@@ -35,7 +35,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 /**
  * Servlet for downloading attachments.
@@ -63,8 +67,8 @@ public class FileDownloadServlet extends HttpServlet {
 
       // make sure the attachment exists
       if (attachment != null) {
-        AppConfiguration config = Application.get().getConfiguration();
-        File fileStore = new File(config.getFileStorePath());
+        Configuration config = Application.get().getConfiguration();
+        File fileStore = new File(config.getFilePath());
         File file = new File(fileStore, attachment.getLocation());
 
         if (file.exists()) {

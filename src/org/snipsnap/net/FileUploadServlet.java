@@ -26,19 +26,20 @@ package org.snipsnap.net;
 
 import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
-import org.snipsnap.config.AppConfiguration;
+import org.snipsnap.config.Configuration;
 import org.snipsnap.net.filter.MultipartWrapper;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.user.User;
-import org.snipsnap.user.Security;
+import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
+import org.snipsnap.user.Security;
+import org.snipsnap.user.User;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -74,12 +75,12 @@ public class FileUploadServlet extends HttpServlet {
     Snip snip = space.load(snipName);
 
     if (request.getParameter("cancel") != null) {
-      response.sendRedirect(SnipLink.absoluteLink(request, "/space/" + snip.getNameEncoded()));
+      response.sendRedirect(SnipLink.absoluteLink("/space/" + snip.getNameEncoded()));
       return;
     }
 
     User user = Application.get().getUser();
-    if (Security.hasRoles(user, roles)) {
+    if (Security.checkPermission(Permissions.ATTACH, user, snip)) {
       if (request.getParameter("upload") != null) {
         MultipartWrapper wrapper = (MultipartWrapper) request;
         String contentType = wrapper.getFileContentType("file");
@@ -89,9 +90,9 @@ public class FileUploadServlet extends HttpServlet {
 
           InputStream fileInputStream = wrapper.getFileInputStream("file");
           if (fileInputStream != null && fileName != null && fileName.length() > 0 && contentType != null) {
-            AppConfiguration config = Application.get().getConfiguration();
+            Configuration config = Application.get().getConfiguration();
 
-            File fileStore = new File(config.getFileStorePath());
+            File fileStore = new File(config.getFilePath());
             File relativeFileLocation = new File(snip.getName(), fileName);
             File file = new File(fileStore, relativeFileLocation.getPath());
 

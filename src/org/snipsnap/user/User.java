@@ -24,10 +24,10 @@
  */
 package org.snipsnap.user;
 
-import org.snipsnap.app.Application;
-import org.snipsnap.config.AppConfiguration;
-import org.snipsnap.snip.SnipLink;
 import org.radeox.util.Linkable;
+import org.snipsnap.app.Application;
+import org.snipsnap.config.Configuration;
+import org.snipsnap.snip.SnipLink;
 
 import java.sql.Timestamp;
 
@@ -167,7 +167,7 @@ public class User implements Linkable {
 
   public boolean isAdmin() {
     Application app = Application.get();
-    AppConfiguration config = app.getConfiguration();
+    Configuration config = app.getConfiguration();
     return config.getAdminLogin().equals(login) || getRoles().contains(Roles.ADMIN);
   }
 

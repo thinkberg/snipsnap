@@ -25,7 +25,7 @@
 package org.snipsnap.net;
 
 import org.snipsnap.app.Application;
-import org.snipsnap.config.AppConfiguration;
+import org.snipsnap.config.Configuration;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
@@ -65,7 +65,7 @@ public class MailPasswordKeyServlet extends HttpServlet {
       }
 
       String key = um.getPassWordKey(user);
-      AppConfiguration configuration = Application.get().getConfiguration();
+      Configuration configuration = Application.get().getConfiguration();
       String receiver = user.getEmail();
       if (receiver != null && receiver.length() > 0) {
         String subject = "Forgotten password";
@@ -76,7 +76,7 @@ public class MailPasswordKeyServlet extends HttpServlet {
         Mail.getInstance().sendMail(receiver, subject, content);
       }
     } else {
-      response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));
+      response.sendRedirect(SnipLink.absoluteLink("/space/start"));
       return;
     }
 

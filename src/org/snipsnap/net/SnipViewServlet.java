@@ -57,7 +57,7 @@ public class SnipViewServlet extends HttpServlet {
     // handle the snip name
     String name = request.getPathInfo();
     if (null == name || "/".equals(name)) {
-      name = Application.get().getConfiguration().getStartName();
+      name = Application.get().getConfiguration().getStartSnip();
     } else {
       name = name.substring(1);
     }

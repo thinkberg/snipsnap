@@ -84,7 +84,7 @@ public class Update extends HttpServlet {
       }
 
     }
-    response.sendRedirect(SnipLink.absoluteLink(request, "/"));
+    response.sendRedirect(request.getContextPath() + "/");
   }
 
   private void downloadUpdate() throws IOException {

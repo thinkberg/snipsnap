@@ -27,10 +27,11 @@ package org.snipsnap.render.macro;
 import org.radeox.engine.ImageRenderEngine;
 import org.radeox.engine.RenderEngine;
 import org.snipsnap.app.Application;
-import org.snipsnap.config.AppConfiguration;
+import org.snipsnap.config.Configuration;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.SnipSpaceFactory;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -44,7 +45,7 @@ import java.io.Writer;
  */
 
 public class ImageMacro extends SnipMacro {
-  AppConfiguration config;
+  Configuration config;
 
   public String getName() {
     return "image";
@@ -86,21 +87,29 @@ public class ImageMacro extends SnipMacro {
           writer.write("<a href=\"" + link + "\">");
         }
 
-        if (img.startsWith("http://")) {
-          if (config.allowExternalImages()) {
-            appendExternalImage(writer, img, align);
+        String imageName = img;
+
+        if (imageName.startsWith("http://")) {
+          if (config.allow(Configuration.APP_PERM_EXTERNALIMAGES)) {
+            appendExternalImage(writer, imageName, align);
           }
         } else {
           // Does the name contain an extension?
-          int dotIndex = img.lastIndexOf('.');
+          int dotIndex = imageName.lastIndexOf('.');
           if (-1 != dotIndex) {
-            ext = img.substring(dotIndex + 1);
-            img = img.substring(0, dotIndex);
+            ext = imageName.substring(dotIndex + 1);
+            imageName = imageName.substring(0, dotIndex);
           }
 
-
           Snip snip = params.getSnip();
-          String imageName = img;
+          int slashIndex = imageName.indexOf('/');
+          if(-1 != slashIndex) {
+            // @TODO change to work with namespaces
+            String snipName = imageName.substring(0, slashIndex);
+            imageName = imageName.substring(slashIndex + 1);
+            snip = SnipSpaceFactory.getInstance().load(snipName);
+          }
+
           if ("svg".equals(ext)) {
             // SVG cannot be used with <image>
             writer.write("<object data=\"");

@@ -235,7 +235,7 @@ public class UserManager {
         path = "/";
       }
     } catch (MalformedURLException e) {
-      Logger.warn("Malformed URL", e);
+      Logger.warn("Malformed URL: "+ Application.get().getConfiguration().getUrl(), e);
       path = "/";
     }
     return path;

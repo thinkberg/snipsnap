@@ -31,7 +31,7 @@ import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipImpl;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.app.Application;
-import org.snipsnap.config.AppConfiguration;
+import org.snipsnap.config.Configuration;
 import org.snipsnap.render.SnipRenderEngine;
 import org.radeox.engine.ImageRenderEngine;
 import org.radeox.engine.RenderEngine;

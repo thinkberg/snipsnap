@@ -24,7 +24,8 @@
  */
 package org.snipsnap.net;
 
-import org.snipsnap.config.AppConfiguration;
+import org.snipsnap.config.Configuration;
+import org.snipsnap.config.ConfigurationProxy;
 import org.snipsnap.snip.Blog;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpaceFactory;
@@ -44,10 +45,10 @@ import java.io.IOException;
  * @version $Id$
  */
 public class RssServlet extends HttpServlet {
-  private AppConfiguration config;
+  private Configuration config;
 
   public void init(ServletConfig servletConfig) throws ServletException {
-    config = AppConfiguration.getInstance();
+    config = ConfigurationProxy.getInstance();
   }
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)

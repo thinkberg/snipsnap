@@ -25,9 +25,9 @@
 package org.snipsnap.net;
 
 import org.snipsnap.app.Application;
+import org.snipsnap.config.Configuration;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
-import org.snipsnap.config.AppConfiguration;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -83,8 +83,8 @@ public class LoginServlet extends HttpServlet {
       throws ServletException, IOException {
     String referer = request.getHeader("REFERER");
     if (referer == null || referer.length() == 0) {
-      AppConfiguration config = Application.get().getConfiguration();
-      referer = config.getSnipUrl(config.getStartName());
+      Configuration config = Application.get().getConfiguration();
+      referer = config.getSnipUrl(config.getStartSnip());
     }
 
     if ("true".equals(request.getParameter("logoff"))) {

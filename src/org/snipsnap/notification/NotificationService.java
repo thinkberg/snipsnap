@@ -26,7 +26,7 @@
 package org.snipsnap.notification;
 
 import org.snipsnap.app.Application;
-import org.snipsnap.config.AppConfiguration;
+import org.snipsnap.config.Configuration;
 import org.snipsnap.notification.jabber.JabberNotifier;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.user.User;
@@ -114,7 +114,7 @@ public class NotificationService {
   public void notify(String message) {
     queue.add(message);
     synchronized (thread) {
-      if (Application.get().getConfiguration().allow(AppConfiguration.PERM_NOTIFICATION)) {
+      if (Application.get().getConfiguration().allow(Configuration.APP_PERM_NOTIFICATION)) {
         thread.notify();
       }
     }

@@ -26,6 +26,7 @@
 package org.snipsnap.snip;
 
 import org.snipsnap.app.Application;
+import org.snipsnap.config.Configuration;
 
 import java.sql.Date;
 import java.text.ParseException;
@@ -45,8 +46,10 @@ public class SnipUtil {
   }
 
   public static String toDate(String dateString) {
+    Configuration config = Application.get().getConfiguration();
+
     SimpleDateFormat in = new SimpleDateFormat("yyyy-MM-dd");
-    SimpleDateFormat out = Application.get().getConfiguration().getWeblogDateFormat();
+    SimpleDateFormat out = new SimpleDateFormat(config.getWeblogDateFormat(), config.getLocale());
     try {
       return out.format(in.parse(dateString));
     } catch (ParseException e) {

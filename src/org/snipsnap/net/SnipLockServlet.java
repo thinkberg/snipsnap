@@ -61,6 +61,6 @@ public class SnipLockServlet extends HttpServlet {
       }
       space.store(snip);
     }
-    response.sendRedirect(SnipLink.absoluteLink(request, "/space/" + SnipLink.encode(name)));
+    response.sendRedirect(SnipLink.absoluteLink("/space/" + SnipLink.encode(name)));
   }
 }

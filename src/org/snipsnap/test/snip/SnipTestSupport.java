@@ -26,10 +26,9 @@
 package org.snipsnap.test.snip;
 
 import junit.framework.TestCase;
-import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.app.Application;
-
-import java.util.Properties;
+import org.snipsnap.config.Configuration;
+import org.snipsnap.config.ConfigurationProxy;
 
 public class SnipTestSupport extends TestCase {
   public SnipTestSupport(String s) {
@@ -37,12 +36,11 @@ public class SnipTestSupport extends TestCase {
   }
 
   protected void setUp() throws Exception {
-    AppConfiguration config = new AppConfiguration();
-    Properties properties = new Properties();
-    properties.setProperty(AppConfiguration.APP_NAME, "SnipSnap");
     // set some basic properties
-    config.setHost("snipsnap.org");
-    config.setContextPath("");
+    Configuration config = ConfigurationProxy.newInstance();
+    config.set(Configuration.APP_NAME, "SnipSnap");
+    config.set(Configuration.APP_HOST, "snipsnap.org");
+    config.set(Configuration.APP_PATH, "");
     Application.get().setConfiguration(config);
     super.setUp();
   }

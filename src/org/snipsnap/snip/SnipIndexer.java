@@ -33,8 +33,8 @@ import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Searcher;
-import org.snipsnap.app.Application;
 import org.radeox.util.logging.Logger;
+import org.snipsnap.app.Application;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,7 +56,7 @@ public class SnipIndexer {
       if(null == file) {
         indexFile = new File(Application.get().getConfiguration().getFile().getParent(), "index");
       } else {
-        indexFile = new File(Application.get().getConfiguration().getIndexPath());
+        indexFile = new File(file);
       }
     }
     return indexFile;

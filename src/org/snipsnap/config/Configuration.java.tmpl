@@ -22,32 +22,48 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-package org.snipsnap.net;
+package org.snipsnap.config;
 
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipSpaceFactory;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.Locale;
+import java.io.File;
 import java.io.IOException;
-import java.security.GeneralSecurityException;
 
 /**
- * Servlet to remove snips from the database.
+ * Interface template for easy usage of the configuration.
  * @author Matthias L. Jugel
  * @version $Id$
  */
-public class SnipRemoveServlet extends HttpServlet {
-  public void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
-    String name = request.getParameter("name");
-    SnipSpace space = SnipSpaceFactory.getInstance();
-    Snip snip = space.load(name);
-    space.remove(snip);
-    response.sendRedirect(SnipLink.absoluteLink("/space/start"));
-  }
+public interface Configuration {
+  public String get(String name);
+  public void set(String name, String value);
+
+  public File getConfDir();
+  public File getFile();
+  public void setFile(File file);
+
+  public void load(File file) throws IOException;
+  public void store() throws IOException;
+
+
+  // LOCALE
+  Locale getLocale();
+
+  // URL HANDLING
+  String getUrl();
+  String getUrl(String target);
+  String getSnipUrl(String snipName);
+
+  // PERMISSIONS
+  boolean allow(String action);
+  boolean deny(String action);
+
+  // TODO remove/replace
+  boolean getAllowRegister();
+
+  // GENERICS
+  public String getVersion();
+  boolean isInstalled();
+
+  // EASY ACCESS
+  @DEFAULTS@
 }

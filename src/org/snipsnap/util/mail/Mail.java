@@ -25,11 +25,16 @@
 
 package org.snipsnap.util.mail;
 
-import org.snipsnap.app.Application;
-import org.snipsnap.config.AppConfiguration;
 import org.radeox.util.logging.Logger;
+import org.snipsnap.app.Application;
+import org.snipsnap.config.Configuration;
 
-import javax.mail.*;
+import javax.mail.BodyPart;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.Session;
+import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
@@ -64,8 +69,8 @@ public class Mail {
 
   public Mail() {
     Properties props = new Properties();
-    AppConfiguration config = Application.get().getConfiguration();
-    String mailhost = config.getProperty(AppConfiguration.APP_MAILHOST);
+    Configuration config = Application.get().getConfiguration();
+    String mailhost = config.getMailHost();
     InetAddress addr = null;
     try {
       addr = InetAddress.getByName(mailhost);
@@ -100,8 +105,8 @@ public class Mail {
     Collection recipientList = new ArrayList();
     recipientList.add(recipient);
     //@TODO get admin mail / host
-    AppConfiguration configuration = Application.get().getConfiguration();
-    String sender = configuration.getProperty(AppConfiguration.APP_MAILDOMAIN);
+    Configuration configuration = Application.get().getConfiguration();
+    String sender = configuration.getMailDomain();
     if (null == sender) {
       sender = configuration.getUrl();
       try {

@@ -1,4 +1,3 @@
-<%@ page import="org.snipsnap.config.Configuration"%>
  <!--
   ** Admin login.
   ** @author Matthias L. Jugel

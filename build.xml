@@ -144,11 +144,43 @@
       <fileset dir="${jar}" includes="${appname}*.war"/>
       <fileset dir="${src}/apps/default/WEB-INF/lib" includes="${appname}-servlets.jar"/>
       <fileset dir="${src}/apps/installer/WEB-INF/lib" includes="installer-servlets.jar"/>
+      <fileset dir="${src}/org/snipsnap/config" includes="Options.java"/>
     </delete>
   </target>
 
   <!-- create all archives -->
   <target depends="jar-server,jar-util,snipsnap-war" description="create all" name="all"/>
+
+
+  <target name="buildtask">
+    <mkdir dir="${target}/ant"/>
+    <javac deprecation="false" debug="false"
+      srcdir="${src}" destdir="${target}/ant">
+      <include name="org/snipsnap/util/PropertyConstantBuilder.java"/>
+    </javac>
+  </target>
+
+  <target depends="buildtask" name="declaretask">
+    <taskdef name="constants"
+      classname="org.snipsnap.util.PropertyConstantBuilder"
+      classpath="${target}/ant"/>
+  </target>
+
+  <!-- prepare special generated classes -->
+  <target depends="declaretask" name="generate">
+    <constants
+      properties="${src}/org/snipsnap/config/defaults.conf"
+      file="${target}/ant/interface.stub" prefix="app."
+    />
+    <loadfile property="interface-stub" srcfile="${target}/ant/interface.stub" failonerror="false"/>
+    <copy file="${src}/org/snipsnap/config/Configuration.java.tmpl"
+      tofile="${src}/org/snipsnap/config/Configuration.java" filtering="true" overwrite="true" >
+      <filterset>
+        <filter token="DEFAULTS" value="${interface-stub}"/>
+      </filterset>
+      </copy>
+
+  </target>
 
   <!-- create server code -->
   <target depends="compile-jsp, compile-server,installer-war" description="create server jar" name="jar-server">
@@ -159,10 +191,11 @@
         <include name="conf/jetty.conf"/>
         <include name="conf/copyright.txt"/>
       </fileset>
+      <fileset dir="${src}" includes="org/snipsnap/config/defaults.conf"/>
     </jar>
   </target>
 
-  <target description="compile server code" name="compile-server">
+  <target depends="generate" description="compile server code" name="compile-server">
     <mkdir dir="${target}/server"/>
     <javac deprecation="${deprecation}" debug="${debug}"
       srcdir="${src}"
@@ -175,10 +208,11 @@
   <target depends="compile-util" description="build util jar" name="jar-util">
     <jar destfile="${jar}/${appname}-utils.jar" excludes="**/CVS">
       <fileset dir="${target}/util" includes="**"/>
+      <fileset dir="${src}" includes="org/snipsnap/config/defaults.conf"/>
     </jar>
   </target>
 
-  <target description="compile util code" name="compile-util">
+  <target depends="generate" description="compile util code" name="compile-util">
     <mkdir dir="${target}/util"/>
     <javac deprecation="${deprecation}" debug="${debug}"
       srcdir="${src}"
@@ -187,7 +221,7 @@
       includes="org/snipsnap/util/Test*, org/snipsnap/util/*Util.java, org/snipsnap/util/DB*.java, org/snipsnap/util/*JDBC*.java, org/snipsnap/util/mail/**, org/snipsnap/util/*Test.java"/>
   </target>
 
-  <target description="compile test code" name="compile-test">
+  <target depends="generate" description="compile test code" name="compile-test">
     <mkdir dir="${target}/test"/>
     <javac deprecation="${deprecation}" debug="${debug}"
       srcdir="${src}"
@@ -196,7 +230,7 @@
       includes="org/snipsnap/test/**"/>
   </target>
 
-  <target description="compile template application code" name="compile-servlets">
+  <target depends="generate" description="compile template application code" name="compile-servlets">
     <mkdir dir="${target}/default/WEB-INF/classes"/>
     <javac deprecation="${deprecation}" debug="${debug}"
       srcdir="${src}"
@@ -212,6 +246,7 @@
     <jar destfile="${src}/apps/default/WEB-INF/lib/snipsnap-servlets.jar" excludes="**/CVS">
       <fileset dir="${target}/default/WEB-INF/classes" includes="**"/>
       <fileset dir="${src}" includes="META-INF/**"/>
+      <fileset dir="${src}" includes="org/snipsnap/config/defaults.conf"/>
     </jar>
   </target>
 
@@ -364,6 +399,7 @@
     <jar destfile="${target}/installer/webapp/WEB-INF/lib/installer-servlets.jar" excludes="**/CVS">
       <fileset dir="${target}/installer/servlets" includes="**"/>
       <fileset dir="." includes="conf/snipsnap.conf"/>
+      <fileset dir="${src}" includes="org/snipsnap/config/defaults.conf"/>
     </jar>
   </target>
 
