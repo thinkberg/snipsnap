@@ -77,6 +77,10 @@ public class SnipImpl implements Snip {
   private Attachments attachments;
   private Modified modified;
 
+  // @TODO: Remove
+  private String commentedName;
+  private String parentName;
+
   private void init() {
     if (null == children) {
       children = SnipSpaceFactory.getInstance().getChildren((Snip) Aspects.getThis());
@@ -249,11 +253,14 @@ public class SnipImpl implements Snip {
   }
 
   public Snip getCommentedSnip() {
+    if (null != commentedName && null == comment) {
+      comment = SnipSpaceFactory.getInstance().load(commentedName);
+    }
     return comment;
   }
 
   public boolean isComment() {
-    return !(null == comment);
+    return !(null == getCommentedSnip());
   }
 
   public Comments getComments() {
@@ -307,6 +314,9 @@ public class SnipImpl implements Snip {
   }
 
   public Snip getParent() {
+    if (null != parentName && null == parent ) {
+      parent = SnipSpaceFactory.getInstance().load(parentName);
+    }
     return parent;
   }
 
@@ -320,6 +330,14 @@ public class SnipImpl implements Snip {
    */
   public void setDirectParent(Snip parentSnip) {
     this.parent = parentSnip;
+  }
+
+  public void setParentName(String name) {
+    this.parentName = name;
+  }
+
+  public void setCommentedName(String name) {
+    this.commentedName = name;
   }
 
   public void setParent(Snip parentSnip) {

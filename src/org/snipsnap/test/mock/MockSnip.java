@@ -13,6 +13,12 @@ import java.sql.Timestamp;
 import java.util.List;
 
 public abstract class MockSnip implements Snip {
+  public void setParentName(String name) {
+  }
+
+  public void setCommentedName(String name) {
+  }
+
   public void handle(HttpServletRequest request) {
   }
 
