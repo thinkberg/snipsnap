@@ -23,43 +23,41 @@
  * --LICENSE NOTICE--
  */
 
-package org.snipsnap.snip.filter.macro;
+package org.snipsnap.snip.filter.macro.parameter;
 
+import org.snipsnap.app.Application;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.util.log.Logger;
 
-import org.snipsnap.snip.filter.macro.api.ApiDoc;
-import org.snipsnap.snip.filter.macro.parameter.MacroParameter;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.StringTokenizer;
 
-import java.io.IOException;
-import java.io.Writer;
-
-/*
- * Lists all known API documentation repositorys and
- * mappings
+/**
+ * Encapsulates parameters for an execute Macro call
  *
- * @author stephan
- * @team sonicteam
+ * @author Stephan J. Schmidt
  * @version $Id$
  */
 
-public class ApiDocMacro extends Macro {
-  private String[] paramDescription = { };
+public class SnipMacroParameter extends BaseMacroParameter implements MacroParameter {
+  private Snip snip;
 
-  public String[] getParamDescription() {
-    return paramDescription;
+  public SnipMacroParameter(Snip snip) {
+    params = new HashMap();
+    this.snip = snip;
   }
 
-  public String getName() {
-    return "api-docs";
+  public SnipMacroParameter(String stringParams) {
+    setParams(stringParams);
   }
 
-  public String getDescription() {
-    return "Displays a list of known online API documentations and mappings.";
+  public Snip getSnip() {
+    return snip;
   }
 
-  public void execute(Writer writer, MacroParameter params)
-      throws IllegalArgumentException, IOException {
-    ApiDoc apiDoc = ApiDoc.getInstance();
-    apiDoc.appendTo(writer);
-    return;
+  public void setSnip(Snip snip) {
+    this.snip = snip;
   }
+
 }

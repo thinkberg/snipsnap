@@ -36,6 +36,7 @@ import org.apache.oro.text.regex.Pattern;
 import org.apache.oro.text.regex.Perl5Substitution;
 import org.apache.oro.text.regex.Util;
 import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.filter.macro.context.FilterContext;
 import org.snipsnap.util.log.Logger;
 
 public class RegexReplaceFilter extends RegexFilter {
@@ -58,7 +59,7 @@ public class RegexReplaceFilter extends RegexFilter {
     addRegex(regex, substitute, multiline);
   }
 
-  public String filter(String input, Snip snip) {
+  public String filter(String input, FilterContext context) {
     String result = input;
     int size = pattern.size();
     for (int i = 0; i < size; i++) {

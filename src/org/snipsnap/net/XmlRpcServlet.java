@@ -28,6 +28,7 @@ import org.apache.xmlrpc.XmlRpcServer;
 import org.snipsnap.xmlrpc.BloggerHandler;
 import org.snipsnap.xmlrpc.SnipSnapHandler;
 import org.snipsnap.xmlrpc.WeblogsPingHandler;
+import org.snipsnap.xmlrpc.GeneratorHandler;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -61,6 +62,7 @@ public class XmlRpcServlet extends HttpServlet {
     xmlrpc.addHandler("snipSnap", new SnipSnapHandler());
     xmlrpc.addHandler("blogger", new BloggerHandler());
     xmlrpc.addHandler("weblogUpdates", new WeblogsPingHandler());
+    xmlrpc.addHandler("generator", new GeneratorHandler());
     byte[] result = xmlrpc.execute(request.getInputStream());
     response.setContentType("text/xml");
     response.setContentLength(result.length);

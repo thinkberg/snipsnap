@@ -34,6 +34,9 @@ package org.snipsnap.snip.filter.macro;
 
 import org.snipsnap.snip.filter.Filter;
 import org.snipsnap.snip.filter.macro.code.SourceCodeFormatter;
+import org.snipsnap.snip.filter.macro.context.FilterContext;
+import org.snipsnap.snip.filter.macro.context.NullFilterContext;
+import org.snipsnap.snip.filter.macro.parameter.MacroParameter;
 import sun.misc.Service;
 import sun.misc.ServiceConfigurationError;
 
@@ -44,7 +47,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class CodeMacro extends Preserved {
-  private Map filters;
+  private Map formatters;
+  private FilterContext nullContext = new NullFilterContext();
 
   private String[] paramDescription =
      {"?1: syntax highlighter to use, defaults to java"};
@@ -54,13 +58,13 @@ public class CodeMacro extends Preserved {
   }
 
   public CodeMacro() {
-    filters = new HashMap();
+    formatters = new HashMap();
 
     Iterator formatterIt = Service.providers(SourceCodeFormatter.class);
     while (formatterIt.hasNext()) {
       try {
         SourceCodeFormatter formatter = (SourceCodeFormatter) formatterIt.next();
-        filters.put(formatter.getName(), formatter);
+        formatters.put(formatter.getName(), formatter);
         System.err.println("Loaded code formatter: " + formatter.getName());
       } catch (Exception e) {
         System.err.println("CodeMacro: unable to load code formatter: " + e);
@@ -93,14 +97,14 @@ public class CodeMacro extends Preserved {
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
 
-    Filter filter = null;
+    SourceCodeFormatter formatter = null;
 
-    if (params.getLength() == 0 || !filters.containsKey(params.get("0"))) {
-      filter = (Filter) filters.get("java");
+    if (params.getLength() == 0 || !formatters.containsKey(params.get("0"))) {
+      formatter = (SourceCodeFormatter) formatters.get("java");
     } else {
-      filter = (Filter) filters.get(params.get("0"));
+      formatter = (SourceCodeFormatter) formatters.get(params.get("0"));
     }
-    String result = filter.filter(params.getContent(), params.getSnip());
+    String result = formatter.filter(params.getContent(), nullContext);
 
     writer.write("<div class=\"code\"><pre>");
     writer.write(replace(result.trim()));

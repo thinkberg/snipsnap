@@ -35,6 +35,7 @@ import org.apache.lucene.search.Hits;
 import org.snipsnap.app.Application;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.filter.macro.parameter.MacroParameter;
 import org.snipsnap.user.UserManager;
 
 import java.io.IOException;

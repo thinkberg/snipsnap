@@ -23,44 +23,25 @@
  * --LICENSE NOTICE--
  */
 
-package org.snipsnap.snip.filter.macro;
+package org.snipsnap.snip.filter.macro.parameter;
 
-import org.snipsnap.app.Application;
-import org.snipsnap.snip.Snip;
 import org.snipsnap.util.log.Logger;
+import org.snipsnap.app.Application;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.HashMap;
 
 /**
- * Encapsulates parameters for an execute Macro call
- *
- * @author Stephan J. Schmidt
+ * 
+ * @author 
  * @version $Id$
  */
 
-public class MacroParameter {
-  private Snip snip;
+public class BaseMacroParameter {
   private String content;
-  private Map params;
+  protected Map params;
   private int size;
-
-  public MacroParameter() {
-    params = new HashMap();
-  }
-
-  public MacroParameter(String stringParams) {
-    setParams(stringParams);
-  }
-
-  public Snip getSnip() {
-    return snip;
-  }
-
-  public void setSnip(Snip snip) {
-    this.snip = snip;
-  }
 
   public void setParams(String stringParams) {
     params = split(stringParams, "|");
@@ -106,7 +87,7 @@ public class MacroParameter {
    * @return           a Array of splittet Strings
    */
 
-  public Map split(String aString, String delimiter) {
+  private Map split(String aString, String delimiter) {
     StringTokenizer st = new StringTokenizer(aString, delimiter);
     Map result = new HashMap();
     int i = 0;

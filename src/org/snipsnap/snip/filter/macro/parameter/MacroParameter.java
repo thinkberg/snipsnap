@@ -23,43 +23,35 @@
  * --LICENSE NOTICE--
  */
 
-package org.snipsnap.snip.filter.macro;
+package org.snipsnap.snip.filter.macro.parameter;
 
+import org.snipsnap.app.Application;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.util.log.Logger;
 
-import org.snipsnap.snip.filter.macro.api.ApiDoc;
-import org.snipsnap.snip.filter.macro.parameter.MacroParameter;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.StringTokenizer;
 
-import java.io.IOException;
-import java.io.Writer;
-
-/*
- * Lists all known API documentation repositorys and
- * mappings
+/**
+ * Encapsulates parameters for an execute Macro call
  *
- * @author stephan
- * @team sonicteam
+ * @author Stephan J. Schmidt
  * @version $Id$
  */
 
-public class ApiDocMacro extends Macro {
-  private String[] paramDescription = { };
+public interface MacroParameter {
+  public void setParams(String stringParams);
 
-  public String[] getParamDescription() {
-    return paramDescription;
-  }
+  public String getContent();
 
-  public String getName() {
-    return "api-docs";
-  }
+  public void setContent(String content);
 
-  public String getDescription() {
-    return "Displays a list of known online API documentations and mappings.";
-  }
+  public int getLength();
 
-  public void execute(Writer writer, MacroParameter params)
-      throws IllegalArgumentException, IOException {
-    ApiDoc apiDoc = ApiDoc.getInstance();
-    apiDoc.appendTo(writer);
-    return;
-  }
+  public String get(String index, int idx);
+
+  public String get(String index);
+
+  public String get(int index);
 }

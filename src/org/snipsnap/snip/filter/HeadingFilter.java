@@ -34,6 +34,7 @@ package org.snipsnap.snip.filter;
 import org.apache.oro.text.regex.MatchResult;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.filter.regex.RegexTokenFilter;
+import org.snipsnap.snip.filter.macro.context.FilterContext;
 
 public class HeadingFilter extends RegexTokenFilter {
 
@@ -41,11 +42,11 @@ public class HeadingFilter extends RegexTokenFilter {
     super("^[[:space:]]*(1(\\.1)*)[[:space:]]+(.*?)$");
   }
 
-  public void handleMatch(StringBuffer buffer, MatchResult result, Snip snip) {
-    buffer.append(handleMatch(result, snip));
+  public void handleMatch(StringBuffer buffer, MatchResult result, FilterContext context) {
+    buffer.append(handleMatch(result, context));
   }
 
-  public String handleMatch(MatchResult result, Snip snip) {
+  public String handleMatch(MatchResult result, FilterContext context) {
     String indent = result.group(1).replace('.', '-');
     return "<h3 class=\"heading-" + indent + "\">" + result.group(3) + "</h3>";
   }

@@ -35,20 +35,21 @@ package org.snipsnap.snip.filter.regex;
 
 import org.apache.oro.text.regex.*;
 import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.filter.macro.context.FilterContext;
 
 public class ActionSubstitution extends StringSubstitution {
   ActionMatch actionMatch = null;
-  Snip snip = null;
+  FilterContext context = null;
 
-  public ActionSubstitution(String s, ActionMatch actionMatch, Snip snip) {
+  public ActionSubstitution(String s, ActionMatch actionMatch, FilterContext context) {
     super(s);
     this.actionMatch = actionMatch;
-    this.snip = snip;
+    this.context = context;
   }
 
   public void appendSubstitution(StringBuffer stringBuffer, MatchResult matchResult,
                                  int i, PatternMatcherInput patternMatcherInput,
                                  PatternMatcher patternMatcher, Pattern pattern) {
-    actionMatch.handleMatch(stringBuffer, matchResult, snip);
+    actionMatch.handleMatch(stringBuffer, matchResult, context);
   }
 }

@@ -165,7 +165,7 @@ public class MemorySnipStorage implements SnipStorage {
   public List storageByParentModifiedOrder(Snip parent, int count) {
     List result = storageByParent(parent);
     Collections.sort(result, mTimeComparatorDesc);
-    return result;
+    return result.subList(0, Math.min(count, result.size()));
   }
 
   public List storageByDateInName(final String start, final String end) {

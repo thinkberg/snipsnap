@@ -86,7 +86,7 @@ public class SnipSpace implements LinkTester {
 
   private void init() {
     missing = new HashMap();
-    changed = new Queue(50);
+    changed = new Queue(100);
     cache = Cache.getInstance();
     storage = new JDBCSnipStorage(cache);
     finders = new FinderFactory("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions, " +

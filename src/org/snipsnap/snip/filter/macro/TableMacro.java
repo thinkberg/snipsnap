@@ -33,6 +33,7 @@
 package org.snipsnap.snip.filter.macro;
 
 import org.snipsnap.snip.filter.macro.table.Table;
+import org.snipsnap.snip.filter.macro.parameter.MacroParameter;
 
 import java.io.IOException;
 import java.io.Writer;

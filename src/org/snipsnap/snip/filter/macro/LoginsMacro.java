@@ -25,6 +25,8 @@
 package org.snipsnap.snip.filter.macro;
 
 import org.snipsnap.app.Application;
+import org.snipsnap.snip.filter.macro.parameter.MacroParameter;
+import org.snipsnap.snip.filter.macro.parameter.SnipMacroParameter;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -53,7 +55,7 @@ public class LoginsMacro extends ListOutputMacro {
     return "Displays all currently logged in users and guests.";
   }
 
-  public void execute(Writer writer, MacroParameter params)
+  public void execute(Writer writer, SnipMacroParameter params)
       throws IllegalArgumentException, IOException {
     String type = "Vertical";
     boolean showSize = true;

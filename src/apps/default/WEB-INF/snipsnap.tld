@@ -41,6 +41,10 @@
       <description>snip to get content for</description>
     </attribute>
     <attribute>
+      <name>encode</name>
+      <description>true if HTML code should be encoded</description>
+    </attribute>
+    <attribute>
       <name>removeHtml</name>
       <description>true if HTML code should be removed</description>
     </attribute>

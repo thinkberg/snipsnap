@@ -32,6 +32,7 @@
 package org.snipsnap.snip.filter.macro;
 
 import org.snipsnap.snip.Modified;
+import org.snipsnap.snip.filter.macro.parameter.MacroParameter;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 

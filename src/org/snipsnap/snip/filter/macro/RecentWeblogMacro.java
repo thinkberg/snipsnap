@@ -32,6 +32,8 @@
 package org.snipsnap.snip.filter.macro;
 
 import org.snipsnap.xmlrpc.SnipSnapPing;
+import org.snipsnap.snip.filter.macro.parameter.MacroParameter;
+import org.snipsnap.snip.filter.macro.parameter.SnipMacroParameter;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -54,7 +56,7 @@ public class RecentWeblogMacro extends ListOutputMacro {
         " ping your site.";
   }
 
-  public void execute(Writer writer, MacroParameter params)
+  public void execute(Writer writer, SnipMacroParameter params)
       throws IllegalArgumentException, IOException {
     String type = "Vertical";
     boolean showSize = false;

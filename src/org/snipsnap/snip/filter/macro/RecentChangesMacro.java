@@ -25,6 +25,8 @@
 package org.snipsnap.snip.filter.macro;
 
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.filter.macro.parameter.MacroParameter;
+import org.snipsnap.snip.filter.macro.parameter.SnipMacroParameter;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -53,7 +55,7 @@ public class RecentChangesMacro extends ListOutputMacro {
     return "Displays a list of recently changes snips.";
   }
 
-  public void execute(Writer writer, MacroParameter params)
+  public void execute(Writer writer, SnipMacroParameter params)
       throws IllegalArgumentException, IOException {
 
     String type = "Vertical";

@@ -29,6 +29,7 @@ import org.apache.oro.text.regex.MatchResult;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.filter.regex.RegexTokenFilter;
+import org.snipsnap.snip.filter.macro.context.FilterContext;
 
 /*
  * UrlFilter finds http:// style URLs in its input and transforms this
@@ -45,7 +46,7 @@ public class UrlFilter extends RegexTokenFilter {
     super("([^\"=]|^)((http|ftp)s?://(%[[:digit:]A-Fa-f][[:digit:]A-Fa-f]|[-_.!~*';/?:@#&=+$,[:alnum:]])+)");
   };
 
-  public void handleMatch(StringBuffer buffer, MatchResult result, Snip snip) {
+  public void handleMatch(StringBuffer buffer, MatchResult result, FilterContext context) {
     buffer.append(result.group(1));
     buffer.append("<span class=\"nobr\">");
     buffer.append(SnipLink.createImage("external-link", "&gt;&gt;"));

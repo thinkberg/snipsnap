@@ -21,24 +21,30 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
+
  */
+
+package org.snipsnap.snip.filter;
+
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.filter.macro.context.FilterContext;
+
 /*
  * Abstract Filter Class that supplies the
  * Filter interface. Concrete Filters should
- * inherit from Filter
+ * inherit from Filter. Filters transform a
+ * String (usually snip content) to another String
+ * (usually HTML).
  *
  * @author stephan
  * @team sonicteam
  * @version $Id$
  */
-package org.snipsnap.snip.filter;
-
-import org.snipsnap.snip.Snip;
 
 public abstract class Filter {
 
   public Filter() {
   }
 
-  public abstract String filter(String input, Snip snip);
+  public abstract String filter(String input, FilterContext context);
 }

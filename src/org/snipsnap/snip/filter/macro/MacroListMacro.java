@@ -25,6 +25,7 @@
 package org.snipsnap.snip.filter.macro;
 
 import org.snipsnap.snip.filter.MacroFilter;
+import org.snipsnap.snip.filter.macro.parameter.MacroParameter;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -39,7 +40,7 @@ import java.util.List;
  * @version $Id$
  */
 
-public class MacroListMacro extends ListOutputMacro {
+public class MacroListMacro extends Macro {
   public String getName() {
     return "list-of-macros";
   }

@@ -35,6 +35,8 @@ package org.snipsnap.snip.filter.macro;
 
 
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.filter.macro.parameter.MacroParameter;
+import org.snipsnap.snip.filter.macro.parameter.SnipMacroParameter;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 
@@ -58,7 +60,7 @@ public class SinceLastVisitMacro extends ListOutputMacro {
     return "Show all snips that have been changed since the last visit of the user.";
   }
 
-  public void execute(Writer writer, MacroParameter params)
+  public void execute(Writer writer, SnipMacroParameter params)
       throws IllegalArgumentException, IOException {
     String type = null;
     boolean showSize = true;

@@ -33,6 +33,8 @@ package org.snipsnap.snip.filter.macro;
 
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.filter.macro.parameter.MacroParameter;
+import org.snipsnap.snip.filter.macro.parameter.SnipMacroParameter;
 import org.snipsnap.util.collection.Collections;
 import org.snipsnap.util.collection.Filterator;
 
@@ -55,7 +57,7 @@ public class IndexSnipMacro extends ListOutputMacro {
     return "Displays a list of all snips of the system. Comment snips are filtered out.";
   }
 
-  public void execute(Writer writer, MacroParameter params)
+  public void execute(Writer writer, SnipMacroParameter params)
       throws IllegalArgumentException, IOException {
     String type = null;
     boolean showSize = true;

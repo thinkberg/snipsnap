@@ -40,6 +40,7 @@ import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.filter.interwiki.InterWiki;
+import org.snipsnap.snip.filter.macro.context.FilterContext;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.util.Transliterate;
 
@@ -69,7 +70,7 @@ public class LinkTestFilter extends Filter {
     // super("\\[(.*?)\\]", "<link href=\"$1\"/>");
   }
 
-  public String filter(String input, Snip snip) {
+  public String filter(String input, FilterContext context) {
     StringBuffer buffer = new StringBuffer("");
 
     PatternMatcherInput patternMatcherInput = new PatternMatcherInput(input);

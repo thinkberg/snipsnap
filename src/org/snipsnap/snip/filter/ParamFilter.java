@@ -28,6 +28,7 @@ import org.apache.oro.text.regex.MatchResult;
 import org.snipsnap.app.Application;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.filter.regex.RegexTokenFilter;
+import org.snipsnap.snip.filter.macro.context.FilterContext;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,7 +45,7 @@ import java.util.Map;
 public class ParamFilter extends RegexTokenFilter {
   private Map params;
 
-  public void handleMatch(StringBuffer buffer, MatchResult result, Snip snip) {
+  public void handleMatch(StringBuffer buffer, MatchResult result, FilterContext context) {
     // String[] params = null;
     // String content = null;
     Map param;

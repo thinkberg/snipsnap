@@ -32,6 +32,8 @@
 package org.snipsnap.snip.filter.macro;
 
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.filter.macro.parameter.MacroParameter;
+import org.snipsnap.snip.filter.macro.parameter.SnipMacroParameter;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -46,7 +48,7 @@ public class UserSnipMacro extends ListOutputMacro {
     return "Show all snips created by a specified user.";
   }
 
-  public void execute(Writer writer, MacroParameter params)
+  public void execute(Writer writer, SnipMacroParameter params)
       throws IllegalArgumentException, IOException {
     String type = null;
     boolean showSize = true;

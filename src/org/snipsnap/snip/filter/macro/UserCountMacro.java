@@ -26,6 +26,7 @@
 package org.snipsnap.snip.filter.macro;
 
 import org.snipsnap.user.UserManager;
+import org.snipsnap.snip.filter.macro.parameter.MacroParameter;
 
 import java.io.IOException;
 import java.io.Writer;

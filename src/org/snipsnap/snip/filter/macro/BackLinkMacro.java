@@ -25,6 +25,8 @@
 package org.snipsnap.snip.filter.macro;
 
 import org.snipsnap.snip.filter.links.BackLinks;
+import org.snipsnap.snip.filter.macro.parameter.MacroParameter;
+import org.snipsnap.snip.filter.macro.parameter.SnipMacroParameter;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -45,7 +47,7 @@ public class BackLinkMacro extends ListOutputMacro {
     return "Renders a list of backlinks for the snip.";
   }
 
-  public void execute(Writer writer, MacroParameter params)
+  public void execute(Writer writer, SnipMacroParameter params)
       throws IllegalArgumentException, IOException {
     int count = 10;
     if (params.getLength() == 1) {

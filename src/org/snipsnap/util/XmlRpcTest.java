@@ -23,43 +23,35 @@
  * --LICENSE NOTICE--
  */
 
-package org.snipsnap.snip.filter.macro;
+package org.snipsnap.util;
 
+import org.apache.xmlrpc.XmlRpcClient;
+import org.apache.xmlrpc.XmlRpcException;
 
-import org.snipsnap.snip.filter.macro.api.ApiDoc;
-import org.snipsnap.snip.filter.macro.parameter.MacroParameter;
-
+import java.util.Vector;
 import java.io.IOException;
-import java.io.Writer;
 
-/*
- * Lists all known API documentation repositorys and
- * mappings
+/**
+ * Small tool to test XML-RPC
  *
- * @author stephan
- * @team sonicteam
+ * @author Stephan J. Schmidt
  * @version $Id$
  */
 
-public class ApiDocMacro extends Macro {
-  private String[] paramDescription = { };
+public class XmlRpcTest {
+  public static void main(String[] args) {
+    try {
+      Vector params = new Vector();
+      XmlRpcClient test = new XmlRpcClient("http://localhost:8668/RPC2");
+      params.clear();
+      // Name of the weblog
+      //params.addElement(config.getName());
+      // Url of the weblog
+      Object result = test.execute("generator.version", params);
+      System.out.println("result="+result);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
 
-  public String[] getParamDescription() {
-    return paramDescription;
-  }
-
-  public String getName() {
-    return "api-docs";
-  }
-
-  public String getDescription() {
-    return "Displays a list of known online API documentations and mappings.";
-  }
-
-  public void execute(Writer writer, MacroParameter params)
-      throws IllegalArgumentException, IOException {
-    ApiDoc apiDoc = ApiDoc.getInstance();
-    apiDoc.appendTo(writer);
-    return;
   }
 }

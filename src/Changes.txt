@@ -1,3 +1,12 @@
+0.3.4
+
+- Developer: Added getParamDescription() to MacroParameter
+- Fixed bug: RSS would display to many items
+- Added feature: SnipSnap has XML-RPC interface with method "generator.version()" to get SnipSnap version
+- Added feature: SnipSnap displays version in HTML with META generator tag
+- Added feature: SnipSnap displays version information about itself with .../rest/version
+- Fixed bug: external images didn't display
+
 0.3.3 - 2003-01-22
 
 - Fixed bug: web GUI import, multi-value html form parameter recognised for multipart/form-data

@@ -32,8 +32,11 @@
         <link><c:out value="${url}/${child.nameEncoded}"/></link>
         <description><s:content snip="${child}" removeHtml="true"/></description>
         <guid isPermaLink="true"><c:out value="${url}/${child.nameEncoded}"/></guid>
-        <%-- <content:encoded><s:content snip="${child}"/></content:encoded> --%>
+        <content:encoded><s:content snip="${child}" encode="true"/></content:encoded>
         <s:dublinCore snip="${child}" format="xml"/>
+        <!--
+<comments>http://rateyourmusic.com/yaccs/commentsn/blogId=705245&itemId=271</comments>
+        -->
       </item>
     </c:forEach>
   </channel>

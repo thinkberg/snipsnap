@@ -39,6 +39,8 @@ import org.snipsnap.app.Application;
 import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.filter.regex.RegexTokenFilter;
+import org.snipsnap.snip.filter.macro.context.FilterContext;
+import org.snipsnap.snip.filter.macro.context.SnipFilterContext;
 
 public class CalendarFilter extends RegexTokenFilter {
 
@@ -48,7 +50,8 @@ public class CalendarFilter extends RegexTokenFilter {
 
   private final static int CALENDAR_PREFIX_LENGTH = "calendar-".length();
 
-  public void handleMatch(StringBuffer buffer, MatchResult result, Snip snip) {
+  public void handleMatch(StringBuffer buffer, MatchResult result, FilterContext context) {
+    Snip snip = ((SnipFilterContext) context).getSnip();
     Application app = Application.get();
     AppConfiguration config = app.getConfiguration();
     Snip parent = snip.getParent();

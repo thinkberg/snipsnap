@@ -25,6 +25,8 @@
 package org.snipsnap.snip.filter;
 
 import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.filter.macro.context.SnipFilterContext;
+import org.snipsnap.snip.filter.macro.context.FilterContext;
 
 /**
  * SnipFormatter supplies some methods for handling Snip Content.
@@ -62,6 +64,7 @@ public class SnipFormatter {
         fp.addFilter("org.snipsnap.snip.filter.TypographyFilter");
       }
     }
-    return fp.filter(content, snip);
+    FilterContext context = new SnipFilterContext(snip);
+    return fp.filter(content, context);
   }
 }

@@ -25,6 +25,8 @@
 
 package org.snipsnap.snip.filter.macro.code;
 
+import org.snipsnap.snip.filter.macro.context.FilterContext;
+
 /**
  * Displays source code with syntax highlighting etc.
  *
@@ -34,4 +36,5 @@ package org.snipsnap.snip.filter.macro.code;
 
 public interface SourceCodeFormatter {
   public String getName();
+  public String filter(String content, FilterContext context);
 }

@@ -25,41 +25,29 @@
 
 package org.snipsnap.snip.filter.macro;
 
-
-import org.snipsnap.snip.filter.macro.api.ApiDoc;
+import org.snipsnap.snip.filter.macro.parameter.SnipMacroParameter;
 import org.snipsnap.snip.filter.macro.parameter.MacroParameter;
 
 import java.io.IOException;
 import java.io.Writer;
 
-/*
- * Lists all known API documentation repositorys and
- * mappings
+/**
+ * Preserved Macro, only for SnipSnap macros
  *
- * @author stephan
- * @team sonicteam
+ * @author Stephan J. Schmidt
  * @version $Id$
  */
 
-public class ApiDocMacro extends Macro {
-  private String[] paramDescription = { };
+public abstract class SnipPreserved extends Preserved {
+  public abstract void execute(Writer writer, SnipMacroParameter params) throws IllegalArgumentException, IOException;
 
-  public String[] getParamDescription() {
-    return paramDescription;
+  public void execute(Writer writer, MacroParameter params) throws IllegalArgumentException, IOException {
+    if (params instanceof SnipMacroParameter) {
+      execute(writer, (SnipMacroParameter) params);
+      return;
+    } else {
+      throw new IllegalArgumentException("Macro must be called in a SnipSnap enviroment.");
+    }
   }
 
-  public String getName() {
-    return "api-docs";
-  }
-
-  public String getDescription() {
-    return "Displays a list of known online API documentations and mappings.";
-  }
-
-  public void execute(Writer writer, MacroParameter params)
-      throws IllegalArgumentException, IOException {
-    ApiDoc apiDoc = ApiDoc.getInstance();
-    apiDoc.appendTo(writer);
-    return;
-  }
 }

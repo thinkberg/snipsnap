@@ -22,6 +22,13 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
+
+package org.snipsnap.snip.filter.regex;
+
+import org.apache.oro.text.regex.MatchResult;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.filter.macro.context.FilterContext;
+
 /*
  * Interface for Classes that handle matches
  *
@@ -30,11 +37,6 @@
  * @version $Id$
  */
 
-package org.snipsnap.snip.filter.regex;
-
-import org.apache.oro.text.regex.MatchResult;
-import org.snipsnap.snip.Snip;
-
 public interface ActionMatch {
-  public void handleMatch(StringBuffer buffer, MatchResult result, Snip snip);
+  public void handleMatch(StringBuffer buffer, MatchResult result, FilterContext context);
 }

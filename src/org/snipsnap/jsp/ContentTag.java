@@ -46,7 +46,8 @@ import java.io.IOException;
 public class ContentTag extends TagSupport {
   Snip snip = null;
   boolean extract = false;
-  boolean removeHtml = true;
+  boolean removeHtml = false;
+  boolean encodeHtml = false;
 
   public int doStartTag() throws JspException {
     if (null != snip) {
@@ -66,6 +67,8 @@ public class ContentTag extends TagSupport {
             content = content + " ...";
           }
         }
+      } else if (encodeHtml) {
+        // content;
       }
       try {
         JspWriter out = pageContext.getOut();
@@ -75,6 +78,10 @@ public class ContentTag extends TagSupport {
       }
     }
     return super.doStartTag();
+  }
+
+  public void setEncode(boolean encode) {
+    this.encodeHtml = encode;
   }
 
   public void setExtract(boolean extract) {

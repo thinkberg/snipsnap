@@ -33,11 +33,13 @@
 package org.snipsnap.snip.filter.macro;
 
 import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.filter.macro.parameter.MacroParameter;
+import org.snipsnap.snip.filter.macro.parameter.SnipMacroParameter;
 
 import java.io.IOException;
 import java.io.Writer;
 
-public class FieldMacro extends Macro {
+public class FieldMacro extends SnipMacro {
   public String getName() {
     return "field";
   }
@@ -49,7 +51,7 @@ public class FieldMacro extends Macro {
   /**
    * {field:id|value|target|button}
    */
-  public void execute(Writer writer, MacroParameter params)
+  public void execute(Writer writer, SnipMacroParameter params)
       throws IllegalArgumentException, IOException {
 
     if (params.getLength() > 0) {

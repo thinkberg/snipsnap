@@ -33,6 +33,7 @@
 package org.snipsnap.snip.filter;
 
 import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.filter.macro.context.FilterContext;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -70,16 +71,16 @@ public class FilterPipe {
     }
   }
 
-  public String filter(String input, Snip snip) {
+  public String filter(String input, FilterContext context) {
 
     String output = input;
     Iterator filterIterator = filterList.iterator();
 
-    // Apply every filter in _filterList to input string
+    // Apply every filter in filterList to input string
     while (filterIterator.hasNext()) {
       Filter f = (Filter) filterIterator.next();
       try {
-        String tmp = f.filter(output, snip);
+        String tmp = f.filter(output, context);
         if (null == tmp) {
           System.err.println("error while filtering: " + f);
         } else {

@@ -23,24 +23,24 @@
  * --LICENSE NOTICE--
  */
 
+package org.snipsnap.snip.filter.regex;
+
+import org.apache.oro.text.regex.*;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.filter.Filter;
+import org.snipsnap.snip.filter.macro.context.FilterContext;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /*
- * Class that applies a RegexFilter, can be subclassed
+ * Class that stores regular expressions, can be subclassed
  * for special Filters
  *
  * @author stephan
  * @team sonicteam
  * @version $Id$
  */
-
-package org.snipsnap.snip.filter.regex;
-
-import org.apache.oro.text.regex.*;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.filter.Filter;
-
-import java.util.ArrayList;
-import java.util.List;
-
 public abstract class RegexFilter extends Filter {
   int limit = Util.SUBSTITUTE_ALL;
   int interps = Perl5Substitution.INTERPOLATE_ALL;
@@ -64,5 +64,5 @@ public abstract class RegexFilter extends Filter {
     }
   }
 
-  public abstract String filter(String input, Snip snip);
+  public abstract String filter(String input, FilterContext context);
 }

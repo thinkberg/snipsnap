@@ -39,8 +39,11 @@ import org.snipsnap.serialization.StringBufferWriter;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.filter.macro.Macro;
-import org.snipsnap.snip.filter.macro.MacroParameter;
+import org.snipsnap.snip.filter.macro.parameter.MacroParameter;
+import org.snipsnap.snip.filter.macro.parameter.SnipMacroParameter;
 import org.snipsnap.snip.filter.macro.WeblogMacro;
+import org.snipsnap.snip.filter.macro.context.SnipFilterContext;
+import org.snipsnap.snip.filter.macro.context.FilterContext;
 import org.snipsnap.snip.filter.regex.RegexTokenFilter;
 
 import java.io.Writer;
@@ -76,7 +79,9 @@ public class LateMacroFilter extends RegexTokenFilter {
     macros.put(macro.getName(), macro);
   }
 
-  public void handleMatch(StringBuffer buffer, MatchResult result, Snip snip) {
+  public void handleMatch(StringBuffer buffer, MatchResult result, FilterContext context) {
+    Snip snip = ((SnipFilterContext) context).getSnip();
+
     String command = result.group(1);
 
 // System.out.println("Parameter block:" + Application.get().getParameters() );
@@ -87,8 +92,7 @@ public class LateMacroFilter extends RegexTokenFilter {
 //        System.err.println(i+" "+result.group(i));
 //      }
 
-      MacroParameter mParams = new MacroParameter();
-      mParams.setSnip(snip);
+      MacroParameter mParams = new SnipMacroParameter(snip);
 // {tag} ... {tag}
       if (result.group(1).equals(result.group(result.groups() - 1))) {
 // {tag:1|2} ... {tag}
@@ -110,7 +114,7 @@ public class LateMacroFilter extends RegexTokenFilter {
           Macro macro = (Macro) macros.get(command);
 // recursively filter macros within macros
           if (null != mParams.getContent()) {
-            mParams.setContent(filter(mParams.getContent(), snip));
+            mParams.setContent(filter(mParams.getContent(), context));
           }
           Writer writer = new StringBufferWriter(buffer);
           macro.execute(writer, mParams);

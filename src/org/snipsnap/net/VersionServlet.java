@@ -22,41 +22,40 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-/*
- * Macro that replaces external links
+package org.snipsnap.net;
+
+import org.snipsnap.config.AppConfiguration;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipSpace;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+
+/**
+ * Display version information about the weblog
  *
- * @author stephan
- * @team sonicteam
+ * @author Stephan J. Schmidt
  * @version $Id$
  */
+public class VersionServlet extends HttpServlet {
+  private AppConfiguration config;
 
-package org.snipsnap.snip.filter.macro;
-
-import org.snipsnap.snip.filter.interwiki.InterWiki;
-import org.snipsnap.snip.filter.macro.parameter.MacroParameter;
-
-import java.io.IOException;
-import java.io.Writer;
-
-public class InterWikiMacro extends Macro {
-    private String[] paramDescription =
-     {"none"};
-
-  public String[] getParamDescription() {
-    return paramDescription;
-  }
-  public String getName() {
-    return "inter-wiki";
+  public void init(ServletConfig servletConfig) throws ServletException {
+    config = AppConfiguration.getInstance();
   }
 
-  public String getDescription() {
-    return "Displays a list of known InterWikis.";
-  }
+  public void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws IOException, ServletException {
 
-  public void execute(Writer writer, MacroParameter params)
-      throws IllegalArgumentException, IOException {
-    InterWiki interWiki = InterWiki.getInstance();
-    interWiki.appendTo(writer);
-    return;
+    request.setAttribute("config", config);
+
+    RequestDispatcher dispatcher = request.getRequestDispatcher("/version.jsp");
+    dispatcher.forward(request, response);
   }
 }

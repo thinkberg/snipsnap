@@ -27,6 +27,7 @@ package org.snipsnap.snip.filter;
 import org.apache.oro.text.regex.MatchResult;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.filter.regex.RegexTokenFilter;
+import org.snipsnap.snip.filter.macro.context.FilterContext;
 import org.snipsnap.util.log.Logger;
 import org.snipsnap.util.log.SystemOutLogger;
 
@@ -79,7 +80,7 @@ public class ListFilter extends RegexTokenFilter {
     closeList.put("j", "</ol>");
   };
 
-  public void handleMatch(StringBuffer buffer, MatchResult result, Snip snip) {
+  public void handleMatch(StringBuffer buffer, MatchResult result, FilterContext context) {
     try {
       Logger.log("ListFilter: " + result.groups());
       BufferedReader reader = new BufferedReader(new StringReader(result.group(0)));

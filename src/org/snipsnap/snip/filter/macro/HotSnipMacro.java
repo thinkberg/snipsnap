@@ -34,6 +34,7 @@ package org.snipsnap.snip.filter.macro;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.filter.macro.parameter.MacroParameter;
 
 import java.io.IOException;
 import java.io.Writer;

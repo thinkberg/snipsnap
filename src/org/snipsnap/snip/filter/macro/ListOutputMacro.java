@@ -27,6 +27,8 @@ package org.snipsnap.snip.filter.macro;
 
 import org.snipsnap.snip.filter.macro.list.ListFormatter;
 import org.snipsnap.snip.filter.macro.list.SimpleList;
+import org.snipsnap.snip.filter.macro.parameter.MacroParameter;
+import org.snipsnap.snip.filter.macro.parameter.SnipMacroParameter;
 import sun.misc.Service;
 import sun.misc.ServiceConfigurationError;
 
@@ -44,7 +46,7 @@ import java.util.Map;
  * @version $Id$
  */
 
-public abstract class ListOutputMacro extends Macro {
+public abstract class ListOutputMacro extends SnipMacro {
 
   private static Map formatterMap = new HashMap();
 
@@ -80,6 +82,6 @@ public abstract class ListOutputMacro extends Macro {
   }
 
 
-  public abstract void execute(Writer writer, MacroParameter params) throws IllegalArgumentException, IOException;
+  public abstract void execute(Writer writer, SnipMacroParameter params) throws IllegalArgumentException, IOException;
 }
 

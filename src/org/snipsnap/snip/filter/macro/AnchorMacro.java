@@ -27,6 +27,8 @@ package org.snipsnap.snip.filter.macro;
 
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.filter.macro.parameter.MacroParameter;
+import org.snipsnap.snip.filter.macro.parameter.SnipMacroParameter;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -40,7 +42,7 @@ import java.util.Map;
  * @version $Id$
  */
 
-public class AnchorMacro extends Preserved {
+public class AnchorMacro extends SnipMacro {
   private String[] paramDescription = {"1: anchor text"};
 
   private Map filters;
@@ -60,7 +62,7 @@ public class AnchorMacro extends Preserved {
     return paramDescription;
   }
 
-  public void execute(Writer writer, MacroParameter params)
+  public void execute(Writer writer,SnipMacroParameter params)
       throws IllegalArgumentException, IOException {
 
     if (params.getLength() == 1) {

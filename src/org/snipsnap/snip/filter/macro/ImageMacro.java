@@ -28,6 +28,8 @@ import org.snipsnap.app.Application;
 import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.filter.macro.parameter.MacroParameter;
+import org.snipsnap.snip.filter.macro.parameter.SnipMacroParameter;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -40,7 +42,7 @@ import java.io.Writer;
  * @version $Id$
  */
 
-public class ImageMacro extends Macro {
+public class ImageMacro extends SnipMacro {
   AppConfiguration config;
 
   public String getName() {
@@ -55,7 +57,7 @@ public class ImageMacro extends Macro {
     config = Application.get().getConfiguration();
   }
 
-  public void execute(Writer writer, MacroParameter params)
+  public void execute(Writer writer, SnipMacroParameter params)
       throws IllegalArgumentException, IOException {
 
     StringBuffer buffer = new StringBuffer();
@@ -74,18 +76,19 @@ public class ImageMacro extends Macro {
         ext = params.get(2);
         align = params.get(3);
       }
-      // Does the name contain an extension?
-      int dotIndex = img.indexOf('.');
-      if (-1 != dotIndex) {
-        ext = img.substring(dotIndex + 1);
-        img = img.substring(0, dotIndex);
-      }
 
       if (img.startsWith("http://")) {
         if (config.allowExternalImages()) {
           SnipLink.appendExternalImage(buffer, img, align);
         }
       } else {
+        // Does the name contain an extension?
+        int dotIndex = img.lastIndexOf('.');
+        if (-1 != dotIndex) {
+          ext = img.substring(dotIndex + 1);
+          img = img.substring(0, dotIndex);
+        }
+
         String imageName = "image-" + snip.getName() + "-" + img;
         if ("svg".equals(ext)) {
           // SVG cannot be used with <image>

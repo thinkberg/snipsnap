@@ -29,6 +29,8 @@ import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.filter.FilterPipe;
 import org.snipsnap.snip.filter.ListFilter;
+import org.snipsnap.snip.filter.macro.context.SnipFilterContext;
+import org.snipsnap.snip.filter.macro.context.FilterContext;
 
 import java.io.File;
 import java.io.IOException;
@@ -84,8 +86,9 @@ public class Presentation {
     //fp.addFilter(new KeyFilter());
 
     Snip snip = space.load(name);
+    FilterContext context = new SnipFilterContext(snip);
 
-    StringTokenizer st = new StringTokenizer(fp.filter(snip.getContent(), snip), "\n");
+    StringTokenizer st = new StringTokenizer(fp.filter(snip.getContent(), context), "\n");
     boolean first = true;
     while (st.hasMoreTokens()) {
       String line = st.nextToken();

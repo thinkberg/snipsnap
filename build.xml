@@ -176,7 +176,7 @@
       srcdir="${src}"
       classpathref="all.classpath"
       destdir="${target}/util"
-      includes="org/snipsnap/util/Test*, org/snipsnap/util/*Util.java, org/snipsnap/util/DB*.java, org/snipsnap/util/*JDBC*.java, org/snipsnap/util/mail/**"/>
+      includes="org/snipsnap/util/Test*, org/snipsnap/util/*Util.java, org/snipsnap/util/DB*.java, org/snipsnap/util/*JDBC*.java, org/snipsnap/util/mail/**, org/snipsnap/util/*Test.java"/>
   </target>
 
   <!-- create web archive of the template application -->

@@ -17,6 +17,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="<c:out value='${app.configuration.locale}'/>" xml:lang="<c:out value='${app.configuration.locale}'/>">
  <head>
   <meta http-equiv="Content-Type" content="text/html; charset=<c:out value='${app.configuration.encoding}'/>"/>
+  <meta http-equiv="Generator" content="SnipSnap/<c:out value="${app.configuration.version}"/>"/>
   <link rel="EditURI" type="application/rsd+xml" title="RSD"
       href="<c:out value='${app.configuration.url}/exec/rsd'/>"/>
   <link rel="alternate" type="application/rss+xml" title="RSS"

@@ -36,13 +36,15 @@ import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipUtil;
 import org.snipsnap.snip.filter.links.BackLinks;
+import org.snipsnap.snip.filter.macro.parameter.MacroParameter;
+import org.snipsnap.snip.filter.macro.parameter.SnipMacroParameter;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Iterator;
 import java.util.List;
 
-public class WeblogMacro extends Macro {
+public class WeblogMacro extends SnipMacro {
   private SnipSpace space;
   private String[] paramDescription = {"?1: number of shown posts"};
 
@@ -62,7 +64,7 @@ public class WeblogMacro extends Macro {
     return paramDescription;
   }
 
-  public void execute(Writer writer, MacroParameter params)
+  public void execute(Writer writer, SnipMacroParameter params)
       throws IllegalArgumentException, IOException {
 
     if (params.getLength() < 2) {
