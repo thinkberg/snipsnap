@@ -30,9 +30,7 @@ import org.snipsnap.snip.Blog;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.semanticweb.rss.BlogFeeder;
-import org.snipsnap.semanticweb.rss.Feeder;
-import org.snipsnap.semanticweb.rss.RecentlySnipChangedFeeder;
+import org.snipsnap.semanticweb.rss.*;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -75,6 +73,10 @@ public class RssServlet extends HttpServlet {
       Feeder feeder = null;
       if ("recentlychanged".equals(type)) {
         feeder = new RecentlySnipChangedFeeder();
+      } else if ("comments".equals(type)) {
+        feeder = new NewCommentFeeder();
+      } else if ("newsnipsonly".equals(type)) {
+        feeder = new NewSnipFeeder();
       } else {
         if (sourceSnip.isWeblog()) {
           feeder = new BlogFeeder(sourceSnipName);
