@@ -20,16 +20,16 @@
   ** @version $Id$
   --%>
   <channel>
-    <title><c:out value="${config.name}"/></title>
+    <title><c:out value="${config.name}" escapeXml="true"/></title>
     <%-- usually points to "start" --%>
-    <link><c:out value="${url}/${snip.nameEncoded}"/></link>
-    <description><c:out value="${config.tagline}"/></description>
+    <link><c:out value="${url}/${snip.nameEncoded}" escapeXml="true"/></link>
+    <description><c:out value="${config.tagline}" escapeXml="true"/></description>
     <s:dublinCore snip="${snip}" format="xml"/>
     <!-- <blogChannel:changes>http://www.weblogs.com/rssUpdates/changes.xml</changes> -->
     <admin:generatorAgent rdf:resource="http://www.snipsnap.org/space/version-<c:out value='${config.version}'/>"/>
     <c:forEach items="${rsssnips}" var="child">
        <item>
-        <title><c:out value="${child.name}"/></title>
+        <title><c:out value="${child.name}" escapeXml="true"/></title>
         <link><c:out value="${url}/${child.nameEncoded}"/></link>
         <description><s:content snip="${child}" removeHtml="true"/></description>
         <guid isPermaLink="true"><c:out value="${url}/${child.nameEncoded}"/></guid>

@@ -91,7 +91,6 @@ public class InitializeDatabase {
       message("created application oid: "+appOid);
       app.storeObject(Application.OID, appOid);
 
-
       new File(config.getFileStore()).mkdirs();
       // automatically created by the indexer
       // (new File(config.getIndexPath())).mkdirs();

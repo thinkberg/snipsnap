@@ -11,13 +11,13 @@
   ** @version $Id$
   --%>
   <channel>
-    <title><c:out value="${config.name}"/></title>
-    <description><c:out value="${config.tagline}"/></description>
+    <title><c:out value="${config.name}" escapeXml="true"/></title>
+    <description><c:out value="${config.tagline}" escapeXml="true"/></description>
     <%-- usually points to "start" --%>
     <link><c:out value="${url}/${snip.nameEncoded}"/></link>
     <c:forEach items="${snip.childrenDateOrder}" var="child">
        <item>
-        <title><c:out value="${child.name}"/></title>
+        <title><c:out value="${child.name}" escapeXml="true"/></title>
         <link><c:out value="${url}/${child.nameEncoded}"/></link>
       </item>
     </c:forEach>
