@@ -73,6 +73,10 @@ public class SnipSpace implements LinkTester {
     return changed.get();
   }
 
+  public List getByDate(String start, String end) {
+    return storageByDateInName(start, end);
+  }
+
   public List getComments(Snip snip) {
     return storageByComments(snip);
   }
@@ -280,6 +284,33 @@ public class SnipSpace implements LinkTester {
     try {
       statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip FROM Snip WHERE parentSnip=?");
       statement.setString(1, parent.getName());
+
+      result = statement.executeQuery();
+      Snip snip = null;
+      while (result.next()) {
+        snip = cacheLoad(result);
+        children.add(snip);
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    } finally {
+      ConnectionManager.close(statement);
+      ConnectionManager.close(result);
+    }
+    return children;
+  }
+
+  private List storageByDateInName(String start, String end) {
+    PreparedStatement statement = null;
+    ResultSet result = null;
+    List children = new ArrayList();
+
+    try {
+      System.out.println("Finding: "+start+" "+end);
+      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip FROM Snip WHERE name>=? and name<=? and parentSnip=?");
+      statement.setString(1, start);
+      statement.setString(2, end);
+      statement.setString(3, "start");
 
       result = statement.executeQuery();
       Snip snip = null;

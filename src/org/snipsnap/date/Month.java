@@ -24,8 +24,15 @@
  */
 package com.neotis.date;
 
+import com.neotis.snip.Snip;
+import com.neotis.snip.SnipSpace;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Object that generates a View of the month
@@ -46,7 +53,7 @@ public class Month {
 
   /** The days in each month. */
   public final static int dom[] = {
-    31, 28, 31, 30,	/* jan feb mar apr */
+    31, 28, 31, 30, /* jan feb mar apr */
     31, 30, 31, 31, /* may jun jul aug */
     30, 31, 30, 31	/* sep oct nov dec */
   };
@@ -55,7 +62,34 @@ public class Month {
   }
 
 
-  public String getView(int month, int year)  {
+  public String toKey(int year, int month, int day) {
+    return year + "-" + (month < 10 ? "0" + month : ""+month) + "-" + (day < 10 ? "0" + day : ""+day);
+  }
+
+  public Set getDays(int month, int year) {
+    String start = toKey(year, month, 1);
+    String end = toKey(year, month, 31);
+    List snips = SnipSpace.getInstance().getByDate(start, end);
+    Iterator iterator = snips.iterator();
+
+    Set days = new HashSet();
+
+    while (iterator.hasNext()) {
+      Snip snip = (Snip) iterator.next();
+      // test for "2002-03-26" format
+      if (snip.getName().length() == 10) {
+        days.add(snip.getName());
+      }
+    }
+    return days;
+  }
+
+
+  // @TODO: convert to use month=1,2,... instead of 0,1,....
+  public String getView(int month, int year) {
+
+    Set days = getDays(month+1, year);
+
     StringBuffer view = new StringBuffer();
     view.append("<table>");
     view.append("<tr colspan=\"7\"><b>");
@@ -66,7 +100,7 @@ public class Month {
 
     int leadGap = 0;  // for German Style Monday starting weeks
 
-    if(month < 0 || month > 11)
+    if (month < 0 || month > 11)
       throw new IllegalArgumentException("Month " + month + " bad, must be 0-11");
 
     Calendar today = new GregorianCalendar();
@@ -78,39 +112,39 @@ public class Month {
     // Compute how much to leave before the first day.
     // getDay() returns 0 for Sunday, which is just right.
     leadGap = calendar.get(Calendar.DAY_OF_WEEK) - 1;
-    leadGap = (leadGap -1 );
-    if (leadGap<0) leadGap=6;
+    leadGap = (leadGap - 1);
+    if (leadGap < 0) leadGap = 6;
 
     int daysInMonth = dom[month];
-    if(calendar.isLeapYear(calendar.get(Calendar.YEAR)) && month == 1)
+    if (calendar.isLeapYear(calendar.get(Calendar.YEAR)) && month == 1)
       ++daysInMonth;
 
     view.append("<tr><td>Mo</td><td>Di</td><td>Mi</td><td>Do</td><td>Fr</td><td>Sa</td><td>So</td></tr>");
 
     StringBuffer week = new StringBuffer();
     // Blank out the labels before 1st day of month
-    for(int i = 0; i < leadGap; i++) {
+    for (int i = 0; i < leadGap; i++) {
       week.append("<td></td>");
     }
 
     // Fill in numbers for the day of month.
 
-    for(int i = 1; i <= daysInMonth; i++) {
+    for (int i = 1; i <= daysInMonth; i++) {
+      String day = "" + i;
 
-      if(i == todayNumber && month == today.get(Calendar.MONTH) && year == today.get(Calendar.YEAR)) {
-        week.append("<td>");
-        week.append("<b>");
-        week.append(i);
-        week.append("</b>");
-        week.append("</td>");
-      } else {
-        week.append("<td>");
-        week.append(i);
-        week.append("</td>");
+      if (days.contains(toKey(year, month+1, i))) {
+        day = "<a href=\"\">" + day + "</a>";
       }
 
+      if (i == todayNumber && month == today.get(Calendar.MONTH) && year == today.get(Calendar.YEAR)) {
+        day = "<b>" + day + "</b>";
+      }
+      week.append("<td>");
+      week.append(day);
+      week.append("</td>");
+
       // wrap if end of line.
-      if((leadGap + i) % 7 == 0) {
+      if ((leadGap + i) % 7 == 0) {
         view.append("<tr align=\"right\">");
         view.append(week);
         week.setLength(0);

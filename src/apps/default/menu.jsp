@@ -16,6 +16,7 @@
  <tr><td class="menuitem">Index<td></tr>
  <tr><td class="menuitem">Search<td></tr>
  <tr><td>
+  <!-- replace this with a JSTL tag ala <s:checkUser role="anonymous"/> -->
   <% if(app.getUser() != null && !app.getUser().getLogin().equals("Guest")) { %>
     logged in as <%= app.getUser().getLogin() %> | <a href="/exec/authenticate?logoff=true">logoff</a>
   <% } else { %>
@@ -37,6 +38,7 @@
   <% } %>
  <tr><td>
   <b>Recent Changes:</b><br>
+  <!-- replace this with a JSTL tag ala <s:recent/> -->
   <%
    SnipSpace space = SnipSpace.getInstance();
    Iterator iterator = space.getChanged().iterator();
@@ -49,11 +51,13 @@
  </td></tr>
  <tr><td>
   <p>
+  <!-- replace this with a JSTL tag ala <s:calendar/> -->
   <% Month m = new Month(); %>
   <%= m.getView(05,2002) %>
   </p>
 
   <p>
+  <!-- replace this with a JSTL tag ala <s:blogrolling/> -->
    <% Snip rolling = space.load("snipsnap-blogrolling"); %>
    <%= rolling.toXML() %>
   </p>
