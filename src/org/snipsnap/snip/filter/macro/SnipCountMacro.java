@@ -25,9 +25,7 @@
 
 package org.snipsnap.snip.filter.macro;
 
-import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.user.UserManager;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -49,7 +47,7 @@ public class SnipCountMacro extends Macro {
   }
 
   public void execute(Writer writer, MacroParameter params)
-    throws IllegalArgumentException, IOException {
+      throws IllegalArgumentException, IOException {
     if (params == null || params.getLength() == 0) {
       writer.write(Integer.toString(SnipSpace.getInstance().getSnipCount()));
     } else {

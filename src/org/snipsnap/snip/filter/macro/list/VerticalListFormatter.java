@@ -24,12 +24,10 @@
  */
 package org.snipsnap.snip.filter.macro.list;
 
-import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.filter.macro.ListOutputMacro;
-import org.snipsnap.util.Nameable;
+import org.snipsnap.snip.SnipLink;
 import org.snipsnap.util.Linkable;
-import org.snipsnap.serialization.Appendable;
+import org.snipsnap.util.Nameable;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -50,7 +48,7 @@ public class VerticalListFormatter implements ListFormatter {
    * Display a simple vertical list.
    */
   public void format(Writer writer, String listComment, Collection c, String emptyText, boolean showSize)
-    throws IOException {
+      throws IOException {
     writer.write("<div class=\"list\"><div class=\"list-title\">");
     writer.write(listComment);
     if (showSize) {
@@ -65,26 +63,26 @@ public class VerticalListFormatter implements ListFormatter {
       while (nameIterator.hasNext()) {
         Object object = nameIterator.next();
         writer.write("<li>");
-        if(object instanceof Linkable) {
-          writer.write(((Linkable)object).getLink());
-        } else if(object instanceof Snip) {
+        if (object instanceof Linkable) {
+          writer.write(((Linkable) object).getLink());
+        } else if (object instanceof Snip) {
           Snip snip = (Snip) object;
           String name = snip.getName();
           String realName = name;
           if (name.startsWith("comment-")) {
             int lastIndex = name.lastIndexOf("-");
             // String count = name.substring(lastIndex+1);
-            realName = name.substring(name.indexOf("-")+1, lastIndex);
+            realName = name.substring(name.indexOf("-") + 1, lastIndex);
             SnipLink.appendImage(writer, "comment-icon", "", "png");
-            SnipLink.appendLink(writer, name, realName );
+            SnipLink.appendLink(writer, name, realName);
             writer.write(" (");
             SnipLink.appendLink(writer, snip.getCUser());
             writer.write(")");
           } else {
             SnipLink.appendLink(writer, name, realName);
           }
-        } else if(object instanceof Nameable) {
-          SnipLink.appendLink(writer, ((Nameable)object).getName() );
+        } else if (object instanceof Nameable) {
+          SnipLink.appendLink(writer, ((Nameable) object).getName());
         } else {
           writer.write(object.toString());
         }

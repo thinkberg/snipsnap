@@ -31,9 +31,9 @@
  */
 package org.snipsnap.snip.filter;
 
-import org.snipsnap.snip.filter.regex.RegexTokenFilter;
-import org.snipsnap.snip.Snip;
 import org.apache.oro.text.regex.MatchResult;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.filter.regex.RegexTokenFilter;
 
 public class EscapeFilter extends RegexTokenFilter {
 
@@ -48,10 +48,10 @@ public class EscapeFilter extends RegexTokenFilter {
   public String handleMatch(MatchResult result, Snip snip) {
     if (result.group(1) == null) {
       String match = result.group(2);
-      if(match == null) {
+      if (match == null) {
         match = result.group(3);
       }
-      if("\\".equals(match)) {
+      if ("\\".equals(match)) {
         return "\\\\";
       }
       return EscapeFilter.escape(match.charAt(0));

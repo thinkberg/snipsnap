@@ -26,12 +26,8 @@
 package org.snipsnap.notification.jabber;
 
 
-import com.echomine.jabber.*;
 import com.echomine.common.SendMessageFailedException;
-import com.echomine.net.ConnectionFailedException;
-
-import java.net.UnknownHostException;
-
+import com.echomine.jabber.*;
 import org.snipsnap.app.Application;
 
 /**
@@ -56,7 +52,7 @@ public class JabberBot {
 
   public JabberBot() {
     try {
-      JabberContext context = new JabberContext("snipbot","snipbot", "snipsnap.org");
+      JabberContext context = new JabberContext("snipbot", "snipbot", "snipsnap.org");
       jabber = new Jabber();
       session = jabber.createSession(context);
 
@@ -68,7 +64,7 @@ public class JabberBot {
 
       // session.getPresenceService().setToAvailable(null,null);
     } catch (Exception e) {
-      System.err.println("Unable to start JabberBot: " +e);
+      System.err.println("Unable to start JabberBot: " + e);
       e.printStackTrace();
     }
   }
@@ -78,18 +74,18 @@ public class JabberBot {
       session.connect("snipsnap.org", 5222);
       session.getUserService().login();
     } catch (Exception e) {
-      System.err.println("JabberBot: unable to connect: "+e);
+      System.err.println("JabberBot: unable to connect: " + e);
       e.printStackTrace();
     }
   }
 
   public void send(String user, String message) {
-    if(!session.getConnection().isConnected()) {
+    if (!session.getConnection().isConnected()) {
       reconnect();
     }
 
     try {
-      System.err.print("Sending '"+message+"' to '"+user+"' ...");
+      System.err.print("Sending '" + message + "' to '" + user + "' ...");
       JabberChatMessage msg = new JabberChatMessage(JabberChatMessage.TYPE_HEADLINE);
       msg.setSubject(Application.get().getConfiguration().getName());
       msg.setBody(message);
@@ -97,7 +93,7 @@ public class JabberBot {
       session.sendMessage(msg);
       System.err.println("Sent.");
     } catch (SendMessageFailedException e) {
-      System.err.println("Unable to send message to "+user+" "+e);
+      System.err.println("Unable to send message to " + user + " " + e);
       e.printStackTrace();
     }
   }

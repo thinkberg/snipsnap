@@ -24,16 +24,14 @@
  */
 package org.snipsnap.snip.filter.macro.list;
 
-import org.snipsnap.snip.filter.macro.ListOutputMacro;
 import org.snipsnap.snip.SnipLink;
-import org.snipsnap.util.Nameable;
 import org.snipsnap.util.Linkable;
-import org.snipsnap.serialization.Appendable;
+import org.snipsnap.util.Nameable;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.util.Collection;
 import java.util.Iterator;
-import java.io.Writer;
-import java.io.IOException;
 
 /**
  * Simple list formatter.
@@ -49,12 +47,12 @@ public class SimpleList implements ListFormatter {
    * Create a simple list.
    */
   public void format(Writer writer, String listComment, Collection c, String emptyText, boolean showSize)
-    throws IOException {
+      throws IOException {
     writer.write("<div class=\"list\"><div class=\"list-title\">");
     writer.write(listComment);
     if (showSize) {
       writer.write(" (");
-      writer.write(""+c.size());
+      writer.write("" + c.size());
       writer.write(")");
     }
     writer.write("</div>");
@@ -63,10 +61,10 @@ public class SimpleList implements ListFormatter {
       Iterator nameIterator = c.iterator();
       while (nameIterator.hasNext()) {
         Object object = nameIterator.next();
-        if(object instanceof Linkable) {
-          writer.write(((Linkable)object).getLink());
-        } else if(object instanceof Nameable) {
-          SnipLink.appendLink(writer, ((Nameable)object).getName());
+        if (object instanceof Linkable) {
+          writer.write(((Linkable) object).getLink());
+        } else if (object instanceof Nameable) {
+          SnipLink.appendLink(writer, ((Nameable) object).getName());
         } else {
           writer.write(object.toString());
         }

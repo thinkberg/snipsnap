@@ -6,6 +6,7 @@ package org.snipsnap.snip;
  * @author stephan
  * @version $Id$
  **/
+
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 

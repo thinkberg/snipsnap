@@ -51,7 +51,7 @@ public class SnipIndexer {
   private File indexFile;
 
   private File indexFile() {
-    if(indexFile == null) {
+    if (indexFile == null) {
       indexFile = new File(Application.get().getConfiguration().getFile().getParentFile(), "index");
     }
     return indexFile;

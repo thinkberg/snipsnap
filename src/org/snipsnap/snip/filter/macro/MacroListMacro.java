@@ -24,17 +24,13 @@
  */
 package org.snipsnap.snip.filter.macro;
 
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.filter.MacroFilter;
-import org.snipsnap.user.UserManager;
-import org.snipsnap.user.User;
-import org.snipsnap.app.Application;
 
-import java.util.*;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 /*
  * Macro that displays a list of currently logged on users.
@@ -42,6 +38,7 @@ import java.io.Writer;
  * @author Matthias L. Jugel
  * @version $Id$
  */
+
 public class MacroListMacro extends ListOutputMacro {
   public String getName() {
     return "list-of-macros";
@@ -52,8 +49,7 @@ public class MacroListMacro extends ListOutputMacro {
   }
 
   public void execute(Writer writer, MacroParameter params)
-      throws IllegalArgumentException, IOException
-  {
+      throws IllegalArgumentException, IOException {
     if (params == null || params.getLength() == 0) {
       appendTo(writer);
     } else {

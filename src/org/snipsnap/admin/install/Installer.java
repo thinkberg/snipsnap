@@ -24,8 +24,6 @@
  */
 package org.snipsnap.admin.install;
 
-import org.mortbay.http.SocketListener;
-import org.mortbay.jetty.Server;
 import org.mortbay.util.InetAddrPort;
 import org.snipsnap.admin.util.CommandHandler;
 import org.snipsnap.app.Application;
@@ -44,26 +42,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.UnknownHostException;
-import java.net.InetAddress;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Properties;
-import java.util.List;
-import java.util.Arrays;
-import java.util.Set;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.jar.JarFile;
-
-import com.mckoi.database.control.DBController;
-import com.mckoi.database.control.DBSystem;
 
 /**
  * Installer servlet that installs the application.
@@ -73,7 +55,7 @@ import com.mckoi.database.control.DBSystem;
 public class Installer extends HttpServlet {
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
 
     // get or create session and application object
     HttpSession session = request.getSession(false);
@@ -137,12 +119,12 @@ public class Installer extends HttpServlet {
       errors.put("port", "The port '" + request.getParameter("port") + "' is not a valid number!");
     }
     String context = request.getParameter("context");
-    if(context != null) {
-      if(context.length() > 1 && !context.startsWith("/")) {
+    if (context != null) {
+      if (context.length() > 1 && !context.startsWith("/")) {
         context = "/" + context;
       }
-      if(context.endsWith("/")) {
-        context = context.substring(0, context.length()-2);
+      if (context.endsWith("/")) {
+        context = context.substring(0, context.length() - 2);
       }
       config.setContextPath(context);
     }
@@ -169,19 +151,19 @@ public class Installer extends HttpServlet {
     }
 
     String domain = request.getParameter("domain");
-    if(domain != null) {
+    if (domain != null) {
       config.setDomain(domain);
     }
 
     String mailhost = request.getParameter("mailhost");
-    if(mailhost != null) {
+    if (mailhost != null) {
       config.setMailHost(mailhost);
     } else {
       writeMessage(out, "No mail host defined, we will try to find one or you will not be able to mail.");
     }
 
     String maildomain = request.getParameter("maildomain");
-    if(maildomain != null) {
+    if (maildomain != null) {
       config.setMailDomain(maildomain);
     }
 
@@ -214,22 +196,22 @@ public class Installer extends HttpServlet {
     }
 
     String theme = request.getParameter("theme");
-    if(theme != null && theme.length() != 0) {
+    if (theme != null && theme.length() != 0) {
       writeMessage(out, "Extracting theme ...");
       try {
-        JarFile themeJar = new JarFile("lib/snipsnap-theme-"+theme+".jar", true);
+        JarFile themeJar = new JarFile("lib/snipsnap-theme-" + theme + ".jar", true);
         Checksum checksum = JarUtil.checksumJar(themeJar);
         Set files = checksum.getFileNames();
         List install = new ArrayList();
         Iterator it = files.iterator();
-        while(it.hasNext()) {
-          String name = (String)it.next();
-          if(name != null && (name.startsWith("css/") || name.startsWith("images/"))) {
+        while (it.hasNext()) {
+          String name = (String) it.next();
+          if (name != null && (name.startsWith("css/") || name.startsWith("images/"))) {
             install.add(name);
           }
         }
         JarUtil.extract(themeJar, webAppRoot, install, null);
-        install = Arrays.asList(new Object[] { theme + ".snip" });
+        install = Arrays.asList(new Object[]{theme + ".snip"});
         JarUtil.extract(themeJar, webInf, install, null);
         checksum.store(new File(webInf, "CHECKSUMS.theme"));
       } catch (IOException e) {
@@ -283,9 +265,9 @@ public class Installer extends HttpServlet {
     CreateDB.createAdmin(config);
     CreateDB.insertData(config, new FileInputStream("conf/snipsnap.snip"));
     CreateDB.postFirst(config);
-    File themeSnip = new File(webInf, theme+".snip");
-    if(themeSnip.exists()) {
-      writeMessage(out, "Adding additional data from theme "+theme);
+    File themeSnip = new File(webInf, theme + ".snip");
+    if (themeSnip.exists()) {
+      writeMessage(out, "Adding additional data from theme " + theme);
       CreateDB.insertData(config, new FileInputStream(themeSnip));
     }
 
@@ -293,7 +275,7 @@ public class Installer extends HttpServlet {
     config.setTagLine(tagline != null && tagline.length() > 0 ? tagline : "The easy Weblog and Wiki Software.");
 
     String logo = request.getParameter("logoimage");
-    if(logo != null && logo.length() > 0) {
+    if (logo != null && logo.length() > 0) {
       config.setLogoImage(logo);
     }
 
@@ -326,12 +308,12 @@ public class Installer extends HttpServlet {
     writeMessage(out, "Installation finished.");
     session.removeAttribute("config");
     String url = config.getUrl();
-    System.out.println("Redirecting to "+url);
+    System.out.println("Redirecting to " + url);
     response.sendRedirect(url);
   }
 
   private void sendError(HttpSession session, Map errors, HttpServletRequest request, HttpServletResponse response)
-    throws IOException {
+      throws IOException {
     session.setAttribute("errors", errors);
     response.sendRedirect(SnipLink.absoluteLink(request, "/exec/install.jsp"));
   }

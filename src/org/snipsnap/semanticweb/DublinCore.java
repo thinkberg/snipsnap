@@ -25,14 +25,13 @@
 
 package org.snipsnap.semanticweb;
 
-import org.snipsnap.snip.Snip;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.AppConfiguration;
+import org.snipsnap.snip.Snip;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Generates a map with dublin core entries

@@ -25,16 +25,16 @@
 
 package org.snipsnap.snip.storage;
 
+import org.snipsnap.cache.Cache;
 import org.snipsnap.jdbc.Finder;
 import org.snipsnap.jdbc.FinderFactory;
 import org.snipsnap.jdbc.JDBCCreator;
-import org.snipsnap.user.User;
 import org.snipsnap.user.Roles;
+import org.snipsnap.user.User;
 import org.snipsnap.util.ConnectionManager;
-import org.snipsnap.cache.Cache;
 
-import java.util.List;
 import java.sql.*;
+import java.util.List;
 
 /**
  * JDBC SnipStorage backend for user data
@@ -48,8 +48,8 @@ public class JDBCUserStorage implements UserStorage, JDBCCreator {
 
   public JDBCUserStorage(Cache cache) {
     finders = new FinderFactory("SELECT login, passwd, email, status, roles, " +
-                                " cTime, mTime, lastLogin, lastAccess, lastLogout " +
-                                " FROM SnipUser ", cache, User.class, "login", this);
+        " cTime, mTime, lastLogin, lastAccess, lastLogout " +
+        " FROM SnipUser ", cache, User.class, "login", this);
   }
 
   public Object createObject(ResultSet result) throws SQLException {
@@ -83,8 +83,8 @@ public class JDBCUserStorage implements UserStorage, JDBCCreator {
 
     try {
       statement = connection.prepareStatement("UPDATE SnipUser SET login=?, passwd=?, email=?, status=?, roles=?, " +
-                                              " cTime=?, mTime=?, lastLogin=?, lastAccess=?, lastLogout=? " +
-                                              " WHERE login=?");
+          " cTime=?, mTime=?, lastLogin=?, lastAccess=?, lastLogout=? " +
+          " WHERE login=?");
 
       statement.setString(1, user.getLogin());
       statement.setString(2, user.getPasswd());
@@ -123,9 +123,9 @@ public class JDBCUserStorage implements UserStorage, JDBCCreator {
 
     try {
       statement = connection.prepareStatement("INSERT INTO SnipUser " +
-                                              " (login, passwd, email, status, roles, " +
-                                              " cTime, mTime, lastLogin, lastAccess, lastLogout) " +
-                                              " VALUES (?,?,?,?,?,?,?,?,?,?)");
+          " (login, passwd, email, status, roles, " +
+          " cTime, mTime, lastLogin, lastAccess, lastLogout) " +
+          " VALUES (?,?,?,?,?,?,?,?,?,?)");
       statement.setString(1, login);
       statement.setString(2, passwd);
       statement.setString(3, email);
@@ -198,8 +198,8 @@ public class JDBCUserStorage implements UserStorage, JDBCCreator {
 
     try {
       statement = connection.prepareStatement("SELECT login, passwd, email, status, roles, cTime, mTime, lastLogin, lastAccess, lastLogout " +
-                                              " FROM SnipUser " +
-                                              " WHERE login=?");
+          " FROM SnipUser " +
+          " WHERE login=?");
       statement.setString(1, login);
 
       result = statement.executeQuery();

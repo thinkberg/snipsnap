@@ -36,7 +36,7 @@ import org.snipsnap.snip.Snip;
 
 public abstract class SnipQuery implements Query {
   public boolean fit(Object object) {
-    if (! (object instanceof Snip)) return false;
+    if (!(object instanceof Snip)) return false;
     return fit((Snip) object);
   }
 

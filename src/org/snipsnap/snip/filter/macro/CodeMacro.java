@@ -32,18 +32,16 @@
 
 package org.snipsnap.snip.filter.macro;
 
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.filter.*;
-import org.snipsnap.snip.filter.macro.code.*;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Iterator;
-import java.io.IOException;
-import java.io.Writer;
-
+import org.snipsnap.snip.filter.Filter;
+import org.snipsnap.snip.filter.macro.code.SourceCodeFormatter;
 import sun.misc.Service;
 import sun.misc.ServiceConfigurationError;
+
+import java.io.IOException;
+import java.io.Writer;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class CodeMacro extends Preserved {
   private Map filters;
@@ -80,8 +78,8 @@ public class CodeMacro extends Preserved {
   }
 
   public String getDescription() {
-    return "Displays a chunk of code with syntax highlighting, for example Java, XML and SQL. The none type will "+
-           "do nothing and is useful for unknown code types.";
+    return "Displays a chunk of code with syntax highlighting, for example Java, XML and SQL. The none type will " +
+        "do nothing and is useful for unknown code types.";
   }
 
 

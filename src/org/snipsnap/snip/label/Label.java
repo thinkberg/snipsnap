@@ -35,13 +35,19 @@ import java.util.Map;
  */
 
 public interface Label {
-   public String getListProxy();
-   public String getInputProxy();
-   public void handleInput(Map input);
+  public String getListProxy();
 
-   public String getType();
-   public String getName();
-   public String getValue();
-   public void setName(String name);
-   public void setValue(String value);
+  public String getInputProxy();
+
+  public void handleInput(Map input);
+
+  public String getType();
+
+  public String getName();
+
+  public String getValue();
+
+  public void setName(String name);
+
+  public void setValue(String value);
 }

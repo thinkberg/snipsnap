@@ -31,14 +31,16 @@
  */
 package org.snipsnap.snip.filter.macro;
 
-import org.snipsnap.snip.*;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipUtil;
 import org.snipsnap.snip.filter.links.BackLinks;
-import org.snipsnap.snip.storage.SnipStorage;
 
-import java.util.Iterator;
-import java.util.List;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Iterator;
+import java.util.List;
 
 public class WeblogMacro extends Macro {
   SnipSpace space;
@@ -67,17 +69,18 @@ public class WeblogMacro extends Macro {
       }
 
       List snips = SnipSpace.getInstance().getChildrenDateOrder(params.getSnip(), count);
+
       Iterator iterator = snips.iterator();
       while (iterator.hasNext()) {
         Snip entry = (Snip) iterator.next();
         writer.write("<div class=\"blog-date\">");
-        writer.write(Snip.toDate(entry.getName()));
+        writer.write(SnipUtil.toDate(entry.getName()));
         writer.write(" <a href=\"");
         SnipLink.appendUrl(writer, entry.getName());
         writer.write("\" title=\"Permalink to ");
         writer.write(entry.getName());
         writer.write("\">");
-        SnipLink.appendImage(writer,"permalink","");
+        SnipLink.appendImage(writer, "permalink", "");
         writer.write("</a>");
         writer.write("</div>");
         writer.write(entry.getXMLContent());

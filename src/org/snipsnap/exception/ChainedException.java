@@ -31,7 +31,7 @@ package org.snipsnap.exception;
  * @version $Id$
  **/
 public class ChainedException extends Exception {
-  private Throwable cause=null;
+  private Throwable cause = null;
 
   public ChainedException() {
     super();

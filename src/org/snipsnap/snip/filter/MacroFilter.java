@@ -26,23 +26,17 @@
 package org.snipsnap.snip.filter;
 
 import org.apache.oro.text.regex.MatchResult;
-import org.snipsnap.app.Application;
 import org.snipsnap.serialization.StringBufferWriter;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.filter.macro.Macro;
 import org.snipsnap.snip.filter.macro.MacroParameter;
 import org.snipsnap.snip.filter.regex.RegexTokenFilter;
-import org.snipsnap.util.log.Logger;
 import sun.misc.Service;
 import sun.misc.ServiceConfigurationError;
 
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /*
  * Class that finds snippets like

@@ -29,9 +29,9 @@ import org.snipsnap.util.log.Logger;
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
-import java.util.Iterator;
 
 /**
  * Stores information and links to api documentation, e.g. for Java, Ruby, JBoss
@@ -67,15 +67,15 @@ public class ApiDoc {
   public void addApiDoc(BufferedReader reader) throws IOException {
     String line;
     while ((line = reader.readLine()) != null) {
-      StringTokenizer tokenizer = new StringTokenizer(line," ");
+      StringTokenizer tokenizer = new StringTokenizer(line, " ");
       String mode = tokenizer.nextToken();
       String baseUrl = tokenizer.nextToken();
       String converterName = tokenizer.nextToken();
       ApiConverter converter = null;
       try {
-        converter = (ApiConverter) Class.forName("org.snipsnap.snip.filter.macro.api."+converterName + "ApiConverter").newInstance();
+        converter = (ApiConverter) Class.forName("org.snipsnap.snip.filter.macro.api." + converterName + "ApiConverter").newInstance();
       } catch (Exception e) {
-        Logger.log("Unable to load converter: "+converterName+"ApiConverter", e);
+        Logger.log("Unable to load converter: " + converterName + "ApiConverter", e);
       }
       converter.setBaseUrl(baseUrl);
       apiDocs.put(mode.toLowerCase(), converter);
@@ -95,7 +95,7 @@ public class ApiDoc {
       writer.write(className);
       writer.write("</a>");
     } else {
-      System.err.println(mode+" not found");
+      System.err.println(mode + " not found");
       System.err.println(apiDocs);
     }
     return writer;

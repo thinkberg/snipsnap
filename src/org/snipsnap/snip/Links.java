@@ -71,11 +71,11 @@ public class Links {
 
     // If there is a sorted cached key set, then add url
     if (null != links) {
-        // remove url first to force resorting
-        if (links.contains(url)) {
-          links.remove(url);
-        }
-        links.add(url);
+      // remove url first to force resorting
+      if (links.contains(url)) {
+        links.remove(url);
+      }
+      links.add(url);
     }
   }
 
@@ -126,7 +126,7 @@ public class Links {
         String url = getUrl(urlString);
         linkcounts.put(url, count);
       } catch (Exception e) {
-        System.err.println("ignoring '"+urlString+"' while deserializing: "+e);
+        System.err.println("ignoring '" + urlString + "' while deserializing: " + e);
       }
     }
     return linkcounts;

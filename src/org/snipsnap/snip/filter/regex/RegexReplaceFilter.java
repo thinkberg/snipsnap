@@ -68,11 +68,11 @@ public class RegexReplaceFilter extends RegexFilter {
         result = Util.substitute(matcher, p, new Perl5Substitution(s, interps), result, limit);
       } catch (Exception e) {
         Logger.log("<span class=\"error\">Exception</span>: " + this + ": " + e);
-        System.err.println("Exception for: "+this);
+        System.err.println("Exception for: " + this);
         e.printStackTrace();
       } catch (Error err) {
         Logger.log("<span class=\"error\">Error</span>: " + this + ": " + err);
-        System.err.println("Error for: "+this);
+        System.err.println("Error for: " + this);
         err.printStackTrace();
       }
     }

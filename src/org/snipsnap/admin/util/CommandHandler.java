@@ -25,10 +25,10 @@
 package org.snipsnap.admin.util;
 
 import org.mortbay.jetty.Server;
+import org.snipsnap.admin.install.Authenticate;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.User;
-import org.snipsnap.admin.install.Authenticate;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -38,12 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.StringTokenizer;
+import java.util.*;
 
 /**
  * Takes the commands and forwards them to their respective servlet
@@ -65,7 +60,7 @@ public class CommandHandler extends HttpServlet {
    */
   public void init(ServletConfig servletConfig) throws ServletException {
     String open = servletConfig.getInitParameter(PARAM_OPEN);
-    if(open != null) {
+    if (open != null) {
       StringTokenizer tokenizer = new StringTokenizer(open, ", ", false);
       while (tokenizer.hasMoreTokens()) {
         String token = tokenizer.nextToken();
@@ -75,7 +70,7 @@ public class CommandHandler extends HttpServlet {
     configFile = servletConfig.getInitParameter(PARAM_CONFIG);
     indexPage = servletConfig.getInitParameter(PARAM_INDEX);
 
-    if(null == indexPage) {
+    if (null == indexPage) {
       indexPage = "/welcome.jsp";
     }
   }
@@ -85,7 +80,7 @@ public class CommandHandler extends HttpServlet {
   public final static String ATT_ADMIN = "serverAdmin";
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws IOException, ServletException {
+      throws IOException, ServletException {
     // get or create session and application object
     HttpSession session = request.getSession(true);
 
@@ -101,8 +96,8 @@ public class CommandHandler extends HttpServlet {
     }
     session.setAttribute(ATT_CONFIG, config);
     session.setAttribute(Authenticate.ATT_CHECK_USER, new User(config.getAdminLogin(),
-                                                               config.getAdminPassword(),
-                                                               config.getAdminEmail()));
+        config.getAdminPassword(),
+        config.getAdminEmail()));
 
     // get admin user from session, this is null if not authenticated
     User admin = (User) session.getAttribute(ATT_ADMIN);

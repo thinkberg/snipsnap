@@ -25,20 +25,14 @@
 package org.snipsnap.app;
 
 import org.snipsnap.config.AppConfiguration;
+import org.snipsnap.notification.NotificationService;
+import org.snipsnap.snip.Snip;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.util.log.Logger;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.notification.NotificationService;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.sql.Timestamp;
-import java.io.InputStream;
+import java.util.*;
 
 /**
  * The application object contains information about current users and other
@@ -77,11 +71,11 @@ public class Application {
 
   public void notify(int type, Snip snip) {
     //System.err.println("Application - notify() "+type);
-    if(notification == null &&
-       config != null && config.allow(AppConfiguration.PERM_NOTIFICATION)) {
+    if (notification == null &&
+        config != null && config.allow(AppConfiguration.PERM_NOTIFICATION)) {
       notification = NotificationService.getInstance();
     }
-    if(notification != null) {
+    if (notification != null) {
       notification.notify(type, snip);
     }
   }
@@ -157,8 +151,8 @@ public class Application {
     List users = new ArrayList();
     Iterator iterator = currentUsers.values().iterator();
     while (iterator.hasNext()) {
-      User user  = (User) iterator.next();
-      if (! (user.isGuest() || user.isNonUser() || users.contains(user))) {
+      User user = (User) iterator.next();
+      if (!(user.isGuest() || user.isNonUser() || users.contains(user))) {
         users.add(user);
       }
     }
@@ -169,7 +163,7 @@ public class Application {
     List users = new ArrayList();
     Iterator iterator = currentUsers.values().iterator();
     while (iterator.hasNext()) {
-      User user  = (User) iterator.next();
+      User user = (User) iterator.next();
       if (user.isNonUser() && !users.contains(user) && !"IGNORE".equals(user.getEmail())) {
         users.add(user);
       }
@@ -196,7 +190,7 @@ public class Application {
       UserManager um = UserManager.getInstance();
       User user = (User) currentUsers.get(session);
       if (um.isAuthenticated(user)) {
-        System.err.println("Removing user: "+user.getLogin());
+        System.err.println("Removing user: " + user.getLogin());
         user.setLastLogout(user.getLastAccess());
         UserManager.getInstance().systemStore(user);
       }
@@ -206,7 +200,7 @@ public class Application {
 
   // Global memory
   public void storeObject(String key, Object value) {
-     Application.globalStore.put(key,value);
+    Application.globalStore.put(key, value);
   }
 
   public Object getObject(String key) {

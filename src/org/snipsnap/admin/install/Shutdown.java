@@ -24,13 +24,9 @@
  */
 package org.snipsnap.admin.install;
 
-import org.snipsnap.config.AppConfiguration;
+import org.snipsnap.admin.util.CommandHandler;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.snip.SnipLink;
-import org.snipsnap.admin.util.CommandHandler;
-import org.mortbay.http.HttpServer;
-import org.mortbay.util.Code;
-import org.mortbay.util.Log;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -39,7 +35,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Iterator;
 
 /**
  * Application configuration servlet.
@@ -49,7 +44,7 @@ import java.util.Iterator;
 public class Shutdown extends HttpServlet {
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
 
     HttpSession session = request.getSession();
     if (session != null) {
@@ -60,8 +55,8 @@ public class Shutdown extends HttpServlet {
 
       // don't do anything before user name and password are checked
       if (config != null &&
-        config.getAdminLogin().equals(user) &&
-        config.getAdminPassword().equals(pass)) {
+          config.getAdminLogin().equals(user) &&
+          config.getAdminPassword().equals(pass)) {
         // shut down server ...
         org.snipsnap.server.Shutdown.shutdown();
         response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE, "Server has been shut down.");

@@ -35,17 +35,17 @@ package org.snipsnap.xmlrpc;
  */
 
 public class WikiHandler {
-    /**
-     *
-     * array getRecentChanges( Date timestamp )
-     * int getRPCVersionSupported(): Returns 1 with this version of the JSPWiki API.
-     * base64 getPage( String pagename ): Get the raw Wiki text of page, latest version.
-     * base64 getPageVersion( String pagename, int version ): Get the raw Wiki text of page. Returns UTF-8, expects UTF-8 with URL encoding.
-     * base64 getPageHTML( String pagename ): Return page in rendered HTML. Returns UTF-8, expects UTF-8 with URL encoding.
-     * base64 getPageHTMLVersion( String pagename, int version ): Return page in rendered HTML, UTF-8.
-     * array getAllPages(): Returns a list of all pages. The result is an array of strings, again UTF-8 in URL encoding.
-     * struct getPageInfo( string pagename ) : returns a struct with elements
-     * struct getPageInfoVersion( string pagename, int version ) : returns a struct just like plain getPageInfo(), but this time for a specific version.
-     * array listLinks( string pagename ): Lists all links for a given page. The returned array contains structs, with the following elements:
-     **/
+  /**
+   *
+   * array getRecentChanges( Date timestamp )
+   * int getRPCVersionSupported(): Returns 1 with this version of the JSPWiki API.
+   * base64 getPage( String pagename ): Get the raw Wiki text of page, latest version.
+   * base64 getPageVersion( String pagename, int version ): Get the raw Wiki text of page. Returns UTF-8, expects UTF-8 with URL encoding.
+   * base64 getPageHTML( String pagename ): Return page in rendered HTML. Returns UTF-8, expects UTF-8 with URL encoding.
+   * base64 getPageHTMLVersion( String pagename, int version ): Return page in rendered HTML, UTF-8.
+   * array getAllPages(): Returns a list of all pages. The result is an array of strings, again UTF-8 in URL encoding.
+   * struct getPageInfo( string pagename ) : returns a struct with elements
+   * struct getPageInfoVersion( string pagename, int version ) : returns a struct just like plain getPageInfo(), but this time for a specific version.
+   * array listLinks( string pagename ): Lists all links for a given page. The returned array contains structs, with the following elements:
+   **/
 }

@@ -26,9 +26,6 @@
 package org.snipsnap.jdbc;
 
 import org.snipsnap.cache.Cache;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.storage.JDBCSnipStorage;
-import org.snipsnap.snip.storage.Storage;
 import org.snipsnap.util.ConnectionManager;
 
 import java.sql.*;

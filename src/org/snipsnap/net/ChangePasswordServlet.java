@@ -48,7 +48,7 @@ public class ChangePasswordServlet extends HttpServlet {
   private final static String ERR_PASSWORD = "User name and password do not match!";
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
 
     String password1 = request.getParameter("password");
     String password2 = request.getParameter("password2");

@@ -27,8 +27,8 @@ package org.snipsnap.snip.storage;
 
 import org.snipsnap.snip.Snip;
 
-import java.util.List;
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * Interface that describes SnipStorage backends for SnipSnap

@@ -32,7 +32,6 @@
 
 package org.snipsnap.snip.filter.macro;
 
-import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.filter.macro.table.Table;
 
 import java.io.IOException;
@@ -50,11 +49,11 @@ public class TableMacro extends Macro {
   }
 
   public void execute(Writer writer, MacroParameter params)
-    throws IllegalArgumentException, IOException {
+      throws IllegalArgumentException, IOException {
 
     String content = params.getContent();
 
-    if(null == content) throw new IllegalArgumentException("missing table content");
+    if (null == content) throw new IllegalArgumentException("missing table content");
 
     content = content.trim() + "\n";
 
@@ -67,7 +66,7 @@ public class TableMacro extends Macro {
         table.newRow();
       } else if (!"|".equals(token)) {
         table.addCell(token);
-      } else if("|".equals(lastToken)) {
+      } else if ("|".equals(lastToken)) {
         table.addCell(" ");
       }
       lastToken = token;

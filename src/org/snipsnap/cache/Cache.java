@@ -27,12 +27,8 @@ package org.snipsnap.cache;
 
 import org.snipsnap.snip.storage.Storage;
 import org.snipsnap.snip.storage.query.Query;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.app.Application;
 
 import java.util.*;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 /**
  * CacheManager for caching Objects (Snips).
@@ -58,7 +54,7 @@ public class Cache {
 
   public static void removeInstance() {
     synchronized (monitor) {
-      if(null != instance) {
+      if (null != instance) {
         instance = null;
       }
     }
@@ -95,7 +91,7 @@ public class Cache {
 
   public List getCache(Class type) {
     //@TODO optimize to use value list, too
- /*   Map m = (Map) caches.get(type);
+/*   Map m = (Map) caches.get(type);
     Iterator iterator = m.keySet().iterator();
     while (iterator.hasNext()) {
       String name = (String) iterator.next();

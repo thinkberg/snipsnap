@@ -27,9 +27,7 @@ package org.snipsnap.admin.util;
 import org.mortbay.http.HttpContext;
 import org.mortbay.http.HttpServer;
 import org.mortbay.jetty.Server;
-import org.mortbay.jetty.servlet.WebApplicationContext;
 
-import java.io.IOException;
 import java.util.Iterator;
 
 /**

@@ -36,5 +36,6 @@ import org.snipsnap.user.User;
 
 public interface Ownable {
   public String getOwner();
+
   public boolean isOwner(User user);
 }

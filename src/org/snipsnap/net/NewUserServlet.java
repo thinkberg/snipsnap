@@ -30,16 +30,12 @@ import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 
-import javax.servlet.ServletException;
 import javax.servlet.RequestDispatcher;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.ServletException;
+import javax.servlet.http.*;
 import java.io.IOException;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 /**
@@ -55,7 +51,7 @@ public class NewUserServlet extends HttpServlet {
   private final static String ERR_PASSWORD_TOO_SHORT = "Password must be at least 3 characters long!";
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
 
     String login = request.getParameter("login");
     String email = request.getParameter("email");
@@ -79,7 +75,7 @@ public class NewUserServlet extends HttpServlet {
         return;
       }
 
-      if(login.length() < 3) {
+      if (login.length() < 3) {
         errors.put("login", ERR_TOO_SHORT);
         sendError(session, errors, request, response);
         return;
@@ -87,8 +83,8 @@ public class NewUserServlet extends HttpServlet {
 
       // TODO 1.4 if(!login.matches("[A-Za-z0-9._ ]+")) {
       StringTokenizer tok = new StringTokenizer(login, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._ ");
-      if(login.startsWith(" ") || tok.hasMoreTokens()) {
-        errors.put("login", ERR_ILLEGAL+": "+(tok.hasMoreTokens() ? tok.nextToken() : ""));
+      if (login.startsWith(" ") || tok.hasMoreTokens()) {
+        errors.put("login", ERR_ILLEGAL + ": " + (tok.hasMoreTokens() ? tok.nextToken() : ""));
         sendError(session, errors, request, response);
         return;
       }
@@ -100,7 +96,7 @@ public class NewUserServlet extends HttpServlet {
         return;
       }
 
-      if(password.length() < 3) {
+      if (password.length() < 3) {
         errors.put("password", ERR_PASSWORD_TOO_SHORT);
         sendError(session, errors, request, response);
         return;
@@ -127,7 +123,7 @@ public class NewUserServlet extends HttpServlet {
   }
 
   private void sendError(HttpSession session, Map errors, HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
     session.setAttribute("errors", errors);
     RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/register.jsp");
     dispatcher.forward(request, response);

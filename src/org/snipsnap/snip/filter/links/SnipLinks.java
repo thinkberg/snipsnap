@@ -44,24 +44,24 @@ public class SnipLinks {
   public static void appendTo(Writer writer, Links snipLinks, int width, String start, String end) {
     Iterator iterator = snipLinks.iterator();
     int size = snipLinks.getSize();
-    int percentPerCell = 100/width;
+    int percentPerCell = 100 / width;
     ColorRange cr = new ColorRange(start, end, Math.max(size <= 20 ? size : 20, 8));
 
     try {
       int i = 0;
-      if(iterator.hasNext()) {
+      if (iterator.hasNext()) {
         writer.write("<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\">\n");
         writer.write("<caption>see also:</caption>\n");
         writer.write("<tr>\n");
         while (iterator.hasNext() && i < 20) {
-          if (i % width == 0 && i!= 0 ) {
+          if (i % width == 0 && i != 0) {
             writer.write("</tr><tr>");
           }
           String url = (String) iterator.next();
           writer.write("<td bgcolor=\"");
           writer.write(cr.getColor(i++));
           writer.write("\" width=\"");
-          writer.write(""+percentPerCell);
+          writer.write("" + percentPerCell);
           writer.write("%\">");
           writer.write(SnipLink.createLink(url, SnipLink.cutLength(url, 25)));
           // writer.write(" - " + snipLinks.getIntCount(url));

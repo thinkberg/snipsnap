@@ -90,7 +90,12 @@ public class Access {
           }
         } else {
           // Referrer was external link
-          backLinks.addLink(SnipLink.decode(referrer));
+          String url = SnipLink.decode(referrer);
+          // do not count localhosts
+          // better use domain object from URL object etc.
+          if (url.indexOf("localhost") == -1) {
+            backLinks.addLink(SnipLink.decode(referrer));
+          }
         }
       }
       store();

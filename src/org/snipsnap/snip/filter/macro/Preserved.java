@@ -26,9 +26,9 @@ package org.snipsnap.snip.filter.macro;
 
 import org.snipsnap.snip.filter.EscapeFilter;
 
-import java.util.StringTokenizer;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 /**
  * A specialized macro that allows to preserve certain special characters
@@ -46,7 +46,7 @@ public abstract class Preserved extends Macro {
    * Escape special character c by replacing with it's hex character entity code.
    */
   protected void addSpecial(char c) {
-    addSpecial(""+c, EscapeFilter.escape(c));
+    addSpecial("" + c, EscapeFilter.escape(c));
   }
 
   /**

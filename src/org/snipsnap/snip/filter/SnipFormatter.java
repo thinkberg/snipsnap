@@ -24,7 +24,6 @@
  */
 package org.snipsnap.snip.filter;
 
-import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.Snip;
 
 /**

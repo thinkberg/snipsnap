@@ -53,7 +53,7 @@ public class Logger {
   }
 
   public static void log(int level, String output) {
-    handler.log(levels[level]+" - "+output);
+    handler.log(levels[level] + " - " + output);
   }
 
   public static void setHandler(LogHandler handler) {

@@ -25,9 +25,9 @@
 package org.snipsnap.snip.filter;
 
 import org.apache.oro.text.regex.MatchResult;
+import org.snipsnap.app.Application;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.filter.regex.RegexTokenFilter;
-import org.snipsnap.app.Application;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,6 +40,7 @@ import java.util.Map;
  * @team sonicteam
  * @version $Id$
  */
+
 public class ParamFilter extends RegexTokenFilter {
   private Map params;
 
@@ -49,7 +50,7 @@ public class ParamFilter extends RegexTokenFilter {
     Map param;
 
     if (params == null) {
-      param =  Application.get().getParameters();
+      param = Application.get().getParameters();
     } else {
       param = params;
     }

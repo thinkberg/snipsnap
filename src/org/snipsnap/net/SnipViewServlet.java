@@ -24,22 +24,17 @@
  */
 package org.snipsnap.net;
 
+import org.snipsnap.app.Application;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
-import org.snipsnap.app.Application;
-import org.snipsnap.util.log.Logger;
-import org.snipsnap.config.AppConfiguration;
 
-import javax.servlet.http.HttpServlet;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
-import javax.servlet.RequestDispatcher;
 import java.io.IOException;
-import java.net.URLDecoder;
 
 /**
  * Load a snip to view.
@@ -49,7 +44,7 @@ import java.net.URLDecoder;
 public class SnipViewServlet extends SnipSnapServlet {
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws IOException, ServletException {
+      throws IOException, ServletException {
 
     UserManager um = UserManager.getInstance();
     User user = Application.get().getUser();
@@ -58,7 +53,7 @@ public class SnipViewServlet extends SnipSnapServlet {
     }
 
     String name = request.getPathInfo();
-    if(null == name || "/".equals(name)) {
+    if (null == name || "/".equals(name)) {
       name = "start";
     } else {
       name = name.substring(1);
@@ -73,7 +68,7 @@ public class SnipViewServlet extends SnipSnapServlet {
     }
     snip.getAccess().handle(request);
     request.setAttribute("snip", snip);
-    request.setAttribute("URI", request.getServletPath()+request.getPathInfo());
+    request.setAttribute("URI", request.getServletPath() + request.getPathInfo());
     RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/snip.jsp");
     dispatcher.forward(request, response);
   }

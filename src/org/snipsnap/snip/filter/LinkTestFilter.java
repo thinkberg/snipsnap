@@ -34,20 +34,17 @@
 package org.snipsnap.snip.filter;
 
 import org.apache.oro.text.regex.*;
+import org.snipsnap.app.Application;
+import org.snipsnap.serialization.StringBufferWriter;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.filter.interwiki.InterWiki;
-import org.snipsnap.util.Transliterate;
-import org.snipsnap.app.Application;
-import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
-import org.snipsnap.serialization.StringBufferWriter;
+import org.snipsnap.util.Transliterate;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.io.Writer;
 import java.io.IOException;
+import java.io.Writer;
 
 public class LinkTestFilter extends Filter {
 
@@ -128,7 +125,7 @@ public class LinkTestFilter extends Filter {
               } else {
                 SnipLink.appendLink(buffer, targetSnip, result.group(1));
               }
-            } else if(UserManager.getInstance().isAuthenticated(app.getUser())) {
+            } else if (UserManager.getInstance().isAuthenticated(app.getUser())) {
               SnipLink.createCreateLink(buffer, targetSnip);
             } else {
               // cannot edit/create snip, so just display the text
@@ -142,7 +139,7 @@ public class LinkTestFilter extends Filter {
         lastmatch = result.endOffset(0);
       }
     } catch (IOException e) {
-      System.err.println("Unable to write LinkTestFilter "+e);
+      System.err.println("Unable to write LinkTestFilter " + e);
     }
     buffer.append(input.substring(lastmatch));
     return buffer.toString();

@@ -25,8 +25,8 @@
 
 package org.snipsnap.serialization;
 
-import java.io.Writer;
 import java.io.IOException;
+import java.io.Writer;
 
 /**
  * Classes that implement Appendable can append themselves to
@@ -37,5 +37,5 @@ import java.io.IOException;
  */
 
 public interface Appendable {
-   public Writer appendTo(Writer s) throws IOException ;
+  public Writer appendTo(Writer s) throws IOException;
 }

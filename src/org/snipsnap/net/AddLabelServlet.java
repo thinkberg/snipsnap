@@ -27,8 +27,8 @@ package org.snipsnap.net;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.label.LabelManager;
 import org.snipsnap.snip.label.Label;
+import org.snipsnap.snip.label.LabelManager;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;

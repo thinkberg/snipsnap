@@ -27,11 +27,9 @@ package org.snipsnap.net;
 import org.snipsnap.app.Application;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
-import org.snipsnap.snip.SnipLink;
 
-import javax.servlet.ServletException;
 import javax.servlet.RequestDispatcher;
-import javax.servlet.http.Cookie;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -47,7 +45,7 @@ public class LoginServlet extends HttpServlet {
   private final static String ERR_PASSWORD = "User name and password do not match!";
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
 
     String login = request.getParameter("login");
     String password = request.getParameter("password");
@@ -56,7 +54,7 @@ public class LoginServlet extends HttpServlet {
     if (request.getParameter("cancel") == null) {
       UserManager um = UserManager.getInstance();
       User user = um.authenticate(login, password);
-      if(Application.getCurrentUsers().contains(user)) {
+      if (Application.getCurrentUsers().contains(user)) {
         Application.getCurrentUsers().remove(user);
       }
       HttpSession session = request.getSession(true);
@@ -81,17 +79,17 @@ public class LoginServlet extends HttpServlet {
   }
 
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
     String referer = request.getHeader("REFERER");
-    if(referer == null || referer.length() == 0) {
+    if (referer == null || referer.length() == 0) {
       referer = Application.get().getConfiguration().getSnipUrl("start");
     }
 
-    if("true".equals(request.getParameter("logoff"))) {
+    if ("true".equals(request.getParameter("logoff"))) {
       HttpSession session = request.getSession(true);
       UserManager.getInstance().removeCookie(request, response);
       session.invalidate();
-    } else if("true".equals(request.getParameter("timeout"))) {
+    } else if ("true".equals(request.getParameter("timeout"))) {
       HttpSession session = request.getSession(true);
       Application.removeCurrentUser(session);
       session.invalidate();

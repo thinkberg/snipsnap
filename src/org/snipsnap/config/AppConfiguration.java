@@ -24,8 +24,6 @@
  */
 package org.snipsnap.config;
 
-import org.snipsnap.snip.SnipLink;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -99,8 +97,8 @@ public class AppConfiguration extends Configuration {
   }
 
   public String getLocale() {
-   String locale = getProperty(AppConfiguration.APP_LOCALE);
-   return locale == null ? "en" : locale;
+    String locale = getProperty(AppConfiguration.APP_LOCALE);
+    return locale == null ? "en" : locale;
   }
 
   // HOST CONFIGURATION

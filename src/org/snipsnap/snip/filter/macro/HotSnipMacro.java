@@ -32,16 +32,13 @@
 package org.snipsnap.snip.filter.macro;
 
 import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.SnipSpace;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Collections;
-import java.util.ArrayList;
-import java.util.List;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Collection;
+import java.util.Iterator;
 
 
 public class HotSnipMacro extends Macro {
@@ -64,12 +61,12 @@ public class HotSnipMacro extends Macro {
 
     int length = 10;
     boolean showSize = false;
-    if(params != null) {
-      if(params.getLength() > 0) {
+    if (params != null) {
+      if (params.getLength() > 0) {
         try {
           length = Integer.parseInt(params.get("0"));
         } catch (NumberFormatException e) {
-          System.err.println("RecentChangesMacro: illegal parameter count='"+params.get("0")+"'");
+          System.err.println("RecentChangesMacro: illegal parameter count='" + params.get("0") + "'");
         }
       }
     }
@@ -78,16 +75,16 @@ public class HotSnipMacro extends Macro {
       Collection c = space.getHot(length);
       Iterator iterator = c.iterator();
       writer.write("<div class=\"list\"><div class=\"list-title\">Most viewed:");
-      if(showSize) {
+      if (showSize) {
         writer.write(" (");
-        writer.write(""+length);
+        writer.write("" + length);
         writer.write(")");
       }
       writer.write("</div><ul>");
       while (iterator.hasNext()) {
         Snip hotSnip = (Snip) iterator.next();
         writer.write("<li><span class=\"count\">");
-        writer.write(""+hotSnip.getViewCount());
+        writer.write("" + hotSnip.getViewCount());
         writer.write("</span>");
         writer.write("<span class=\"content\">");
         SnipLink.appendLink(writer, hotSnip);

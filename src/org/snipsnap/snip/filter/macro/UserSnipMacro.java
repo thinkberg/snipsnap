@@ -31,7 +31,6 @@
 
 package org.snipsnap.snip.filter.macro;
 
-import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 
 import java.io.IOException;
@@ -48,7 +47,7 @@ public class UserSnipMacro extends ListOutputMacro {
   }
 
   public void execute(Writer writer, MacroParameter params)
-    throws IllegalArgumentException, IOException {
+      throws IllegalArgumentException, IOException {
     String type = null;
     boolean showSize = true;
     if (params != null) {

@@ -26,8 +26,8 @@
 package org.snipsnap.xmlrpc.ping;
 
 import org.apache.xmlrpc.XmlRpcClient;
-import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.app.Application;
+import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.snip.Snip;
 
 import java.util.Vector;

@@ -24,17 +24,11 @@
  */
 package org.snipsnap.snip.filter.macro;
 
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.user.UserManager;
-import org.snipsnap.user.User;
 import org.snipsnap.app.Application;
 
-import java.util.Iterator;
-import java.util.List;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.List;
 
 /*
  * Macro that displays a list of currently logged on users.
@@ -42,6 +36,7 @@ import java.io.Writer;
  * @author Matthias L. Jugel
  * @version $Id$
  */
+
 public class LoginsMacro extends ListOutputMacro {
   public String getName() {
     return "logins";
@@ -52,13 +47,12 @@ public class LoginsMacro extends ListOutputMacro {
   }
 
   public void execute(Writer writer, MacroParameter params)
-      throws IllegalArgumentException, IOException
-  {
+      throws IllegalArgumentException, IOException {
     String type = "Vertical";
     boolean showSize = true;
-    if(params != null) {
-      if(params.getLength() > 0) {
-      type = params.get("0");
+    if (params != null) {
+      if (params.getLength() > 0) {
+        type = params.get("0");
       }
     }
     if (params == null || params.getLength() <= 2) {
@@ -67,11 +61,11 @@ public class LoginsMacro extends ListOutputMacro {
 
       output(writer, "Users:", users, "", type, showSize);
       int guests = Application.getGuestCount();
-      if(guests > 0) {
+      if (guests > 0) {
         writer.write("... and ");
-        writer.write(""+guests);
+        writer.write("" + guests);
         writer.write(" Guest");
-        if(guests > 1) {
+        if (guests > 1) {
           writer.write("s");
         }
       }

@@ -25,8 +25,8 @@
 
 package org.snipsnap.snip.filter.macro;
 
-import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipLink;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -59,7 +59,7 @@ public class AnchorMacro extends Preserved {
       throws IllegalArgumentException, IOException {
 
     if (null != params && params.getLength() == 1) {
-      String anchor = params.get("0").replace(' ','_');
+      String anchor = params.get("0").replace(' ', '_');
       writer.write("<a name=\"");
       writer.write(anchor);
       writer.write("\"/>");
@@ -73,7 +73,7 @@ public class AnchorMacro extends Preserved {
       writer.write("\" title=\"Permalink to ");
       writer.write(anchor);
       writer.write("\">");
-      SnipLink.appendImage(writer,"permalink","");
+      SnipLink.appendImage(writer, "permalink", "");
       writer.write("</a>");
     }
     return;

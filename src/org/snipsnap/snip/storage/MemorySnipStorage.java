@@ -31,9 +31,9 @@ import org.snipsnap.snip.storage.query.SnipComparator;
 import org.snipsnap.snip.storage.query.SnipQuery;
 
 import java.sql.Timestamp;
-import java.util.List;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * Wrapper with finders for in-memory searching. Can
@@ -57,16 +57,16 @@ public class MemorySnipStorage implements SnipStorage {
     this.cache = cache;
 
     this.nameComparator = new SnipComparator() {
-          public int compare(Snip s1, Snip s2) {
-            return s1.getName().compareTo(s2.getName());
-          }
-        };
+      public int compare(Snip s1, Snip s2) {
+        return s1.getName().compareTo(s2.getName());
+      }
+    };
 
     this.nameComparatorDesc = new SnipComparator() {
-          public int compare(Snip s1, Snip s2) {
-            return s2.getName().compareTo(s1.getName());
-          }
-        };
+      public int compare(Snip s1, Snip s2) {
+        return s2.getName().compareTo(s1.getName());
+      }
+    };
 
     this.mTimeComparatorDesc = new SnipComparator() {
       public int compare(Snip s1, Snip s2) {
@@ -157,9 +157,14 @@ public class MemorySnipStorage implements SnipStorage {
   public List storageByParentNameOrder(final Snip parent, int count) {
     return cache.querySorted(new SnipQuery() {
       public boolean fit(Snip snip) {
+        if (snip.getParent() != null) {
+        System.err.println("parent="+parent.getClass()+" -> "+snip.getParent().getClass());
+        } else {
+          System.err.println("parent= is null");
+        }
         return (parent == snip.getParent());
       }
-    }, nameComparatorDesc , count, type);
+    }, nameComparatorDesc, count, type);
   }
 
   public List storageByParentModifiedOrder(Snip parent, int count) {
@@ -179,7 +184,7 @@ public class MemorySnipStorage implements SnipStorage {
         //}
         //System.err.print(" start="+start);
         //System.err.print(" end="+end);
-        return (start.compareTo(name) <= 0 && end.compareTo(name) >=0 &&
+        return (start.compareTo(name) <= 0 && end.compareTo(name) >= 0 &&
             null != parent && "start".equals(parent.getName()));
       }
     }, nameComparator, type);

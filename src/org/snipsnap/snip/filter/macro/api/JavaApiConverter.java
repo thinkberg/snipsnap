@@ -34,7 +34,7 @@ package org.snipsnap.snip.filter.macro.api;
 
 public class JavaApiConverter extends BaseApiConverter {
   public String convert(String className) {
-    return baseUrl+className.replace('.', '/')+".html";
+    return baseUrl + className.replace('.', '/') + ".html";
   }
 
   public String getName() {

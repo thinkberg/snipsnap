@@ -25,29 +25,19 @@
 package org.snipsnap.net;
 
 import org.snipsnap.app.Application;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.user.User;
-import org.snipsnap.user.UserManager;
 import org.snipsnap.config.AppConfiguration;
-import org.snipsnap.config.Configuration;
+import org.snipsnap.snip.SnipLink;
 import org.snipsnap.util.log.Logger;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
 import javax.servlet.ServletConfig;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.net.URLDecoder;
-import java.util.Iterator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
-
-import sun.misc.Service;
 
 /**
  * Layouter and main handler for web sites.
@@ -63,11 +53,11 @@ public class Layouter extends SnipSnapServlet {
   }
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws IOException, ServletException {
+      throws IOException, ServletException {
 
     // page attribute overrides pathinfo
-    String layout = (String)request.getAttribute(ATT_PAGE);
-    if(null == layout) {
+    String layout = (String) request.getAttribute(ATT_PAGE);
+    if (null == layout) {
       layout = SnipLink.decode(request.getPathInfo());
     }
 
@@ -82,14 +72,14 @@ public class Layouter extends SnipSnapServlet {
     }
     Application.get().setParameters(paramMap);
 
-    String uri = (String)request.getAttribute("URI");
-    Logger.log("URI: "+uri);
+    String uri = (String) request.getAttribute("URI");
+    Logger.log("URI: " + uri);
     AppConfiguration config = Application.get().getConfiguration();
-    if(uri != null) {
+    if (uri != null) {
       paramMap.put("URI", config.getUrl(uri));
     } else {
       String path = request.getPathInfo();
-      paramMap.put("URI", config.getUrl(request.getServletPath()+(path != null ? path : "")));
+      paramMap.put("URI", config.getUrl(request.getServletPath() + (path != null ? path : "")));
     }
     paramMap.put("RSS", config.getUrl("/exec/rss"));
     Application.get().setParameters(paramMap);

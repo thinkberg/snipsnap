@@ -28,12 +28,7 @@ package org.snipsnap.util.mail;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.AppConfiguration;
 
-import javax.mail.BodyPart;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.Session;
-import javax.mail.Transport;
+import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
@@ -114,7 +109,7 @@ public class Mail {
         sender = "this-is-a-bug.org";
       }
     }
-    sendMail("do-not-reply@"+sender, recipientList, subject, content);
+    sendMail("do-not-reply@" + sender, recipientList, subject, content);
   }
 
   public void sendMail(String sender, Collection recipientList, String subject, String content) {

@@ -27,19 +27,11 @@ package org.snipsnap.net.filter;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.AppConfiguration;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.io.PrintStream;
-import java.io.OutputStreamWriter;
 
 /**
  * A ServletFilter that parses multipart/form-data requests and wraps the data into
@@ -62,11 +54,11 @@ public class MultipartFilter implements Filter {
 
   public void doFilter(ServletRequest request, ServletResponse response,
                        FilterChain chain) throws IOException, ServletException {
-    HttpServletRequest req = (HttpServletRequest)request;
+    HttpServletRequest req = (HttpServletRequest) request;
 
 
     // if in doubt use application character encoding
-    if(null == req.getCharacterEncoding()) {
+    if (null == req.getCharacterEncoding()) {
       HttpSession session = req.getSession();
       AppConfiguration config = Application.getInstance(session).getConfiguration();
       req.setCharacterEncoding(config.getEncoding());
@@ -75,7 +67,7 @@ public class MultipartFilter implements Filter {
     try {
       req = new EncRequestWrapper((HttpServletRequest) req, req.getCharacterEncoding());
     } catch (UnsupportedEncodingException e) {
-      req = (HttpServletRequest)req;
+      req = (HttpServletRequest) req;
     }
 
     String type = req.getHeader("Content-Type");

@@ -24,16 +24,8 @@
  */
 package org.snipsnap.snip.filter.macro;
 
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.filter.MacroFilter;
 import org.snipsnap.snip.filter.links.BackLinks;
-import org.snipsnap.user.UserManager;
-import org.snipsnap.user.User;
-import org.snipsnap.app.Application;
 
-import java.util.*;
 import java.io.IOException;
 import java.io.Writer;
 
@@ -43,6 +35,7 @@ import java.io.Writer;
  * @author Stephan J. Schmidt
  * @version $Id$
  */
+
 public class BackLinkMacro extends ListOutputMacro {
   public String getName() {
     return "backlinks";
@@ -53,8 +46,7 @@ public class BackLinkMacro extends ListOutputMacro {
   }
 
   public void execute(Writer writer, MacroParameter params)
-      throws IllegalArgumentException, IOException
-  {
+      throws IllegalArgumentException, IOException {
     int count = 10;
     if (params == null || params.getLength() > 1) {
       if (params.getLength() == 1) {

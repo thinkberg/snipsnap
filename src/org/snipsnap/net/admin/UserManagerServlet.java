@@ -24,17 +24,16 @@
  */
 package org.snipsnap.net.admin;
 
+import org.snipsnap.app.Application;
+import org.snipsnap.net.SnipSnapServlet;
+import org.snipsnap.snip.HomePage;
+import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.HomePage;
-import org.snipsnap.app.Application;
-import org.snipsnap.net.SnipSnapServlet;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -58,10 +57,10 @@ public class UserManagerServlet extends SnipSnapServlet {
   public final static String CREATE = "create";
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
     HttpSession session = request.getSession(false);
-    User admin = session != null ? (User)session.getAttribute(AdminServlet.ATT_ADMIN) : null;
-    if(null == admin) {
+    User admin = session != null ? (User) session.getAttribute(AdminServlet.ATT_ADMIN) : null;
+    if (null == admin) {
       response.sendRedirect("/manager");
       return;
     }
@@ -83,10 +82,10 @@ public class UserManagerServlet extends SnipSnapServlet {
       } else {
         RequestDispatcher dispatcher = null;
 
-        if(EDIT.equals(command)) {
+        if (EDIT.equals(command)) {
           dispatcher = request.getRequestDispatcher("/manager/user.jsp");
         } else if (UPDATE.equals(command)) {
-          if(update(request, errors, user)) {
+          if (update(request, errors, user)) {
             um.store(user);
             errors.put("", OK_USER_UPDATED);
             response.sendRedirect(SnipLink.absoluteLink(request, "/manager/usermanager.jsp"));
@@ -94,9 +93,9 @@ public class UserManagerServlet extends SnipSnapServlet {
           } else {
             dispatcher = request.getRequestDispatcher("/manager/user.jsp");
           }
-        } else if(CREATE.equals(command)) {
+        } else if (CREATE.equals(command)) {
           User tmp = new User(login, "", "");
-          if(user != null || !update(request, errors, tmp)) {
+          if (user != null || !update(request, errors, tmp)) {
             errors.put("fatal", "User with that name already exists! Use Edit to modify.");
             dispatcher = request.getRequestDispatcher("/manager/newuser.jsp");
           } else {

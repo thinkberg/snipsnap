@@ -28,28 +28,24 @@ import org.apache.lucene.search.Hits;
 import org.snipsnap.app.Application;
 import org.snipsnap.cache.Cache;
 import org.snipsnap.jdbc.Finder;
-import org.snipsnap.snip.storage.Storage;
 import org.snipsnap.jdbc.FinderFactory;
 import org.snipsnap.jdbc.JDBCCreator;
+import org.snipsnap.notification.Notification;
 import org.snipsnap.snip.filter.LinkTester;
-import org.snipsnap.snip.label.Labels;
-import org.snipsnap.snip.storage.SnipStorage;
 import org.snipsnap.snip.storage.JDBCSnipStorage;
 import org.snipsnap.snip.storage.MemorySnipStorage;
+import org.snipsnap.snip.storage.SnipStorage;
+import org.snipsnap.snip.storage.Storage;
+import org.snipsnap.user.Digest;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
-import org.snipsnap.user.Digest;
-import org.snipsnap.util.ConnectionManager;
 import org.snipsnap.util.Queue;
 import org.snipsnap.util.log.Logger;
-import org.snipsnap.notification.Notification;
 import org.snipsnap.xmlrpc.WeblogsPing;
 
-import java.sql.*;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.*;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * SnipSpace handles all the data storage.
@@ -93,8 +89,8 @@ public class SnipSpace implements LinkTester {
     cache = Cache.getInstance();
     storage = new JDBCSnipStorage(cache);
     finders = new FinderFactory("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions, " +
-                               " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
-                               " FROM Snip ", cache, Snip.class, "name", (JDBCCreator) storage);
+        " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
+        " FROM Snip ", cache, Snip.class, "name", (JDBCCreator) storage);
     cache.setLoader(Snip.class, (Storage) storage);
 
     // Fully fill the cache with all Snips
@@ -102,7 +98,7 @@ public class SnipSpace implements LinkTester {
       Finder finder = finders.getFinder();
       finder.execute();
 
-     // If we keep all snips in memory we can use queries directly on the snip list
+      // If we keep all snips in memory we can use queries directly on the snip list
       storage = new MemorySnipStorage(storage, cache);
       cache.setLoader(Snip.class, (Storage) storage);
       System.err.println("Cache strategy is: keep full, using MemorySnipStorage");
@@ -131,8 +127,8 @@ public class SnipSpace implements LinkTester {
   }
 
   public String getETag() {
-    return "\""+eTag+"\"";
- }
+    return "\"" + eTag + "\"";
+  }
 
   // A snip is changed by the user (created, stored)
   public void changed(Snip snip) {
@@ -164,7 +160,7 @@ public class SnipSpace implements LinkTester {
     }
   }
 
-  public List getSince(Timestamp date){
+  public List getSince(Timestamp date) {
     return storage.storageByDateSince(date);
   }
 
@@ -221,7 +217,7 @@ public class SnipSpace implements LinkTester {
   }
 
   public Snip post(String content, String title) {
-    return post(getContent(title,content));
+    return post(getContent(title, content));
   }
 
   public Snip post(String content) {
@@ -235,7 +231,7 @@ public class SnipSpace implements LinkTester {
   }
 
   public Snip post(Snip weblog, String content, Date date) {
-    String name = Snip.toName(date);
+    String name = SnipUtil.toName(date);
     Snip snip = null;
     if (exists(name)) {
       snip = load(name);

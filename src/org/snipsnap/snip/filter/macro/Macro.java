@@ -31,8 +31,6 @@
 
 package org.snipsnap.snip.filter.macro;
 
-import org.snipsnap.snip.Snip;
-
 import java.io.IOException;
 import java.io.Writer;
 
@@ -45,6 +43,7 @@ public abstract class Macro implements Comparable {
   public String getDescription() {
     return description;
   }
+
   public String getParamDescription() {
     return paramsDescription;
   }

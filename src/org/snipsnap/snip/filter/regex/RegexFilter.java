@@ -35,12 +35,11 @@
 package org.snipsnap.snip.filter.regex;
 
 import org.apache.oro.text.regex.*;
-
-import java.util.List;
-import java.util.ArrayList;
-
-import org.snipsnap.snip.filter.Filter;
 import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.filter.Filter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class RegexFilter extends Filter {
   int limit = Util.SUBSTITUTE_ALL;
@@ -60,7 +59,7 @@ public abstract class RegexFilter extends Filter {
     try {
       this.pattern.add(compiler.compile(regex, multiline ? Perl5Compiler.MULTILINE_MASK : Perl5Compiler.SINGLELINE_MASK));
       this.substitute.add(substitute);
-    } catch(MalformedPatternException e) {
+    } catch (MalformedPatternException e) {
       System.err.println("bad pattern: " + e);
     }
   }

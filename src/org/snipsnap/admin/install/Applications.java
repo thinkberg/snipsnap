@@ -24,22 +24,21 @@
  */
 package org.snipsnap.admin.install;
 
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.config.Configuration;
-import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.admin.util.CommandHandler;
+import org.snipsnap.config.AppConfiguration;
+import org.snipsnap.config.Configuration;
+import org.snipsnap.snip.SnipLink;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.ServletException;
-import javax.servlet.RequestDispatcher;
-import java.io.IOException;
 import java.io.File;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Loads the list of installed applications.
@@ -49,25 +48,25 @@ import java.util.HashMap;
 public class Applications extends HttpServlet {
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     HttpSession session = request.getSession(false);
-    if(session != null) {
-      Configuration config = (Configuration)session.getAttribute(CommandHandler.ATT_CONFIG);
+    if (session != null) {
+      Configuration config = (Configuration) session.getAttribute(CommandHandler.ATT_CONFIG);
       String root = config.getProperty(Configuration.SERVER_WEBAPP_ROOT);
       Map applications = new HashMap();
       File dir = new File(root);
-      if(dir.isDirectory()) {
+      if (dir.isDirectory()) {
         File[] apps = dir.listFiles();
-        for(int i = 0; i < apps.length; i++) {
+        for (int i = 0; i < apps.length; i++) {
           try {
             AppConfiguration appConfig = loadApp(apps[i]);
             String name = appConfig.getName();
             applications.put(name != null ? name : apps[i].getName(), appConfig);
           } catch (IOException e) {
-            System.err.println("ignoring: "+e.getMessage());
+            System.err.println("ignoring: " + e.getMessage());
           }
         }
       }
       // forward to list of applications or direct install if none exist
-      if(applications.size() > 0) {
+      if (applications.size() > 0) {
         session.setAttribute("serverApplications", applications);
         RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/welcome.jsp");
         dispatcher.forward(request, response);
@@ -82,10 +81,10 @@ public class Applications extends HttpServlet {
 
   private AppConfiguration loadApp(File dir) throws IOException {
     File configFile = new File(dir, "WEB-INF/application.conf");
-    if(configFile.exists() && !configFile.isDirectory()) {
+    if (configFile.exists() && !configFile.isDirectory()) {
       return new AppConfiguration(configFile);
     } else {
-      throw new IOException(configFile.getAbsolutePath()+" is not a configuration file");
+      throw new IOException(configFile.getAbsolutePath() + " is not a configuration file");
     }
   }
 }

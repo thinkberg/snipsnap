@@ -34,7 +34,10 @@ package org.snipsnap.snip.filter.macro.api;
 
 public interface ApiConverter {
   public String convert(String className);
+
   public void setBaseUrl(String baseUrl);
+
   public String getBaseUrl();
+
   public String getName();
 }

@@ -25,19 +25,17 @@
 
 package org.snipsnap.xmlrpc;
 
-import org.apache.xmlrpc.XmlRpcClient;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.snip.Snip;
-import org.snipsnap.xmlrpc.ping.PingHandler;
-import org.snipsnap.xmlrpc.ping.SimplePingHandler;
-import org.snipsnap.xmlrpc.ping.RssPingHandler;
 import org.snipsnap.xmlrpc.ping.ExtendedPingHandler;
+import org.snipsnap.xmlrpc.ping.PingHandler;
+import org.snipsnap.xmlrpc.ping.RssPingHandler;
+import org.snipsnap.xmlrpc.ping.SimplePingHandler;
 
-import java.util.Vector;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Pings weblogs.com
@@ -62,7 +60,7 @@ public class WeblogsPing extends Thread {
   }
 
   public void run() {
-    if (config.allow(AppConfiguration.PERM_WEBLOGS_PING) && handlers.size()>0) {
+    if (config.allow(AppConfiguration.PERM_WEBLOGS_PING) && handlers.size() > 0) {
       Iterator iterator = handlers.iterator();
       while (iterator.hasNext()) {
         PingHandler handler = (PingHandler) iterator.next();

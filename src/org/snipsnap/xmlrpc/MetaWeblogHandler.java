@@ -35,12 +35,12 @@ package org.snipsnap.xmlrpc;
  */
 
 public class MetaWeblogHandler {
-    /**
-     metaWeblog.newPost (blogid, username, password, struct, publish) returns string
-     metaWeblog.editPost (postid, username, password, struct, publish) returns true
-     metaWeblog.getPost (postid, username, password) returns struct
-     */
-    public String newPost(String blogid, String username, String password, String struct, String publish) {
-        return "";
-    }
+  /**
+   metaWeblog.newPost (blogid, username, password, struct, publish) returns string
+   metaWeblog.editPost (postid, username, password, struct, publish) returns true
+   metaWeblog.getPost (postid, username, password) returns struct
+   */
+  public String newPost(String blogid, String username, String password, String struct, String publish) {
+    return "";
+  }
 }

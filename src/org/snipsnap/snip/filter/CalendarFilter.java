@@ -35,12 +35,10 @@
 package org.snipsnap.snip.filter;
 
 import org.apache.oro.text.regex.MatchResult;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.filter.macro.*;
-import org.snipsnap.snip.filter.regex.RegexTokenFilter;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.AppConfiguration;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.filter.regex.RegexTokenFilter;
 
 public class CalendarFilter extends RegexTokenFilter {
 
@@ -49,6 +47,7 @@ public class CalendarFilter extends RegexTokenFilter {
   }
 
   private final static int CALENDAR_PREFIX_LENGTH = "calendar-".length();
+
   public void handleMatch(StringBuffer buffer, MatchResult result, Snip snip) {
     Application app = Application.get();
     AppConfiguration config = app.getConfiguration();
@@ -58,8 +57,8 @@ public class CalendarFilter extends RegexTokenFilter {
 
     String file = null;
     StringBuffer url = new StringBuffer("/exec/ical/");
-    if(parent != null) {
-      file = snip.getName().substring(CALENDAR_PREFIX_LENGTH+parent.getName().length()+1);
+    if (parent != null) {
+      file = snip.getName().substring(CALENDAR_PREFIX_LENGTH + parent.getName().length() + 1);
       url.append(parent.getName()).append("/");
       url.append(file);
     } else {
@@ -68,7 +67,7 @@ public class CalendarFilter extends RegexTokenFilter {
     }
 
     String webcalUrl = config.getUrl(url.toString());
-    webcalUrl = webcalUrl.substring(webcalUrl.indexOf("//")+2);
+    webcalUrl = webcalUrl.substring(webcalUrl.indexOf("//") + 2);
     buffer.append("webcal://").append(webcalUrl);
     buffer.append("\">").append("calendar ").append(file).append("</a>");
   }

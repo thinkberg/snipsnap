@@ -36,10 +36,11 @@ import java.util.Collection;
  */
 public interface ListFormatter {
   public String getName();
+
   public void format(Writer writer,
                      String listComment,
                      Collection c,
                      String emptyText,
                      boolean showSize)
-    throws IOException;
+      throws IOException;
 }

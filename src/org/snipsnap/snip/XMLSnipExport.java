@@ -30,12 +30,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.StringTokenizer;
 
 /**
@@ -64,8 +59,8 @@ public class XMLSnipExport {
       pw.println("<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>");
       pw.println("<snipspace>");
 
-      if((exportMask & USERS) != 0) toXml("SnipUser", "user", connection, pw);
-      if((exportMask & SNIPS) != 0) toXml("Snip", "snip", connection, pw);
+      if ((exportMask & USERS) != 0) toXml("SnipUser", "user", connection, pw);
+      if ((exportMask & SNIPS) != 0) toXml("Snip", "snip", connection, pw);
 
       pw.println("</snipspace>");
       pw.flush();
@@ -83,7 +78,7 @@ public class XMLSnipExport {
     ResultSet results;
     try {
       PreparedStatement prepStmt = connection.prepareStatement("SELECT * " +
-                                                               " FROM " + table);
+          " FROM " + table);
       results = prepStmt.executeQuery();
       toXml(export, results, out);
     } catch (SQLException e) {

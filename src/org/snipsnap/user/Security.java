@@ -25,8 +25,8 @@
 
 package org.snipsnap.user;
 
-import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.Ownable;
+import org.snipsnap.snip.Snip;
 
 /**
  * Security manager for checking permission, roles etc.

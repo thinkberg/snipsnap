@@ -35,6 +35,7 @@ import org.snipsnap.snip.filter.regex.RegexReplaceFilter;
  * @team sonicteam
  * @version $Id$
  */
+
 public class StrikeThroughFilter extends RegexReplaceFilter {
 
   public StrikeThroughFilter() {

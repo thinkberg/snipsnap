@@ -38,8 +38,8 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Load a snip to edit. Loads the snip into the request context. In case
@@ -51,12 +51,12 @@ import java.util.HashMap;
 public class SnipEditServlet extends SnipSnapServlet {
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws IOException, ServletException {
+      throws IOException, ServletException {
     doGet(request, response);
   }
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws IOException, ServletException {
+      throws IOException, ServletException {
 
     final String name = request.getParameter("name");
     if (null == name) {
@@ -72,12 +72,12 @@ public class SnipEditServlet extends SnipSnapServlet {
     File imageDir = new File(config.getFile().getParentFile().getParentFile(), "images");
 
     final Map ids = new HashMap();
-    final int prefixLength = ("image-"+name+"-").length();
+    final int prefixLength = ("image-" + name + "-").length();
     String[] images = imageDir.list(new FilenameFilter() {
       public boolean accept(File dir, String file) {
-        if(file.startsWith("image-" + name) && file.length() > prefixLength) {
-          String ext = file.substring(file.indexOf('.', prefixLength)+1);
-          if("png".equals(ext)) {
+        if (file.startsWith("image-" + name) && file.length() > prefixLength) {
+          String ext = file.substring(file.indexOf('.', prefixLength) + 1);
+          if ("png".equals(ext)) {
             ids.put(file, file.substring(prefixLength, file.indexOf('.', prefixLength)));
           } else {
             ids.put(file, file.substring(prefixLength));

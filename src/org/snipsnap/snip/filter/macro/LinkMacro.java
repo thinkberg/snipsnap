@@ -24,7 +24,6 @@
  */
 package org.snipsnap.snip.filter.macro;
 
-import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 
 import java.io.IOException;
@@ -58,7 +57,7 @@ public class LinkMacro extends Macro {
 
     if (url != null && text != null) {
       writer.write("<span class=\"nobr\">");
-      if(!"none".equals(img)) {
+      if (!"none".equals(img)) {
         writer.write(linkImage);
       }
       writer.write("<a href=\"");

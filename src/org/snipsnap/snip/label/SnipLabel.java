@@ -25,7 +25,6 @@
 
 package org.snipsnap.snip.label;
 
-import java.util.Map;
 
 /**
  * SnipLabel connects a Snip to another Snip

@@ -33,6 +33,6 @@ package org.snipsnap.notification;
  */
 
 public class Notification {
-  public static int SNIP_CREATE=1;
-  public static int USER_LOGIN=101;
+  public static int SNIP_CREATE = 1;
+  public static int USER_LOGIN = 101;
 }

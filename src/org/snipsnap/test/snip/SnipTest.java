@@ -24,10 +24,12 @@
  */
 package org.snipsnap.test.snip;
 
-import junit.framework.TestCase;
 import junit.framework.Test;
+import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipImpl;
+import org.snipsnap.snip.SnipUtil;
 
 import java.sql.Date;
 
@@ -43,17 +45,17 @@ public class SnipTest extends TestCase {
   }
 
   public void testName() {
-    Snip snip1 = new Snip("A", "A Content");
+    Snip snip1 = new SnipImpl("A", "A Content");
     assertEquals(snip1.getName(), "A");
   }
 
   public void testContent() {
-    Snip snip1 = new Snip("A", "A Content");
+    Snip snip1 = new SnipImpl("A", "A Content");
     assertEquals(snip1.getContent(), "A Content");
   }
 
   public void testDateName() {
-    assertEquals( Snip.toName(new Date(new java.util.Date("01 Jan 2002").getTime())) , "2002-01-01");
+    assertEquals(SnipUtil.toName(new Date(new java.util.Date("01 Jan 2002").getTime())), "2002-01-01");
   }
 
 }

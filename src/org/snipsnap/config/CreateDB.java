@@ -69,35 +69,35 @@ public class CreateDB {
 
       // Create a Person table,
       statement.executeQuery(
-        "    CREATE TABLE Snip ( " +
-        "       name        VARCHAR(100) NOT NULL, " +
-        "       content     TEXT, " +
-        "       cTime       TIMESTAMP, " +
-        "       mTime       TIMESTAMP, " +
-        "       cUser       VARCHAR(55), " +
-        "       mUser       VARCHAR(55), " +
-        "       oUser       VARCHAR(55), " +
-        "       parentSnip  VARCHAR(100), " +
-        "       commentSnip VARCHAR(100), " +
-        "       backLinks   TEXT, " +
-        "       snipLinks   TEXT, " +
-        "       labels      TEXT, " +
-        "       attachments TEXT, " +
-        "       viewCount   INTEGER, " +
-        "       permissions VARCHAR(200) )");
+          "    CREATE TABLE Snip ( " +
+          "       name        VARCHAR(100) NOT NULL, " +
+          "       content     TEXT, " +
+          "       cTime       TIMESTAMP, " +
+          "       mTime       TIMESTAMP, " +
+          "       cUser       VARCHAR(55), " +
+          "       mUser       VARCHAR(55), " +
+          "       oUser       VARCHAR(55), " +
+          "       parentSnip  VARCHAR(100), " +
+          "       commentSnip VARCHAR(100), " +
+          "       backLinks   TEXT, " +
+          "       snipLinks   TEXT, " +
+          "       labels      TEXT, " +
+          "       attachments TEXT, " +
+          "       viewCount   INTEGER, " +
+          "       permissions VARCHAR(200) )");
 
       statement.executeQuery(
-        "    CREATE TABLE SnipUser ( " +
-        "       cTime      TIMESTAMP, " +
-        "       mTime      TIMESTAMP, " +
-        "       lastLogin  TIMESTAMP, " +
-        "       lastAccess TIMESTAMP, " +
-        "       lastLogout TIMESTAMP, " +
-        "       login      VARCHAR(100) NOT NULL, " +
-        "       passwd     VARCHAR(100), " +
-        "       email      VARCHAR(100)," +
-        "       status     VARCHAR(50), " +
-        "       roles      VARCHAR(200) )");
+          "    CREATE TABLE SnipUser ( " +
+          "       cTime      TIMESTAMP, " +
+          "       mTime      TIMESTAMP, " +
+          "       lastLogin  TIMESTAMP, " +
+          "       lastAccess TIMESTAMP, " +
+          "       lastLogout TIMESTAMP, " +
+          "       login      VARCHAR(100) NOT NULL, " +
+          "       passwd     VARCHAR(100), " +
+          "       email      VARCHAR(100)," +
+          "       status     VARCHAR(50), " +
+          "       roles      VARCHAR(200) )");
 
 
       // Close the statement and the connection.
@@ -106,8 +106,8 @@ public class CreateDB {
 
     } catch (SQLException e) {
       System.out.println(
-        "An error occured\n" +
-        "The SQLException message is: " + e.getMessage());
+          "An error occured\n" +
+          "The SQLException message is: " + e.getMessage());
     }
     // Close the the connection.
     try {
@@ -145,7 +145,7 @@ public class CreateDB {
 
     System.out.println("Importing default snips.");
     try {
-      XMLSnipImport.load(data, XMLSnipImport.OVERWRITE|XMLSnipImport.IMPORT_USERS|XMLSnipImport.IMPORT_SNIPS);
+      XMLSnipImport.load(data, XMLSnipImport.OVERWRITE | XMLSnipImport.IMPORT_USERS | XMLSnipImport.IMPORT_SNIPS);
     } catch (IOException e) {
       System.out.println("CreateDB: import failed!");
     }

@@ -1,5 +1,6 @@
 0.3.2
 
+- Developer: Refactored Snip to use interface and introduced interceptors (AOP)
 - Fixed bug: RSD <api> was not closed
 - Added feature: /raw/<snip-name> displays the raw content of a snip
 - Added feature: uploading of images for a snip
@@ -15,7 +16,7 @@
 - Fixed bug: RSD <settings> was at the wrong place
 - Fixed bug: detection of encrypted passwords on import
 
-0.3.1
+0.3.1 - 2002-12-11
 
 - Fixed bug: run.bat classpath corrected
 - Fixed bug: urls were double decoded (now only '+' is decoded by servlet)
@@ -29,7 +30,7 @@
 - Refactored heavily the backend to use in-memory queries instead of SQL queries. This
   should allow us to move to Prevalyer easier
 
-0.3
+0.3 - 2002-11-21
 
 - Added feature: Sky and Oranges themes
 - Changed to newer versions of McKoi and ORO Regex
@@ -78,7 +79,7 @@
 - Worked on Accessibility
 - Fixed a lot of smaller bugs
 
-0.2.7
+0.2.7 - 2002-10-10
 
 - Fixed bug: Editing users failed when email field was empty
 - Fixed bug: wrong manifest for snipsnap.jar
@@ -94,7 +95,7 @@
 - Fixed bug: application dirs must not contain space (replaced by _ now)
 - Fixed smaller bugs
 
-0.2.6
+0.2.6 - 2002-10-01
 
 - Added feature: Dublin Core support
 - Added feature: Broader search: searching for tree will no also find treehouse
@@ -112,7 +113,7 @@
 - Added feature: automatic re-login via cookie
 - Added feature: configurable list formatter, made {index:AtoZ} for A to Z listing
 
-0.2.5
+0.2.5 - 2002-09-18
 
 - Added feature: SnipSnap is multi-server capable
 - SnipSnap stores information about snip views, clicked links between snips and incoming snips
@@ -122,3 +123,31 @@
 - Following Jakob Nielsen, start and the logo are no longer clickable on the start page
 - Basic RSS support
 - Fixed HTML to XHTML 1.0 and CSS to validated CSS
+
+0.1a-200207241333 - 2002-07-24
+
+- Added feature: Fulltext search now looks in titles and text
+- Added feature: User management improved
+- Added feature: Updating procedure from admin tool
+- Added feature: Rights management (lock/unlock, delete snips)
+- Fixed several bugs
+
+unknown - 2002-07-19
+
+- Added feature: fulltext search engine
+- Added feature: user management
+
+unknown - 2002-07-17
+
+- no more JDK 1.4
+- run.sh start and stop
+
+unknown - 2002-07-15
+
+- Added feature: snipsnap-index
+- Fixed quite a few bugs
+- Added feature: {image} macro
+
+0.1 - 2002-07-12
+
+- Initial public alpha release

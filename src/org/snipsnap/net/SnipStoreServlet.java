@@ -53,7 +53,7 @@ import java.io.InputStream;
  */
 public class SnipStoreServlet extends SnipSnapServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
 
     String name = request.getParameter("name");
     SnipSpace space = SnipSpace.getInstance();

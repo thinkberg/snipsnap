@@ -32,7 +32,6 @@
 
 package org.snipsnap.snip.filter.macro;
 
-import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 
 import java.io.IOException;
@@ -55,7 +54,7 @@ public class FieldMacro extends Macro {
 
     if (params != null && params.getLength() > 0) {
       writer.write("<form class=\"form\" action=\"");
-      if(params.getLength() >= 3) {
+      if (params.getLength() >= 3) {
         SnipLink.appendUrl(writer, params.get("2"));
       } else {
         SnipLink.appendUrl(writer, params.getSnip().getName());
@@ -70,7 +69,7 @@ public class FieldMacro extends Macro {
         writer.write("\"");
       }
       writer.write("/>");
-      if(params.getLength() >= 4) {
+      if (params.getLength() >= 4) {
         writer.write(" <input type=\"submit\" name=\"submit\" value=\"");
         writer.write(params.get("3"));
         writer.write("\"/>");

@@ -29,7 +29,6 @@ import org.snipsnap.snip.SnipLink;
 import org.snipsnap.util.Checksum;
 import org.snipsnap.util.FileUtil;
 import org.snipsnap.util.JarUtil;
-import org.mortbay.jetty.Server;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -37,18 +36,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.jar.JarFile;
 
 /**
@@ -59,7 +49,7 @@ import java.util.jar.JarFile;
 public class Update extends HttpServlet {
 
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
     HttpSession session = request.getSession();
     if (session != null && session.getAttribute("admin") != null) {
       String srv = request.getParameter("server");
@@ -117,7 +107,7 @@ public class Update extends HttpServlet {
       JarFile template = new JarFile("./lib/snipsnap-template.war");
       JarUtil.extract(template, new File("./app" + ctx), install, unpack);
       // TODO: hack to read servlets jar before restarting
-      JarUtil.checksumJar(new JarFile("./app"+ctx+"/WEB-INF/lib/servlets.jar"));
+      JarUtil.checksumJar(new JarFile("./app" + ctx + "/WEB-INF/lib/servlets.jar"));
       JarUtil.checksumJar(template).store(new File("./app" + ctx + "/WEB-INF/CHECKSUMS"));
     } catch (Exception e) {
       errors.put("update", "Unable to update your application, see server.log for details!");

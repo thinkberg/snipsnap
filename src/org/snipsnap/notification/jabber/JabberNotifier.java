@@ -29,7 +29,7 @@ import org.snipsnap.notification.Notifier;
 
 /**
  * Sends notifications via Jabber IM service
- * @author 
+ * @author
  * @version $Id$
  */
 

@@ -33,14 +33,9 @@ package org.snipsnap.snip.filter.macro;
 
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipLink;
 import org.snipsnap.util.collection.Collections;
 import org.snipsnap.util.collection.Filterator;
-import org.snipsnap.serialization.StringBufferWriter;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Collection;
 import java.io.IOException;
 import java.io.Writer;
 
@@ -55,28 +50,28 @@ public class IndexSnipMacro extends ListOutputMacro {
 
 
   public void execute(Writer writer, MacroParameter params)
-      throws IllegalArgumentException,IOException {
+      throws IllegalArgumentException, IOException {
     String type = null;
     boolean showSize = true;
-    if(params != null) {
-      if(params.getLength() > 0) {
+    if (params != null) {
+      if (params.getLength() > 0) {
         type = params.get("0");
       }
     }
 
     if (params == null || params.getLength() <= 2) {
       output(writer, "All Snips:",
-             Collections.filter(SnipSpace.getInstance().getAll(),
-                                new Filterator() {
-                                  public boolean filter(Object obj) {
-                                    String name = ((Snip) obj).getName();
-                                    if (name.startsWith("comment-")) {
-                                      return true;
-                                    }
-                                    return false;
-                                  }
-                                }
-      ), "none written yet.", type, showSize);
+          Collections.filter(SnipSpace.getInstance().getAll(),
+              new Filterator() {
+                public boolean filter(Object obj) {
+                  String name = ((Snip) obj).getName();
+                  if (name.startsWith("comment-")) {
+                    return true;
+                  }
+                  return false;
+                }
+              }
+          ), "none written yet.", type, showSize);
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

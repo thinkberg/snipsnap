@@ -27,9 +27,8 @@ package org.snipsnap.net;
 import org.snipsnap.app.Application;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.user.UserManager;
-import org.snipsnap.user.Permissions;
 import org.snipsnap.user.User;
+import org.snipsnap.user.UserManager;
 import org.snipsnap.util.Base64;
 
 import javax.servlet.ServletException;
@@ -40,7 +39,6 @@ import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.FileInputStream;
 import java.util.Iterator;
 
 /**
@@ -64,10 +62,10 @@ public class iCalServlet extends HttpServlet {
     String auth = request.getHeader("Authorization");
     String login = "", password = "";
 
-    if(auth != null) {
-      auth = new String(Base64.decode(auth.substring(auth.indexOf(' ')+1)));
+    if (auth != null) {
+      auth = new String(Base64.decode(auth.substring(auth.indexOf(' ') + 1)));
       login = auth.substring(0, auth.indexOf(':'));
-      password = auth.substring(auth.indexOf(':')+1);
+      password = auth.substring(auth.indexOf(':') + 1);
     }
 
     User user = um.authenticate(login, password);
@@ -105,7 +103,7 @@ public class iCalServlet extends HttpServlet {
       delete(name, file);
     } else if ("PUT".equals(method)) {
       put(name, file, request, response);
-    } else if("GET".equals(method)) {
+    } else if ("GET".equals(method)) {
       get(name, file, request, response);
     }
 
@@ -120,7 +118,7 @@ public class iCalServlet extends HttpServlet {
       Iterator it = userSnip.getChildren().iterator();
       while (it.hasNext()) {
         Snip snip = (Snip) it.next();
-        if (snip.getName().equals("calendar-"+name+"-"+file)) {
+        if (snip.getName().equals("calendar-" + name + "-" + file)) {
           space.remove(snip);
         }
       }
@@ -142,7 +140,7 @@ public class iCalServlet extends HttpServlet {
       while ((l = r.read(buffer)) != -1) {
         content.append(buffer, 0, l);
       }
-      Snip snip = space.create("calendar-"+name+"-"+file, content.toString());
+      Snip snip = space.create("calendar-" + name + "-" + file, content.toString());
       userSnip.addSnip(snip);
     }
   }
@@ -156,7 +154,7 @@ public class iCalServlet extends HttpServlet {
       Iterator it = userSnip.getChildren().iterator();
       while (it.hasNext()) {
         Snip snip = (Snip) it.next();
-        if (snip.getName().equals("calendar-"+name+"-"+file)) {
+        if (snip.getName().equals("calendar-" + name + "-" + file)) {
           String content = snip.getContent();
           response.setContentLength(content.length());
           response.setContentType("application/octet-stream");

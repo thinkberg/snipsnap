@@ -38,7 +38,7 @@ import java.util.Comparator;
 
 public abstract class SnipComparator implements Comparator {
   public int compare(Object o1, Object o2) {
-    if (! ((o1 instanceof Snip) && (o2 instanceof Snip))) {
+    if (!((o1 instanceof Snip) && (o2 instanceof Snip))) {
       throw new ClassCastException();
     }
     return compare((Snip) o1, (Snip) o2);

@@ -1,9 +1,10 @@
-<%@ page import="org.snipsnap.snip.SnipSpace"%><%--
+<%@ page pageEncoding="iso-8859-1" %><%--
+--%><%@ page import="org.snipsnap.snip.SnipSpace"%><%--
 --%><% response.setHeader("ETag", SnipSpace.getInstance().getETag()); %><%--
---%><?xml version="1.0" encoding="utf-8"?>
+--%><?xml version="1.0" encoding="UTF-8"?>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %><%-- hack to remove linefeed
 --%><%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %><%--
---%><%@ page contentType="text/xml"%><%--
+--%><%@ page contentType="text/xml; charset=UTF-8"%><%--
 --%><!-- name="generator" content="SnipSnap/<c:out value="${config.version}"/>" -->
 <rss version="2.0"
     xmlns:dc="http://purl.org/dc/elements/1.1/"

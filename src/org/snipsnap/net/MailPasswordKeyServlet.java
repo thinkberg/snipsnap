@@ -37,8 +37,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * Generates a password key to change the password. The key
@@ -51,7 +49,7 @@ public class MailPasswordKeyServlet extends HttpServlet {
   private final static String ERR_PASSWORD = "User name and password do not match!";
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
 
     String login = request.getParameter("login");
 
@@ -72,7 +70,7 @@ public class MailPasswordKeyServlet extends HttpServlet {
       String subject = "Forgotten password";
       String url = configuration.getUrl("/exec/changepass.jsp?key=" + key);
       String content = "To change your password go to <a href=\"" + url +
-        "\">" + url + "</a>";
+          "\">" + url + "</a>";
 
       Mail.getInstance().sendMail(receiver, subject, content);
     } else {

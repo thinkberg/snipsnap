@@ -24,17 +24,8 @@
  */
 package org.snipsnap.snip.filter.macro;
 
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.filter.MacroFilter;
-import org.snipsnap.snip.filter.links.BackLinks;
 import org.snipsnap.snip.filter.links.SnipLinks;
-import org.snipsnap.user.UserManager;
-import org.snipsnap.user.User;
-import org.snipsnap.app.Application;
 
-import java.util.*;
 import java.io.IOException;
 import java.io.Writer;
 
@@ -44,6 +35,7 @@ import java.io.Writer;
  * @author Stephan J. Schmidt
  * @version $Id$
  */
+
 public class SnipLinkMacro extends ListOutputMacro {
   public String getName() {
     return "sniplinks";
@@ -54,14 +46,13 @@ public class SnipLinkMacro extends ListOutputMacro {
   }
 
   public void execute(Writer writer, MacroParameter params)
-      throws IllegalArgumentException, IOException
-  {
+      throws IllegalArgumentException, IOException {
     String start = "#ffffff";
     String end = "#b0b0b0";
     int width = 4;
     if (params == null || params.getLength() > 1) {
       if (params.getLength() == 1) {
-        width  = Integer.parseInt(params.get("0"));
+        width = Integer.parseInt(params.get("0"));
       }
       SnipLinks.appendTo(writer, params.getSnip().getAccess().getBackLinks(), width, start, end);
     } else {

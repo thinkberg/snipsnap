@@ -25,35 +25,23 @@
 package org.snipsnap.net.admin;
 
 import org.snipsnap.app.Application;
-import org.snipsnap.snip.HomePage;
+import org.snipsnap.config.AppConfiguration;
+import org.snipsnap.net.filter.MultipartWrapper;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.XMLSnipExport;
 import org.snipsnap.snip.XMLSnipImport;
 import org.snipsnap.user.User;
-import org.snipsnap.user.UserManager;
-import org.snipsnap.config.AppConfiguration;
-import org.snipsnap.util.log.Logger;
-import org.snipsnap.net.filter.MultipartWrapper;
 
-import javax.servlet.ServletException;
+import javax.mail.BodyPart;
 import javax.servlet.RequestDispatcher;
-import javax.servlet.http.Cookie;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.BodyPart;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.io.ByteArrayInputStream;
-import java.util.Map;
 import java.util.HashMap;
-import java.util.StringTokenizer;
+import java.util.Map;
 
 /**
  * Servlet to import into the database.
@@ -65,11 +53,11 @@ public class ImportServlet extends HttpServlet {
   private final static String ERR_IOEXCEPTION = "Error while importing!";
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
     HttpSession session = request.getSession(false);
     Application.getInstance(session);
-    User admin = session != null ? (User)session.getAttribute(AdminServlet.ATT_ADMIN) : null;
-    if(null == admin || !(request instanceof MultipartWrapper)) {
+    User admin = session != null ? (User) session.getAttribute(AdminServlet.ATT_ADMIN) : null;
+    if (null == admin || !(request instanceof MultipartWrapper)) {
       response.sendRedirect(SnipLink.absoluteLink(request, "/manager"));
       return;
     }
@@ -77,16 +65,16 @@ public class ImportServlet extends HttpServlet {
     Map errors = new HashMap();
     request.setAttribute("errors", errors);
 
-    MultipartWrapper req = (MultipartWrapper)request;
+    MultipartWrapper req = (MultipartWrapper) request;
 
     boolean overwrite = request.getParameter("overwrite") != null;
     String data[] = request.getParameterValues("data");
     int importMask = 0;
-    for(int i = 0; i < data.length; i++) {
-      if("users".equals(data[i])) {
+    for (int i = 0; i < data.length; i++) {
+      if ("users".equals(data[i])) {
         importMask = importMask | XMLSnipExport.USERS;
       }
-      if("snips".equals(data[i])) {
+      if ("snips".equals(data[i])) {
         importMask = importMask | XMLSnipExport.SNIPS;
       }
     }
@@ -104,7 +92,7 @@ public class ImportServlet extends HttpServlet {
       XMLSnipImport.load(file.getInputStream(), importMask);
       errors.put("message", OK_IMPORTED);
     } catch (Exception e) {
-      System.err.println("ImportServlet: unable to import snips: "+e);
+      System.err.println("ImportServlet: unable to import snips: " + e);
       e.printStackTrace();
       errors.put("message", ERR_IOEXCEPTION);
     }

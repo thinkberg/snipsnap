@@ -25,7 +25,6 @@
 package org.snipsnap.snip.filter.macro;
 
 import org.snipsnap.date.Month;
-import org.snipsnap.snip.Snip;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -61,8 +60,8 @@ public class CalendarMacro extends Macro {
       } catch (NumberFormatException e) {
         System.err.println("CalendarMacro: month is not a number: " + params.get("1"));
       }
-    } else if(params != null && params.getLength() > 0) {
-      System.err.println("CalendarMacro: illegal number of arguments: "+params.getLength());
+    } else if (params != null && params.getLength() > 0) {
+      System.err.println("CalendarMacro: illegal number of arguments: " + params.getLength());
     }
 
     Month m = new Month();

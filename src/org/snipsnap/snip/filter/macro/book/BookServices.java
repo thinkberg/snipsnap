@@ -26,13 +26,11 @@
 package org.snipsnap.snip.filter.macro.book;
 
 import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.filter.EscapeFilter;
 
 import java.io.*;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 /**
  * Manages links to book dealears or comparison services
@@ -68,7 +66,7 @@ public class BookServices {
   public void addInterMap(BufferedReader reader) throws IOException {
     String line;
     while ((line = reader.readLine()) != null) {
-      if (! line.startsWith("#")) {
+      if (!line.startsWith("#")) {
         int index = line.indexOf(" ");
         services.put(line.substring(0, index), SnipLink.escape(line.substring(index + 1)));
       }

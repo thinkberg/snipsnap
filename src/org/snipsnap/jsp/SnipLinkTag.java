@@ -25,19 +25,15 @@
 package org.snipsnap.jsp;
 
 import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
-import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.Links;
-import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.filter.links.SnipLinks;
-import org.snipsnap.util.ColorRange;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.tagext.TagSupport;
-import javax.servlet.jsp.tagext.BodyTag;
 import javax.servlet.jsp.jstl.core.ConditionalTagSupport;
-import java.util.Iterator;
-import java.io.IOException;
+import javax.servlet.jsp.tagext.BodyTag;
+import javax.servlet.jsp.tagext.TagSupport;
 
 public class SnipLinkTag extends TagSupport {
   Snip snip = null;
@@ -46,11 +42,13 @@ public class SnipLinkTag extends TagSupport {
   int width = 4;
 
   public int doStartTag() throws JspException {
-    if(snip==null){ return BodyTag.SKIP_BODY;}
+    if (snip == null) {
+      return BodyTag.SKIP_BODY;
+    }
 
     JspWriter out = pageContext.getOut();
     Links snipLinks = snip.getAccess().getSnipLinks();
-    SnipLinks.appendTo(out,snip.getAccess().getSnipLinks(), this.width, this.start, this.end);
+    SnipLinks.appendTo(out, snip.getAccess().getSnipLinks(), this.width, this.start, this.end);
 
     return super.doStartTag();
   }

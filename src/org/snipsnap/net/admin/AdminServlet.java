@@ -25,15 +25,14 @@
 package org.snipsnap.net.admin;
 
 import org.snipsnap.app.Application;
+import org.snipsnap.net.Layouter;
+import org.snipsnap.net.SnipSnapServlet;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
-import org.snipsnap.net.SnipSnapServlet;
-import org.snipsnap.net.Layouter;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -52,7 +51,7 @@ public class AdminServlet extends SnipSnapServlet {
   protected final static String ATT_ADMIN = "admin";
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
     // get user manager and store in session
     UserManager um = UserManager.getInstance();
     HttpSession session = request.getSession();
@@ -68,10 +67,10 @@ public class AdminServlet extends SnipSnapServlet {
       session.setAttribute(ATT_ADMIN, user);
 
       String layout = request.getPathInfo();
-      if(null == layout || "/".equals(layout)) {
+      if (null == layout || "/".equals(layout)) {
         layout = "/application.jsp";
       }
-      request.setAttribute(Layouter.ATT_PAGE, "/admin"+layout);
+      request.setAttribute(Layouter.ATT_PAGE, "/admin" + layout);
       RequestDispatcher dispatcher = getServletContext().getNamedDispatcher("org.snipsnap.net.Layouter");
       dispatcher.forward(request, response);
       return;

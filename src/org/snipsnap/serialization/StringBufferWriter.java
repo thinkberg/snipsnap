@@ -25,8 +25,8 @@
 
 package org.snipsnap.serialization;
 
-import java.io.Writer;
 import java.io.IOException;
+import java.io.Writer;
 
 /**
  * The same as StringWriter, but takes an existing StringBuffer in its

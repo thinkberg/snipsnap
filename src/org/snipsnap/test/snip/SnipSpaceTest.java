@@ -27,9 +27,9 @@ package org.snipsnap.test.snip;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import org.snipsnap.app.Application;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.app.Application;
 
 public class SnipSpaceTest extends TestCase {
   public SnipSpaceTest(String name) {
@@ -48,7 +48,7 @@ public class SnipSpaceTest extends TestCase {
 
   public void testLoadSnip() {
     Application app = Application.get();
-    Snip snip1 = SnipSpace.getInstance().create("A","A Content");
+    Snip snip1 = SnipSpace.getInstance().create("A", "A Content");
     Snip snip2 = SnipSpace.getInstance().load("A");
     assertEquals(snip2.getName(), "A");
     SnipSpace.getInstance().remove(snip1);
@@ -56,8 +56,8 @@ public class SnipSpaceTest extends TestCase {
 
   public void testParent() {
     Application app = Application.get();
-    Snip snip1 = SnipSpace.getInstance().create("A","A Content");
-    Snip snip2 = SnipSpace.getInstance().create("B","B Content");
+    Snip snip1 = SnipSpace.getInstance().create("A", "A Content");
+    Snip snip2 = SnipSpace.getInstance().create("B", "B Content");
     snip2.setParent(snip1);
     assertEquals(snip1, snip2.getParent());
     SnipSpace.getInstance().remove(snip1);
@@ -66,14 +66,14 @@ public class SnipSpaceTest extends TestCase {
 
   public void testExists() {
     Application app = Application.get();
-    Snip snip1 = SnipSpace.getInstance().create("A","A Content");
+    Snip snip1 = SnipSpace.getInstance().create("A", "A Content");
     assertTrue("Snip exists", SnipSpace.getInstance().exists("A"));
     SnipSpace.getInstance().remove(snip1);
   }
 
   public void testCreateAndDeleteSnip() {
     Application app = Application.get();
-    Snip snip1 = SnipSpace.getInstance().create("A","A Content");
+    Snip snip1 = SnipSpace.getInstance().create("A", "A Content");
     assertEquals(snip1.getName(), "A");
     assertEquals(snip1.getContent(), "A Content");
     SnipSpace.getInstance().remove(snip1);

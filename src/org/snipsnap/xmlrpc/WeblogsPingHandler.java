@@ -26,11 +26,6 @@
 
 package org.snipsnap.xmlrpc;
 
-import org.snipsnap.app.Application;
-import org.snipsnap.user.User;
-import org.snipsnap.user.UserManager;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.Snip;
 
 /**
  * Handles XML-RPC calls for the Weblogs Ping API
@@ -40,14 +35,14 @@ import org.snipsnap.snip.Snip;
  * @version $Id$
  */
 
-public class  WeblogsPingHandler {
-    /**
-     * From the spec:
-     * weblogUpdates.ping()
-    **/
-    public String ping(String weblogName, String weblogUrl) {
-        System.out.println("XML-RPC call to ping() from "+weblogName);
-        SnipSnapPing.getInstance().addChangedWeblog(weblogName, weblogUrl);
-        return "";
-    }
+public class WeblogsPingHandler {
+  /**
+   * From the spec:
+   * weblogUpdates.ping()
+   **/
+  public String ping(String weblogName, String weblogUrl) {
+    System.out.println("XML-RPC call to ping() from " + weblogName);
+    SnipSnapPing.getInstance().addChangedWeblog(weblogName, weblogUrl);
+    return "";
+  }
 }

@@ -33,18 +33,16 @@
 package org.snipsnap.snip.filter;
 
 import org.snipsnap.snip.Snip;
-import org.snipsnap.util.log.Logger;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.lang.reflect.Method;
-import java.lang.reflect.InvocationTargetException;
 
 public class FilterPipe {
 
   private Collection filterList = null;
-  private static Object[] noArguments =  new Object[]{};
+  private static Object[] noArguments = new Object[]{};
 
   public FilterPipe() {
     filterList = new ArrayList();
@@ -60,15 +58,15 @@ public class FilterPipe {
       Filter filter;
       try {
         Method getInstanceMethod = null;
-        getInstanceMethod = filterClass.getMethod("getInstance",null);
+        getInstanceMethod = filterClass.getMethod("getInstance", null);
         filter = (Filter) getInstanceMethod.invoke(null, noArguments);
       } catch (NoSuchMethodException e) {
         filter = (Filter) filterClass.newInstance();
       }
       addFilter(filter);
-      System.err.println("FilterPipe: added "+name);
+      System.err.println("FilterPipe: added " + name);
     } catch (Exception e) {
-      System.err.println("FilterPipe: unable to load '" + name + "' filter "+e);
+      System.err.println("FilterPipe: unable to load '" + name + "' filter " + e);
     }
   }
 
@@ -88,7 +86,7 @@ public class FilterPipe {
           output = tmp;
         }
       } catch (Exception e) {
-        System.err.println("Filtering exception: "+f+": "+e);
+        System.err.println("Filtering exception: " + f + ": " + e);
         e.printStackTrace();
       }
     }

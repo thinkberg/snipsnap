@@ -24,11 +24,16 @@
  */
 package org.snipsnap.test.user;
 
-import org.snipsnap.user.*;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 import org.snipsnap.app.Application;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
-import junit.framework.*;
+import org.snipsnap.user.Permissions;
+import org.snipsnap.user.Roles;
+import org.snipsnap.user.Security;
+import org.snipsnap.user.User;
 
 public class PermissionsTest extends TestCase {
   public PermissionsTest(String name) {
@@ -62,14 +67,14 @@ public class PermissionsTest extends TestCase {
     roles.add("role x");
 
     assertTrue("User has Edit permission", perms.check("Edit", roles));
-    assertTrue("User has not Edit permission", ! perms.check("Edit", roles2));
+    assertTrue("User has not Edit permission", !perms.check("Edit", roles2));
   }
 
   public void testEmptyRoles() {
     Permissions perms = new Permissions();
     perms.add("Edit", "role 1");
     Roles roles = new Roles();
-    assertTrue("User has not Edit permission", ! perms.check("Edit", roles));
+    assertTrue("User has not Edit permission", !perms.check("Edit", roles));
   }
 
   public void testEmptyPerms() {
@@ -85,11 +90,11 @@ public class PermissionsTest extends TestCase {
   public void testOwner() {
     Application app = Application.get();
 
-    User user1 = new User("user1 1", "password 1","user1@user1.de");
-    User user2 = new User("user1 2","password 2","user1@user1.de");
+    User user1 = new User("user1 1", "password 1", "user1@user1.de");
+    User user2 = new User("user1 2", "password 2", "user1@user1.de");
 
     // create with user1 1
-    Snip snip1 = SnipSpace.getInstance().create("A","A Content");
+    Snip snip1 = SnipSpace.getInstance().create("A", "A Content");
 
     // modify with user1 2
     app.setUser(user2);
@@ -99,7 +104,7 @@ public class PermissionsTest extends TestCase {
     Roles roles = new Roles();
     roles.add(Roles.OWNER);
     // user1 2 is not owner of snip
-    assertTrue(! Security.hasRoles(user2, snip1, roles));
+    assertTrue(!Security.hasRoles(user2, snip1, roles));
     // user1 1 is owner of snip
     assertTrue(Security.hasRoles(user1, snip1, roles));
 
@@ -111,7 +116,7 @@ public class PermissionsTest extends TestCase {
     perms.add("Edit");
     Roles roles = new Roles();
     roles.add("role 1");
-    assertTrue("Permission with no roles grants no permissions", ! perms.check("Edit", roles));
+    assertTrue("Permission with no roles grants no permissions", !perms.check("Edit", roles));
   }
 
   public void testSerialize() {

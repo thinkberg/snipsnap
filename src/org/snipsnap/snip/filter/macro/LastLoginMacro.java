@@ -31,15 +31,10 @@
 
 package org.snipsnap.snip.filter.macro;
 
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.Modified;
-import org.snipsnap.user.UserManager;
 import org.snipsnap.user.User;
+import org.snipsnap.user.UserManager;
 
-import java.util.Iterator;
-import java.util.List;
 import java.io.IOException;
 import java.io.Writer;
 

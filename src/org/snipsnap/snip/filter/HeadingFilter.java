@@ -31,16 +31,9 @@
  */
 package org.snipsnap.snip.filter;
 
-import org.snipsnap.snip.filter.regex.RegexTokenFilter;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.util.log.Logger;
-import org.snipsnap.util.log.SystemOutLogger;
 import org.apache.oro.text.regex.MatchResult;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.filter.regex.RegexTokenFilter;
 
 public class HeadingFilter extends RegexTokenFilter {
 
@@ -54,7 +47,7 @@ public class HeadingFilter extends RegexTokenFilter {
 
   public String handleMatch(MatchResult result, Snip snip) {
     String indent = result.group(1).replace('.', '-');
-    return "<h3 class=\"heading-"+indent+"\">" + result.group(3) + "</h3>";
+    return "<h3 class=\"heading-" + indent + "\">" + result.group(3) + "</h3>";
   }
 /*
   public static void main(String args[]) {

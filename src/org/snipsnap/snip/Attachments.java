@@ -33,14 +33,14 @@ package org.snipsnap.snip;
  */
 
 public class Attachments {
-    public Attachments(String attachments) {
-    }
+  public Attachments(String attachments) {
+  }
 
-    public Attachments() {
+  public Attachments() {
 
-    }
+  }
 
-    public String toString() {
-        return "";
-    }
+  public String toString() {
+    return "";
+  }
 }

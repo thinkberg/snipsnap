@@ -25,26 +25,22 @@
 package org.snipsnap.net.admin;
 
 import org.snipsnap.app.Application;
-import org.snipsnap.snip.HomePage;
+import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.XMLSnipExport;
 import org.snipsnap.user.User;
-import org.snipsnap.user.UserManager;
-import org.snipsnap.config.AppConfiguration;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.Map;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.HashMap;
-import java.util.StringTokenizer;
+import java.util.Map;
 
 /**
  * Servlet to export database.
@@ -57,10 +53,10 @@ public class ExportServlet extends HttpServlet {
   private final static String ERR_IOEXCEPTION = "Error while writing data!";
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
     HttpSession session = request.getSession(false);
-    User admin = session != null ? (User)session.getAttribute(AdminServlet.ATT_ADMIN) : null;
-    if(null == admin) {
+    User admin = session != null ? (User) session.getAttribute(AdminServlet.ATT_ADMIN) : null;
+    if (null == admin) {
       response.sendRedirect("/manager");
       return;
     }
@@ -72,11 +68,11 @@ public class ExportServlet extends HttpServlet {
     session.setAttribute("errors", errors);
 
     OutputStream out = null;
-    if("application".equals(output)) {
+    if ("application".equals(output)) {
       AppConfiguration config = Application.get().getConfiguration();
-      File outFile = new File(config.getFile().getParentFile(), config.getName()+".snip");
+      File outFile = new File(config.getFile().getParentFile(), config.getName() + ".snip");
       out = new FileOutputStream(outFile);
-    } else if("web".equals(output)) {
+    } else if ("web".equals(output)) {
       response.setContentType("text/xml");
       out = response.getOutputStream();
     } else {
@@ -86,11 +82,11 @@ public class ExportServlet extends HttpServlet {
     }
 
     int exportMask = 0;
-    for(int i = 0; i < data.length; i++) {
-      if("users".equals(data[i])) {
+    for (int i = 0; i < data.length; i++) {
+      if ("users".equals(data[i])) {
         exportMask = exportMask | XMLSnipExport.USERS;
       }
-      if("snips".equals(data[i])) {
+      if ("snips".equals(data[i])) {
         exportMask = exportMask | XMLSnipExport.SNIPS;
       }
     }
@@ -103,7 +99,7 @@ public class ExportServlet extends HttpServlet {
       return;
     }
 
-    if("application".equals(output)) {
+    if ("application".equals(output)) {
       out.close();
       errors.put("message", OK_EXPORTED);
       response.sendRedirect(SnipLink.absoluteLink(request, "/manager/export.jsp"));

@@ -25,9 +25,8 @@
 
 package org.snipsnap.xmlrpc;
 
-import org.snipsnap.util.Queue;
-import org.snipsnap.util.WeblogQueue;
 import org.snipsnap.util.Weblog;
+import org.snipsnap.util.WeblogQueue;
 
 import java.util.List;
 

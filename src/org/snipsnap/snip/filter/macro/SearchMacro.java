@@ -31,12 +31,11 @@
 
 package org.snipsnap.snip.filter.macro;
 
-import org.snipsnap.snip.Snip;
+import org.apache.lucene.search.Hits;
+import org.snipsnap.app.Application;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.user.UserManager;
-import org.snipsnap.app.Application;
-import org.apache.lucene.search.Hits;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -62,7 +61,7 @@ public class SearchMacro extends Macro {
     if (params.getLength() == 1 || params.getLength() == 2) {
       int maxHits = 10;
       if (params.getLength() == 2) {
-          maxHits = Integer.parseInt(params.get("1"));
+        maxHits = Integer.parseInt(params.get("1"));
       }
       String searchString = params.get("0");
 
@@ -70,7 +69,7 @@ public class SearchMacro extends Macro {
       try {
         hits = space.search(searchString);
       } catch (Exception e) {
-        System.err.println("SearchMacro: exception while searching: "+e);
+        System.err.println("SearchMacro: exception while searching: " + e);
       }
 
 
@@ -78,7 +77,7 @@ public class SearchMacro extends Macro {
         writer.write("<div class=\"list\"><div class=\"list-title\">snips with ");
         writer.write(searchString);
         writer.write(": (");
-        writer.write(""+hits.length());
+        writer.write("" + hits.length());
         writer.write(")</div>");
 
         int start = 0;
@@ -100,13 +99,13 @@ public class SearchMacro extends Macro {
       }
 
       if (searchString != null && searchString.length() > 0 &&
-        !SnipSpace.getInstance().exists(searchString) &&
-        UserManager.getInstance().isAuthenticated(Application.get().getUser())) {
-          writer.write("<p>There is no snip with <b>");
-          writer.write(searchString);
-          writer.write("</b> , would you like to ");
-          SnipLink.createCreateLink(writer, searchString);
-          writer.write("?</p>");
+          !SnipSpace.getInstance().exists(searchString) &&
+          UserManager.getInstance().isAuthenticated(Application.get().getUser())) {
+        writer.write("<p>There is no snip with <b>");
+        writer.write(searchString);
+        writer.write("</b> , would you like to ");
+        SnipLink.createCreateLink(writer, searchString);
+        writer.write("?</p>");
       }
 
       return;

@@ -27,12 +27,10 @@ package org.snipsnap.snip.filter.macro.table;
 
 import org.snipsnap.serialization.Appendable;
 
-import java.util.Map;
-import java.util.HashMap;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.Writer;
-import java.io.IOException;
 
 /**
  * A Table implementation primarly for the
@@ -61,21 +59,21 @@ public class Table implements Appendable {
     rows.add(currentRow);
     indexRow++;
     currentRow = new ArrayList(indexCol);
-    indexCol=0;
+    indexCol = 0;
   }
 
   public int calc() {
-      return 0;
+    return 0;
   }
 
   public Writer appendTo(Writer writer) throws IOException {
     writer.write("<table class=\"wiki-table\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
     List[] outputRows = (List[]) rows.toArray(new List[0]);
     int rowSize = outputRows.length;
-    boolean odd=true;
-    for (int i=0; i<rowSize; i++) {
+    boolean odd = true;
+    for (int i = 0; i < rowSize; i++) {
       writer.write("<tr ");
-      if (i==0) {
+      if (i == 0) {
         writer.write(">");
       } else if (odd) {
         writer.write(" class=\"table-odd\">");
@@ -86,9 +84,9 @@ public class Table implements Appendable {
       }
       String[] outputCols = (String[]) outputRows[i].toArray(new String[0]);
       int colSize = outputCols.length;
-      for (int j=0; j<colSize; j++) {
+      for (int j = 0; j < colSize; j++) {
         writer.write(i == 0 ? "<th>" : "<td>");
-        if(outputCols[j] == null || outputCols[j].trim().length() == 0) {
+        if (outputCols[j] == null || outputCols[j].trim().length() == 0) {
           writer.write("&#160;");
         } else {
           writer.write(outputCols[j]);

@@ -34,11 +34,11 @@ package org.snipsnap.util.collection;
  */
 public interface Transformer {
 
-    /**
-     * Transforms an object to another
-     *
-     * @param obj  object to transform
-     * @return     transformed object
-     */
-    public Object transform(Object obj);
+  /**
+   * Transforms an object to another
+   *
+   * @param obj  object to transform
+   * @return     transformed object
+   */
+  public Object transform(Object obj);
 }

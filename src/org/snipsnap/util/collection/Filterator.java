@@ -34,12 +34,12 @@ package org.snipsnap.util.collection;
  */
 public interface Filterator {
 
-    /**
-     * Determines, whether the object belongs to the sort of filtered objects or
-     * not
-     *
-     * @param obj  object to filter
-     * @return     true, if the object should be filtered.
-     */
-    public boolean filter(Object obj);
+  /**
+   * Determines, whether the object belongs to the sort of filtered objects or
+   * not
+   *
+   * @param obj  object to filter
+   * @return     true, if the object should be filtered.
+   */
+  public boolean filter(Object obj);
 }

@@ -26,7 +26,6 @@
 package org.snipsnap.jdbc;
 
 import org.snipsnap.cache.Cache;
-import org.snipsnap.snip.storage.Storage;
 
 /**
  * Convenience factory to generate Finders

@@ -29,8 +29,6 @@ import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.util.Linkable;
 
-import java.io.IOException;
-import java.io.Writer;
 import java.sql.Timestamp;
 
 /**
@@ -132,7 +130,7 @@ public class User implements Linkable {
   // Set passwd of user. Takes unecrypted
   // passwd and then sets an encrypted version
   public void setPasswd(String passwd) {
-    if(passwd.length() > 30) {
+    if (passwd.length() > 30) {
       this.passwd = passwd;
     } else {
       this.passwd = Digest.getDigest(passwd);

@@ -1,4 +1,3 @@
-
 /*
  * This file is part of "SnipSnap Wiki/Weblog".
  *
@@ -26,15 +25,15 @@
 
 package org.snipsnap.notification;
 
+import org.snipsnap.app.Application;
+import org.snipsnap.config.AppConfiguration;
+import org.snipsnap.notification.jabber.JabberNotifier;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.user.User;
-import org.snipsnap.app.Application;
-import org.snipsnap.notification.jabber.JabberNotifier;
-import org.snipsnap.config.AppConfiguration;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Notification service receives notifications, stores
@@ -76,7 +75,7 @@ public class NotificationService {
             sendNotifiers(message);
           }
           try {
-            synchronized(this) {
+            synchronized (this) {
               wait();
             }
           } catch (InterruptedException e) {
@@ -90,7 +89,7 @@ public class NotificationService {
 
   public void notify(int type, Snip snip) {
     StringBuffer buffer = new StringBuffer();
-    if (type ==Notification.SNIP_CREATE) {
+    if (type == Notification.SNIP_CREATE) {
       buffer.append("new snip '");
       buffer.append(snip.getName());
       buffer.append("'");
@@ -117,7 +116,7 @@ public class NotificationService {
   public void notify(String message) {
     queue.add(message);
     synchronized (thread) {
-      if(Application.get().getConfiguration().allow(AppConfiguration.PERM_NOTIFICATION)) {
+      if (Application.get().getConfiguration().allow(AppConfiguration.PERM_NOTIFICATION)) {
         thread.notify();
       }
     }

@@ -32,10 +32,6 @@
 
 package org.snipsnap.snip.filter.macro;
 
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.filter.macro.api.ApiConverter;
-import org.snipsnap.snip.filter.macro.api.JavaApiConverter;
-import org.snipsnap.snip.filter.macro.api.RubyApiConverter;
 import org.snipsnap.snip.filter.macro.api.ApiDoc;
 
 import java.io.IOException;
@@ -59,9 +55,9 @@ public class ApiMacro extends Macro {
     if (params.getLength() == 1) {
       klass = params.get("0");
       int index = klass.indexOf("@");
-      if (index >0) {
-        mode = klass.substring(index+1);
-        klass = klass.substring(0,index);
+      if (index > 0) {
+        mode = klass.substring(index + 1);
+        klass = klass.substring(0, index);
       } else {
         mode = "java";
       }

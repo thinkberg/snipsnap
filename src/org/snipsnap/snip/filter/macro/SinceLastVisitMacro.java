@@ -34,19 +34,13 @@ package org.snipsnap.snip.filter.macro;
  */
 
 
-import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.Modified;
-import org.snipsnap.user.UserManager;
 import org.snipsnap.user.User;
-import org.snipsnap.serialization.StringBufferWriter;
+import org.snipsnap.user.UserManager;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Collection;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Collection;
 
 public class SinceLastVisitMacro extends ListOutputMacro {
   public String getName() {
@@ -62,19 +56,19 @@ public class SinceLastVisitMacro extends ListOutputMacro {
     String type = null;
     boolean showSize = true;
     String userName = null;
-    if(params != null) {
-      if(params.getLength() > 0) {
+    if (params != null) {
+      if (params.getLength() > 0) {
         userName = params.get("0");
       }
-      if(params.getLength() > 1) {
+      if (params.getLength() > 1) {
         type = params.get("1");
       }
     }
 
     if (params.getLength() > 0) {
       User user = UserManager.getInstance().load(userName);
-      System.err.println("Hashcode lastVisit="+((Object) user).hashCode());
-      System.err.println("SinceLastVisit: "+user.getLastLogout());
+      System.err.println("Hashcode lastVisit=" + ((Object) user).hashCode());
+      System.err.println("SinceLastVisit: " + user.getLastLogout());
       Collection c = SnipSpace.getInstance().getSince(user.getLastLogout());
       output(writer, "changed snips since last visit", c, "no recent changes.", type, showSize);
     } else {

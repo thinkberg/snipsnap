@@ -25,10 +25,10 @@
 
 package org.snipsnap.snip.filter;
 
-import org.snipsnap.snip.filter.regex.RegexTokenFilter;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.Snip;
 import org.apache.oro.text.regex.MatchResult;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.filter.regex.RegexTokenFilter;
 
 /*
  * UrlFilter finds http:// style URLs in its input and transforms this
@@ -38,6 +38,7 @@ import org.apache.oro.text.regex.MatchResult;
  * @team sonicteam
  * @version $Id$
  */
+
 public class UrlFilter extends RegexTokenFilter {
 
   public UrlFilter() {

@@ -25,8 +25,8 @@
 
 package org.snipsnap.notification;
 
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Queues notifications
@@ -52,6 +52,6 @@ public class NotificationQueue {
   }
 
   public boolean hasItems() {
-    return ! list.isEmpty();
+    return !list.isEmpty();
   }
 }

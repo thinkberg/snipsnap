@@ -24,20 +24,17 @@
  */
 package org.snipsnap.admin.install;
 
-import org.snipsnap.config.AppConfiguration;
+import org.snipsnap.admin.util.CommandHandler;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.User;
-import org.snipsnap.admin.util.CommandHandler;
 
 import javax.servlet.ServletException;
-import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Properties;
 
 /**
  * Servlet to login a user by checking user name and password.
@@ -51,21 +48,21 @@ public class Authenticate extends HttpServlet {
   private final static String ERR_CREATE = "Passwords are not equal, try again!";
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
 
     String login = request.getParameter("login");
     String password = request.getParameter("password");
 
     HttpSession session = request.getSession(false);
-    Configuration config = (Configuration)session.getAttribute(CommandHandler.ATT_CONFIG);
-    User checkUser = (User)session.getAttribute(ATT_CHECK_USER);
+    Configuration config = (Configuration) session.getAttribute(CommandHandler.ATT_CONFIG);
+    User checkUser = (User) session.getAttribute(ATT_CHECK_USER);
 
     // request to create a new user, but make sure there is no password set already
-    if(request.getParameter("create") != null && config != null &&
-      checkUser.getLogin() == null && checkUser.getPasswd() == null) {
+    if (request.getParameter("create") != null && config != null &&
+        checkUser.getLogin() == null && checkUser.getPasswd() == null) {
       String password2 = request.getParameter("password2");
       String email = request.getParameter("email");
-      if(password != null && password.equals(password2)) {
+      if (password != null && password.equals(password2)) {
         config.setAdminLogin(login);
         config.setAdminPassword(password);
         config.setAdminEmail(email);
@@ -103,7 +100,7 @@ public class Authenticate extends HttpServlet {
   }
 
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
     if ("true".equals(request.getParameter("logoff"))) {
       HttpSession session = request.getSession();
       if (session != null) {

@@ -25,13 +25,13 @@
 
 package org.snipsnap.snip.filter.macro;
 
-import org.snipsnap.snip.Snip;
 import org.snipsnap.app.Application;
+import org.snipsnap.snip.Snip;
 import org.snipsnap.util.log.Logger;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
-import java.util.HashMap;
 
 /**
  * Encapsulates parameters for an execute Macro call
@@ -66,7 +66,7 @@ public class MacroParameter {
     params = split(stringParams, "|");
     Logger.log(params.toString());
     size = params.size();
-   }
+  }
 
   public String getContent() {
     return content;
@@ -82,7 +82,7 @@ public class MacroParameter {
 
   public String get(String index, int idx) {
     String result = get(index);
-    if(result == null) {
+    if (result == null) {
       result = get(idx);
     }
     return result;
@@ -93,7 +93,7 @@ public class MacroParameter {
   }
 
   public String get(int index) {
-    return get(""+index);
+    return get("" + index);
   }
 
   /**
@@ -113,13 +113,13 @@ public class MacroParameter {
 
     while (st.hasMoreTokens()) {
       String value = st.nextToken();
-      String key = ""+i;
+      String key = "" + i;
       if (value.indexOf("=") != -1) {
         // Store this for
         result.put(key, insertValue(value));
         int index = value.indexOf("=");
         key = value.substring(0, index);
-        value = value.substring(index+1);
+        value = value.substring(index + 1);
 
         result.put(key, insertValue(value));
       } else {
@@ -134,11 +134,11 @@ public class MacroParameter {
   private String insertValue(String s) {
     int idx = s.indexOf('$');
     StringBuffer tmp = new StringBuffer();
-    if(idx != -1) {
+    if (idx != -1) {
       Map globals = Application.get().getParameters();
-      String var = s.substring(idx+1);
-      if(idx > 0) tmp.append(s.substring(0, idx));
-      if(globals.containsKey(var)) {
+      String var = s.substring(idx + 1);
+      if (idx > 0) tmp.append(s.substring(0, idx));
+      if (globals.containsKey(var)) {
         tmp.append(globals.get(var));
       }
       return tmp.toString();

@@ -24,12 +24,11 @@
  */
 package org.snipsnap.test;
 
-import org.snipsnap.test.filter.FilterTest;
-import org.snipsnap.test.snip.AllSnips;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import org.snipsnap.test.filter.FilterTest;
+import org.snipsnap.test.snip.AllSnips;
 
 public class AllTests extends TestCase {
   public AllTests(String name) {

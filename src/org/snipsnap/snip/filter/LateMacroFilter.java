@@ -35,16 +35,17 @@
 package org.snipsnap.snip.filter;
 
 import org.apache.oro.text.regex.MatchResult;
+import org.snipsnap.serialization.StringBufferWriter;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.filter.macro.*;
+import org.snipsnap.snip.filter.macro.Macro;
+import org.snipsnap.snip.filter.macro.MacroParameter;
+import org.snipsnap.snip.filter.macro.WeblogMacro;
 import org.snipsnap.snip.filter.regex.RegexTokenFilter;
-import org.snipsnap.app.Application;
-import org.snipsnap.serialization.StringBufferWriter;
-import org.snipsnap.util.log.Logger;
 
-import java.util.*;
 import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LateMacroFilter extends RegexTokenFilter {
 
@@ -128,8 +129,8 @@ public class LateMacroFilter extends RegexTokenFilter {
           buffer.append(result.group(0));
           return;
         }
-      } catch(IllegalArgumentException e) {
-        buffer.append("<div class=\"error\">" + command + ": "+e.getMessage()+"</div>");
+      } catch (IllegalArgumentException e) {
+        buffer.append("<div class=\"error\">" + command + ": " + e.getMessage() + "</div>");
       } catch (Exception e) {
         System.err.println("unable to format macro: " + result.group(1));
         buffer.append("<div class=\"error\">" + command + "</div>");

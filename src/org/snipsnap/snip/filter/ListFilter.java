@@ -24,22 +24,15 @@
  */
 package org.snipsnap.snip.filter;
 
-import org.snipsnap.snip.filter.regex.RegexTokenFilter;
+import org.apache.oro.text.regex.MatchResult;
 import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.filter.regex.RegexTokenFilter;
 import org.snipsnap.util.log.Logger;
 import org.snipsnap.util.log.SystemOutLogger;
-import org.apache.oro.text.regex.MatchResult;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.FileReader;
-import java.io.FileNotFoundException;
-import java.io.File;
-import java.util.StringTokenizer;
-import java.util.Map;
+import java.io.*;
 import java.util.HashMap;
+import java.util.Map;
 
 /*
  * NewlineFilter finds # in its input and transforms this
@@ -49,6 +42,7 @@ import java.util.HashMap;
  * @team sonicteam
  * @version $Id$
  */
+
 public class ListFilter extends RegexTokenFilter {
 
   private final static Map openList = new HashMap();
@@ -87,11 +81,11 @@ public class ListFilter extends RegexTokenFilter {
 
   public void handleMatch(StringBuffer buffer, MatchResult result, Snip snip) {
     try {
-      Logger.log("ListFilter: "+result.groups());
+      Logger.log("ListFilter: " + result.groups());
       BufferedReader reader = new BufferedReader(new StringReader(result.group(0)));
       addList(buffer, reader);
     } catch (Exception e) {
-      Logger.log("ListFilter: cannot read list: "+e);
+      Logger.log("ListFilter: cannot read list: " + e);
       e.printStackTrace();
     }
   }
@@ -99,26 +93,26 @@ public class ListFilter extends RegexTokenFilter {
   private void addList(StringBuffer buffer, BufferedReader reader) throws IOException {
     String lastBullet = null;
     String line = null;
-    while((line = reader.readLine()) != null) {
-      Logger.log("'"+line+"'");
+    while ((line = reader.readLine()) != null) {
+      Logger.log("'" + line + "'");
       // no nested list handling, trim lines:
       line = line.trim();
-      if(line.length() == 0) {
+      if (line.length() == 0) {
         continue;
       }
-      String bullet = line.substring(0,1);
+      String bullet = line.substring(0, 1);
 
-      Logger.log("found bullet: ('"+lastBullet+"') '"+bullet+"'");
+      Logger.log("found bullet: ('" + lastBullet + "') '" + bullet + "'");
       // check whether we find a new list
-      if(!bullet.equals(lastBullet)) {
+      if (!bullet.equals(lastBullet)) {
         Logger.log("new list detected ...");
-        if(lastBullet != null) {
+        if (lastBullet != null) {
           buffer.append(closeList.get(lastBullet)).append("\n");
         }
         buffer.append(openList.get(bullet)).append("\n");
       }
       buffer.append("<li>");
-      buffer.append(line.substring(line.indexOf(' ')+1));
+      buffer.append(line.substring(line.indexOf(' ') + 1));
       buffer.append("</li>\n");
       lastBullet = bullet;
     }
@@ -132,12 +126,12 @@ public class ListFilter extends RegexTokenFilter {
     try {
       reader = new BufferedReader(new FileReader(args[0]));
     } catch (FileNotFoundException e) {
-      System.err.println("can't read file: "+args[0]);
+      System.err.println("can't read file: " + args[0]);
       System.exit(-1);
     }
     String buf = "", line = null;
     try {
-      while(null != (line = reader.readLine())) {
+      while (null != (line = reader.readLine())) {
         buf += line + "\n";
       }
     } catch (IOException e) {

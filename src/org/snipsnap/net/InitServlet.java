@@ -26,15 +26,10 @@ package org.snipsnap.net;
 
 import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.config.Configuration;
-import org.snipsnap.util.log.Logger;
 import org.snipsnap.util.log.LogHandler;
-import org.snipsnap.util.MckoiEmbeddedJDBCDriver;
+import org.snipsnap.util.log.Logger;
 
-import javax.servlet.GenericServlet;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import java.io.IOException;
 
 /**
@@ -51,9 +46,9 @@ public class InitServlet extends GenericServlet {
     try {
       AppConfiguration config = AppConfiguration.getInstance(configFile);
       try {
-        Logger.setHandler((LogHandler)Class.forName(config.getLogger()).newInstance());
+        Logger.setHandler((LogHandler) Class.forName(config.getLogger()).newInstance());
       } catch (Exception e) {
-        System.err.println("InitServlet: LogHandler not found: "+config.getLogger());
+        System.err.println("InitServlet: LogHandler not found: " + config.getLogger());
       }
     } catch (IOException e) {
       e.printStackTrace();

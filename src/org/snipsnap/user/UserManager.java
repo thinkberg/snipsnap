@@ -26,11 +26,7 @@ package org.snipsnap.user;
 
 import org.snipsnap.app.Application;
 import org.snipsnap.cache.Cache;
-import org.snipsnap.jdbc.Finder;
 import org.snipsnap.jdbc.FinderFactory;
-import org.snipsnap.snip.storage.Storage;
-import org.snipsnap.util.ConnectionManager;
-import org.snipsnap.util.log.Logger;
 import org.snipsnap.snip.storage.JDBCUserStorage;
 
 import javax.servlet.http.Cookie;
@@ -43,10 +39,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -108,7 +100,7 @@ public class UserManager {
 
     try {
       BufferedReader crawler = new BufferedReader(
-        new InputStreamReader(new FileInputStream("conf/robotdetect.txt")));
+          new InputStreamReader(new FileInputStream("conf/robotdetect.txt")));
       String line = null;
       int ln = 0;
       while ((line = crawler.readLine()) != null) {
@@ -298,8 +290,8 @@ public class UserManager {
     System.out.println("check: encrypted: "+Digest.authenticate(passwd, user.getPasswd()));
 */
     if (null != user &&
-      (user.getPasswd().equals(passwd) ||
-      Digest.authenticate(passwd, user.getPasswd()))) {
+        (user.getPasswd().equals(passwd) ||
+        Digest.authenticate(passwd, user.getPasswd()))) {
       user.lastLogin();
       storage.storageStore(user);
       return user;

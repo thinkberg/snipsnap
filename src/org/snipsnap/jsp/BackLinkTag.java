@@ -27,23 +27,22 @@ package org.snipsnap.jsp;
 import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
 import org.snipsnap.snip.Links;
 import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.filter.links.BackLinks;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.jstl.core.ConditionalTagSupport;
-import javax.servlet.jsp.tagext.TagSupport;
 import javax.servlet.jsp.tagext.BodyTag;
-import java.io.IOException;
-import java.util.Iterator;
+import javax.servlet.jsp.tagext.TagSupport;
 
 public class BackLinkTag extends TagSupport {
   Snip snip = null;
   int count = 15;
 
   public int doStartTag() throws JspException {
-    if(snip==null){ return BodyTag.SKIP_BODY;}
+    if (snip == null) {
+      return BodyTag.SKIP_BODY;
+    }
 
     JspWriter out = pageContext.getOut();
     Links backLinks = snip.getAccess().getBackLinks();

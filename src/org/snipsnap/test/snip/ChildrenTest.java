@@ -24,13 +24,13 @@
  */
 package org.snipsnap.test.snip;
 
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.app.Application;
-import org.snipsnap.user.User;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import org.snipsnap.app.Application;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.user.User;
 
 public class ChildrenTest extends TestCase {
   public ChildrenTest(String name) {
@@ -45,7 +45,7 @@ public class ChildrenTest extends TestCase {
 
   public void testChildren() {
     Application app = Application.get();
-    User user = new User("user 1", "password 1","user@user.de");
+    User user = new User("user 1", "password 1", "user@user.de");
     app.setUser(user);
     Snip snip1 = SnipSpace.getInstance().create("A", "A Content");
     Snip snip2 = SnipSpace.getInstance().create("B", "B Content");

@@ -25,7 +25,6 @@
 
 package org.snipsnap.snip.filter.macro;
 
-import org.snipsnap.snip.Snip;
 import org.snipsnap.user.UserManager;
 
 import java.io.IOException;
@@ -48,7 +47,7 @@ public class UserCountMacro extends Macro {
   }
 
   public void execute(Writer writer, MacroParameter params)
-    throws IllegalArgumentException, IOException {
+      throws IllegalArgumentException, IOException {
     if (params == null || params.getLength() == 0) {
       writer.write(Integer.toString(UserManager.getInstance().getUserCount()));
     } else {

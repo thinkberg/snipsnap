@@ -29,8 +29,6 @@ import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 
 import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.jstl.core.ConditionalTagSupport;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.io.IOException;
@@ -43,7 +41,7 @@ public class SnipTag extends TagSupport {
       try {
         snip.appendTo(pageContext.getOut());
       } catch (IOException e) {
-        System.err.println("SnipTag: unable to write snip xml content: "+snip);
+        System.err.println("SnipTag: unable to write snip xml content: " + snip);
       }
     }
     return super.doStartTag();
@@ -60,7 +58,7 @@ public class SnipTag extends TagSupport {
   public void setName(String name) {
     try {
       String snipName = (String) ExpressionEvaluatorManager.evaluate("name", name, String.class, this, pageContext);
-      if(SnipSpace.getInstance().exists(snipName)) {
+      if (SnipSpace.getInstance().exists(snipName)) {
         snip = SnipSpace.getInstance().load(snipName);
       }
     } catch (JspException e) {

@@ -25,7 +25,6 @@
 
 package org.snipsnap.snip.storage;
 
-import org.snipsnap.snip.Snip;
 
 /**
  * Interface for loading classes

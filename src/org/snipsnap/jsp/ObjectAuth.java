@@ -24,18 +24,15 @@
  */
 package org.snipsnap.jsp;
 
-import org.snipsnap.app.Application;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.user.Security;
-import org.snipsnap.user.User;
-import org.snipsnap.user.Roles;
-
-import javax.servlet.jsp.JspTagException;
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.jstl.core.ConditionalTagSupport;
-import java.util.*;
-
 import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.user.Roles;
+import org.snipsnap.user.Security;
+
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspTagException;
+import javax.servlet.jsp.jstl.core.ConditionalTagSupport;
+import java.util.StringTokenizer;
 
 
 public class ObjectAuth extends ConditionalTagSupport {
@@ -51,9 +48,9 @@ public class ObjectAuth extends ConditionalTagSupport {
 
   public void setSnip(String snip) {
     try {
-      this.snip = (Snip)ExpressionEvaluatorManager.evaluate("snip", snip, Snip.class, this, pageContext);
+      this.snip = (Snip) ExpressionEvaluatorManager.evaluate("snip", snip, Snip.class, this, pageContext);
     } catch (JspException e) {
-      System.err.println("unable to evaluate expression: "+e);
+      System.err.println("unable to evaluate expression: " + e);
     }
   }
 

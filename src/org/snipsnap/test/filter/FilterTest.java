@@ -24,10 +24,11 @@
  */
 package org.snipsnap.test.filter;
 
-import junit.framework.TestCase;
 import junit.framework.Test;
+import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipImpl;
 import org.snipsnap.snip.filter.BoldFilter;
 import org.snipsnap.snip.filter.Filter;
 import org.snipsnap.snip.filter.ItalicFilter;
@@ -44,12 +45,12 @@ public class FilterTest extends TestCase {
   }
 
   public Snip getMock() {
-    return new Snip("mock","mock");
+    return new SnipImpl("mock", "mock");
   }
 
   public void testBold() {
     Filter filter = new BoldFilter();
-    assertEquals("<span class=\"bold\">Text</span>", filter.filter("__Text__" , getMock()));
+    assertEquals("<span class=\"bold\">Text</span>", filter.filter("__Text__", getMock()));
   }
 
   public void testItalic() {

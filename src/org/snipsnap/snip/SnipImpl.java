@@ -24,31 +24,24 @@
  */
 package org.snipsnap.snip;
 
+import org.snipsnap.app.Application;
 import org.snipsnap.snip.filter.SnipFormatter;
-import org.snipsnap.snip.filter.Filter;
-import org.snipsnap.snip.filter.regex.RegexFilter;
-import org.snipsnap.snip.filter.regex.RegexReplaceFilter;
 import org.snipsnap.snip.label.Labels;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.User;
-import org.snipsnap.util.Nameable;
-import org.snipsnap.app.Application;
-import org.snipsnap.serialization.Appendable;
+import org.snipsnap.interceptor.Aspects;
 
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.List;
-import java.io.Writer;
 import java.io.IOException;
+import java.io.Writer;
+import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * Central class for snips.
  * @author Stephan J. Schmidt
  * @version $Id$
  */
-public class Snip implements Ownable, Nameable, Appendable {
+public class SnipImpl implements Snip {
   //@TODO think about that
   public Snip parent;
   private List children;
@@ -68,26 +61,11 @@ public class Snip implements Ownable, Nameable, Appendable {
     }
   }
 
-  public Snip(String name, String content) {
+  public SnipImpl(String name, String content) {
     this.name = name;
     this.content = content;
     this.modified = new Modified();
     this.access = new Access(this);
-  }
-
-  public static String toName(Date date) {
-    SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
-    return sf.format(date);
-  }
-
-  public static String toDate(String dateString) {
-    SimpleDateFormat in = new SimpleDateFormat("yyyy-MM-dd");
-    SimpleDateFormat out = new SimpleDateFormat(Application.get().getConfiguration().getWeblogDateFormat());
-    try {
-      return out.format(in.parse(dateString));
-    } catch (ParseException e) {
-      return dateString;
-    }
   }
 
   public Access getAccess() {
@@ -151,11 +129,11 @@ public class Snip implements Ownable, Nameable, Appendable {
   }
 
   public Attachments getAttachments() {
-      return attachments;
+    return attachments;
   }
 
   public void setAttachments(Attachments attachments) {
-      this.attachments = attachments;
+    this.attachments = attachments;
   }
 
   public Labels getLabels() {
@@ -287,22 +265,20 @@ public class Snip implements Ownable, Nameable, Appendable {
     }
   }
 
-  /**
-   * Get a list of child snips, ordered by date with
-   * the newest one first
-   *
-   * @return List of child snips
-   */
-  public List getChildrenDateOrder() {
-    return SnipSpace.getInstance().getChildrenDateOrder(this, 10);
-  }
-
-  public List getChildrenModifiedOrder() {
-    return SnipSpace.getInstance().getChildrenModifiedOrder(this, 10);
-  }
-
   public Snip getParent() {
     return parent;
+  }
+
+  /**
+   * Directly sets the parent snip, does
+   * not add the snip to the parent.
+   * This is needed for restoring from storage.
+   * Better solution wanted
+   *
+   * @param parentSnip new parent snip of this snip
+   */
+  public void setDirectParent(Snip parentSnip) {
+     this.parent = parentSnip;
   }
 
   public void setParent(Snip parentSnip) {
@@ -359,8 +335,8 @@ public class Snip implements Ownable, Nameable, Appendable {
 
   public String toXML() {
     long start = Application.get().start();
-    String xml = SnipFormatter.toXML(this, getContent());
-    Application.get().stop(start, "Formatting "+name);
+    String xml = SnipFormatter.toXML((Snip) Aspects.getThis(), getContent());
+    Application.get().stop(start, "Formatting " + name);
     return xml;
   }
 
@@ -368,10 +344,10 @@ public class Snip implements Ownable, Nameable, Appendable {
     String tmp = null;
     try {
       tmp = toXML();
-    } catch(Exception e) {
+    } catch (Exception e) {
       tmp = "<span class=\"error\">" + e + "</span>";
       e.printStackTrace();
-    } catch(Error err) {
+    } catch (Error err) {
       err.printStackTrace();
       tmp = "<span class=\"error\">" + err + "</span>";
     }

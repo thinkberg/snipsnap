@@ -25,9 +25,6 @@
 
 package org.snipsnap.snip.filter.macro;
 
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.Snip;
-
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
@@ -59,7 +56,7 @@ public class FilePathMacro extends Preserved {
       throws IllegalArgumentException, IOException {
 
     if (null != params && params.getLength() == 1) {
-      String path = params.get("0").replace('/','\\');
+      String path = params.get("0").replace('/', '\\');
       writer.write(path);
     }
     return;

@@ -56,7 +56,7 @@ public class ImageMacro extends Macro {
   }
 
   public void execute(Writer writer, MacroParameter params)
-    throws IllegalArgumentException, IOException {
+      throws IllegalArgumentException, IOException {
 
     StringBuffer buffer = new StringBuffer();
     Snip snip = params.getSnip();
@@ -78,7 +78,7 @@ public class ImageMacro extends Macro {
       int dotIndex = img.indexOf('.');
       if (-1 != dotIndex) {
         ext = img.substring(dotIndex + 1);
-        img = img.substring(0,dotIndex);
+        img = img.substring(0, dotIndex);
       }
 
       if (img.startsWith("http://")) {
@@ -86,7 +86,7 @@ public class ImageMacro extends Macro {
           SnipLink.appendExternalImage(buffer, img, align);
         }
       } else {
-        String imageName =  "image-" + snip.getName() + "-" + img;
+        String imageName = "image-" + snip.getName() + "-" + img;
         if ("svg".equals(ext)) {
           // SVG cannot be used with <image>
           buffer.append("<object data=\"");
@@ -96,7 +96,7 @@ public class ImageMacro extends Macro {
           buffer.append(ext);
           buffer.append("\" type=\"image/svg+xml\" width=\"400\" height=\"400\"></object>");
         } else {
-           SnipLink.appendImage(buffer, imageName, alt, ext, align);
+          SnipLink.appendImage(buffer, imageName, alt, ext, align);
         }
       }
     } else {

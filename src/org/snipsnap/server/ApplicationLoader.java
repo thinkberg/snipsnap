@@ -27,14 +27,12 @@ package org.snipsnap.server;
 import org.mortbay.http.HttpListener;
 import org.mortbay.http.HttpServer;
 import org.mortbay.http.SocketListener;
-import org.mortbay.http.RequestLog;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.WebApplicationContext;
 import org.mortbay.util.InetAddrPort;
 import org.snipsnap.config.AppConfiguration;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -84,7 +82,7 @@ public class ApplicationLoader {
     if (rootDir.exists()) {
       if (rootDir.isDirectory()) {
         File appDir = new File(rootDir, normalize(name));
-        if(appDir.isDirectory()) {
+        if (appDir.isDirectory()) {
           return new File(appDir, "WEB-INF/application.conf");
         }
       }
@@ -94,7 +92,7 @@ public class ApplicationLoader {
 
   public static void reloadApplication(String root, String name) throws Exception {
     File configFile = getConfigFile(root, normalize(name));
-    if(configFile != null) {
+    if (configFile != null) {
       AppConfiguration config = new AppConfiguration(configFile);
       unloadApplication(config);
       loadApplication(config);
@@ -103,7 +101,7 @@ public class ApplicationLoader {
 
   public static void loadApplication(String root, String name) throws Exception {
     File configFile = getConfigFile(root, normalize(name));
-    if(configFile != null) {
+    if (configFile != null) {
       AppConfiguration config = new AppConfiguration(configFile);
       loadApplication(config);
     }
@@ -111,7 +109,7 @@ public class ApplicationLoader {
 
   public static void unloadApplication(String root, String name) throws Exception {
     File configFile = getConfigFile(root, normalize(name));
-    if(configFile != null) {
+    if (configFile != null) {
       AppConfiguration config = new AppConfiguration(configFile);
       unloadApplication(config);
     }
@@ -126,10 +124,10 @@ public class ApplicationLoader {
   }
 
   public static WebApplicationContext loadApplication(AppConfiguration config) throws Exception {
-    if(applications.get(config.getName()) != null) {
-      WebApplicationContext context = (WebApplicationContext)applications.get(config.getName());
-      if(context.isStarted()) {
-        throw new Exception("ApplicationLoader: '"+config.getName()+"' already started");
+    if (applications.get(config.getName()) != null) {
+      WebApplicationContext context = (WebApplicationContext) applications.get(config.getName());
+      if (context.isStarted()) {
+        throw new Exception("ApplicationLoader: '" + config.getName() + "' already started");
       }
     }
 
@@ -174,12 +172,12 @@ public class ApplicationLoader {
     // start web application context
     File appRoot = webInf.getParentFile().getAbsoluteFile();
     String contextPath = config.getContextPath();
-    if(contextPath == null || contextPath.length() == 0) {
+    if (contextPath == null || contextPath.length() == 0) {
       contextPath = "/";
     }
 
     WebApplicationContext context =
-      installServer.addWebApplication(contextPath, appRoot.getAbsolutePath());
+        installServer.addWebApplication(contextPath, appRoot.getAbsolutePath());
     context.setAttribute(AppConfiguration.INIT_PARAM, config.getFile().getAbsolutePath());
     context.start();
 
@@ -191,14 +189,14 @@ public class ApplicationLoader {
 
   public static void unloadApplication(AppConfiguration config) {
     try {
-      WebApplicationContext context = (WebApplicationContext)applications.get(config.getName());
+      WebApplicationContext context = (WebApplicationContext) applications.get(config.getName());
       context.stop();
       context.destroy();
     } catch (Exception e) {
-      System.out.println("Unable to stop '"+config.getName()+"': "+e);
+      System.out.println("Unable to stop '" + config.getName() + "': " + e);
       e.printStackTrace();
     }
-    System.out.println("Stopped application '" + config.getName() +"'");
+    System.out.println("Stopped application '" + config.getName() + "'");
   }
 
   private static String normalize(String name) {

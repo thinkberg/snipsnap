@@ -27,18 +27,16 @@ package org.snipsnap.net;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.label.LabelManager;
 import org.snipsnap.snip.label.Label;
+import org.snipsnap.snip.label.LabelManager;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**

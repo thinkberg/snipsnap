@@ -26,8 +26,6 @@
 package org.snipsnap.snip.filter.macro;
 
 
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.filter.interwiki.InterWiki;
 import org.snipsnap.snip.filter.macro.api.ApiDoc;
 
 import java.io.IOException;

@@ -26,12 +26,14 @@ package org.snipsnap.net;
 
 import org.apache.xmlrpc.XmlRpcServer;
 import org.snipsnap.xmlrpc.BloggerHandler;
-import org.snipsnap.xmlrpc.WeblogsPingHandler;
 import org.snipsnap.xmlrpc.SnipSnapHandler;
+import org.snipsnap.xmlrpc.WeblogsPingHandler;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -43,27 +45,27 @@ import java.io.OutputStream;
  */
 public class XmlRpcServlet extends HttpServlet {
 
-    public void init(ServletConfig servletConfig) throws ServletException {
-    }
+  public void init(ServletConfig servletConfig) throws ServletException {
+  }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doGet(request, response);
-    }
+  protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    doGet(request, response);
+  }
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
+  public void doGet(HttpServletRequest request, HttpServletResponse response)
+      throws IOException, ServletException {
 
-        //System.out.println("XMLRPC call received.");
-        XmlRpcServer xmlrpc = new XmlRpcServer();
+    //System.out.println("XMLRPC call received.");
+    XmlRpcServer xmlrpc = new XmlRpcServer();
 
-        xmlrpc.addHandler("snipSnap", new SnipSnapHandler());
-        xmlrpc.addHandler("blogger", new BloggerHandler());
-        xmlrpc.addHandler("weblogUpdates", new WeblogsPingHandler());
-        byte[] result = xmlrpc.execute(request.getInputStream());
-        response.setContentType("text/xml");
-        response.setContentLength(result.length);
-        OutputStream out = response.getOutputStream();
-        out.write(result);
-        out.flush();
-    }
+    xmlrpc.addHandler("snipSnap", new SnipSnapHandler());
+    xmlrpc.addHandler("blogger", new BloggerHandler());
+    xmlrpc.addHandler("weblogUpdates", new WeblogsPingHandler());
+    byte[] result = xmlrpc.execute(request.getInputStream());
+    response.setContentType("text/xml");
+    response.setContentLength(result.length);
+    OutputStream out = response.getOutputStream();
+    out.write(result);
+    out.flush();
+  }
 }

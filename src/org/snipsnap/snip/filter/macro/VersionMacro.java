@@ -33,8 +33,6 @@ package org.snipsnap.snip.filter.macro;
  * @version $Id$
  */
 
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipLink;
 import org.snipsnap.app.Application;
 
 import java.io.IOException;
@@ -57,6 +55,6 @@ public class VersionMacro extends Macro {
 
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
-      writer.write(version);
+    writer.write(version);
   }
 }

@@ -35,12 +35,12 @@ package org.snipsnap.xmlrpc;
  */
 
 public class WeblogHandler {
- /**
-  * weblog.getUsersBlogs (headers) returns array
-  * weblog.getPostIndex (headers, blogid, filter) returns array
-  * weblog.getPost (headers, postid) returns struct
-  * weblog.newPost (headers, blogid, post, publish) returns string
-  * weblog.editPost (headers, postid, post, publish) returns boolean
-  * weblog.deletePost (headers, postid) returns boolean
-  */
+  /**
+   * weblog.getUsersBlogs (headers) returns array
+   * weblog.getPostIndex (headers, blogid, filter) returns array
+   * weblog.getPost (headers, postid) returns struct
+   * weblog.newPost (headers, blogid, post, publish) returns string
+   * weblog.editPost (headers, postid, post, publish) returns boolean
+   * weblog.deletePost (headers, postid) returns boolean
+   */
 }

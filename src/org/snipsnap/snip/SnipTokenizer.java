@@ -1,7 +1,7 @@
 package org.snipsnap.snip;
 
-import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.Token;
+import org.apache.lucene.analysis.Tokenizer;
 
 import java.io.Reader;
 
@@ -30,33 +30,33 @@ public final class SnipTokenizer extends Tokenizer {
     int length = 0;
     int start = offset;
 
-    while(true) {
+    while (true) {
       char c;
 
       offset++;
-      if(bufferIndex >= dataLen) {
+      if (bufferIndex >= dataLen) {
         dataLen = input.read(ioBuffer);
         bufferIndex = 0;
       }
       ;
-      if(dataLen == -1) {
-        if(length > 0)
+      if (dataLen == -1) {
+        if (length > 0)
           break;
         else
           return null;
       } else
         c = (char) ioBuffer[bufferIndex++];
 
-      if(Character.isLetterOrDigit(c) ) {
-        if(length == 0)			  // start of token
+      if (Character.isLetterOrDigit(c)) {
+        if (length == 0)			  // start of token
           start = offset - 1;
 
         buffer[length++] = Character.toLowerCase(c);
         // buffer it
-        if(length == MAX_WORD_LEN)		  // buffer overflow!
+        if (length == MAX_WORD_LEN)		  // buffer overflow!
           break;
 
-      } else if(length > 0)			  // at non-Letter w/ chars
+      } else if (length > 0)			  // at non-Letter w/ chars
         break;					  // return 'em
 
     }

@@ -27,11 +27,10 @@ package org.snipsnap.snip.filter.interwiki;
 
 import org.snipsnap.snip.SnipLink;
 
-import java.util.Map;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.StringTokenizer;
-import java.io.*;
+import java.util.Map;
 
 /**
  * Stores information and links to other wikis forming a
@@ -64,7 +63,7 @@ public class InterWiki {
     try {
       BufferedReader br = new BufferedReader(
           new InputStreamReader(
-          new FileInputStream("conf/intermap.txt")));
+              new FileInputStream("conf/intermap.txt")));
       addInterMap(br);
     } catch (IOException e) {
       System.err.println("Unable to read conf/intermap.txt ");
@@ -75,8 +74,9 @@ public class InterWiki {
     String line;
     while ((line = reader.readLine()) != null) {
       int index = line.indexOf(" ");
-      interWiki.put(line.substring(0,index), line.substring(index+1));
-    };
+      interWiki.put(line.substring(0, index), line.substring(index + 1));
+    }
+    ;
   }
 
   public Writer appendTo(Writer writer) throws IOException {

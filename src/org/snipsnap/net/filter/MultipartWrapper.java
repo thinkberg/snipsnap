@@ -25,7 +25,6 @@
 package org.snipsnap.net.filter;
 
 import org.snipsnap.util.mail.InputStreamDataSource;
-import org.snipsnap.util.log.Logger;
 
 import javax.mail.BodyPart;
 import javax.mail.MessagingException;
@@ -35,10 +34,6 @@ import javax.mail.internet.MimeMultipart;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.PrintStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -71,10 +66,10 @@ public class MultipartWrapper extends HttpServletRequestWrapper {
         ContentDisposition disp = new ContentDisposition(body.getHeader("content-disposition", null));
         String name = disp.getParameter("name");
         if (body.getContentType().startsWith("text")) {
-          String value = new String(((String)body.getContent()).getBytes("iso-8859-1"), request.getCharacterEncoding());
+          String value = new String(((String) body.getContent()).getBytes("iso-8859-1"), request.getCharacterEncoding());
           String[] values = (String[]) params.get(name);
           if (null == values) {
-            params.put(name, new String[]{ value });
+            params.put(name, new String[]{value});
           } else {
             String[] tmp = new String[values.length + 1];
             System.arraycopy(values, 0, tmp, 0, values.length);

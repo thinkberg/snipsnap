@@ -24,17 +24,11 @@
  */
 package org.snipsnap.snip.filter.macro;
 
-import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.user.UserManager;
-import org.snipsnap.user.User;
-import org.snipsnap.app.Application;
 
-import java.util.Iterator;
-import java.util.List;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.List;
 
 /*
  * Macro that displays a list of currently logged on users.
@@ -42,6 +36,7 @@ import java.io.Writer;
  * @author Matthias L. Jugel
  * @version $Id$
  */
+
 public class RecentChangesMacro extends ListOutputMacro {
   public String getName() {
     return "recent-changes";
@@ -57,15 +52,15 @@ public class RecentChangesMacro extends ListOutputMacro {
     String type = "Vertical";
     boolean showSize = false;
     int length = 10;
-    if(params != null) {
-      if(params.getLength() > 0) {
+    if (params != null) {
+      if (params.getLength() > 0) {
         try {
           length = Integer.parseInt(params.get("0"));
         } catch (NumberFormatException e) {
-          System.err.println("RecentChangesMacro: illegal parameter count='"+params.get("1")+"'");
+          System.err.println("RecentChangesMacro: illegal parameter count='" + params.get("1") + "'");
         }
       }
-      if(params.getLength() > 1) {
+      if (params.getLength() > 1) {
         type = params.get("1");
       }
     }

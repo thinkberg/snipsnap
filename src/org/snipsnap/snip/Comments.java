@@ -24,12 +24,9 @@
  */
 package org.snipsnap.snip;
 
-import org.snipsnap.app.Application;
-import org.snipsnap.util.StringUtil;
 import org.snipsnap.user.Permissions;
-import org.snipsnap.user.Security;
 import org.snipsnap.user.Roles;
-import org.snipsnap.user.User;
+import org.snipsnap.util.StringUtil;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -110,7 +107,7 @@ public class Comments {
   public String getCommentString() {
     StringBuffer buffer = new StringBuffer();
     if (getCount() > 0) {
-     // @TODO do not link to comments if snip is a comment, but link to parent comments object
+      // @TODO do not link to comments if snip is a comment, but link to parent comments object
       SnipLink.appendLinkWithRoot(buffer, "../comments", SnipLink.encode(snip.getName()), StringUtil.plural(getCount(), "comment"));
       buffer.append(" (by ");
       appendUserString(buffer);
@@ -124,7 +121,7 @@ public class Comments {
 
   public String getPostString() {
     StringBuffer buffer = new StringBuffer();
-    SnipLink.appendLinkWithRoot(buffer, "../comments", SnipLink.encode(snip.getName())+"#post", "post comment");
+    SnipLink.appendLinkWithRoot(buffer, "../comments", SnipLink.encode(snip.getName()) + "#post", "post comment");
     return buffer.toString();
   }
 

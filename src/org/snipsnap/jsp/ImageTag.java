@@ -25,15 +25,12 @@
 package org.snipsnap.jsp;
 
 import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
+import org.snipsnap.snip.SnipLink;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-
-import org.snipsnap.snip.SnipLink;
 
 public class ImageTag extends TagSupport {
   private String ext = null;
@@ -46,7 +43,7 @@ public class ImageTag extends TagSupport {
       if (alt != null) {
         alt = (String) ExpressionEvaluatorManager.evaluate("alt", alt, String.class, this, pageContext);
       }
-      if(ext != null) {
+      if (ext != null) {
         ext = (String) ExpressionEvaluatorManager.evaluate("ext", ext, String.class, this, pageContext);
       }
     } catch (JspException e) {

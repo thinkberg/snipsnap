@@ -25,18 +25,15 @@
 
 package org.snipsnap.snip.storage;
 
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.Links;
-import org.snipsnap.snip.Attachments;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.label.Labels;
-import org.snipsnap.user.Permissions;
-import org.snipsnap.util.ConnectionManager;
+import org.snipsnap.app.Application;
+import org.snipsnap.cache.Cache;
 import org.snipsnap.jdbc.Finder;
 import org.snipsnap.jdbc.FinderFactory;
 import org.snipsnap.jdbc.JDBCCreator;
-import org.snipsnap.cache.Cache;
-import org.snipsnap.app.Application;
+import org.snipsnap.snip.*;
+import org.snipsnap.snip.label.Labels;
+import org.snipsnap.user.Permissions;
+import org.snipsnap.util.ConnectionManager;
 
 import java.sql.*;
 import java.util.List;
@@ -53,8 +50,8 @@ public class JDBCSnipStorage implements SnipStorage, JDBCCreator {
 
   public JDBCSnipStorage(Cache cache) {
     this.finders = new FinderFactory("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions, " +
-                               " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
-                               " FROM Snip ", cache, Snip.class, "name", this);
+        " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
+        " FROM Snip ", cache, Snip.class, "name", this);
   }
 
   public Object createObject(ResultSet result) throws SQLException {
@@ -65,7 +62,7 @@ public class JDBCSnipStorage implements SnipStorage, JDBCCreator {
     String name = result.getString("name");
     String content = result.getString("content");
 
-    Snip snip = new Snip(name, content);
+    Snip snip = SnipFactory.createSnip(name,content);
     snip.setCTime(result.getTimestamp("cTime"));
     snip.setMTime(result.getTimestamp("mTime"));
     snip.setCUser(result.getString("cUser"));
@@ -76,7 +73,7 @@ public class JDBCSnipStorage implements SnipStorage, JDBCCreator {
     }
     String parentString = result.getString("parentSnip");
     if (!result.wasNull()) {
-      snip.parent = SnipSpace.getInstance().load(parentString);
+      snip.setDirectParent(SnipSpace.getInstance().load(parentString));
     }
     snip.setPermissions(new Permissions(result.getString("permissions")));
     snip.setBackLinks(new Links(result.getString("backLinks")));
@@ -94,7 +91,7 @@ public class JDBCSnipStorage implements SnipStorage, JDBCCreator {
     int count = -1;
     try {
       statement = connection.prepareStatement("SELECT count(*) " +
-                                              " FROM Snip ");
+          " FROM Snip ");
       result = statement.executeQuery();
       if (result.next()) {
         count = result.getInt(1);
@@ -162,7 +159,7 @@ public class JDBCSnipStorage implements SnipStorage, JDBCCreator {
 
   public List storageByDateInName(String start, String end) {
     Finder finder = finders.getFinder("WHERE name>=? and name<=? and parentSnip=? " +
-                                      " ORDER BY name");
+        " ORDER BY name");
     finder.setString(1, start);
     finder.setString(2, end);
     finder.setString(3, "start");
@@ -179,9 +176,9 @@ public class JDBCSnipStorage implements SnipStorage, JDBCCreator {
 
     try {
       statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions, " +
-                                              " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
-                                              " FROM Snip " +
-                                              " WHERE UPPER(name)=?");
+          " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
+          " FROM Snip " +
+          " WHERE UPPER(name)=?");
       statement.setString(1, name.toUpperCase());
 
       result = statement.executeQuery();
@@ -205,9 +202,9 @@ public class JDBCSnipStorage implements SnipStorage, JDBCCreator {
 
     try {
       statement = connection.prepareStatement("UPDATE Snip SET name=?, content=?, cTime=?, mTime=?, " +
-                                              " cUser=?, mUser=?, parentSnip=?, commentSnip=?, permissions=?, " +
-                                              " oUser=?, backLinks=?, snipLinks=?, labels=?, attachments=?, viewCount=? " +
-                                              " WHERE name=?");
+          " cUser=?, mUser=?, parentSnip=?, commentSnip=?, permissions=?, " +
+          " oUser=?, backLinks=?, snipLinks=?, labels=?, attachments=?, viewCount=? " +
+          " WHERE name=?");
       statement.setString(1, snip.getName());
       statement.setString(2, snip.getContent());
       statement.setTimestamp(3, snip.getCTime());
@@ -251,7 +248,7 @@ public class JDBCSnipStorage implements SnipStorage, JDBCCreator {
 
     Application app = Application.get();
     String login = app.getUser().getLogin();
-    Snip snip = new Snip(name, content);
+    Snip snip = SnipFactory.createSnip(name, content);
     Timestamp cTime = new Timestamp(new java.util.Date().getTime());
     Timestamp mTime = (Timestamp) cTime.clone();
     snip.setCTime(cTime);
@@ -267,11 +264,11 @@ public class JDBCSnipStorage implements SnipStorage, JDBCCreator {
 
     try {
       statement = connection.prepareStatement("INSERT INTO Snip (name, content, cTime, mTime, " +
-                                              " cUser, mUser, parentSnip, commentSnip, permissions, " +
-                                              " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
-                                              " ) VALUES (?,?,?,?,?,"+
-                                                         "?,?,?,?,?,"+
-                                                         "?,?,?,?,?)");
+          " cUser, mUser, parentSnip, commentSnip, permissions, " +
+          " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
+          " ) VALUES (?,?,?,?,?," +
+          "?,?,?,?,?," +
+          "?,?,?,?,?)");
       statement.setString(1, name);
       statement.setString(2, content);
       statement.setTimestamp(3, cTime);

@@ -25,20 +25,17 @@
 
 package org.snipsnap.snip.filter.macro;
 
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.filter.macro.list.SimpleList;
 import org.snipsnap.snip.filter.macro.list.ListFormatter;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Iterator;
-import java.io.Writer;
-import java.io.IOException;
-
+import org.snipsnap.snip.filter.macro.list.SimpleList;
 import sun.misc.Service;
 import sun.misc.ServiceConfigurationError;
+
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Base class for macros outputting a list, e.g. user-list
@@ -54,16 +51,16 @@ public abstract class ListOutputMacro extends Macro {
   static {
     /* load all list formatter found in the services plugin control file */
     Iterator macroIt = Service.providers(ListFormatter.class);
-    while(macroIt.hasNext()) {
+    while (macroIt.hasNext()) {
       try {
-        ListFormatter formatter = (ListFormatter)macroIt.next();
+        ListFormatter formatter = (ListFormatter) macroIt.next();
         formatterMap.put(formatter.getName().toLowerCase(), formatter);
-        System.err.println("Loaded list formatter: "+formatter.getName());
+        System.err.println("Loaded list formatter: " + formatter.getName());
       } catch (Exception e) {
-        System.err.println("ListOutputMacro: unable to load list formatter: "+e);
+        System.err.println("ListOutputMacro: unable to load list formatter: " + e);
         e.printStackTrace();
-      } catch(ServiceConfigurationError err) {
-        System.err.println("ListOutputMacro: error loading list formatter: "+err);
+      } catch (ServiceConfigurationError err) {
+        System.err.println("ListOutputMacro: error loading list formatter: " + err);
         err.printStackTrace();
       }
     }

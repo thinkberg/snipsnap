@@ -30,12 +30,11 @@ import org.mortbay.util.InetAddrPort;
 import org.mortbay.util.MultiException;
 import org.snipsnap.config.Configuration;
 
-import java.io.IOException;
 import java.io.File;
-import java.util.Iterator;
-import java.util.Locale;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Iterator;
 
 /**
  * Application Server
@@ -56,7 +55,7 @@ public class AppServer {
 
     try {
       snipsnapConfig = new Configuration("conf/snipsnap.conf");
-      System.setProperty("snipsnap."+Configuration.SERVER_VERSION, snipsnapConfig.getVersion());
+      System.setProperty("snipsnap." + Configuration.SERVER_VERSION, snipsnapConfig.getVersion());
     } catch (IOException e) {
       e.printStackTrace();
       System.out.println("ERROR: unable to read snipsnap default configuration, aborting");
@@ -65,7 +64,7 @@ public class AppServer {
 
     System.out.println("SnipSnap " + snipsnapConfig.getVersion());
     System.out.println("Copyright (c) 2002 Stephan J. Schmidt, Matthias L. Jugel. "
-                       + "All Rights Reserved.");
+        + "All Rights Reserved.");
     System.out.println("See License Agreement for terms and conditions of use.");
 
     // if not server.conf exists create one
@@ -84,7 +83,7 @@ public class AppServer {
     serverConfig = parseArguments(args, serverConfig);
 
     String enc = serverConfig.getProperty(Configuration.SERVER_ENCODING);
-    if(enc != null && enc.length() > 0) {
+    if (enc != null && enc.length() > 0) {
       System.setProperty("file.encoding", enc);
     } else {
       System.setProperty("file.encoding", "iso-8859-1");
@@ -95,7 +94,7 @@ public class AppServer {
       jettyServer = new Server("./conf/jetty.conf");
       jettyServer.start();
       String hostname = InetAddress.getLocalHost().getHostName();
-      System.out.println("Administrative interface started at http://"+hostname+":8668/install");
+      System.out.println("Administrative interface started at http://" + hostname + ":8668/install");
     } catch (IOException e) {
       System.err.println("AppServer: admin server configuration not found: " + e);
     } catch (MultiException e) {
@@ -132,7 +131,7 @@ public class AppServer {
       }
       System.out.println("ATTENTION: http://" + host + ":" + listener.getPort() + "/install");
     } else {
-      System.out.println(ApplicationLoader.getApplicationCount() + " applications loaded and running ("+errors+" errors).");
+      System.out.println(ApplicationLoader.getApplicationCount() + " applications loaded and running (" + errors + " errors).");
     }
 
   }
@@ -165,7 +164,7 @@ public class AppServer {
         if (args.length > i + 1) {
           try {
             if (!AdminServer.execute(Integer.parseInt(serverConfig.getProperty(Configuration.SERVER_ADMIN_PORT).trim()),
-                                     args[i + 1], args.length > i + 2 ? args[i + 2] : null)) {
+                args[i + 1], args.length > i + 2 ? args[i + 2] : null)) {
               System.exit(-1);
             }
             System.exit(0);

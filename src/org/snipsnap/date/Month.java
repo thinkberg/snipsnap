@@ -24,14 +24,11 @@
  */
 package org.snipsnap.date;
 
-import org.snipsnap.snip.*;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.SnipSpace;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Object that generates a View of the month
@@ -41,8 +38,8 @@ import java.util.Set;
  **/
 public class Month {
 
-  private String[] months = { "January", "February", "March", "April", "May", "June", "July", "August", "September",
-                              "October", "November", "December" };
+  private String[] months = {"January", "February", "March", "April", "May", "June", "July", "August", "September",
+                             "October", "November", "December"};
 
 //  private String[] months = {
 //    "Januar", "Februar", "Maerz", "April",
@@ -54,8 +51,8 @@ public class Month {
   };
 
   // @TODO Use locale
-  private String[] weekDaysShort = { "Mo", "Tu", "We", "Th", "Fr", "Sa", "Su" };
-  private String[] weekDaysLong = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+  private String[] weekDaysShort = {"Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"};
+  private String[] weekDaysLong = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
 
   /** The days in each month. */
   public final static int dom[] = {
@@ -68,7 +65,7 @@ public class Month {
   }
 
   public String toKey(int year, int month, int day) {
-    return year + "-" + (month < 10 ? "0" + month : ""+month) + "-" + (day < 10 ? "0" + day : ""+day);
+    return year + "-" + (month < 10 ? "0" + month : "" + month) + "-" + (day < 10 ? "0" + day : "" + day);
   }
 
   /**
@@ -103,7 +100,7 @@ public class Month {
   // @TODO: convert to use month=1,2,... instead of 0,1,....
   public String getView(int month, int year) {
 
-    Set days = getDays(month+1, year);
+    Set days = getDays(month + 1, year);
 
     StringBuffer view = new StringBuffer();
     view.append("<div class=\"calendar\"><table summary=\"Monthly calendar with links to each day's posts\">");
@@ -148,8 +145,8 @@ public class Month {
     for (int i = 1; i <= daysInMonth; i++) {
       String day = "" + i;
 
-      if (days.contains(toKey(year, month+1, i))) {
-        day =  SnipLink.createLink( toKey(year, month+1, i), day);
+      if (days.contains(toKey(year, month + 1, i))) {
+        day = SnipLink.createLink(toKey(year, month + 1, i), day);
       }
 
       if (i == todayNumber && month == today.get(Calendar.MONTH) && year == today.get(Calendar.YEAR)) {
@@ -178,7 +175,7 @@ public class Month {
   private String getHeader() {
     StringBuffer buffer = new StringBuffer();
     buffer.append("<tr>");
-    for (int i=0; i<weekDaysShort.length; i++) {
+    for (int i = 0; i < weekDaysShort.length; i++) {
       buffer.append("<th abbr=\"");
       buffer.append(weekDaysLong[i]);
       buffer.append("\">");

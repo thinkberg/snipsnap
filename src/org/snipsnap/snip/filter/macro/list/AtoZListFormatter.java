@@ -25,19 +25,12 @@
 package org.snipsnap.snip.filter.macro.list;
 
 import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.filter.macro.ListOutputMacro;
-import org.snipsnap.util.Nameable;
 import org.snipsnap.util.Linkable;
-import org.snipsnap.serialization.Appendable;
+import org.snipsnap.util.Nameable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.io.Writer;
 import java.io.IOException;
+import java.io.Writer;
+import java.util.*;
 
 /**
  * Formats a list as AtoZ listing separated by the alphabetical characters.
@@ -53,7 +46,7 @@ public class AtoZListFormatter implements ListFormatter {
    * Create an A to Z index
    */
   public void format(Writer writer, String listComment, Collection c, String emptyText, boolean showSize)
-    throws IOException {
+      throws IOException {
     if (c.size() > 0) {
       Iterator it = c.iterator();
       Map atozMap = new HashMap();
@@ -62,16 +55,16 @@ public class AtoZListFormatter implements ListFormatter {
       while (it.hasNext()) {
         Object object = it.next();
         String name, indexChar;
-        if(object instanceof Nameable) {
-          name = ((Nameable)object).getName();
+        if (object instanceof Nameable) {
+          name = ((Nameable) object).getName();
           indexChar = name.substring(0, 1).toUpperCase();
           name = SnipLink.createLink(name);
         } else {
           name = object.toString();
           indexChar = name.substring(0, 1).toUpperCase();
         }
-        if(object instanceof Linkable) {
-          name = ((Linkable)object).getLink();
+        if (object instanceof Linkable) {
+          name = ((Linkable) object).getLink();
         }
 
         if (indexChar.charAt(0) >= 'A' && indexChar.charAt(0) <= 'Z') {
@@ -88,26 +81,26 @@ public class AtoZListFormatter implements ListFormatter {
       }
 
       writer.write("<table width=\"100%\" class=\"index-top\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
-      for(int idxChar = 'A'; idxChar <= 'Z';) {
+      for (int idxChar = 'A'; idxChar <= 'Z';) {
         writer.write("<tr>");
-        for(int i = 0; i < 6 && idxChar + i <= 'Z'; i++) {
-          String ch = "" + (char)(idxChar + i);
-          writer.write("<th><b> &nbsp;<a href=\"#idx"+ch+"\">");
+        for (int i = 0; i < 6 && idxChar + i <= 'Z'; i++) {
+          String ch = "" + (char) (idxChar + i);
+          writer.write("<th><b> &nbsp;<a href=\"#idx" + ch + "\">");
           writer.write(ch);
           writer.write("</a></b></th>");
           writer.write("<th>...</th><th>");
-          writer.write(""+(atozMap.get(ch) == null ? 0 : ((List)atozMap.get(ch)).size()));
+          writer.write("" + (atozMap.get(ch) == null ? 0 : ((List) atozMap.get(ch)).size()));
           writer.write("&nbsp; </th>");
         }
         idxChar += 6;
-        if(idxChar >= 'Z') {
+        if (idxChar >= 'Z') {
           writer.write("<th><b> &nbsp;<a href=\"#idx0-9\">0-9</a></b></th>");
           writer.write("<th>...</th><th>");
-          writer.write(""+numberRestList.size());
+          writer.write("" + numberRestList.size());
           writer.write("&nbsp; </th>");
           writer.write("<th><b> &nbsp;<a href=\"#idxAT\">@</a></b></th>");
           writer.write("<th>...</th><th>");
-          writer.write(""+otherRestList.size());
+          writer.write("" + otherRestList.size());
           writer.write("&nbsp; </th>");
           writer.write("<th></th><th></th><th></th><th></th>");
           writer.write("<th></th><th></th><th></th><th></th>");
@@ -119,9 +112,9 @@ public class AtoZListFormatter implements ListFormatter {
 
       writer.write("<div class=\"list-title\">");
       writer.write(listComment);
-      if(showSize) {
+      if (showSize) {
         writer.write(" (");
-        writer.write(""+c.size());
+        writer.write("" + c.size());
         writer.write(")");
       }
       writer.write("</div>");

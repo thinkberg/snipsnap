@@ -25,16 +25,14 @@
 package org.snipsnap.net;
 
 import org.snipsnap.app.Application;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.filter.SnipFormatter;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 
-import javax.servlet.ServletException;
 import javax.servlet.RequestDispatcher;
-import javax.servlet.http.HttpServlet;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -47,14 +45,14 @@ import java.io.IOException;
  */
 public class PostStoreServlet extends SnipSnapServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
 
     String title = request.getParameter("title");
     String content = request.getParameter("content");
 
     if (request.getParameter("preview") != null) {
       // If there is a title, generate preview of snip with title + content
-      if (null != title && ! "".equals(title)) {
+      if (null != title && !"".equals(title)) {
         request.setAttribute("preview", SnipFormatter.toXML(null, SnipSpace.getInstance().getContent(title, content)));
       } else {
         request.setAttribute("preview", SnipFormatter.toXML(null, content));

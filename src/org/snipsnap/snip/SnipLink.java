@@ -232,7 +232,7 @@ public class SnipLink {
    */
   public static Writer appendImageWithRoot(Writer writer, String root, String name,
                                            String alt, String ext, String position)
-    throws IOException {
+      throws IOException {
     // extract extension or leave as is, default is to append .png
     int dotIndex = name.lastIndexOf('.');
     if (dotIndex != -1) {

@@ -56,7 +56,7 @@ public class Labels {
   }
 
   public Label getLabel(String name) {
-    return (Label)labels.get(name);
+    return (Label) labels.get(name);
   }
 
   public Set getIds() {

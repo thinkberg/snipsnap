@@ -55,8 +55,8 @@ public class ContentTag extends TagSupport {
         Filter filter = new HtmlRemoveFilter();
         content = filter.filter(content, null);
         if (extract) {
-          if (content.length() >40 ) {
-            content = content.substring(0,40) + " ...";
+          if (content.length() > 40) {
+            content = content.substring(0, 40) + " ...";
           }
         }
       }

@@ -26,19 +26,13 @@ package org.snipsnap.server;
 
 import org.snipsnap.config.Configuration;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
 
 /**
  * Server for administrative commands that are sent via local host.
@@ -48,12 +42,12 @@ import java.util.Properties;
 public class AdminServer implements Runnable {
 
   public final static List COMMANDS = Arrays.asList(
-    new String[]{
-      "shutdown",
-      "start <appname>",
-      "stop <appname>",
-      "reload <appname>"
-    });
+      new String[]{
+        "shutdown",
+        "start <appname>",
+        "stop <appname>",
+        "reload <appname>"
+      });
 
   /**
    * Execute an administrative command by sending it to the server on the specified port.
@@ -66,11 +60,11 @@ public class AdminServer implements Runnable {
       Socket s = new Socket(InetAddress.getLocalHost(), port);
       BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
       BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
-      writer.write(command+" "+args);
+      writer.write(command + " " + args);
       writer.newLine();
       writer.flush();
       String output = null;
-      while((output = reader.readLine()) != null) {
+      while ((output = reader.readLine()) != null) {
         System.out.println(output);
       }
       reader.close();
@@ -115,28 +109,28 @@ public class AdminServer implements Runnable {
           String line = reader.readLine();
           String command = null, args = null;
           int idx = line.indexOf(' ');
-          if(idx != -1) {
+          if (idx != -1) {
             command = line.substring(0, idx);
-            args = line.substring(idx+1);
+            args = line.substring(idx + 1);
           }
-          System.out.println("AdminServer: got command: '"+command+"' '"+args+"'");
+          System.out.println("AdminServer: got command: '" + command + "' '" + args + "'");
           if ("shutdown".equals(command)) {
             Shutdown.shutdown();
-          } else if("start".equals(command) && args != null) {
+          } else if ("start".equals(command) && args != null) {
             try {
               ApplicationLoader.loadApplication(config.getProperty(Configuration.SERVER_WEBAPP_ROOT), args);
             } catch (Exception e) {
               e.printStackTrace(new PrintWriter(writer));
               writer.newLine();
             }
-          } else if("stop".equals(command) && args != null) {
+          } else if ("stop".equals(command) && args != null) {
             try {
               ApplicationLoader.unloadApplication(config.getProperty(Configuration.SERVER_WEBAPP_ROOT), args);
             } catch (Exception e) {
               e.printStackTrace(new PrintWriter(writer));
               writer.newLine();
             }
-          } else if("reload".equals(command) && args != null) {
+          } else if ("reload".equals(command) && args != null) {
             try {
               ApplicationLoader.reloadApplication(config.getProperty(Configuration.SERVER_WEBAPP_ROOT), args);
             } catch (Exception e) {
