@@ -45,6 +45,7 @@ import org.radeox.util.StringBufferWriter;
 import org.radeox.util.logging.Logger;
 import org.radeox.EngineManager;
 import org.radeox.engine.IncludeRenderEngine;
+import org.radeox.engine.RenderEngine;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 
@@ -121,7 +122,7 @@ public class LateMacroFilter extends RegexTokenFilter {
           macro.execute(writer, mParams);
         } else if (command.startsWith("!")) {
 // @TODO including of other snips
-          EngineManager engine = context.getRenderEngine();
+          RenderEngine engine = context.getRenderEngine();
           if (engine instanceof IncludeRenderEngine) {
             String include = ((IncludeRenderEngine) engine).include(command.substring(1));
             if (null != include) {
