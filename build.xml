@@ -247,8 +247,6 @@
 
   <!-- create web archive of the template application -->
   <target depends="jsp-jar,theme-jar" description="build template war" name="snipsnap-war">
-    <property name="web.inc" value=""/>
-    <loadfile property="web.inc" srcfile="${target}/jsp/web.inc" failonerror="false"/>
     <mkdir dir="${target}/webapp"/>
     <copy todir="${target}/webapp">
       <fileset dir="${src}/apps/default">
@@ -258,12 +256,22 @@
       </fileset>
       <fileset dir="${src}/theme/blue" includes="**" excludes="**/CVS"/>
     </copy>
-    <copy tofile="${target}/webapp/WEB-INF/web.xml"
-          file="${src}/apps/default/WEB-INF/web-xml.tmpl" overwrite="true">
+
+    <loadfile property="web.inc" srcfile="${target}/jsp/web.inc" failonerror="false"/>
+    <condition property="web.inc" value="">
+      <not>
+        <isset property="${web.inc}"/>
+      </not>
+    </condition>
+    <!-- copy with filter if web.inc is available -->
+    <copy
+      tofile="${target}/webapp/WEB-INF/web.xml"
+      file="${src}/apps/default/WEB-INF/web-xml.tmpl" overwrite="true">
       <filterset>
         <filter token="PRECOMPILED-JSP" value="${web.inc}"/>
       </filterset>
     </copy>
+
     <copy file="${src}/apps/default/index.jsp" tofile="${target}/webapp/index.jsp"/>
     <copy todir="${target}/webapp/WEB-INF/lib">
       <fileset dir="${jar}">
@@ -361,8 +369,6 @@
 
   <!-- create web archive of the installer web application -->
   <target depends="installer-jsp-jar" description="build installer war" name="installer-war">
-    <property name="installer-web.inc" value=""/>
-    <loadfile property="installer-web.inc" srcfile="${target}/installer/jsp/web.inc" failonerror="false"/>
     <mkdir dir="${target}/installer/webapp"/>
     <copy todir="${target}/installer/webapp">
       <fileset dir="${src}/apps/installer">
@@ -376,12 +382,22 @@
       </fileset>
     </copy>
     <copy file="${src}/apps/installer/index.jsp" tofile="${target}/installer/webapp/index.jsp"/>
-    <copy tofile="${target}/installer/webapp/WEB-INF/web.xml"
-          file="${src}/apps/installer/WEB-INF/web-xml.tmpl" overwrite="true">
+
+    <!-- copy if installer-web.inc is available -->
+    <loadfile property="installer-web.inc" srcfile="${target}/installer/jsp/web.inc" failonerror="false"/>
+    <condition property="installer-web.inc" value="">
+      <not>
+        <isset property="${installer-web.inc}"/>
+      </not>
+    </condition>
+    <copy
+      tofile="${target}/installer/webapp/WEB-INF/web.xml"
+      file="${src}/apps/installer/WEB-INF/web-xml.tmpl" overwrite="true">
       <filterset>
         <filter token="PRECOMPILED-JSP" value="${installer-web.inc}"/>
       </filterset>
     </copy>
+
     <copy todir="${target}/installer/webapp/WEB-INF/lib">
       <fileset dir="${jar}">
         <include name="radeox.jar"/>
