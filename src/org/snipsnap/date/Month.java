@@ -133,7 +133,7 @@ public class Month {
       String day = "" + i;
 
       if (days.contains(toKey(year, month+1, i))) {
-        day = "<a href=\"\">" + day + "</a>";
+        day =  Snip.createLink( toKey(year, month+1, i), day);
       }
 
       if (i == todayNumber && month == today.get(Calendar.MONTH) && year == today.get(Calendar.YEAR)) {

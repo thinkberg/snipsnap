@@ -53,16 +53,22 @@ public class Snip {
     return sf.format(date);
   }
 
-  public static void appendLink(StringBuffer buffer, String name) {
-    appendLink(buffer, name, name);
+  public static String createLink(String name, String view) {
+    StringBuffer buffer = new StringBuffer();
+    return appendLink(buffer, name, view).toString();
   }
 
-  public static void appendLink(StringBuffer buffer, String name, String view) {
+  public static StringBuffer appendLink(StringBuffer buffer, String name) {
+    return appendLink(buffer, name, name);
+  }
+
+  public static StringBuffer appendLink(StringBuffer buffer, String name, String view) {
     buffer.append(" <a href=\"/space/");
     buffer.append(name);
     buffer.append("\">");
     buffer.append(view);
     buffer.append("</a> ");
+    return buffer;
   }
 
   public String getNiceTime(Timestamp time) {
@@ -150,19 +156,6 @@ public class Snip {
     return children;
   }
 
-  public void addSnip(Snip snip) {
-    init();
-    snip.setParent(this);
-    if (!children.contains(snip)) {
-      children.add(snip);
-    }
-    SnipSpace.getInstance().store(snip);
-  }
-
-  public Snip getParent() {
-    return parent;
-  }
-
   public void setComment(Snip comment) {
     this.comment = comment;
   }
@@ -178,13 +171,27 @@ public class Snip {
     return comments;
   }
 
-  public void setParent(Snip parentSnip) {
-    if (parentSnip != this.parent) {
-      if (null != this.parent) {
-        this.parent.removeSnip(this);
-      }
-      this.parent = parentSnip;
+  public void addSnip(Snip snip) {
+    init();
+    if (!children.contains(snip)) {
+      snip.setParent(this);
+      children.add(snip);
+      SnipSpace.getInstance().store(snip);
     }
+  }
+
+  public Snip getParent() {
+    return parent;
+  }
+
+  public void setParent(Snip parentSnip) {
+    if (parentSnip == this.parent) return;
+
+    if (null != this.parent) {
+      this.parent.removeSnip(this);
+    }
+    this.parent = parentSnip;
+    parentSnip.addSnip(this);
   }
 
   public void removeSnip(Snip snip) {

@@ -304,7 +304,6 @@ public class SnipSpace implements LinkTester {
     List children = null;
 
     try {
-      System.out.println("Finding: "+start+" "+end);
       statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip FROM Snip WHERE name>=? and name<=? and parentSnip=?");
       statement.setString(1, start);
       statement.setString(2, end);
