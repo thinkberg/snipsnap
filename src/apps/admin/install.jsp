@@ -46,7 +46,11 @@
         <tr>
           <td>Host Name:</td>
           <td><input name="host" type="text" value="<c:out value='${config.host}' default=''/>"></td>
-          <td>(optional)</td>
+          <td>(optional)<br>
+	    The virtual host the server should accept requests for.
+	    Leave blank if you want to accept requests for all possible
+	    host names your server has (default).
+	  </td>
         <tr>
         <tr>
           <td>Port Number:</td>
@@ -56,7 +60,12 @@
         <tr>
           <td>Path on Server:</td>
           <td><input name="context" type="text" value="<c:out value='${config.contextPath}' default='/'/>"></td>
-          <td>(optional)</td>
+          <td>(optional)<br>
+	    The relative path on your server where the application resides.
+	    If you enter <i>/foo/</i> then your application listens for requests
+	    like: <i>http://localhost:8668/foo/space/start</i>. Leave the
+	    default if this is a standalone server.
+	  </td>
         <tr>
         <tr>
           <td colspan="2">

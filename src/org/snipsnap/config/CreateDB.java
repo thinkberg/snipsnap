@@ -146,7 +146,7 @@ public class CreateDB {
       snip.addPermission("Edit", Security.OWNER);
       space.store(snip);
 
-      space.post("Welcom to [SnipSnap]. You can now login and add your first post", app);
+      space.post("Welcome to [SnipSnap]. You can now login and add/edit your first post", app);
       System.out.println("--- Complete ---");
 
     } catch (SQLException e) {

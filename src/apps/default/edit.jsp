@@ -13,8 +13,8 @@
     <table border="0" cellpadding="0" cellspacing="2">
       <tr><td><textarea name="content" type="text" cols="80" rows="20"><c:out value="${snip.content}"/></textarea></td></tr>
       <tr><td align="right">
-        <input value="Cancel" name="cancel" type="submit">
         <input value="Save" name="save" type="submit">
+        <input value="Cancel" name="cancel" type="submit">
       </td></tr>
     </table>
     <input name="name" type="hidden" value="<c:out value="${snip_name}"/>">
