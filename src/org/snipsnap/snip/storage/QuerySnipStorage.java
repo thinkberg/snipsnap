@@ -214,10 +214,9 @@ public class QuerySnipStorage implements SnipStorage {
     return result.subList(0, Math.min(count, result.size()));
   }
 
-  public List storageByDateInName(final String start, final String end) {
-    final String startName = Application.get().getConfiguration().getStartSnip();
-    final String queryStart = startName + "/" + start + "/";
-    final String queryEnd = startName + "/" + end + "/";
+  public List storageByDateInName(final String nameSpace, final String start, final String end) {
+    final String queryStart = nameSpace + "/" + start + "/";
+    final String queryEnd = nameSpace + "/" + end + "/";
     List blogWithParent = QueryKit.querySorted(storage.storageAll(), new SnipQuery() {
       public boolean fit(Snip snip) {
         // Return all Snips with the parent matching like
@@ -225,7 +224,7 @@ public class QuerySnipStorage implements SnipStorage {
         String name = snip.getName();
         Snip parent = snip.getParent();
         boolean blogWithParent = (start.compareTo(name) <= 0 && end.compareTo(name) >= 0 &&
-            null != parent && startName.equals(parent.getName()));
+            null != parent && nameSpace.equals(parent.getName()));
         return blogWithParent;
       }
     }, nameComparator);

@@ -76,6 +76,6 @@ public interface SnipStorage {
 
   public List storageByParentModifiedOrder(Snip parent, int count);
 
-  public List storageByDateInName(String start, String end);
+  public List storageByDateInName(String nameSpace, String start, String end);
 
 }

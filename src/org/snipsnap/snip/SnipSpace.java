@@ -57,7 +57,7 @@ public interface SnipSpace  {
 
   public List getSince(Timestamp date);
 
-  public List getByDate(String start, String end);
+  public List getByDate(String nameSpace, String start, String end);
 
   /**
    * A list of Snips, ordered by "hotness", currently

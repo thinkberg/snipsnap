@@ -28,34 +28,34 @@ package org.snipsnap.semanticweb.rss;
 import org.snipsnap.snip.Blog;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.app.Application;
 
 import java.util.List;
 
 /*
- * Generates a feed of snips from a blog which can then be
- * serialized to RSS, RDF, Atom, ...
+ * Generates a feed of recently changed snips which can then be
+ * displayed or serialized to RSS, RDF, Atom, ...
  *
  * @author stephan
  * @team sonicteam
  * @version $Id$
  */
 
-public class BlogFeeder implements Feeder {
-  private Blog blog;
+public class RecentlySnipChangedFeeder implements Feeder {
+  private SnipSpace space;
 
-  public BlogFeeder() {
-    blog = SnipSpaceFactory.getInstance().getBlog();
-  }
-
-  public BlogFeeder(String blogName) {
-    blog = SnipSpaceFactory.getInstance().getBlog(blogName);
+  public RecentlySnipChangedFeeder() {
+    space = SnipSpaceFactory.getInstance();
   }
 
   public List getFeed() {
-      return blog.getFlatPosts();
+    List changed = space.getChanged(10);
+    return changed;
   };
 
   public Snip getContextSnip() {
-    return blog.getSnip();
+    String startName = Application.get().getConfiguration().getStartSnip();
+    return space.load(startName);
   }
 }

@@ -151,8 +151,8 @@ public class BlogImpl implements Blog {
     //    Collections.sort(posts, comparator);
     // sort
     // Add old snips of form '2005-03-01' if name == 'start'
-    if (posts.size() < count && name.equals(startName)) {
-      List oldPosts = space.getByDate(Month.toKey(startC), Month.toKey(endC));
+    if (posts.size() < count) {
+      List oldPosts = space.getByDate(blog.getName(), Month.toKey(startC), Month.toKey(endC));
       oldPosts = oldPosts.subList(0, Math.min(oldPosts.size(), count - posts.size()));
       posts.addAll(oldPosts);
     }

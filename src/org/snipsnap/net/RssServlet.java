@@ -29,6 +29,7 @@ import org.snipsnap.config.ConfigurationProxy;
 import org.snipsnap.snip.Blog;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpaceFactory;
+import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.semanticweb.rss.BlogFeeder;
 import org.snipsnap.semanticweb.rss.Feeder;
 import org.snipsnap.semanticweb.rss.RecentlySnipChangedFeeder;
@@ -57,27 +58,36 @@ public class RssServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
 
+    SnipSpace space = SnipSpaceFactory.getInstance();
+
     String eTag = request.getHeader("If-None-Match");
-    if (null != eTag && eTag.equals(SnipSpaceFactory.getInstance().getETag())) {
-      response.setHeader("ETag", SnipSpaceFactory.getInstance().getETag());
+    if (null != eTag && eTag.equals(space.getETag())) {
+      response.setHeader("ETag", space.getETag());
       response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
       return;
     } else {
       String version = request.getParameter("version");
       String type = request.getParameter("type");
+      String sourceSnipName = request.getParameter("snip");
+
+      Snip sourceSnip = space.load(sourceSnipName);
 
       Feeder feeder = null;
       if ("recentlychanged".equals(type)) {
         feeder = new RecentlySnipChangedFeeder();
-      }  else {
-        feeder = new BlogFeeder();
+      } else {
+        if (sourceSnip.isWeblog()) {
+          feeder = new BlogFeeder(sourceSnipName);
+        } else {
+          feeder = new BlogFeeder();
+        }
       }
 
       Snip snip = feeder.getContextSnip();
 
       request.setAttribute("snip", snip);
       request.setAttribute("rsssnips", feeder.getFeed());
-      request.setAttribute("space", SnipSpaceFactory.getInstance());
+      request.setAttribute("space", space);
       request.setAttribute("config", config);
 
       request.setAttribute("url", config.getUrl("/space"));

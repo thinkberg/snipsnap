@@ -238,7 +238,10 @@ public class JDBCSnipStorage implements SnipStorage, CacheableStorage {
     return list;
   }
 
-  public List storageByDateInName(String start, String end) {
+  public List storageByDateInName(String nameSpace, String start, String end) {
+    // THIS NEEDS TO BE FIXED ! THIS DOES NOT WORK
+    System.err.println("JDBCSnipStorage: ERROR storageByDateInName() DOES NOT WORK.");
+
     String applicationOid = (String) Application.get().getObject(Application.OID);
     Finder finder = finders.getFinder("WHERE name>=? and name<=? and parentSnip=? AND applicationOid=?" +
         " ORDER BY name")
@@ -270,7 +273,7 @@ public class JDBCSnipStorage implements SnipStorage, CacheableStorage {
         " ORDER BY name")
         .setString(1, start.toUpperCase())
         .setString(2, end.toUpperCase())
-        .setString(3, applicationOid);
+        .setString(4, applicationOid);
     List list = createObjects(finder.execute());
     finder.close();
     return (Snip[]) list.toArray(new Snip[list.size()]);

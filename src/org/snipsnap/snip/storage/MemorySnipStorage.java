@@ -194,7 +194,7 @@ public class MemorySnipStorage implements SnipStorage {
     throw new MethodNotSupportedException(NOT_SUPPORTED_EXCEPTION_MSG);
   }
 
-  public List storageByDateInName(String start, String end) {
+  public List storageByDateInName(String nameSpace, String start, String end) {
     throw new MethodNotSupportedException(NOT_SUPPORTED_EXCEPTION_MSG);
   }
 }

@@ -56,7 +56,7 @@ public class MockSnipSpace extends MockObject implements SnipSpace {
     return null;
   }
 
-  public List getByDate(String start, String end) {
+  public List getByDate(String nameSpace, String start, String end) {
     return null;
   }
 

@@ -200,8 +200,8 @@ public class SnipSpaceImpl implements SnipSpace {
     return storage.storageByDateSince(date);
   }
 
-  public List getByDate(String start, String end) {
-    return storage.storageByDateInName(start, end);
+  public List getByDate(String nameSpace, String start, String end) {
+    return storage.storageByDateInName(nameSpace, start, end);
   }
 
   /**

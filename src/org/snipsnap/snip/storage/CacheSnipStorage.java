@@ -137,7 +137,7 @@ public class CacheSnipStorage implements SnipStorage, CacheStorage {
     return storage.storageByParentModifiedOrder(parent, count);
   }
 
-  public List storageByDateInName(String start, String end) {
-    return storage.storageByDateInName(start, end);
+  public List storageByDateInName(String nameSpace, String start, String end) {
+    return storage.storageByDateInName(nameSpace, start, end);
   }
 }

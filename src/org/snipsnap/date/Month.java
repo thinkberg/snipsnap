@@ -89,7 +89,8 @@ public class Month {
   public Set getDays(int month, int year) {
     String start = toKey(year, month, 1);
     String end = toKey(year, month, 31);
-    List snips = SnipSpaceFactory.getInstance().getByDate(start, end);
+    // FIX THIS FOR MULTY WEBLOGS
+    List snips = SnipSpaceFactory.getInstance().getByDate(Application.get().getConfiguration().getStartSnip(), start, end);
     Iterator iterator = snips.iterator();
 
     Set days = new HashSet();
