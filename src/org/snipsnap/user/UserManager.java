@@ -1,20 +1,12 @@
 package com.neotis.user;
 
+import com.neotis.util.ConnectionManager;
+
+import javax.servlet.http.HttpSession;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Date;
-
-import com.neotis.util.ConnectionManager;
-
-import javax.servlet.http.HttpSession;
 
 public class UserManager {
   private static UserManager instance;
@@ -33,31 +25,31 @@ public class UserManager {
   }
 
   public User getUser(HttpSession session) {
-    return new User("Guest","Guest");
+    return new User("Guest", "Guest");
   }
 
   public User authenticate(String login, String passwd) {
-	  User user = storageLoad(login);
-	  if (null!=user 
-					  && user.getPasswd().equals(passwd)) {
-			 return user;
-		} else {
-			 return null;
-		}
+    User user = storageLoad(login);
+    if (null != user
+      && user.getPasswd().equals(passwd)) {
+      return user;
+    } else {
+      return null;
+    }
   }
 
   public User create(String login, String passwd) {
-		return storageCreate(login, passwd);
+    return storageCreate(login, passwd);
   }
 
   public void store(User user) {
-	  storageStore(user);
-		return;
+    storageStore(user);
+    return;
   }
 
   public void remove(User user) {
-	  storageRemove(user);
-		return;
+    storageRemove(user);
+    return;
   }
 
   public User load(String login) {
@@ -69,11 +61,11 @@ public class UserManager {
   private User createUser(ResultSet result) throws SQLException {
     String login = result.getString("login");
     String passwd = result.getString("passwd");
-		User user = new User(login, passwd);
+    User user = new User(login, passwd);
     return user;
   }
 
-	 private void storageStore(User user) {
+  private void storageStore(User user) {
     PreparedStatement statement = null;
 
     try {
@@ -94,7 +86,7 @@ public class UserManager {
     PreparedStatement statement = null;
     ResultSet result = null;
 
-		User user = new User(login, passwd);
+    User user = new User(login, passwd);
 
     try {
       statement = connection.prepareStatement("INSERT INTO User (login,passwd) VALUES (?,?)");

@@ -76,7 +76,8 @@ public class CreateDB {
         "       mTime     TIMESTAMP, " +
         "       cUser     CHAR(55), " +
         "       mUser     CHAR(55), " +
-        "       parentSnip VARCHAR(100) ) ");
+        "       parentSnip VARCHAR(100), "+
+        "       commentSnip VARCHAR(100) ) ");
 
       statement.executeQuery(
         "    CREATE TABLE User ( " +

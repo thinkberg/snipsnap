@@ -2,29 +2,21 @@ package com.neotis.snip;
 
 import com.neotis.snip.filter.SnipFormatter;
 import com.neotis.user.User;
+import com.neotis.util.StringUtil;
 
 import java.sql.Timestamp;
-import java.sql.Date;
 import java.util.Collection;
 
 
 public class Snip {
   private Snip parent;
   private Collection children;
+  private Snip comment;
+  private Comments comments;
 
   private String name, content;
   private Timestamp cTime, mTime;
   private String cUser, mUser;
-
-  public StringBuffer plural(StringBuffer buffer, int i, String s) {
-    buffer.append(i);
-    buffer.append(" ");
-    buffer.append(s);
-    if (i>1) {
-      buffer.append("s");
-    }
-    return buffer;
-  }
 
   public String getNiceTime(Timestamp time) {
     if(time == null) return "";
@@ -42,15 +34,15 @@ public class Snip {
     if (mins==0) {
       nice.append("Just a blink of an eye ago.");
     } else if (hours==0) {
-      plural(nice, min, "minute");
+      StringUtil.plural(nice, min, "minute");
       nice.append(" ago.");
     } else if (days==0) {
-      plural(nice, hour, "hour");
+      StringUtil.plural(nice, hour, "hour");
       nice.append(", ");
-      plural(nice, min, "minute");
+      StringUtil.plural(nice, min, "minute");
       nice.append(" ago.");
     } else {
-      plural(nice, days, "day");
+      StringUtil.plural(nice, days, "day");
       nice.append(" ago.");
     }
     return nice.toString();
@@ -58,15 +50,10 @@ public class Snip {
 
   public String getModified() {
     StringBuffer buffer = new StringBuffer();
-    buffer.append("Created by <a href=\"/space/");
-    buffer.append(cUser);
-    buffer.append("\">");
-    buffer.append(cUser);
-    buffer.append("</a> - Last Edited by <a href=\"/space/");
-    buffer.append(mUser);
-    buffer.append("\">");
-    buffer.append(mUser);
-    buffer.append("</a> ");
+    buffer.append("Created by");
+    User.appendLink(buffer, cUser);
+    buffer.append("Last Edited by");
+    User.appendLink(buffer, mUser);
     buffer.append(getNiceTime(mTime));
     return buffer.toString();
   }
@@ -129,6 +116,21 @@ public class Snip {
     return parent;
   }
 
+  public void setComment(Snip comment) {
+    this.comment = comment;
+  }
+
+  public Snip getComment() {
+    return comment;
+  }
+
+  public Comments getComments() {
+    if (null==comments) {
+      comments = new Comments(this);
+    }
+    return comments;
+  }
+
   public void setParent(Snip parentSnip) {
     if (parentSnip != this.parent) {
       if (null != this.parent) {
@@ -152,12 +154,10 @@ public class Snip {
     }
   }
 
-
   public Snip(String name, String content) {
     this.name = name;
     this.content = content;
   }
-
 
   public String getName() {
     return name;

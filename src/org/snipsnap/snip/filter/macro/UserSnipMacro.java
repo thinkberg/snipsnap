@@ -28,7 +28,9 @@ public class UserSnipMacro extends Macro {
       buffer.append("<b>this user's snips: (");
       List snips = space.getByUser(params[0]);
       buffer.append(snips.size());
-      buffer.append(") </b><br/><blockquote>");
+      buffer.append(") </b><br/>");
+      if (snips.size()>0) {
+      buffer.append("<blockquote>");
       Iterator snipsIterator = snips.iterator();
       while (snipsIterator.hasNext()) {
         Snip snip = (Snip) snipsIterator.next();
@@ -42,6 +44,9 @@ public class UserSnipMacro extends Macro {
         }
       }
       buffer.append("</blockquote>");
+      } else {
+        buffer.append("none written yet.");
+      }
       return buffer.toString();
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");

@@ -1,21 +1,23 @@
 package com.neotis.snip;
 
+import com.neotis.app.Application;
 import com.neotis.snip.filter.LinkTester;
 import com.neotis.util.ConnectionManager;
 import com.neotis.util.Queue;
-import com.neotis.app.Application;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.sql.Types;
+import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SnipSpace implements LinkTester {
   private Connection connection;
@@ -44,9 +46,13 @@ public class SnipSpace implements LinkTester {
     return changed.get();
   }
 
-	public List getByUser(String login) {
-		return storageByUser(login);
-	}
+  public List getComments(Snip snip) {
+    return storageByComments(snip);
+  }
+
+  public List getByUser(String login) {
+    return storageByUser(login);
+  }
 
   public Collection getChildren(Snip snip) {
     return storageByParent(snip);
@@ -78,8 +84,8 @@ public class SnipSpace implements LinkTester {
   }
 
   public void store(Snip snip, Application app) {
-		snip.setMUser(app.getUser());
-		store(snip);
+    snip.setMUser(app.getUser());
+    store(snip);
     return;
   }
 
@@ -113,39 +119,48 @@ public class SnipSpace implements LinkTester {
   private Snip createSnip(ResultSet result) throws SQLException {
     String name = result.getString("name");
     String content = result.getString("content");
+
     Snip snip = new Snip(name, content);
     snip.setCTime(result.getTimestamp("cTime"));
     snip.setMTime(result.getTimestamp("mTime"));
     snip.setCUser(result.getString("cUser"));
     snip.setMUser(result.getString("mUser"));
+    String commentString = result.getString("commentSnip");
+    if (!result.wasNull()) {
+      snip.setComment(load(commentString));
+    }
+    String parentString = result.getString("parentSnip");
+    if (!result.wasNull()) {
+      snip.setParent(load(parentString));
+    }
     return snip;
   }
 
-	private Snip cacheLoad(ResultSet result) throws SQLException{
-		 Snip snip = null;
-     String name = result.getString("name");
-     if (cache.containsKey(name)) {
-       snip = (Snip) cache.get(name);
-     } else {
-       snip = createSnip(result);
-       cache.put(name, snip);
-     }
-		 return snip;
-	}
- 
+  private Snip cacheLoad(ResultSet result) throws SQLException {
+    Snip snip = null;
+    String name = result.getString("name");
+    if (cache.containsKey(name)) {
+      snip = (Snip) cache.get(name);
+    } else {
+      snip = createSnip(result);
+      cache.put(name, snip);
+    }
+    return snip;
+  }
+
   private List storageByRecent(int size) {
     PreparedStatement statement = null;
     ResultSet result = null;
     List snips = new ArrayList();
 
     try {
-      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser FROM Snip ORDER by mTime DESC");
+      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip FROM Snip ORDER by mTime DESC");
 
       result = statement.executeQuery();
       Snip snip = null;
-      while (result.next() && --size>0) {
-			 snip = cacheLoad(result);
-       snips.add(snip);
+      while (result.next() && --size > 0) {
+        snip = cacheLoad(result);
+        snips.add(snip);
       }
     } catch (SQLException e) {
       e.printStackTrace();
@@ -155,6 +170,7 @@ public class SnipSpace implements LinkTester {
     }
     return snips;
   }
+
 
   private List storageByUser(String login) {
     PreparedStatement statement = null;
@@ -162,14 +178,14 @@ public class SnipSpace implements LinkTester {
     List snips = new ArrayList();
 
     try {
-      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser FROM Snip WHERE mUser=?");
+      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip FROM Snip WHERE mUser=?");
       statement.setString(1, login);
 
       result = statement.executeQuery();
       Snip snip = null;
       while (result.next()) {
-			 snip = cacheLoad(result);
-       snips.add(snip);
+        snip = cacheLoad(result);
+        snips.add(snip);
       }
     } catch (SQLException e) {
       e.printStackTrace();
@@ -181,20 +197,44 @@ public class SnipSpace implements LinkTester {
   }
 
 
+  private List storageByComments(Snip parent) {
+    PreparedStatement statement = null;
+    ResultSet result = null;
+    List comments = new ArrayList();
+
+    try {
+      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip FROM Snip WHERE commentSnip=?");
+      statement.setString(1, parent.getName());
+
+      result = statement.executeQuery();
+      Snip snip = null;
+      while (result.next()) {
+        snip = cacheLoad(result);
+        comments.add(snip);
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    } finally {
+      ConnectionManager.close(statement);
+      ConnectionManager.close(result);
+    }
+    return comments;
+  }
+
   private Collection storageByParent(Snip parent) {
     PreparedStatement statement = null;
     ResultSet result = null;
     Collection children = new ArrayList();
 
     try {
-      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser FROM Snip WHERE parentSnip=?");
+      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip FROM Snip WHERE parentSnip=?");
       statement.setString(1, parent.getName());
 
       result = statement.executeQuery();
       Snip snip = null;
       while (result.next()) {
-			 snip = cacheLoad(result);
-       children.add(snip);
+        snip = cacheLoad(result);
+        children.add(snip);
       }
     } catch (SQLException e) {
       e.printStackTrace();
@@ -209,14 +249,27 @@ public class SnipSpace implements LinkTester {
     PreparedStatement statement = null;
 
     try {
-      statement = connection.prepareStatement("UPDATE Snip SET name=?, content=?, cTime=?, mTime=?, cUser=?, mUser=? WHERE name=?");
+      statement = connection.prepareStatement("UPDATE Snip " +
+          "SET name=?, content=?, cTime=?, mTime=?, cUser=?, mUser=?, parentSnip=?, commentSnip=? WHERE name=?");
       statement.setString(1, snip.getName());
       statement.setString(2, snip.getContent());
       statement.setTimestamp(3, snip.getCTime());
       statement.setTimestamp(4, snip.getMTime());
       statement.setString(5, snip.getCUser());
       statement.setString(6, snip.getMUser());
-      statement.setString(7, snip.getName());
+      Snip parent = snip.getParent();
+      if (null==parent) {
+        statement.setNull(7, Types.VARCHAR );
+      } else {
+        statement.setString(7, parent.getName());
+      }
+      Snip comment = snip.getComment();
+      if (null==comment) {
+        statement.setNull(8, Types.VARCHAR );
+      } else {
+        statement.setString(8, comment.getName());
+      }
+      statement.setString(9, snip.getName());
 
       statement.execute();
     } catch (SQLException e) {
@@ -231,7 +284,7 @@ public class SnipSpace implements LinkTester {
     PreparedStatement statement = null;
     ResultSet result = null;
 
-		String login = app.getUser().getLogin();
+    String login = app.getUser().getLogin();
     Snip snip = new Snip(name, content);
     Timestamp cTime = new Timestamp(new Date().getTime());
     Timestamp mTime = (Timestamp) cTime.clone();
@@ -241,13 +294,25 @@ public class SnipSpace implements LinkTester {
     snip.setMUser(login);
 
     try {
-      statement = connection.prepareStatement("INSERT INTO Snip (name, content, cTime, mTime, cUser, mUser) VALUES (?,?,?,?,?,?)");
+      statement = connection.prepareStatement("INSERT INTO Snip (name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip) VALUES (?,?,?,?,?,?,?,?)");
       statement.setString(1, name);
       statement.setString(2, content);
       statement.setTimestamp(3, cTime);
       statement.setTimestamp(4, mTime);
-      statement.setString(5, login );
-      statement.setString(6, login );
+      statement.setString(5, login);
+      statement.setString(6, login);
+      Snip parent = snip.getParent();
+      if (null==parent) {
+        statement.setNull(7, Types.VARCHAR );
+      } else {
+        statement.setString(7, parent.getName());
+      }
+      Snip comment = snip.getComment();
+      if (null==comment) {
+        statement.setNull(8, Types.VARCHAR );
+      } else {
+        statement.setString(8, comment.getName());
+      }
 
       statement.execute();
     } catch (SQLException e) {
@@ -283,7 +348,7 @@ public class SnipSpace implements LinkTester {
     ResultSet result = null;
 
     try {
-      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser FROM Snip WHERE name=?");
+      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip FROM Snip WHERE name=?");
       statement.setString(1, name);
 
       result = statement.executeQuery();

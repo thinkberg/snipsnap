@@ -16,6 +16,10 @@ public class SnipBean {
     return snip.getModified();
   }
 
+  public String getComments() {
+    return snip.getComments().getCommentString();
+  }
+
   public Timestamp getCTime() {
     return snip.getCTime();
   }
@@ -48,6 +52,7 @@ public class SnipBean {
     }
     return content != null ? content : "";
   }
+
 
   public String getXMLContent() {
     System.err.println("getXMLContent()");
