@@ -1,4 +1,4 @@
-package org.snipsnap.test.interceptor.mock;
+package org.snipsnap.test.mock;
 
 import org.snipsnap.snip.*;
 import org.snipsnap.snip.attachment.Attachments;
