@@ -179,7 +179,7 @@ public class Configuration {
   }
 
   public String getVersion() {
-    String version = System.getProperty("snipsnap." + VERSION);
+    String version = System.getProperty(VERSION);
     if (null == version) {
       version = getProperty(VERSION);
     }
