@@ -25,10 +25,7 @@
 package org.snipsnap.net;
 
 import org.apache.xmlrpc.XmlRpcServer;
-import org.snipsnap.xmlrpc.BloggerHandler;
-import org.snipsnap.xmlrpc.SnipSnapHandler;
-import org.snipsnap.xmlrpc.WeblogsPingHandler;
-import org.snipsnap.xmlrpc.GeneratorHandler;
+import org.snipsnap.xmlrpc.*;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -37,16 +34,38 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
-
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * XmlRpc handler servlet
+ *
  * @author Stephan J. Schmidt
  * @version $Id$
  */
+
 public class XmlRpcServlet extends HttpServlet {
+  private XmlRpcServer xmlrpc;
+  private List handlers;
 
   public void init(ServletConfig servletConfig) throws ServletException {
+    XmlRpcServer xmlrpc = new XmlRpcServer();
+
+    handlers = new ArrayList();
+
+    // Read via services plugin
+    handlers.add(new SnipSnapHandler());
+    handlers.add(new BloggerHandler());
+    handlers.add(new WeblogsPingHandler());
+    handlers.add(new GeneratorHandler());
+    handlers.add(new WeblogHandler());
+
+    Iterator iterator = handlers.iterator();
+    while (iterator.hasNext()) {
+      XmlRpcHandler handler = (XmlRpcHandler) iterator.next();
+      xmlrpc.addHandler(handler.getName(), handler);
+    }
   }
 
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -55,14 +74,6 @@ public class XmlRpcServlet extends HttpServlet {
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-
-    //Logger.debug("XMLRPC call received.");
-    XmlRpcServer xmlrpc = new XmlRpcServer();
-
-    xmlrpc.addHandler("snipSnap", new SnipSnapHandler());
-    xmlrpc.addHandler("blogger", new BloggerHandler());
-    xmlrpc.addHandler("weblogUpdates", new WeblogsPingHandler());
-    xmlrpc.addHandler("generator", new GeneratorHandler());
     byte[] result = xmlrpc.execute(request.getInputStream());
     response.setContentType("text/xml");
     response.setContentLength(result.length);

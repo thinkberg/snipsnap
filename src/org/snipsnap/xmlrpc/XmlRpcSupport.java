@@ -35,10 +35,24 @@ import org.radeox.util.logging.Logger;
 /**
  * Utility base class for XML-RPC handlers.
  *
+ * Constants were taken from Blojsom. This
+ * should make understanding tyhe code easier.
+ * (both ways).
+ *
  * @author Stephan J. Schmidt
  * @version $Id$
  */
-public class XmlRpcSupport  {
+public abstract class XmlRpcSupport implements XmlRpcHandler {
+   public static final int    AUTHORIZATION_EXCEPTION = 0001;
+   public static final String AUTHORIZATION_EXCEPTION_MSG = "Invalid Username and/or Password";
+
+   public static final int    UNKNOWN_EXCEPTION = 1000;
+   public static final String UNKNOWN_EXCEPTION_MSG = "An error occured processing your request";
+
+   public static final int    UNSUPPORTED_EXCEPTION = 1001;
+   public static final String UNSUPPORTED_EXCEPTION_MSG = "Unsupported method - Snipsnap does not support this XML-RPC concept";
+
+
   /**
    *  Utility method for XML-RPC handlers. Method authenticates
    *  an user, sets this user as the current user of
@@ -48,6 +62,7 @@ public class XmlRpcSupport  {
    *  @param username Login name of the user received from XML-RPC call
    *  @param password Password credential received from XML-RPC call
    */
+
   protected User authenticate(String username, String password) throws XmlRpcException {
     UserManager um = UserManager.getInstance();
     User user = um.authenticate(username, password);
@@ -56,6 +71,7 @@ public class XmlRpcSupport  {
       return user;
     }
     Logger.warn("XML-RPC authenticate: invalid login for "+username);
-    throw new XmlRpcException(-1, "Invalid login: " + username);
+    throw new XmlRpcException(AUTHORIZATION_EXCEPTION, AUTHORIZATION_EXCEPTION_MSG);
   }
+
 }

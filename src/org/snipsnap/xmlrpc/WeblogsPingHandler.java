@@ -37,7 +37,13 @@ import org.radeox.util.logging.Logger;
  * @version $Id$
  */
 
-public class WeblogsPingHandler {
+public class WeblogsPingHandler extends XmlRpcSupport {
+  public static final String API_PREFIX = "weblogUpdates";
+
+  public String getName() {
+    return API_PREFIX;
+  }
+
   /**
    * From the spec:
    * weblogUpdates.ping()

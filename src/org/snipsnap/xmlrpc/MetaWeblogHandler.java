@@ -30,11 +30,19 @@ package org.snipsnap.xmlrpc;
  * Handles XML-RPC calls for the MetaWeblog API
  * http://www.xmlrpc.com/metaWeblogApi
  *
+ * Some design ideas taken from Blojsom
+ *
  * @author Stephan J. Schmidt
  * @version $Id$
  */
 
-public class MetaWeblogHandler {
+public class MetaWeblogHandler extends XmlRpcSupport {
+  public static final String API_PREFIX = "metaWeblog";
+
+  public String getName() {
+    return API_PREFIX;
+  }
+
   /**
    metaWeblog.newPost (blogid, username, password, struct, publish) returns string
    metaWeblog.editPost (postid, username, password, struct, publish) returns true

@@ -37,7 +37,13 @@ import org.snipsnap.config.AppConfiguration;
  * @version $Id$
  */
 
-public class GeneratorHandler {
+public class GeneratorHandler extends XmlRpcSupport {
+  public static final String API_PREFIX = "generator";
+
+  public String getName() {
+    return API_PREFIX;
+  }
+
   /**
    * Return the version of the running webtool
    **/
@@ -48,6 +54,6 @@ public class GeneratorHandler {
   }
 
   public String version() {
-    return "SnipSnap/"+conf.getVersion();
+    return "SnipSnap/" + conf.getVersion();
   }
 }

@@ -34,7 +34,13 @@ package org.snipsnap.xmlrpc;
  * @version $Id$
  */
 
-public class WeblogHandler {
+public class WeblogHandler extends XmlRpcSupport {
+  public static final String API_PREFIX = "weblog";
+
+  public String getName() {
+    return API_PREFIX;
+  }
+
   /**
    * weblog.getUsersBlogs (headers) returns array
    * weblog.getPostIndex (headers, blogid, filter) returns array

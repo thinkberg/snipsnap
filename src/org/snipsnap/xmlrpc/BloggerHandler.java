@@ -25,19 +25,18 @@
 
 package org.snipsnap.xmlrpc;
 
+import org.apache.xmlrpc.XmlRpcException;
+import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.User;
-import org.snipsnap.user.UserManager;
-import org.radeox.util.logging.Logger;
-import org.apache.xmlrpc.XmlRpcException;
 
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.Vector;
 import java.util.List;
+import java.util.Vector;
 
 /**
  * Handles XML-RPC calls for the Blogger API
@@ -49,6 +48,12 @@ import java.util.List;
  */
 
 public class BloggerHandler extends XmlRpcSupport {
+  public static final String API_PREFIX = "blogger";
+
+  public String getName() {
+    return API_PREFIX;
+  }
+
   /**
    * From the spec:
    * blogger.newPost(): Makes a new post to a designated blog. Optionally, will publish the blog after making the post.
@@ -158,19 +163,19 @@ public class BloggerHandler extends XmlRpcSupport {
   }
 
   /**
-  blogger.getPost
+   blogger.getPost
 
-  Parameters:
+   Parameters:
 
-      * appkey : currently ignored
-      * postId : postId is a unique identifier for the post created. It is the value returned by blogger.newPost. postId will look like..."zoneId|convId|pathToWeblog|msgNum".
-      * username : the email address you use as a username for the site. This user must have privileges to post to the weblog as either the weblog owner, or a member of the owner group.
-      * password : the password you use for the site
+   * appkey : currently ignored
+   * postId : postId is a unique identifier for the post created. It is the value returned by blogger.newPost. postId will look like..."zoneId|convId|pathToWeblog|msgNum".
+   * username : the email address you use as a username for the site. This user must have privileges to post to the weblog as either the weblog owner, or a member of the owner group.
+   * password : the password you use for the site
 
    Returns:
 
-      * struct containing values content ( message body ), userId, postId and dateCreated.
-  **/
+   * struct containing values content ( message body ), userId, postId and dateCreated.
+   **/
 
   public Hashtable getPost(String appkey,
                            String postId,

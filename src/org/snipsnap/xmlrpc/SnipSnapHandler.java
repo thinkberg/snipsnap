@@ -28,6 +28,7 @@ package org.snipsnap.xmlrpc;
 import org.snipsnap.app.Application;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
+import org.apache.xmlrpc.XmlRpcException;
 
 /**
  * Handles XML-RPC calls for the SnbipSnap API
@@ -36,7 +37,13 @@ import org.snipsnap.user.UserManager;
  * @version $Id$
  */
 
-public class SnipSnapHandler {
+public class SnipSnapHandler extends XmlRpcSupport {
+  public static final String API_PREFIX = "snipSnap";
+
+  public String getName() {
+    return API_PREFIX;
+  }
+
   /**
    * Returns the SnipSnap version of this running instance
    *
@@ -55,8 +62,8 @@ public class SnipSnapHandler {
    *
    * @return isAuthenticated True when the user can be authenticated
    */
-  public boolean authenticate(String login, String passwd) {
-     User user = UserManager.getInstance().authenticate(login, passwd);
-     return (null != user);
+  public boolean authenticateUser(String login, String passwd) throws XmlRpcException {
+    User user = authenticate(login, passwd);
+    return (null != user);
   }
 }
