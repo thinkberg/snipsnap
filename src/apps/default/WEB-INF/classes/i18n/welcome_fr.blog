@@ -1,0 +1,12 @@
+Bienvenue à SnipSnap
+Vous pouvez maintenant vous authentifier et ajouter/éditer votre premier blog. Il y a un lien __soumettre un blog__
+dans le menu. Pour l'aide avec le formatage de votre premier blog, voir
+[snipsnap-help]. Pour créer un lien à une page sur votre site entourez un mot avec
+\[ et \]. Mettre \_\_ autour d'une expression la fait devenir en __gras__ et mettre \~\~
+autour d'une expression la fait devenir en ~~italique~~.
+Vous pouvez créer des liens à l'Internet seulement par l'écriture du URL comme http://snipsnap.org ou en employant \{link:Name|url\}.
+Donc \{link:SnipSnap|\http://snipsnap.org\} produit
+{link:SnipSnap|http://snipsnap.org}. Amusez-vous!
+
+Le ping vers Weblogs.com est peut être allumé.
+La {link:FAQ|http://snipsnap.org/space/FAQ} explique comment arrêter ceci.
