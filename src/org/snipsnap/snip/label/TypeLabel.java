@@ -97,11 +97,22 @@ public class TypeLabel extends BaseLabel {
 	Iterator iter   = Service.providerNames(TypeLabel.class);
 
 	while (iter.hasNext()) {
-	  String curTypeName = ((String) iter.next()).trim();
-	  if (!curTypeName.startsWith(COMMENT_CHAR)) {
+	  String curTypeName = (String) iter.next();
+	  if (isValid(curTypeName)) {
 	    result.add(curTypeName);
 	  }
     }
     return result;
+  }
+  
+  private static boolean isValid(String str)
+  {
+  	if (str == null) { 
+  	  return false;
+  	}
+  	
+  	String line = str.trim();
+  	return !(line.startsWith(COMMENT_CHAR)
+  			|| line.equals(""));
   }
 }
