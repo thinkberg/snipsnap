@@ -76,18 +76,20 @@ public class AdminXmlRpcHandler extends AuthXmlRpcHandler {
     return appList;
   }
 
-  public void shutdown() {
+  public String shutdown() {
+    System.out.println("INFO: received remote shutdown request (waiting 1s) ...");
     new Thread() {
       public void run() {
         System.err.println("AdminXmlRpcHandler: shutdown waiting for 1s ...");
         try {
-          currentThread().wait(1000);
+          Thread.sleep(1000);
         } catch (InterruptedException e) {
           System.err.println("AdminXmlRpcHandler: shutdown delay cancelled");
         }
         System.exit(0);
       }
     }.start();
+    return "SnipSnap Server is shutting down ...";
   }
 
   public String install(String name, String host, String port, String path) throws Exception {
