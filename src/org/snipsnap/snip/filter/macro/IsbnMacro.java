@@ -35,19 +35,26 @@ package org.snipsnap.snip.filter.macro;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 
+import java.io.IOException;
+import java.io.Writer;
+
 public class IsbnMacro extends Macro {
   public String getName() {
     return "isbn";
   }
 
-  public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
+  public void execute(Writer writer, String[] params, String content, Snip snip)
+      throws IllegalArgumentException, IOException {
+
     if (params.length== 1) {
+      StringBuffer buffer = new StringBuffer();
       SnipLink.appendImage(buffer, "arrow.right", ">>", "gif");
-      buffer.append(" (<a href=\"http://www.amazon.de/exec/obidos/ASIN/");
-      buffer.append(params[0]);
-      buffer.append("\">Amazon</a> | <a href=\"http://www.preistester.de/cgi-bin/pt/buchs.pl?query=profi&isbn=");
-      buffer.append(params[0]);
-      buffer.append("\">Preistester</a>)");
+      writer.write(buffer.toString());
+      writer.write(" (<a href=\"http://www.amazon.de/exec/obidos/ASIN/");
+      writer.write(params[0]);
+      writer.write("\">Amazon</a> | <a href=\"http://www.preistester.de/cgi-bin/pt/buchs.pl?query=profi&isbn=");
+      writer.write(params[0]);
+      writer.write("\">Preistester</a>)");
       return;
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");

@@ -186,7 +186,7 @@ public class SnipSpace implements LinkTester, Loader {
     Snip snip = null;
     if (exists(name)) {
       snip = load(name);
-      snip.setContent(snip.getContent() + "\n\n" + content);
+      snip.setContent(content + "\n\n" + snip.getContent());
     } else {
       snip = create(name, content);
     }

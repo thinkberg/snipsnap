@@ -35,6 +35,8 @@ import org.snipsnap.snip.*;
 
 import java.util.Iterator;
 import java.util.List;
+import java.io.IOException;
+import java.io.Writer;
 
 public class WeblogMacro extends Macro {
   SnipSpace space;
@@ -47,7 +49,9 @@ public class WeblogMacro extends Macro {
     return "weblog";
   }
 
-  public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
+  public void execute(Writer writer, String[] params, String content, Snip snip)
+      throws IllegalArgumentException, IOException {
+
     if (params == null || params.length < 2) {
       int count = 0;
       if (params != null && params.length == 1) {
@@ -60,17 +64,17 @@ public class WeblogMacro extends Macro {
       Iterator iterator = snips.iterator();
       while (iterator.hasNext()) {
         Snip entry = (Snip) iterator.next();
-        buffer.append("<div class=\"blog-date\">");
-        buffer.append(Snip.toDate(entry.getName()));
-        buffer.append("</div>");
-        buffer.append(entry.getXMLContent());
-        buffer.append("<div class=\"comment\">");
-        SnipLink.appendLink(buffer, entry.getName(), "Permalink");
-        buffer.append(" | ");
-        buffer.append(entry.getComments().getCommentString());
-        buffer.append(" | ");
-        buffer.append(entry.getComments().getPostString());
-        buffer.append("</div>\n\n");
+        writer.write("<div class=\"blog-date\">");
+        writer.write(Snip.toDate(entry.getName()));
+        writer.write("</div>");
+        writer.write(entry.getXMLContent());
+        writer.write("<div class=\"comment\">");
+        SnipLink.appendLink(writer, entry.getName(), "Permalink");
+        writer.write(" | ");
+        writer.write(entry.getComments().getCommentString());
+        writer.write(" | ");
+        writer.write(entry.getComments().getPostString());
+        writer.write("</div>\n\n");
       }
 
       return;

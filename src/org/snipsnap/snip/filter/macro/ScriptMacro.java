@@ -43,6 +43,8 @@ import org.python.core.PyObject;
 import java.util.HashMap;
 import java.util.Map;
 import java.io.StringWriter;
+import java.io.IOException;
+import java.io.Writer;
 
 public class ScriptMacro extends Preserved {
   private Map filters;
@@ -54,16 +56,14 @@ public class ScriptMacro extends Preserved {
     return "script";
   }
 
-  public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
+  public void execute(Writer writer, String[] params, String content, Snip snip)
+      throws IllegalArgumentException, IOException {
+
      PythonInterpreter interp =
 	    new PythonInterpreter();
 
-    StringWriter sw = new StringWriter();
-
-    interp.setOut(sw);
+    interp.setOut(writer);
     interp.set("snip", snip);
     interp.exec(content);
-
-    buffer.append(sw.getBuffer());
   }
 }

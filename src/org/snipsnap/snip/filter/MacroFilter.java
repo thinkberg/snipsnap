@@ -40,8 +40,10 @@ import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.filter.macro.*;
 import org.snipsnap.snip.filter.regex.RegexTokenFilter;
 import org.snipsnap.app.Application;
+import org.snipsnap.serialization.StringBufferWriter;
 
 import java.util.*;
+import java.io.Writer;
 
 public class MacroFilter extends RegexTokenFilter {
 
@@ -162,7 +164,8 @@ public class MacroFilter extends RegexTokenFilter {
           if (null != content) {
             content = filter(content, snip);
           }
-          macro.execute(buffer, params, content, snip);
+          Writer writer = new StringBufferWriter(buffer);
+          macro.execute(writer, params, content, snip);
         } else if (command.startsWith("!")) {
 // @TODO including of other snips
           Snip includeSnip = SnipSpace.getInstance().load(command.substring(1));

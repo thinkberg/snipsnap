@@ -1,5 +1,7 @@
 0.2.8
 
+- Changed feature: Post blog prepends to the post
+- Fixed bug: SnipSnap now uses <dc:title> in RSS and DC.Title in HTML
 - Added Feature: Introduced portlet snip snipsnap-portlet-<number>
 - Added Feature: VerticalListFormatter introduced
 - Added Feature: {logins} macro

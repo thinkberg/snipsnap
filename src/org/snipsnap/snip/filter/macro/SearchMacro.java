@@ -39,6 +39,7 @@ import org.snipsnap.app.Application;
 import org.apache.lucene.search.Hits;
 
 import java.io.IOException;
+import java.io.Writer;
 
 public class SearchMacro extends Macro {
   SnipSpace space;
@@ -51,7 +52,9 @@ public class SearchMacro extends Macro {
     return "search";
   }
 
-  public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
+  public void execute(Writer writer, String[] params, String content, Snip snip)
+      throws IllegalArgumentException, IOException {
+
     if (params.length == 1 || params.length == 2) {
       int maxHits = 10;
       if (params.length == 2) {
@@ -59,40 +62,40 @@ public class SearchMacro extends Macro {
       }
       String searchString = params[0];
 
-      buffer.append("<b>snips with ");
-      buffer.append(searchString);
-      buffer.append(": (");
+      writer.write("<b>snips with ");
+      writer.write(searchString);
+      writer.write(": (");
       Hits hits = space.search(searchString);
-      buffer.append(hits.length());
+      writer.write(hits.length());
 
-      buffer.append(") </b><br/>");
+      writer.write(") </b><br/>");
 
       if (hits.length() > 0) {
         int start = 0;
         int end = Math.min(maxHits, hits.length());
-        buffer.append("<blockquote>");
+        writer.write("<blockquote>");
         try {
           for (int i = start; i < end; i++) {
-            SnipLink.appendLink(buffer, hits.doc(i).get("title"));
+            SnipLink.appendLink(writer, hits.doc(i).get("title"));
             if (i < end - 1) {
-              buffer.append(", ");
+              writer.write(", ");
             }
           }
-          buffer.append("</blockquote>");
+          writer.write("</blockquote>");
         } catch (IOException e) {
           System.err.println("I/O error while iterating over search results.");
         }
       } else {
-        buffer.append("none found.");
+        writer.write("none found.");
       }
 
       if (! SnipSpace.getInstance().exists(searchString) &&
         UserManager.getInstance().isAuthenticated(Application.get().getUser())) {
-          buffer.append("<p>There is no snip with <b>");
-          buffer.append(searchString);
-          buffer.append("</b> , would you like to ");
-          SnipLink.createCreateLink(buffer, searchString);
-          buffer.append(" ?</p>");
+          writer.write("<p>There is no snip with <b>");
+          writer.write(searchString);
+          writer.write("</b> , would you like to ");
+          SnipLink.createCreateLink(writer, searchString);
+          writer.write(" ?</p>");
       }
 
       return;

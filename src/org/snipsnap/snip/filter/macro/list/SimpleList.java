@@ -30,6 +30,8 @@ import org.snipsnap.util.Nameable;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.io.Writer;
+import java.io.IOException;
 
 /**
  * Simple list formatter.
@@ -41,25 +43,25 @@ public class SimpleList implements ListoutputMacro.ListFormatter {
   /**
    * Create a simple list.
    */
-  public void format(StringBuffer buffer, String listComment, Collection c, String emptyText) {
-    buffer.append("<b>");
-    buffer.append(listComment);
-    buffer.append(": (");
-    buffer.append(c.size());
-    buffer.append(") </b><br/>");
+  public void format(Writer writer, String listComment, Collection c, String emptyText) throws IOException {
+    writer.write("<b>");
+    writer.write(listComment);
+    writer.write(": (");
+    writer.write(c.size());
+    writer.write(") </b><br/>");
     if (c.size() > 0) {
-      buffer.append("<blockquote>");
+      writer.write("<blockquote>");
       Iterator nameIterator = c.iterator();
       while (nameIterator.hasNext()) {
         Nameable nameable = (Nameable) nameIterator.next();
-        SnipLink.appendLink(buffer, nameable.getName());
+        SnipLink.appendLink(writer, nameable.getName());
         if (nameIterator.hasNext()) {
-          buffer.append(", ");
+          writer.write(", ");
         }
       }
-      buffer.append("</blockquote>");
+      writer.write("</blockquote>");
     } else {
-      buffer.append(emptyText);
+      writer.write(emptyText);
     }
     return;
   }

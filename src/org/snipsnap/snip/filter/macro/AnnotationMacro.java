@@ -34,16 +34,20 @@ package org.snipsnap.snip.filter.macro;
 
 import org.snipsnap.snip.Snip;
 
+import java.io.IOException;
+import java.io.Writer;
+
 public class AnnotationMacro extends Macro {
   public String getName() {
     return "note";
   }
 
-  public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
+  public void execute(Writer writer, String[] params, String content, Snip snip)
+      throws IllegalArgumentException, IOException {
     if (params.length == 1) {
-      buffer.append("<footnote>");
-      buffer.append(params[0]);
-      buffer.append("</footnote>");
+      writer.write("<footnote>");
+      writer.write(params[0]);
+      writer.write("</footnote>");
     } else {
       throw new IllegalArgumentException("footnote needs exactly one argument");
     }

@@ -34,6 +34,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.io.Writer;
+import java.io.IOException;
 
 /**
  * Formats a list as AtoZ listing separated by the alphabetical characters.
@@ -43,9 +45,10 @@ import java.util.Map;
 public class AtoZListFormatter implements ListoutputMacro.ListFormatter {
 
   /**
-   * Create a simple list.
+   * Create an A to Z index
    */
-  public void format(StringBuffer buffer, String listComment, Collection c, String emptyText) {
+  public void format(Writer writer, String listComment, Collection c, String emptyText)
+    throws IOException {
     if (c.size() > 0) {
       Iterator it = c.iterator();
       Map atozMap = new HashMap();
@@ -69,77 +72,91 @@ public class AtoZListFormatter implements ListoutputMacro.ListFormatter {
         }
       }
 
-      buffer.append("<table width=\"100%\" class=\"index-table\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
+      writer.write("<table width=\"100%\" class=\"index-table\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
       for(int idxChar = 'A'; idxChar <= 'Z'; idxChar++) {
-        buffer.append("<tr class=\"index-table-header\">");
+        writer.write("<tr class=\"index-table-header\">");
         for(int i = 0; i < 5 && idxChar + i <= 'Z'; i++) {
           String ch = "" + (char)(idxChar + i);
-          buffer.append("<td><b> &nbsp;<a href=\"#idx"+ch+"\">").append(ch).append("</a></b></td>");
-          buffer.append("<td>...</td><td>");
-          buffer.append(atozMap.get(ch) == null ? 0 : ((List)atozMap.get(ch)).size());
-          buffer.append("&nbsp; </td>");
+          writer.write("<td><b> &nbsp;<a href=\"#idx"+ch+"\">");
+          writer.write(ch);
+          writer.write("</a></b></td>");
+          writer.write("<td>...</td><td>");
+          writer.write(atozMap.get(ch) == null ? 0 : ((List)atozMap.get(ch)).size());
+          writer.write("&nbsp; </td>");
         }
         idxChar += 5;
         if(idxChar >= 'Z') {
-          buffer.append("<td><b> &nbsp;<a href=\"#idx0-9\">0-9</a></b></td>");
-          buffer.append("<td>...</td><td>");
-          buffer.append(numberRestList.size()).append("&nbsp; </td>");
-          buffer.append("<td><b> &nbsp;<a href=\"#idx@\">@</a></b></td>");
-          buffer.append("<td>...</td><td>");
-          buffer.append(otherRestList.size()).append("&nbsp; </td>");
-          buffer.append("<td></td></td></td><td></td><td></td>");
+          writer.write("<td><b> &nbsp;<a href=\"#idx0-9\">0-9</a></b></td>");
+          writer.write("<td>...</td><td>");
+          writer.write(numberRestList.size());
+          writer.write("&nbsp; </td>");
+          writer.write("<td><b> &nbsp;<a href=\"#idx@\">@</a></b></td>");
+          writer.write("<td>...</td><td>");
+          writer.write(otherRestList.size());
+          writer.write("&nbsp; </td>");
+          writer.write("<td></td></td></td><td></td><td></td>");
         }
-        buffer.append("</tr>");
+        writer.write("</tr>");
 
       }
-      buffer.append("</table>");
+      writer.write("</table>");
 
-      buffer.append("<b>").append(listComment).append("(").append(c.size()).append("):</b>");
-      buffer.append("<table width=\"100%\" class=\"index-table\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
+      writer.write("<b>");
+      writer.write(listComment);
+      writer.write("(");
+      writer.write(c.size());
+      writer.write("):</b>");
+      writer.write("<table width=\"100%\" class=\"index-table\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
       for (int ch = 'A'; ch <= 'Z'; ch += 2) {
         String left = "" + (char) ch;
         String right = "" + (char) (ch + 1);
 
-        insertCharHeader(buffer, left, right);
-        addRows(buffer, (List) atozMap.get(left), (List) atozMap.get(right));
+        insertCharHeader(writer, left, right);
+        addRows(writer, (List) atozMap.get(left), (List) atozMap.get(right));
       }
-      insertCharHeader(buffer, "0-9", "@");
-      addRows(buffer, numberRestList, otherRestList);
-      buffer.append("</table>");
+      insertCharHeader(writer, "0-9", "@");
+      addRows(writer, numberRestList, otherRestList);
+      writer.write("</table>");
     } else {
-      buffer.append(emptyText);
+      writer.write(emptyText);
     }
   }
 
-  private void addRows(StringBuffer buffer, List listLeft, List listRight) {
+  private void addRows(Writer writer, List listLeft, List listRight) throws IOException {
     Iterator leftIt = listLeft != null ? listLeft.iterator() : new EmptyIterator();
     Iterator rightIt = listRight != null ? listRight.iterator() : new EmptyIterator();
 
     while (leftIt.hasNext() || rightIt.hasNext()) {
       String leftName = (String) (leftIt != null && leftIt.hasNext() ? leftIt.next() : null);
       String rightName = (String) (rightIt != null && rightIt.hasNext() ? rightIt.next() : null);
-      insertRow(buffer, leftName, rightName, false);
+      insertRow(writer, leftName, rightName, false);
     }
   }
 
-  private void insertCharHeader(StringBuffer buffer, String leftHeader, String rightHeader) {
-    buffer.append("<tr class=\"index-table-header\"><td>");
-    buffer.append("<b><a name=\"idx").append(leftHeader).append("\"></a>").append(leftHeader);
-    buffer.append("</b></td><td> </td><td>");
-    buffer.append("<b><a name=\"idx").append(rightHeader).append("\"></a>").append(rightHeader);
-    buffer.append("</b></td></tr>");
+  private void insertCharHeader(Writer writer, String leftHeader, String rightHeader) throws IOException {
+    writer.write("<tr class=\"index-table-header\"><td>");
+    writer.write("<b><a name=\"idx");
+    writer.write(leftHeader);
+    writer.write("\"></a>");
+    writer.write(leftHeader);
+    writer.write("</b></td><td> </td><td>");
+    writer.write("<b><a name=\"idx");
+    writer.write(rightHeader);
+    writer.write("\"></a>");
+    writer.write(rightHeader);
+    writer.write("</b></td></tr>");
   }
 
-  private void insertRow(StringBuffer buffer, String left, String right, boolean odd) {
-    buffer.append("<tr><td>");
+  private void insertRow(Writer writer, String left, String right, boolean odd) throws IOException {
+    writer.write("<tr><td>");
     if (left != null) {
-      SnipLink.appendLink(buffer, left);
+      SnipLink.appendLink(writer, left);
     }
-    buffer.append("</td><td> </td><td>");
+    writer.write("</td><td> </td><td>");
     if (right != null) {
-      SnipLink.appendLink(buffer, right);
+      SnipLink.appendLink(writer, right);
     }
-    buffer.append("</td></tr>");
+    writer.write("</td></tr>");
   }
 
   private class EmptyIterator implements Iterator {

@@ -34,26 +34,29 @@ package org.snipsnap.snip.filter.macro;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.xmlrpc.SnipSnapPing;
 import org.snipsnap.util.Weblog;
+import org.snipsnap.serialization.StringBufferWriter;
+import org.snipsnap.serialization.Appendable;
 
 import java.util.Collection;
 import java.util.Iterator;
-
+import java.io.Writer;
+import java.io.IOException;
 
 public class RecentWeblogMacro extends ListoutputMacro {
   public String getName() {
     return "recent-weblog";
   }
 
-  public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
+  public void execute(Writer writer, String[] params, String content, Snip snip)
+      throws IllegalArgumentException, IOException {
     if (params.length == 1) {
       Collection c = SnipSnapPing.getInstance().getChanged(Integer.parseInt(params[0]));
       Iterator iterator = c.iterator();
       while (iterator.hasNext()) {
-        Weblog weblog = (Weblog) iterator.next();
-        weblog.appendTo(buffer);
-        buffer.append("<br/>");
+        Appendable weblog = (Appendable) iterator.next();
+        weblog.appendTo(writer);
+        writer.write("<br/>");
       }
-
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

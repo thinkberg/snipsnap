@@ -35,26 +35,31 @@ package org.snipsnap.snip.filter.macro;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 
+import java.io.IOException;
+import java.io.Writer;
+
 public class FieldMacro extends Macro {
   public String getName() {
     return "field";
   }
 
-  public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
+  public void execute(Writer writer, String[] params, String content, Snip snip)
+      throws IllegalArgumentException, IOException {
+
     if (params.length==1 || params.length==2) {
-      buffer.append("<form action=\"");
-      SnipLink.appendUrl(buffer, snip.getName());
-      buffer.append("\" method=\"get\">");
-      buffer.append("<input name=\"");
-      buffer.append(params[0]);
-      buffer.append("\"");
+      writer.write("<form action=\"");
+      SnipLink.appendUrl(writer, snip.getName());
+      writer.write("\" method=\"get\">");
+      writer.write("<input name=\"");
+      writer.write(params[0]);
+      writer.write("\"");
       if (params.length==2) {
-        buffer.append(" value=\"");
-        buffer.append(params[1]);
-        buffer.append("\"");
+        writer.write(" value=\"");
+        writer.write(params[1]);
+        writer.write("\"");
       }
-      buffer.append("/>");
-      buffer.append("</form>");
+      writer.write("/>");
+      writer.write("</form>");
       return;
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");

@@ -27,6 +27,9 @@ package org.snipsnap.snip.filter.macro;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 
+import java.io.IOException;
+import java.io.Writer;
+
 /*
  * Macro that replaces external links
  *
@@ -42,16 +45,21 @@ public class LinkMacro extends Macro {
     return "link";
   }
 
-  public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
+  public void execute(Writer writer, String[] params, String content, Snip snip)
+      throws IllegalArgumentException, IOException {
+
     if (params.length == 2) {
-      buffer.append("<span class=\"nobr\">");
-      buffer.append(img);
-      buffer.append("<a href=\"").append(params[1]).append("\">");
-      buffer.append(params[0]).append("</a>");
-      buffer.append("</span>");
+      writer.write("<span class=\"nobr\">");
+      writer.write(img);
+      writer.write("<a href=\"");
+      writer.write(params[1]);
+      writer.write("\">");
+      writer.write(params[0]);
+      writer.write("</a>");
+      writer.write("</span>");
     } else if (params.length == 1) {
       // will be catched by UrlFilter
-      buffer.append(params[0]);
+      writer.write(params[0]);
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

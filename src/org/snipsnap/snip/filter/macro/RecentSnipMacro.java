@@ -32,8 +32,11 @@
 package org.snipsnap.snip.filter.macro;
 
 import org.snipsnap.snip.Snip;
+import org.snipsnap.serialization.StringBufferWriter;
 
 import java.util.Collection;
+import java.io.Writer;
+import java.io.IOException;
 
 
 public class RecentSnipMacro extends ListoutputMacro {
@@ -41,10 +44,12 @@ public class RecentSnipMacro extends ListoutputMacro {
     return "snips-by-recent";
   }
 
-  public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
+  public void execute(Writer writer, String[] params, String content, Snip snip)
+      throws IllegalArgumentException, IOException {
+
     if (params.length == 1) {
       Collection c = space.getChanged(Integer.parseInt(params[0]));
-      output(buffer, "recently changed snips", c, "no recently changes.");
+      output(writer, "recently changed snips", c, "no recently changes.");
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

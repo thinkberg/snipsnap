@@ -37,6 +37,9 @@ import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.app.Application;
 
+import java.io.IOException;
+import java.io.Writer;
+
 public class VersionMacro extends Macro {
   String version;
 
@@ -48,8 +51,9 @@ public class VersionMacro extends Macro {
     return "version";
   }
 
-  public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
-      buffer.append(version);
+  public void execute(Writer writer, String[] params, String content, Snip snip)
+      throws IllegalArgumentException, IOException {
+      writer.write(version);
       return;
   }
 }

@@ -33,14 +33,12 @@ package org.snipsnap.snip.filter.macro;
 
 import org.snipsnap.snip.Snip;
 
-public abstract class Macro {
-   public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {
-     return "";
-   }
+import java.io.IOException;
+import java.io.Writer;
 
+public abstract class Macro {
   public abstract String getName();
 
-  public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
-      buffer.append(execute(params, content, snip));
-  }
+  public abstract void execute(Writer writer, String[] params, String content, Snip snip)
+      throws IllegalArgumentException, IOException;
 }

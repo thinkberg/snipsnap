@@ -25,10 +25,14 @@
 
 package org.snipsnap.snip.filter.macro.table;
 
+import org.snipsnap.serialization.Appendable;
+
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.Writer;
+import java.io.IOException;
 
 /**
  * A Table implementation primarly for the
@@ -38,7 +42,7 @@ import java.util.List;
  * @version $Id$
  */
 
-public class Table {
+public class Table implements Appendable {
   int indexRow = 0;
   int indexCol = 0;
   List rows = new ArrayList(10);
@@ -64,31 +68,32 @@ public class Table {
       return 0;
   }
 
-  public void appendTo(StringBuffer buffer) {
-    buffer.append("<table class=\"snip-table\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
+  public Writer appendTo(Writer writer) throws IOException {
+    writer.write("<table class=\"snip-table\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
     List[] outputRows = (List[]) rows.toArray(new List[0]);
     int rowSize = outputRows.length;
     boolean odd=true;
     for (int i=0; i<rowSize; i++) {
-      buffer.append("<tr valign=\"top\" ");
+      writer.write("<tr valign=\"top\" ");
       if (i==0) {
-        buffer.append(" class=\"snip-table-header\">");
+        writer.write(" class=\"snip-table-header\">");
       } else if (odd) {
-        buffer.append(" class=\"snip-table-odd\">");
+        writer.write(" class=\"snip-table-odd\">");
         odd = false;
       } else {
-        buffer.append(" class=\"snip-table-even\">");
+        writer.write(" class=\"snip-table-even\">");
         odd = true;
       }
       String[] outputCols = (String[]) outputRows[i].toArray(new String[0]);
       int colSize = outputCols.length;
       for (int j=0; j<colSize; j++) {
-        buffer.append("<td>");
-        buffer.append(outputCols[j]);
-        buffer.append("</td>");
+        writer.write("<td>");
+        writer.write(outputCols[j]);
+        writer.write("</td>");
       }
-      buffer.append("</tr>");
+      writer.write("</tr>");
     }
-    buffer.append("</table>");
+    writer.write("</table>");
+    return writer;
   }
 }

@@ -40,6 +40,8 @@ import org.snipsnap.snip.filter.XmlCodeFilter;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.io.IOException;
+import java.io.Writer;
 
 public class CodeMacro extends Preserved {
   private Map filters;
@@ -60,7 +62,9 @@ public class CodeMacro extends Preserved {
     return "code";
   }
 
-  public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
+  public void execute(Writer writer, String[] params, String content, Snip snip)
+      throws IllegalArgumentException, IOException {
+
     Filter filter = null;
 
     if (params == null || !filters.containsKey(params[0])) {
@@ -70,9 +74,9 @@ public class CodeMacro extends Preserved {
     }
     String result = filter.filter(content, snip);
 
-    buffer.append("<div class=\"code\"><pre>");
-    buffer.append(replace(result.trim()));
-    buffer.append("</pre></div>");
+    writer.write("<div class=\"code\"><pre>");
+    writer.write(replace(result.trim()));
+    writer.write("</pre></div>");
     return;
   }
 }

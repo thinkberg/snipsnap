@@ -31,6 +31,8 @@ import org.snipsnap.util.URLEncoderDecoder;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.List;
+import java.io.Writer;
+import java.io.IOException;
 
 /**
  *  Generates links for snips
@@ -40,9 +42,26 @@ import java.util.List;
  */
 public class SnipLink {
 
+  public static void appendUrl(Writer writer, String name) throws IOException {
+    writer.write("../space/");
+    writer.write(name);
+    return;
+  }
+
   public static void appendUrl(StringBuffer buffer, String name) {
     buffer.append("../space/");
     buffer.append(name);
+    return;
+  }
+
+  public static void createCreateLink(Writer writer, String name) throws IOException {
+    writer.write(EscapeFilter.escape('['));
+    writer.write("create <a href=\"../exec/edit?name=");
+    writer.write(SnipLink.encode(name));
+    writer.write("\">");
+    writer.write(name);
+    writer.write("</a>");
+    writer.write(EscapeFilter.escape(']'));
     return;
   }
 
@@ -70,16 +89,42 @@ public class SnipLink {
     return appendLinkWithRoot(buffer, root, name, view).toString();
   }
 
+  public static Writer appendLink(Writer writer, Snip snip) throws IOException {
+    return appendLink(writer, snip.getName());
+  }
+
   public static StringBuffer appendLink(StringBuffer buffer, Snip snip) {
     return appendLink(buffer, snip.getName());
+  }
+
+  public static Writer appendLink(Writer writer, String name) throws IOException {
+    StringBuffer buffer = new StringBuffer();
+    appendLink(buffer, name, name);
+    writer.write(buffer.toString());
+    return writer;
   }
 
   public static StringBuffer appendLink(StringBuffer buffer, String name) {
     return appendLink(buffer, name, name);
   }
 
+  public static Writer appendLink(Writer writer, String name, String view) throws IOException {
+    return appendLinkWithRoot(writer, "../space", encode(name), view);
+  }
+
   public static StringBuffer appendLink(StringBuffer buffer, String name, String view) {
     return appendLinkWithRoot(buffer, "../space", encode(name), view);
+  }
+
+  public static Writer appendLinkWithRoot(Writer writer, String root, String name, String view) throws IOException {
+    writer.write("<a href=\"");
+    writer.write(root);
+    writer.write("/");
+    writer.write(name);
+    writer.write("\">");
+    writer.write(view);
+    writer.write("</a>");
+    return writer;
   }
 
   /**

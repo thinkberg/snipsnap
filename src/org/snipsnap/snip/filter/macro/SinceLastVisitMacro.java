@@ -40,23 +40,28 @@ import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.Modified;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.user.User;
+import org.snipsnap.serialization.StringBufferWriter;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Collection;
+import java.io.IOException;
+import java.io.Writer;
 
 public class SinceLastVisitMacro extends ListoutputMacro {
   public String getName() {
     return "since-last-visit";
   }
 
-  public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
+  public void execute(Writer writer, String[] params, String content, Snip snip)
+      throws IllegalArgumentException, IOException {
+
     if (params.length == 1) {
       User user = UserManager.getInstance().load(params[0]);
       System.err.println("Hashcode lastVisit="+((Object) user).hashCode());
       System.err.println("SinceLastVisit: "+user.getLastLogout());
       Collection c = space.getSince(user.getLastLogout());
-      output(buffer, "changed snips since last visit", c, "no recently changes.");
+      output(writer, "changed snips since last visit", c, "no recently changes.");
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

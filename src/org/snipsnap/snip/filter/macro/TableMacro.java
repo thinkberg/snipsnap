@@ -36,6 +36,8 @@ import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.filter.macro.table.Table;
 
 import java.util.StringTokenizer;
+import java.io.IOException;
+import java.io.Writer;
 
 public class TableMacro extends Macro {
 
@@ -43,7 +45,9 @@ public class TableMacro extends Macro {
         return "table";
     }
 
-    public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
+    public void execute(Writer writer, String[] params, String content, Snip snip)
+        throws IllegalArgumentException, IOException {
+
         content = content.trim() + "\n";
 
         Table table = new Table();
@@ -57,7 +61,7 @@ public class TableMacro extends Macro {
             }
         }
         table.calc();
-        table.appendTo(buffer);
+        table.appendTo(writer);
         return;
     }
 }

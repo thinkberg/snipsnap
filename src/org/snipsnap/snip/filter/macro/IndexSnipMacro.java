@@ -36,23 +36,27 @@ import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.util.collection.Collections;
 import org.snipsnap.util.collection.Filterator;
+import org.snipsnap.serialization.StringBufferWriter;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Collection;
+import java.io.IOException;
+import java.io.Writer;
 
 public class IndexSnipMacro extends ListoutputMacro {
   public String getName() {
     return "index";
   }
 
-  public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
+  public void execute(Writer writer, String[] params, String content, Snip snip)
+      throws IllegalArgumentException,IOException {
     String type = null;
     if(params != null && params.length > 0) {
       type = params[0];
     }
     if (params == null || params.length <= 1) {
-      output(buffer, "all snips",
+      output(writer, "all snips",
              Collections.filter(space.getAll(),
                                 new Filterator() {
                                   public boolean filter(Object obj) {

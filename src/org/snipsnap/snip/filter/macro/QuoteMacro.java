@@ -40,6 +40,8 @@ import org.snipsnap.snip.filter.XmlCodeFilter;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.io.IOException;
+import java.io.Writer;
 
 public class QuoteMacro extends Preserved {
   private Map filters;
@@ -51,14 +53,15 @@ public class QuoteMacro extends Preserved {
     return "quote";
   }
 
-  public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
+  public void execute(Writer writer, String[] params, String content, Snip snip)
+      throws IllegalArgumentException, IOException {
 
-    buffer.append("<blockquote class=\"quote\">");
-    buffer.append(content);
+    writer.write("<blockquote class=\"quote\">");
+    writer.write(content);
     if (null!=params && params.length==1) {
-      buffer.append(params[0]);
+      writer.write(params[0]);
     }
-    buffer.append("</blockquote>");
+    writer.write("</blockquote>");
     return;
   }
 }

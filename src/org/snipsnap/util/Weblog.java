@@ -25,6 +25,10 @@
 
 package org.snipsnap.util;
 
+import org.snipsnap.serialization.Appendable;
+
+import java.io.Writer;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -35,7 +39,7 @@ import java.util.Date;
  * @version $Id$
  */
 
-public class Weblog {
+public class Weblog implements Appendable {
   private String name;
   private String url;
   private Timestamp update;
@@ -46,13 +50,13 @@ public class Weblog {
     this.update = new Timestamp(new Date().getTime());
   }
 
-  public void appendTo(StringBuffer buffer) {
-    buffer.append("<a href=\"");
-    buffer.append(url);
-    buffer.append("\">");
-    buffer.append(name);
-    buffer.append("</a>");
-    return;
+  public Writer appendTo(Writer s) throws IOException {
+    s.write("<a href=\"");
+    s.write(url);
+    s.write("\">");
+    s.write(name);
+    s.write("</a>");
+    return s;
   }
 
   private String getUrl() {
@@ -60,7 +64,7 @@ public class Weblog {
   }
 
   public boolean equals(Object obj) {
-    if (! (obj instanceof Weblog)) {
+    if (!(obj instanceof Weblog)) {
       return false;
     }
     return url.equals(((Weblog) obj).getUrl());

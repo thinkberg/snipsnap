@@ -37,6 +37,8 @@ import org.snipsnap.snip.SnipLink;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.io.IOException;
+import java.io.Writer;
 
 
 public class HotSnipMacro extends Macro {
@@ -50,16 +52,18 @@ public class HotSnipMacro extends Macro {
     return "snips-by-hotness";
   }
 
-  public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
+  public void execute(Writer writer, String[] params, String content, Snip snip)
+      throws IllegalArgumentException, IOException {
+
     if (params.length == 1) {
       Collection c = space.getHot(Integer.parseInt(params[0]));
       Iterator iterator = c.iterator();
       while (iterator.hasNext()) {
         Snip hotSnip = (Snip) iterator.next();
-        buffer.append(hotSnip.getViewCount());
-        buffer.append(": ");
-        SnipLink.appendLink(buffer, hotSnip);
-        buffer.append("<br/>");
+        writer.write(hotSnip.getViewCount());
+        writer.write(": ");
+        SnipLink.appendLink(writer, hotSnip);
+        writer.write("<br/>");
       }
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");

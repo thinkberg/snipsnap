@@ -40,17 +40,21 @@ import org.snipsnap.user.User;
 
 import java.util.Iterator;
 import java.util.List;
+import java.io.IOException;
+import java.io.Writer;
 
 public class LastVisitMacro extends ListoutputMacro {
   public String getName() {
     return "last-visit";
   }
 
-  public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
+  public void execute(Writer writer, String[] params, String content, Snip snip)
+      throws IllegalArgumentException, IOException {
+
     if (params.length == 1) {
       User user = UserManager.getInstance().load(params[0]);
-      buffer.append("<b>Last visit was:</b> ");
-      buffer.append(Modified.getNiceTime(user.getLastLogout()));
+      writer.write("<b>Last visit was:</b> ");
+      writer.write(Modified.getNiceTime(user.getLastLogout()));
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

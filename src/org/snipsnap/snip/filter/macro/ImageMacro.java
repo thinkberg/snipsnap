@@ -29,6 +29,9 @@ import org.snipsnap.snip.SnipLink;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.AppConfiguration;
 
+import java.io.IOException;
+import java.io.Writer;
+
 /*
  * Macro that replaces external links
  *
@@ -47,7 +50,10 @@ public class ImageMacro extends Macro {
     config = Application.get().getConfiguration();
   }
 
-  public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
+  public void execute(Writer writer, String[] params, String content, Snip snip)
+      throws IllegalArgumentException, IOException {
+
+    StringBuffer buffer = new StringBuffer();
     if(params.length > 0) {
       if (params[0].startsWith("http://")) {
         if (config.allowExternalImages()) {
@@ -61,6 +67,7 @@ public class ImageMacro extends Macro {
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }
+    writer.write(buffer.toString());
     return;
   }
 }
