@@ -48,7 +48,6 @@ public class RobotServlet extends HttpServlet {
     throws ServletException, IOException {
     String host = request.getRemoteHost();
     String name = "Unknown Robot";
-    request.
     if(host.endsWith("googlebot.com")) {
       name = "GoogleBot";
     }
