@@ -121,6 +121,10 @@ public class QuerySnipStorage implements SnipStorage {
     storage.storageStore(snip);
   }
 
+  public void storageStore(List snips) {
+    storage.storageStore(snips);
+  }
+
   public Snip storageCreate(String name, String content) {
     return storage.storageCreate(name, content);
   }

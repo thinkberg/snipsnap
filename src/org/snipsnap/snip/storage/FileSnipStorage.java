@@ -256,8 +256,16 @@ public abstract class FileSnipStorage implements CacheableStorage, VersionStorag
    */
   protected abstract void storeSnip(Snip snip, File snipDir);
 
+  public void storageStore(List snips) {
+    Iterator iterator = snips.iterator();
+    while (iterator.hasNext()) {
+      Snip snip = (Snip) iterator.next();
+      storageStore(snip);
+    }
+  }
+
   /**
-   * Stors a version of a snip in the storage.
+   * Stores a version of a snip in the storage.
    * Navigates to a directory then calls storeSnip() from
    * a subclass to store the snip.
    *
@@ -288,7 +296,7 @@ public abstract class FileSnipStorage implements CacheableStorage, VersionStorag
     snip.setAttachments(new Attachments());
     snip.setApplication(applicationOid);
     storageStore(snip);
-    return (Snip) Aspects.newInstance(snip, Snip.class);
+    return SnipFactory.wrap(snip);
   }
 
   private Snip parseSnip(Map snipMap) {
@@ -304,7 +312,7 @@ public abstract class FileSnipStorage implements CacheableStorage, VersionStorag
 
     // Aspects.setTarget(proxy, snip);
     // return proxy;
-    snip = (Snip) Aspects.newInstance(snip, Snip.class);
+    snip = (Snip) Aspects.wrap(snip);
     cache.getMap(applicationOid).put(name.toUpperCase(), snip);
     return snip;
   }

@@ -106,6 +106,10 @@ public class MemorySnipStorage implements SnipStorage {
     return (Snip) cache.getMap().get(name.toUpperCase());
   }
 
+  public void storageStore(List snips) {
+    storage.storageStore(snips);
+  }
+  
   public void storageStore(Snip snip) {
     storage.storageStore(snip);
   }

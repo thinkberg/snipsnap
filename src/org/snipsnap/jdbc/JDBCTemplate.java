@@ -53,6 +53,38 @@ public class JDBCTemplate {
     query(query, handler);
   }
 
+  public int[] batchUpdate(String query, BatchPreparedStatementSetter setter) {
+    PreparedStatement statement = null;
+    ResultSet result = null;
+    Connection connection = null;
+    int[] updateCount = new int[0];
+    try {
+      connection = ds.getConnection();
+
+      connection.setAutoCommit(false);
+      int max = setter.getBatchSize();
+      for (int i=0; i < max; i++) {
+        statement = connection.prepareStatement(query);
+        statement.addBatch(query);
+        setter.setValues(statement, i);
+      }
+      updateCount = statement.executeBatch();
+      connection.commit();
+    } catch (SQLException e) {
+      try {
+        connection.rollback();
+      } catch (SQLException e1) {
+        // Empty
+      }
+      throw new RuntimeException("JDBCTemplate: unable to execute query", e);
+    } finally {
+      ConnectionManager.close(result);
+      ConnectionManager.close(statement);
+      ConnectionManager.close(connection);
+    }
+    return updateCount;
+  }
+
   public int update(String query) {
     PreparedStatement statement = null;
     ResultSet result = null;

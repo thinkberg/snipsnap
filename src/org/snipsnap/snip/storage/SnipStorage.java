@@ -45,6 +45,8 @@ public interface SnipStorage {
 
   public Snip storageLoad(String name);
 
+  public void storageStore(List snips);
+
   public void storageStore(Snip snip);
 
   public Snip storageCreate(String name, String content);

@@ -81,6 +81,10 @@ public class CacheSnipStorage implements SnipStorage, CacheStorage {
     storage.storageStore(snip);
   }
 
+  public void storageStore(List snips) {
+    storage.storageStore(snips);
+  }
+
   public Snip storageCreate(String name, String content) {
     Snip snip = storage.storageCreate(name, content);
     cache.getMap().put(snip.getName(), snip);

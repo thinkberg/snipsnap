@@ -78,8 +78,7 @@ public class JDBCSnipStorage implements SnipStorage, CacheableStorage {
 
     System.err.println("JDBCSnipStorage: creating Snip SQL table");
     JDBCTemplate template = new JDBCTemplate(datasource);
-    template.update(
-        "    CREATE TABLE Snip ( " +
+    template.update("    CREATE TABLE Snip ( " +
         "       name           VARCHAR(100) NOT NULL, " +
         "       applicationOid VARCHAR(100) NOT NULL, " +
         "       content        TEXT, " +
@@ -110,8 +109,7 @@ public class JDBCSnipStorage implements SnipStorage, CacheableStorage {
     final IntHolder holder = new IntHolder(-1);
 
     JDBCTemplate template = new JDBCTemplate(ds);
-    template.query(
-        "SELECT count(*) " +
+    template.query("SELECT count(*) " +
         "   FROM Snip WHERE applicationOid=?"
         , new RowCallbackHandler() {
           public void processRow(ResultSet rs) throws SQLException {
@@ -121,8 +119,7 @@ public class JDBCSnipStorage implements SnipStorage, CacheableStorage {
           public void setValues(PreparedStatement ps) throws SQLException {
             ps.setString(1, applicationOid);
           }
-        }
-    );
+        });
     return holder.getValue();
   }
 
@@ -137,8 +134,7 @@ public class JDBCSnipStorage implements SnipStorage, CacheableStorage {
       public void setValues(PreparedStatement ps) throws SQLException {
         ps.setString(1, applicationOid);
       }
-    }
-    );
+    });
     return list;
   }
 
@@ -317,11 +313,56 @@ public class JDBCSnipStorage implements SnipStorage, CacheableStorage {
     return snip;
   }
 
+  public void storageStore(final List snips) {
+    JDBCTemplate template = new JDBCTemplate(ds);
+    template.batchUpdate(" UPDATE Snip SET name=?, content=?, cTime=?, mTime=?, " +
+        " cUser=?, mUser=?, parentSnip=?, commentSnip=?, permissions=?, " +
+        " oUser=?, backLinks=?, snipLinks=?, labels=?, attachments=?, viewCount=?, version=? " +
+        " WHERE name=? AND applicationOid=?",
+        new BatchPreparedStatementSetter() {
+          public int getBatchSize() {
+            return snips.size();
+          }
+
+          public void setValues(PreparedStatement ps, int i) throws SQLException {
+            Snip snip = (Snip) snips.get(i);
+            ps.setString(1, snip.getName());
+            ps.setString(2, snip.getContent());
+            ps.setTimestamp(3, snip.getCTime());
+            ps.setTimestamp(4, snip.getMTime());
+            ps.setString(5, snip.getCUser());
+            ps.setString(6, snip.getMUser());
+            Snip parent = snip.getParent();
+            if (null == parent) {
+              ps.setNull(7, Types.VARCHAR);
+            } else {
+              ps.setString(7, parent.getName());
+            }
+            Snip comment = snip.getCommentedSnip();
+            if (null == comment) {
+              ps.setNull(8, Types.VARCHAR);
+            } else {
+              ps.setString(8, comment.getName());
+            }
+            ps.setString(9, snip.getPermissions().toString());
+            ps.setString(10, snip.getOUser());
+            ps.setString(11, snip.getBackLinks().toString());
+            ps.setString(12, snip.getSnipLinks().toString());
+            ps.setString(13, snip.getLabels().toString());
+            ps.setString(14, snip.getAttachments().toString());
+            ps.setInt(15, snip.getViewCount());
+            ps.setInt(16, snip.getVersion());
+            ps.setString(17, snip.getName());
+            ps.setString(18, snip.getApplication());
+          }
+        });
+    return;
+  }
+
   public void storageStore(final Snip snip) {
     //System.out.println("storing: "+snip+": "+ snip.getApplication());
     JDBCTemplate template = new JDBCTemplate(ds);
-    template.update(
-        " UPDATE Snip SET name=?, content=?, cTime=?, mTime=?, " +
+    template.update(" UPDATE Snip SET name=?, content=?, cTime=?, mTime=?, " +
         " cUser=?, mUser=?, parentSnip=?, commentSnip=?, permissions=?, " +
         " oUser=?, backLinks=?, snipLinks=?, labels=?, attachments=?, viewCount=?, version=? " +
         " WHERE name=? AND applicationOid=?",
@@ -380,8 +421,7 @@ public class JDBCSnipStorage implements SnipStorage, CacheableStorage {
     snip.setApplication(applicationOid);
 
     JDBCTemplate template = new JDBCTemplate(ds);
-    template.update(
-        "INSERT INTO Snip (name, content, cTime, mTime, " +
+    template.update("INSERT INTO Snip (name, content, cTime, mTime, " +
         " cUser, mUser, parentSnip, commentSnip, permissions, " +
         " oUser, backLinks, snipLinks, labels, attachments, viewCount, applicationOid, version " +
         " ) VALUES (?,?,?,?,?, ?,?,?,?,?, ?,?,?,?,?, ?,?)",
@@ -416,13 +456,12 @@ public class JDBCSnipStorage implements SnipStorage, CacheableStorage {
             ps.setInt(17, snip.getVersion());
           }
         });
-    return (Snip) Aspects.newInstance(snip, Snip.class);
+    return (Snip) Aspects.wrap(snip);
   }
 
   public void storageRemove(final Snip snip) {
     JDBCTemplate template = new JDBCTemplate(ds);
-    template.update(
-        "DELETE FROM Snip WHERE name=? AND applicationOid=?",
+    template.update("DELETE FROM Snip WHERE name=? AND applicationOid=?",
         new PreparedStatementSetter() {
           public void setValues(PreparedStatement ps) throws SQLException {
             ps.setString(1, snip.getName());
@@ -489,7 +528,7 @@ public class JDBCSnipStorage implements SnipStorage, CacheableStorage {
 
     // Aspects.setTarget(proxy, snip);
     // return proxy;
-    snip = (Snip) Aspects.newInstance(snip, Snip.class);
+    snip = (Snip) Aspects.wrap(snip);
 
     cache.getMap(applicationOid).put(name.toUpperCase(), snip);
     return snip;
