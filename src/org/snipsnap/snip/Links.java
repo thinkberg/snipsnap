@@ -144,17 +144,23 @@ public class Links {
     StringTokenizer tokenizer = new StringTokenizer(links, "|");
     while (tokenizer.hasMoreTokens()) {
       String urlString = tokenizer.nextToken();
-      Integer count = getCount(urlString);
-      String url = getUrl(urlString);
-      for (int c = 0; c < url.length(); c++) {
-        char ch = urlString.charAt(c);
-        if (ch < 0x20 && !(ch == 0x0a || ch == 0x0d || ch == 0x09)) {
-          errors = true;
-          Logger.warn("ignoring '" + urlString + "' while deserializing: illegal character");
-          break;
+      try {
+        Integer count = getCount(urlString);
+        String url = getUrl(urlString);
+        for (int c = 0; c < url.length(); c++) {
+          char ch = urlString.charAt(c);
+          if (ch < 0x20 && !(ch == 0x0a || ch == 0x0d || ch == 0x09)) {
+            errors = true;
+            Logger.warn("ignoring '" + urlString + "' while deserializing: illegal character");
+            break;
+          }
         }
+        linkcounts.put(url, count);
+      } catch (Exception e) {
+        errors = true;
+        Logger.warn("ignoring '"+urlString+"' while deserializing, format errors");
+        break;
       }
-      linkcounts.put(url, count);
     }
     // make sure correct data is in the cache
     if (errors) {

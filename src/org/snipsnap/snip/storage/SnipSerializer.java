@@ -172,9 +172,9 @@ public class SnipSerializer extends SerializerSupport {
       if (SNIP_NAME.equals(element)) {
 //        System.out.println("SnipSerializer.deserialize(" + value + ")");
         snip.setName(value);
-      } else if (SNIP_CTIME.equals(element)) {
+      } else if (SNIP_CTIME.equals(element) && !"".equals(value)) {
         snip.setCTime(new Timestamp(Long.parseLong(value)));
-      } else if (SNIP_MTIME.equals(element)) {
+      } else if (SNIP_MTIME.equals(element) && !"".equals(value)) {
         snip.setMTime(new Timestamp(Long.parseLong(value)));
       } else if (SNIP_CUSER.equals(element)) {
         if (null == snip.getOUser() || "".equals(snip.getOUser())) {
@@ -209,11 +209,11 @@ public class SnipSerializer extends SerializerSupport {
         } else {
           snip.setAttachments(new Attachments(value));
         }
-      } else if (SNIP_VIEWCOUNT.equals(element)) {
+      } else if (SNIP_VIEWCOUNT.equals(element) && !"".equals(value)) {
         snip.setViewCount(Integer.parseInt(value));
       } else if (SNIP_CONTENT.equals(element)) {
         snip.setContent(value);
-      } else if (SNIP_VERSION.equals(element)) {
+      } else if (SNIP_VERSION.equals(element) && !"".equals(value)) {
         snip.setVersion(Integer.parseInt(value));
       } else if (SNIP_APPLICATION.equals(element)) {
         snip.setApplication(value);

@@ -186,7 +186,13 @@ public class XMLSnipImport {
         snip = snipSerializer.deserialize(snipMap, snip);
         restoreVersions(snipElement, snip, (flags & OVERWRITE) != 0);
         snip.getBackLinks().getSize();
-        space.systemStore(snip);
+        // ensure that the configuration snip is stored normally
+        // so the configuration is updated
+        if(Configuration.SNIPSNAP_CONFIG.equals(snip.getName())) {
+          space.store(snip);
+        } else {
+          space.systemStore(snip);
+        }
         getStatus().inc();
       }
     }
