@@ -34,10 +34,12 @@ import org.snipsnap.config.Globals;
 import org.snipsnap.config.InitializeDatabase;
 import org.snipsnap.container.Components;
 import org.snipsnap.net.filter.MultipartWrapper;
+import org.snipsnap.net.FileUploadServlet;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.XMLSnipExport;
 import org.snipsnap.snip.XMLSnipImport;
+import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.snip.storage.JDBCSnipStorage;
 import org.snipsnap.snip.storage.JDBCUserStorage;
 import org.snipsnap.user.User;
@@ -311,7 +313,6 @@ public class ConfigureServlet extends HttpServlet {
               Snip configSnip = space.load(Configuration.SNIPSNAP_CONFIG);
               configSnip.setContent(new String(configStream.toString("UTF-8")));
               space.store(configSnip);
-              session.removeAttribute(ATT_CONFIG);
             }
           }
         } else {
@@ -327,6 +328,9 @@ public class ConfigureServlet extends HttpServlet {
       session.setAttribute(ATT_STEPS, steps);
       RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/configure.jsp");
       dispatcher.forward(request, response);
+      if(config.isConfigured()) {
+        session.removeAttribute(ATT_CONFIG);
+      }
       return;
     }
     session.removeAttribute(ATT_CONFIG);
@@ -385,31 +389,44 @@ public class ConfigureServlet extends HttpServlet {
     return steps;
   }
 
+  private FileUploadServlet uploader = new FileUploadServlet();
+
   private void setupApplication(HttpServletRequest request, Configuration config, Map errors, List steps) {
     config.setName(request.getParameter(Configuration.APP_NAME));
     config.setTagline(request.getParameter(Configuration.APP_TAGLINE));
     if (request instanceof MultipartWrapper) {
-      MultipartWrapper mpRequest = (MultipartWrapper) request;
       try {
-        String fileName = mpRequest.getFileName(Configuration.APP_LOGO);
-        if (fileName != null && !"".equals(fileName)) {
-          String logoFileName = mpRequest.getFileName(Configuration.APP_LOGO);
-          String logoFileType = mpRequest.getFileContentType(Configuration.APP_LOGO);
-          if (logoFileType.startsWith("image")) {
-            InputStream logoFileIs = mpRequest.getFileInputStream(Configuration.APP_LOGO);
-            File root = new File(getServletContext().getRealPath("/images"));
-            FileOutputStream imageOut = new FileOutputStream(new File(root, logoFileName));
-            byte buffer[] = new byte[8192];
-            int len = 0;
-            while ((len = logoFileIs.read(buffer)) != -1) {
-              imageOut.write(buffer, 0, len);
+        if (config.isConfigured()) {
+          SnipSpace space = SnipSpaceFactory.getInstance();
+          Snip snip = space.load(Configuration.SNIPSNAP_CONFIG);
+          uploader.uploadFile(request, snip, config.getFilePath());
+          config.setLogo(((MultipartWrapper) request).getFileName("file"));
+        } else {
+          MultipartWrapper mpRequest = (MultipartWrapper) request;
+          String fileName = mpRequest.getFileName("file");
+          if (fileName != null && !"".equals(fileName)) {
+            String logoFileName = mpRequest.getFileName("file");
+            String logoFileType = mpRequest.getFileContentType("file");
+            if (logoFileType.startsWith("image")) {
+              InputStream logoFileIs = mpRequest.getFileInputStream("file");
+              File root = new File(getServletContext().getRealPath("/images"));
+              File logoFile = new File(root, logoFileName);
+              FileOutputStream imageOut = new FileOutputStream(logoFile);
+              byte buffer[] = new byte[8192];
+              int len = 0;
+              while ((len = logoFileIs.read(buffer)) != -1) {
+                imageOut.write(buffer, 0, len);
+              }
+              imageOut.close();
+              logoFileIs.close();
+              config.setLogo(logoFileName);
+              config.set(InitializeDatabase.LOGO_FILE, logoFile.getPath());
+              config.set(InitializeDatabase.LOGO_FILE_TYPE, logoFileType);
+            } else {
+              errors.put(Configuration.APP_LOGO, Configuration.APP_LOGO + ".type");
             }
-            imageOut.close();
-            logoFileIs.close();
-            config.setLogo(logoFileName);
-          } else {
-            errors.put(Configuration.APP_LOGO, Configuration.APP_LOGO + ".type");
           }
+
         }
       } catch (IOException e) {
         errors.put(Configuration.APP_LOGO, Configuration.APP_LOGO);
@@ -432,11 +449,13 @@ public class ConfigureServlet extends HttpServlet {
       }
       request.getSession().setAttribute(ATT_USAGE, "custom");
     }
+
     String name = config.getName();
     if (null == name || "".equals(name)) {
       errors.put(Configuration.APP_NAME, Configuration.APP_NAME);
     }
   }
+
 
   private void setupTheme(HttpServletRequest request, HttpServletResponse response, Configuration config, Map errors) {
     config.setTheme(request.getParameter(Configuration.APP_THEME));
@@ -539,7 +558,7 @@ public class ConfigureServlet extends HttpServlet {
     config.setMailHost(mailHost);
     if (null != mailHost && !"".equals(mailHost)) {
       try {
-        // check host name/address
+// check host name/address
         final InetAddress address = InetAddress.getByName(mailHost);
         Socket socket = new Socket();
         try {
@@ -567,7 +586,7 @@ public class ConfigureServlet extends HttpServlet {
     config.setMailPop3Host(pop3Host);
     if (null != pop3Host && !"".equals(pop3Host)) {
       try {
-        // check host name/address
+// check host name/address
         final InetAddress address = InetAddress.getByName(pop3Host);
         Socket socket = new Socket();
         try {
@@ -627,7 +646,7 @@ public class ConfigureServlet extends HttpServlet {
       }
     }
     String realPath = request.getParameter(Configuration.APP_REAL_PATH);
-    if(null != realPath && !"".equals(realPath)) {
+    if (null != realPath && !"".equals(realPath)) {
       realPath = realPath.trim();
       config.setRealPath(realPath.startsWith("/") ? realPath : "/" + realPath);
     }
@@ -660,7 +679,7 @@ public class ConfigureServlet extends HttpServlet {
     config.setEncoding(encoding != null && encoding.length() > 0 ? encoding : "UTF-8");
   }
 
-  // SETUP TIME
+// SETUP TIME
   private void importDatabase(HttpServletRequest request, Configuration config, Map errors) {
     MultipartWrapper req = (MultipartWrapper) request;
 
@@ -727,7 +746,7 @@ public class ConfigureServlet extends HttpServlet {
     List snips = null;
 
     String exportMatch = request.getParameter("export.match");
-    if(null == exportMatch) {
+    if (null == exportMatch) {
       exportMatch = "";
     }
     request.setAttribute("exportMatch", exportMatch);
@@ -744,7 +763,7 @@ public class ConfigureServlet extends HttpServlet {
         request.setAttribute("exportTypeUsers", "true");
       }
       if ("snips".equals(exportTypes[i])) {
-        if(null != exportMatch && !"".equals(exportMatch)) {
+        if (null != exportMatch && !"".equals(exportMatch)) {
           snips = Arrays.asList(space.match(exportMatch));
         } else {
           snips = space.getAll();
@@ -786,7 +805,7 @@ public class ConfigureServlet extends HttpServlet {
 
   }
 
-  // SPECIAL FIRST TIME INSTALLATIONS
+// SPECIAL FIRST TIME INSTALLATIONS
   /**
    * Set up the database which is the central data store
    * @param request
@@ -800,7 +819,7 @@ public class ConfigureServlet extends HttpServlet {
     if ("file".equals(database)) {
       config.setFileStore(request.getParameter(Globals.APP_FILE_STORE));
       File fileStore = new File(config.getGlobal(Globals.APP_FILE_STORE));
-      if(checkPath(config.getGlobal(Globals.APP_FILE_STORE))) {
+      if (checkPath(config.getGlobal(Globals.APP_FILE_STORE))) {
         fileStore.mkdirs();
       } else {
         errors.put(Globals.APP_FILE_STORE, Globals.APP_FILE_STORE);
@@ -835,8 +854,8 @@ public class ConfigureServlet extends HttpServlet {
           createInternalDatabase(config);
         }
 
-        // initialize storages
-        // TODO: make generic or check for type of storage
+// initialize storages
+// TODO: make generic or check for type of storage
         JDBCApplicationStorage.createStorage();
         JDBCSnipStorage.createStorage();
         JDBCVersionStorage.createStorage();
@@ -868,10 +887,10 @@ public class ConfigureServlet extends HttpServlet {
 
   private static void createInternalDatabase(Globals config) throws IOException, SQLException {
     System.err.println("creating internal database");
-    // create directories
+// create directories
     File dbDir = new File(config.getWebInfDir(), "mckoidb");
     dbDir.mkdir();
-    // store default configurationn file
+// store default configurationn file
     File dbConfFile = new File(config.getWebInfDir(), "mckoidb.conf");
     Properties dbConf = new Properties();
     System.err.println("Creating internal database config file: " + dbConfFile.toString());

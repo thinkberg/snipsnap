@@ -75,7 +75,7 @@ public class FileUploadServlet extends HttpServlet {
     String snipName = request.getParameter("name");
     Configuration config = Application.get().getConfiguration();
 
-    if(null == snipName) {
+    if (null == snipName) {
       response.sendRedirect(config.getUrl());
       return;
     }
@@ -93,35 +93,8 @@ public class FileUploadServlet extends HttpServlet {
       File filePath = config.getFilePath();
 
       if (request.getParameter("upload") != null) {
-        MultipartWrapper wrapper = (MultipartWrapper) request;
-        String fileName = wrapper.getParameter("filename");
-        String contentType = wrapper.getParameter("mimetype");
-        if(null == contentType || contentType.length() == 0) {
-          contentType = wrapper.getFileContentType("file");
-        }
         try {
-          // make sure the file name does not contain slashes or backslashes
-          if (null == fileName || fileName.length() == 0) {
-            fileName = getCanonicalFileName(wrapper.getFileName("file"));
-          } else {
-            fileName = getCanonicalFileName(fileName);
-          }
-
-          InputStream fileInputStream = wrapper.getFileInputStream("file");
-          if (fileInputStream != null && fileName != null && fileName.length() > 0 && contentType != null) {
-            File relativeFileLocation = new File(snip.getName(), fileName);
-            File file = new File(filePath, relativeFileLocation.getPath());
-
-            // check and create the directory, where to store the snip attachments
-            if (!file.getParentFile().isDirectory()) {
-              file.getParentFile().mkdirs();
-            }
-            Logger.log(Logger.DEBUG, "Uploading '" + relativeFileLocation.getName() + "' to '" + file.getCanonicalPath() + "'");
-            int size = storeAttachment(file, fileInputStream);
-            snip.getAttachments().addAttachment(relativeFileLocation.getName(),
-                                                contentType, size, relativeFileLocation.getPath());
-            SnipSpaceFactory.getInstance().store(snip);
-          }
+          uploadFile(request, snip, filePath);
         } catch (IOException e) {
           request.setAttribute("error", "I/O Error while uploading.");
           e.printStackTrace();
@@ -133,7 +106,7 @@ public class FileUploadServlet extends HttpServlet {
           Attachments attachments = snip.getAttachments();
           for (int fileNo = 0; fileNo < files.length; fileNo++) {
             Attachment attachment = attachments.getAttachment(files[fileNo]);
-            if(null != attachment) {
+            if (null != attachment) {
               File file = new File(filePath, attachment.getLocation());
               file.delete();
               attachments.removeAttachment(attachment);
@@ -151,6 +124,37 @@ public class FileUploadServlet extends HttpServlet {
     request.setAttribute("snip_name", snipName);
     RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/upload.jsp");
     dispatcher.forward(request, response);
+  }
+
+  public void uploadFile(HttpServletRequest request, Snip snip, File filePath) throws IOException {
+    MultipartWrapper wrapper = (MultipartWrapper) request;
+    String fileName = wrapper.getParameter("filename");
+    String contentType = wrapper.getParameter("mimetype");
+    if (null == contentType || contentType.length() == 0) {
+      contentType = wrapper.getFileContentType("file");
+    }
+    // make sure the file name does not contain slashes or backslashes
+    if (null == fileName || fileName.length() == 0) {
+      fileName = getCanonicalFileName(wrapper.getFileName("file"));
+    } else {
+      fileName = getCanonicalFileName(fileName);
+    }
+
+    InputStream fileInputStream = wrapper.getFileInputStream("file");
+    if (fileInputStream != null && fileName != null && fileName.length() > 0 && contentType != null) {
+      File relativeFileLocation = new File(snip.getName(), fileName);
+      File file = new File(filePath, relativeFileLocation.getPath());
+
+      // check and create the directory, where to store the snip attachments
+      if (!file.getParentFile().isDirectory()) {
+        file.getParentFile().mkdirs();
+      }
+      Logger.log(Logger.DEBUG, "Uploading '" + relativeFileLocation.getName() + "' to '" + file.getCanonicalPath() + "'");
+      int size = storeAttachment(file, fileInputStream);
+      snip.getAttachments().addAttachment(relativeFileLocation.getName(),
+                                          contentType, size, relativeFileLocation.getPath());
+      SnipSpaceFactory.getInstance().store(snip);
+    }
   }
 
   // make file name pure without the path

@@ -57,8 +57,8 @@ public class InitializeDatabase {
   private static ThreadLocal output = new ThreadLocal();
 
   private static void message(String message) {
-    if(null != output.get()) {
-      PrintWriter writer = (PrintWriter)output.get();
+    if (null != output.get()) {
+      PrintWriter writer = (PrintWriter) output.get();
       writer.println("[" + Application.get().getConfiguration().getName() + "] " + message);
       writer.flush();
     }
@@ -73,14 +73,14 @@ public class InitializeDatabase {
     ApplicationManager appManager = (ApplicationManager) Components.getComponent(ApplicationManager.class);
     Collection prefixes = appManager.getPrefixes();
 
-    if(prefixes != null && prefixes.contains(config.getPrefix())) {
-      throw new Exception("the prefix "+config.getPrefix()+" already exists");
+    if (prefixes != null && prefixes.contains(config.getPrefix())) {
+      throw new Exception("the prefix " + config.getPrefix() + " already exists");
     }
 
     Properties prefixProps = appManager.createApplication(config.getName(), config.getPrefix());
     String appOid = prefixProps.getProperty(ApplicationStorage.OID);
     try {
-      message("created application oid: "+appOid);
+      message("created application oid: " + appOid);
       app.storeObject(Application.OID, appOid);
 
       new File(config.getFileStore()).mkdirs();
@@ -114,7 +114,7 @@ public class InitializeDatabase {
       createConfigSnipFromFile(Configuration.SNIPSNAP_CONFIG_WIKI, "/defaults/intermap.txt", space);
 
       File themeTemplateDir = new File(config.getWebInfDir(), "themes");
-      XMLSnipImport.load(new FileInputStream(new File(themeTemplateDir, "SnipSnap-Theme-"+config.getTheme()+".snip")),
+      XMLSnipImport.load(new FileInputStream(new File(themeTemplateDir, "SnipSnap-Theme-" + config.getTheme() + ".snip")),
                          XMLSnipImport.OVERWRITE | XMLSnipImport.IMPORT_SNIPS);
 
       postFirstBlog(config, space);
@@ -159,15 +159,33 @@ public class InitializeDatabase {
     space.getBlog().post(weblogPost, title);
   }
 
+  public final static String LOGO_FILE = "_logofile";
+  public final static String LOGO_FILE_TYPE = "_logofiletype";
 
   private static void storeConfiguration(Configuration config, SnipSpace space) throws IOException {
+    String logoFileName = config.get(LOGO_FILE);
+    String logoFileType = config.get(LOGO_FILE_TYPE);
+    config.getProperties().remove(LOGO_FILE);
+    config.getProperties().remove(LOGO_FILE_TYPE);
+
     message("creating configuration snip '" + Configuration.SNIPSNAP_CONFIG + "'");
     config.setConfigured("true");
     ByteArrayOutputStream configStream = new ByteArrayOutputStream();
     config.store(configStream);
-    createConfigSnip(Configuration.SNIPSNAP_CONFIG,
-                     new String(configStream.toString("UTF-8")),
-                     space);
+    Snip configSnip = createConfigSnip(Configuration.SNIPSNAP_CONFIG,
+                                       new String(configStream.toString("UTF-8")),
+                                       space);
+    String logo = config.getLogo();
+    if (logoFileName != null && !"".equals(logoFileName)) {
+      File logoFile = new File(logoFileName);
+      File relativeFileLocation = new File(new File(Configuration.SNIPSNAP_CONFIG), logo);
+      new File(config.getFilePath(), Configuration.SNIPSNAP_CONFIG).mkdirs();
+      File attFile = new File(config.getFilePath(), relativeFileLocation.getPath());
+      logoFile.renameTo(attFile);
+      configSnip.getAttachments().addAttachment(logo, logoFileType, attFile.length(),
+                                                relativeFileLocation.getPath());
+      space.store(configSnip);
+    }
   }
 
   private static User createAdministrator(Configuration config) {

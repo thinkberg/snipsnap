@@ -29,7 +29,7 @@
     <td><fmt:message key="config.app.logo.text"/></td>
     <td>
       <fmt:message key="config.app.logo"/><br/>
-      <input type="file" name="app.logo" value="<c:out value='${newconfig.logo}'/>" accept="image/*">
+      <input type="file" name="file" value="<c:out value='${newconfig.logo}'/>" accept="image/*">
       <c:if test="${!empty errors['app.logo']}"><img src="images/attention.jpg"></c:if>
     </td>
   </tr>
