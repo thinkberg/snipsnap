@@ -26,6 +26,7 @@ package org.snipsnap.jsp;
 
 import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
 import org.radeox.util.logging.Logger;
+import org.radeox.util.Encoder;
 import org.snipsnap.semanticweb.DublinCore;
 import org.snipsnap.snip.Snip;
 
@@ -60,7 +61,7 @@ public class DublinCoreTag extends TagSupport {
             out.print("<dc:");
             out.print(name.toLowerCase());
             out.print(">");
-            out.print(value);
+            out.print(Encoder.escape(value));
             out.print("</dc:");
             out.print(name);
             out.println(">");
@@ -74,7 +75,7 @@ public class DublinCoreTag extends TagSupport {
             out.print("<meta name=\"DC.");
             out.print(capitalize(name));
             out.print("\" content=\"");
-            out.print(value);
+            out.print(Encoder.escape(value));
             out.println("\"/>");
           }
         }
