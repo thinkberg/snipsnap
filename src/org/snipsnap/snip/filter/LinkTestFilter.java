@@ -22,6 +22,8 @@ import org.apache.oro.text.regex.Util;
 
 import java.net.URLEncoder;
 
+import com.neotis.util.Transliterate;
+
 public class LinkTestFilter extends Filter {
 
   LinkTester linkTester;
@@ -31,9 +33,11 @@ public class LinkTestFilter extends Filter {
   Pattern pattern = null;
   PatternCompiler compiler = new Perl5Compiler();
   String _substitute;
+  Transliterate trans;
 
   public LinkTestFilter(LinkTester linkTester) {
     this.linkTester = linkTester;
+    trans = new Transliterate("romaji.properties");
 
     try {
       pattern = compiler.compile("\\[(.*?)\\]");
@@ -57,17 +61,25 @@ public class LinkTestFilter extends Filter {
       // Since we're still in the loop, fetch match that was found.
       result = matcher.getMatch();
       buffer.append(input.substring(lastmatch, result.beginOffset(0)));
+      String key = result.group(1);
+      if(key.startsWith("&#")) {
+	key = trans.nativeToAscii(key);
+      }
 
-      if(linkTester.exists(result.group(1))) {
-        buffer.append("<a href=\"");
-        buffer.append("/space/");
-        buffer.append(URLEncoder.encode(result.group(1)));
-        buffer.append("\">").append(result.group(1)).append("</a>");
+      if(key != null) {
+        if(linkTester.exists(key)) {
+          buffer.append("<a href=\"");
+          buffer.append("/space/");
+          buffer.append(URLEncoder.encode(key));
+          buffer.append("\">").append(result.group(1)).append("</a>");
+        } else {
+          buffer.append("[create <a href=\"");
+          buffer.append("/exec/edit?name=");
+          buffer.append(URLEncoder.encode(key));
+          buffer.append("\">").append(result.group(1)).append("</a>]");
+        }
       } else {
-        buffer.append("[create <a href=\"");
-        buffer.append("/exec/edit?name=");
-        buffer.append(URLEncoder.encode(result.group(1)));
-        buffer.append("\">").append(result.group(1)).append("</a>]");
+	buffer.append(result.group(1)).append("*link error*");
       }
 
 
