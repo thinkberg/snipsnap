@@ -34,9 +34,9 @@
 
 package com.neotis.snip.filter;
 
-import com.neotis.snip.filter.regex.RegexTokenFilter;
-import com.neotis.snip.filter.macro.*;
 import com.neotis.snip.Snip;
+import com.neotis.snip.filter.macro.*;
+import com.neotis.snip.filter.regex.RegexTokenFilter;
 import org.apache.oro.text.regex.MatchResult;
 
 import java.util.HashMap;
@@ -45,28 +45,32 @@ import java.util.StringTokenizer;
 
 public class MacroFilter extends RegexTokenFilter {
 
-  private Map macros = new HashMap();
+  private static Map macros;
 
   public MacroFilter() {
     // @TODO replace with singleton/static
     super("\\{([^:}]*):?(.*?)\\}(.*?)\\{(\\1)\\}", SINGLELINE);
     addRegex("\\{([^:}]*):?(.*?)\\}", "", MULTILINE);
 
-    add(new LinkMacro());
-    add(new AnnotationMacro());
-    add(new CodeMacro());
-    add(new IsbnMacro());
-    add(new ApiMacro());
-    add(new TableMacro());
-    add(new UserSnipMacro());
-    add(new RecentSnipMacro());
-    add(new UserMacro());
-    add(new SearchMacro());
-    add(new WeblogMacro());
-    add(new IndexSnipMacro());
-    add(new ImageMacro());
+    synchronized(this) {
+      if (null == macros) {
+        macros = new HashMap();
+        add(new LinkMacro());
+        add(new AnnotationMacro());
+        add(new CodeMacro());
+        add(new IsbnMacro());
+        add(new ApiMacro());
+        add(new TableMacro());
+        add(new UserSnipMacro());
+        add(new RecentSnipMacro());
+        add(new UserMacro());
+        add(new SearchMacro());
+        add(new WeblogMacro());
+        add(new IndexSnipMacro());
+        add(new ImageMacro());
+      }
+    }
   }
-
 
   public void add(Macro macro) {
     macros.put(macro.getName(), macro);

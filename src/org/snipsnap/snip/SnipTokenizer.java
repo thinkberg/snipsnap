@@ -16,7 +16,7 @@ import java.io.Reader;
 
 public final class SnipTokenizer extends Tokenizer {
 
-  public SnipTokenizer(Reader in) {
+  public SnipTokenizer(String field, Reader in) {
     input = in;
   }
 

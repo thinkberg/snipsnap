@@ -13,7 +13,7 @@ import java.io.Reader;
 
 public final class SnipAnalyzer extends Analyzer {
 
-  public final TokenStream tokenStream(Reader reader) {
-    return new SnipTokenizer(reader);
+  public final TokenStream tokenStream(String field, Reader reader) {
+    return new SnipTokenizer(field, reader);
   }
 }
