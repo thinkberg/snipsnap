@@ -116,7 +116,7 @@ public class UserManager implements Loader {
     if(user == null) {
       System.out.println("new robot found: "+address+" '"+name+"'");
       //user = new User(name, name, "");
-      //robots.put(address, user);
+      robots.put(address, user);
     }
   }
 
