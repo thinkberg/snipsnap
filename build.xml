@@ -100,6 +100,7 @@
         <include name="conf/romaji.properties"/>
         <include name="conf/intermap.txt"/>
         <include name="conf/bookservices.txt"/>
+        <include name="conf/apidocs.txt"/>
         <include name="conf/snipsnap.snip"/>
         <include name="license.txt"/>
         <include name="validate.xsl"/>
