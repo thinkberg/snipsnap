@@ -27,10 +27,10 @@ package org.snipsnap.config;
 import org.snipsnap.app.Application;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.filter.FilterPipe;
-import org.snipsnap.snip.filter.ListFilter;
-import org.snipsnap.snip.filter.macro.context.SnipFilterContext;
-import org.snipsnap.snip.filter.macro.context.FilterContext;
+import org.snipsnap.render.filter.FilterPipe;
+import org.snipsnap.render.filter.ListFilter;
+import org.snipsnap.render.filter.context.SnipFilterContext;
+import org.snipsnap.render.filter.context.FilterContext;
 
 import java.io.File;
 import java.io.IOException;

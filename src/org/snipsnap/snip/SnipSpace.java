@@ -31,7 +31,7 @@ import org.snipsnap.jdbc.Finder;
 import org.snipsnap.jdbc.FinderFactory;
 import org.snipsnap.jdbc.JDBCCreator;
 import org.snipsnap.notification.Notification;
-import org.snipsnap.snip.filter.LinkTester;
+import org.snipsnap.render.filter.LinkTester;
 import org.snipsnap.snip.storage.JDBCSnipStorage;
 import org.snipsnap.snip.storage.MemorySnipStorage;
 import org.snipsnap.snip.storage.SnipStorage;

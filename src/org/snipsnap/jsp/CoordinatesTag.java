@@ -46,7 +46,7 @@ public class CoordinatesTag extends TagSupport {
       if (null != coordinates) {
         out.print("<meta name=\"ICBM\" content=\"");
         out.print(coordinates);
-        out.print("\">");
+        out.print("\"/>");
       }
     } catch (IOException e) {
       System.err.println("CoordinatesTag: unable print to JSP writer: " + e);

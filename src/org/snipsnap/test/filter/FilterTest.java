@@ -29,9 +29,9 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipImpl;
-import org.snipsnap.snip.filter.BoldFilter;
-import org.snipsnap.snip.filter.Filter;
-import org.snipsnap.snip.filter.ItalicFilter;
+import org.snipsnap.render.filter.BoldFilter;
+import org.snipsnap.render.filter.Filter;
+import org.snipsnap.render.filter.ItalicFilter;
 
 public class FilterTest extends TestCase {
   public FilterTest(String name) {

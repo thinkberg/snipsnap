@@ -28,7 +28,7 @@ package org.snipsnap.snip;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.serialization.StringBufferWriter;
-import org.snipsnap.snip.filter.EscapeFilter;
+import org.snipsnap.render.filter.EscapeFilter;
 import org.snipsnap.util.URLEncoderDecoder;
 import org.snipsnap.util.log.Logger;
 

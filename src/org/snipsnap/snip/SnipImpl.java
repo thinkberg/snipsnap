@@ -25,7 +25,9 @@
 package org.snipsnap.snip;
 
 import org.snipsnap.app.Application;
-import org.snipsnap.snip.filter.SnipFormatter;
+import org.snipsnap.render.RenderEngine;
+import org.snipsnap.render.filter.context.SnipFilterContext;
+import org.snipsnap.render.filter.context.FilterContext;
 import org.snipsnap.snip.label.Labels;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.User;
@@ -354,8 +356,12 @@ public class SnipImpl implements Snip {
   }
 
   public String toXML() {
+
     long start = Application.get().start();
-    String xml = SnipFormatter.toXML((Snip) Aspects.getThis(), getContent());
+
+    FilterContext context = new SnipFilterContext((Snip) Aspects.getThis());
+    String xml = RenderEngine.getInstance().render(content, context);
+
     //String xml = SnipFormatter.toXML(this, getContent());
     Application.get().stop(start, "Formatting " + name);
     return xml;

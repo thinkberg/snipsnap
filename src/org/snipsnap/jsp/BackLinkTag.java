@@ -27,7 +27,7 @@ package org.snipsnap.jsp;
 import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
 import org.snipsnap.snip.Links;
 import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.filter.links.BackLinks;
+import org.snipsnap.render.filter.links.BackLinks;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
