@@ -1,5 +1,8 @@
-0.3.2
+0.3.3
 
+0.3.2 - 2003-01-10
+
+- Added feature: geoURL support, add app.geoCoordinates=x.x, y.y
 - Fixed bug: Weblog dates use app.locale (e.g. app.locale=de, default is "en")
 - Fixed bug: XML feeds (RSD, RSS) should no be legal UTF-8
 - Developer: Refactored Snip to use interface and introduced interceptors (AOP)

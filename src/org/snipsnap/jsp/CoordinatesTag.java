@@ -42,7 +42,7 @@ public class CoordinatesTag extends TagSupport {
       JspWriter out = pageContext.getOut();
       Application app = Application.get();
       String coordinates = app.getConfiguration().getCoordinates();
-      System.err.println("Coordinates="+coordinates);
+      //System.err.println("Coordinates="+coordinates);
       if (null != coordinates) {
         out.print("<meta name=\"ICBM\" content=\"");
         out.print(coordinates);

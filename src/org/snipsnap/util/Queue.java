@@ -28,6 +28,7 @@ import org.snipsnap.snip.Snip;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Iterator;
 
 /**
  * Queue implementation for Snips.
@@ -49,7 +50,14 @@ public class Queue {
   }
 
   public Snip add(Snip snip) {
+    System.err.println("Adding snip="+snip);
+    Iterator iterator = queue.iterator();
+    while (iterator.hasNext()) {
+      Snip snip1 = (Snip) iterator.next();
+      System.err.println("content="+snip1);
+    }
     if (queue.contains(snip)) {
+      System.err.println("Removing.");
       queue.remove(snip);
     }
 

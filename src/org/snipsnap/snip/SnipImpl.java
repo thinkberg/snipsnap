@@ -57,7 +57,7 @@ public class SnipImpl implements Snip {
 
   private void init() {
     if (null == children) {
-      children = SnipSpace.getInstance().getChildren(this);
+      children = SnipSpace.getInstance().getChildren((Snip) Aspects.getThis());
     }
   }
 
@@ -65,7 +65,7 @@ public class SnipImpl implements Snip {
     this.name = name;
     this.content = content;
     this.modified = new Modified();
-    this.access = new Access(this);
+    this.access = new Access((Snip) Aspects.getThis());
   }
 
   public Access getAccess() {
@@ -231,7 +231,7 @@ public class SnipImpl implements Snip {
 
   public Comments getComments() {
     if (null == comments) {
-      comments = new Comments(this);
+      comments = new Comments((Snip) Aspects.getThis());
     }
     return comments;
   }
@@ -246,7 +246,7 @@ public class SnipImpl implements Snip {
   public void addSnip(Snip snip) {
     init();
     if (!children.contains(snip)) {
-      snip.setParent(this);
+      snip.setParent((Snip) Aspects.getThis());
       children.add(snip);
       SnipSpace.getInstance().systemStore(snip);
     }
@@ -285,10 +285,10 @@ public class SnipImpl implements Snip {
     if (parentSnip == this.parent) return;
 
     if (null != this.parent) {
-      this.parent.removeSnip(this);
+      this.parent.removeSnip((Snip) Aspects.getThis());
     }
     this.parent = parentSnip;
-    parentSnip.addSnip(this);
+    parentSnip.addSnip((Snip) Aspects.getThis());
   }
 
   public String getName() {
@@ -335,8 +335,8 @@ public class SnipImpl implements Snip {
 
   public String toXML() {
     long start = Application.get().start();
-    //String xml = SnipFormatter.toXML((Snip) Aspects.getThis(), getContent());
-    String xml = SnipFormatter.toXML(this, getContent());
+    String xml = SnipFormatter.toXML((Snip) Aspects.getThis(), getContent());
+    //String xml = SnipFormatter.toXML(this, getContent());
     Application.get().stop(start, "Formatting " + name);
     return xml;
   }
@@ -359,5 +359,17 @@ public class SnipImpl implements Snip {
   public Writer appendTo(Writer s) throws IOException {
     s.write(getXMLContent());
     return s;
+  }
+
+  public int hashCode() {
+    return this.name.hashCode();
+  }
+
+  public boolean equals(Object obj) {
+    if (! (obj instanceof Snip)) {
+      return false;
+    }
+
+    return ((Snip) obj).getName().equals((this.name));
   }
 }

@@ -16,6 +16,7 @@
     <docs>http://api.blogger.com/api/</docs>
     <notes>SnipSnap partially supports Blogger API. SnipSnap will support other XML-RPC and SOAP APIs in the future.</notes>
   </settings>
+  </api>
   </apis>
 </service>
 </rsd>

@@ -36,8 +36,8 @@ import org.snipsnap.interceptor.Aspects;
 
 public class SnipFactory {
   public static Snip createSnip(String name, String content) {
-    return new SnipImpl(name,content);
-    // return (Snip) Aspects.newInstance(new SnipImpl(name, content), Snip.class);
+    //return new SnipImpl(name,content);
+    return (Snip) Aspects.newInstance(new SnipImpl(name, content), Snip.class);
   }
 
 }
