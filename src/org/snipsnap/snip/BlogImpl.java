@@ -25,6 +25,8 @@
 
 package org.snipsnap.snip;
 
+import dynaop.Proxy;
+import dynaop.ProxyAware;
 import org.snipsnap.app.Application;
 import org.snipsnap.date.Month;
 import org.snipsnap.semanticweb.rss.Rssify;
@@ -33,10 +35,9 @@ import org.snipsnap.user.Roles;
 import org.snipsnap.xmlrpc.WeblogsPing;
 
 import java.sql.Date;
-import java.util.*;
-
-import dynaop.ProxyAware;
-import dynaop.Proxy;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 /**
  * BlogImpl for Blog.
@@ -93,11 +94,11 @@ public class BlogImpl implements Blog, ProxyAware {
       // how many children do exist?
       // get the highest count
       // e.g. start/2003-05-06
-      snip = snip = space.create(snipName + "/" + (max+1), content);
+      snip = snip = space.create(snipName + "/" + (max + 1), content);
     } else {
       // there was a post with a least /1 then add to that post
       if (max != 0) {
-         snipName = snipName + "/" + max;
+        snipName = snipName + "/" + max;
       }
       if (space.exists(snipName)) {
         snip = space.load(snipName);
@@ -117,7 +118,7 @@ public class BlogImpl implements Blog, ProxyAware {
   }
 
   private int findMaxPost(String snipName) {
-    Snip[] existing = space.match(snipName+"/");
+    Snip[] existing = space.match(snipName + "/");
     int max = 0;
     //System.out.println("found="+existing.length+" name="+snipName);
     for (int i = 0; i < existing.length; i++) {
@@ -143,27 +144,13 @@ public class BlogImpl implements Blog, ProxyAware {
   }
 
   public List getPosts(int count) {
-    // simpledateformat?
-    Calendar startC = new GregorianCalendar();
-    startC.setTime(new java.util.Date());
-    Calendar endC = (Calendar)startC.clone();
+    Calendar endC = new GregorianCalendar();
+    endC.setTime(new java.util.Date());
     endC.add(Calendar.DAY_OF_MONTH, 1);
-    startC.add(Calendar.MONTH, -3);
+    Calendar startC = new GregorianCalendar();
+    startC.setTimeInMillis(blog.getCTime().getTime());
 
-    //@TODO: reduce number of posts to count;
-    //@TODO: reorder snips
-    //List posts = new ArrayList();
-    //space.getChildrenDateOrder(blog, count);
-    List posts = new ArrayList();
-    //    posts.addAll(Arrays.asList(space.match(start, end)));
-    //    Collections.sort(posts, comparator);
-    // sort
-    // Add old snips of form '2005-03-01' if name == 'start'
-    if (posts.size() < count) {
-      List oldPosts = space.getByDate(blog.getName(), Month.toKey(startC), Month.toKey(endC));
-      oldPosts = oldPosts.subList(0, Math.min(oldPosts.size(), count - posts.size()));
-      posts.addAll(oldPosts);
-    }
+    List posts = space.getByDate(blog.getName(), Month.toKey(startC), Month.toKey(endC));
     return posts.subList(0, Math.min(posts.size(), count));
   }
 
