@@ -24,10 +24,15 @@
  */
 package org.snipsnap.app;
 
+import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.user.User;
 
 import javax.servlet.http.HttpSession;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The application object contains information about current users and other
@@ -39,6 +44,7 @@ public class Application {
   private static Map currentUsers;
 
   private User user;
+  private AppConfiguration config;
   private Map parameters;
 
   private static ThreadLocal instance = new ThreadLocal() {
@@ -103,7 +109,7 @@ public class Application {
     if (null == currentUsers) {
       currentUsers = new HashMap();
     }
-    currentUsers.put(session,user);
+    currentUsers.put(session, user);
   }
 
   public static List getCurrentUsers() {
@@ -119,7 +125,7 @@ public class Application {
   }
 
   public static int getGuestCount() {
-    int count=0;
+    int count = 0;
     Iterator iterator = currentUsers.values().iterator();
     while (iterator.hasNext()) {
       User user = (User) iterator.next();
@@ -136,5 +142,17 @@ public class Application {
     if (currentUsers.containsKey(session)) {
       currentUsers.remove(session);
     }
+  }
+
+  public void setConfiguration(AppConfiguration config) {
+    this.config = config;
+  }
+
+  public AppConfiguration getConfiguration() {
+    if (config == null) {
+      config = AppConfiguration.getInstance();
+      System.out.println("get new config: " + config);
+    }
+    return config;
   }
 }
