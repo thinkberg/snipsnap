@@ -105,7 +105,7 @@ public class ConfigurationProxy implements InvocationHandler {
       //System.out.print(targetMethod.getName() + "(" + (args != null ? "" + Arrays.asList(args) : "") + ") => ");
       result = targetMethod.invoke(config, args);
     }
-    System.out.println(result);
+    //System.out.println(result);
     return result;
   }
 
