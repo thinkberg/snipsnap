@@ -66,11 +66,16 @@ public class WeblogMacro extends Macro {
         Snip entry = (Snip) iterator.next();
         writer.write("<div id=\"blog-date\">");
         writer.write(Snip.toDate(entry.getName()));
+        writer.write(" <a href=\"");
+        SnipLink.appendUrl(writer, entry.getName());
+        writer.write("\" title=\"Permalink to ");
+        writer.write(entry.getName());
+        writer.write("\">");
+        SnipLink.appendImage(writer,"pl","");
+        writer.write("</a>");
         writer.write("</div>");
         writer.write(entry.getXMLContent());
         writer.write("<div id=\"snip-post-comments\">");
-        SnipLink.appendLink(writer, entry.getName(), "Permalink");
-        writer.write(" | ");
         writer.write(entry.getComments().getCommentString());
         writer.write(" | ");
         writer.write(entry.getComments().getPostString());

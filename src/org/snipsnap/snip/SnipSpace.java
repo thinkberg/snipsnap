@@ -113,7 +113,7 @@ public class SnipSpace implements LinkTester, Loader {
   }
 
   public String getETag() {
-    return eTag;
+    return "\""+eTag+"\"";
  }
 
   // A snip is changed by the user (created, stored)

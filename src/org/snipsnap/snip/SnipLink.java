@@ -27,6 +27,7 @@ package org.snipsnap.snip;
 
 import org.snipsnap.snip.filter.EscapeFilter;
 import org.snipsnap.util.URLEncoderDecoder;
+import org.snipsnap.serialization.StringBufferWriter;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
@@ -199,6 +200,14 @@ public class SnipLink {
     return appendImageWithRoot(buffer, SnipLink.IMAGES_ROOT, name, alt, "png", null);
   }
 
+  public static Writer appendImage(Writer writer, String name, String alt, String ext) throws IOException {
+    return appendImageWithRoot(writer, SnipLink.IMAGES_ROOT, name, alt, ext, null);
+  }
+
+  public static Writer appendImage(Writer writer, String name, String alt) throws IOException {
+    return appendImageWithRoot(writer, SnipLink.IMAGES_ROOT, name, alt, "png", null);
+  }
+
   public static StringBuffer appendImage(StringBuffer buffer, String name, String alt, String ext, String position) {
     return appendImageWithRoot(buffer, SnipLink.IMAGES_ROOT, name, alt, ext, position);
   }
@@ -212,8 +221,9 @@ public class SnipLink {
    * @param alt an alternative text
    * @return the string buffer
    */
-  public static StringBuffer appendImageWithRoot(StringBuffer buffer, String root,
-                                                 String name, String alt, String ext, String position) {
+  public static Writer appendImageWithRoot(Writer writer, String root, String name,
+                                           String alt, String ext, String position)
+    throws IOException {
     // extract extension or leave as is, default is to append .png
     int dotIndex = name.lastIndexOf('.');
     if (dotIndex != -1) {
@@ -227,24 +237,38 @@ public class SnipLink {
       ext = "png";
     }
 
-    buffer.append("<img src=\"");
-    buffer.append(root);
-    buffer.append("/");
-    buffer.append(name).append(".").append(ext);
-    buffer.append("\"");
+    writer.write("<img src=\"");
+    writer.write(root);
+    writer.write("/");
+    writer.write(name);
+    writer.write(".");
+    writer.write(ext);
+    writer.write("\"");
     if (alt != null) {
-      buffer.append(" alt=\"");
-      buffer.append(alt);
-      buffer.append("\"");
+      writer.write(" alt=\"");
+      writer.write(alt);
+      writer.write("\"");
     }
     if(position != null) {
-      buffer.append(" class=\"");
-      buffer.append(position);
-      buffer.append("\"");
+      writer.write(" class=\"");
+      writer.write(position);
+      writer.write("\"");
     }
-    buffer.append(" border=\"0\"/>");
+    writer.write(" border=\"0\"/>");
+    return writer;
+  }
+
+
+  public static StringBuffer appendImageWithRoot(StringBuffer buffer, String root,
+                                                  String name, String alt, String ext, String position) {
+    Writer writer = new StringBufferWriter(buffer);
+    try {
+      appendImageWithRoot(writer, root, name, alt, ext, position);
+    } catch (IOException e) {
+    }
     return buffer;
   }
+
 
   // TODO 1.4 buffer.append(URLEncoder.encode(key, "iso-8859-1"));
   public static String encode(String s) {

@@ -1,5 +1,8 @@
 0.2.8
 
+- Added Feature: Interwiki (e.g. [Wiki@MoinMoin]) reads from a standard
+  intermap file in conf/intermap.txt
+- Added Feature: {isbn} macro now reads books services from conf/bookservices.txt
 - Changed logo/validation images
 - Introduced snipsnap-copyright snip for page bottom
 - Changed semantics of {image} macro, expect images as image-name-id

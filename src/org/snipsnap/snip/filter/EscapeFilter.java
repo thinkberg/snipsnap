@@ -63,5 +63,4 @@ public class EscapeFilter extends RegexTokenFilter {
   public static String escape(int c) {
     return "&#x" + Integer.toHexString(c) + ";";
   }
-
 }

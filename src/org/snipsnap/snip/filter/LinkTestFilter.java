@@ -37,13 +37,17 @@ import org.apache.oro.text.regex.*;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.filter.interwiki.InterWiki;
 import org.snipsnap.util.Transliterate;
 import org.snipsnap.app.Application;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
+import org.snipsnap.serialization.StringBufferWriter;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.io.Writer;
+import java.io.IOException;
 
 public class LinkTestFilter extends Filter {
 
@@ -55,7 +59,6 @@ public class LinkTestFilter extends Filter {
   private PatternCompiler compiler = new Perl5Compiler();
   private String _substitute;
   private Transliterate trans;
-  private Map wikiSpaces = new HashMap();
 
   public LinkTestFilter() {
     linkTester = SnipSpace.getInstance();
@@ -66,16 +69,6 @@ public class LinkTestFilter extends Filter {
     } catch (MalformedPatternException e) {
       System.err.println("error compiling pattern: " + e);
     }
-
-    // @TODO read from config
-    wikiSpaces.put("LCOM", "http://www.langreiter.com/space/");
-    wikiSpaces.put("ESA", "http://earl.strain.at/space/");
-    wikiSpaces.put("C2", "http://www.c2.com/cgi/wiki?");
-    wikiSpaces.put("WeblogKitchen", "http://www.weblogkitchen.com/wiki.cgi?");
-    wikiSpaces.put("meatball", "http://www.usemod.com/cgi-bin/mb.pl?");
-    wikiSpaces.put("SnipSnap", "http://snipsnap.org/space/");
-
-
     // super("\\[(.*?)\\]", "<link href=\"$1\"/>");
   }
 
@@ -88,57 +81,56 @@ public class LinkTestFilter extends Filter {
 
     // Loop until there are no more matches left.
     MatchResult result;
-    while (matcher.contains(patternMatcherInput, pattern)) {
-      // Since we're still in the loop, fetch match that was found.
-      result = matcher.getMatch();
-      buffer.append(input.substring(lastmatch, result.beginOffset(0)));
-      String targetSnip = result.group(1);
-      if (targetSnip.startsWith("&#")) {
-        targetSnip = trans.nativeToAscii(targetSnip);
-      }
-
-      if (targetSnip != null) {
-        int colonIndex = targetSnip.indexOf(':');
-        int atIndex = targetSnip.indexOf('@');
-        // typed link ?
-        if (-1 != colonIndex) {
-          // for now throw away the type information
-          targetSnip = targetSnip.substring(colonIndex + 1);
+    Writer writer = new StringBufferWriter(buffer);
+    try {
+      while (matcher.contains(patternMatcherInput, pattern)) {
+        // Since we're still in the loop, fetch match that was found.
+        result = matcher.getMatch();
+        buffer.append(input.substring(lastmatch, result.beginOffset(0)));
+        String targetSnip = result.group(1);
+        if (targetSnip.startsWith("&#")) {
+          targetSnip = trans.nativeToAscii(targetSnip);
         }
-        // external link ?
-        if (-1 != atIndex) {
-          String extSpace = targetSnip.substring(atIndex + 1);
-          // known extarnal space ?
-          if (wikiSpaces.containsKey(extSpace)) {
-            targetSnip = targetSnip.substring(0, atIndex);
-            buffer.append("<a href=\"");
-            buffer.append(wikiSpaces.get(extSpace));
-            buffer.append(SnipLink.encode(targetSnip));
-            buffer.append("\">");
-            buffer.append(targetSnip);
-            buffer.append("@");
-            buffer.append(extSpace);
-            buffer.append("</a>");
-          } else {
-            buffer.append(result.group(1)).append("*link error*");
+
+        if (targetSnip != null) {
+          int colonIndex = targetSnip.indexOf(':');
+          int atIndex = targetSnip.indexOf('@');
+          // typed link ?
+          if (-1 != colonIndex) {
+            // for now throw away the type information
+            targetSnip = targetSnip.substring(colonIndex + 1);
           }
-          // internal link
+          // external link ?
+          if (-1 != atIndex) {
+            String extSpace = targetSnip.substring(atIndex + 1);
+            // known extarnal space ?
+            InterWiki interWiki = InterWiki.getInstance();
+            if (interWiki.contains(extSpace)) {
+              targetSnip = targetSnip.substring(0, atIndex);
+              interWiki.expand(writer, extSpace, targetSnip);
+            } else {
+              buffer.append(result.group(1)).append("*link error*");
+            }
+            // internal link
+          } else {
+            Application app = Application.get();
+            if (linkTester.exists(targetSnip)) {
+              SnipLink.appendLink(buffer, targetSnip, result.group(1));
+            } else if(UserManager.getInstance().isAuthenticated(app.getUser())) {
+              SnipLink.createCreateLink(buffer, targetSnip);
+            } else {
+              // cannot edit/create snip, so just display the text
+              buffer.append(targetSnip);
+            }
+          }
         } else {
-          Application app = Application.get();
-          if (linkTester.exists(targetSnip)) {
-            SnipLink.appendLink(buffer, targetSnip, result.group(1));
-          } else if(UserManager.getInstance().isAuthenticated(app.getUser())) {
-            SnipLink.createCreateLink(buffer, targetSnip);
-          } else {
-            // cannot edit/create snip, so just display the text
-            buffer.append(targetSnip);
-          }
+          buffer.append(result.group(1));
         }
-      } else {
-        buffer.append(result.group(1)).append("*link error*");
-      }
 
-      lastmatch = result.endOffset(0);
+        lastmatch = result.endOffset(0);
+      }
+    } catch (IOException e) {
+      System.err.println("Unable to write LinkTestFilter "+e);
     }
     buffer.append(input.substring(lastmatch));
     return buffer.toString();

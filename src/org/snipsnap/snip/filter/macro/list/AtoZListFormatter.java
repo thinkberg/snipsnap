@@ -80,7 +80,7 @@ public class AtoZListFormatter implements ListoutputMacro.ListFormatter {
       }
 
       writer.write("<table width=\"100%\" id=\"index\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
-      for(int idxChar = 'A'; idxChar <= 'Z'; idxChar++) {
+      for(int idxChar = 'A'; idxChar <= 'Z';) {
         writer.write("<tr>");
         for(int i = 0; i < 5 && idxChar + i <= 'Z'; i++) {
           String ch = "" + (char)(idxChar + i);

@@ -10,7 +10,8 @@
     xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
     xmlns:admin="http://webns.net/mvcb/"
     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:content="http://purl.org/rss/1.0/modules/content/">
+    xmlns:content="http://purl.org/rss/1.0/modules/content/"
+    xmlns:blogChannel="http://backend.userland.com/blogChannelModule" >
 <%--
   ** RSS2 display template.
   ** @author Stephan J. Schmidt
@@ -22,8 +23,8 @@
     <link><c:out value="${url}/${snip.nameEncoded}"/></link>
     <description><c:out value="${config.tagLine}"/></description>
     <s:dublinCore snip="${snip}" format="xml"/>
+    <blogChannel:changes>http://www.weblogs.com/rssUpdates/changes.xml</changes>
     <admin:generatorAgent rdf:resource="http://www.snipsnap.org/space/version-<c:out value='${config.version}'/>"/>
-
     <c:forEach items="${snip.childrenModifiedOrder}" var="child">
        <item>
         <title><c:out value="${child.name}"/> <s:content snip="${child}" removeHtml="true" extract="true"/></title>

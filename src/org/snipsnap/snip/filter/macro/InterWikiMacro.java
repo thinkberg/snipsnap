@@ -33,25 +33,20 @@
 package org.snipsnap.snip.filter.macro;
 
 import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.filter.macro.book.BookServices;
+import org.snipsnap.snip.filter.interwiki.InterWiki;
 
 import java.io.IOException;
 import java.io.Writer;
 
-public class IsbnMacro extends Macro {
+public class InterWikiMacro extends Macro {
   public String getName() {
-    return "isbn";
+    return "inter-wiki";
   }
 
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
-
-    if (params.getLength()== 1) {
-      BookServices.getInstance().isbn(writer, params.get("0"));
-      return;
-    } else {
-      throw new IllegalArgumentException("Number of arguments does not match");
-    }
+    InterWiki interWiki = InterWiki.getInstance();
+    interWiki.appendTo(writer);
+    return;
   }
 }

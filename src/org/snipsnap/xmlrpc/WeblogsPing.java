@@ -51,6 +51,7 @@ public class WeblogsPing extends Thread {
   public void run() {
     if (config.allow(AppConfiguration.PERM_WEBLOGS_PING)) {
       Vector params = new Vector();
+      //@TODO refactor to handler list PingList[PingHandler].pingAll()
       try {
         // Ping weblogs.com
         XmlRpcClient weblogs_com = new XmlRpcClient("http://rpc.weblogs.com/RPC2");
@@ -63,6 +64,19 @@ public class WeblogsPing extends Thread {
         //System.err.println("weblogs.ping received: " + result);
       } catch (Exception e) {
         System.err.println("Unable to ping weblogs.com " + e);
+      }
+      try {
+        // Ping RSS weblogs.com
+        XmlRpcClient weblogs_com = new XmlRpcClient("http://rpc.weblogs.com/RPC2");
+        params.clear();
+        // Name of the weblog
+        params.addElement(config.getName());
+        // Url/CheckUrl of the weblog
+        params.addElement(config.getUrl() + "/exec/rss");
+        Object result = weblogs_com.execute("rssUpdate.ping", params);
+        //System.err.println("weblogs.ping received: " + result);
+      } catch (Exception e) {
+        System.err.println("Unable to ping RSS weblogs.com " + e);
       }
       try {
         // Ping blog.gs
