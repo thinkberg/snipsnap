@@ -100,6 +100,18 @@ public class Modified {
     return buffer.toString();
   }
 
+  /**
+   * Return a short version of the modification user and time.
+   * @return pretty print of the user and modified time
+   */
+  public String getShort() {
+    StringBuffer buffer = new StringBuffer();
+    SnipLink.appendLink(buffer, cUser);
+    buffer.append(", ");
+    buffer.append(getNiceTime(mTime));
+    return buffer.toString();
+  }
+
   // Should go to a date class
   /**
    * Generate a pretty print of the difference

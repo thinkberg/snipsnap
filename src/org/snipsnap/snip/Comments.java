@@ -26,6 +26,8 @@ package com.neotis.snip;
 
 import com.neotis.app.Application;
 import com.neotis.util.StringUtil;
+import com.neotis.user.Permissions;
+import com.neotis.user.Security;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -90,6 +92,7 @@ public class Comments {
     Snip comment = space.create(name, content, app);
     System.err.println(comment);
     comment.setComment(this.snip);
+    comment.addPermission(Permissions.EDIT, Security.OWNER);
     space.store(comment);
     comments.add(comment);
     users.add(comment.getCUser());
@@ -105,13 +108,17 @@ public class Comments {
    */
   public String getCommentString() {
     StringBuffer buffer = new StringBuffer();
-    SnipLink.appendLink(buffer, "comments-" + snip.getName(), StringUtil.plural(getCount(), "comment"));
 
     if (getCount() > 0) {
+      SnipLink.appendLink(buffer, "/comments", snip.getName(), StringUtil.plural(getCount(), "comment"));
       buffer.append(" (by ");
       appendUserString(buffer);
-      buffer.append(")");
+      buffer.append(") | ");
     }
+
+    buffer.append("<a href=\"/exec/editcomments.jsp?name=");
+    buffer.append(snip.getName());
+    buffer.append("\">post comment</a>");
     return buffer.toString();
   }
 

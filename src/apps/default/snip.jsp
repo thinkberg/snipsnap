@@ -27,9 +27,8 @@
   <tr><td>
    <!-- do not display comments on start page, only on posted
         entries -->
-   <c:if test="${snip.notWeblog}">
+    <c:if test="${snip.notWeblog}">
       <c:out value="${snip.comments}" escapeXml="false" /> |
-      <a href="/exec/comment?name=<c:out value='${snip.name}'/>">post comment</a>
     </c:if>
   </td></tr>
   <tr>

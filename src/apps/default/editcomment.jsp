@@ -7,6 +7,7 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %>
 
+<!-- @TODO: this is a hack and should be replaced by a servlet -->
 <s:snip load="${param['name']}" id="snip" />
 
 <s:check roles="Authenticated">

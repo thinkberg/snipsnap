@@ -43,7 +43,13 @@ public class SnipLink {
   }
 
   public static StringBuffer appendLink(StringBuffer buffer, String name, String view) {
-    buffer.append("<a href=\"/space/");
+    return appendLink(buffer, "/space", name, view);
+  }
+
+  public static StringBuffer appendLink(StringBuffer buffer, String root, String name, String view) {
+    buffer.append("<a href=\"");
+    buffer.append(root);
+    buffer.append("/");
     buffer.append(name);
     buffer.append("\">");
     buffer.append(view);

@@ -38,6 +38,11 @@
   </servlet>
 
   <servlet>
+    <servlet-name>com.neotis.net.CommentViewServlet</servlet-name>
+    <servlet-class>com.neotis.net.CommentViewServlet</servlet-class>
+  </servlet>
+
+  <servlet>
     <servlet-name>com.neotis.net.CommentStoreServlet</servlet-name>
     <servlet-class>com.neotis.net.CommentStoreServlet</servlet-class>
   </servlet>
@@ -75,6 +80,11 @@
   <servlet-mapping>
     <servlet-name>com.neotis.net.PostStoreServlet</servlet-name>
     <url-pattern>/exec/storepost</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>com.neotis.net.CommentViewServlet</servlet-name>
+    <url-pattern>/comments/*</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
