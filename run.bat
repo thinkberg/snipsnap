@@ -4,6 +4,7 @@ rem SnipSnap Startscript for Win32 by Bernd 'Nexos' Dutkowski <bernd@dutkowski.n
 rem Adapted to new version by Matthias L. Jugel <leo@mud.de>
 rem Version 0.0.1 2002/07/29
 rem Version 0.0.2 2002/09/18
+rem Version 0.3.0 2002/11/20
 
 set BASE=.
 
@@ -27,8 +28,7 @@ exit
 :ok_snipsnap_jar
 
 rem put classpath together
-set CLASSPATH=%CLASSPATH%;lib/xmlrpc-1.1.jar;lib/jakarta.jar;lib/javax.servlet.jar;lib/mckoidb.jar;lib/org.apache.jasper.jar;lib/org.mortbay.jetty.jar;lib/jdbcpool.jar;lib/lucene-1.2.jar;lib/jython.jar;%JAVA_HOME%/lib/tools.jar
-set CLASSPATH=%CLASSPATH%;lib/muse-jabber-0.8a1.jar:lib/aspectjrt.jar;lib/jdom-b8.jar
+set CLASSPATH=%CLASSPATH%;lib/org.mortbay.jetty.jar;lib/javax.servlet.jar;lib/org.apache.crimson.jar;lib/org.apache.jasper.jar:lib/jdbcpool.jar;lib/mckoidb.jar;%JAVA_HOME%/lib/tools.jar
 
 if $1 == "admin" set cmdline="-admin $1 $2"
 
