@@ -72,8 +72,7 @@ body {
   width: 67%;
   height: 100%;
   padding-left: 15px;
-  padding-right: 10px;
-  padding-top: 10px;
+  padding-right: 15px;
   background: #FFF;
 }
 
@@ -84,15 +83,26 @@ body {
   height: 100%;
   width: 25%;
   margin: 0px;
+  padding-right: 15px;
   padding-left: 15px;
-  padding-right: 0px;
-  padding-top: 10px;
-  padding-bottom: -5px;
 
   /* IE (Windows,MAC) do not display the line down to the bottom */
   border-left: 1px solid #003366;
   background-color: #FFF;
 }
+
+/* Remove the comments around the section below to move the menu to the left side */
+/* START OF LEFT SIDE MENU
+#page-content {
+  padding-left: 31%;
+}
+
+#page-portlet-1 {
+  left: 0px;
+  border-left: 0;
+  border-right: 1px solid #003366;
+}
+  END OF LEFT SIDE MENU */
 
 #page-portlet-2 {
   display: none; /* hide */
@@ -100,7 +110,7 @@ body {
 
 #page-bottom {
   padding-top: 15px;
-  padding-bottom: 10px;
+  padding-bottom: 15px;
   margin: 0px;
   margin-top: -11px;
   width: 100%;
