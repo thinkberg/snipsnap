@@ -49,18 +49,21 @@ public class WeblogsPing extends Thread {
   }
 
   public void run() {
-    try {
-      if (config.allow(AppConfiguration.PERM_WEBLOGS_PING)) {
+    if (config.allow(AppConfiguration.PERM_WEBLOGS_PING)) {
+      Vector params = new Vector();
+      try {
         // Ping weblogs.com
         XmlRpcClient weblogs_com = new XmlRpcClient("http://rpc.weblogs.com/RPC2");
-        Vector params = new Vector();
         // Name of the weblog
         params.addElement(config.getName());
         // Url/CheckUrl of the weblog
         params.addElement(config.getSnipUrl(weblog.getName()));
         Object result = weblogs_com.execute("weblogUpdates.ping", params);
         //System.err.println("weblogs.ping received: " + result);
-
+      } catch (Exception e) {
+        System.err.println("Unable to ping weblogs.com " + e);
+      }
+      try {
         // Ping blog.gs
         XmlRpcClient blo_gs = new XmlRpcClient("http://http://ping.blo.gs/");
         params.clear();
@@ -72,20 +75,23 @@ public class WeblogsPing extends Thread {
         params.addElement(config.getSnipUrl(weblog.getName()));
         // RSS feed
         params.addElement(config.getUrl() + "/exec/rss");
-        result = weblogs_com.execute("weblogUpdates.extendedPing", params);
+        Object result = blo_gs.execute("weblogUpdates.extendedPing", params);
         //System.err.println("weblogs.ping received: " + result);
-
+      } catch (Exception e) {
+        System.err.println("Unable to ping blo.gs " + e);
+      }
+      try {
         XmlRpcClient home = new XmlRpcClient("http://www.snipsnap.org/RPC2");
         params.clear();
         // Name of the weblog
         params.addElement(config.getName());
         // Url/CheckUrl of the weblog
         params.addElement(config.getSnipUrl(weblog.getName()));
-        result = home.execute("weblogUpdates.ping", params);
+        Object result = home.execute("weblogUpdates.ping", params);
         //System.err.println("xmlrpc result="+result);
+      } catch (Exception e) {
+        System.err.println("Unable to ping snipsnap.org " + e);
       }
-    } catch (Exception e) {
-      System.err.println("Unable to ping weblogs.com " + e);
     }
   }
 
