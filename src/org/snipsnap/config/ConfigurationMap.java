@@ -227,18 +227,20 @@ public class ConfigurationMap {
 
   // TODO replace with generic replacement method
   private String replaceTokens(String value) {
-    int idx = value.indexOf("${CONFDIR}");
-    if (idx != -1) {
-      StringBuffer replaced = new StringBuffer();
-      if (idx > 0) {
-        replaced.append(value.substring(0, idx));
+    if(value != null) {
+      int idx = value.indexOf("${CONFDIR}");
+      if (idx != -1) {
+        StringBuffer replaced = new StringBuffer();
+        if (idx > 0) {
+          replaced.append(value.substring(0, idx));
+        }
+        replaced.append(getConfDir().getPath());
+        int endIdx = idx + "${CONFDIR}".length();
+        if (endIdx < value.length()) {
+          replaced.append(value.substring(endIdx));
+        }
+        return replaced.toString();
       }
-      replaced.append(getConfDir().getPath());
-      int endIdx = idx + "${CONFDIR}".length();
-      if (endIdx < value.length()) {
-        replaced.append(value.substring(endIdx));
-      }
-      return replaced.toString();
     }
     return value;
   }
