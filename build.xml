@@ -140,7 +140,11 @@
       <fileset dir="${target}/default/WEB-INF/classes" includes="**"/>
     </jar>
     <jar destfile="${jar}/${appname}-template.war" excludes="**/CVS">
-      <fileset dir="${src}/apps/default" includes="**"/>
+      <fileset dir="${src}/apps/default" includes="**">
+        <exclude name="css/**"/>
+        <exclude name="images/**"/>
+      </fileset>
+      <fileset dir="${src}/layout/snipsnap" includes="**"/>
     </jar>
   </target>
 
