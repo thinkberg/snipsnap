@@ -93,18 +93,11 @@
       <tarfileset dir="${basedir}" prefix="${appname}-${snipsnap.server.version}" mode="700">
         <include name="run.sh"/>
         <include name="run.bat"/>
-        <include name="db.sh"/>
-        <include name="dbexport.sh"/>
-        <include name="dbimport.sh"/>
-        <include name="dbrepair.sh"/>
-        <include name="exportall.sh"/>
-        <include name="devlinks.sh"/>
-        <include name="renimg.sh"/>
       </tarfileset>
       <tarfileset dir="${basedir}" prefix="${appname}-${snipsnap.server.version}">
         <include name="lib/${appname}.jar"/>
-        <include name="lib/${appname}-server.jar"/>
         <include name="lib/${appname}.war"/>
+        <include name="lib/${appname}-server.jar"/>
         <include name="lib/${appname}-theme-*.jar"/>
         <include name="lib/${appname}-installer.war"/>
         <include name="lib/${appname}-utils.jar"/>
@@ -115,6 +108,8 @@
         <include name="lib/commons-pool-1.1.jar"/>
         <include name="lib/commons-collections.jar"/>
         <include name="lib/mckoidb.jar"/>
+        <include name="lib/mysql-connector.jar"/>
+        <include name="lib/postgres-jdbc.jar"/>
         <include name="lib/org.apache.crimson.jar"/>
         <include name="lib/xmlrpc-1.1.jar"/>
         <include name="conf/jetty.conf"/>
@@ -125,8 +120,6 @@
         <exclude name="run.sh"/>
         <exclude name="run.bat"/>
         <exclude name="db.sh"/>
-        <exclude name="dbexport.sh"/>
-        <exclude name="dbimport.sh"/>
         <exclude name="dbrepair.sh"/>
         <exclude name="exportall.sh"/>
         <exclude name="devlinks.sh"/>
@@ -358,7 +351,7 @@
       tofile="${target}/webapp/WEB-INF/web.xml"
       file="${src}/apps/default/WEB-INF/web-xml.tmpl" overwrite="true">
       <filterset>
-        <filter token="VERSION" value="${snipsnap.server.version}"/>  
+        <filter token="VERSION" value="${snipsnap.server.version}"/>
         <filter token="PRECOMPILED-JSP" value="${web.inc}"/>
       </filterset>
     </copy>
