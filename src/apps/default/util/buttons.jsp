@@ -14,6 +14,8 @@
 [<a href="http://www.daypop.com/search?q=<c:out value='${snip.nameEncoded}'/>">daypop</a>]
 <s:check roles="Authenticated" permission="Edit" snip="${snip}">[<a href="../exec/edit?name=<c:out value='${snip.nameEncoded}'/>">edit</a>]</s:check>
 <s:check roles="Authenticated" permission="Edit" snip="${snip}" invert="true"><span class="inactive">[edit]</span></s:check>
-<s:check roles="Authenticated">[<a href="/exec/addlabel?name=<c:out value='${snip.nameEncoded}'/>">new label</a>]</s:check>
+<s:check roles="Authenticated" permission="Edit" snip="${snip}">[<a href="../exec/upload?name=<c:out value='${snip.nameEncoded}'/>">attach</a>]</s:check>
+<s:check roles="Authenticated" permission="Edit" snip="${snip}" invert="true"><span class="inactive">[attach]</span></s:check>
+<s:check roles="Authenticated">[<a href="../exec/addlabel?name=<c:out value='${snip.nameEncoded}'/>">new label</a>]</s:check>
 <s:check roles="Editor"><div class="permissions"><c:out value="${snip.permissions}"/></div></s:check>
 
