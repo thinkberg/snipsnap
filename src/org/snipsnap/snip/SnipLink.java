@@ -27,10 +27,9 @@ package org.snipsnap.snip;
 
 import org.snipsnap.app.Application;
 import org.snipsnap.config.AppConfiguration;
-import org.radeox.util.StringBufferWriter;
-import org.radeox.filter.EscapeFilter;
 import org.snipsnap.util.URLEncoderDecoder;
 import org.radeox.util.logging.Logger;
+import org.radeox.util.StringBufferWriter;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -62,22 +61,18 @@ public class SnipLink {
   }
 
   public static void createCreateLink(Writer writer, String name) throws IOException {
-    writer.write(EscapeFilter.escape('['));
-    writer.write("create <a href=\"../exec/edit?name=");
+    writer.write("&#92;create <a href=\"../exec/edit?name=");
     writer.write(SnipLink.encode(name));
     writer.write("\">");
     writer.write(name);
-    writer.write("</a>");
-    writer.write(EscapeFilter.escape(']'));
+    writer.write("</a>&#93;");
     return;
   }
 
   public static void createCreateLink(StringBuffer buffer, String name) {
-    buffer.append(EscapeFilter.escape('['));
-    buffer.append("create <a href=\"../exec/edit?name=");
+    buffer.append("&#92;create <a href=\"../exec/edit?name=");
     buffer.append(SnipLink.encode(name));
-    buffer.append("\">").append(name).append("</a>");
-    buffer.append(EscapeFilter.escape(']'));
+    buffer.append("\">").append(name).append("</a>&#93;");
     return;
   }
 

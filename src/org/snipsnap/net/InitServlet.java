@@ -63,10 +63,17 @@ public class InitServlet extends GenericServlet {
       } catch (Exception e) {
         System.err.println("InitServlet: LogHandler not found: " + config.getLogger());
       }
+
+      if (config.allow(AppConfiguration.PERM_WEBLOGS_PING)) {
+        System.out.println("WARNING " + config.getName() + ": Weblogs ping is enabled. This means that SnipSnap sends notifications to hosts\n" +
+                           "on the internet when your weblog changes. To turn this off take a look at the FAQ\non http://snipsnap.org");
+      }
     } catch (IOException e) {
       e.printStackTrace();
       System.err.println("InitServlet: Unable to load configuration for this application: " + e);
     }
+
+
   }
 
   public void service(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {

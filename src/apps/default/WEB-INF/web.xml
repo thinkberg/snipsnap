@@ -325,6 +325,10 @@
     <url-pattern>/manager/import</url-pattern>
   </servlet-mapping>
 
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+
   <!-- TAGLIBS -->
   <taglib>
     <taglib-uri>http://java.sun.com/jstl/core</taglib-uri>
