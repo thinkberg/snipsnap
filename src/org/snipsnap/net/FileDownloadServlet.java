@@ -45,7 +45,7 @@ import java.io.*;
 public class FileDownloadServlet extends HttpServlet {
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
     doPost(request, response);
   }
 
@@ -53,41 +53,44 @@ public class FileDownloadServlet extends HttpServlet {
   public final static String SNIP = "snip";
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
 
     Snip snip = (Snip) request.getAttribute(SNIP);
     String fileName = (String) request.getAttribute(FILENAME);
-    Attachment attachment = (Attachment) snip.getAttachments().getAttachment(fileName);
 
-    // make sure the attachment exists
-    if (attachment != null) {
-      AppConfiguration config = Application.get().getConfiguration();
-      File fileStore = new File(config.getFileStorePath());
-      File file = new File(fileStore, attachment.getLocation());
+    if (snip != null) {
+      Attachment attachment = snip.getAttachments().getAttachment(fileName);
 
-      if (file.exists()) {
-        response.setContentType(attachment.getContentType());
-        response.setContentLength(attachment.getSize());
-        BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
-        BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
-        byte buf[] = new byte[4096];
-        int length = -1;
-        while ((length = in.read(buf)) != -1) {
-          out.write(buf, 0, length);
+      // make sure the attachment exists
+      if (attachment != null) {
+        AppConfiguration config = Application.get().getConfiguration();
+        File fileStore = new File(config.getFileStorePath());
+        File file = new File(fileStore, attachment.getLocation());
+
+        if (file.exists()) {
+          response.setContentType(attachment.getContentType());
+          response.setContentLength(attachment.getSize());
+          BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
+          BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
+          byte buf[] = new byte[4096];
+          int length = -1;
+          while ((length = in.read(buf)) != -1) {
+            out.write(buf, 0, length);
+          }
+          out.flush();
+          in.close();
+          out.close();
+          return;
         }
-        out.flush();
-        in.close();
-        out.close();
-        return;
-      }
-    } else {
-      // legacy: found a default image download
-      Logger.log(Logger.DEBUG, "old style image: " + fileName);
-      String oldStyleFile = "/images/image-"+snip.getName()+"-"+fileName;
-      RequestDispatcher dispatcher = request.getRequestDispatcher(oldStyleFile);
-      if(dispatcher != null) {
-        dispatcher.forward(request, response);
-        return;
+      } else {
+        // legacy: found a default image download
+        Logger.log(Logger.DEBUG, "old style image: " + fileName);
+        String oldStyleFile = "/images/image-" + snip.getName() + "-" + fileName;
+        RequestDispatcher dispatcher = request.getRequestDispatcher(oldStyleFile);
+        if (dispatcher != null) {
+          dispatcher.forward(request, response);
+          return;
+        }
       }
     }
 

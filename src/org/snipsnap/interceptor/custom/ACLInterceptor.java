@@ -35,6 +35,11 @@ import org.snipsnap.user.User;
 
 import java.security.GeneralSecurityException;
 
+/**
+ * Access Control Interceptor for checking permissions of set operations on objects.
+ * @author Stephan J. Schmidt
+ * @version $Id$
+ */
 public class ACLInterceptor extends InterceptorSupport {
   private Roles roles;
 
@@ -53,9 +58,9 @@ public class ACLInterceptor extends InterceptorSupport {
       //Logger.debug("ACLInterceptor: Snip = "+snip);
       if(!user.isAdmin()) {// TODO: checking for the admin is a hack
         if (!(Security.checkPermission("Edit", user, snip)
-            && Security.hasRoles(user, snip, roles))) {
+            || Security.hasRoles(user, snip, roles))) {
           //Logger.debug("SECURITY EXCEPTION");
-          throw new GeneralSecurityException("Not allowed to modify object.");
+          throw new GeneralSecurityException(snip.getName()+": "+user+" is not allowed to modify object");
         }
       }
     }

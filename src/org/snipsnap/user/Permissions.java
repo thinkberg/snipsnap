@@ -67,6 +67,10 @@ public class Permissions {
     return serialize();
   }
 
+  public boolean empty() {
+    return null == permissions || permissions.isEmpty();
+  }
+
   public void remove(String permission, String role) {
     init();
     if (permissions.containsKey(permission)) {

@@ -24,16 +24,19 @@
  */
 package org.snipsnap.app;
 
+import org.radeox.util.logging.Logger;
 import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.notification.NotificationService;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
-import org.radeox.util.logging.Logger;
-import org.radeox.filter.MacroFilter;
 
 import javax.servlet.http.HttpSession;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The application object contains information about current users and other
@@ -191,7 +194,7 @@ public class Application {
       UserManager um = UserManager.getInstance();
       User user = (User) currentUsers.get(session);
       if (um.isAuthenticated(user)) {
-        Logger.debug("Removing user: " + user.getLogin());
+        Logger.debug("Removing user from session: " + user.getLogin());
         user.setLastLogout(user.getLastAccess());
         UserManager.getInstance().systemStore(user);
       }
