@@ -104,6 +104,7 @@ public class DBDump {
       out.close();
     } catch (Exception e) {
       System.err.println("error writing output");
+      e.printStackTrace();
     }
     System.err.println("ATTENTION: Check the encoding of the file!");
   }
