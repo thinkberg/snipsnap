@@ -466,7 +466,9 @@ public class SnipSpace implements LinkTester, Loader {
       statement = connection.prepareStatement("INSERT INTO Snip (name, content, cTime, mTime, " +
                                               " cUser, mUser, parentSnip, commentSnip, permissions, " +
                                               " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
-                                              " ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                                              " ) VALUES (?,?,?,?,?,"+
+                                                         "?,?,?,?,?,"+
+                                                         "?,?,?,?,?)");
       statement.setString(1, name);
       statement.setString(2, content);
       statement.setTimestamp(3, cTime);
