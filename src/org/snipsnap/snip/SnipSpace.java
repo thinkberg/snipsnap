@@ -48,6 +48,7 @@ public class SnipSpace implements LinkTester {
   public Snip create(String name, String content) {
     Snip snip = storageCreate(name, content);
     cache.put(name, snip);
+    return snip;
   }
 
   public void remove(Snip snip) {
