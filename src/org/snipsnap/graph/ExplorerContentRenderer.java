@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletOutputStream;
 import java.io.IOException;
 
-public class ExplorerContentRenderer implements ContentRenderer {
+public class ExplorerContentRenderer implements ContentRenderer  {
 
   public String getName() {
     return "explorer";
