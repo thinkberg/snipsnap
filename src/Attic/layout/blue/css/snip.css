@@ -8,42 +8,51 @@
 }
 
 #snip-title {
+  float: left;
+  width: 100%;
   text-align: left;
+  padding: 0px;
+  margin-bottom: 10px;
 }
 
 .snip-name {
-  font-family: verdana, arial, sans-serif;
-	font-size: 11px;
+  width: 100%;
+  font-family: georgia, verdana, arial, sans-serif;
+	font-size: 15px;
 	color: #000000;
-	text-transform:uppercase;
+	text-transform: none;
+  border-bottom: 1px solid #003366;
 }
 
 .snip-commented-snip {
 }
 
 #snip-buttons {
+  border: 0;
   float: right;
   font-family: verdana, arial, sans-serif;
   font-size:10px;
   font-weight:normal;
-  margin-top: 5px;
 }
 
 #snip-info {
+  border: 0;
+  float: left;
   font-family: verdana, arial, sans-serif;
   font-size:10px;
   font-weight:normal;
-  margin-top: 5px;
 }
 
 #snip-content {
-  font-family:georgia, verdana, arial, sans-serif;
+  clear: left;
+  border: 0;
+  display: block;
+  font-family: verdana, arial, sans-serif;
   color:#666;
   font-size:11px;
   font-weight:normal;
   background:#FFF;
   line-height:16px;
-  margin-top: 20px;
 }
 
 #snip-post-comments {

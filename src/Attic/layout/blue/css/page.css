@@ -70,10 +70,17 @@ body {
 #page-portlet-1 {
   display: table-cell;
   width: 200px;
-  padding:15px;
+  padding-left:15px;
+  padding-right;
   margin-bottom:15px;
 	background:#FFF;
   border-left: 1px solid #003366;
+
+  font-family: verdana, arial, sans-serif;
+  color:#666;
+  font-size:11px;
+  font-weight:normal;
+  line-height:16px;
 }
 
 #page-portlet-2 {

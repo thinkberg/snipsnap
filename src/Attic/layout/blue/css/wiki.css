@@ -101,14 +101,12 @@ img.float-right {
 
 /* weblog formatting */
 #blog-date {
-  display: block;
-  background-color: #f8f8f8;
-  color: black;
-  font-family: verdana, sans-serif;
-  font-size: 16px;
-  font-weight: bold;
+  font-family: georgia, verdana, arial, sans-serif;
+	font-size: 15px;
+	color: #000000;
+	text-transform: none;
+  border-bottom: 1px solid #003366;
   margin-bottom: 10px;
-  width: 100%;
 }
 
 /* special formatting of a wiki table */

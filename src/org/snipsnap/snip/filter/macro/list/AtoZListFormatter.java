@@ -82,7 +82,7 @@ public class AtoZListFormatter implements ListoutputMacro.ListFormatter {
       writer.write("<table width=\"100%\" id=\"index\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
       for(int idxChar = 'A'; idxChar <= 'Z';) {
         writer.write("<tr>");
-        for(int i = 0; i < 5 && idxChar + i <= 'Z'; i++) {
+        for(int i = 0; i < 6 && idxChar + i <= 'Z'; i++) {
           String ch = "" + (char)(idxChar + i);
           writer.write("<th><b> &nbsp;<a href=\"#idx"+ch+"\">");
           writer.write(ch);
@@ -91,7 +91,7 @@ public class AtoZListFormatter implements ListoutputMacro.ListFormatter {
           writer.write(""+(atozMap.get(ch) == null ? 0 : ((List)atozMap.get(ch)).size()));
           writer.write("&nbsp; </th>");
         }
-        idxChar += 5;
+        idxChar += 6;
         if(idxChar >= 'Z') {
           writer.write("<th><b> &nbsp;<a href=\"#idx0-9\">0-9</a></b></th>");
           writer.write("<th>...</th><th>");
@@ -101,6 +101,7 @@ public class AtoZListFormatter implements ListoutputMacro.ListFormatter {
           writer.write("<th>...</th><th>");
           writer.write(""+otherRestList.size());
           writer.write("&nbsp; </th>");
+          writer.write("<th></th></th></th><th></th><th></th>");
           writer.write("<th></th></th></th><th></th><th></th>");
         }
         writer.write("</tr>");
