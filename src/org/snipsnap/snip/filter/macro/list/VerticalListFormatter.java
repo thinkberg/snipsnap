@@ -75,7 +75,7 @@ public class VerticalListFormatter implements ListFormatter {
             int lastIndex = name.lastIndexOf("-");
             // String count = name.substring(lastIndex+1);
             realName = name.substring(name.indexOf("-")+1, lastIndex);
-            SnipLink.appendImage(writer, "comment", "", "png");
+            SnipLink.appendImage(writer, "comment-icon", "", "png");
             SnipLink.appendLink(writer, name, realName );
             writer.write(" (");
             SnipLink.appendLink(writer, snip.getMUser());
@@ -85,7 +85,6 @@ public class VerticalListFormatter implements ListFormatter {
           }
         } else if(object instanceof Nameable) {
           SnipLink.appendLink(writer, ((Nameable)object).getName() );
-
         } else {
           writer.write(object.toString());
         }
