@@ -212,11 +212,18 @@ public class UserManager implements Loader {
     authHash.put(auth, user);
     Cookie cookie = new Cookie(COOKIE_NAME, auth);
     cookie.setMaxAge(SECONDS_PER_YEAR);
+    String path = null;
     try {
-      cookie.setPath(new URL(Application.get().getConfiguration().getUrl()).getPath());
+      path = new URL(Application.get().getConfiguration().getUrl()).getPath();
+      if(path == null || path.length() == 0) {
+        path = "/";
+      }
     } catch (MalformedURLException e) {
       System.err.println("Malformed URL: "+e);
+      path = "/";
     }
+    System.out.println("path: '"+path+"'");
+    cookie.setPath(path);
     cookie.setComment("SnipSnap User");
     response.addCookie(cookie);
   }

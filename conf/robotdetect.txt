@@ -1,3 +1,4 @@
 # This file contains User-Agent mappings for robots
 Googlebot http://www.googlebot.com/bot.html
 FAST-WebCrawler http://fast.no/support/crawler.asp
+Slurp http://www.inktomi.com/slurp.html

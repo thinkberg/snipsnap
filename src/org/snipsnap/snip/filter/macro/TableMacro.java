@@ -48,7 +48,11 @@ public class TableMacro extends Macro {
   public void execute(Writer writer, MacroParameter params)
     throws IllegalArgumentException, IOException {
 
-    String content = params.getContent().trim() + "\n";
+    String content = params.getContent();
+
+    if(null == content) throw new IllegalArgumentException("missing table content");
+
+    content = content.trim() + "\n";
 
     Table table = new Table();
     StringTokenizer tokenizer = new StringTokenizer(content, "|\n", true);
