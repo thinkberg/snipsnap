@@ -24,6 +24,7 @@
  */
 package org.snipsnap.net;
 
+import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.net.filter.MultipartWrapper;
@@ -31,12 +32,13 @@ import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipSpaceFactory;
-import org.radeox.util.logging.Logger;
+import org.snipsnap.user.User;
+import org.snipsnap.user.Security;
+import org.snipsnap.user.Roles;
 
-import javax.mail.BodyPart;
-import javax.mail.MessagingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,7 +46,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.StringTokenizer;
 
 /**
  * Servlet to store attachments to snips.
@@ -53,54 +54,68 @@ import java.util.StringTokenizer;
  */
 public class FileUploadServlet extends HttpServlet {
 
+  private Roles roles = new Roles();
+
+  public void init(ServletConfig servletConfig) throws ServletException {
+    super.init(servletConfig);
+    roles.add("Editor");
+    roles.add("Admin");
+  }
+
   public void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+      throws ServletException, IOException {
     doPost(request, response);
   }
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-
+      throws ServletException, IOException {
     String snipName = request.getParameter("name");
     SnipSpace space = SnipSpaceFactory.getInstance();
     Snip snip = space.load(snipName);
 
-    if (request.getParameter("upload") != null) {
-      MultipartWrapper wrapper = (MultipartWrapper) request;
-      String contentType = wrapper.getFileContentType("file");
-      try {
-        // make sure the file name does not contain slashes or backslashes
-        String fileName = getCanonicalFileName(wrapper.getFileName("file"));
-
-        InputStream fileInputStream = wrapper.getFileInputStream("file");
-        if (fileInputStream != null && fileName != null && fileName.length() > 0 && contentType != null) {
-          AppConfiguration config = Application.get().getConfiguration();
-
-          File fileStore = new File(config.getFileStorePath());
-          File relativeFileLocation = new File(snip.getName(), fileName);
-          File file = new File(fileStore, relativeFileLocation.getPath());
-
-          // check and create the directory, where to store the snip attachments
-          if(!file.getParentFile().isDirectory()) {
-            file.getParentFile().mkdirs();
-          }
-          Logger.log(Logger.DEBUG, "Uploading '" + relativeFileLocation.getName() + "' to '" + file.getCanonicalPath() + "'");
-          int size = storeAttachment(file, fileInputStream);
-          snip.getAttachments().addAttachment(relativeFileLocation.getName(),
-                                              contentType, size, relativeFileLocation.getPath());
-          SnipSpaceFactory.getInstance().store(snip);
-        } else {
-          request.setAttribute("error", "Please provide a file for upload.");
-        }
-      } catch (IOException e) {
-        request.setAttribute("error", "I/O Error while uploading.");
-        e.printStackTrace();
-      }
-    } else if(request.getParameter("delete") != null) {
-      request.setAttribute("error", "Ask your SnipSnap administrator to delete the files.");
-    } else if(request.getParameter("cancel") != null) {
+    if (request.getParameter("cancel") != null) {
       response.sendRedirect(SnipLink.absoluteLink(request, "/space/" + snip.getNameEncoded()));
       return;
+    }
+
+    User user = Application.get().getUser();
+    if (Security.hasRoles(user, roles)) {
+      if (request.getParameter("upload") != null) {
+        MultipartWrapper wrapper = (MultipartWrapper) request;
+        String contentType = wrapper.getFileContentType("file");
+        try {
+          // make sure the file name does not contain slashes or backslashes
+          String fileName = getCanonicalFileName(wrapper.getFileName("file"));
+
+          InputStream fileInputStream = wrapper.getFileInputStream("file");
+          if (fileInputStream != null && fileName != null && fileName.length() > 0 && contentType != null) {
+            AppConfiguration config = Application.get().getConfiguration();
+
+            File fileStore = new File(config.getFileStorePath());
+            File relativeFileLocation = new File(snip.getName(), fileName);
+            File file = new File(fileStore, relativeFileLocation.getPath());
+
+            // check and create the directory, where to store the snip attachments
+            if (!file.getParentFile().isDirectory()) {
+              file.getParentFile().mkdirs();
+            }
+            Logger.log(Logger.DEBUG, "Uploading '" + relativeFileLocation.getName() + "' to '" + file.getCanonicalPath() + "'");
+            int size = storeAttachment(file, fileInputStream);
+            snip.getAttachments().addAttachment(relativeFileLocation.getName(),
+                                                contentType, size, relativeFileLocation.getPath());
+            SnipSpaceFactory.getInstance().store(snip);
+          } else {
+            request.setAttribute("error", "Please provide a file for upload.");
+          }
+        } catch (IOException e) {
+          request.setAttribute("error", "I/O Error while uploading.");
+          e.printStackTrace();
+        }
+      } else if (request.getParameter("delete") != null) {
+        request.setAttribute("error", "Ask your SnipSnap administrator to delete the files.");
+      }
+    } else {
+      request.setAttribute("error", "You don't have permission to upload files.");
     }
 
     request.setAttribute("snip", snip);
@@ -112,14 +127,14 @@ public class FileUploadServlet extends HttpServlet {
   // make file name pure without the path
   private String getCanonicalFileName(String fileName) {
     int slashIndex = fileName.lastIndexOf('\\');
-    if(slashIndex >= 0) {
-      Logger.log(Logger.WARN, "Windows path detected, cutting off: "+fileName);
+    if (slashIndex >= 0) {
+      Logger.log(Logger.WARN, "Windows path detected, cutting off: " + fileName);
       fileName = fileName.substring(slashIndex + 1);
     }
 
     slashIndex = fileName.lastIndexOf('/');
-    if(slashIndex != -1) {
-      Logger.log(Logger.WARN, "UNIX path detected, cutting off: "+fileName);
+    if (slashIndex != -1) {
+      Logger.log(Logger.WARN, "UNIX path detected, cutting off: " + fileName);
       fileName = fileName.substring(slashIndex + 1);
     }
     return fileName;

@@ -23,12 +23,12 @@
      <input name="referer" type="hidden" value="<%= request.getHeader("REFERER") %>"/>
      <table class="wiki-table" border="0" cellpaddin="0" cellspacing="0">
       <tr>
-       <th><input type="checkbox" name="allChecked"/></th>
+       <s:check roles="Admin"><th><input type="checkbox" name="allChecked"/></th></s:check>
        <th>File Name</th><th>Size</th><th>Date</th><th>Type</th>
       <tr>
       <c:forEach items="${snip.attachments.all}" var="attachment">
        <tr>
-        <td><input type="checkbox" name="${attachment.name}"/></td>
+        <s:check roles="Admin"><td><input type="checkbox" name="${attachment.name}"/></td></s:check>
         <td><a href="<c:url value='/space/${snip.nameEncoded}/${attachment.name}'/>"><c:out value="${attachment.name}"/></a></td>
         <td><c:out value="${attachment.size}"/></td>
         <td><c:out value="${attachment.date}"/></td>
@@ -37,11 +37,13 @@
       </c:forEach>
       <tr>
        <td colspan="5" class="form-buttons">
-        <input name="file" type="file" maxlength="1000000" accept="*/*"/>
-        <input value="Upload Document" name="upload" type="submit"/><br/>
-        <input value="Cancel" name="cancel" type="submit"/>
-        <input value="Scan File Store" name="scan" type="submit"/>
-        <input value="Delete File(s)" name="delete" type="submit"/>
+        <s:check roles="Editor" permission="Edit" snip="${snip}">
+         <input name="file" type="file" maxlength="1000000" accept="*/*"/>
+         <input value="Upload Document" name="upload" type="submit"/><br/>
+        </s:check>
+        <input value="Back/Cancel" name="cancel" type="submit"/>
+        <%--<input value="Scan File Store" name="scan" type="submit"/>
+        <input value="Delete File(s)" name="delete" type="submit"/>--%>
        </td>
       </tr>
      </table>

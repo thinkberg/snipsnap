@@ -26,10 +26,9 @@ package org.snipsnap.net.filter;
 
 import org.snipsnap.app.Application;
 import org.snipsnap.config.AppConfiguration;
-import org.snipsnap.user.UserManager;
-import org.snipsnap.user.User;
-import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipSpaceFactory;
+import org.snipsnap.user.User;
+import org.snipsnap.user.UserManager;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -38,14 +37,13 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.net.URL;
 
 /**
  * A ServletFilter that takes care of uninstalled web applications and creating the
@@ -78,19 +76,19 @@ public class InitFilter implements Filter {
 
     //System.out.println("request: "+request);
 
-    String serverName = request.getServerName();
-    int serverPort = request.getServerPort();
-    //System.out.println("server: "+serverName+":"+serverPort);
-    String requestURL = request.getRequestURL().toString();
-    //System.out.println("request url: "+requestURL);
-    int postServerNameIndex = requestURL.indexOf(serverName) + serverName.length();
-    String contextPath = request.getContextPath();
-    if(contextPath.length() == 0) {
-      config.setUrl(requestURL.substring(0, requestURL.indexOf("/", postServerNameIndex)));
-    } else {
-      config.setUrl(requestURL.substring(0, requestURL.indexOf(contextPath, postServerNameIndex) + contextPath.length()));
-    }
-    //System.out.println("url: "+config.getUrl());
+//    String serverName = request.getServerName();
+//    int serverPort = request.getServerPort();
+//    //System.out.println("server: "+serverName+":"+serverPort);
+//    String requestURL = request.getRequestURL().toString();
+//    //System.out.println("request url: "+requestURL);
+//    int postServerNameIndex = requestURL.indexOf(serverName) + serverName.length();
+//    String contextPath = request.getContextPath();
+//    if(contextPath.length() == 0) {
+//      config.setUrl(requestURL.substring(0, requestURL.indexOf("/", postServerNameIndex)));
+//    } else {
+//      config.setUrl(requestURL.substring(0, requestURL.indexOf(contextPath, postServerNameIndex) + contextPath.length()));
+//    }
+//    //System.out.println("url: "+config.getUrl());
 
     // make sure the request has a correct character encoding
     // the enc-wrapper ensures some methods return correct strings too

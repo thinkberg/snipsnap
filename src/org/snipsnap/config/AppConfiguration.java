@@ -190,7 +190,7 @@ public class AppConfiguration extends Configuration {
   /**
    * Returns an external URL to this instance of SnipSnap
    *
-   * @target Path to add to url, e.g. "/exec/"
+   * @param target Path to add to url, e.g. "/exec/"
    */
   public String getUrl(String target) {
     return getUrl() + target;
@@ -200,7 +200,7 @@ public class AppConfiguration extends Configuration {
   /**
    * Returns an external URL of a snip
    *
-   * @snipName Name of the snip
+   * @param snipName Name of the snip
    */
   public String getSnipUrl(String snipName) {
     return getUrl("/space/" + snipName);
