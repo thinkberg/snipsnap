@@ -142,7 +142,7 @@ public class Month {
         viewedSnip = SnipSpaceFactory.getInstance().load(weblogName);
       }
     }
-    String viewed = viewedSnip.isWeblog() ? viewedSnip.getName() : config.getStartSnip();
+    String viewed = viewedSnip != null && viewedSnip.isWeblog() ? viewedSnip.getName() : config.getStartSnip();
 
     StringBuffer view = new StringBuffer();
     view.append("<div class=\"calendar\">");
