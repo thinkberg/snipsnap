@@ -1,4 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+<%@ page import="org.snipsnap.snip.SnipSpace"%><%--
+--%><% response.setHeader("ETag", SnipSpace.getInstance().getETag()); %><%--
+--%><?xml version="1.0" encoding="utf-8"?>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %><%-- hack to remove linefeed
 --%><%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %><%--
 --%><%@ page contentType="text/xml"%><%--

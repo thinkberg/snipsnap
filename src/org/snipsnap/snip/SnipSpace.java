@@ -43,6 +43,8 @@ import org.snipsnap.xmlrpc.WeblogsPing;
 import java.sql.*;
 import java.sql.Date;
 import java.util.*;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * SnipSpace handles all the data storage.
@@ -57,6 +59,7 @@ public class SnipSpace implements LinkTester, Loader {
   private SnipIndexer indexer;
   private FinderFactory finders;
   private Timer timer;
+  private String eTag;
 
   private static SnipSpace instance;
 
@@ -89,7 +92,7 @@ public class SnipSpace implements LinkTester, Loader {
                                " FROM Snip ", cache, (Loader) this, "name");
 
     changed.fill(storageByRecent(50));
-
+    setETag();
     timer = new Timer();
     timer.schedule(new TimerTask() {
       public void run() {
@@ -105,6 +108,49 @@ public class SnipSpace implements LinkTester, Loader {
       // execute after 5 minutes and then
       // every 5 minutes
     }, 5 * 60 * 1000, 5 * 60 * 1000);
+  }
+
+  public String getETag() {
+    return eTag;
+ }
+
+  // A snip is changed by the user (created, stored)
+  public void changed(Snip snip) {
+    changed.add(snip);
+    setETag();
+  }
+
+  public void setETag() {
+    MessageDigest digest;
+    // Modify eTag
+    try {
+      digest =  MessageDigest.getInstance("SHA1");
+    } catch (NoSuchAlgorithmException e) {
+      System.err.println("UserManager: unable to load digest algorithm: "+e);
+      digest = null;
+    }
+
+    if (null != digest) {
+      String tmp = new java.util.Date().toString();
+      eTag = digestToHexString(digest.digest(tmp.getBytes()));
+    }
+  }
+
+  // @TODO refactor
+  /**
+   * Make a hexadecimal character string out of a byte array digest
+   */
+  private static String digestToHexString(byte[] digest) {
+      byte b = 0;
+      StringBuffer buffer = new StringBuffer();
+
+      for (int i = 0; i < digest.length; ++i) {
+           b = digest[i];
+          int value = (b & 0x7F) + (b < 0 ? 128 : 0);
+          buffer.append(value < 16 ? "0" : "");
+          buffer.append(Integer.toHexString(value).toUpperCase());
+      }
+      return buffer.toString();
   }
 
   public List getChanged() {
@@ -220,7 +266,7 @@ public class SnipSpace implements LinkTester, Loader {
     Application app = Application.get();
     long start = app.start();
     snip.setMUser(app.getUser());
-    changed.add(snip);
+    changed(snip);
     snip.setMTime(new Timestamp(new java.util.Date().getTime()));
     storageStore(snip);
     indexer.reIndex(snip);
@@ -271,7 +317,7 @@ public class SnipSpace implements LinkTester, Loader {
     if (missing.containsKey(name)) {
       missing.remove(name);
     }
-    changed.add(snip);
+    changed(snip);
     indexer.index(snip);
     Application.get().notify(Notification.SNIP_CREATE, snip);
     return snip;

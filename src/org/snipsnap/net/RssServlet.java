@@ -25,7 +25,6 @@
 package org.snipsnap.net;
 
 import org.snipsnap.config.AppConfiguration;
-import org.snipsnap.config.Configuration;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 
@@ -53,24 +52,31 @@ public class RssServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
 
-    String version = request.getParameter("version");
-    String name = "start";
-    Snip snip = SnipSpace.getInstance().load(name);
-
-    request.setAttribute("snip", snip);
-    request.setAttribute("space", SnipSpace.getInstance());
-    request.setAttribute("config", config);
-
-    request.setAttribute("url", config.getUrl("/space"));
-
-    RequestDispatcher dispatcher;
-    if ("1.0".equals(version)) {
-      dispatcher = request.getRequestDispatcher("/rdf.jsp");
-    } else if ("0.92".equals(version)) {
-      dispatcher = request.getRequestDispatcher("/rss.jsp");
+    String eTag = request.getHeader("If-None-Match");
+    if (null != eTag && eTag.equals(SnipSpace.getInstance().getETag())) {
+      response.setHeader("ETag", SnipSpace.getInstance().getETag());
+      response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+      return;
     } else {
-      dispatcher = request.getRequestDispatcher("/rss2.jsp");
+      String version = request.getParameter("version");
+      String name = "start";
+      Snip snip = SnipSpace.getInstance().load(name);
+
+      request.setAttribute("snip", snip);
+      request.setAttribute("space", SnipSpace.getInstance());
+      request.setAttribute("config", config);
+
+      request.setAttribute("url", config.getUrl("/space"));
+
+      RequestDispatcher dispatcher;
+      if ("1.0".equals(version)) {
+        dispatcher = request.getRequestDispatcher("/rdf.jsp");
+      } else if ("0.92".equals(version)) {
+        dispatcher = request.getRequestDispatcher("/rss.jsp");
+      } else {
+        dispatcher = request.getRequestDispatcher("/rss2.jsp");
+      }
+      dispatcher.forward(request, response);
     }
-    dispatcher.forward(request, response);
   }
 }
