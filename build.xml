@@ -33,6 +33,7 @@
     <pathelement location="${jar}/activation.jar"/>
     <pathelement location="${jar}/mail.jar"/>
     <pathelement location="${jar}/cvslib.jar"/>
+    <pathelement location="${jar}/j2h.jar"/>
   </path>
 
   <path id="all.classpath">
@@ -203,6 +204,7 @@
         <include name="jython.jar"/>
         <include name="mail.jar"/>
         <include name="activation.jar"/>
+        <include name="j2h.jar"/>
       </zipfileset>
     </jar>
   </target>

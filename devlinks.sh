@@ -23,6 +23,7 @@ if [ -d $app ]; then
   ln -sf $base/lib/mail.jar $app/WEB-INF/lib
   ln -sf $base/lib/activation.jar $app/WEB-INF/lib
   ln -sf $base/lib/xmlrpc-1.1.jar $app/WEB-INF/lib
+  ln -sf $base/lib/j2h.jar $app/WEB-INF/lib
   echo Linking JSPs ...
   ln -sf $base/src/apps/default/*.jsp $app/
   ln -sf $base/src/apps/default/util/*.jsp $app/util/
