@@ -38,8 +38,6 @@ public class LoginServlet extends HttpServlet {
       // store user name and app in cookie and session
       response.addCookie(new Cookie("userName", user.getLogin()));
       session.setAttribute("app", app);
-      response.sendRedirect("/space/" + login);
-      return;
     }
 
     response.sendRedirect(referer != null ? referer : "/space/about");

@@ -90,8 +90,8 @@ public class UserManager {
   // Storage System dependend Methods
 
   private User createUser(ResultSet result) throws SQLException {
-    String login = result.getString("login").trim();
-    String passwd = result.getString("passwd").trim();
+    String login = result.getString("login");
+    String passwd = result.getString("passwd");
     User user = new User(login, passwd);
     return user;
   }
