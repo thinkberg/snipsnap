@@ -13,9 +13,9 @@ import com.neotis.snip.filter.regex.RegexReplaceFilter;
 public class ListFilter extends RegexReplaceFilter {
 
   public ListFilter() {
-    super("^[:space:]*([-*])[:space:]?(?![-*])(.*)$", "<item type=\"$1\">$2</item>");
-    addRegex("^[:space:]*([iIaA])\\.[:space:]?(?![iIaA]\\.)(.*)$", "<item type=\"$1\">$2</item>");
-    addRegex("^[:space:]*\\d+\\.[:space:]?(?!\\d+\\.)(.*)$", "<item type=\"enumerated\">$1</item>");
-    addRegex("((<item[^>]*>.*?</item>[\r]?[\n]?)+)", "<list>$1</list>\n", RegexReplaceFilter.SINGLELINE);
+    super("^[:space:]*([-*])[:space:]?(?![-*])(.*)$", "<li type=\"$1\">$2</li>");
+    addRegex("^[:space:]*([iIaA])\\.[:space:]?(?![iIaA]\\.)(.*)$", "<li type=\"$1\">$2</li>");
+    addRegex("^[:space:]*\\d+\\.[:space:]?(?!\\d+\\.)(.*)$", "<li type=\"enumerated\">$1</li>");
+    addRegex("((<li[^>]*>.*?</li>[\r]?[\n]?)+)", "<ul>$1</ul>\n", RegexReplaceFilter.SINGLELINE);
   };
 }

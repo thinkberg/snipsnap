@@ -6,10 +6,11 @@
   <link type="text/css" href="/default.css" rel="STYLESHEET"/>
  </head>
  <body>
-   <h1 class="title">Weblog</h1>
+   <table width="800" border="0" cellpadding="0" cellspacing="0"><tr><td valign="top">
    <table border="0" cellpadding="4" cellspacing="1">
     <tr>
      <td valign="top">
+      <img src="/images/javangelist.gif"/>
       <jsp:include page="/menu.jsp" flush="true"/>
      </td>
      <td valign="top">
@@ -17,6 +18,7 @@
       </td>
     </tr>
    </table>
+   </td></tr></table>
  </body>
 </html>
 

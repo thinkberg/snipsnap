@@ -1,17 +1,26 @@
 package com.neotis.snip;
 
-import com.neotis.util.ConnectionManager;
 import com.neotis.snip.filter.LinkTester;
+import com.neotis.util.ConnectionManager;
+import com.neotis.util.Queue;
 
-import java.sql.*;
-import java.util.Map;
-import java.util.HashMap;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Date;
 
 public class SnipSpace implements LinkTester {
   private Connection connection;
   private Map cache;
+  private Map missing;
+  private Queue changed;
 
   private static SnipSpace instance;
 
@@ -23,8 +32,15 @@ public class SnipSpace implements LinkTester {
   }
 
   private SnipSpace() {
+    missing = new HashMap();
+    changed = new Queue(10);
     cache = new HashMap();
     connection = ConnectionManager.getConnection();
+    changed.fill(storageByRecent(10));
+  }
+
+  public List getChanged() {
+    return changed.get();
   }
 
   public Collection getChildren(Snip snip) {
@@ -32,7 +48,15 @@ public class SnipSpace implements LinkTester {
   }
 
   public boolean exists(String name) {
-    return (null != load(name));
+    if (missing.containsKey(name)) {
+      return false;
+    }
+    if (null == load(name)) {
+      missing.put(name, new Integer(0));
+      return false;
+    } else {
+      return true;
+    }
   }
 
   public Snip load(String name) {
@@ -49,6 +73,8 @@ public class SnipSpace implements LinkTester {
   }
 
   public void store(Snip snip) {
+    changed.add(snip);
+    snip.setMTime(new Timestamp(new Date().getTime()));
     storageStore(snip);
     return;
   }
@@ -56,13 +82,58 @@ public class SnipSpace implements LinkTester {
   public Snip create(String name, String content) {
     Snip snip = storageCreate(name, content);
     cache.put(name, snip);
+    if (missing.containsKey(name)) {
+      missing.remove(name);
+    }
+    changed.add(snip);
     return snip;
   }
 
   public void remove(Snip snip) {
     cache.remove(snip.getName());
+    changed.remove(snip);
     storageRemove(snip);
     return;
+  }
+
+  // Storage System dependend Methods
+
+  private Snip createSnip(ResultSet result) throws SQLException {
+    String name = result.getString("name");
+    String content = result.getString("content");
+    Snip snip = new Snip(name, content);
+    snip.setCTime(result.getTimestamp("cTime"));
+    snip.setMTime(result.getTimestamp("mTime"));
+    return snip;
+  }
+
+  private List storageByRecent(int size) {
+    PreparedStatement statement = null;
+    ResultSet result = null;
+    List snips = new ArrayList();
+
+    try {
+      statement = connection.prepareStatement("SELECT name, content, cTime, mTime FROM Snip ORDER by mTime DESC");
+
+      result = statement.executeQuery();
+      Snip snip = null;
+      while (result.next() && --size>0) {
+        String name = result.getString(1);
+        if (cache.containsKey(name)) {
+          snip = (Snip) cache.get(name);
+        } else {
+          snip = createSnip(result);
+          cache.put(name, snip);
+        }
+        snips.add(snip);
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    } finally {
+      ConnectionManager.close(statement);
+      ConnectionManager.close(result);
+    }
+    return snips;
   }
 
   private Collection storageByParent(Snip parent) {
@@ -71,7 +142,7 @@ public class SnipSpace implements LinkTester {
     Collection children = new ArrayList();
 
     try {
-      statement = connection.prepareStatement("SELECT name, content FROM Snip WHERE parentSnip=?");
+      statement = connection.prepareStatement("SELECT name, content, cTime, mTime FROM Snip WHERE parentSnip=?");
       statement.setString(1, parent.getName());
 
       result = statement.executeQuery();
@@ -81,9 +152,8 @@ public class SnipSpace implements LinkTester {
         if (cache.containsKey(name)) {
           snip = (Snip) cache.get(name);
         } else {
-          String content = result.getString(2);
-          snip = new Snip(name, content);
-          cache.put(name, content);
+          snip = createSnip(result);
+          cache.put(name, snip);
         }
         children.add(snip);
       }
@@ -100,10 +170,12 @@ public class SnipSpace implements LinkTester {
     PreparedStatement statement = null;
 
     try {
-      statement = connection.prepareStatement("UPDATE Snip SET name=?, content=? WHERE name=?");
+      statement = connection.prepareStatement("UPDATE Snip SET name=?, content=?, cTime=?, mTime=? WHERE name=?");
       statement.setString(1, snip.getName());
       statement.setString(2, snip.getContent());
-      statement.setString(3, snip.getName());
+      statement.setTimestamp(3, snip.getCTime());
+      statement.setTimestamp(4, snip.getMTime());
+      statement.setString(5, snip.getName());
 
       statement.execute();
     } catch (SQLException e) {
@@ -118,20 +190,27 @@ public class SnipSpace implements LinkTester {
     PreparedStatement statement = null;
     ResultSet result = null;
 
+    Snip snip = new Snip(name, content);
+    Timestamp cTime = new Timestamp(new Date().getTime());
+    Timestamp mTime = (Timestamp) cTime.clone();
+    snip.setCTime(cTime);
+    snip.setMTime(mTime);
+
     try {
-      statement = connection.prepareStatement("INSERT INTO Snip (name, content) VALUES (?,?)");
+      statement = connection.prepareStatement("INSERT INTO Snip (name, content, cTime, mTime) VALUES (?,?,?,?)");
       statement.setString(1, name);
       statement.setString(2, content);
+      statement.setTimestamp(3, cTime);
+      statement.setTimestamp(4, mTime);
 
       statement.execute();
     } catch (SQLException e) {
       e.printStackTrace();
     } finally {
-      ConnectionManager.close(statement);
       ConnectionManager.close(result);
+      ConnectionManager.close(statement);
     }
 
-    Snip snip = new Snip(name, content);
     return snip;
   }
 
@@ -158,19 +237,19 @@ public class SnipSpace implements LinkTester {
     ResultSet result = null;
 
     try {
-      statement = connection.prepareStatement("SELECT name, content FROM Snip WHERE name=?");
+      statement = connection.prepareStatement("SELECT name, content, cTime, mTime FROM Snip WHERE name=?");
       statement.setString(1, name);
 
       result = statement.executeQuery();
       if (result.next()) {
-        snip = new Snip(result.getString("name"), result.getString("content"));
+        snip = createSnip(result);
       }
     } catch (SQLException e) {
       e.printStackTrace();
     } finally {
+      ConnectionManager.close(result);
       ConnectionManager.close(statement);
     }
     return snip;
   }
-
 }

@@ -4,12 +4,25 @@ import com.neotis.snip.Snip;
 import com.neotis.snip.SnipSpace;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.Timestamp;
 
 public class SnipBean {
   Snip snip = null;
 
   HttpServletRequest request = null;
   String name, content;
+
+  public String getModified() {
+    return snip.getModified();
+  }
+
+  public Timestamp getCTime() {
+    return snip.getCTime();
+  }
+
+  public Timestamp getMTime() {
+    return snip.getMTime();
+  }
 
   public void setName(String name) {
     System.err.println("setName(" + name + ")");

@@ -22,20 +22,31 @@ public class SnipSpaceTest extends TestCase {
   }
 
   public void testLoadSnip() {
-    Snip snip1 = SnipSpace.getInstance().load("about");
-    assertEquals(snip1.getName(), "about");
+    Snip snip1 = SnipSpace.getInstance().create("A","A Content");
+    Snip snip2 = SnipSpace.getInstance().load("A");
+    assertEquals(snip2.getName(), "A");
+    SnipSpace.getInstance().remove(snip1);
+  }
+
+  public void testParent() {
+    Snip snip1 = SnipSpace.getInstance().create("A","A Content");
+    Snip snip2 = SnipSpace.getInstance().create("B","B Content");
+    snip2.setParent(snip1);
+    assertEquals(snip1, snip2.getParent());
+    SnipSpace.getInstance().remove(snip1);
+    SnipSpace.getInstance().remove(snip2);
   }
 
   public void testExists() {
-    Snip snip1 = SnipSpace.getInstance().create("funzel","stephan");
-    assertTrue("Snip exists", SnipSpace.getInstance().exists("funzel"));
+    Snip snip1 = SnipSpace.getInstance().create("A","A Content");
+    assertTrue("Snip exists", SnipSpace.getInstance().exists("A"));
     SnipSpace.getInstance().remove(snip1);
   }
 
   public void testCreateAndDeleteSnip() {
-    Snip snip1 = SnipSpace.getInstance().create("funzel","stephan");
-    assertEquals(snip1.getName(), "funzel");
-    assertEquals(snip1.getContent(), "stephan");
+    Snip snip1 = SnipSpace.getInstance().create("A","A Content");
+    assertEquals(snip1.getName(), "A");
+    assertEquals(snip1.getContent(), "A Content");
     SnipSpace.getInstance().remove(snip1);
   }
 

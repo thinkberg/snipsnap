@@ -20,6 +20,7 @@ public class SnipStoreServlet extends HttpServlet {
     Snip snip = space.load(name);
     if(snip != null) {
       snip.setContent(content);
+      space.store(snip);
     } else {
       snip = space.create(name, content);
     }

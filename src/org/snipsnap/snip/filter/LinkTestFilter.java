@@ -59,15 +59,15 @@ public class LinkTestFilter extends Filter {
       buffer.append(input.substring(lastmatch, result.beginOffset(0)));
 
       if(linkTester.exists(result.group(1))) {
-        buffer.append("[<a href=\"");
+        buffer.append("<a href=\"");
         buffer.append("/space/");
         buffer.append(URLEncoder.encode(result.group(1)));
-        buffer.append("\">").append(result.group(1)).append("</a>]");
+        buffer.append("\">").append(result.group(1)).append("</a>");
       } else {
-        buffer.append("<a href=\"");
+        buffer.append("[create <a href=\"");
         buffer.append("/exec/edit?name=");
         buffer.append(URLEncoder.encode(result.group(1)));
-        buffer.append("\">create ").append(result.group(1)).append("</a>");
+        buffer.append("\">").append(result.group(1)).append("</a>]");
       }
 
 

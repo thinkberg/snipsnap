@@ -3,8 +3,6 @@ package com.neotis.test.snip;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import com.neotis.snip.Snip;
-import com.neotis.snip.SnipSpace;
 import com.neotis.test.filter.FilterTest;
 
 public class AllTests extends TestCase {
@@ -17,6 +15,7 @@ public class AllTests extends TestCase {
     s.addTestSuite(SnipSpaceTest.class);
     s.addTestSuite(SnipTest.class);
     s.addTestSuite(FilterTest.class);
+    s.addTestSuite(ChildrenTest.class);
     return s;
   }
 }

@@ -64,6 +64,10 @@ public class CreateDB {
       "    CREATE TABLE Snip ( " +
       "       name      VARCHAR(100) NOT NULL, " +
       "       content   TEXT, " +
+      "       cTime     TIMESTAMP, " +
+      "       mTime     TIMESTAMP, " +
+      "       cUser     CHAR(55), " +
+      "       mUser     CHAR(55), " +
       "       parentSnip VARCHAR(100) ) " );
 
       System.out.println("-- Inserting Data --");

@@ -16,7 +16,7 @@ public class TableMacro extends Macro {
     content = content.trim()+"\n";
 
     StringTokenizer tokenizer = new StringTokenizer(content, "|\n", true);
-    StringBuffer result = new StringBuffer("<table class=\"wiki-table\">");
+    StringBuffer result = new StringBuffer("<table class=\"snip-table\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
     StringBuffer cell = new StringBuffer();
     StringBuffer row = new StringBuffer();
     boolean firstLine = true;
@@ -24,28 +24,28 @@ public class TableMacro extends Macro {
     while (tokenizer.hasMoreTokens()) {
       String token = tokenizer.nextToken();
       if ("|".equals(token)) {
-        cell.insert(0, "<cell>").append("</cell>");
+        cell.insert(0, "<td>").append("</td>");
         row.append(cell);
         cell = new StringBuffer();
       } else if ("\n".equals(token)) {
         // add rest of cell
-        cell.insert(0, "<cell>").append("</cell>");
+        cell.insert(0, "<td>").append("</td>");
         row.append(cell);
         cell = new StringBuffer();
 
         // add row
-        result.append("<row");
+        result.append("<tr valign=\"top\"");
         if (firstLine) {
-          result.append(" style=\"wiki-table-header\">");
+          result.append(" class=\"snip-table-header\">");
           firstLine = false;
         } else if (odd) {
-          result.append(" style=\"wiki-table-odd\">");
+          result.append(" class=\"snip-table-odd\">");
           odd = false;
         } else {
-          result.append(" style=\"wiki-table-even\">");
+          result.append(" class=\"snip-table-even\">");
           odd = true;
         }
-        result.append(row).append("</row>\n");
+        result.append(row).append("</tr>\n");
         row = new StringBuffer();
       } else {
         cell.append(token);

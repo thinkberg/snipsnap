@@ -41,6 +41,6 @@ public class CodeMacro extends Preserved {
     }
     String result = filter.filter(content);
 
-    return "<code>" + replace(result.trim()) + "</code>";
+    return "<div class=\"code\">" + replace(result.trim()) + "</div>";
   }
 }
