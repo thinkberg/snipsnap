@@ -23,5 +23,5 @@
 </s:check>
 
 <s:check roles="Authenticated" permission="Edit" snip="${snip}" invert="true">
-  <a href="../exec/login">Please login!</a>
+  <a href="../exec/login.jsp">Please login!</a>
 </s:check>

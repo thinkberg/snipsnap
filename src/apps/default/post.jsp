@@ -22,5 +22,5 @@
 </s:check>
 
 <s:check roles="Authenticated" invert="true">
- <a href="login.jsp">Please login!</a>
+ <a href="../exec/login.jsp">Please login!</a>
 </s:check>
