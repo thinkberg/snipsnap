@@ -836,10 +836,8 @@ public class ConfigureServlet extends HttpServlet {
         config.setJdbcDriver(jdbcDriver != null ? jdbcDriver : "");
         config.setJdbcUrl(request.getParameter(Globals.APP_JDBC_URL));
         config.setJdbcUser(request.getParameter(Globals.APP_JDBC_USER));
-        if (null == request.getParameter(Globals.APP_JDBC_PASSWORD)) {
-          config.setJdbcPassword(request.getParameter(Globals.APP_JDBC_PASSWORD));
-          return;
-        }
+        String passwd = request.getParameter(Globals.APP_JDBC_PASSWORD);
+        config.setJdbcPassword(null == passwd ? "" : passwd);
       }
 
       try {
