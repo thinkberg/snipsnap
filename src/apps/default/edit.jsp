@@ -16,7 +16,7 @@
   </c:if>
   <form name="f" method="POST" action="../exec/store">
     <table border="0" cellpadding="0" cellspacing="2">
-      <tr><td><textarea name="content" type="text" cols="80" rows="20"><c:out value="${content}"/></textarea></td></tr>
+      <tr><td><textarea name="content" type="text" cols="80" rows="20"><c:out value="${content}" escapeXml="false"/></textarea></td></tr>
       <tr><td align="right">
         <input value="Preview" name="preview" type="submit"/>
         <input value="Save" name="save" type="submit"/>
