@@ -13,7 +13,7 @@
 <h3>WARNING!</h3>
 This update procedure has been tested in our development environment. It seems to work as far as <i>comparison
 and updating the web application</i> is concerned. However, you may experience <i>errors when the updater restarts</i> the
-application.<br>In case of an error <b>restart your server manually</b>.
+application.<br/>In case of an error <b>restart your server manually</b>.
 </div>
 
 <c:forEach items="${errors}" var="error">
@@ -28,7 +28,7 @@ application.<br>In case of an error <b>restart your server manually</b>.
       <input type="hidden" name="context" value="<c:out value='${context}'/>">
       There is an update of the web application available on <a href="http://snipsnap.org">SnipSnap</a>.
       <input type="submit" name="download" value="Click to Download Update">
-      <br><c:out value="${available}"/>
+      <br/><c:out value="${available}"/>
     </form>
   </div>
 <% } %>
@@ -36,9 +36,9 @@ application.<br>In case of an error <b>restart your server manually</b>.
 <form method="POST" action="../app/update">
   <input type="hidden" name="server" value="<c:out value='${server}'/>">
   <input type="hidden" name="context" value="<c:out value='${context}'/>">
-  <span style="color: green">green</span> files are either unchanged or may be updated from the distribution.<br>
+  <span style="color: green">green</span> files are either unchanged or may be updated from the distribution.<br/>
   <span style="color: red">red</span> files have been changed locally and will be
-  unpacked as <i>filename</i>.new when selected for update.<br>
+  unpacked as <i>filename</i>.new when selected for update.<br/>
   <table width="100%" border="0" cellpadding="2" cellspacing="0">
     <tr class="table-header">
       <td>No Update Needed</td><td>Locally Changed</td><td>Updated</td><td>Updated and Locally Changed</td>

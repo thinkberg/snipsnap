@@ -25,17 +25,17 @@
       <td><span class="nobr"><c:out value="${user.status}"/></span></td>
       <td>
         <form method="POST" action="<c:url value='/exec/admin/user'/>">
-          <input type="hidden" name="command" value="edit">
-          <input type="hidden" name="login" value="<c:out value='${user.login}'/>">
-          <input type="submit" name="ok" value="Edit">
+          <input type="hidden" name="command" value="edit"/>
+          <input type="hidden" name="login" value="<c:out value='${user.login}'/>"/>
+          <input type="submit" name="ok" value="Edit"/>
         </form>
       </td>
       <td>
         <c:if test="${config.adminLogin != user.login}">
           <form method="POST" action="<c:url value='/exec/admin/user'/>">
-            <input type="hidden" name="command" value="remove">
-            <input type="hidden" name="login" value="<c:out value='${user.login}'/>">
-            <input style="color: red" type="submit" name="ok" value="Remove">
+            <input type="hidden" name="command" value="remove"/>
+            <input type="hidden" name="login" value="<c:out value='${user.login}'/>"/>
+            <input style="color: red" type="submit" name="ok" value="Remove"/>
           </form>
         </c:if>
       </td>
@@ -44,7 +44,7 @@
   <tr>
     <td colspan="7">
       <form method="GET" action="<c:url value='/exec/admin/newuser.jsp'/>">
-        <input type="submit" name="ok" value="Add New User">
+        <input type="submit" name="ok" value="Add New User"/>
       </form>
     </td>
   </tr>

@@ -64,7 +64,7 @@ public class WeblogMacro extends Macro {
         buffer.append(Snip.toDate(entry.getName()));
         buffer.append("</div>");
         buffer.append(entry.getXMLContent());
-        buffer.append("<div class=\"comment\"");
+        buffer.append("<div class=\"comment\">");
         SnipLink.appendLink(buffer, entry.getName(), "Link me");
         buffer.append(" | ");
         buffer.append(entry.getComments().getCommentString());

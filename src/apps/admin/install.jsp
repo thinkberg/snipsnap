@@ -9,7 +9,7 @@
 <h1>Welcome to your SnipSnap Installation</h1>
 
 <c:forEach items="${errors}" var="error">
-  <span class="error"><c:out value="${error.value}"/></span><br>
+  <span class="error"><c:out value="${error.value}"/></span><br/>
 </c:forEach>
 
 <c:choose>
@@ -46,7 +46,7 @@
         <tr <c:if test="${errors['host'] != null}">class="error-position"</c:if>>
           <td valign="top">Virtual Host:</td>
           <td valign="top"><input name="host" type="text" value="<c:out value='${config.host}' default=''/>"></td>
-          <td valign="top">(optional)<br>
+          <td valign="top">(optional)<br/>
 	          The virtual host the server should accept requests for.
 	          Leave blank if you want to accept requests for all possible
 	          host names your server has (default).
@@ -60,7 +60,7 @@
         <tr>
           <td valign="top">Path on Server:</td>
           <td valign="top"><input name="context" type="text" value="<c:out value='${config.contextPath}' default='/'/>"></td>
-          <td valign="top">(optional)<br>
+          <td valign="top">(optional)<br/>
 	    The relative path on your server where the application resides.
 	    If you enter <i>/foo/</i> then your application listens for requests
 	    like: <i>http://localhost:8668/foo/space/start</i>. Leave the

@@ -66,7 +66,7 @@ public class Table {
     int rowSize = outputRows.length;
     boolean odd=true;
     for (int i=0; i<rowSize; i++) {
-      buffer.append("<tr valign=\"0\" ");
+      buffer.append("<tr valign=\"top\" ");
       if (i==0) {
         buffer.append(" class=\"snip-table-header\">");
       } else if (odd) {

@@ -1,7 +1,12 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %>
 
-<font size="2">[ <a href="<c:url value='/space/start'/>">start</a> | <a href="<c:url value='/space/snipsnap-index'/>">index</a> |
+<font size="2">[
+<c:choose>
+ <c:when test="${snip.name=='start'}"><span class="inactive">start</span></c:when>
+ <c:otherwise><a href="<c:url value='/space/start'/>">start</a></c:otherwise>
+</c:choose>
+ | <a href="<c:url value='/space/snipsnap-index'/>">index</a> |
  <s:check roles="Authenticated">
     logged in as <a href="<c:url value='/space/${app.user.login}'/>"><c:out value="${app.user.login}"/></a> | <a href="<c:url value='/exec/authenticate?logoff=true'/>">logoff</a>
  </s:check>

@@ -44,18 +44,15 @@ public class TableMacro extends Macro {
   }
 
   public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
-    Table table = new Table();
-
     content = content.trim()+"\n";
 
+    Table table = new Table();
     StringTokenizer tokenizer = new StringTokenizer(content, "|\n", true);
     while (tokenizer.hasMoreTokens()) {
       String token = tokenizer.nextToken();
-      if ("|".equals(token)) {
-        // nothing
-      } else if ("\n".equals(token)) {
+      if ("\n".equals(token)) {
         table.newRow();
-      } else {
+      } else if (! "|".equals(token)) {
         table.addCell(token);
       }
     }

@@ -29,7 +29,12 @@
  <body onLoad="setFocus();">
    <table width="800" border="0" cellpadding="0" cellspacing="0"><tr><td valign="top">
    <table border="0" cellpadding="4" cellspacing="1">
-    <tr><td colspan="2"><a href="http://www.snipsnap.org"><s:image name="snip"/></a></td></tr>
+    <tr><td colspan="2">
+     <c:choose>
+       <c:when test="${snip.name=='start'}"><s:image name="snip"/></c:when>
+       <c:otherwise><a href="http://www.snipsnap.org"><s:image name="snip"/></a></c:otherwise>
+     </c:choose>
+    </td></tr>
     <tr><td colspan="2">
      <div id="Header">Bigger. Better. Faster. More.
       <c:import url="util/mainbuttons.jsp"/>

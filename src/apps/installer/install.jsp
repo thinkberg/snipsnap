@@ -9,9 +9,9 @@
 <h1>Welcome to your SnipSnap Installation</h1>
 
 <c:forEach items="${errors}" var="error">
-  <span class="error"><c:out value="${error.value}"/></span><br>
+  <span class="error"><c:out value="${error.value}"/></span><br/>
 </c:forEach>
-<br>
+<br/>
 
 <c:if test="${admin == null}">
   <b>
@@ -20,7 +20,7 @@
   </b>
 </c:if>
 
-<br>
+<br/>
 <form method="POST" action="../exec/install">
   <table border="0" cellpadding="2" cellspacing="2">
     <tr>
@@ -55,7 +55,7 @@
     <tr <c:if test="${errors['host'] != null}">class="error-position"</c:if>>
       <td valign="top">Virtual Host:</td>
       <td valign="top"><input name="host" type="text" value="<c:out value='${config.host}' default=''/>"></td>
-      <td valign="top">(optional)<br>
+      <td valign="top">(optional)<br/>
         The virtual host the server should accept requests for.
         Leave blank if you want to accept requests for all possible
         host names your server has (default).
@@ -69,7 +69,7 @@
     <tr>
       <td valign="top">Path on Server:</td>
       <td valign="top"><input name="context" type="text" value="<c:out value='${config.contextPath}' default='/'/>"></td>
-      <td valign="top">(optional)<br>
+      <td valign="top">(optional)<br/>
         The relative path on your server where the application resides.
         If you enter <i>/foo/</i> then your application listens for requests
         like: <i>http://localhost:8668/foo/space/start</i>. Leave the
@@ -85,21 +85,21 @@
     <tr>
       <td valign="top">Use Mckoi Database:</td>
       <td valign="top"><input name="usemckoi" type="checkbox" checked="checked"></td>
-      <td valign="top">(default)<br>
+      <td valign="top">(default)<br/>
         Use Mckoi Database. <b>It is not supported right now to change that!</b>
       </td>
     </tr>
     <tr>
       <td valign="top">Database URL:</td>
       <td valign="top"><input name="jdbc" type="text" value="<c:out value='${config.JDBCURL}' default=''/>"></td>
-      <td valign="top">(optional)<br>
+      <td valign="top">(optional)<br/>
         The JDBC URL to use for this installation. <i>Leave empty if you use the built-in database.</i>
       </td>
     </tr>
     <tr>
       <td valign="top">JDBC Driver Class:</td>
       <td valign="top"><input name="driver" type="text" value="<c:out value='${config.JDBCDriver}' default=''/>"></td>
-      <td valign="top">(optional)<br>
+      <td valign="top">(optional)<br/>
         The JDBC Driver to use for this database connection.
       </td>
     </tr>
