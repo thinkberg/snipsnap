@@ -100,7 +100,7 @@
         <include name="lib/${appname}.jar"/>
         <include name="lib/${appname}.war"/>
         <include name="lib/${appname}-server.jar"/>
-        <include name="lib/${appname}-theme-*.jar"/>
+<!--        <include name="lib/${appname}-theme-*.jar"/>-->
         <include name="lib/${appname}-installer.war"/>
         <include name="lib/${appname}-utils.jar"/>
         <include name="lib/asm-1.3.4.jar"/>
@@ -330,7 +330,7 @@
   </target>
 
   <!-- create web archive of the template application -->
-  <target depends="jsp-jar,theme-jar" description="build template war" name="snipsnap-war">
+  <target depends="jsp-jar" description="build template war" name="snipsnap-war">
     <mkdir dir="${target}/webapp"/>
     <copy todir="${target}/webapp">
       <fileset dir="${src}/apps/default">
@@ -338,13 +338,13 @@
         <exclude name="**/*.jsp" if="precompile.jsp"/>
         <exclude name="WEB-INF/web-xml.tmpl"/>
       </fileset>
-      <fileset dir="${src}/theme/blue" includes="**" excludes="**/CVS"/>
+<!--      <fileset dir="${src}/theme/blue" includes="**" excludes="**/CVS"/>-->
     </copy>
 
-    <mkdir dir="${target}/webapp/WEB-INF/themes"/>
-    <copy todir="${target}/webapp/WEB-INF/themes">
-      <fileset dir="${jar}" includes="${appname}-theme-*.jar"/>
-    </copy>
+<!--    <mkdir dir="${target}/webapp/WEB-INF/themes"/>-->
+<!--    <copy todir="${target}/webapp/WEB-INF/themes">-->
+<!--      <fileset dir="${jar}" includes="${appname}-theme-*.jar"/>-->
+<!--    </copy>-->
     <loadfile property="web.inc" srcfile="${target}/jsp/web.inc" failonerror="false"/>
     <condition property="web.inc" value="">
       <not>
@@ -402,26 +402,26 @@
   </target>
 
   <!-- create jar archives of all themes -->
-  <target description="build theme jar" name="theme-jar">
-    <jar destfile="${jar}/${appname}-theme-blue.jar" excludes="**/CVS">
-      <fileset dir="${src}/theme/blue" includes="**"/>
-      <zipfileset dir="${src}/theme" prefix="WEB-INF">
-        <include name="web.xml"/>
-      </zipfileset>
-    </jar>
-    <jar destfile="${jar}/${appname}-theme-sky.jar" excludes="**/CVS">
-      <fileset dir="${src}/theme/sky" includes="**"/>
-      <zipfileset dir="${src}/theme" prefix="WEB-INF">
-        <include name="web.xml"/>
-      </zipfileset>
-    </jar>
-    <jar destfile="${jar}/${appname}-theme-orange.jar" excludes="**/CVS">
-      <fileset dir="${src}/theme/orange" includes="**"/>
-      <zipfileset dir="${src}/theme" prefix="WEB-INF">
-        <include name="web.xml"/>
-      </zipfileset>
-    </jar>
-  </target>
+<!--  <target description="build theme jar" name="theme-jar">-->
+<!--    <jar destfile="${jar}/${appname}-theme-blue.jar" excludes="**/CVS">-->
+<!--      <fileset dir="${src}/theme/blue" includes="**"/>-->
+<!--      <zipfileset dir="${src}/theme" prefix="WEB-INF">-->
+<!--        <include name="web.xml"/>-->
+<!--      </zipfileset>-->
+<!--    </jar>-->
+<!--    <jar destfile="${jar}/${appname}-theme-sky.jar" excludes="**/CVS">-->
+<!--      <fileset dir="${src}/theme/sky" includes="**"/>-->
+<!--      <zipfileset dir="${src}/theme" prefix="WEB-INF">-->
+<!--        <include name="web.xml"/>-->
+<!--      </zipfileset>-->
+<!--    </jar>-->
+<!--    <jar destfile="${jar}/${appname}-theme-orange.jar" excludes="**/CVS">-->
+<!--      <fileset dir="${src}/theme/orange" includes="**"/>-->
+<!--      <zipfileset dir="${src}/theme" prefix="WEB-INF">-->
+<!--        <include name="web.xml"/>-->
+<!--      </zipfileset>-->
+<!--    </jar>-->
+<!--  </target>-->
 
   <target if="precompile.jsp" depends="installer-servlets-jar" name="compile-installer-jsp" description="compile installer jsp files">
     <mkdir dir="${target}/installer/jsp/source"/>

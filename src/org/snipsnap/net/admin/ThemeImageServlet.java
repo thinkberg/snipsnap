@@ -25,8 +25,6 @@
  */
 package org.snipsnap.net.admin;
 
-import org.snipsnap.config.theme.Theme;
-
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,16 +39,6 @@ public class ThemeImageServlet extends HttpServlet {
     String name = request.getParameter("name");
     if(null != name && null != session) {
       Map themes = (Map)session.getAttribute("themes");
-      Theme theme = (Theme)themes.get(name);
-      if(null != theme) {
-        byte[] image = (byte[])theme.getImages().get(name);
-        if(image != null && image.length > 0) {
-          response.setContentType("image/png");
-          response.setContentLength(image.length);
-          response.getOutputStream().write(image);
-          return;
-        }
-      }
     }
 
     response.sendError(HttpServletResponse.SC_NOT_FOUND);

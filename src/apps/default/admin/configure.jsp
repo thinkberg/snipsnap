@@ -19,7 +19,7 @@
   <body>
     <div class="header">
       <c:import url="config/info.jsp"/>
-      <img src="../images/snipsnap-logo.png"/>
+      <img src="images/snipsnap-logo.png"/>
     </div>
     <div class="content">
       <form action="configure" method="POST" enctype="multipart/form-data">

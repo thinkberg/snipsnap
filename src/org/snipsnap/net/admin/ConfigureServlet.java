@@ -343,9 +343,6 @@ public class ConfigureServlet extends HttpServlet {
       setupApplication(request, config, errors, steps);
     } else if (STEP_THEME.equals(step)) {
       setupTheme(request, response, config, errors);
-      if(errors.size() == 0) {
-        return null;
-      }
     } else if (STEP_LOCALIZATION.equals(step)) {
       setupLocalization(request, config, errors);
     } else if (STEP_ADMINISTRATOR.equals(step)) {
@@ -442,20 +439,7 @@ public class ConfigureServlet extends HttpServlet {
   }
 
   private void setupTheme(HttpServletRequest request, HttpServletResponse response, Configuration config, Map errors) {
-    String export = request.getParameter("export");
-    if(export != null) {
-      SnipSpace space = (SnipSpace)Components.getComponent(SnipSpace.class);
-      response.setContentType("text/xml");
-      try {
-        System.out.println(config.getFilePath());
-        XMLSnipExport.store(response.getOutputStream(),
-                            Arrays.asList(space.match("SnipSnap/themes/blue")),
-                            null,
-                            config.getFilePath());
-      } catch (IOException e) {
-        errors.put("fatal", "fatal");
-      }
-    }
+    config.setTheme(request.getParameter(Configuration.APP_THEME));
   }
 
   private final static List countries = Arrays.asList(Locale.getISOCountries());
@@ -642,7 +626,11 @@ public class ConfigureServlet extends HttpServlet {
         }
       }
     }
-    config.setRealPath(request.getParameter(Configuration.APP_REAL_PATH));
+    String realPath = request.getParameter(Configuration.APP_REAL_PATH);
+    if(null != realPath && !"".equals(realPath)) {
+      realPath = realPath.trim();
+      config.setRealPath(realPath.startsWith("/") ? realPath : "/" + realPath);
+    }
   }
 
 

@@ -73,8 +73,8 @@ public class Month {
 
   public static String toKey(Calendar calendar) {
     return toKey(calendar.get(Calendar.YEAR),
-          calendar.get(Calendar.MONTH) + 1,
-          calendar.get(Calendar.DAY_OF_MONTH));
+                 calendar.get(Calendar.MONTH),
+                 calendar.get(Calendar.DAY_OF_MONTH));
   }
 
   public static String toKey(int year, int month, int day) {
@@ -107,25 +107,24 @@ public class Month {
   public String getView(boolean navigation) {
     Calendar today = new GregorianCalendar(locale);
     today.setTime(new java.util.Date());
-    return getView(today.get(Calendar.MONTH), today.get(Calendar.YEAR), navigation);
+    return getView(today.get(Calendar.MONTH) + 1, today.get(Calendar.YEAR), navigation);
   }
 
-  // @TODO: convert to use month=1,2,... instead of 0,1,....
   public String getView(int month, int year, boolean navigation) {
 
-    Set days = getDays(month + 1, year);
+    Set days = getDays(month, year);
 
     int nextYear = year;
     int nextMonth = month + 1;
-    if (nextMonth == 12) {
+    if (nextMonth == 13) {
       nextYear++;
-      nextMonth = 0;
+      nextMonth = 1;
     }
     int prevYear = year;
     int prevMonth = month - 1;
-    if (prevMonth == -1) {
+    if (prevMonth == 0) {
       prevYear--;
-      prevMonth = 11;
+      prevMonth = 12;
     }
 
     StringBuffer view = new StringBuffer();
@@ -135,24 +134,24 @@ public class Month {
     if (navigation) {
       view.append("<a href=\"?calmonth=");
       view.append(prevMonth);
-      view.append("&calyear=");
+      view.append("&amp;calyear=");
       view.append(prevYear);
       view.append("\">&lt;</a> ");
     }
-    view.append(months[month]);
+    view.append(months[month - 1]);
     view.append(" ");
     view.append(year);
     if (navigation) {
       view.append(" <a href=\"?calmonth=");
       view.append(nextMonth);
-      view.append("&calyear=");
+      view.append("&amp;calyear=");
       view.append(nextYear);
       view.append("\">&gt;</a>");
     }
     view.append("</caption>");
 
-    if (month < 0 || month > 11) {
-      throw new IllegalArgumentException("Month " + month + " bad, must be 0-11");
+    if (month < 1 || month > 12) {
+      throw new IllegalArgumentException("Month " + month + " bad, must be 1-12");
     }
 
     Calendar today = new GregorianCalendar(locale);
@@ -160,16 +159,18 @@ public class Month {
     int todayNumber = today.get(Calendar.DAY_OF_MONTH);
 
     GregorianCalendar calendar = new GregorianCalendar(locale);
-    calendar.set(year, month, 1);
+    calendar.set(year, month - 1, 1);
 
     // Compute how much to leave before the first day.
     // getDay() returns 0 for Sunday, which is just right.
     int leadGap = calendar.get(Calendar.DAY_OF_WEEK);
     leadGap = leadGap - calendar.getFirstDayOfWeek();
-    if (leadGap < 0) { leadGap = 6; }
+    if (leadGap < 0) {
+      leadGap = 6;
+    }
 
-    int daysInMonth = dom[month];
-    if (calendar.isLeapYear(calendar.get(Calendar.YEAR)) && month == 1) {
+    int daysInMonth = dom[month - 1];
+    if (calendar.isLeapYear(calendar.get(Calendar.YEAR)) && month == 2) {
       ++daysInMonth;
     }
 
@@ -187,11 +188,11 @@ public class Month {
     for (int i = 1; i <= daysInMonth; i++) {
       String day = "" + i;
 
-      if (days.contains(toKey(year, month + 1, i))) {
-        day = SnipLink.createLink(toKey(year, month + 1, i), day);
+      if (days.contains(toKey(year, month, i))) {
+        day = SnipLink.createLink(toKey(year, month, i), day);
       }
 
-      if (i == todayNumber && month == today.get(Calendar.MONTH) && year == today.get(Calendar.YEAR)) {
+      if (i == todayNumber && month == today.get(Calendar.MONTH) + 1 && year == today.get(Calendar.YEAR)) {
         day = "<span class=\"today\">" + day + "</span>";
       }
       week.append("<td>");

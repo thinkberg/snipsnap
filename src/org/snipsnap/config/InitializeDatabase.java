@@ -40,15 +40,7 @@ import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.user.UserManagerFactory;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.io.Writer;
+import java.io.*;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Locale;
@@ -126,7 +118,8 @@ public class InitializeDatabase {
       createConfigSnipFromFile(Configuration.SNIPSNAP_CONFIG_WIKI, "/defaults/intermap.txt", space);
 
       File themeTemplateDir = new File(config.getWebInfDir(), "themes");
-      importTheme("blue", new JarFile(new File(themeTemplateDir, "snipsnap-theme-blue.jar")), space);
+      XMLSnipImport.load(new FileInputStream(new File(themeTemplateDir, "SnipSnap-Theme-"+config.getTheme()+".snip")),
+                         XMLSnipImport.OVERWRITE | XMLSnipImport.IMPORT_SNIPS);
 
       // last, but not least store to file and configuration snip
       storeConfiguration(config, space);
@@ -141,86 +134,6 @@ public class InitializeDatabase {
     }
 
     return appOid;
-  }
-
-  public static void importTheme(String name, JarFile pkg, SnipSpace space) {
-    String nameSpace = Configuration.SNIPSNAP_THEMES + "/" + name;
-    JarEntry info = pkg.getJarEntry("about.txt");
-    String infoContent = pkg.getName();
-    if (info != null) {
-      try {
-        infoContent = getResourceAsString(pkg.getInputStream(info));
-      } catch (IOException e) {
-        System.err.println("InitializeDatabase: " + pkg.getName() + " has broken about.txt: " + e.getMessage());
-      }
-    }
-    Snip themeSnip = createConfigSnip(nameSpace, infoContent, space);
-
-    String defaultCSS = "@import url(css/wiki.css);\n"
-      + "@import url(css/snip.css);\n"
-      + "@import url(css/general.css);\n"
-      + "@import url(css/page.css);\n"
-      + "@import url(css/debug.css);\n"
-      + "@import url(css/admin.css);\n";
-
-    JarEntry defaultCSSEntry = pkg.getJarEntry("default.css");
-    if (defaultCSSEntry != null) {
-      try {
-        defaultCSS = getResourceAsString(pkg.getInputStream(defaultCSSEntry));
-      } catch (IOException e) {
-        System.err.println("InitializeDatabase: "+ pkg.getName() + " has no default.css");
-      }
-    }
-    createConfigSnip(nameSpace + "/css", defaultCSS, space);
-
-    Configuration config = Application.get().getConfiguration();
-    File filePath = config.getFilePath();
-
-    for (Enumeration entries = pkg.entries(); entries.hasMoreElements();) {
-      JarEntry entry = (JarEntry) entries.nextElement();
-      if (entry.getName().startsWith("css") && !entry.isDirectory()) {
-        try {
-          message("creating theme entry: " + entry.getName());
-          createConfigSnip(nameSpace + "/" + entry.getName(),
-                           getResourceAsString(pkg.getInputStream(entry)),
-                           space);
-        } catch (IOException e) {
-          System.err.println("InitializeDatabase: " + pkg.getName() + ": " + entry.getName() + " corrupted");
-        }
-      } else if (entry.getName().startsWith("images") && !entry.isDirectory()) {
-        File imageDir = new File(filePath, nameSpace);
-        if (!imageDir.exists()) {
-          imageDir.mkdirs();
-        }
-        String imageName = new File(entry.getName()).getName();
-        File imageFile = new File(imageDir, imageName);
-        message("storing " + nameSpace + "/" + imageName);
-
-        try {
-          FileOutputStream imageStream = new FileOutputStream(imageFile);
-          InputStream jarImageStream = pkg.getInputStream(entry);
-          byte[] buffer = new byte[4096];
-          int length = 0;
-          while ((length = jarImageStream.read(buffer)) != -1) {
-            imageStream.write(buffer, 0, length);
-          }
-          imageStream.close();
-          jarImageStream.close();
-
-          Attachments atts = themeSnip.getAttachments();
-          int dotIndex = imageName.lastIndexOf('.');
-          String type = "";
-          if (dotIndex != -1) {
-            type = "/" + imageName.substring(dotIndex + 1).toLowerCase();
-          }
-          atts.addAttachment(imageName, "image" + type, entry.getSize(), nameSpace + "/" + imageName);
-        } catch (IOException e) {
-          System.err.println("InitializeDatabase: " + pkg.getName() + ": unable to store " + imageName);
-        }
-
-      }
-    }
-    space.systemStore(themeSnip);
   }
 
   public static void createConfigSnipFromFile(String name, String file, SnipSpace space) throws IOException {
