@@ -365,12 +365,18 @@ public class Snip implements Ownable, Nameable, Appendable {
   }
 
   public String getXMLContent() {
+    String tmp = null;
     try {
-      return toXML();
+      tmp = toXML();
     } catch (Exception e) {
       e.printStackTrace();
-      return "<span class=\"error\">" + e + "</span>";
+      tmp = "<span class=\"error\">" + e + "</span>";
+    } catch(Error err) {
+      err.printStackTrace();
+      tmp = "<span class=\"error\">" + err + "</span>";
     }
+
+    return tmp;
   }
 
   public Writer appendTo(Writer s) throws IOException {

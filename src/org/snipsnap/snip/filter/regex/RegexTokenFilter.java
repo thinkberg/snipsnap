@@ -36,6 +36,8 @@ import org.apache.oro.text.regex.MatchResult;
 import org.apache.oro.text.regex.Pattern;
 import org.apache.oro.text.regex.Util;
 import org.snipsnap.snip.Snip;
+import org.snipsnap.app.Application;
+import org.snipsnap.util.log.Logger;
 
 public abstract class RegexTokenFilter extends RegexFilter implements ActionMatch {
 
@@ -61,7 +63,12 @@ public abstract class RegexTokenFilter extends RegexFilter implements ActionMatc
     for (int i = 0; i < size; i++) {
       Pattern p = (Pattern) pattern.get(i);
       String s = (String) substitute.get(i);
-      result = Util.substitute(matcher, p, new ActionSubstitution(s, this, snip), result, limit);
+      try {
+        result = Util.substitute(matcher, p, new ActionSubstitution(s, this, snip), result, limit);
+      } catch (Exception e) {
+        Logger.log("Error: "+this+": "+e);
+        e.printStackTrace();
+      }
     }
     return result;
 

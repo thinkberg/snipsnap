@@ -47,12 +47,12 @@ public class SnipFormatter {
         fp.addFilter("org.snipsnap.snip.filter.MacroFilter");
         fp.addFilter(MacroFilter.getInstance());
         fp.addFilter("org.snipsnap.snip.filter.CalendarFilter");
-        fp.addFilter("org.snipsnap.snip.filter.LineFilter");
         fp.addFilter("org.snipsnap.snip.filter.HeadingFilter");
         fp.addFilter("org.snipsnap.snip.filter.StrikeThroughFilter");
         fp.addFilter("org.snipsnap.snip.filter.ListFilter");
         fp.addFilter("org.snipsnap.snip.filter.NewlineFilter");
         fp.addFilter("org.snipsnap.snip.filter.ParagraphFilter");
+        fp.addFilter("org.snipsnap.snip.filter.LineFilter");
         fp.addFilter("org.snipsnap.snip.filter.BoldFilter");
         fp.addFilter("org.snipsnap.snip.filter.ItalicFilter");
         fp.addFilter("org.snipsnap.snip.filter.UrlFilter");
