@@ -53,6 +53,8 @@ public class SinceLastVisitMacro extends ListoutputMacro {
   public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
     if (params.length == 1) {
       User user = UserManager.getInstance().load(params[0]);
+      System.err.println("Hashcode lastVisit="+((Object) user).hashCode());
+      System.err.println("SinceLastVisit: "+user.getLastLogout());
       Collection c = space.getSince(user.getLastLogout());
       output(buffer, "changed snips since last visit", c, "no recently changes.");
     } else {

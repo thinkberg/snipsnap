@@ -29,6 +29,7 @@ import org.snipsnap.app.Application;
 import org.snipsnap.cache.Cache;
 import org.snipsnap.jdbc.Finder;
 import org.snipsnap.jdbc.Loader;
+import org.snipsnap.jdbc.FinderFactory;
 import org.snipsnap.snip.filter.LinkTester;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
@@ -51,6 +52,7 @@ public class SnipSpace implements LinkTester, Loader {
   private List delayed;
   private Cache cache;
   private SnipIndexer indexer;
+  private FinderFactory finders;
   private Timer timer;
 
   private static SnipSpace instance;
@@ -75,10 +77,16 @@ public class SnipSpace implements LinkTester, Loader {
   private void init() {
     missing = new HashMap();
     changed = new Queue(50);
-    cache = new Cache((Loader) this);
-    changed.fill(storageByRecent(50));
+    cache = Cache.getInstance();
+    cache.setLoader(Snip.class, (Loader) this);
     indexer = new SnipIndexer();
     delayed = new ArrayList();
+    finders = new FinderFactory("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions, " +
+                               " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
+                               " FROM Snip ", cache, (Loader) this, "name");
+
+    changed.fill(storageByRecent(50));
+
     timer = new Timer();
     timer.schedule(new TimerTask() {
       public void run() {
@@ -198,7 +206,7 @@ public class SnipSpace implements LinkTester, Loader {
   }
 
   public Snip load(String name) {
-    return cache.load(name);
+    return (Snip) cache.load(Snip.class, name);
   }
 
   public void store(Snip snip) {
@@ -252,7 +260,7 @@ public class SnipSpace implements LinkTester, Loader {
 
   public Snip create(String name, String content) {
     Snip snip = storageCreate(name, content);
-    cache.put(name, snip);
+    cache.put(Snip.class, name, snip);
     if (missing.containsKey(name)) {
       missing.remove(name);
     }
@@ -262,11 +270,23 @@ public class SnipSpace implements LinkTester, Loader {
   }
 
   public void remove(Snip snip) {
-    cache.remove(snip.getName());
+    cache.remove(Snip.class, snip.getName());
     changed.remove(snip);
     storageRemove(snip);
     indexer.removeIndex(snip);
     return;
+  }
+
+  public Class getLoaderType() {
+    return Snip.class;
+  }
+
+  public Object createObject(ResultSet result) throws SQLException {
+    return createSnip(result);
+  }
+
+  public Object loadObject(String name) {
+    return storageLoad(name);
   }
 
 // Storage System dependend Methods
@@ -298,83 +318,54 @@ public class SnipSpace implements LinkTester, Loader {
   }
 
   private List storageAll() {
-    Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions, " +
-                               " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
-                               " FROM Snip " +
-                               " ORDER BY name", cache, (Loader) this, false);
+    Finder finder = finders.getFinder("ORDER BY name");
     return finder.execute();
   }
 
   private List storageByHotness(int size) {
-    Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions, " +
-                               " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
-                               " FROM Snip " +
-                               " ORDER by viewCount DESC", cache, (Loader) this);
+    Finder finder = finders.getFinder("ORDER BY viewCount DESC");
     return finder.execute(size);
   }
 
   private List storageByUser(String login) {
-    Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions, " +
-                               " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
-                               " FROM Snip " +
-                               " WHERE cUser=?", cache, (Loader) this);
+    Finder finder = finders.getFinder("WHERE cUser=?");
     finder.setString(1, login);
     return finder.execute();
   }
 
   private List storageByDateSince(Timestamp date) {
-    Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions, " +
-                               " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
-                               " FROM Snip " +
-                               " WHERE mTime>=?", cache, (Loader) this);
+    Finder finder = finders.getFinder("WHERE mTime>=?");
     finder.setDate(1, date);
     return finder.execute();
   }
 
 
   private List storageByRecent(int size) {
-    Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions, " +
-                               " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
-                               " FROM Snip " +
-                               " ORDER by mTime DESC", cache, (Loader) this);
-
+    Finder finder = finders.getFinder("ORDER by mTime DESC");
     return finder.execute(size);
   }
 
   private List storageByComments(Snip parent) {
-    Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions, " +
-                               " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
-                               " FROM Snip " +
-                               " WHERE commentSnip=?", cache, (Loader) this);
+    Finder finder = finders.getFinder("WHERE commentSnip=? ORDER BY cTime");
     finder.setString(1, parent.getName());
     return finder.execute();
   }
 
   private List storageByParent(Snip parent) {
-    Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions, " +
-                               " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
-                               " FROM Snip " +
-                               " WHERE parentSnip=?", cache, (Loader) this);
+    Finder finder = finders.getFinder("WHERE parentSnip=?");
     finder.setString(1, parent.getName());
     return finder.execute();
   }
 
   private List storageByParentNameOrder(Snip parent, int count) {
-    Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions, " +
-                               " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
-                               " FROM Snip " +
-                               " WHERE parentSnip=? " +
-                               " ORDER BY name DESC ", cache, (Loader) this);
+    Finder finder = finders.getFinder("WHERE parentSnip=? ORDER BY name DESC ");
     finder.setString(1, parent.getName());
     return finder.execute(count);
   }
 
   private List storageByDateInName(String start, String end) {
-    Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions, " +
-                               " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
-                               " FROM Snip " +
-                               " WHERE name>=? and name<=? and parentSnip=? " +
-                               " ORDER BY name", cache, (Loader) this);
+    Finder finder = finders.getFinder("WHERE name>=? and name<=? and parentSnip=? " +
+                                      " ORDER BY name");
     finder.setString(1, start);
     finder.setString(2, end);
     finder.setString(3, "start");

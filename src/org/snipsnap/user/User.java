@@ -71,6 +71,8 @@ public class User implements Nameable {
 
   public void lastAccess() {
     this.lastAccess = new Timestamp(new java.util.Date().getTime());
+    //System.err.println(this.login+" hashcode: "+((Object) this).hashCode());
+    //System.err.println("Set lastAccess() "+this.login+" "+lastAccess);
   }
 
   public Timestamp getLastLogout() {
@@ -78,7 +80,7 @@ public class User implements Nameable {
   }
 
   public void setLastLogout(Timestamp lastLogout) {
-    //System.err.println(((Object) this).hashCode());
+    //System.err.println(this.login+" hashcode: "+((Object) this).hashCode());
     //System.err.println("Set LastLogout() "+this.login+" "+lastLogout+" old: "+this.lastLogout);
     this.lastLogout = lastLogout;
   }

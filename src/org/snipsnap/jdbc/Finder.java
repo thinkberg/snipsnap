@@ -40,26 +40,30 @@ import java.util.List;
  * @version $Id$
  */
 public class Finder {
-  PreparedStatement statement;
-  String statementString;
-  Connection connection;
-  Cache cache;
-  Loader loader;
+  private PreparedStatement statement;
+  private String statementString;
+  private Connection connection;
+  private Cache cache;
+  private Loader loader;
+  private Class type;
+  private String keyName;
   private boolean caching = true;
 
-  public Finder(String statement, Cache cache, Loader loader, boolean caching) {
-    this(statement, cache, loader);
+  public Finder(String statement, Cache cache, Loader loader, boolean caching, String key) {
+    this(statement, cache, loader, key);
     this.caching = caching;
   }
 
-  public Finder(String statement, Cache cache, Loader loader) {
+  public Finder(String statement, Cache cache, Loader loader, String key) {
     try {
       this.connection = ConnectionManager.getConnection();
-      this.statementString= statement;
+      this.statementString = statement;
       this.statement = this.connection.prepareStatement(statement);
       this.loader = loader;
+      this.type = loader.getLoaderType();
+      this.keyName = key;
     } catch (SQLException e) {
-      System.out.println("Unable to prepare statement: "+statementString);
+      System.out.println("Unable to prepare statement: " + statementString);
     }
     this.cache = cache;
   }
@@ -68,7 +72,7 @@ public class Finder {
     try {
       statement.setTimestamp(column, date);
     } catch (SQLException e) {
-      System.out.println("Unable to set Timestamp value: "+statementString);
+      System.out.println("Unable to set Timestamp value: " + statementString);
     }
   }
 
@@ -76,7 +80,7 @@ public class Finder {
     try {
       statement.setString(column, value);
     } catch (SQLException e) {
-      System.out.println("Unable to set String value: "+statementString);
+      System.out.println("Unable to set String value: " + statementString);
     }
   }
 
@@ -99,19 +103,21 @@ public class Finder {
   public List find(PreparedStatement statement, int count, List resultList) {
     ResultSet result = null;
 
+    //System.err.println("execute("+statementString+")");
     try {
       result = statement.executeQuery();
-      Snip snip = null;
+      Object object = null;
       while (result.next() && count-- > 0) {
-        String name = result.getString("name");
-        snip = cache.get(name);
-        if (null == snip) {
-          snip = loader.createSnip(result);
+        String name = result.getString(this.keyName);
+        object = cache.get(type, name);
+        if (null == object) {
+          object = loader.createObject(result);
           if (caching) {
-            cache.put(name, snip);
+            cache.put(type, name, object);
           }
         }
-        resultList.add(snip);
+
+        resultList.add(object);
       }
     } catch (SQLException e) {
       e.printStackTrace();

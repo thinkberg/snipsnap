@@ -26,6 +26,10 @@ package org.snipsnap.user;
 
 import org.snipsnap.util.ConnectionManager;
 import org.snipsnap.util.log.Logger;
+import org.snipsnap.cache.Cache;
+import org.snipsnap.jdbc.Loader;
+import org.snipsnap.jdbc.FinderFactory;
+import org.snipsnap.jdbc.Finder;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -45,7 +49,7 @@ import java.util.*;
  * @author Stephan J. Schmidt
  * @version $Id$
  */
-public class UserManager {
+public class UserManager implements Loader {
   private static UserManager instance;
 
   public static synchronized UserManager getInstance() {
@@ -66,6 +70,8 @@ public class UserManager {
   private MessageDigest digest;
   private Map authHash = new HashMap();
   private List delayed;
+  private Cache cache;
+  private FinderFactory finders;
 
   protected UserManager() {
     try {
@@ -76,6 +82,14 @@ public class UserManager {
     }
 
     delayed = new LinkedList();
+
+    cache = Cache.getInstance();
+    cache.setLoader(User.class, (Loader) this);
+
+    finders = new FinderFactory("SELECT login, passwd, email, status, roles, " +
+                                " cTime, mTime, lastLogin, lastAccess, lastLogout " +
+                                " FROM SnipUser ", cache, (Loader) this, "login");
+
     Timer timer = new Timer();
     timer.schedule(new TimerTask() {
       public void run() {
@@ -203,7 +217,7 @@ public class UserManager {
   }
 
   public User authenticate(String login, String passwd) {
-    User user = storageLoad(login);
+    User user = load(login);
     if (null != user && user.getPasswd().equals(passwd)) {
       user.lastLogin();
       storageStore(user);
@@ -217,8 +231,23 @@ public class UserManager {
     return user != null && !"Guest".equals(user.getLogin());
   }
 
+  public Object createObject(ResultSet result) throws SQLException {
+    return createUser(result);
+  }
+
+  public Object loadObject(String login) {
+    return storageLoad(login);
+  }
+
+  public Class getLoaderType() {
+    return User.class;
+  }
+
   public User create(String login, String passwd, String email) {
-    return storageCreate(login, passwd, email);
+    User user = storageCreate(login, passwd, email);
+    cache.put(User.class, login, user);
+    // System.err.println("createUser login="+login+" hashcode="+((Object) user).hashCode());
+    return user;
   }
 
   public void store(User user) {
@@ -236,17 +265,19 @@ public class UserManager {
   }
 
   public void systemStore(User user) {
+    // System.err.println("SystemStore User="+user.getLogin());
     storageStore(user);
     return;
   }
 
   public void remove(User user) {
+    cache.remove(User.class, user.getLogin());
     storageRemove(user);
     return;
   }
 
   public User load(String login) {
-    return storageLoad(login);
+    return (User) cache.load(User.class, login);
   }
 
   // Storage System dependend Methods
@@ -363,6 +394,7 @@ public class UserManager {
   }
 
   private User storageLoad(String login) {
+    System.err.println("storageLoad() User="+login);
     User user = null;
     PreparedStatement statement = null;
     ResultSet result = null;
@@ -389,31 +421,8 @@ public class UserManager {
   }
 
   private List storageAll() {
-    List users = new ArrayList();
-
-    ResultSet result = null;
-    PreparedStatement statement = null;
-    Connection connection = ConnectionManager.getConnection();
-
-    try {
-      statement = connection.prepareStatement("SELECT login, passwd, email, status, roles, cTime, mTime, lastLogin, lastAccess, lastLogout " +
-                                              " FROM SnipUser " +
-                                              " ORDER BY login");
-      result = statement.executeQuery();
-      User user = null;
-      while (result.next()) {
-        user = createUser(result);
-        users.add(user);
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    } finally {
-      ConnectionManager.close(result);
-      ConnectionManager.close(statement);
-      ConnectionManager.close(connection);
-    }
-
-    return users;
+    Finder finder = finders.getFinder(" ORDER BY login");
+    return finder.execute();
   }
 
 }

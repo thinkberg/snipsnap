@@ -25,19 +25,28 @@
 
 package org.snipsnap.jdbc;
 
-import org.snipsnap.snip.Snip;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import org.snipsnap.cache.Cache;
 
 /**
- * Interface for loading classes form a ResultSet
+ * Convenience factory to generate Finders
  *
  * @author stephan
  * @version $Id$
  */
-public interface Loader {
-  public Object createObject(ResultSet result) throws SQLException;
-  public Object loadObject(String name);
-  public Class getLoaderType();
+public class FinderFactory {
+  private Cache cache;
+  private Loader loader;
+  private String statementRoot;
+  private String keyName;
+
+  public FinderFactory(String statement, Cache cache, Loader loader, String keyName) {
+    this.cache = cache;
+    this.loader = loader;
+    this.statementRoot = statement + " ";
+    this.keyName = keyName;
+  }
+
+  public Finder getFinder(String statement) {
+    return new Finder(statementRoot + statement, cache, loader, keyName);
+  }
 }

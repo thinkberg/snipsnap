@@ -25,8 +25,6 @@
 
 package org.snipsnap.cache;
 
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.jdbc.Loader;
 import org.snipsnap.app.Application;
 
@@ -42,42 +40,79 @@ import java.sql.SQLException;
  * @version $Id$
  */
 public class Cache {
-  private Map cache;
-  private Loader loader;
+  private Map caches;
+  private Map loaders;
 
-  public Cache(Loader loader) {
-    cache = new HashMap();
-    this.loader = loader;
-  }
+  public static Cache instance;
+  private static Object monitor = new Object();
 
-  public void put(String name, Snip snip) {
-    cache.put(name, snip);
-    return;
-  }
-
-  public boolean contains(String name) {
-    return cache.containsKey(name);
-  }
-
-  public Snip get(String name) {
-    return (Snip) cache.get(name);
-  }
-
-  public void remove(String name) {
-    cache.remove(name);
-    return;
-  }
-
-  public Snip load(String name) {
-    Snip snip = null;
-    if (contains(name)) {
-      snip = get(name);
-    } else {
-      snip = loader.storageLoad(name);
-      if (null != snip) {
-        cache.put(name, snip);
+  public static Cache getInstance() {
+    synchronized (monitor) {
+      if (null == instance) {
+        instance = new Cache();
       }
     }
-    return snip;
+    return instance;
+  }
+
+  private Cache() {
+    caches = new HashMap();
+    loaders = new HashMap();
+  }
+
+  public void setLoader(Class type, Loader loader) {
+    loaders.put(type, loader);
+    if (!caches.containsKey(type)) {
+      caches.put(type, new HashMap());
+    }
+  }
+
+  public void put(Class type, String name, Object snip) {
+    Map cache = (Map) caches.get(type);
+    if (null != cache) {
+      cache.put(name, snip);
+    }
+    return;
+  }
+
+  public boolean contains(Class type, String name) {
+    Map cache = (Map) caches.get(type);
+    if (null != cache) {
+      return cache.containsKey(name);
+    } else {
+      return false;
+    }
+  }
+
+  public Object get(Class type, String name) {
+    Map cache = (Map) caches.get(type);
+    if (null != cache) {
+      return cache.get(name);
+    } else {
+      return null;
+    }
+  }
+
+  public void remove(Class type, String name) {
+    Map cache = (Map) caches.get(type);
+    if (null != cache) {
+      cache.remove(name);
+    }
+    return;
+  }
+
+  public Object load(Class type, String name) {
+    Map cache = (Map) caches.get(type);
+    Object object = null;
+    if (contains(type, name)) {
+      object = get(type, name);
+    } else {
+      Loader loader = (Loader) loaders.get(type);
+      object = loader.loadObject(name);
+      if (null != object) {
+        cache.put(name, object);
+      }
+    }
+    return object;
   }
 }
