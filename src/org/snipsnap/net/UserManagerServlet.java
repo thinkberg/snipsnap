@@ -137,12 +137,14 @@ public class UserManagerServlet extends SnipSnapServlet {
     String roles[] = request.getParameterValues("roles");
 
     boolean modified = false;
-    if (!user.getEmail().equals(email)) {
+    if ((user.getEmail() == null && email != null) ||
+        (user.getEmail() != null && !user.getEmail().equals(email))) {
       modified = true;
       user.setEmail(email);
     }
 
-    if (!user.getStatus().equals(status)) {
+    if ((user.getStatus() == null && status != null) ||
+        (user.getStatus() != null && !user.getStatus().equals(status))) {
       modified = true;
       user.setStatus(status);
     }
