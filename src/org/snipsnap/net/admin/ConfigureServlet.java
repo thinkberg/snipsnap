@@ -115,6 +115,7 @@ public class ConfigureServlet extends HttpServlet {
     Configuration config = (Configuration) session.getAttribute(ATT_CONFIG);
     if (null == config) {
       config = ConfigurationProxy.newInstance();
+      config.setWebInfDir(Application.get().getConfiguration().getWebInfDir());
     }
 
     session.setAttribute(ATT_APPLICATION, app);

@@ -108,7 +108,6 @@ public class InitFilter implements Filter {
 
     }
 
-
     String path = request.getServletPath();
     // make sure we do not enter the default web application unless it's fully installed
     if (!config.isInstalled()) {
