@@ -28,9 +28,7 @@ import com.neotis.app.Application;
 import com.neotis.snip.HomePage;
 import com.neotis.snip.Snip;
 import com.neotis.snip.SnipSpace;
-import com.neotis.user.Security;
-import com.neotis.user.User;
-import com.neotis.user.UserManager;
+import com.neotis.user.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -135,6 +133,7 @@ public class CreateDB {
     System.out.println("CreateDB: Inserting Data");
 
     User admin = UserManager.getInstance().create(username, password, email);
+    admin.getRoles().add(Roles.EDITOR);
 
     Application app = new Application();
     app.setUser(admin);
@@ -161,7 +160,7 @@ public class CreateDB {
       "{link:Lambda|http://lambda.weblogs.com}\\\\ \n" +
       "{link:e7l3|http://www.e7l3.com}\\\\ \n";
     snip = space.create("snipsnap-blogrolling", rolling, app);
-    snip.addPermission("Edit", Security.OWNER);
+    snip.addPermission(Permissions.EDIT, Roles.OWNER);
     space.store(snip);
 
     space.post("Welcome to [SnipSnap]. You can now login and add/edit your first post", app);

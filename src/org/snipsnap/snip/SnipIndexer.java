@@ -32,7 +32,7 @@ import org.apache.lucene.search.Searcher;
 import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.queryParser.MultiFieldQueryParser;
 
 import java.io.IOException;
 import java.io.File;
@@ -46,6 +46,7 @@ import java.io.File;
 
 public class SnipIndexer {
   private static String indexFile = "./db/index";
+  private static final String[] searchFields = new String[]{"content","title"};
 
   public void removeIndex(Snip snip) {
     IndexReader reader = null;
@@ -113,7 +114,7 @@ public class SnipIndexer {
     // parse the query String.
     Query query = null;
     try {
-      query = QueryParser.parse(queryString, "content", new SnipAnalyzer());
+      query = MultiFieldQueryParser.parse(queryString, searchFields, new SnipAnalyzer());
     } catch (org.apache.lucene.queryParser.ParseException e1) {
       close(searcher);
       System.out.println("Unable to parse: " + queryString);

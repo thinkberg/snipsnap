@@ -85,10 +85,16 @@ public class Permissions {
     return;
   }
 
+  public boolean exists(String permission, Roles roles) {
+    // if no permission is set, then return false
+    if (null == permissions || ! permissions.containsKey(permission)) return false;
+    Roles permRoles = (Roles) permissions.get(permission);
+    return permRoles.containsAny(roles);
+  }
+
   public boolean check(String permission, Roles roles) {
     // Policy: If no permission is set, everything is allowed
     if (null == permissions || ! permissions.containsKey(permission)) return true;
-    // Copy !
     Roles permRoles = (Roles) permissions.get(permission);
     return permRoles.containsAny(roles);
   }

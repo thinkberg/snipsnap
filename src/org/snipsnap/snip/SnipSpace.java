@@ -31,6 +31,7 @@ import com.neotis.jdbc.Loader;
 import com.neotis.snip.filter.LinkTester;
 import com.neotis.user.Permissions;
 import com.neotis.user.Security;
+import com.neotis.user.Roles;
 import com.neotis.util.ConnectionManager;
 import com.neotis.util.Queue;
 import org.apache.lucene.search.Hits;
@@ -142,7 +143,7 @@ public class SnipSpace implements LinkTester, Loader {
       snip = create(name, content, app);
     }
     snip.setParent(weblog);
-    snip.addPermission(Permissions.EDIT, Security.OWNER);
+    snip.addPermission(Permissions.EDIT, Roles.OWNER);
     store(snip);
 
     // Ping weblogs.com that we changed our site

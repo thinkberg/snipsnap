@@ -36,9 +36,6 @@ import com.neotis.snip.Ownable;
  */
 
 public class Security {
-  public final static String AUTHENTICATED = "Authenticated";
-  public final static String OWNER = "Owner";
-
   /**
    * Adds authenticated role to user roles
    *
@@ -48,7 +45,7 @@ public class Security {
   public static Roles getRoles(User user) {
     Roles userRoles = user.getRoles();
     if (UserManager.getInstance().isAuthenticated(user)) {
-      userRoles.add(AUTHENTICATED);
+      userRoles.add(Roles.AUTHENTICATED);
     }
     return userRoles;
   }
@@ -65,10 +62,25 @@ public class Security {
     if (object instanceof Ownable) {
       Ownable o = (Ownable) object;
       if (o.isOwner(user)) {
-        roles.add(OWNER);
+        roles.add(Roles.OWNER);
       }
     }
     return roles;
+  }
+
+  /**
+   * Checks whether a object has the given permissiom, e.g.
+   * if a snip has the permission "Edit" for the roles "Owner".
+   * Returns false if there is no "Edit" permission.
+   *
+   * @param permission String with the permission to check, e.g. "Edit"
+   * @param object Object to check permission agains
+   * @param roles Roles object containing the roles
+   * @return true if the object has the permission for the roles
+   */
+  public static boolean existsPermission(String permission, Snip object, Roles roles) {
+    Permissions permissions = object.getPermissions();
+    return permissions.exists(permission, roles);
   }
 
   public static boolean hasRoles(User user, Roles roles) {
@@ -82,7 +94,8 @@ public class Security {
   }
 
   /**
-   * Check if the user has the permission on the object
+   * Check if the user has the permission on the object.
+   * Returns true if there is no "Edit" permission.
    *
    * @param permission the permission to check, e.g. "Edit"
    * @param user the user to check permissions for, e.g. "funzel"

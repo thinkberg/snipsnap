@@ -28,6 +28,7 @@ import com.neotis.app.Application;
 import com.neotis.util.StringUtil;
 import com.neotis.user.Permissions;
 import com.neotis.user.Security;
+import com.neotis.user.Roles;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -92,7 +93,7 @@ public class Comments {
     Snip comment = space.create(name, content, app);
     System.err.println(comment);
     comment.setCommentedSnip(this.snip);
-    comment.addPermission(Permissions.EDIT, Security.OWNER);
+    comment.addPermission(Permissions.EDIT, Roles.OWNER);
     space.store(comment);
     comments.add(comment);
     users.add(comment.getCUser());

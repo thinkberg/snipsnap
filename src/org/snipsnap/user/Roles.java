@@ -42,12 +42,17 @@ import java.util.TreeSet;
 public class Roles {
   private Set roles;
 
+  public final static String AUTHENTICATED = "Authenticated";
+  public final static String OWNER = "Owner";
+  public final static String EDITOR = "Editor";
+  public final static String NOCOMMENT = "NoComment";
+
   private static Set ROLES = new TreeSet();
 
   private static Set getAllRoles() {
     if (ROLES == null) {
-      ROLES.add("Editor");
-      ROLES.add("NoComment");
+      ROLES.add(EDITOR);
+      ROLES.add(NOCOMMENT);
     }
     return ROLES;
   }

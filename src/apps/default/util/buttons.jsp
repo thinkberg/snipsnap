@@ -4,6 +4,7 @@
 <s:check roles="Editor" snip="${snip}">
   [<a href="../exec/remove?name=<c:out value='${snip.name}'/>">zap!</a>]
 </s:check>
+
 [<a href="http://www.google.com/search?q=<c:out value='${snip.name}'/>">google</a>]
 [<a href="http://www.daypop.com/search?q=<c:out value='${snip.name}'/>">daypop</a>]
 <s:check roles="Authenticated" permission="Edit" snip="${snip}">
