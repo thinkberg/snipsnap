@@ -20,10 +20,9 @@
 <s:check roles="Authenticated" permission="Edit" snip="${snip}" invert="true">
   <span class="inactive">[edit]</span>
 </s:check>
-<!-- <s:check roles="Authenticated">
- [<a href="<c:url value='/exec/addlabel'/>">new label</a>]
+<s:check roles="Authenticated">
+ [<a href="/exec/addlabel?name=<c:out value='${snip.nameEncoded}'/>">new label</a>]
 </s:check>
--->
 <s:check roles="Editor">
   <BR/><c:out value="${snip.permissions}"/>
 </s:check>

@@ -26,6 +26,11 @@
     <servlet-class>org.snipsnap.net.Layouter</servlet-class>
   </servlet>
 
+    <servlet>
+      <servlet-name>org.snipsnap.net.AddLabelServlet</servlet-name>
+      <servlet-class>org.snipsnap.net.AddLabelServlet</servlet-class>
+    </servlet>
+
   <servlet>
     <servlet-name>org.snipsnap.net.SnipViewServlet</servlet-name>
     <servlet-class>org.snipsnap.net.SnipViewServlet</servlet-class>
@@ -35,6 +40,11 @@
     <servlet-name>org.snipsnap.net.RssServlet</servlet-name>
     <servlet-class>org.snipsnap.net.RssServlet</servlet-class>
   </servlet>
+
+    <servlet>
+      <servlet-name>org.snipsnap.net.XmlRpcServlet</servlet-name>
+      <servlet-class>org.snipsnap.net.XmlRpcServlet</servlet-class>
+    </servlet>
 
   <servlet>
     <servlet-name>org.snipsnap.net.SnipEditServlet</servlet-name>
@@ -118,9 +128,19 @@
     <url-pattern>/exec/lock</url-pattern>
   </servlet-mapping>
 
+    <servlet-mapping>
+      <servlet-name>org.snipsnap.net.XmlRpcServlet</servlet-name>
+      <url-pattern>/api/RPC2</url-pattern>
+    </servlet-mapping>
+
   <servlet-mapping>
     <servlet-name>org.snipsnap.net.RssServlet</servlet-name>
     <url-pattern>/exec/rss</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>org.snipsnap.net.AddLabelServlet</servlet-name>
+    <url-pattern>/exec/addlabel</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
