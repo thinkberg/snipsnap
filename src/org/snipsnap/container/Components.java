@@ -61,7 +61,7 @@ public class Components {
         nc.registerComponentByClass(org.snipsnap.container.SessionService.class);
         nc.registerComponent(DEFAULT_ENGINE, org.snipsnap.render.SnipRenderEngine.class);
         nc.registerComponentByClass(org.snipsnap.render.PlainTextRenderEngine.class);
-        nc.registerComponentByClass(org.snipsnap.snip.storage.JDBCSnipStorage.class);
+        //nc.registerComponentByClass(org.snipsnap.snip.storage.JDBCSnipStorage.class);
         nc.registerComponent(org.snipsnap.snip.SnipSpace.class, org.snipsnap.snip.SnipSpaceImpl.class);
 
         nc.instantiateComponents();
