@@ -35,11 +35,14 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Searcher;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
+import org.snipsnap.container.Components;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+
 
 /**
  * Indexes snips for fulltext searches
@@ -61,6 +64,36 @@ public class SnipIndexer {
       indexMap.put(appOid, indexFile);
     }
     return indexFile;
+  }
+
+  public void deleteIndex() throws IOException {
+    File indexFile = indexFile();
+    if(indexFile.exists() && indexFile.isDirectory()) {
+      File oldIndexFile = new File(indexFile.getParentFile(), indexFile.getName()+".old");
+      boolean done = indexFile.renameTo(oldIndexFile);
+      if(done) {
+        removeDirectory(oldIndexFile);
+      } else {
+        throw new IOException("unable to move old index directory to "+oldIndexFile);
+      }
+    }
+  }
+
+  private void removeDirectory(File root) {
+    File[] files = root.listFiles();
+    for(int f = 0; f < files.length; f++) {
+      if(files[f].isDirectory()) {
+        removeDirectory(files[f]);
+      }
+      boolean done = files[f].delete();
+      if(!done) {
+        Logger.fatal("Unable to delete old index directory: "+files[f]);
+      }
+    }
+
+    if (!root.delete()) {
+      Logger.fatal("Unable to delete old index directory: " + root);
+    }
   }
 
   public void removeIndex(Snip snip) {

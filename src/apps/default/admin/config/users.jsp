@@ -12,43 +12,13 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
 
-<% pageContext.setAttribute("usermanager", Components.getComponent(UserManager.class)); %>
-
-
-<table class="users">
-  <tr>
-    <th><fmt:message key="config.users.name"/></th>
-    <th><fmt:message key="config.users.lastlogin"/></th>
-    <th><fmt:message key="config.users.email"/></th>
-    <th><fmt:message key="config.users.roles"/></th>
-    <th colspan="2"><fmt:message key="config.users.action"/></th>
-  </tr>
-  <c:forEach items="${usermanager.all}" var="user" varStatus="idx">
-    <tr <c:choose>
-      <c:when test="${idx.count mod 2 == 0}">class="users-odd"</c:when>
-      <c:otherwise>class="user-even"</c:otherwise>
-     </c:choose>>
-      <td>
-        <span class="nobr"><b><a href="space/${user.login}"><c:out value="${user.login}"/></a></b></span>
-        <c:if test="${user.status != 'not set'}"><br/><fmt:message key="config.users.status"/> <i><c:out value="${user.status}"/></i></c:if><br/>
-      </td>
-      <td><c:out value="${user.lastLogin}"/></td>
-      <td>
-        <c:if test="${user.email != null}">
-          <a href="mailto:<c:out value="${user.email}"/>"><c:out value="${user.email}"/></a>
-        </c:if>
-      </td>
-      <td><span class="nobr"><c:out value="${user.roles}"/></span></td>
-      <td>
-        <input type="hidden" name="edit_login" value="<c:out value='${user.login}'/>"/>
-        <input type="submit" name="edit_user" value="<fmt:message key="config.users.edit"/>"/>
-      </td>
-      <td>
-        <c:if test="${configuser.login != user.login}">
-          <input type="hidden" name="remove_login" value="<c:out value='${user.login}'/>"/>
-          <input style="color: red" type="submit" name="ok" value="<fmt:message key="config.users.remove"/>"/>
-        </c:if>
-      </td>
-    </tr>
-  </c:forEach>
-</table>
+<div class="users">
+  <c:choose>
+    <c:when test="${not empty param.edit_user}">
+      <c:out value="not implemented yet"/>
+    </c:when>
+    <c:otherwise>
+      <c:import url="config/users.list.jsp"/>
+    </c:otherwise>
+  </c:choose>
+</div>

@@ -11,7 +11,20 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
 
-<% pageContext.setAttribute("locales", Locale.getAvailableLocales()); %>
+<%
+  Locale[] locales;
+  Map countries = new TreeMap();
+  Map languages = new TreeMap();
+  locales = Locale.getAvailableLocales();
+  for (int count = 0; count < locales.length; count++) {
+    if(!"".equals(locales[count].getDisplayCountry())) {
+      countries.put(locales[count].getDisplayCountry(), locales[count]);
+    }
+    languages.put(locales[count].getDisplayLanguage(), locales[count]);
+  }
+  pageContext.setAttribute("countries", countries.values());
+  pageContext.setAttribute("languages", languages.values());
+%>
 
 <table>
   <tr>
@@ -19,10 +32,8 @@
     <td>
       <fmt:message key="config.app.country"/><br/>
       <select size="1" name="app.country">
-        <c:forEach items="${locales}" var="locale">
-          <c:if test="${!empty locale.country}">
-            <option value="<c:out value='${locale.country}'/>" <c:if test="${newconfig.country == locale.country}">selected="selected"</c:if>><c:out value="${locale.displayCountry}" /></option>
-          </c:if>
+        <c:forEach items="${countries}" var="country">
+          <option value="<c:out value='${country.country}'/>" <c:if test="${newconfig.country == country.country}">selected="selected"</c:if>><c:out value="${country.displayCountry}" /></option>
         </c:forEach>
       </select>
     </td>
@@ -32,16 +43,8 @@
     <td>
       <fmt:message key="config.app.language"/><br/>
       <select size="1" name="app.language">
-        <%
-          Map languages = new TreeMap();
-          Locale[] locales = Locale.getAvailableLocales();
-          for(int count = 0; count < locales.length; count++) {
-            languages.put(locales[count].getLanguage(), locales[count]);
-          }
-          pageContext.setAttribute("languages", languages);
-        %>
         <c:forEach items="${languages}" var="language">
-          <option value="<c:out value='${language.key}'/>" <c:if test="${newconfig.language == language.key}">selected="selected"</c:if>><c:out value="${language.value.displayLanguage}" /></option>
+          <option value="<c:out value='${language.language}'/>" <c:if test="${newconfig.language == language.language}">selected="selected"</c:if>><c:out value="${language.displayLanguage}" /></option>
         </c:forEach>
       </select>
     </td>

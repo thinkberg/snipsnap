@@ -10,7 +10,7 @@
 <input type="hidden" name="step" value="<c:out value='${step}'/>"/>
 <c:choose>
   <c:when test="${not empty configuser && configuser.admin}">
-    <c:if test="${not(step == 'import' || step == 'export' || step == 'users')}">
+    <c:if test="${not(step == 'import' || step == 'export' || step == 'users' || step == 'search')}">
       <input type="submit" name="save" value="<fmt:message key="config.nav.save"/>"/>
     </c:if>
   </c:when>

@@ -43,6 +43,7 @@ import org.snipsnap.versioning.VersionManager;
 
 import java.sql.Timestamp;
 import java.util.*;
+import java.io.IOException;
 
 /**
  * SnipSpace implementation handles all the operations with snips like
@@ -234,11 +235,17 @@ public class SnipSpaceImpl implements SnipSpace {
   }
 
   public void reIndex() {
-    List snips = getAll();
-    Iterator iterator = snips.iterator();
-    while (iterator.hasNext()) {
-      Snip snip = (Snip) iterator.next();
-      indexer.reIndex(snip);
+    try {
+      indexer.deleteIndex();
+      List snips = getAll();
+      Iterator iterator = snips.iterator();
+      while (iterator.hasNext()) {
+        Snip snip = (Snip) iterator.next();
+        indexer.reIndex(snip);
+      }
+    } catch (IOException e) {
+      Logger.fatal("unable to re-index SnipSpace: ", e);
+      e.printStackTrace();
     }
   }
 

@@ -24,6 +24,7 @@
  */
 package org.snipsnap.net.admin;
 
+import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.app.ApplicationManager;
 import org.snipsnap.app.JDBCApplicationStorage;
@@ -33,20 +34,19 @@ import org.snipsnap.config.ConfigurationProxy;
 import org.snipsnap.config.Globals;
 import org.snipsnap.config.InitializeDatabase;
 import org.snipsnap.container.Components;
-import org.snipsnap.net.filter.MultipartWrapper;
 import org.snipsnap.net.FileUploadServlet;
+import org.snipsnap.net.filter.MultipartWrapper;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.snip.XMLSnipExport;
 import org.snipsnap.snip.XMLSnipImport;
-import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.snip.storage.JDBCSnipStorage;
 import org.snipsnap.snip.storage.JDBCUserStorage;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.util.ConnectionManager;
 import org.snipsnap.versioning.JDBCVersionStorage;
-import org.radeox.util.logging.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -64,8 +64,8 @@ import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -107,6 +107,7 @@ public class ConfigureServlet extends HttpServlet {
   protected final static String STEP_IMPORT = "import";
   protected final static String STEP_EXPORT = "export";
   protected final static String STEP_USERS = "users";
+  protected final static String STEP_SEARCH = "search";
 
   private final static List BASIC_STEPS = Arrays.asList(new String[]{
     STEP_ADMINISTRATOR,
@@ -127,7 +128,8 @@ public class ConfigureServlet extends HttpServlet {
   private final static List CONFIG_STEPS = Arrays.asList(new String[]{
     STEP_IMPORT,
     STEP_EXPORT,
-    STEP_USERS
+    STEP_USERS,
+    STEP_SEARCH
   });
 
   public void init() throws ServletException {
@@ -343,7 +345,7 @@ public class ConfigureServlet extends HttpServlet {
       session.setAttribute(ATT_STEPS, steps);
       RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/configure.jsp");
       dispatcher.forward(request, response);
-      if(config.isConfigured()) {
+      if (config.isConfigured()) {
         session.removeAttribute(ATT_CONFIG);
       }
       return;
@@ -387,6 +389,8 @@ public class ConfigureServlet extends HttpServlet {
       }
     } else if (STEP_USERS.equals(step)) {
       manageUsers(request, config, errors);
+    } else if (STEP_SEARCH.equals(step)) {
+      manageSearchEngine(request, config, errors);
     }
     return errors;
   }
@@ -820,7 +824,32 @@ public class ConfigureServlet extends HttpServlet {
   }
 
   private void manageUsers(HttpServletRequest request, Configuration config, Map errors) {
-    
+    if (request.getParameter("remove_user") != null) {
+      errors.put("fatal", "fatal");
+    }
+  }
+
+  private Map indexerThreads = new HashMap();
+  private void manageSearchEngine(HttpServletRequest request, Configuration config, Map errors) {
+    if (request.getParameter("reset") != null) {
+      final String appOid = (String)Application.get().getObject(Application.OID);
+      Thread indexerThread = (Thread)indexerThreads.get(appOid);
+      if(indexerThread != null && indexerThread.isAlive()) {
+        errors.put("config.search.running", "config.search.running");
+        return;
+      } else if(indexerThread != null) {
+        indexerThreads.remove(appOid);
+        indexerThread = null;
+      }
+      indexerThread = new Thread() {
+        public void run() {
+          Application.get().storeObject(Application.OID, appOid);
+          ((SnipSpace) Components.getComponent(SnipSpace.class)).reIndex();
+        }
+      };
+      indexerThread.start();
+      request.getSession().setAttribute("indexerThread", indexerThread);
+    }
   }
 
 // SPECIAL FIRST TIME INSTALLATIONS
@@ -855,7 +884,7 @@ public class ConfigureServlet extends HttpServlet {
         config.setJdbcUrl(request.getParameter(Globals.APP_JDBC_URL));
         config.setJdbcUser(request.getParameter(Globals.APP_JDBC_USER));
         String passwd = request.getParameter(Globals.APP_JDBC_PASSWORD);
-        if(null != passwd) {
+        if (null != passwd) {
           config.setJdbcPassword(passwd);
         }
       }

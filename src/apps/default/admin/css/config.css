@@ -201,20 +201,36 @@ li.current-step {
   list-style-type: none;
 }
 
+.users {
+  width: 100%;
+}
+
+.users-pages {
+  font-size: x-small;
+  margin-bottom: 5px;
+}
+
 .users table {
-  margin: 0;
-  padding: 0;
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
+  border: 1px;
 }
 
 .users td {
-  padding: 2px;
+  padding-left: 2px;
+  padding-right: 2px;
+  padding-top: 1px;
+  padding-bottom: 1px;
   margin: 0px;
+  border: 0px;
+  text-align: left;
 }
 
-.users td:first-child {
-  background: inherit;
+.users th {
+  text-align: left;
 }
 
-.users-odd {
+.users-even {
   background: #eeeeee;
 }
