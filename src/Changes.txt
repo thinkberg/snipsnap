@@ -1,5 +1,6 @@
 0.5
 
+- Added Feature: File system storage for Snips
 - Added Feature: Stylesheets are now contained within the SnipSpace
 - Developer: Macro, Servlet and ContentRenderer for rendering inline content (PNG, ...)
 - Added Feature: Rendering MindMaps and Organigrams
