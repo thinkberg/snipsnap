@@ -837,7 +837,9 @@ public class ConfigureServlet extends HttpServlet {
         config.setJdbcUrl(request.getParameter(Globals.APP_JDBC_URL));
         config.setJdbcUser(request.getParameter(Globals.APP_JDBC_USER));
         String passwd = request.getParameter(Globals.APP_JDBC_PASSWORD);
-        config.setJdbcPassword(null == passwd ? "" : passwd);
+        if(null != passwd) {
+          config.setJdbcPassword(passwd);
+        }
       }
 
       try {
