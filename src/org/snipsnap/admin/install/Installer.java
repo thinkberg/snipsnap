@@ -198,7 +198,7 @@ public class Installer extends HttpServlet {
 
     writeMessage(out, "Extracting application template ...");
     try {
-      Checksum checksum = JarUtil.extract(new JarFile("./lib/snipsnap-template.war", true), appDir);
+      Checksum checksum = JarUtil.extract(new JarFile("lib/snipsnap-template.war", true), appDir);
       checksum.store(new File(webAppRoot, "CHECKSUMS"));
     } catch (IOException e) {
       System.err.println("Installer: error while extracting default template: " + e);
@@ -229,7 +229,7 @@ public class Installer extends HttpServlet {
 
       try {
         Properties dbConf = new Properties();
-        dbConf.load(new FileInputStream("./conf/db.conf"));
+        dbConf.load(new FileInputStream("conf/db.conf"));
         dbConf.store(new FileOutputStream(dbConfFile), "SnipSnap Database configuration: " + config.getName());
 
         CreateDB.createDB(config);

@@ -32,6 +32,7 @@ import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
+import org.snipsnap.util.ConnectionManager;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -55,25 +56,9 @@ public class CreateDB {
   // The username/password for the database.  This will be the username/
   // password for the user that has full control over the database.
   public static void createDB(AppConfiguration config) {
-    // Register the Mckoi JDBC Driver
-    try {
-      Class.forName(config.getJDBCDriver()).newInstance();
-    } catch (Exception e) {
-      e.printStackTrace();
-      System.out.println("CreateDB: unable to register the JDBC Driver class " + config.getJDBCDriver() + ".");
-      return;
-    }
-
     // Make a connection with the database.  This will create the database
     // and log into the newly created database.
-    Connection connection;
-    try {
-      connection = DriverManager.getConnection(config.getJDBCURL(), config.getAdminLogin(), config.getAdminPassword());
-    } catch (SQLException e) {
-      e.printStackTrace();
-      System.out.println("CreateDB: unable to create the database: " + e.getMessage());
-      return;
-    }
+    Connection connection = ConnectionManager.getConnection();
 
     // --- Set up the database ---
 

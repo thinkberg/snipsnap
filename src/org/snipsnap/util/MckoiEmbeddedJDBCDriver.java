@@ -95,6 +95,8 @@ public class MckoiEmbeddedJDBCDriver implements Driver {
       url = url.substring(0, varStart);
     }
 
+    System.out.println("classLoader: "+MckoiEmbeddedJDBCDriver.class.getClassLoader());
+    System.out.println("getDatabase("+url+") -> "+databases.get(url));
     if (databases.get(url) == null) {
       String file = url.substring(MCKOI_PREFIX.length());
       File configFile = new File(file);
@@ -109,6 +111,7 @@ public class MckoiEmbeddedJDBCDriver implements Driver {
       } else {
         dbsystem = controller.startDatabase(config);
       }
+      System.out.println("databases: "+databases.size());
       databases.put(url, dbsystem);
     }
     return (DBSystem) databases.get(url);
