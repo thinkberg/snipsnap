@@ -498,6 +498,9 @@
 
 
   <target name="test" depends="compile-server, compile-servlets, compile-util, compile-test">
+    <mkdir dir="./cls/test/org/snipsnap/config"/> 
+    <copy file="src/org/snipsnap/config/defaults.conf" tofile="./cls/test/org/snipsnap/config/defaults.conf"/>
+    <copy file="src/org/snipsnap/config/transpose.map" tofile="./cls/test/org/snipsnap/config/transpose.map"/>
     <junit printsummary="true">
        <formatter usefile="false" type="plain"/>
        <test name="org.snipsnap.test.AllTests"/>
