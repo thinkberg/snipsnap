@@ -85,6 +85,7 @@ public class MacroFilter extends RegexTokenFilter {
     add(new InterWikiMacro());
     add(new BackLinkMacro());
     add(new SnipLinkMacro());
+    add(new LdapMacro());
   }
 
   public static MacroFilter getInstance() {

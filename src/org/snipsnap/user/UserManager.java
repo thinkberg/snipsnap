@@ -220,7 +220,6 @@ public class UserManager implements Loader {
     return null;
   }
 
-
   public User authenticate(String login, String passwd) {
     User user = load(login);
 /*
