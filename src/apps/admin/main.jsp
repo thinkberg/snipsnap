@@ -19,10 +19,10 @@
         <table border="0" cellpadding="4" cellspacing="1">
          <tr>
            <td valign="top">
-             <img src="/images/snipsnap.gif"/>
-             <c:import url="/menu.jsp"/>
+             <img src="/images/snip.png"/>
            </td>
          </tr>
+         <tr><td><c:import url="/menu.jsp"/></td></tr>
          <tr>
            <td valign="top" width="100%">
              <c:import url="${page}"/>
