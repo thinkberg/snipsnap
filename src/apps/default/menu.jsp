@@ -4,41 +4,43 @@
   ** @version $Id$
   -->
 
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+
 <%@ page import="com.neotis.snip.SnipSpace,
                  java.util.Iterator,
                  com.neotis.snip.Snip,
                  com.neotis.date.Month,
                  com.neotis.app.Application,
                  com.neotis.user.User"%>
-<jsp:useBean id="user" scope="request" class="com.neotis.jsp.UserBean">
-  <jsp:setProperty name="user" property="session" value="<%= session %>"/>
-</jsp:useBean>
-
 <table class="menu" width="100%" border="0" cellpadding="4" cellspacing="1">
  <tr><td class="menuitem">Start<td></tr>
  <tr><td class="menuitem">Index<td></tr>
  <tr><td class="menuitem">Search<td></tr>
  <tr><td>
   <!-- replace this with a JSTL tag ala <s:checkUser role="anonymous"/> -->
-  <% if(user.isAuthenticated()) { %>
-    logged in as <a href="/space/<%= user.getLogin() %>"><%= user.getLogin() %></a> | <a href="/exec/authenticate?logoff=true">logoff</a>
-    <br>
-    <a href="/exec/post">post comment</a>
-  <% } else { %>
-   <form method="POST" action="/exec/authenticate">
-    <table border="0" cellspacing="0" cellpadding="0">
-     <tr>
-      <td>Login: </td>
-      <td>Password: </td>
-     <tr>
-      <td><input name="login" type="text" size="10" value=""></td>
-      <td><input name="password" type="password" size="10" value=""></td>
-     <tr><td colspan="2">
-       <input value="Login" name="ok" type="submit"> <a href="/exec/register">Register!</a>
-     </td></tr>
-    </table>
-   </form><br>
-  <% } %>
+
+  <c:choose>
+    <c:when test="app.user.login != 'Guest'">
+      logged in as <c:out value="'<a href=/space/'+ app.user.login()>"><c:out value="user.login"/></a> | <a href="/exec/authenticate?logoff=true">logoff</a>
+      <br>
+      <a href="/exec/post">post comment</a>
+    </c:when>
+    <c:otherwise>
+      <form method="POST" action="/exec/authenticate">
+        <table border="0" cellspacing="0" cellpadding="0">
+         <tr>
+          <td>Login: </td>
+          <td>Password: </td>
+         <tr>
+          <td><input name="login" type="text" size="10" value=""></td>
+          <td><input name="password" type="password" size="10" value=""></td>
+         <tr><td colspan="2">
+           <input value="Login" name="ok" type="submit"> <a href="/exec/register">Register!</a>
+         </td></tr>
+        </table>
+      </form><br>
+    </c:otherwise>
+  </c:choose>
  <tr><td>
   <b>Recent Changes:</b><br>
   <!-- replace this with a JSTL tag ala <s:recent/> -->
