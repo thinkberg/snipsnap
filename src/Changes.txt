@@ -1,5 +1,6 @@
 0.2.8
 
+- Required JAR libararies are now included in snipsnap-template.war
 - Added feature: {api} now reads from conf/apidocs.txt so {api}
   can point to other online api documentation,
 - re-validated XHTML 1.0

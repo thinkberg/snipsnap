@@ -172,7 +172,7 @@
 
     <jar destfile="${jar}/${appname}-template.war" excludes="**/CVS">
       <fileset dir="${src}/apps/default" includes="**"/>
-      <fileset dir="${src}/theme/snipsnap" includes="**"/>
+      <fileset dir="${src}/theme/blue" includes="**"/>
       <zipfileset dir="${jar}" prefix="WEB-INF/lib">
         <include name="mckoidb.jar"/>
         <include name="jdbcpool.jar"/>
