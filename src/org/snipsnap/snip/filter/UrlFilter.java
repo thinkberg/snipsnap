@@ -31,8 +31,8 @@ import org.snipsnap.snip.Snip;
 import org.apache.oro.text.regex.MatchResult;
 
 /*
- * UrlFilter finds [text] in its input and transforms this
- * to <url name="text">
+ * UrlFilter finds http:// style URLs in its input and transforms this
+ * to &lt;a href="url"&gt;url&lt;/a&gt;
  *
  * @author stephan
  * @team sonicteam
