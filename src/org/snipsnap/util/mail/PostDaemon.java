@@ -34,8 +34,10 @@ import org.snipsnap.container.Components;
 import org.snipsnap.snip.Blog;
 import org.snipsnap.snip.BlogKit;
 import org.snipsnap.snip.SnipSpaceFactory;
+import org.snipsnap.snip.Snip;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManagerFactory;
+import org.snipsnap.net.FileUploadServlet;
 
 import javax.mail.Address;
 import javax.mail.Flags;
@@ -98,13 +100,13 @@ public class PostDaemon extends TimerTask {
   public void run() {
     ConfigurationManager configManager = ConfigurationManager.getInstance();
     Iterator oids = configManager.getOids();
+    Logger.debug("PostDaemon: checking for mail-to-blog posts ...");
 
 
     while (oids.hasNext()) {
       String appOid = (String) oids.next();
       Configuration config = configManager.getConfiguration(appOid);
 
-      Logger.debug("PostDaemon: checking pop3: "+appOid);
 
       int minutes = -1;
       try {
@@ -199,7 +201,7 @@ public class PostDaemon extends TimerTask {
             Blog blog = SnipSpaceFactory.getInstance().getBlog();
             Logger.debug("PostDaemon: posting '"+title);
 
-            blog.post(writer.getBuffer().toString(), title);
+            Snip blogSnip = blog.post(writer.getBuffer().toString(), title);
 
           } catch (Exception e) {
             Logger.warn("PostDaemon Error:", e);
@@ -223,7 +225,7 @@ public class PostDaemon extends TimerTask {
 
   public void processImage(Writer writer, Part part, String name) throws MessagingException, IOException {
     writer.write("{image:");
-    writer.write(part.getFileName());
+    writer.write(FileUploadServlet.getCanonicalFileName(part.getFileName()));
     storeImage(part, name);
     writer.write("}");
   }
@@ -253,7 +255,7 @@ public class PostDaemon extends TimerTask {
     try {
       if (part != null && part.getFileName() != null) {
         Configuration config = Application.get().getConfiguration();
-        File imageDir = new File(config.getWebInfDir().getParentFile(), "images");
+        File imageDir = new File(config.getFilePath(), "images");
         File file = new File(imageDir, "image-" + name + "-" + part.getFileName());
         Logger.debug("Uploading '" + part.getFileName() + "' to '" + file.getAbsolutePath() + "'");
         FileOutputStream out = new FileOutputStream(file);
