@@ -1,0 +1,15 @@
+0.2.6
+
+- Added feature: create snip at search, whe snip does not exist
+- Added feature: XML-RPC Blogger API newPost()
+
+0.2.5
+
+- Added feature: SnipSnap is multi-server capable
+- SnipSnap stores information about snip views, clicked links between snips and incoming snips
+- storing information about users, like lastlogin and creation time. Added owner to snips to seperate creator and owner
+- Added some macros (like {last-login:funzel}, {snips-by-hotness})
+- Preview Button
+- Following Jakob Nielsen, start and the logo are no longer clickable on the start page
+- Basic RSS support
+- Fixed HTML to XHTML 1.0 and CSS to validated CSS
