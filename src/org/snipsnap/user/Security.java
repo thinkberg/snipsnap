@@ -38,8 +38,17 @@ import java.util.*;
  */
 
 public class Security {
+  public final static String AUTHENTICATED = "Authenticated";
+
+  public static Set getRoles(User user) {
+    Set userRoles = user.getRoles();
+    if (UserManager.getInstance().isAuthenticated(user)) {
+      userRoles.add(AUTHENTICATED);
+    }
+  }
+
   public static Set getRoles(User user, Snip object) {
-    Set roles = user.getRoles();
+    Set roles = getRoles(user);
     if (object instanceof Ownable) {
       Ownable o = (Ownable) object;
       if (o.isOwner(user)) {
@@ -49,14 +58,16 @@ public class Security {
     return roles;
   }
 
-  public static boolean hasRole(User user, Snip object, String role) {
-    return getRoles(user, object).contains(role);
+  public static boolean hasRoles(User user, List roles) {
+    Set userRoles = getRoles(user);
+    userRoles.retainAll(roles);
+    return !userRoles.isEmpty();
   }
 
   public static boolean hasRoles(User user, Snip object, List roles) {
-    Set userRoles = getRoles(user,object);
+    Set userRoles = getRoles(user, object);
     userRoles.retainAll(roles);
-    return ! userRoles.isEmpty();
+    return !userRoles.isEmpty();
   }
 
   // "Edit", "SnipSnap", "funzel"
@@ -65,6 +76,6 @@ public class Security {
     Set permRoles = (Set) permissions.get(permission);
     permRoles.removeAll(getRoles(user, object));
 
-    return ! permRoles.isEmpty();
+    return !permRoles.isEmpty();
   }
 }
