@@ -94,19 +94,19 @@ public class UserManager {
   }
 
   private String getDigest(User user) {
-    // create a string representation of the MD5 hash of current user
-    StringBuffer md5hex = new StringBuffer();
+    // create a string representation of the digest of current user
+    StringBuffer tmpDigest = new StringBuffer();
     if (digest != null) {
       String tmp = user.getLogin() + user.getPasswd() + user.getLastLogin().toString();
       // System.out.println("encoding: "+tmp);
       byte buf[] = digest.digest(tmp.getBytes());
-      md5hex.setLength(0);
+      tmpDigest.setLength(0);
       for (int i = 0; i < buf.length; i++) {
-        md5hex.append(Integer.toHexString(buf[i]).toUpperCase());
+        tmpDigest.append(Integer.toHexString(buf[i]).toUpperCase());
       }
     }
     // System.out.println("md5hash: "+md5hex.toString());
-    return md5hex.toString();
+    return tmpDigest.toString();
   }
 
   // update the auth hash by removing all entries and updating from the database
@@ -227,7 +227,7 @@ public class UserManager {
     return;
   }
 
-  public void delayedStrore(User user) {
+  public void delayedStore(User user) {
     synchronized (delayed) {
       if (!delayed.contains(user)) {
         delayed.add(user);
@@ -259,6 +259,7 @@ public class UserManager {
     Timestamp mTime = result.getTimestamp("mTime");
     Timestamp lastLogin = result.getTimestamp("lastLogin");
     Timestamp lastAccess = result.getTimestamp("lastAccess");
+    Timestamp lastLogout = result.getTimestamp("lastLogout");
     String status = result.getString("status");
     User user = new User(login, passwd, email);
     user.setStatus(status);
@@ -267,6 +268,7 @@ public class UserManager {
     user.setMTime(mTime);
     user.setLastLogin(lastLogin);
     user.setLastAccess(lastAccess);
+    user.setLastLogout(lastLogout);
     return user;
   }
 
@@ -276,7 +278,7 @@ public class UserManager {
 
     try {
       statement = connection.prepareStatement("UPDATE SnipUser SET login=?, passwd=?, email=?, status=?, roles=?, " +
-                                              " cTime=?, mTime=?, lastLogin=?, lastAccess=? " +
+                                              " cTime=?, mTime=?, lastLogin=?, lastAccess=?, lastLogout=? " +
                                               " WHERE login=?");
 
       statement.setString(1, user.getLogin());
@@ -288,7 +290,8 @@ public class UserManager {
       statement.setTimestamp(7, user.getMTime());
       statement.setTimestamp(8, user.getLastLogin());
       statement.setTimestamp(9, user.getLastAccess());
-      statement.setString(10, user.getLogin());
+      statement.setTimestamp(10, user.getLastLogout());
+      statement.setString(11, user.getLogin());
 
       statement.execute();
     } catch (SQLException e) {
@@ -311,12 +314,13 @@ public class UserManager {
     user.setMTime(cTime);
     user.setLastLogin(cTime);
     user.setLastAccess(cTime);
+    user.setLastLogout(cTime);
 
     try {
       statement = connection.prepareStatement("INSERT INTO SnipUser " +
                                               " (login, passwd, email, status, roles, " +
-                                              " cTime, mTime, lastLogin, lastAccess) " +
-                                              " VALUES (?,?,?,?,?,?,?,?,?)");
+                                              " cTime, mTime, lastLogin, lastAccess, lastLogout) " +
+                                              " VALUES (?,?,?,?,?,?,?,?,?,?)");
       statement.setString(1, login);
       statement.setString(2, passwd);
       statement.setString(3, email);
@@ -326,6 +330,7 @@ public class UserManager {
       statement.setTimestamp(7, cTime);
       statement.setTimestamp(8, cTime);
       statement.setTimestamp(9, cTime);
+      statement.setTimestamp(10, cTime);
 
       statement.execute();
     } catch (SQLException e) {
@@ -358,13 +363,14 @@ public class UserManager {
   }
 
   private User storageLoad(String login) {
+    System.err.println("User storageLoad() "+login);
     User user = null;
     PreparedStatement statement = null;
     ResultSet result = null;
     Connection connection = ConnectionManager.getConnection();
 
     try {
-      statement = connection.prepareStatement("SELECT login, passwd, email, status, roles, cTime, mTime, lastLogin, lastAccess " +
+      statement = connection.prepareStatement("SELECT login, passwd, email, status, roles, cTime, mTime, lastLogin, lastAccess, lastLogout " +
                                               " FROM SnipUser " +
                                               " WHERE login=?");
       statement.setString(1, login);
@@ -384,6 +390,7 @@ public class UserManager {
   }
 
   private List storageAll() {
+    System.err.println("User storageAll()");
     List users = new ArrayList();
 
     ResultSet result = null;
@@ -391,7 +398,7 @@ public class UserManager {
     Connection connection = ConnectionManager.getConnection();
 
     try {
-      statement = connection.prepareStatement("SELECT login, passwd, email, status, roles, cTime, mTime, lastLogin, lastAccess " +
+      statement = connection.prepareStatement("SELECT login, passwd, email, status, roles, cTime, mTime, lastLogin, lastAccess, lastLogout " +
                                               " FROM SnipUser " +
                                               " ORDER BY login");
       result = statement.executeQuery();

@@ -26,6 +26,7 @@ package org.snipsnap.app;
 
 import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.user.User;
+import org.snipsnap.user.UserManager;
 import org.snipsnap.util.log.Logger;
 
 import javax.servlet.http.HttpSession;
@@ -34,6 +35,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.sql.Timestamp;
 
 /**
  * The application object contains information about current users and other
@@ -119,10 +121,14 @@ public class Application {
   }
 
   public void setUser(User user, HttpSession session) {
-    setUser(user);
+    if (this.user == user) {
+      return;
+    }
+
     if (this.user != null) {
       Application.removeCurrentUser(session);
     }
+    setUser(user);
     Application.addCurrentUser(user, session);
     return;
   }
@@ -162,6 +168,13 @@ public class Application {
     if (null == currentUsers) return;
 
     if (currentUsers.containsKey(session)) {
+      UserManager um = UserManager.getInstance();
+      User user = (User) currentUsers.get(session);
+      if (um.isAuthenticated(user)) {
+        System.err.println("Removing user: "+user.getLogin());
+        user.setLastLogout(user.getLastAccess());
+        UserManager.getInstance().systemStore(user);
+      }
       currentUsers.remove(session);
     }
   }

@@ -22,17 +22,14 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-
-package org.snipsnap.snip.filter.macro;
-
 /*
- * Macro that displays all cahnged Snips
- * since the users last login
+ * Macro that show last logout time from user
  *
  * @author stephan
  * @version $Id$
  */
 
+package org.snipsnap.snip.filter.macro;
 
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
@@ -43,18 +40,17 @@ import org.snipsnap.user.User;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Collection;
 
-public class SinceLastLoginMacro extends ListoutputMacro {
+public class LastVisitMacro extends ListoutputMacro {
   public String getName() {
-    return "since-last-login";
+    return "last-visit";
   }
 
   public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
     if (params.length == 1) {
       User user = UserManager.getInstance().load(params[0]);
-      Collection c = space.getSince(user.getLastLogin());
-      output(buffer, "changed snips since last login", c, "no recently changes.");
+      buffer.append("<b>Last visit was:</b> ");
+      buffer.append(Modified.getNiceTime(user.getLastLogout()));
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }
