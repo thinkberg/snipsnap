@@ -41,6 +41,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.neotis.jdbc.Finder;
+
 /**
  * SnipSpace handles all the data storage.
  * @author Stephan J. Schmidt
@@ -173,7 +175,7 @@ public class SnipSpace implements LinkTester {
 
   // Storage System dependend Methods
 
-  private Snip createSnip(ResultSet result) throws SQLException {
+  public Snip createSnip(ResultSet result) throws SQLException {
     String name = result.getString("name");
     String content = result.getString("content");
 
@@ -193,7 +195,7 @@ public class SnipSpace implements LinkTester {
     return snip;
   }
 
-  private Snip cacheLoad(ResultSet result) throws SQLException {
+  public Snip cacheLoad(ResultSet result) throws SQLException {
     Snip snip = null;
     String name = result.getString("name");
 
@@ -206,159 +208,56 @@ public class SnipSpace implements LinkTester {
     return snip;
   }
 
-  private List find(PreparedStatement statement) {
-    return find(statement, Integer.MAX_VALUE);
-  }
-
-  private List find(PreparedStatement statement, int count) {
-    ResultSet result = null;
-    List snips = new ArrayList();
-
-    try {
-      result = statement.executeQuery();
-      Snip snip = null;
-      while (result.next() && --count>0 ) {
-        snip = cacheLoad(result);
-        snips.add(snip);
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    } finally {
-      ConnectionManager.close(result);
-    }
-    return snips;
-  }
-
   private List storageByRecent(int size) {
-    PreparedStatement statement = null;
-    ResultSet result = null;
-    Connection connection = ConnectionManager.getConnection();
-    List snips = new ArrayList();
+    Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip " +
+                               " FROM Snip " +
+                               " ORDER by mTime DESC", this);
 
-    try {
-      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip " +
-                                              " FROM Snip "+
-                                              " ORDER by mTime DESC");
-      snips = find(statement, size);
-    } catch (SQLException e) {
-      e.printStackTrace();
-    } finally {
-      ConnectionManager.close(result);
-      ConnectionManager.close(statement);
-      ConnectionManager.close(connection);
-    }
-    return snips;
+    return finder.execute(size);
   }
-
 
   private List storageByUser(String login) {
-    PreparedStatement statement = null;
-    Connection connection = ConnectionManager.getConnection();
-    List snips = null;
-
-    try {
-      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip " +
-                                              " FROM Snip " +
-                                              " WHERE cUser=?");
-      statement.setString(1, login);
-
-      snips = find(statement);
-    } catch (SQLException e) {
-      e.printStackTrace();
-    } finally {
-      ConnectionManager.close(statement);
-      ConnectionManager.close(connection);
-    }
-    return snips;
+    Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip " +
+                               " FROM Snip " +
+                               " WHERE cUser=?", this);
+    finder.setString(1, login);
+    return finder.execute();
   }
 
-
   private List storageByComments(Snip parent) {
-    PreparedStatement statement = null;
-    Connection connection = ConnectionManager.getConnection();
-    List comments = null;
-
-    try {
-      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip " +
-                                              " FROM Snip " +
-                                              " WHERE commentSnip=?");
-      statement.setString(1, parent.getName());
-
-      comments = find(statement);
-    } catch (SQLException e) {
-      e.printStackTrace();
-    } finally {
-      ConnectionManager.close(statement);
-      ConnectionManager.close(connection);
-    }
-    return comments;
+    Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip " +
+                               " FROM Snip " +
+                               " WHERE commentSnip=?", this);
+    finder.setString(1, parent.getName());
+    return finder.execute();
   }
 
   private List storageByParent(Snip parent) {
-    PreparedStatement statement = null;
-    Connection connection = ConnectionManager.getConnection();
-    List children = null;
-
-    try {
-      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip " +
-                                              " FROM Snip " +
-                                              " WHERE parentSnip=?");
-      statement.setString(1, parent.getName());
-
-      children = find(statement);
-    } catch (SQLException e) {
-      e.printStackTrace();
-    } finally {
-      ConnectionManager.close(statement);
-      ConnectionManager.close(connection);
-    }
-    return children;
+    Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip " +
+                               " FROM Snip " +
+                               " WHERE parentSnip=?", this);
+    finder.setString(1, parent.getName());
+    return finder.execute();
   }
 
   private List storageByParentNameOrder(Snip parent, int count) {
-    PreparedStatement statement = null;
-    Connection connection = ConnectionManager.getConnection();
-    List children = null;
-
-    try {
-      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip " +
-                                              " FROM Snip " +
-                                              " WHERE parentSnip=? " +
-                                              " ORDER BY name DESC ");
-      statement.setString(1, parent.getName());
-
-      children = find(statement, count);
-    } catch (SQLException e) {
-      e.printStackTrace();
-    } finally {
-      ConnectionManager.close(statement);
-      ConnectionManager.close(connection);
-    }
-    return children;
+    Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip " +
+                               " FROM Snip " +
+                               " WHERE parentSnip=? " +
+                               " ORDER BY name DESC ", this);
+    finder.setString(1, parent.getName());
+    return finder.execute(count);
   }
 
   private List storageByDateInName(String start, String end) {
-    PreparedStatement statement = null;
-    Connection connection = ConnectionManager.getConnection();
-    List children = null;
-
-    try {
-      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip " +
-                                              " FROM Snip " +
-                                              " WHERE name>=? and name<=? and parentSnip=? " +
-                                              " ORDER BY name");
-      statement.setString(1, start);
-      statement.setString(2, end);
-      statement.setString(3, "start");
-
-      children = find(statement);
-    } catch (SQLException e) {
-      e.printStackTrace();
-    } finally {
-      ConnectionManager.close(statement);
-      ConnectionManager.close(connection);
-    }
-    return children;
+    Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip " +
+                               " FROM Snip " +
+                               " WHERE name>=? and name<=? and parentSnip=? " +
+                               " ORDER BY name", this);
+    finder.setString(1, start);
+    finder.setString(2, end);
+    finder.setString(3, "start");
+    return finder.execute();
   }
 
   private Snip storageLoad(String name) {
