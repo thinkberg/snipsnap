@@ -1,5 +1,3 @@
-package org.snipsnap.snip.name;
-
 /*
  * This file is part of "SnipSnap Wiki/Weblog".
  *
@@ -25,6 +23,7 @@ package org.snipsnap.snip.name;
  * --LICENSE NOTICE--
  */
 
+package org.snipsnap.snip.name;
 
 /**
  * Formats names, used to format names of snip e.g. WikiFormat would

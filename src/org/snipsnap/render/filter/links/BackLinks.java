@@ -42,6 +42,8 @@ import java.util.Iterator;
  */
 
 public class BackLinks {
+  private static UrlFormatter formatter = new CutLengthFormatter();
+
   public static void appendTo(Writer writer, Links backLinks, int count) {
     Iterator iterator = backLinks.iterator();
 
