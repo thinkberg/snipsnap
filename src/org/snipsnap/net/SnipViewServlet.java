@@ -94,11 +94,6 @@ public class SnipViewServlet extends HttpServlet {
       snip = space.load(name);
     }
 
-    Application app = Application.get();
-    Map params = app.getParameters();
-    params.put("viewed", snip);
-    params.put("RSS", params.get("RSS")+"?snip="+snip.getNameEncoded());
-
     request.setAttribute("snip", snip);
 //    request.setAttribute("URI", request.getRequestURL().toString());
 
@@ -137,6 +132,11 @@ public class SnipViewServlet extends HttpServlet {
       }
       return;
     }
+
+    Application app = Application.get();
+    Map params = app.getParameters();
+    params.put("viewed", snip);
+    params.put("RSS", params.get("RSS")+"?snip="+snip.getNameEncoded());
 
     snip.handle(request);
     RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/snip.jsp");
