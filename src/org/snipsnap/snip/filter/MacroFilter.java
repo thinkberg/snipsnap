@@ -121,9 +121,9 @@ public class MacroFilter extends RegexTokenFilter {
 
     // {$peng} are variables not macros.
     if (!command.startsWith("$")) {
-//    for (int i=0; i<result.groups(); i++) {
-//      System.err.println(i+" "+result.group(i));
-//    }
+//      for (int i=0; i<result.groups(); i++) {
+//        System.err.println(i+" "+result.group(i));
+//      }
 
       Map paramMap = Application.get().getParameters();
       // {tag} ... {tag}

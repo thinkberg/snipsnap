@@ -70,11 +70,8 @@ public class LoginServlet extends HttpServlet {
       session.removeAttribute("referrer");
       Application app = Application.getInstance(session);
       app.setUser(user, session);
-      Cookie cookie = new Cookie("userName", user.getLogin());
-      cookie.setMaxAge(Integer.MAX_VALUE-2);
-      cookie.setPath(request.getContextPath());
-      // store user name and app in cookie and session
-      response.addCookie(cookie);
+
+      um.setCookie(request, response, user);
       session.setAttribute("app", app);
     }
 
@@ -87,11 +84,7 @@ public class LoginServlet extends HttpServlet {
 
     if("true".equals(request.getParameter("logoff"))) {
       HttpSession session = request.getSession(true);
-      Cookie cookie = UserManager.getInstance().getCookie(request, "userName");
-      if(cookie != null) {
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
-      }
+      UserManager.getInstance().removeCookie(request, response);
       session.invalidate();
     }
 

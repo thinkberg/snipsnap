@@ -48,9 +48,9 @@ public class WeblogMacro extends Macro {
   }
 
   public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
-    if (params.length < 2) {
+    if (params == null || params.length < 2) {
       int count = 0;
-      if (params.length == 1) {
+      if (params != null && params.length == 1) {
         count = Integer.parseInt(params[0]);
       } else {
         count = 10;

@@ -118,7 +118,7 @@ public class NewUserServlet extends HttpServlet {
 
       // store user name and app in cookie and session
       Cookie cookie = new Cookie("userName", user.getLogin());
-      cookie.setMaxAge(Integer.MAX_VALUE-2);
+      cookie.setMaxAge(43200000);
       cookie.setPath(request.getContextPath());
       response.addCookie(cookie);
       session.setAttribute("app", app);

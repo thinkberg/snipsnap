@@ -60,20 +60,13 @@ public class Layouter extends HttpServlet {
     // get or create session and application object
     HttpSession session = request.getSession(true);
     Application app = Application.getInstance(session);
+    UserManager um = UserManager.getInstance();
 
     User user = app.getUser();
     if (user == null) {
-      user = UserManager.getInstance().getUser(request);
+      user = um.getUser(request, response);
     }
 
-    // store user name and app in cookie and session
-    Cookie cookie = UserManager.getInstance().getCookie(request, "userName");
-    if (null == cookie) {
-      cookie = new Cookie("userName", user.getLogin());
-    }
-    cookie.setPath(request.getContextPath());
-    cookie.setMaxAge(Integer.MAX_VALUE - 2);
-    response.addCookie(cookie);
     app.setUser(user, session);
     session.setAttribute("app", app);
     session.setAttribute("space", SnipSpace.getInstance());

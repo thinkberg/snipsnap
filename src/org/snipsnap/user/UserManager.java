@@ -25,13 +25,20 @@
 package org.snipsnap.user;
 
 import org.snipsnap.util.ConnectionManager;
+import org.mortbay.util.UnixCrypt;
+import org.apache.xmlrpc.Base64;
 
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import java.sql.*;
-import java.util.*;
-import java.util.Date;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * User manager handles all register, creation and authentication of users.
@@ -52,20 +59,53 @@ public class UserManager {
     return storageAll();
   }
 
-  public User getUser(HttpServletRequest request) {
+
+  private final static String COOKIE_NAME = "SnipSnapUser";
+  private final static String ATT_USER = "user";
+  private final static int SECONDS_PER_YEAR = 60 * 60 * 24 * 365;
+
+  /**
+   * Get user from session or cookie.
+   */
+  public User getUser(HttpServletRequest request, HttpServletResponse response) {
     HttpSession session = request.getSession(true);
-    User user = (User) session.getAttribute("user");
+    User user = (User) session.getAttribute(ATT_USER);
     if (user == null) {
-      Cookie cookie = getCookie(request, "userName");
-      if (cookie != null && cookie.getMaxAge() > 0) {
-        user = load(cookie.getValue());
+      Cookie cookie = getCookie(request, COOKIE_NAME);
+      if (cookie != null) {
+        String value = new String(Base64.decode(cookie.getValue().getBytes()));
+        int delIdx = value.indexOf('\0');
+        String userName = value.substring(0, delIdx);
+        String userPass = value.substring(delIdx+1);
+        user = authenticate(userName, userPass);
       }
       if (user == null) {
         user = new User("Guest", "Guest", "");
+      } else {
+        setCookie(request, response, user);
       }
-      session.setAttribute("user", user);
+      session.setAttribute(ATT_USER, user);
     }
     return user;
+  }
+
+  public void setCookie(HttpServletRequest request, HttpServletResponse response, User user) {
+    String value = user.getLogin()+"\0"+user.getPasswd();
+    value = new String(Base64.encode(value.getBytes()));
+
+    Cookie cookie = new Cookie(COOKIE_NAME, value);
+    cookie.setMaxAge(SECONDS_PER_YEAR);
+    cookie.setPath("/");
+    cookie.setComment("SnipSnap User");
+    response.addCookie(cookie);
+  }
+
+  public void removeCookie(HttpServletRequest request, HttpServletResponse response) {
+    Cookie cookie = getCookie(request, COOKIE_NAME);
+    cookie.setMaxAge(0);
+    cookie.setPath("/");
+    cookie.setComment("SnipSnap User");
+    response.addCookie(cookie);
   }
 
   /**
@@ -77,6 +117,13 @@ public class UserManager {
   public Cookie getCookie(HttpServletRequest request, String name) {
     Cookie cookies[] = request.getCookies();
     for (int i = 0; cookies != null && i < cookies.length; i++) {
+/*
+      System.out.println("Cookie: [" + name + "] " +
+                         cookies[i].getName() + "/" +
+                         cookies[i].getPath() + "/" +
+                         cookies[i].getValue() + " " +
+                         cookies[i].getMaxAge() + "s");
+*/
       if (cookies[i].getName().equals(name)) {
         return cookies[i];
       }
@@ -179,7 +226,7 @@ public class UserManager {
 
     try {
       statement = connection.prepareStatement("INSERT INTO SnipUser " +
-                                              " (login, passwd, email, status, roles, cTime, mTime, lastLogin) "+
+                                              " (login, passwd, email, status, roles, cTime, mTime, lastLogin) " +
                                               " VALUES (?,?,?,?,?,?,?,?)");
       statement.setString(1, login);
       statement.setString(2, passwd);

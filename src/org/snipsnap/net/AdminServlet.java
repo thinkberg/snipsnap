@@ -57,7 +57,7 @@ public class AdminServlet extends HttpServlet {
     Application app = Application.getInstance(session);
     User user = app.getUser();
     if (user == null) {
-      user = UserManager.getInstance().getUser(request);
+      user = um.getUser(request, response);
     }
 
     if (um.isAuthenticated(user) && user.isAdmin() && request.getPathInfo() != null) {
