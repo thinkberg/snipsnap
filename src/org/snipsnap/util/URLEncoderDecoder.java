@@ -32,11 +32,7 @@ public class URLEncoderDecoder {
     for (int i = 0; i < s.length(); i++) {
       int c = (int) s.charAt(i);
       if (dontNeedEncoding.get(c)) {
-        if (c == ' ') {
-          result.append('+');
-        } else {
-          result.append((char) c);
-        }
+        result.append((char) c);
       } else {
         result.append('%').append(Integer.toHexString(c & 0xFF).toUpperCase());
       }
@@ -48,9 +44,7 @@ public class URLEncoderDecoder {
     StringBuffer result = new StringBuffer();
     for(int i = 0; i < s.length(); i++) {
       char c = s.charAt(i);
-      if(c == '+') {
-        result.append(' ');
-      } else if(c == '%') {
+      if(c == '%') {
         result.append((char)Integer.parseInt(s.substring(i+1, i+3), 16));
         i+= 2;
       } else {
