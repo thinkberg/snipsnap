@@ -112,7 +112,7 @@
     </tr>
     <tr>
       <td valign="top">Real URL:</td>
-      <td valign="top"><input name="domain" type="text" value="<c:out value='${config.domain}' default=''/>"></td>
+      <td valign="top"><input name="domain" type="text" value="<c:out value='${config.url}' default=''/>"></td>
       <td valign="top"><b>(optional)</b><br/>
         If SnipSnap is running behind a proxy or dyndns set the real world accessible URL to this instance
         of snipsnap, e.g. 'http://snipsnap.org'
