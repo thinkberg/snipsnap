@@ -36,31 +36,27 @@ import org.snipsnap.snip.attachment.Attachment;
 import org.snipsnap.snip.attachment.Attachments;
 import org.snipsnap.snip.label.Labels;
 import org.snipsnap.snip.label.RenderEngineLabel;
-import org.snipsnap.snip.label.TypeLabel;
-import org.snipsnap.snip.label.Label;
-import org.snipsnap.snip.name.CapitalizeFormatter;
 import org.snipsnap.snip.name.NameFormatter;
 import org.snipsnap.snip.name.PathRemoveFormatter;
-import org.snipsnap.snip.storage.SnipSerializer;
+import org.snipsnap.snip.name.WeblogNameFormatter;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.User;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
-import java.io.Writer;
-import java.io.BufferedOutputStream;
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.Writer;
 import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Central class for snips.
- *
+ * <p/>
  * TODO: cUser, mUser, cTime, ... -> modified to composite object
  *
  * @author Stephan J. Schmidt
@@ -462,7 +458,7 @@ public class SnipImpl implements Snip {
 //    }
 
     RenderEngineLabel reLabel =
-      (RenderEngineLabel) getLabels().getLabel("RenderEngine");
+            (RenderEngineLabel) getLabels().getLabel("RenderEngine");
     RenderEngine engine = null;
     if (reLabel != null) {
       try {
@@ -478,9 +474,8 @@ public class SnipImpl implements Snip {
     }
 
 
-    RenderContext context = new SnipRenderContext(
-      (Snip) Aspects.getThis(),
-      (SnipSpace) container.getComponentInstance(SnipSpace.class));
+    RenderContext context = new SnipRenderContext((Snip) Aspects.getThis(),
+                                                  (SnipSpace) container.getComponentInstance(SnipSpace.class));
     context.setParameters(Application.get().getParameters());
 
     String xml = "";
@@ -522,8 +517,8 @@ public class SnipImpl implements Snip {
 
   public String getTitle() {
     if (null == nameFormatter) {
-      nameFormatter = new CapitalizeFormatter();
-      nameFormatter.setParent(new PathRemoveFormatter());
+      nameFormatter = new PathRemoveFormatter();
+      nameFormatter.setParent(new WeblogNameFormatter());
     }
     return nameFormatter.format(name);
   }
@@ -549,7 +544,7 @@ public class SnipImpl implements Snip {
   }
 
   public Snip copy(String newName) {
-    SnipSpace space = (SnipSpace)Components.getComponent(SnipSpace.class);
+    SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
     Snip newSnip = space.create(newName, getContent());
     newSnip.setLabels(new Labels(newSnip, getLabels().toString()));
     newSnip.setPermissions(getPermissions());
@@ -557,13 +552,13 @@ public class SnipImpl implements Snip {
     List atts = getAttachments().getAll();
     Iterator attsIt = atts.iterator();
     File fileStorePath = new File(Application.get().getConfiguration().getFileStore(), "snips");
-    while(attsIt.hasNext()) {
-      Attachment oldAtt = (Attachment)attsIt.next();
+    while (attsIt.hasNext()) {
+      Attachment oldAtt = (Attachment) attsIt.next();
       Attachment att = newSnip.getAttachments().addAttachment(oldAtt.getName(), oldAtt.getContentType(), oldAtt.getSize(), oldAtt.getLocation());
       att.setDate(oldAtt.getDate());
       String location = att.getLocation();
       File attFile = new File(fileStorePath, location);
-      if(attFile.exists()) {
+      if (attFile.exists()) {
         try {
           File newLocation = new File(newSnip.getName(), attFile.getName());
           File newAttFile = new File(fileStorePath, newLocation.getPath());
@@ -580,7 +575,7 @@ public class SnipImpl implements Snip {
           in.close();
           att.setLocation(newLocation.getPath());
         } catch (IOException e) {
-          Logger.warn("SnipImpl: unable to copy attachment: "+attFile, e);
+          Logger.warn("SnipImpl: unable to copy attachment: " + attFile, e);
         }
       } else {
         newSnip.getAttachments().removeAttachment(att);

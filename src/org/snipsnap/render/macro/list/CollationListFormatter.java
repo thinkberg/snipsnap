@@ -62,7 +62,7 @@ public class CollationListFormatter implements ListFormatter {
    * locale provided.
    */
   public void format(Writer writer, Linkable current, String listComment, Collection c, String emptyText, boolean showSize)
-    throws IOException {
+          throws IOException {
     Collator collator = Collator.getInstance(ResourceManager.getLocale("radeox_messages"));
 
     if (c.size() > 0) {
@@ -71,11 +71,18 @@ public class CollationListFormatter implements ListFormatter {
       while (it.hasNext()) {
         Object object = it.next();
         String name, indexChar;
+
         if (object instanceof Nameable) {
           name = ((Nameable) object).getName();
         } else {
           name = object.toString();
         }
+
+//        StringBuffer nameBuffer = new StringBuffer();
+//        StringBufferWriter stringBufferWriter = new StringBufferWriter();
+//        VerticalListFormatter.formatSnipName(object, stringBufferWriter);
+//        String finalName = nameBuffer.toString();
+
         String finalName = removeParents(name);
         indexChar = finalName.substring(0, 1).toUpperCase();
         if (object instanceof Linkable) {
@@ -94,9 +101,9 @@ public class CollationListFormatter implements ListFormatter {
       writer.write("<table width=\"100%\" class=\"index-top\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
       writer.write("<colgroup width='5.5%' span='18'/>");
       Iterator collatorIt = atozMap.keySet().iterator();
-      while(collatorIt.hasNext()) {
+      while (collatorIt.hasNext()) {
         writer.write("<tr>");
-        for(int i = 0; i < 6 && collatorIt.hasNext(); i++) {
+        for (int i = 0; i < 6 && collatorIt.hasNext(); i++) {
           CollationKey cKey = (CollationKey) collatorIt.next();
           String ch = cKey.getSourceString();
           writer.write("<th><b> &nbsp;<a href=\"");
@@ -122,9 +129,9 @@ public class CollationListFormatter implements ListFormatter {
       writer.write("</div>");
       writer.write("<table width=\"100%\" class=\"index\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
       collatorIt = atozMap.keySet().iterator();
-      while(collatorIt.hasNext()) {
-        CollationKey leftKey = (CollationKey)collatorIt.next();
-        CollationKey rightKey = collatorIt.hasNext() ? (CollationKey)collatorIt.next() : null;
+      while (collatorIt.hasNext()) {
+        CollationKey leftKey = (CollationKey) collatorIt.next();
+        CollationKey rightKey = collatorIt.hasNext() ? (CollationKey) collatorIt.next() : null;
 
         insertCharHeader(writer,
                          leftKey.getSourceString(),
@@ -157,7 +164,7 @@ public class CollationListFormatter implements ListFormatter {
     writer.write("\"></a>");
     writer.write(leftHeader);
     writer.write("</b></th><th> </th><th>");
-    if(null != rightHeader) {
+    if (null != rightHeader) {
       writer.write("<b><a name=\"idx");
       writer.write(Integer.toHexString(rightHeader.charAt(0)));
       writer.write("\"></a>");
