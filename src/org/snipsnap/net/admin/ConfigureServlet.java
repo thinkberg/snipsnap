@@ -257,7 +257,6 @@ public class ConfigureServlet extends HttpServlet {
     (new File(config.getFilePath())).mkdirs();
     (new File(config.getIndexPath())).mkdirs();
 
-
     // create admin account
     message("creating administrator account");
     UserManager um = UserManager.getInstance();
