@@ -13,7 +13,7 @@
   <tr>
    <td><span class="snip-name"><c:out value="${snip.name}"/></span>
      <c:if test="${snip.comment}">
-       <s:image name="arrow"/> <a href="../comments/<c:out value='${snip.commentedSnip.nameEncoded}'/>"><c:out value='${snip.commentedSnip.nameEncoded}'/></a>
+       <s:image name="arrow"/> <a href="../comments/<c:out value='${snip.commentedSnip.nameEncoded}'/>"><c:out value='${snip.commentedSnip.name}'/></a>
      </c:if>
    </td>
    <td align="right">
