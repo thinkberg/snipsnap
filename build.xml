@@ -3,7 +3,7 @@
   ** @author Matthias L. Jugel
   ** @version $Id$
   -->
-<project basedir="." default="build" name="solent sources">
+<project basedir="." default="jar" name="solent sources">
 
   <property file="conf/build.properties"/>
 
@@ -39,6 +39,9 @@
   <target description="clean up compiled code" name="clean">
     <delete>
       <fileset dir="${target}" includes="**"/>
+      <fileset dir="${jar}" includes="${appname}.jar"/>
+      <fileset dir="${jar}" includes="${appname}-admin.war"/>
+      <fileset dir="${jar}" includes="${appname}-template.war"/>
     </delete>
   </target>
 
