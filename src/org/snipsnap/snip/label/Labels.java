@@ -57,7 +57,12 @@ public class Labels {
     // additional parameter 'overwrite' or exception or return value?
     // (decision should to be made by user)
     cache = null;
-    labels.put(label.getName(), label);
+    Map map = (Map) this.labels.get(label.getName());
+    if (map == null) {
+      map = new HashMap();
+      this.labels.put(label.getName(), map);
+    }
+    map.put(label.getValue(), label);
   }
 
   public void addLabel(String name, String value) {
@@ -66,15 +71,31 @@ public class Labels {
     // (decision should to be made by user)
     cache = null;
     Label label = createDefaultLabel(name, value);
-    labels.put(name, label);
+    addLabel(label);
   }
 
   public Label getLabel(String name) {
-    return (Label) labels.get(name);
+    Map map = (Map) this.labels.get(name);
+    if (map == null) return null;
+    Iterator it = map.values().iterator();
+    return it.hasNext() ? (Label) it.next() : null;
+  }
+
+  public Label getLabel(String name, String value) {
+    Map map = (Map) this.labels.get(name);
+    if (map == null) return null;
+    return (Label) map.get(value);
   }
 
   public Collection getAll() {
-    return labels.values();
+    Collection result = new ArrayList();
+
+    Iterator iterator = this.labels.values().iterator();
+    while (iterator.hasNext()) {
+      Map map = (Map) iterator.next();
+      result.addAll(map.values());
+    }
+    return result;
   }
 
   public Collection getLabels(String type) {
@@ -85,52 +106,60 @@ public class Labels {
 
     Iterator iterator = this.labels.values().iterator();
     while (iterator.hasNext()) {
-      Label label = (Label) iterator.next();
-      if(null != label && type.equals(label.getType())) {
-        result.add(label);
+      Map map = (Map) iterator.next();
+      Iterator it = map.values().iterator();
+      while (it.hasNext()) {
+        Label label = (Label) it.next();
+        if (null != label && type.equals(label.getType())) {
+          result.add(label);
+        }
       }
     }
     return result;
   }
 
-  public void removeLabel(String name) {
+  public void removeLabel(String name, String value) {
     cache = null;
-    Label label = (Label) labels.get(name);
-    label.remove();
-    labels.remove(name);
-  }
-
-  public Set getIds() {
-    return labels.keySet();
+    Map map = (Map) labels.get(name);
+    if (map != null) {
+      Label label = (Label) map.get(value);
+      label.remove();
+      map.remove(value);
+    }
   }
 
   private Label createDefaultLabel(String name, String value) {
-    Label label = ((LabelManager)Components.getComponent(LabelManager.class)).getDefaultLabel();
+    Label label = ((LabelManager) Components.getComponent(LabelManager.class)).getDefaultLabel();
     label.setName(name);
     label.setValue(value);
     return label;
   }
 
   private Label createLabel(String type, String name, String value) {
+    // TODO: ? throw an exception (e.g. LabelTypeUnkownException ) ?
     Label label = ((LabelManager) Components.getComponent(LabelManager.class)).getLabel(type);
-    label.setName(name);
-    label.setValue(value);
+    if (label != null) {
+      label.setName(name);
+      label.setValue(value);
+    }
     return label;
   }
 
   private void deserialize(Snip snip, String labelString) {
     labels = new HashMap();
-    if (null == labelString || "".equals(labelString)) { return; }
+    if (null == labelString || "".equals(labelString)) {
+      return;
+    }
 
     StringTokenizer tokenizer = new StringTokenizer(labelString, "|");
     while (tokenizer.hasMoreTokens()) {
       String labelToken = tokenizer.nextToken();
       String[] data = StringUtil.split(labelToken, ":");
       //System.out.println("Data="+data);
-      if(data.length == 3) {
+      if (data.length == 3) {
         Label label = createLabel(data[0], data[1], data[2]);
         label.setSnip(snip);
-        labels.put(label.getName(), label);
+        addLabel(label);
       } else {
         System.err.println("Labels: Broken Label: '" + labelToken + "' ignored");
       }
@@ -139,26 +168,35 @@ public class Labels {
   }
 
   private String serialize() {
-    if (null == labels || labels.isEmpty()) { return ""; }
+    if (null == this.labels || this.labels.isEmpty()) {
+      return "";
+    }
 
     StringBuffer linkBuffer = new StringBuffer();
-    Iterator iterator = labels.entrySet().iterator();
+    Iterator iterator = this.labels.entrySet().iterator();
     while (iterator.hasNext()) {
       Map.Entry entry = (Map.Entry) iterator.next();
       String name = (String) entry.getKey();
-      Label label = (Label) entry.getValue();
-      String type = label.getType();
-      String value = label.getValue();
-      linkBuffer.append(type);
-      linkBuffer.append(":");
-      linkBuffer.append(name);
-      linkBuffer.append(":");
-      linkBuffer.append(value);
-      if (iterator.hasNext()) {
+      Map map = (Map) entry.getValue();
+      Iterator it = map.values().iterator();
+      while (it.hasNext()) {
+        Label label = (Label) it.next();
+        String type = label.getType();
+        String value = label.getValue();
+        linkBuffer.append(type);
+        linkBuffer.append(":");
+        linkBuffer.append(name);
+        linkBuffer.append(":");
+        linkBuffer.append(value);
+
         linkBuffer.append("|");
       }
     }
     //System.out.println("serialize = "+linkBuffer.toString());
+    // remove last '|'
+    if (linkBuffer.length() > 0) {
+      linkBuffer.setLength(linkBuffer.length() - 1);
+    }
     return linkBuffer.toString();
   }
 

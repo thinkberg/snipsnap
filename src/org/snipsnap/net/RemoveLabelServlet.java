@@ -76,7 +76,8 @@ public class RemoveLabelServlet extends HttpServlet {
 
     Snip snip = SnipSpaceFactory.getInstance().load(snipName);
     String labelName = request.getParameter("labelname");
-    snip.getLabels().removeLabel(labelName);
+    String labelValue = request.getParameter("labelvalue");
+    snip.getLabels().removeLabel(labelName, labelValue);
 
     RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/labels?snipname=" + SnipLink.encode(snipName));
     dispatcher.forward(request, response);

@@ -56,7 +56,7 @@ public class LabelManager {
         addLabelType(label.getType(), label.getClass());
       }
     } catch (ClassNotFoundException e) {
-      Logger.warn("LabelManager: base label type " + labelClassName + " not found. Label types have not been registered.", e);
+      System.err.println("LabelManager: base label type " + labelClassName + " not found. Label types have not been registered."+e);
     }
   }
 

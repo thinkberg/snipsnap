@@ -1,10 +1,6 @@
 /*
- * This file is part of "SnipSnap Wiki/Weblog".
- *
- * Copyright (c) 2002 Stephan J. Schmidt, Matthias L. Jugel
+ * Copyright (c) 2004 Thomas Mohaupt
  * All Rights Reserved.
- *
- * Please visit http://snipsnap.org/ for updates and contact.
  *
  * --LICENSE NOTICE--
  * This program is free software; you can redistribute it and/or
@@ -22,34 +18,20 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-
-package org.snipsnap.test;
+package org.snipsnap.test.label;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import org.snipsnap.test.commons.AllCommonsTests;
-import org.snipsnap.test.components.AllComponentsTests;
-import org.snipsnap.test.interceptor.AllInterceptorTests;
-import org.snipsnap.test.snip.AllSnipTests;
-import org.snipsnap.test.user.AllUserTests;
-import org.snipsnap.test.render.AllRenderTests;
-import org.snipsnap.test.label.AllLabelTests;
 
-public class AllTests extends TestCase {
-  public AllTests(String name) {
+public class AllLabelTests extends TestCase {
+  public AllLabelTests(String name) {
     super(name);
   }
 
   public static Test suite() {
     TestSuite s = new TestSuite();
-    s.addTest(AllSnipTests.suite());
-    s.addTest(AllUserTests.suite());
-    s.addTest(AllCommonsTests.suite());
-    s.addTest(AllComponentsTests.suite());
-    s.addTest(AllInterceptorTests.suite());
-    s.addTest(AllRenderTests.suite());
-    s.addTest(AllLabelTests.suite());
+    s.addTestSuite(LabelsTest.class);
     return s;
   }
 }

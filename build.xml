@@ -17,6 +17,10 @@
     <pathelement location="${jar}/xmlrpc-1.1.jar"/>
   </path>
 
+  <path id="snipsnap.test">
+    <pathelement location="${src}/apps/default/WEB-INF/lib/snipsnap-servlets.jar"/>
+  </path>
+
   <!-- the overall class path -->
   <path id="app.classpath">
     <pathelement location="${jar}/asm-1.4.1.jar"/>
@@ -537,8 +541,8 @@
        <test name="org.snipsnap.test.AllTests"/>
        <classpath>
           <pathelement location="${target}/test"/>
-          <pathelement location="${target}"/>
           <path refid="all.classpath"/>
+          <path refid="snipsnap.test"/>
        </classpath>
     </junit>
   </target>

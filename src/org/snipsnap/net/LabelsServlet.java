@@ -100,7 +100,8 @@ public class LabelsServlet extends HttpServlet {
     if(null != request.getParameter("edit")) {
       request.setAttribute("edit", "edit");
       String labelName = request.getParameter("labelname");
-      Label label = snip.getLabels().getLabel(labelName);
+      String labelValue = request.getParameter("labelvalue");
+      Label label = snip.getLabels().getLabel(labelName, labelValue);
       if(null != label) {
         request.setAttribute("label", label);
         RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/addlabel.jsp");
@@ -112,8 +113,8 @@ public class LabelsServlet extends HttpServlet {
     if(null != request.getParameter("delete")) {
       String[] labels = request.getParameterValues("label");
       for (int i = 0; i < labels.length; i++) {
-        String label = labels[i];
-        snip.getLabels().removeLabel(label);
+        String label[] = labels[i].split("|");
+        snip.getLabels().removeLabel(label[0], label[1]);
       }
     }
 

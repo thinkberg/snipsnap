@@ -47,10 +47,10 @@ public class RDFSerializer extends RDFSerializerBase {
   protected final void addLabelsToModel(Snip snip, Model model) {
     LabelSerializerFactory factory = getLabelSerializerFactory();
     Labels labels = snip.getLabels();
-    Iterator it = labels.getIds().iterator();
+    Iterator it = labels.getAll().iterator();
     Map serializers = new HashMap();
     while (it.hasNext()) {
-      Label label = labels.getLabel((String) it.next());
+      Label label = (Label) it.next();
       String labelType = label.getType();
       LabelSerializer ls = (LabelSerializer) serializers.get(labelType);
       if (ls == null) {

@@ -48,11 +48,11 @@
             </tr>
             <c:forEach items="${snip.labels.all}" var="label" varStatus="status">
              <tr>
-               <s:check roles="Authenticated"><td><input id="label<c:out value='${status.index}'/>" type="checkbox" name="label" value="<c:out value='${label.name}' escapeXml="true"/>"/></td></s:check>
+               <s:check roles="Authenticated"><td><input id="label<c:out value='${status.index}'/>" type="checkbox" name="label" value="<c:out value='${label.name}' escapeXml="true"/>|<c:out value='${label.value}' escapeXml="true"/>"/></td></s:check>
                <td><c:out value="${label.name}" escapeXml="true" /></td>
                <td><c:out value="${label.type}" escapeXml="true" /></td>
                <td><c:out value="${label.value}" escapeXml="true" /></td>
-               <td>[<a href="exec/labels?snipname=<c:out value="${snip.nameEncoded}"/>&amp;labelname=<c:out value="${label.name}"/>&amp;edit=edit"><fmt:message key="snip.labels.edit"/></a>]</td>
+               <td>[<a href="exec/labels?snipname=<c:out value="${snip.nameEncoded}"/>&amp;labelname=<c:out value="${label.name}"/>&amp;labelvalue=<c:out value="${label.value}"/>&amp;edit=edit"><fmt:message key="snip.labels.edit"/></a>]</td>
              </tr>
             </c:forEach>
             <c:if test="${empty(snip.labels.all)}">
