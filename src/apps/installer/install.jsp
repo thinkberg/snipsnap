@@ -68,10 +68,10 @@
     </tr>
     <tr>
       <td valign="top">Path on Server:</td>
-      <td valign="top"><input name="context" type="text" value="<c:out value='${config.contextPath}' default='/'/>"></td>
+      <td valign="top"><input name="context" type="text" value="<c:out value='${config.contextPath}' default=''/>"></td>
       <td valign="top">(optional)<br/>
         The relative path on your server where the application resides.
-        If you enter <i>/foo/</i> then your application listens for requests
+        If you enter <i>/foo</i> then your application listens for requests
         like: <i>http://localhost:8668/foo/space/start</i>. Leave the
         default if this is a standalone server.
       </td>

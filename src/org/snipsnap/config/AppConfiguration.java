@@ -109,6 +109,9 @@ public class AppConfiguration extends Configuration {
   }
 
   public void setContextPath(String contextPath) {
+    if(contextPath.endsWith("/")) {
+      contextPath = contextPath.substring(0, contextPath.length()-2);
+    }
     setProperty(AppConfiguration.APP_PATH, contextPath);
   }
 

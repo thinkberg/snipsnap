@@ -129,8 +129,13 @@ public class ApplicationLoader {
 
     // start web application context
     File appRoot = new File(root.getAbsoluteFile(), "app");
+    String contextPath = config.getContextPath();
+    if(contextPath == null || contextPath.length() == 0) {
+      contextPath = "/";
+    }
+
     WebApplicationContext context =
-      installServer.addWebApplication(config.getContextPath(), appRoot.getAbsolutePath());
+      installServer.addWebApplication(contextPath, appRoot.getAbsolutePath());
     context.setAttribute(AppConfiguration.INIT_PARAM, config.getFile().getAbsolutePath());
     context.start();
 

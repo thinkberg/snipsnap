@@ -133,12 +133,8 @@ public class Installer extends HttpServlet {
       errors.put("port", "The port '" + request.getParameter("port") + "' is not a valid number!");
     }
     String context = request.getParameter("context");
-    if(context != null && context.endsWith("/")) {
+    if(context != null) {
       config.setContextPath(context);
-    } else if(context != null) {
-      config.setContextPath(context+"/");
-    } else {
-      config.setContextPath("/");
     }
 
     if (errors.size() != 0) {

@@ -96,7 +96,7 @@ public class DBDump {
       out.println("<?xml version=\"1.0\" encoding=\"iso-8859-1\" ?>");
       out.println("<snipspace>");
 
-      toXml("User", "user", connection, out);
+      toXml("SnipUser", "user", connection, out);
       toXml("Snip", "snip", connection, out);
 
       out.println("</snipspace>");
