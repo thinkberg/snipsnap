@@ -12,12 +12,10 @@
 }
 
 .snip-name {
-  display: inline;
-  font-weight: bold;
-  font-size: 150%;
-  color: black;
-  background-color: inherit;
-  clear: left;
+  font-family: verdana, arial, sans-serif;
+	font-size: 11px;
+	color: #000000;
+	text-transform:uppercase;
 }
 
 .snip-commented-snip {
@@ -25,18 +23,27 @@
 
 #snip-buttons {
   float: right;
+  font-family: verdana, arial, sans-serif;
+  font-size:10px;
+  font-weight:normal;
   margin-top: 5px;
 }
 
 #snip-info {
-  color: #999999;
-  background-color: inherit;
+  font-family: verdana, arial, sans-serif;
+  font-size:10px;
+  font-weight:normal;
   margin-top: 5px;
 }
 
 #snip-content {
-  width: 100%;
-  margin-top: 10px;
+  font-family:georgia, verdana, arial, sans-serif;
+  color:#666;
+  font-size:11px;
+  font-weight:normal;
+  background:#FFF;
+  line-height:16px;
+  margin-top: 20px;
 }
 
 #snip-post-comments {
@@ -145,6 +152,6 @@ span.count:after {
 
 
 #preview {
-  background-color: #eeeeee;
+  background-color: #999999;
   color: inherit;
 }

@@ -14,22 +14,25 @@
 /************************************************/
 /* ANCHOR tag                                   */
 a {
-	color:#09c;
-	background-color: inherit;
-	text-decoration: none;
-	font-weight: 400;
+  color: #003366;
+  font-family: verdana, arial, sans-serif;
+  font-size:10px;
+  text-decoration: none;
+  font-weight:bold;
 }
 a:link {
-  color:#09c;
-  background-color: inherit;
+  color: #003366;
+  text-decoration: none;
 }
-a:visited {
-  color:#07a;
-  background-color: inherit;
+a:visited	{
+  color: #003366;
+  text-decoration: none;
+}
+a:active {
+  color: #FFCC66;
 }
 a:hover {
-  color: inherit;
-  background-color: #eeeeee;
+  color: #FFCC66;
 }
 
 /************************************************/
@@ -43,19 +46,18 @@ table {
 /************************************************/
 /* input tag                                    */
 
+/*
 input[type=submit] {
   color: inherit;
-  background-color: #eeeeee;
 	font-family: inherit;
 }
 
 input, select, textarea {
   line-height: inherit;
   /*vertical-align: middle; a bug in IE5.2-mac crashes with this*/
-	border: 1px dashed #999999;
   font-size: inherit;
   font-family: courier, courier new, monospaced;
 }
-
+*/
 
 
