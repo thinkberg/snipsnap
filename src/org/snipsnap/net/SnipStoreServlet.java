@@ -28,6 +28,8 @@ import org.snipsnap.app.Application;
 import org.snipsnap.snip.*;
 import org.snipsnap.user.User;
 import org.snipsnap.user.AuthenticationService;
+import org.snipsnap.user.Permissions;
+import org.snipsnap.user.Security;
 import org.snipsnap.container.Components;
 import org.snipsnap.config.Configuration;
 
@@ -64,7 +66,7 @@ public class SnipStoreServlet extends HttpServlet {
         User user = Application.get().getUser();
         AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
 
-        if (service.isAuthenticated(user)) {
+        if (service.isAuthenticated(user) && (null == snip || Security.checkPermission(Permissions.EDIT_SNIP, user, snip))) {
           if (snip != null) {
             snip.setContent(content);
             space.store(snip);
