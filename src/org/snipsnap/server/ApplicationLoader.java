@@ -139,7 +139,6 @@ public class ApplicationLoader {
       contextPath = "/";
     }
 
-
     HttpListener listener[] = AppServer.jettyServer.getListeners();
     HttpListener existingListener = null;
     for (int i = 0; i < listener.length; i++) {

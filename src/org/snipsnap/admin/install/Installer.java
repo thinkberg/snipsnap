@@ -32,6 +32,7 @@ import org.snipsnap.config.ConfigurationProxy;
 import org.snipsnap.config.CreateDB;
 import org.snipsnap.config.ServerConfiguration;
 import org.snipsnap.server.ApplicationLoader;
+import org.snipsnap.server.AdminServer;
 import org.snipsnap.user.User;
 import org.snipsnap.util.Checksum;
 import org.snipsnap.util.JarUtil;
@@ -322,24 +323,12 @@ public class Installer extends HttpServlet {
 
     config.store();
     writeMessage(out, "Starting application ...");
-    // for starting the application make sure we do not use the class loader
-    // of the installer, we remember our current class loader and replace it later
-    Thread thread = Thread.currentThread();
-    ClassLoader currentClassLoader = thread.getContextClassLoader();
-    try {
-      thread.setContextClassLoader(currentClassLoader.getParent());
-      ApplicationLoader.loadApplication(config);
-    } catch (Exception e) {
-      System.err.println("Installer: unable to start application: " + e);
-      e.printStackTrace();
-      errors.put("fatal", "Cannot start application: " + e);
+    if (!AdminServer.execute(Integer.parseInt(serverConfig.getProperty(ServerConfiguration.ADMIN_PORT)), "start", config.getName())) {
+      System.out.println("Cannot execute administrative command: 'start " + config.getName() + "'");
+      errors.put("fatal", "Unable to start application '"+config.getName()+"'");
       sendError(session, errors, request, response);
       return;
-    } finally {
-      // reset back to the default classloader
-      thread.setContextClassLoader(currentClassLoader);
     }
-
 
     if (serverConfig.getAdminLogin() == null && serverConfig.getAdminPassword() == null) {
       System.out.println("Installer: Creating System Installer Account using " + config.get(Configuration.APP_ADMIN_LOGIN));

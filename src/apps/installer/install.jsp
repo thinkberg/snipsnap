@@ -35,7 +35,7 @@
     </tr>
     <tr <c:if test="${errors['tagline'] != null}">class="error-position"</c:if>>
       <td valign="top"><span class="nobr">Website Tagline:</span></td>
-      <td valign="top"><input name="tagline" type="text" value="<c:out value='${config.tagLine}'/>"></td>
+      <td valign="top"><input name="tagline" type="text" value="<c:out value='${config.tagline}'/>"></td>
       <td valign="top">Give your Website a tagline.<br/>
       The tagline should describe your site in
       a very short sentence, like <i>"Stories about Brian."</i> or
@@ -43,7 +43,7 @@
     </tr>
     <tr <c:if test="${errors['logoimage'] != null}">class="error-position"</c:if>>
       <td valign="top"><span class="nobr">Logo Image Name:</span></td>
-      <td valign="top"><input name="logoimage" type="text" value="<c:out value='${config.logoImage}'/>"></td>
+      <td valign="top"><input name="logoimage" type="text" value="<c:out value='${config.logo}'/>"></td>
       <td valign="top"><b>(optional)</b> If you already have a logo for your site put the name here. Leave
       empty if you want to use the Name above as Logo.<br/>
       If it is a PNG image, just use the name without the extension. For <i>"Logo.png"</i> use <i>"Logo"</i>.
@@ -118,7 +118,7 @@
     </tr>
     <tr>
       <td valign="top">Path on Server:</td>
-      <td valign="top"><input name="context" type="text" value="<c:out value='${config.contextPath}' default=''/>"></td>
+      <td valign="top"><input name="context" type="text" value="<c:out value='${config.path}' default=''/>"></td>
       <td valign="top"><b>(optional)</b><br/>
         The relative path on your server where the application resides.
         If you enter <i>/foo</i> then your application listens for requests

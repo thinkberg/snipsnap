@@ -21,8 +21,8 @@
         <a href="<c:out value='${cfg.url}'/>"><c:out value="${config.key}"/></a>
       </td>
       <td><c:out value="${cfg.host}" default="*" /><c:out value=":${cfg.port}" default=""/></td>
-      <td><c:out value="${cfg.contextPath}"/></td>
-      <td><c:out value="${cfg.JDBCURL}"/></td>
+      <td><c:out value="${cfg.path}"/></td>
+      <td><c:out value="${cfg.jdbcUrl}"/></td>
       <td>
         <a href="<c:out value='${cfg.url}'/>/space/<c:out value='${cfg.adminLogin}'/>"><c:out value="${cfg.adminLogin}"/></a> (<c:out value="${cfg.adminEmail}" default="no email"/>)</td>
     </tr>
