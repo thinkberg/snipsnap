@@ -256,6 +256,7 @@
         <filter token="PRECOMPILED-JSP" value="${web.inc}"/>
       </filterset>
     </copy>
+    <copy file="${src}/apps/default/index.jsp" tofile="${target}/webapp/index.jsp"/>
     <copy todir="${target}/webapp/WEB-INF/lib">
       <fileset dir="${jar}">
         <include name="radeox.jar"/>

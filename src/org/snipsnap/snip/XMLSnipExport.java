@@ -63,7 +63,7 @@ public class XMLSnipExport {
     try {
       PrintWriter pw = new PrintWriter(new OutputStreamWriter(out, "UTF-8"));
       pw.println("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
-      pw.println("<snipACLIspace>");
+      pw.println("<snipspace>");
 
       if ((exportMask & USERS) != 0) toXml("SnipUser", "user", connection, pw);
       if ((exportMask & SNIPS) != 0) toXml("Snip", "snip", connection, pw);
@@ -126,7 +126,7 @@ public class XMLSnipExport {
     while (t.hasMoreTokens()) {
       String token = t.nextToken();
       if (token.equals("\0")) {
-        Logger.log(Logger.DEBUG, "Found null-byte in data: removing.");
+        // System.err.println("Found null-byte in data: removing it.");
       } else if ("<".equals(token) || ">".equals(token) || "&".equals(token)) {
         out.append("&#x").append(Integer.toHexString(token.charAt(0))).append(";");
       } else {
