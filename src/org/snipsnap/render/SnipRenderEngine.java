@@ -64,7 +64,7 @@ public class SnipRenderEngine extends BaseRenderEngine
 
   public SnipRenderEngine(AuthenticationService authService) {
     this.authService = authService;
-    MacroRepository.getInstance().addLoader(new GroovyMacroLoader());
+    //MacroRepository.getInstance().addLoader(new GroovyMacroLoader());
     // DOES NOT WORK BECAUSE OF ASPECTS
 //    this.space = space;
   }
