@@ -24,19 +24,18 @@
  */
 package org.snipsnap.net;
 
+import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
-import org.snipsnap.config.ConfigurationProxy;
 import org.snipsnap.container.Components;
-import org.snipsnap.feeder.FeederRepository;
 import org.snipsnap.feeder.Feeder;
+import org.snipsnap.feeder.FeederRepository;
 import org.snipsnap.render.PlainTextRenderEngine;
+import org.snipsnap.semanticweb.rss.BlogFeeder;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.semanticweb.rss.BlogFeeder;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -46,20 +45,16 @@ import java.io.IOException;
 
 /**
  * Load a snip for output as RSS
+ *
  * @author Stephan J. Schmidt
  * @version $Id$
  */
 public class RssServlet extends HttpServlet {
-  private Configuration config;
-
-  public void init(ServletConfig servletConfig) throws ServletException {
-    config = ConfigurationProxy.getInstance();
-  }
-
   public void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws IOException, ServletException {
+          throws IOException, ServletException {
 
     SnipSpace space = SnipSpaceFactory.getInstance();
+    Configuration config = Application.get().getConfiguration();
 
     String eTag = request.getHeader("If-None-Match");
     if (null != eTag && eTag.equals(space.getETag())) {
@@ -77,8 +72,8 @@ public class RssServlet extends HttpServlet {
 
       Snip sourceSnip = space.load(sourceSnipName);
 
-      Object object =  Components.getComponent(PlainTextRenderEngine.class);
-      System.err.println("object = "+object.getClass());
+      Object object = Components.getComponent(PlainTextRenderEngine.class);
+      System.err.println("object = " + object.getClass());
 
       FeederRepository repository = (FeederRepository) Components.getComponent(FeederRepository.class);
 
