@@ -61,6 +61,7 @@
         <include name="conf/db.conf"/>
         <include name="conf/romaji.properties"/>
         <include name="license.txt"/>
+        <include name="README"/>
         <include name="app/**"/>
         <exclude name="**/CVS"/>
       </tarfileset>
