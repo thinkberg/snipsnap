@@ -24,45 +24,37 @@
  */
 package org.snipsnap.net;
 
-import org.snipsnap.app.Application;
-import org.snipsnap.user.UserManager;
-import org.snipsnap.user.User;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.config.Configuration;
 import org.snipsnap.config.AppConfiguration;
+import org.snipsnap.config.Configuration;
 
-import javax.servlet.RequestDispatcher;
+import javax.servlet.GenericServlet;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpSession;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import java.io.IOException;
-import java.net.URLDecoder;
 
 /**
- * Load a snip to view.
+ * Only used to initialize configuration.
  * @author Matthias L. Jugel
  * @version $Id$
  */
-public class SnipViewServlet extends HttpServlet {
-
-  public void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws IOException, ServletException {
-
-    String name = request.getPathInfo();
-    if(null == name || "/".equals(name)) {
-      name = "start";
-    } else {
-      name = name.substring(1);
+public class InitServlet extends GenericServlet {
+  public void init(ServletConfig servletConfig) throws ServletException {
+    String configFile = (String) servletConfig.getServletContext().getAttribute(Configuration.INIT_PARAM);
+    if (null == configFile) {
+      configFile = servletConfig.getServletContext().getRealPath("../application.conf");
     }
-    // TODO 1.4 name = URLDecoder.decode(name, "iso-8859-1");
-    name = URLDecoder.decode(name);
-
-    request.setAttribute("snip", SnipSpace.getInstance().load(name));
-    RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/snip.jsp");
-    dispatcher.forward(request, response);
+    try {
+      System.out.println("classloader: "+getClass().getClassLoader());
+      System.out.println("Loading Config: " + configFile);
+      Configuration config = AppConfiguration.getInstance(configFile);
+    } catch (IOException e) {
+      e.printStackTrace();
+      System.err.println("InitServlet: Unable to load configuration for this application: " + e);
+    }
   }
 
+  public void service(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
+  }
 }

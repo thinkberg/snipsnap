@@ -122,4 +122,8 @@ public class User implements Nameable {
     }
     return roles;
   }
+
+  public String toString() {
+    return "User["+login+","+(passwd != null ? "pass set" : "no pass") +","+email+","+status+","+roles+"]";
+  }
 }

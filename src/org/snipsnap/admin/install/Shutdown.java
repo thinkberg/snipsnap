@@ -22,10 +22,12 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-package org.snipsnap.admin;
+package org.snipsnap.admin.install;
 
+import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.snip.SnipLink;
+import org.snipsnap.admin.CommandHandler;
 import org.mortbay.http.HttpServer;
 import org.mortbay.util.Code;
 import org.mortbay.util.Log;
@@ -54,12 +56,12 @@ public class Shutdown extends HttpServlet {
       String user = request.getParameter("login");
       String pass = request.getParameter("password");
 
-      Configuration config = new Configuration("./conf/local.conf");
+      Configuration config = (Configuration) session.getAttribute(CommandHandler.ATT_CONFIG);
 
       // don't do anything before user name and password are checked
-      if (config.isConfigured() &&
-        config.getUserName().equals(user) &&
-        config.getPassword().equals(pass)) {
+      if (config != null &&
+        config.getAdminLogin().equals(user) &&
+        config.getAdminPassword().equals(pass)) {
         // shut down server ...
         org.snipsnap.server.Shutdown.shutdown();
         response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE, "Server has been shut down.");

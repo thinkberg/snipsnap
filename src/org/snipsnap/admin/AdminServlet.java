@@ -24,7 +24,7 @@
  */
 package org.snipsnap.admin;
 
-import org.snipsnap.config.Configuration;
+import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.UserManager;
 import org.mortbay.http.HttpContext;
@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -60,9 +61,9 @@ public class AdminServlet extends HttpServlet {
 
     UserManager um = UserManager.getInstance();
     Collection servers = HttpServer.getHttpServers();
-    Configuration config = (Configuration) session.getAttribute("config");
+    AppConfiguration config = (AppConfiguration) session.getAttribute("config");
     if (null == config) {
-      config = new Configuration("./conf/local.conf");
+      config = new AppConfiguration(new File("./conf/local.conf"));
     }
 
     session.setAttribute("servers", servers);
@@ -70,7 +71,7 @@ public class AdminServlet extends HttpServlet {
 
     String command = request.getPathInfo();
     if (null == command || "/".equals(command)) {
-      if (config.isConfigured()) {
+      if (config != null) {
         if (session.getAttribute("admin") != null) {
           response.sendRedirect(SnipLink.absoluteLink(request, "/exec/welcome.jsp"));
         } else {

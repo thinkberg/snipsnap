@@ -29,6 +29,8 @@ import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
+import org.snipsnap.config.AppConfiguration;
+import org.snipsnap.config.Configuration;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;

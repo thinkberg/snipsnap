@@ -33,12 +33,19 @@
  */
 package org.snipsnap.snip.filter;
 
+import org.apache.oro.text.regex.MalformedPatternException;
+import org.apache.oro.text.regex.MatchResult;
+import org.apache.oro.text.regex.Pattern;
+import org.apache.oro.text.regex.PatternCompiler;
+import org.apache.oro.text.regex.PatternMatcher;
+import org.apache.oro.text.regex.PatternMatcherInput;
+import org.apache.oro.text.regex.Perl5Compiler;
+import org.apache.oro.text.regex.Perl5Matcher;
+import org.apache.oro.text.regex.Perl5Substitution;
+import org.apache.oro.text.regex.Util;
 import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipLink;
 import org.snipsnap.util.Transliterate;
-import org.apache.oro.text.regex.*;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 public class LinkTestFilter extends Filter {
 
@@ -86,11 +93,10 @@ public class LinkTestFilter extends Filter {
         int colonIndex = key.indexOf(':');
         if (-1 != colonIndex) {
           String extSpace = key.substring(0, colonIndex);
-          key = key.substring(colonIndex+1);
+          key = key.substring(colonIndex + 1);
           buffer.append("<a href=\"http://www.langreiter.com/space/");
           try {
-            //TODO 1.4 buffer.append(URLEncoder.encode(key, "iso-8859-1"));
-            buffer.append(URLEncoder.encode(key));
+            buffer.append(SnipLink.encode(key));
           } catch (Exception e) {
             buffer.append(key);
           }
@@ -101,21 +107,13 @@ public class LinkTestFilter extends Filter {
           buffer.append("</a>");
         } else {
           if (linkTester.exists(key)) {
-            buffer.append("<a href=\"../space/");
-            try {
-              // TODO 1.4 buffer.append(URLEncoder.encode(key, "iso-8859-1"));
-              buffer.append(URLEncoder.encode(key));
-            } catch (Exception e) {
-              buffer.append(key);
-            }
-            buffer.append("\">").append(result.group(1)).append("</a>");
+            SnipLink.appendLink(buffer, key, result.group(1));
           } else {
             buffer.append(EscapeFilter.escape('['));
             buffer.append("create <a href=\"" +
                           "../exec/edit?name=");
             try {
-              // TODO 1.4 buffer.append(URLEncoder.encode(key, "iso-8859-1"));
-              buffer.append(URLEncoder.encode(key));
+              buffer.append(SnipLink.encode(key));
             } catch (Exception e) {
               buffer.append(key);
             }
@@ -127,19 +125,9 @@ public class LinkTestFilter extends Filter {
         buffer.append(result.group(1)).append("*link error*");
       }
 
-
-/*
-      try {
-        buffer.append(URLEncoder.encode(result.group(1), "ISO-8859-1"));
-      } catch (UnsupportedEncodingException e) {
-        cat.error("unsupported encoding", e);
-        buffer.append(result.group(1));
-      }
-*/
       lastmatch = result.endOffset(0);
     }
     buffer.append(input.substring(lastmatch));
     return buffer.toString();
-
   }
 }

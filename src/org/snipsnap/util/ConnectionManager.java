@@ -25,13 +25,16 @@
 package org.snipsnap.util;
 
 import com.bitmechanic.sql.ConnectionPoolManager;
-import org.snipsnap.config.Configuration;
+import org.snipsnap.app.Application;
+import org.snipsnap.config.AppConfiguration;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * The connection manager handles all database connections.
@@ -49,59 +52,65 @@ public class ConnectionManager {
     return instance;
   }
 
+  private ConnectionPoolManager mgr = null;
+
   public ConnectionManager() {
-    ConnectionPoolManager mgr = null;
     try {
       mgr = new ConnectionPoolManager(300);
     } catch (SQLException e) {
       System.out.println("Unable to create ConnectionPool");
     }
+  }
 
-    // Register the Mckoi JDBC Driver
-    try {
-      Class.forName("com.mckoi.JDBCDriver").newInstance();
-    } catch (Exception e) {
-      System.out.println(
-        "Unable to register the JDBC Driver.\n" +
-        "Make sure the classpath is correct.\n" +
-        "For example on Win32;  java -cp ../../mckoidb.jar;. SimpleApplicationDemo\n" +
-        "On Unix;  java -cp ../../mckoidb.jar:. SimpleApplicationDemo");
-      return;
-    }
+  private Set names = new HashSet();
 
-    // This URL specifies we are connecting with a local database.  The
-    // configuration file for the database is found at './ExampleDB.conf'
-    String url = "jdbc:mckoi:local://./conf/db.conf";
+  private void update(AppConfiguration config) {
+    if (!names.contains(config.getName())) {
+      try {
+        Class.forName(config.getJDBCDriver());
+      } catch (Exception e) {
+        System.out.println(
+          "Unable to register the JDBC Driver.\n" +
+          "Make sure the classpath is correct.\n" +
+          "For example on Win32;  java -cp ../../mckoidb.jar;. SimpleApplicationDemo\n" +
+          "On Unix;  java -cp ../../mckoidb.jar:. SimpleApplicationDemo");
+        return;
+      }
 
-    // The username/password for the database.  This is set when the database
-    // is created (see SimpleDatabaseCreateDemo).
-    Configuration config = new Configuration("./conf/local.conf");
+      // This URL specifies we are connecting with a local database.  The
+      // configuration file for the database is found at './ExampleDB.conf'
+      //String url = "jdbc:mckoi:local://./conf/db.conf";
+      String url = config.getJDBCURL();
+      String name = config.getName();
 
-    String name = "snipsnap";
-
-    try {
-      mgr.addAlias(name, "com.mckoi.JDBCDriver",
-                   url,
-                   config.getUserName(), config.getPassword(),
-                   10, // max connections to open
-                   300, // seconds a connection can be idle before it is closed
-                   120, // seconds a connection can be checked out by a thread
-                   // before it is returned back to the pool
-                   30, // number of times a connection can be re-used before
-                   // connection to database is closed and re-opened
-                   // (optional parameter)
-                   false); // specifies whether to cache statements
-    } catch (Exception e) {
-      System.out.println("Unable to add connection alias.");
-      e.printStackTrace();
+      try {
+        System.out.println("Creating alias: " + name + ": " + config.getJDBCDriver() + ", config=" + config);
+        mgr.addAlias(name, config.getJDBCDriver(),
+                     url,
+                     config.getAdminLogin(), config.getAdminPassword(),
+                     10, // max connections to open
+                     300, // seconds a connection can be idle before it is closed
+                     120, // seconds a connection can be checked out by a thread
+                     // before it is returned back to the pool
+                     30, // number of times a connection can be re-used before
+                     // connection to database is closed and re-opened
+                     // (optional parameter)
+                     false); // specifies whether to cache statements
+        names.add(config.getName());
+      } catch (Exception e) {
+        System.out.println("Unable to add connection alias.");
+        e.printStackTrace();
+      }
     }
   }
 
-
-  public Connection connection() {
+  private Connection connection() {
+    Application app = Application.get();
+    AppConfiguration config = app.getConfiguration();
+    // make sure a pool exists for this config
+    update(config);
     try {
-      return DriverManager.getConnection(ConnectionPoolManager.URL_PREFIX +
-                                         "snipsnap", null, null);
+      return DriverManager.getConnection(ConnectionPoolManager.URL_PREFIX + config.getName());
     } catch (SQLException e) {
       e.printStackTrace();
       System.out.println("Unable to get connection.");

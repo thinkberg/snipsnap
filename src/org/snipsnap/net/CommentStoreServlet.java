@@ -63,6 +63,7 @@ public class CommentStoreServlet extends HttpServlet {
           snip.getComments().postComment(content);
         } else {
           response.sendError(HttpServletResponse.SC_FORBIDDEN);
+          return;
         }
       }
     } else if (snip == null) {

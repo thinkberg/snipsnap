@@ -26,16 +26,17 @@
 package org.snipsnap.snip;
 
 import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.Term;
 import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.search.Searcher;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.queryParser.MultiFieldQueryParser;
 import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.queryParser.MultiFieldQueryParser;
+import org.apache.lucene.search.Searcher;
+import org.snipsnap.app.Application;
 
-import java.io.IOException;
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Indexes snips for fulltext searches
@@ -45,13 +46,22 @@ import java.io.File;
  */
 
 public class SnipIndexer {
-  private static String indexFile = "./db/index";
-  private static final String[] searchFields = new String[]{"content","title"};
+  //private static String indexFile = "./index";
+  private static final String[] searchFields = new String[]{"content", "title"};
+  private File indexFile;
+
+  private File indexFile() {
+    if(indexFile == null) {
+      indexFile = new File(Application.get().getConfiguration().getFile().getParentFile(), "index");
+      System.out.println("index file: "+indexFile);
+    }
+    return indexFile;
+  }
 
   public void removeIndex(Snip snip) {
     IndexReader reader = null;
     try {
-      reader = IndexReader.open(indexFile);
+      reader = IndexReader.open(indexFile());
       int count = reader.delete(new Term("id", Integer.toHexString(snip.getName().hashCode())));
       // System.err.println("Deleted: "+ count );
     } catch (IOException e) {
@@ -84,30 +94,30 @@ public class SnipIndexer {
       File f;
       boolean create = true;
       // create index if the directory does not exist
-      if ((f = new File(indexFile)).exists() && f.isDirectory()) {
+      if ((f = indexFile()).exists() && f.isDirectory()) {
         create = false;
       } else {
         create = true;
       }
-      writer = new IndexWriter(indexFile, new SnipAnalyzer(), create);
+      writer = new IndexWriter(f, new SnipAnalyzer(), create);
 
       writer.mergeFactor = 20;
       writer.addDocument(SnipDocument.Document(snip));
       writer.optimize();
-   } catch(IOException e) {
+    } catch (IOException e) {
       System.err.println("Unable to index snip.");
       e.printStackTrace();
-   } finally {
-     close(writer);
-   }
+    } finally {
+      close(writer);
+    }
   }
 
   public Hits search(String queryString) {
     Searcher searcher = null;
     try {
-      searcher = new IndexSearcher(indexFile);
+      searcher = new IndexSearcher(indexFile().getAbsolutePath());
     } catch (IOException e) {
-      System.out.println("Unable to open index file: " + indexFile);
+      System.out.println("Unable to open index file: " + indexFile());
       e.printStackTrace();
     }
 
@@ -134,28 +144,28 @@ public class SnipIndexer {
   }
 
   private static void close(IndexWriter writer) {
-    if(null != writer) {
+    if (null != writer) {
       try {
         writer.close();
-      } catch(Exception e) {
+      } catch (Exception e) {
       }
     }
   }
 
   private static void close(Searcher searcher) {
-    if(null != searcher) {
+    if (null != searcher) {
       try {
         searcher.close();
-      } catch(Exception e) {
+      } catch (Exception e) {
       }
     }
   }
 
   private static void close(IndexReader reader) {
-    if(null != reader) {
+    if (null != reader) {
       try {
         reader.close();
-      } catch(Exception e) {
+      } catch (Exception e) {
       }
     }
   }

@@ -34,7 +34,6 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.net.URLEncoder;
 
 /**
  * Central class for snips.
@@ -92,7 +91,7 @@ public class Snip implements Ownable, Nameable {
   }
 
   public boolean isNotWeblog() {
-    return ! isWeblog();
+    return !isWeblog();
   }
 
   public String getOwner() {
@@ -209,7 +208,7 @@ public class Snip implements Ownable, Nameable {
   }
 
   public boolean isComment() {
-    return ! (null == comment);
+    return !(null == comment);
   }
 
   public Comments getComments() {
@@ -264,9 +263,8 @@ public class Snip implements Ownable, Nameable {
 
   public String getNameEncoded() {
     try {
-      // TODO 1.4 return URLEncoder.encode(getName(), "iso-8859-1");
-      return URLEncoder.encode(getName());
-    } catch(Exception e) {
+      return SnipLink.encode(getName());
+    } catch (Exception e) {
       return getName();
     }
   }
@@ -292,7 +290,7 @@ public class Snip implements Ownable, Nameable {
       return toXML();
     } catch (Exception e) {
       e.printStackTrace();
-      return "<span class=\"error\">"+e+"</span>";
+      return "<span class=\"error\">" + e + "</span>";
     }
   }
 }

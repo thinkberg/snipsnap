@@ -24,23 +24,13 @@
  */
 package org.snipsnap.server;
 
-import org.snipsnap.config.Configuration;
 import org.mortbay.http.HttpListener;
-import org.mortbay.http.SocketListener;
 import org.mortbay.jetty.Server;
-import org.mortbay.jetty.servlet.WebApplicationContext;
 import org.mortbay.util.InetAddrPort;
 import org.mortbay.util.MultiException;
+import org.snipsnap.config.Configuration;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.BindException;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.Iterator;
 
 /**
@@ -50,139 +40,121 @@ import java.util.Iterator;
  */
 public class AppServer {
 
-  public final static int ADMIN_PORT = 9765;
+
+  private static Configuration adminConfig;
   private static Server jettyServer;
-  private static WebApplicationContext adminContext;
 
   public static void main(String args[]) {
-    System.out.println("SnipSnap v0.1-alpha");
+    try {
+      adminConfig = new Configuration("conf/server.conf");
+    } catch (IOException e) {
+      e.printStackTrace();
+      System.out.println("ERROR: unable to read server configuration, aborting");
+      System.exit(-1);
+    }
+
+    System.out.println("SnipSnap " + adminConfig.getProperty(Configuration.SERVER_VERSION));
     System.out.println("Copyright (c) 2002 Stephan J. Schmidt, Matthias L. Jugel. "
                        + "All Rights Reserved.");
     System.out.println("See License Agreement for terms and conditions of use.");
-    if (args.length > 1) {
-      if ("-admin".equals(args[0])) {
-        try {
-          Socket s = new Socket(InetAddress.getLocalHost(), ADMIN_PORT);
-          BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
-          writer.write(args[1]);
-          writer.newLine();
-          writer.close();
-          s.close();
-        } catch (IOException e) {
-          System.err.println("AppServer: cannot send administrative command");
-          System.exit(-1);
-        }
-        System.exit(0);
-      }
-    } else {
-      Configuration config = new Configuration("./conf/local.conf");
-      initServer(config);
-      checkConfig(config);
-    }
-  }
 
-  /**
-   * Initialize Server and load administrative web application.
-   */
-  private static void initServer(Configuration config) {
+    adminConfig = parseArguments(args, adminConfig);
+
+    // start jetty server and install web application
     try {
-      jettyServer = new Server("./conf/server.conf");
+      jettyServer = new Server("./conf/jetty.conf");
       jettyServer.start();
     } catch (IOException e) {
-      System.err.println("AppServer: configuration not found: " + e);
+      System.err.println("AppServer: admin server configuration not found: " + e);
     } catch (MultiException e) {
       Iterator exceptions = e.getExceptions().iterator();
       while (exceptions.hasNext()) {
         Exception ex = (Exception) exceptions.next();
-        if (ex instanceof BindException) {
-          System.out.println("ERROR: can't start server, address already in use: " + ex.getMessage());
-        }
+        ex.printStackTrace();
+        System.out.println("ERROR: can't start server: " + ex.getMessage());
       }
+      System.exit(-1);
     }
 
+    // start the administrative network interface
     try {
-      adminContext = addApplication("/admin", "./lib/snipsnap-admin.war");
+      new AdminServer(Integer.parseInt(adminConfig.getProperty(Configuration.SERVER_ADMIN_PORT).trim()));
     } catch (Exception e) {
-      System.err.println("AppServer: unable to load servlet class: " + e);
+      e.printStackTrace();
+      System.out.println("ERROR: unable to start administration server: " + e);
     }
 
-    new Thread(new Runnable() {
-      public void run() {
-        ServerSocket ss = null;
-        try {
-          ss = new ServerSocket(ADMIN_PORT, 1, InetAddress.getLocalHost());
-        } catch (IOException e) {
-          System.err.println("AppServer: unable to bind administration socket on port ");
-        }
-        while(ss != null) {
-          try {
-            Socket s = ss.accept();
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
-            BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
-            if (s.getInetAddress().equals(InetAddress.getLocalHost())) {
-              String command = reader.readLine();
-              if ("shutdown".equals(command)) {
-                Shutdown.shutdown();
-              }
-            } else {
-              writer.write("I cut you out, don't try that again! Snip Snap!");
-              writer.newLine();
-              writer.flush();
-            }
-            reader.close();
-            writer.close();
-            s.close();
-          } catch (IOException e) {
-            System.err.println("AppServer: exception while handling administrative command on socket");
-            e.printStackTrace();
-          }
-        } while (true);
-      }
-    }).start();
-  }
-
-  private static void checkConfig(Configuration config) {
-    if (config.isConfigured()) {
-      try {
-        jettyServer.addListener(new SocketListener(new InetAddrPort(config.getPort())));
-      } catch (IllegalArgumentException e) {
-        System.err.println("AppServer: illegal number for port: " + config.getPort());
-      } catch (IOException e) {
-        System.err.println("AppServer: unable to configure server on port " + config.getPort());
-        System.err.println("AppServer: error caused by: " + e);
-      }
-      try {
-        WebApplicationContext context = addApplication(config.getContextPath(), "./app" + config.getContextPath());
-        System.out.println("INFO: starting application " + context);
-        context.start();
-      } catch (Exception e) {
-        System.out.println("WARNING: unable to start your application: " + e);
-        e.printStackTrace(System.err);
-      }
-    } else {
-      System.out.println("INFO: Server is still unconfigured!");
-      System.out.println("INFO: Point your browser to the following address:");
+    // now, after loading all possible services we will look for applications and start them
+    int errors = ApplicationLoader.loadApplications(adminConfig.getProperty(Configuration.SERVER_WEBAPP_ROOT));
+    if (errors == 0 && ApplicationLoader.getApplicationCount() == 0) {
+      System.out.println("ATTENTION: Server is still unconfigured!");
+      System.out.println("ATTENTION: Point your browser to the following address:");
       HttpListener listener = jettyServer.getListeners()[0];
       String host = listener.getHost();
       if (InetAddrPort.__0_0_0_0.equals(host)) {
         host = "localhost";
       }
-      System.out.println("INFO: http://" + host + ":" + listener.getPort() + "/admin");
+      System.out.println("ATTENTION: http://" + host + ":" + listener.getPort() + "/install");
+    } else {
+      System.out.println(ApplicationLoader.getApplicationCount() + " applications loaded and running ("+errors+" errors).");
     }
+
   }
 
-  private static WebApplicationContext addApplication(String root, String app) {
-    WebApplicationContext context = null;
-    try {
-      context = jettyServer.addWebApplication(root, app);
-      context.start();
-    } catch (Exception e) {
-      System.err.println("AppServer: default configuration not found: " + e);
+  /**
+   * Parse argument from command line and exit in case of erroneous options.
+   * The server will immedialy exit if there is a problem and display a usage message
+   * @param args the command line arguments
+   * @param adminConfig the configuration properties of the server
+   * @return the possibly changed configuration properties
+   */
+  private static Configuration parseArguments(String args[], Configuration adminConfig) {
+    for (int i = 0; i < args.length; i++) {
+      // the applications root directory
+      if ("-appsroot".equals(args[i])) {
+        if (args.length >= i + 1 && !args[i + 1].startsWith("-")) {
+          adminConfig.setProperty(Configuration.SERVER_WEBAPP_ROOT, args[i++]);
+        } else {
+          usage("an argument is required for -appsroot");
+        }
+        // the port where the server listens for administrative commands
+      } else if ("-adminport".equals(args[i]) && !args[i + 1].startsWith("-")) {
+        if (args.length >= i + 1) {
+          adminConfig.setProperty(Configuration.SERVER_ADMIN_PORT, args[i++].trim());
+        } else {
+          usage("a number argument is required for -adminport");
+        }
+        // an administrative command to be sent to the server
+      } else if ("-admin".equals(args[i])) {
+        if (args.length >= i + 1) {
+          try {
+            if (!AdminServer.execute(Integer.parseInt(adminConfig.getProperty(Configuration.SERVER_ADMIN_PORT).trim()), args[1])) {
+              System.exit(-1);
+            }
+          } catch (NumberFormatException e) {
+            System.out.println("ERROR: admin port '" + adminConfig.getProperty(Configuration.SERVER_ADMIN_PORT) + "' is not a number, aborting");
+            System.exit(-1);
+          }
+        } else {
+          usage("an argument is required for -admin");
+        }
+        System.exit(0);
+      }
     }
-    return context;
+    return adminConfig;
   }
 
-  public static Server getServer() {
-    return jettyServer;
+  /**
+   * Display a a message in addition to a usage message.
+   * @param message an additional informational text
+   */
+  private static void usage(String message) {
+    System.out.println(message);
+    System.out.println("usage: " + AppServer.class.getName() + " [-appsroot <dir>] [-adminport <port>] [-admin <command>]");
+    System.out.println("  -appsroot   directory, where to find the applications for this server");
+    System.out.println("  -adminport  port number, where the server listens for administrative commands");
+    System.out.println("  -admin      send command to server, allowed commands include:");
+    System.out.println("              " + AdminServer.COMMANDS);
+    System.exit(-1);
   }
 }

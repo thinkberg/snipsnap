@@ -28,12 +28,16 @@ import org.snipsnap.app.Application;
 import org.snipsnap.snip.HomePage;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.user.*;
+import org.snipsnap.user.Permissions;
+import org.snipsnap.user.Roles;
+import org.snipsnap.user.User;
+import org.snipsnap.user.UserManager;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Driver;
 
 /**
  * Create initial database and example snips.
@@ -43,40 +47,31 @@ import java.sql.Statement;
 public class CreateDB {
 
   public static void main(String[] args) {
-    createDB("funzel", "funzel", "stephan@mud.de");
-    insertData("funzel", "funzel", "stephan@mud.de");
+    System.err.println("NOT IMPLEMENTED.");
+//    createDB("funzel", "funzel", "stephan@mud.de");
+//    insertData("funzel", "funzel", "stephan@mud.de");
   }
 
   // The username/password for the database.  This will be the username/
   // password for the user that has full control over the database.
-  public static void createDB(String username, String password, String email) {
+  public static void createDB(AppConfiguration config) {
     // Register the Mckoi JDBC Driver
     try {
-      Class.forName("com.mckoi.JDBCDriver").newInstance();
+      Class.forName(config.getJDBCDriver()).newInstance();
     } catch (Exception e) {
-      System.out.println(
-        "Unable to register the JDBC Driver.\n" +
-        "Make sure the classpath is correct.\n" +
-        "For example on Win32;  java -cp ../../mckoidb.jar;. SimpleApplicationDemo\n" +
-        "On Unix;  java -cp ../../mckoidb.jar:. SimpleApplicationDemo");
+      e.printStackTrace();
+      System.out.println("CreateDB: unable to register the JDBC Driver class " + config.getJDBCDriver() + ".");
       return;
     }
-
-    // This URL specifies we are creating a local database.  The
-    // configuration file for the database is found at './ExampleDB.conf'
-    // The 'create=true' argument means we want to create the database.  If
-    // the database already exists, it can not be created.
-    String url = "jdbc:mckoi:local://./conf/db.conf?create=true";
 
     // Make a connection with the database.  This will create the database
     // and log into the newly created database.
     Connection connection;
     try {
-      connection = DriverManager.getConnection(url, username, password);
+      connection = DriverManager.getConnection(config.getJDBCURL(), config.getAdminLogin(), config.getAdminPassword());
     } catch (SQLException e) {
-      System.out.println(
-        "Unable to create the database.\n" +
-        "The reason: " + e.getMessage());
+      e.printStackTrace();
+      System.out.println("CreateDB: unable to create the database: " + e.getMessage());
       return;
     }
 
@@ -136,19 +131,18 @@ public class CreateDB {
 
   }
 
-  public static void insertData(String username, String password, String email) {
-
+  public static void insertData(AppConfiguration config) {
     System.out.println("CreateDB: Inserting Data");
 
-    User admin = UserManager.getInstance().create(username, password, email);
+    User admin = UserManager.getInstance().create(config.getAdminLogin(), config.getAdminPassword(), config.getAdminEmail());
     admin.getRoles().add(Roles.EDITOR);
     UserManager.getInstance().store(admin);
 
     Application app = Application.get();
     app.setUser(admin);
 
-    System.out.println("Creating admin homepage");
-    HomePage.create(username);
+    System.out.println("Creating admin homepage.");
+    HomePage.create(config.getAdminLogin());
 
     SnipSpace space = SnipSpace.getInstance();
     Snip snip = null;
@@ -182,6 +176,7 @@ public class CreateDB {
     snip.addPermission(Permissions.EDIT, Roles.EDITOR);
     space.store(snip);
 
+    System.out.println("Creating first blog entry.");
     space.post("Welcome to [SnipSnap]. You can now login and add/edit your first post");
     System.out.println("CreateDB: Complete");
   }

@@ -24,16 +24,19 @@
  */
 package org.snipsnap.admin;
 
+import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.User;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Properties;
 
 /**
  * Servlet to login a user by checking user name and password.
@@ -41,7 +44,10 @@ import java.io.IOException;
  * @version $Id$
  */
 public class Authenticate extends HttpServlet {
+  public final static String ATT_CHECK_USER = "auth.login.check";
+
   private final static String ERR_PASSWORD = "User name and password do not match!";
+  private final static String ERR_CREATE = "Passwords are not equal, try again!";
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
@@ -49,16 +55,33 @@ public class Authenticate extends HttpServlet {
     String login = request.getParameter("login");
     String password = request.getParameter("password");
 
-    Configuration config = new Configuration("./conf/local.conf");
-    if (config.isConfigured() && request.getParameter("cancel") == null) {
-      HttpSession session = request.getSession(true);
-      User user = authenticate(config, login, password);
+    HttpSession session = request.getSession(false);
+    Configuration config = (Configuration)session.getAttribute(CommandHandler.ATT_CONFIG);
+    User checkUser = (User)session.getAttribute(ATT_CHECK_USER);
+
+    // request to create a new user, but make sure there is no password set already
+    if(request.getParameter("create") != null && config != null &&
+      checkUser.getLogin() == null && checkUser.getPasswd() == null) {
+      String password2 = request.getParameter("password2");
+      String email = request.getParameter("email");
+      if(password != null && password.equals(password2)) {
+        config.setAdminLogin(login);
+        config.setAdminPassword(password);
+        config.setAdminEmail(email);
+        config.store();
+        // put admin user in session
+        checkUser = new User(login, password, email);
+        session.setAttribute(CommandHandler.ATT_ADMIN, checkUser);
+      } else {
+        session.setAttribute("error", ERR_CREATE);
+      }
+    } else if (request.getParameter("cancel") == null) {
+      User user = authenticate(checkUser, login, password);
       if (user == null) {
         session.setAttribute("error", ERR_PASSWORD);
-        response.sendRedirect(SnipLink.absoluteLink(request, "/exec/login.jsp"));
-        return;
+      } else {
+        session.setAttribute(CommandHandler.ATT_ADMIN, user);
       }
-      session.setAttribute("admin", user);
     }
 
     response.sendRedirect(SnipLink.absoluteLink(request, "/"));
@@ -66,13 +89,12 @@ public class Authenticate extends HttpServlet {
 
   /**
    * Authenticate user against local administrator.
-   * @param config the configuration object
+   * @param user the user to check against
    * @param login passed user name
    * @param password pass password
    * @return the authenticated user
    */
-  private User authenticate(Configuration config, String login, String password) {
-    User user = new User(config.getUserName(), config.getPassword(), config.getEmail());
+  private User authenticate(User user, String login, String password) {
     if (user.getLogin().equals(login) && user.getPasswd().equals(password)) {
       return user;
     }

@@ -28,6 +28,7 @@ package org.snipsnap.snip;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.List;
+import java.net.URLEncoder;
 
 /**
  *  Generates links for snips
@@ -65,7 +66,7 @@ public class SnipLink {
     buffer.append("<a href=\"");
     buffer.append(root);
     buffer.append("/");
-    buffer.append(name);
+    buffer.append(encode(name));
     buffer.append("\">");
     buffer.append(view);
     buffer.append("</a>");
@@ -167,5 +168,19 @@ public class SnipLink {
     }
     buffer.append(" border=\"0\">");
     return buffer;
+  }
+
+  // TODO 1.4 buffer.append(URLEncoder.encode(key, "iso-8859-1"));
+  public static String encode(String s) {
+    /*
+      try {
+        URLEncoder.encode(s, "ISO-8859-1");
+      } catch (UnsupportedEncodingException e) {
+        cat.error("unsupported encoding", e);
+        return s;
+      }
+    */
+
+    return URLEncoder.encode(s);
   }
 }

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<!--
+  ** Web Application configuration for installer application.
+  ** @author Matthias L. Jugel
+  ** @version $Id$
+  -->
+<web-app>
+  <display-name>SnipSnap Installer</display-name>
+
+  <servlet>
+    <servlet-name>org.snipsnap.admin.CommandHandler</servlet-name>
+    <servlet-class>org.snipsnap.admin.CommandHandler</servlet-class>
+    <init-param>
+      <param-name>config-file</param-name>
+      <param-value>conf/server.conf</param-value>
+    </init-param>
+    <init-param>
+      <param-name>free-files</param-name>
+      <param-value>/login.jsp, /install.jsp</param-value>
+    </init-param>
+    <init-param>
+      <param-name>index-page</param-name>
+      <param-value>/exec/app</param-value>
+    </init-param>
+  </servlet>
+
+  <servlet>
+    <servlet-name>org.snipsnap.admin.Authenticate</servlet-name>
+    <servlet-class>org.snipsnap.admin.Authenticate</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>org.snipsnap.admin.install.Installer</servlet-name>
+    <servlet-class>org.snipsnap.admin.install.Installer</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>org.snipsnap.admin.install.Applications</servlet-name>
+    <servlet-class>org.snipsnap.admin.install.Applications</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>org.snipsnap.admin.install.Shutdown</servlet-name>
+    <servlet-class>org.snipsnap.admin.install.Shutdown</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>org.snipsnap.admin.CommandHandler</servlet-name>
+    <url-pattern>/exec/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>org.snipsnap.admin.Authenticate</servlet-name>
+    <url-pattern>/exec/authenticate</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>org.snipsnap.admin.install.Applications</servlet-name>
+    <url-pattern>/exec/app</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>org.snipsnap.admin.install.Installer</servlet-name>
+    <url-pattern>/exec/install</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>org.snipsnap.admin.install.Shutdown</servlet-name>
+    <url-pattern>/exec/shutdown</url-pattern>
+  </servlet-mapping>
+
+
+  <!-- TAGLIBS -->
+  <taglib>
+    <taglib-uri>http://java.sun.com/jstl/core</taglib-uri>
+    <taglib-location>/WEB-INF/c.tld</taglib-location>
+  </taglib>
+
+</web-app>

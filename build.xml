@@ -6,6 +6,7 @@
 <project basedir="." default="jar" name="solent sources">
 
   <property file="conf/build.properties"/>
+  <property file="conf/server.conf"/>
 
 
   <!-- the overall class path -->
@@ -26,12 +27,12 @@
   <!-- build binary distribution package -->
   <target depends="clean" description="build binary package" name="src-tar">
     <tstamp/>
-    <tar destfile="../${appname}-${version}-${DSTAMP}${TSTAMP}-src.tgz" compression="gzip">
-      <tarfileset dir="." prefix="${appname}-${version}" mode="566">
+    <tar destfile="../${appname}-${server.version}-${DSTAMP}${TSTAMP}-src.tgz" compression="gzip">
+      <tarfileset dir="." prefix="${appname}-${server.version}" mode="566">
         <include name="run.sh"/>
         <include name="db.sh"/>
       </tarfileset>
-      <tarfileset dir="." prefix="${appname}-${version}">
+      <tarfileset dir="." prefix="${appname}-${server.version}">
         <include name="**"/>
         <exclude name="**/CVS"/>
       </tarfileset>
@@ -40,12 +41,12 @@
 
   <target depends="clean, jar" description="build source package" name="bin-tar">
     <tstamp/>
-    <tar destfile="../${appname}-${version}-${DSTAMP}${TSTAMP}.tgz" compression="gzip">
-      <tarfileset dir="." prefix="${appname}-${version}" mode="566">
+    <tar destfile="../${appname}-${server.version}-${DSTAMP}${TSTAMP}.tgz" compression="gzip">
+      <tarfileset dir="." prefix="${appname}-${server.version}" mode="566">
         <include name="run.sh"/>
         <include name="db.sh"/>
       </tarfileset>
-      <tarfileset dir="." prefix="${appname}-${version}" mode="666">
+      <tarfileset dir="." prefix="${appname}-${server.version}" mode="666">
         <include name="${jar}/${appname}.jar"/>
         <include name="${jar}/jdbcpool.jar"/>
         <include name="${jar}/jakarta.jar"/>
@@ -70,49 +71,57 @@
 
   <!-- delete compiled class files and created jar/war archives -->
   <target description="clean up compiled code" name="clean">
-    <delete dir="${target}/admin"/>
     <delete dir="${target}/server"/>
+    <delete dir="${target}/admin"/>
+    <delete dir="${target}/installer"/>
     <delete dir="${target}/default"/>
     <delete>
       <fileset dir="${jar}" includes="${appname}.jar"/>
       <fileset dir="${jar}" includes="${appname}-admin.war"/>
+      <fileset dir="${jar}" includes="${appname}-installer.war"/>
       <fileset dir="${jar}" includes="${appname}-template.war"/>
     </delete>
   </target>
 
   <!-- create a jar containing the server code and compile all supporting applications  -->
-  <target depends="build,template-war,admin-war" description="build executable jar" name="jar">
-    <jar destfile="${jar}/${appname}.jar"
-      excludes="**/CVS"
-      manifest="conf/manifest">
+  <target depends="build-server,template-war,admin-war,installer-war" description="build executable jar" name="jar">
+    <jar destfile="${jar}/${appname}.jar" excludes="**/CVS" manifest="conf/manifest">
       <fileset dir="${target}/server" includes="**"/>
     </jar>
   </target>
 
+  <!-- create web archive of the template application -->
+  <target depends="build-template-app" description="build template war" name="template-war">
+    <!-- TODO: Hack to allow running without a war -->
+    <jar destfile="${src}/apps/default/WEB-INF/lib/servlets.jar" excludes="**/CVS">
+      <fileset dir="${target}/default/WEB-INF/classes" includes="**"/>
+    </jar>
+    <jar destfile="${jar}/${appname}-template.war" excludes="**/CVS">
+      <fileset dir="${src}/apps/default" includes="**"/>
+    </jar>
+  </target>
+
   <!-- create web archive of the administrative web application -->
-  <target depends="build" description="build admin war" name="admin-war">
+  <target depends="build-admin-app" description="build admin war" name="admin-war">
     <mkdir dir="${src}/apps/admin/WEB-INF/lib"/>
-    <jar destfile="${src}/apps/admin/WEB-INF/lib/servlets.jar"
-      excludes="**/CVS">
+    <jar destfile="${src}/apps/admin/WEB-INF/lib/servlets.jar" excludes="**/CVS">
       <fileset dir="${target}/admin/WEB-INF/classes" includes="**"/>
     </jar>
-    <jar destfile="${jar}/${appname}-admin.war"
-      excludes="**/CVS">
+    <jar destfile="${jar}/${appname}-admin.war" excludes="**/CVS">
       <fileset dir="${src}/apps/admin" includes="**"/>
       <fileset dir="${src}/apps/default/" includes="WEB-INF/lib/jstl.jar, WEB-INF/lib/standard.jar"/>
     </jar>
   </target>
 
-  <!-- create web archive of the template application -->
-  <target depends="build" description="build template war" name="template-war">
-    <!-- TODO: Hack to allow running without a war -->
-    <jar destfile="${src}/apps/default/WEB-INF/lib/servlets.jar"
-      excludes="**/CVS">
-      <fileset dir="${target}/default/WEB-INF/classes" includes="**"/>
+  <!-- create web archive of the administrative web application -->
+  <target depends="build-installer-app" description="build installer war" name="installer-war">
+    <mkdir dir="${src}/apps/installer/WEB-INF/lib"/>
+    <jar destfile="${src}/apps/installer/WEB-INF/lib/servlets.jar" excludes="**/CVS">
+      <fileset dir="${target}/installer/WEB-INF/classes" includes="**"/>
     </jar>
-    <jar destfile="${jar}/${appname}-template.war"
-      excludes="**/CVS">
-      <fileset dir="${src}/apps/default" includes="**"/>
+    <jar destfile="${jar}/${appname}-installer.war" excludes="**/CVS">
+      <fileset dir="${src}/apps/installer" includes="**"/>
+      <fileset dir="${src}/apps/default/" includes="WEB-INF/lib/jstl.jar, WEB-INF/lib/standard.jar"/>
     </jar>
   </target>
 
@@ -120,12 +129,14 @@
   <target depends="jar" description="run application server" name="run">
     <java classname="org.snipsnap.server.AppServer" fork="true"
       classpathref="classpath">
-      <classpath path="${jar}/${appname}.jar"/>
+      <classpath path="${jar}/${appname}.jar">
+        <pathelement location="${java.home}/lib/tools.jar"/>
+      </classpath>
     </java>
   </target>
 
   <!-- a simple help target to build all applications and server code -->
-  <target depends="build-server, build-default-app, build-admin-app"
+  <target depends="build-server, build-template-app, build-admin-app, build-installer-app"
     description="build all code" name="build"/>
 
   <target description="compile server code" name="build-server">
@@ -134,10 +145,10 @@
       srcdir="${src}"
       classpathref="classpath"
       destdir="${target}/server"
-      includes="org/snipsnap/server/**, org/snipsnap/util/*Util*"/>
+      includes="org/snipsnap/server/**, org/snipsnap/util/*Util*, org/snipsnap/util/EmbeddedJDBCDriver.java"/>
   </target>
 
-  <target description="compile default application code" name="build-default-app">
+  <target description="compile template application code" name="build-template-app">
     <mkdir dir="${target}/default/WEB-INF/classes"/>
     <javac deprecation="${deprecation}" debug="${debug}"
       srcdir="${src}"
@@ -153,7 +164,17 @@
       srcdir="${src}"
       classpathref="classpath"
       destdir="${target}/admin/WEB-INF/classes"
-      includes="org/snipsnap/admin/**"/>
+      includes="org/snipsnap/admin/**"
+      excludes="org/snipsnap/admin/install/**"/>
+  </target>
+
+  <target description="compile installer application code" name="build-installer-app">
+    <mkdir dir="${target}/installer/WEB-INF/classes"/>
+    <javac deprecation="${deprecation}" debug="${debug}"
+      srcdir="${src}"
+      classpathref="classpath"
+      destdir="${target}/installer/WEB-INF/classes"
+      includes="org/snipsnap/admin/CommandHandler.java, org/snipsnap/admin/Authenticate.java, org/snipsnap/admin/install/**"/>
   </target>
 
 </project>

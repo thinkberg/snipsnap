@@ -22,17 +22,23 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-package org.snipsnap.admin;
+package org.snipsnap.admin.install;
 
-import org.snipsnap.config.Configuration;
-import org.snipsnap.config.CreateDB;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.util.Checksum;
-import org.snipsnap.util.JarUtil;
 import org.mortbay.http.SocketListener;
 import org.mortbay.jetty.Server;
-import org.mortbay.jetty.servlet.WebApplicationContext;
 import org.mortbay.util.InetAddrPort;
+import org.snipsnap.admin.CommandHandler;
+import org.snipsnap.app.Application;
+import org.snipsnap.config.AppConfiguration;
+import org.snipsnap.config.Configuration;
+import org.snipsnap.config.CreateDB;
+import org.snipsnap.server.ApplicationLoader;
+import org.snipsnap.snip.SnipLink;
+import org.snipsnap.user.User;
+import org.snipsnap.util.Checksum;
+import org.snipsnap.util.ConnectionManager;
+import org.snipsnap.util.JarUtil;
+import org.snipsnap.util.MckoiEmbeddedJDBCDriver;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -40,6 +46,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.UnknownHostException;
@@ -47,10 +55,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
 import java.util.jar.JarFile;
+import java.sql.SQLException;
+
+import com.mckoi.database.control.DBController;
 
 /**
- * Installs an unpacks the default application
+ * Installer servlet that installs the application.
  * @author Matthias L. Jugel
  * @version $Id$
  */
@@ -62,31 +74,45 @@ public class Installer extends HttpServlet {
     // get or create session and application object
     HttpSession session = request.getSession(false);
     if (null == session) {
-      response.sendRedirect(SnipLink.absoluteLink(request, "/admin"));
+      response.sendRedirect(SnipLink.absoluteLink(request, "/"));
       return;
     }
     Map errors = new HashMap();
     session.removeAttribute("errors");
 
     // get config from session
-    Configuration config = (Configuration) session.getAttribute("config");
-    if (null == config || config.isConfigured()) {
-      response.sendRedirect(SnipLink.absoluteLink(request, "/admin"));
+    Configuration serverConfig = (Configuration) session.getAttribute(CommandHandler.ATT_CONFIG);
+    User admin = (User) session.getAttribute(CommandHandler.ATT_ADMIN);
+    if (null == serverConfig || admin == null) {
+      response.sendRedirect(SnipLink.absoluteLink(request, "/"));
       return;
     }
+
+    // create a new configuration object
+    AppConfiguration config = new AppConfiguration();
+    session.setAttribute("config", config);
 
     // change this to response.getWriter() to enable display on webpage
     PrintWriter out = new PrintWriter(System.out);
     writeMessage(out, "Installing SnipSnap ...");
 
-    writeMessage(out, "Checking user name and password ...");
+    // set application name ...
+    writeMessage(out, "Checking application name ...");
+    String appName = request.getParameter("appname");
+    if (null == appName || appName.length() == 0) {
+      System.err.println("Installer: application name too short");
+      errors.put("appname", "An application name is required!");
+    }
+    config.setName(appName != null ? appName : "");
+
     // set user name and email, check that information
-    config.setUserName(request.getParameter("username"));
-    if (null == config.getUserName() || config.getUserName().length() == 0) {
+    writeMessage(out, "Checking user name and password ...");
+    config.setAdminLogin(request.getParameter("username"));
+    if (null == config.getAdminLogin() || config.getAdminLogin().length() == 0) {
       System.err.println("Installer: user name too short");
       errors.put("login", "You must enter a user name with at least 3 characters!");
     }
-    config.setEmail(request.getParameter("email"));
+    config.setAdminEmail(request.getParameter("email"));
 
     String password = request.getParameter("password");
     String password2 = request.getParameter("password2");
@@ -94,7 +120,7 @@ public class Installer extends HttpServlet {
       System.err.println("Installer: passwords do not match");
       errors.put("password", "Passwords do not match!");
     } else {
-      config.setPassword(password);
+      config.setAdminPassword(password);
     }
 
     writeMessage(out, "Checking server host and port information ...");
@@ -146,10 +172,27 @@ public class Installer extends HttpServlet {
       }
     }
 
-    writeMessage(out, "Extracting templates ...");
+    // create application root directory
+    File webAppRoot = new File(serverConfig.getProperty(Configuration.SERVER_WEBAPP_ROOT) + "/" + config.getName());
+    writeMessage(out, "Creating web application directories ...");
+    if (!webAppRoot.mkdirs()) {
+      System.err.println("Installer: error creating applications root directory");
+      errors.put("fatal", "Unable to create applications root directory: " + webAppRoot);
+      sendError(session, errors, request, response);
+      return;
+    }
+
+    File appDir = new File(webAppRoot, "app");
+    appDir.mkdir();
+    File dbDir = new File(webAppRoot, "db");
+    dbDir.mkdir();
+    File logDir = new File(webAppRoot, "log");
+    logDir.mkdir();
+
+    writeMessage(out, "Extracting application template ...");
     try {
-      Checksum checksum = JarUtil.extract(new JarFile("./lib/snipsnap-template.war", true), new File("./app/" + config.getContextPath()));
-      checksum.store(new File("./app/" + config.getContextPath() + "/WEB-INF/CHECKSUMS"));
+      Checksum checksum = JarUtil.extract(new JarFile("./lib/snipsnap-template.war", true), appDir);
+      checksum.store(new File(webAppRoot, "CHECKSUMS"));
     } catch (IOException e) {
       System.err.println("Installer: error while extracting default template: " + e);
       errors.put("fatal", "Unable to extract default application, please see server.log for details!");
@@ -157,47 +200,71 @@ public class Installer extends HttpServlet {
       return;
     }
 
+    // store configuration in thread, for database creation
+    Application app = Application.getInstance(session);
+    System.out.println("app: " + app);
+    app.setConfiguration(config);
 
     writeMessage(out, "Saving local configuration ...");
-    config.setConfigured(true);
-    config.save("./conf/local.conf");
+    config.setFile(new File(webAppRoot.getAbsoluteFile(), "application.conf"));
 
     writeMessage(out, "Creating database ...");
-    try {
-      CreateDB.createDB(config.getUserName(), password, config.getEmail());
-    } catch (Exception e) {
-      e.printStackTrace();
-      errors.put("fatal", "Unable to create database: " + e);
-      sendError(session, errors, request, response);
-      return;
+    boolean useMcKoi = request.getParameter("usemckoi") != null ? true : false;
+    String jdbcURL = request.getParameter("jdbc");
+    String jdbcDrv = request.getParameter("driver");
+    if (useMcKoi || jdbcURL == null || jdbcURL.length() == 0) {
+      File dbConfFile = new File(webAppRoot, "db.conf");
+      jdbcURL = MckoiEmbeddedJDBCDriver.MCKOI_PREFIX + dbConfFile.getAbsolutePath();
+      jdbcDrv = "org.snipsnap.util.MckoiEmbeddedJDBCDriver";
+
+      config.setJDBCURL(jdbcURL + "?create=true");
+      config.setJDBCDriver(jdbcDrv);
+
+      try {
+        Properties dbConf = new Properties();
+        dbConf.load(new FileInputStream("./conf/db.conf"));
+        dbConf.store(new FileOutputStream(dbConfFile), "SnipSnap Database configuration: " + config.getName());
+
+        CreateDB.createDB(config);
+      } catch (IOException e) {
+        System.err.println("Installer: error creating database: " + e);
+        errors.put("fatal", "Unable to create database!");
+        sendError(session, errors, request, response);
+        return;
+      }
+      config.setJDBCURL(jdbcURL);
+      writeMessage(out, "Inserting inital data into database ...");
+      CreateDB.insertData(config);
+
+    } else {
+      config.setJDBCURL(jdbcURL);
+      config.setJDBCDriver(jdbcDrv);
+      CreateDB.createDB(config);
+      CreateDB.insertData(config);
     }
 
-    writeMessage(out, "Inserting inital data into database ...");
-    CreateDB.insertData(config.getUserName(), password, config.getEmail());
+    config.store();
 
-    writeMessage(out, "Starting your application ...");
+    writeMessage(out, "Starting application ...");
     try {
-      WebApplicationContext context =
-        server.addWebApplication(config.getContextPath(), "./app" + config.getContextPath());
-      context.start();
+      ApplicationLoader.loadApplication(config);
     } catch (Exception e) {
       System.err.println("Installer: unable to start application: " + e);
+      e.printStackTrace();
       errors.put("fatal", "Cannot start application: " + e);
       sendError(session, errors, request, response);
       return;
     }
 
-    // save again, just to make sure
-    config.save("./conf/local.conf");
-
     writeMessage(out, "Installation finished.");
-    response.sendRedirect(SnipLink.absoluteLink(request, "/exec/finished.jsp"));
+    session.removeAttribute("config");
+    response.sendRedirect(SnipLink.absoluteLink(request, "/"));
   }
 
   private void sendError(HttpSession session, Map errors, HttpServletRequest request, HttpServletResponse response)
     throws IOException {
     session.setAttribute("errors", errors);
-    response.sendRedirect(SnipLink.absoluteLink(request, "/exec/install.jsp"));
+    response.sendRedirect(SnipLink.absoluteLink(request, "/"));
   }
 
   private void writeMessage(PrintWriter out, String message) {

@@ -16,6 +16,12 @@
   </listener>
 
   <servlet>
+    <servlet-name>org.snipsnap.net.InitServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.InitServlet</servlet-class>
+    <load-on-startup/>
+  </servlet>
+
+  <servlet>
     <servlet-name>org.snipsnap.net.Layouter</servlet-name>
     <servlet-class>org.snipsnap.net.Layouter</servlet-class>
   </servlet>

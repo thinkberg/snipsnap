@@ -17,16 +17,6 @@
   </servlet>
 
   <servlet>
-    <servlet-name>org.snipsnap.admin.Installer</servlet-name>
-    <servlet-class>org.snipsnap.admin.Installer</servlet-class>
-  </servlet>
-
-  <servlet>
-    <servlet-name>org.snipsnap.admin.Shutdown</servlet-name>
-    <servlet-class>org.snipsnap.admin.Shutdown</servlet-class>
-  </servlet>
-
-  <servlet>
     <servlet-name>org.snipsnap.admin.Authenticate</servlet-name>
     <servlet-class>org.snipsnap.admin.Authenticate</servlet-class>
   </servlet>
@@ -55,16 +45,6 @@
   <servlet-mapping>
     <servlet-name>org.snipsnap.admin.AdminServlet</servlet-name>
     <url-pattern>/exec/*</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>org.snipsnap.admin.Installer</servlet-name>
-    <url-pattern>/exec/install</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>org.snipsnap.admin.Shutdown</servlet-name>
-    <url-pattern>/exec/shutdown</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
