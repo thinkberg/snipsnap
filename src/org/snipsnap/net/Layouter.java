@@ -74,6 +74,9 @@ public class Layouter extends HttpServlet {
 
     request.setAttribute("page", layout);
     RequestDispatcher dispatcher = request.getRequestDispatcher("/main.jsp");
+    if(null == dispatcher) {
+      dispatcher = request.getRequestDispatcher(layout);
+    }
     dispatcher.forward(request, response);
   }
 
