@@ -55,7 +55,8 @@ public class SnipViewServlet extends HttpServlet {
     } else {
       name = name.substring(1);
     }
-    name = URLDecoder.decode(name, "iso-8859-1");
+    // TODO 1.4 name = URLDecoder.decode(name, "iso-8859-1");
+    name = URLDecoder.decode(name);
     System.err.println(name);
 
     request.setAttribute("snip", SnipSpace.getInstance().load(name));

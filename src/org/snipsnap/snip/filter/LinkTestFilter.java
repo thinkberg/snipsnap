@@ -90,8 +90,9 @@ public class LinkTestFilter extends Filter {
           key = key.substring(colonIndex+1);
           buffer.append("<a href=\"http://www.langreiter.com/space/");
           try {
-            buffer.append(URLEncoder.encode(key, "iso-8859-1"));
-          } catch (UnsupportedEncodingException e) {
+            //TODO 1.4 buffer.append(URLEncoder.encode(key, "iso-8859-1"));
+            buffer.append(URLEncoder.encode(key));
+          } catch (Exception e) {
             buffer.append(key);
           }
           buffer.append("\">");
@@ -103,8 +104,9 @@ public class LinkTestFilter extends Filter {
           if (linkTester.exists(key)) {
             buffer.append("<a href=\"../space/");
             try {
-              buffer.append(URLEncoder.encode(key, "iso-8859-1"));
-            } catch (UnsupportedEncodingException e) {
+              // TODO 1.4 buffer.append(URLEncoder.encode(key, "iso-8859-1"));
+              buffer.append(URLEncoder.encode(key));
+            } catch (Exception e) {
               buffer.append(key);
             }
             buffer.append("\">").append(result.group(1)).append("</a>");
@@ -112,8 +114,9 @@ public class LinkTestFilter extends Filter {
             buffer.append("[create <a href=\"" +
                           "../exec/edit?name=");
             try {
-              buffer.append(URLEncoder.encode(key, "iso-8859-1"));
-            } catch (UnsupportedEncodingException e) {
+              // TODO 1.4 buffer.append(URLEncoder.encode(key, "iso-8859-1"));
+              buffer.append(URLEncoder.encode(key));
+            } catch (Exception e) {
               buffer.append(key);
             }
             buffer.append("\">").append(result.group(1)).append("</a>]");

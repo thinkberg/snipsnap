@@ -50,15 +50,9 @@ public class Application extends HttpServlet {
     if (session != null && session.getAttribute("admin") != null) {
       String srv = request.getParameter("server");
       String ctx = request.getParameter("context");
-      String start = request.getParameter("start");
-      String stop = request.getParameter("stop");
-      String remove = request.getParameter("remove");
-      if (start != null) {
-        startStop(srv, ctx, Application.CMD_APPLICATION_START);
-      } else if (stop != null) {
-        startStop(srv, ctx, Application.CMD_APPLICATION_STOP);
-      } else if (remove != null) {
-        startStop(srv, ctx, Application.CMD_APPLICATION_REMOVE);
+      String command = request.getParameter("command");
+      if(command != null) {
+        startStop(srv, ctx, command.toLowerCase());
       }
     }
     response.sendRedirect(SnipLink.absoluteLink(request, "/"));
@@ -66,7 +60,7 @@ public class Application extends HttpServlet {
 
   private final static String CMD_APPLICATION_START = "start";
   private final static String CMD_APPLICATION_STOP = "stop";
-  private final static String CMD_APPLICATION_REMOVE = "stop";
+  private final static String CMD_APPLICATION_REMOVE = "remove";
 
   private void startStop(String srv, String ctx, String command) {
     System.err.println("srv=" + srv + " ctx=" + ctx);

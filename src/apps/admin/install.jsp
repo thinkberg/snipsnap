@@ -6,7 +6,7 @@
 
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 
-<h3>Welcome to your SnipSnap Installation</h3>
+<h1>Welcome to your SnipSnap Installation</h1>
 
 <c:forEach items="${errors}" var="error">
   <span class="error"><c:out value="${error}"/></span><br>
@@ -44,23 +44,23 @@
           <td colspan="2" class="table-header">Application</td>
         </tr>
         <tr>
-          <td>Virtual Host:</td>
-          <td><input name="host" type="text" value="<c:out value='${config.host}' default=''/>"></td>
-          <td>(optional)<br>
-	    The virtual host the server should accept requests for.
-	    Leave blank if you want to accept requests for all possible
-	    host names your server has (default).
-	  </td>
+          <td valign="top">Virtual Host:</td>
+          <td valign="top"><input name="host" type="text" value="<c:out value='${config.host}' default=''/>"></td>
+          <td valign="top">(optional)<br>
+	          The virtual host the server should accept requests for.
+	          Leave blank if you want to accept requests for all possible
+	          host names your server has (default).
+	        </td>
         <tr>
         <tr>
-          <td>Port Number:</td>
-          <td><input name="port" type="text" value="<c:out value='${config.port}' default='80'/>"></td>
-          <td>(optional)</td>
+          <td valign="top">Port Number:</td>
+          <td valign="top"><input name="port" type="text" value="<c:out value='${config.port}' default='80'/>"></td>
+          <td valign="top">(optional)</td>
         <tr>
         <tr>
-          <td>Path on Server:</td>
-          <td><input name="context" type="text" value="<c:out value='${config.contextPath}' default='/'/>"></td>
-          <td>(optional)<br>
+          <td valign="top">Path on Server:</td>
+          <td valign="top"><input name="context" type="text" value="<c:out value='${config.contextPath}' default='/'/>"></td>
+          <td valign="top">(optional)<br>
 	    The relative path on your server where the application resides.
 	    If you enter <i>/foo/</i> then your application listens for requests
 	    like: <i>http://localhost:8668/foo/space/start</i>. Leave the
@@ -69,7 +69,7 @@
         <tr>
         <tr>
           <td colspan="2">
-            <input type="submit" value="Install"/>
+            <input type="submit" value="Install SnipSnap"/>
           </td>
         </tr>
       </table>

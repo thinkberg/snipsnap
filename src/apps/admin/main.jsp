@@ -15,21 +15,21 @@
   </head>
   <body>
     <table width="800" border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td valign="top" width="100%">
+          <img src="images/snip.png"/>
+        </td>
+      </tr>
+      <tr><td><c:import url="/menu.jsp"/></td></tr>
       <tr><td valign="top">
-        <table width="100%"border="0" cellpadding="4" cellspacing="1">
-         <tr>
-           <td valign="top" width="100%">
-             <img src="images/snip.png"/>
-           </td>
-         </tr>
-         <tr><td><c:import url="/menu.jsp"/></td></tr>
-         <tr>
-           <td valign="top" width="100%">
-             <c:import url="${page}"/>
-           </td>
-         </tr>
-       </table>
-     </td></tr>
+        <table width="100%"border="0" cellpadding="8" cellspacing="0">
+          <tr bgcolor="#cccccc">
+            <td valign="top" width="100%">
+              <c:import url="${page}"/>
+            </td>
+          </tr>
+        </table>
+      </td></tr>
     </table>
   </body>
 </html>

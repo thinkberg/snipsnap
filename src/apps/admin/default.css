@@ -11,11 +11,20 @@
 
 }
 
-.menuitem {
-  background-color: #eeeeee;
+.menuitem-active {
+  background-color: #cccccc;
+  color: #000000;
   font-weight: bold;
-  font-size: 13px;
+  font-size: 14px;
 }
+
+.menuitem-inactive {
+  background-color: #eeeeee;
+  color: #000000;
+  font-weight: bold;
+  font-size: 14px;
+}
+
 
 /* special formatting of a wiki table */
 .table-header {
@@ -47,7 +56,7 @@ table {
 input[type=submit] {
     text-align: center;
     background: #cccccc;
-    border: 1px ridge #888888;
+    border: 1px ridge #444444;
     font-size: inherit;
     font-family: inherit;
     line-height: inherit;
@@ -62,5 +71,5 @@ input, select, textarea {
     font-family: courier, courier new, monospace;
     line-height: inherit;
     vertical-align: middle;
-    border: 1px ridge #aaaaaa;
+    border: 1px ridge #444444;
 }

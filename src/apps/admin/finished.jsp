@@ -8,7 +8,7 @@
 
 <c:choose>
   <c:when test="${config.configured}">
-    <h3>Your SnipSnap Installation finished sucessfully!</h3>
+    <h1>Your SnipSnap Installation finished sucessfully!</h1>
     Point your browser to the following address:
     <ul>
       <li><a href="http://<c:out value='${config.host}' default='localhost'/>:<c:out value='${config.port}${config.contextPath}'/>">

@@ -39,6 +39,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.StringTokenizer;
 
 /**
  * Servlet to register a new user.
@@ -88,8 +89,10 @@ public class NewUserServlet extends HttpServlet {
         return;
       }
 
-      if(!login.matches("[A-Za-z0-9.][A-Za-z0-9 .]+")) {
-        errors.put("login", ERR_ILLEGAL);
+      // TODO 1.4 if(!login.matches("[A-Za-z0-9.][]+")) {
+      StringTokenizer tok = new StringTokenizer(login, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789. ");
+      if(login.startsWith(" ") || tok.hasMoreTokens()) {
+        errors.put("login", ERR_ILLEGAL+": "+tok.nextToken());
         sendError(session, errors, request, response);
         return;
       }

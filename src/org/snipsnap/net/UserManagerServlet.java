@@ -22,13 +22,9 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-package com.neotis.admin;
+package com.neotis.net;
 
-import com.neotis.config.Configuration;
-import com.neotis.snip.SnipLink;
-import org.mortbay.http.HttpServer;
-import org.mortbay.util.Code;
-import org.mortbay.util.Log;
+import com.neotis.user.UserManager;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -36,44 +32,23 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Iterator;
 
 /**
- * Application configuration servlet.
+ * Servlet to login a user by checking user name and password.
  * @author Matthias L. Jugel
  * @version $Id$
  */
-public class Shutdown extends HttpServlet {
+public class UserManagerServlet extends HttpServlet {
 
-  public void doPost(HttpServletRequest request, HttpServletResponse response)
+  public void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-
-    HttpSession session = request.getSession();
-    if (session != null) {
-      String user = request.getParameter("login");
-      String pass = request.getParameter("password");
-
-      Configuration config = new Configuration("./conf/local.conf");
-
-      // don't do anything before user name and password are checked
-      if (config.isConfigured() &&
-        config.getUserName().equals(user) &&
-        config.getPassword().equals(pass)) {
-        // shut down server ...
-        com.neotis.server.Shutdown.shutdown();
-        response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE, "Server has been shut down.");
-        return;
-      }
-    }
-
-    response.sendRedirect(SnipLink.absoluteLink(request, "/"));
+    HttpSession session = request.getSession(false);
+    System.err.println("UserManagerServlet: "+session);
+    UserManager um = UserManager.getInstance();
+    session.setAttribute("usermanager", um);
   }
 
-  private void writeMessage(PrintWriter out, String message) {
-    out.println(message);
-    out.flush();
+  protected void doPost(HttpServletRequest request, HttpServletResponse httpServletResponse) throws ServletException, IOException {
+    doGet(request, httpServletResponse);
   }
-
 }
-

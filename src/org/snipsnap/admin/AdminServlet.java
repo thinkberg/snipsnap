@@ -40,6 +40,8 @@ import java.io.IOException;
 import java.io.FileInputStream;
 import java.util.Collection;
 import java.util.Properties;
+import java.util.List;
+import java.util.Arrays;
 
 /**
  * Main AdminServlet
@@ -47,6 +49,8 @@ import java.util.Properties;
  * @version $Id$
  */
 public class AdminServlet extends HttpServlet {
+
+  List free = Arrays.asList(new String[] { "/install.jsp", "/finished.jsp" });
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
     throws IOException, ServletException {
@@ -76,6 +80,10 @@ public class AdminServlet extends HttpServlet {
       } else {
         command = "/install.jsp";
       }
+    }
+
+    if(!free.contains(command) && command.endsWith(".jsp") && session.getAttribute("admin") == null) {
+      command = "/login.jsp";
     }
 
     request.setAttribute("page", command);

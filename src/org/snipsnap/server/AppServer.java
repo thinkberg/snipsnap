@@ -30,9 +30,18 @@ import org.mortbay.http.SocketListener;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.WebApplicationContext;
 import org.mortbay.util.InetAddrPort;
+import org.mortbay.util.MultiException;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.Properties;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.BindException;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.Iterator;
 
 /**
  * Application Server
@@ -41,18 +50,35 @@ import java.util.Properties;
  */
 public class AppServer {
 
+  public final static int ADMIN_PORT = 9765;
   private static Server jettyServer;
   private static WebApplicationContext adminContext;
-  private static Properties config;
 
   public static void main(String args[]) {
     System.out.println("SnipSnap v0.1-alpha");
     System.out.println("Copyright (c) 2002 Stephan J. Schmidt, Matthias L. Jugel. "
-                       + "All Rights Resved.");
+                       + "All Rights Reserved.");
     System.out.println("See License Agreement for terms and conditions of use.");
-    Configuration config = new Configuration("./conf/local.conf");
-    initServer(config);
-    checkConfig(config);
+    if (args.length > 1) {
+      if ("-admin".equals(args[0])) {
+        try {
+          Socket s = new Socket(InetAddress.getLocalHost(), ADMIN_PORT);
+          BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
+          writer.write(args[1]);
+          writer.newLine();
+          writer.close();
+          s.close();
+        } catch (IOException e) {
+          System.err.println("AppServer: cannot send administrative command");
+          System.exit(-1);
+        }
+        System.exit(0);
+      }
+    } else {
+      Configuration config = new Configuration("./conf/local.conf");
+      initServer(config);
+      checkConfig(config);
+    }
   }
 
   /**
@@ -64,8 +90,14 @@ public class AppServer {
       jettyServer.start();
     } catch (IOException e) {
       System.err.println("AppServer: configuration not found: " + e);
-    } catch (Exception e) {
-      System.err.println("AppServer: unable to load servlet class: " + e);
+    } catch (MultiException e) {
+      Iterator exceptions = e.getExceptions().iterator();
+      while (exceptions.hasNext()) {
+        Exception ex = (Exception) exceptions.next();
+        if (ex instanceof BindException) {
+          System.out.println("ERROR: can't start server, address already in use: " + ex.getMessage());
+        }
+      }
     }
     try {
       adminContext = addApplication("/admin", "./lib/snipsnap-admin.war");
@@ -73,6 +105,40 @@ public class AppServer {
     } catch (Exception e) {
       System.err.println("AppServer: unable to load servlet class: " + e);
     }
+
+    new Thread(new Runnable() {
+      public void run() {
+        ServerSocket ss = null;
+        try {
+          ss = new ServerSocket(ADMIN_PORT, 1, InetAddress.getLocalHost());
+        } catch (IOException e) {
+          System.err.println("AppServer: unable to bind administration socket on port ");
+        }
+        while(ss != null) {
+          try {
+            Socket s = ss.accept();
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
+            if (s.getInetAddress().equals(InetAddress.getLocalHost())) {
+              String command = reader.readLine();
+              if ("shutdown".equals(command)) {
+                Shutdown.shutdown();
+              }
+            } else {
+              writer.write("I cut you out, don't try that again! Snip Snap!");
+              writer.newLine();
+              writer.flush();
+            }
+            reader.close();
+            writer.close();
+            s.close();
+          } catch (IOException e) {
+            System.err.println("AppServer: exception while handling administrative command on socket");
+            e.printStackTrace();
+          }
+        } while (true);
+      }
+    }).start();
   }
 
   private static void checkConfig(Configuration config) {

@@ -210,7 +210,8 @@ public class Snip implements Ownable {
 
   public String getNameEncoded() {
     try {
-      return URLEncoder.encode(getName(), "iso-8859-1");
+      // TODO 1.4 return URLEncoder.encode(getName(), "iso-8859-1");
+      return URLEncoder.encode(getName());
     } catch(Exception e) {
       return getName();
     }

@@ -56,6 +56,11 @@
     <servlet-class>com.neotis.net.LoginServlet</servlet-class>
   </servlet>
 
+  <servlet>
+    <servlet-name>com.neotis.net.UserManagerServlet</servlet-name>
+    <servlet-class>com.neotis.net.UserManagerServlet</servlet-class>
+  </servlet>
+
   <servlet-mapping>
     <servlet-name>com.neotis.net.SnipViewServlet</servlet-name>
     <url-pattern>/space/*</url-pattern>

@@ -75,7 +75,8 @@ public class Layouter extends HttpServlet {
     session.setAttribute("app", app);
     session.setAttribute("space", SnipSpace.getInstance());
 
-    String layout = URLDecoder.decode(request.getPathInfo(), "iso-8869-1");
+    //TODO 1.4 String layout = URLDecoder.decode(request.getPathInfo(), "iso-8869-1");
+    String layout = URLDecoder.decode(request.getPathInfo());
     if(null == layout || "/".equals(layout)) {
       response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));
       return;

@@ -101,7 +101,7 @@ public class ConnectionManager {
   public Connection connection() {
     try {
       return DriverManager.getConnection(ConnectionPoolManager.URL_PREFIX +
-              "snipsnap", null, null);
+                                         "snipsnap", null, null);
     } catch (SQLException e) {
       e.printStackTrace();
       System.out.println("Unable to get connection.");
@@ -110,7 +110,7 @@ public class ConnectionManager {
   }
 
   public static Connection getConnection() {
-     return getInstance().connection();
+    return getInstance().connection();
   }
 
   public static void close(Connection conn) {
@@ -122,6 +122,7 @@ public class ConnectionManager {
       }
     }
   }
+
   public static void close(Statement statement) {
     if (null != statement) {
       try {

@@ -55,11 +55,16 @@ public class LoginServlet extends HttpServlet {
     if (request.getParameter("cancel") == null) {
       UserManager um = UserManager.getInstance();
       User user = um.authenticate(login, password);
+      HttpSession session = request.getSession(true);
       if (user == null) {
-        response.sendRedirect(SnipLink.absoluteLink(request, "/exec/login.jsp?login=" + login + "&message=" + ERR_PASSWORD));
+        session.setAttribute("login.login", login);
+        session.setAttribute("referrer", referer);
+        session.setAttribute("error", ERR_PASSWORD);
+        response.sendRedirect(SnipLink.absoluteLink(request, "/exec/login.jsp"));
         return;
       }
-      HttpSession session = request.getSession(true);
+
+      session.removeAttribute("referrer");
       Application app = (Application) session.getAttribute("app");
       if(app == null) {
         app = new Application();
@@ -73,7 +78,7 @@ public class LoginServlet extends HttpServlet {
       session.setAttribute("app", app);
     }
 
-    response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));
+    response.sendRedirect(referer);
   }
 
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -87,11 +92,9 @@ public class LoginServlet extends HttpServlet {
         cookie.setMaxAge(0);
         response.addCookie(cookie);
       }
-      response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));
       session.invalidate();
-      return;
     }
 
-    response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));
+    response.sendRedirect(referer);
   }
 }
