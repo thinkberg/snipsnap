@@ -116,7 +116,8 @@ public class WeblogMacro extends SnipMacro {
         Snip entry = (Snip) object;
 
         String[] entryName = StringUtil.split(entry.getName(), "/");
-        String day = (entryName.length > 1 ? entryName[DAY_INDEX] : entryName[0]);
+        int slashOffset = entryName.length - 3;
+        String day = (entryName.length > 1 ? entryName[slashOffset + DAY_INDEX] : entryName[0]);
         // New Day?
         //System.err.println("entryName="+Arrays.asList(entryName));
         if (!lastDay.equals(day)) {

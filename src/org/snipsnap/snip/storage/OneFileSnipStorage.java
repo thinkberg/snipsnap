@@ -84,6 +84,7 @@ public abstract class OneFileSnipStorage extends FileSnipStorage {
 
   protected void storageRemoveFile(Snip snip, File snipDir) {
     File file = new File(snipDir, getFileName());
+    Logger.debug(file + ": exists? " + file.exists());
     if (file.exists()) {
       File backup = new File(file.getPath() + ".removed");
       file.renameTo(backup);

@@ -133,6 +133,7 @@ public abstract class TwoFileSnipStorage extends FileSnipStorage {
    */
   protected void storageRemoveMetadata(Snip snip, File snipDir) {
     File metadataFile = new File(snipDir, getMetadataFileName());
+    Logger.debug(metadataFile + ": exists? " + metadataFile.exists());
     if (metadataFile.exists()) {
       File backup = new File(metadataFile.getPath() + ".removed");
       metadataFile.renameTo(backup);
@@ -148,6 +149,7 @@ public abstract class TwoFileSnipStorage extends FileSnipStorage {
    */
   protected void storageRemoveContent(Snip snip, File snipDir) {
     File contentFile = new File(snipDir, getContentFileName());
+    Logger.debug(contentFile+": exists? "+contentFile.exists());
     if (contentFile.exists()) {
       File backup = new File(contentFile.getPath() + ".removed");
       contentFile.renameTo(backup);
