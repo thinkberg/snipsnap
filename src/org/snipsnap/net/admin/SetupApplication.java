@@ -56,7 +56,7 @@ public class SetupApplication implements SetupHandler {
         if (config.isConfigured()) {
           SnipSpace space = SnipSpaceFactory.getInstance();
           Snip snip = space.load(Configuration.SNIPSNAP_CONFIG);
-          String logoName = uploader.uploadFile(request, snip, config.getFilePath());
+          String logoName = uploader.uploadFile(request, snip);
           if (logoName != null && !"".equals(logoName)) {
             config.setLogo(logoName);
           }
