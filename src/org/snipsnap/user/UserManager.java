@@ -144,7 +144,7 @@ public class UserManager implements Loader {
       }
 
       if (null == user) {
-        user = (User)robots.get(request.getRemoteHost());
+        //user = (User)robots.get(request.getRemoteHost());
         if(null == user) {
           user = new User("Guest", "Guest", "");
         }
