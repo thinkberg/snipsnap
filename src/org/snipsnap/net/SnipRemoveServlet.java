@@ -28,6 +28,8 @@ import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipSpaceFactory;
+import org.snipsnap.app.Application;
+import org.snipsnap.user.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -43,10 +45,15 @@ import java.io.IOException;
 public class SnipRemoveServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
+    Application app = Application.get();
+    User user = app.getUser();
     String name = request.getParameter("name");
-    SnipSpace space = SnipSpaceFactory.getInstance();
-    Snip snip = space.load(name);
-    space.remove(snip);
-    response.sendRedirect(SnipLink.absoluteLink("/space/start"));
+    if(user != null && user.isAdmin()) {
+      SnipSpace space = SnipSpaceFactory.getInstance();
+      Snip snip = space.load(name);
+      space.remove(snip);
+      response.sendRedirect(SnipLink.absoluteLink("/space/"+app.getConfiguration().getStartSnip()));
+    }
+    response.sendRedirect(SnipLink.absoluteLink("/space/"+name));
   }
 }

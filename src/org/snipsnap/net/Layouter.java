@@ -58,7 +58,7 @@ public class Layouter extends HttpServlet {
     }
 
     if (null == layout || "/".equals(layout)) {
-      response.sendRedirect(SnipLink.absoluteLink("/space/start"));
+      response.sendRedirect(SnipLink.absoluteLink("/space/"+Application.get().getConfiguration().getStartSnip()));
       return;
     }
 

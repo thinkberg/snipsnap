@@ -31,6 +31,7 @@ import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.snip.label.Label;
 import org.snipsnap.snip.label.LabelManager;
 import org.snipsnap.snip.label.Labels;
+import org.snipsnap.app.Application;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -55,7 +56,7 @@ public class LabelsServlet extends HttpServlet {
 
         String snipName = request.getParameter("snipname");
         if (null == snipName) {
-            response.sendRedirect(SnipLink.absoluteLink("/space/start"));
+            response.sendRedirect(SnipLink.absoluteLink("/space/"+Application.get().getConfiguration().getStartSnip()));
             return;
         }
 

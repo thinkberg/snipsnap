@@ -84,6 +84,6 @@ public class PostStoreServlet extends HttpServlet {
       }
     }
 
-    response.sendRedirect(SnipLink.absoluteLink("/space/start"));
+    response.sendRedirect(SnipLink.absoluteLink("/space/"+Application.get().getConfiguration().getStartSnip()));
   }
 }

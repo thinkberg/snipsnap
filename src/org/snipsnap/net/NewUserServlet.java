@@ -124,7 +124,7 @@ public class NewUserServlet extends HttpServlet {
       }
 
       String referer = request.getParameter("referer");
-      response.sendRedirect(referer != null ? referer : SnipLink.absoluteLink("/space/start"));
+      response.sendRedirect(referer != null ? referer : SnipLink.absoluteLink("/space/"+app.getConfiguration().getStartSnip()));
     } else {
       errors.put("Fatal", ERR_NOT_ALLOWED);
       sendError(session, errors, request, response);

@@ -28,6 +28,7 @@ package org.snipsnap.net;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpaceFactory;
+import org.snipsnap.app.Application;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -51,7 +52,7 @@ public class RemoveLabelServlet extends HttpServlet {
 
         String snipName = request.getParameter("snipname");
         if (null == snipName) {
-            response.sendRedirect(SnipLink.absoluteLink("/space/start"));
+            response.sendRedirect(SnipLink.absoluteLink("/space/"+Application.get().getConfiguration().getStartSnip()));
             return;
         }
         // cancel pressed

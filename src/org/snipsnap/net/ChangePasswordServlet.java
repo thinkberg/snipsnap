@@ -88,7 +88,7 @@ public class ChangePasswordServlet extends HttpServlet {
         dispatcher.forward(request, response);
       }
     } else {
-      response.sendRedirect(SnipLink.absoluteLink("/space/start"));
+      response.sendRedirect(SnipLink.absoluteLink("/space/"+Application.get().getConfiguration().getStartSnip()));
     }
   }
 }

@@ -27,6 +27,7 @@ package org.snipsnap.net;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpaceFactory;
+import org.snipsnap.app.Application;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -54,37 +55,13 @@ public class SnipEditServlet extends HttpServlet {
 
     final String name = request.getParameter("name");
     if (null == name) {
-      response.sendRedirect(SnipLink.absoluteLink("/space/start"));
+      response.sendRedirect(SnipLink.absoluteLink("/space/"+Application.get().getConfiguration().getStartSnip()));
       return;
     }
 
     Snip snip = SnipSpaceFactory.getInstance().load(name);
     request.setAttribute("snip", snip);
     request.setAttribute("snip_name", name);
-
-//    Configuration config = Application.get().getConfiguration();
-//    File imageDir = new File(config.getFile().getParentFile().getParentFile(), "images");
-//
-//    final Map ids = new HashMap();
-//    final int prefixLength = ("image-" + name + "-").length();
-//    String[] images = imageDir.list(new FilenameFilter() {
-//      public boolean accept(File dir, String file) {
-//        if (file.startsWith("image-" + name) && file.length() > prefixLength) {
-//          String ext = file.substring(file.indexOf('.', prefixLength) + 1);
-//          if ("png".equals(ext)) {
-//            ids.put(file, file.substring(prefixLength, file.indexOf('.', prefixLength)));
-//          } else {
-//            ids.put(file, file.substring(prefixLength));
-//          }
-//          return true;
-//        }
-//        return false;
-//      }
-//    });
-//    if (images != null) {
-//      request.setAttribute("ids", ids);
-//      request.setAttribute("images", Arrays.asList(images));
-//    }
 
     String content = request.getParameter("content");
     if (null != content) {
