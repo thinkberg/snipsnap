@@ -23,45 +23,34 @@
  * --LICENSE NOTICE--
  */
 /*
- * Transforms multiple \ into single backspaces and escapes other characters.
+ * Macro that displays all Snips by user
  *
- * @author leo
- * @team other
+ * @author stephan
  * @version $Id$
  */
-package org.snipsnap.snip.filter;
 
-import org.snipsnap.snip.filter.regex.RegexTokenFilter;
+package org.snipsnap.snip.filter.macro;
+
 import org.snipsnap.snip.Snip;
-import org.apache.oro.text.regex.MatchResult;
+import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipLink;
+import org.snipsnap.user.UserManager;
+import org.snipsnap.user.User;
 
-public class EscapeFilter extends RegexTokenFilter {
+import java.util.Iterator;
+import java.util.List;
 
-  public EscapeFilter() {
-    super("\\\\(\\\\\\\\)|\\\\(.)|([<>&])");
+public class LastLoginMacro extends ListoutputMacro {
+  public String getName() {
+    return "list-login";
   }
 
-  public void handleMatch(StringBuffer buffer, MatchResult result, Snip snip) {
-    buffer.append(handleMatch(result, snip));
-  }
-
-  public String handleMatch(MatchResult result, Snip snip) {
-    if (result.group(1) == null) {
-      String match = result.group(2);
-      if(match == null) {
-        match = result.group(3);
-      }
-      if("\\".equals(match)) {
-        return "\\\\";
-      }
-      return escape(match.charAt(0));
+  public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
+    if (params.length == 1) {
+      User user = UserManager.getInstance().load(params[0]);
+      buffer.append(user.getLastLogin());
     } else {
-      return "&#x005c;";
+      throw new IllegalArgumentException("Number of arguments does not match");
     }
   }
-
-  public static String escape(int c) {
-    return "&#x" + Integer.toHexString(c) + ";";
-  }
-
 }

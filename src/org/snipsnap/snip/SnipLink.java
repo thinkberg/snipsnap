@@ -37,6 +37,12 @@ import java.util.List;
  */
 public class SnipLink {
 
+  public static void appendUrl(StringBuffer buffer, String name) {
+    buffer.append("../space/");
+    buffer.append(name);
+    return;
+  }
+
   public static String createLink(String name, String view) {
     StringBuffer buffer = new StringBuffer();
     return appendLink(buffer, name, view).toString();

@@ -91,23 +91,31 @@ public class CreateDB {
       // Create a Person table,
       statement.executeQuery(
         "    CREATE TABLE Snip ( " +
-        "       name      VARCHAR(100) NOT NULL, " +
-        "       content   TEXT, " +
-        "       cTime     TIMESTAMP, " +
-        "       mTime     TIMESTAMP, " +
-        "       cUser     VARCHAR(55), " +
-        "       mUser     VARCHAR(55), " +
-        "       parentSnip VARCHAR(100), " +
+        "       name        VARCHAR(100) NOT NULL, " +
+        "       content     TEXT, " +
+        "       cTime       TIMESTAMP, " +
+        "       mTime       TIMESTAMP, " +
+        "       cUser       VARCHAR(55), " +
+        "       mUser       VARCHAR(55), " +
+        "       oUser       VARCHAR(55), " +
+        "       parentSnip  VARCHAR(100), " +
         "       commentSnip VARCHAR(100), " +
+        "       backLinks   TEXT, " +
+        "       snipLinks   TEXT, " +
+        "       labels      TEXT, " +
+        "       viewCount   INTEGER, " +
         "       permissions VARCHAR(200) )");
 
       statement.executeQuery(
         "    CREATE TABLE User ( " +
-        "       login    VARCHAR(100) NOT NULL, " +
-        "       passwd   VARCHAR(20), " +
-        "       email    VARCHAR(100)," +
-        "       status   VARCHAR(50), " +
-        "       roles    VARCHAR(200) )");
+        "       cTime     TIMESTAMP, " +
+        "       mTime     TIMESTAMP, " +
+        "       lastLogin TIMESTAMP, " +
+        "       login     VARCHAR(100) NOT NULL, " +
+        "       passwd    VARCHAR(20), " +
+        "       email     VARCHAR(100)," +
+        "       status    VARCHAR(50), " +
+        "       roles     VARCHAR(200) )");
 
 
       // Close the statement and the connection.
@@ -157,6 +165,10 @@ public class CreateDB {
     space.store(snip);
 
     snip = space.create("snipsnap-index", "{index}");
+    snip.addPermission(Permissions.EDIT, Roles.EDITOR);
+    space.store(snip);
+
+    snip = space.create("snipsnap-search", "Search for snips\n\n{field:query|$query}\n\n{search:$query}");
     snip.addPermission(Permissions.EDIT, Roles.EDITOR);
     space.store(snip);
 

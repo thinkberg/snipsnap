@@ -45,7 +45,7 @@ public class IsbnMacro extends Macro {
       SnipLink.appendImage(buffer, "arrow.right", ">>", "gif");
       buffer.append(" (<a href=\"http://www.amazon.de/exec/obidos/ASIN/");
       buffer.append(params[0]);
-      buffer.append("\">Amazon</a><a href=\"http://www.preistester.de/cgi-bin/pt/buchs.pl?query=profi&isbn=");
+      buffer.append("\">Amazon</a> | <a href=\"http://www.preistester.de/cgi-bin/pt/buchs.pl?query=profi&isbn=");
       buffer.append(params[0]);
       buffer.append("\">Preistester</a>)");
       return;

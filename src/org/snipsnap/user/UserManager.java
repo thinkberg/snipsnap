@@ -29,11 +29,9 @@ import org.snipsnap.util.ConnectionManager;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
+import java.util.Date;
 
 /**
  * User manager handles all register, creation and authentication of users.
@@ -89,6 +87,8 @@ public class UserManager {
   public User authenticate(String login, String passwd) {
     User user = storageLoad(login);
     if (null != user && user.getPasswd().equals(passwd)) {
+      user.setLastLogin(new Timestamp(new java.util.Date().getTime()));
+      storageStore(user);
       return user;
     } else {
       return null;
@@ -104,6 +104,7 @@ public class UserManager {
   }
 
   public void store(User user) {
+    user.setMTime(new Timestamp(new java.util.Date().getTime()));
     storageStore(user);
     return;
   }
@@ -123,10 +124,16 @@ public class UserManager {
     String login = result.getString("login");
     String passwd = result.getString("passwd");
     String email = result.getString("email");
+    Timestamp cTime = result.getTimestamp("cTime");
+    Timestamp mTime = result.getTimestamp("mTime");
+    Timestamp lastLogin = result.getTimestamp("lastLogin");
     String status = result.getString("status");
     User user = new User(login, passwd, email);
     user.setStatus(status);
     user.setRoles(new Roles(result.getString("roles")));
+    user.setCTime(cTime);
+    user.setMTime(mTime);
+    user.setLastLogin(lastLogin);
     return user;
   }
 
@@ -135,7 +142,8 @@ public class UserManager {
     Connection connection = ConnectionManager.getConnection();
 
     try {
-      statement = connection.prepareStatement("UPDATE User SET login=?, passwd=?, email=?, status=?, roles=? " +
+      statement = connection.prepareStatement("UPDATE User SET login=?, passwd=?, email=?, status=?, roles=?, " +
+                                              " cTime=?, mTime=?, lastLogin=? " +
                                               " WHERE login=?");
 
       statement.setString(1, user.getLogin());
@@ -143,7 +151,10 @@ public class UserManager {
       statement.setString(3, user.getEmail());
       statement.setString(4, user.getStatus());
       statement.setString(5, user.getRoles().toString());
-      statement.setString(6, user.getLogin());
+      statement.setTimestamp(6, user.getCTime());
+      statement.setTimestamp(7, user.getMTime());
+      statement.setTimestamp(8, user.getLastLogin());
+      statement.setString(9, user.getLogin());
 
       statement.execute();
     } catch (SQLException e) {
@@ -161,14 +172,23 @@ public class UserManager {
     Connection connection = ConnectionManager.getConnection();
 
     User user = new User(login, passwd, email);
+    Timestamp cTime = new Timestamp(new java.util.Date().getTime());
+    user.setCTime(cTime);
+    user.setMTime(cTime);
+    user.setLastLogin(cTime);
 
     try {
-      statement = connection.prepareStatement("INSERT INTO User (login, passwd, email, status, roles) VALUES (?,?,?,?,?)");
+      statement = connection.prepareStatement("INSERT INTO User " +
+                                              " (login, passwd, email, status, roles, cTime, mTime, lastLogin) "+
+                                              " VALUES (?,?,?,?,?,?,?,?)");
       statement.setString(1, login);
       statement.setString(2, passwd);
       statement.setString(3, email);
       statement.setString(4, "");
       statement.setString(5, "");
+      statement.setTimestamp(6, cTime);
+      statement.setTimestamp(7, cTime);
+      statement.setTimestamp(8, cTime);
 
       statement.execute();
     } catch (SQLException e) {
@@ -207,7 +227,9 @@ public class UserManager {
     Connection connection = ConnectionManager.getConnection();
 
     try {
-      statement = connection.prepareStatement("SELECT login, passwd, email, status, roles FROM User WHERE login=?");
+      statement = connection.prepareStatement("SELECT login, passwd, email, status, roles, cTime, mTime, lastLogin " +
+                                              " FROM User " +
+                                              " WHERE login=?");
       statement.setString(1, login);
 
       result = statement.executeQuery();
@@ -232,9 +254,9 @@ public class UserManager {
     Connection connection = ConnectionManager.getConnection();
 
     try {
-      statement = connection.prepareStatement("SELECT login, passwd, email, status, roles FROM User "+
+      statement = connection.prepareStatement("SELECT login, passwd, email, status, roles, cTime, mTime, lastLogin " +
+                                              " FROM User " +
                                               " ORDER BY login");
-
       result = statement.executeQuery();
       User user = null;
       while (result.next()) {

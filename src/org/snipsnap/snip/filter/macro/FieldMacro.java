@@ -23,45 +23,41 @@
  * --LICENSE NOTICE--
  */
 /*
- * Transforms multiple \ into single backspaces and escapes other characters.
+ * Macro that replaces external links
  *
- * @author leo
- * @team other
+ * @author stephan
+ * @team sonicteam
  * @version $Id$
  */
-package org.snipsnap.snip.filter;
 
-import org.snipsnap.snip.filter.regex.RegexTokenFilter;
+package org.snipsnap.snip.filter.macro;
+
 import org.snipsnap.snip.Snip;
-import org.apache.oro.text.regex.MatchResult;
+import org.snipsnap.snip.SnipLink;
 
-public class EscapeFilter extends RegexTokenFilter {
-
-  public EscapeFilter() {
-    super("\\\\(\\\\\\\\)|\\\\(.)|([<>&])");
+public class FieldMacro extends Macro {
+  public String getName() {
+    return "field";
   }
 
-  public void handleMatch(StringBuffer buffer, MatchResult result, Snip snip) {
-    buffer.append(handleMatch(result, snip));
-  }
-
-  public String handleMatch(MatchResult result, Snip snip) {
-    if (result.group(1) == null) {
-      String match = result.group(2);
-      if(match == null) {
-        match = result.group(3);
+  public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
+    if (params.length==1 || params.length==2) {
+      buffer.append("<form action=\"");
+      SnipLink.appendUrl(buffer, snip.getName());
+      buffer.append("\" method=\"get\">");
+      buffer.append("<input name=\"");
+      buffer.append(params[0]);
+      buffer.append("\"");
+      if (params.length==2) {
+        buffer.append(" value=\"");
+        buffer.append(params[1]);
+        buffer.append("\"");
       }
-      if("\\".equals(match)) {
-        return "\\\\";
-      }
-      return escape(match.charAt(0));
+      buffer.append("/>");
+      buffer.append("</form>");
+      return;
     } else {
-      return "&#x005c;";
+      throw new IllegalArgumentException("Number of arguments does not match");
     }
   }
-
-  public static String escape(int c) {
-    return "&#x" + Integer.toHexString(c) + ";";
-  }
-
 }

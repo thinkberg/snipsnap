@@ -39,6 +39,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.util.Iterator;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Layouter and main handler for web sites.
@@ -70,6 +73,16 @@ public class Layouter extends HttpServlet {
     app.setUser(user, session);
     session.setAttribute("app", app);
     session.setAttribute("space", SnipSpace.getInstance());
+
+    Map params = request.getParameterMap();
+    Iterator iterator = params.keySet().iterator();
+    Map paramMap = new HashMap();
+    while (iterator.hasNext()) {
+      String key = (String) iterator.next();
+      String[] values = (String[]) params.get(key);
+      paramMap.put(key, values[0]);
+    }
+    app.setParameters(paramMap);
 
     //TODO 1.4 String layout = URLDecoder.decode(request.getPathInfo(), "iso-8869-1");
     String layout = URLDecoder.decode(request.getPathInfo());

@@ -38,6 +38,7 @@ public class SnipFormatter {
   public static String toXML(Snip snip, String content) {
     FilterPipe fp = new FilterPipe();
     fp.addFilter(new EscapeFilter());
+    fp.addFilter(new ParamFilter());
     fp.addFilter(new MacroFilter());
     fp.addFilter(new MacroFilter());
     fp.addFilter(new HeadingFilter());

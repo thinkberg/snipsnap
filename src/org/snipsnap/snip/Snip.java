@@ -50,6 +50,10 @@ public class Snip implements Ownable, Nameable {
   private Permissions permissions;
   private String name, content;
   private Modified modified;
+  private String oUser;
+  private Access access;
+  private Labels labels;
+
 
   private void init() {
     if (null == children) {
@@ -61,6 +65,7 @@ public class Snip implements Ownable, Nameable {
     this.name = name;
     this.content = content;
     this.modified = new Modified();
+    this.access = new Access(this);
   }
 
   public static String toName(Date date) {
@@ -108,6 +113,46 @@ public class Snip implements Ownable, Nameable {
 
   public Permissions getPermissions() {
     return permissions;
+  }
+
+  public String getOUser() {
+    return oUser;
+  }
+
+  public void setOUser(String oUser) {
+    this.oUser = oUser;
+  }
+
+  public Labels getLabels() {
+    return labels;
+  }
+
+  public void setLabels(Labels labels) {
+    this.labels = labels;
+  }
+
+  public Links getBackLinks() {
+    return access.getBackLinks();
+  }
+
+  public Links getSnipLinks() {
+    return access.getSnipLinks();
+  }
+
+  public void setBackLinks(Links backLinks) {
+    access.setBackLinks(backLinks);
+  }
+
+  public void setSnipLinks(Links snipLinks) {
+    access.setSnipLinks(snipLinks);
+  }
+
+  public int getViewCount() {
+    return access.getViewCount();
+  }
+
+  public int incViewCount() {
+    return access.incViewCount();
   }
 
   public Timestamp getCTime() {
@@ -206,6 +251,14 @@ public class Snip implements Ownable, Nameable {
   }
 
   public String getName() {
+    return name;
+  }
+
+  public String getShortName() {
+    String name = getName();
+    if (name.length()>20) {
+      name = name.substring(0,20-3) + "...";
+    }
     return name;
   }
 

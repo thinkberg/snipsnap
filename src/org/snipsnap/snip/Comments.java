@@ -110,6 +110,7 @@ public class Comments {
   public String getCommentString() {
     StringBuffer buffer = new StringBuffer();
     if (getCount() > 0) {
+     // @TODO do not link to comments if snip is a comment, but link to parent comments object
       SnipLink.appendLinkWithRoot(buffer, "../comments", snip.getName(), StringUtil.plural(getCount(), "comment"));
       buffer.append(" (by ");
       appendUserString(buffer);
@@ -118,7 +119,6 @@ public class Comments {
       buffer.append("no comments");
     }
 
-    //
     return buffer.toString();
   }
 

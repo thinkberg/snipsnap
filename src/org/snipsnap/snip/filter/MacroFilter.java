@@ -39,6 +39,7 @@ import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.filter.macro.*;
 import org.snipsnap.snip.filter.regex.RegexTokenFilter;
+import org.snipsnap.app.Application;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,6 +56,7 @@ public class MacroFilter extends RegexTokenFilter {
     synchronized (this) {
       if (null == macros) {
         macros = new HashMap();
+        add(new FieldMacro());
         add(new LinkMacro());
         add(new AnnotationMacro());
         add(new CodeMacro());
@@ -68,6 +70,7 @@ public class MacroFilter extends RegexTokenFilter {
         add(new WeblogMacro());
         add(new IndexSnipMacro());
         add(new ImageMacro());
+        add(new LastLoginMacro());
       }
     }
   }
@@ -85,13 +88,23 @@ public class MacroFilter extends RegexTokenFilter {
    * @return           a Array of splittet Strings
    */
 
-  public static String[] split(String aString, String delimiter) {
+  public static String[] split(String aString, String delimiter, Map params) {
     StringTokenizer st = new StringTokenizer(aString, delimiter);
     String[] result = new String[st.countTokens()];
     int i = 0;
 
     while (st.hasMoreTokens()) {
-      result[i++] = st.nextToken();
+      String value = st.nextToken();
+      if (value.startsWith("$")) {
+        value = value.substring(1);
+        if (params.containsKey(value)) {
+          result[i++] = (String) params.get(value);
+        } else {
+          result[i++] = "";
+        }
+      } else {
+        result[i++] = value;
+      }
     }
 
     return result;
@@ -102,23 +115,26 @@ public class MacroFilter extends RegexTokenFilter {
     String content = null;
     String command = result.group(1);
 
+    // System.out.println("Parameter block:" + Application.get().getParameters() );
+
     // {$peng} are variables not macros.
     if (!command.startsWith("$")) {
 //    for (int i=0; i<result.groups(); i++) {
 //      System.err.println(i+" "+result.group(i));
 //    }
 
+      Map paramMap = Application.get().getParameters();
       // {tag} ... {tag}
       if (result.group(1).equals(result.group(result.groups() - 1))) {
         // {tag:1|2} ... {tag}
         if (!"".equals(result.group(2))) {
-          params = split(result.group(2), "|");
+          params = split(result.group(2), "|", paramMap);
         }
         content = result.group(3);
       } else {
         // {tag}
         if (result.groups() > 1) {
-          params = split(result.group(2), "|");
+          params = split(result.group(2), "|", paramMap);
         }
       }
 

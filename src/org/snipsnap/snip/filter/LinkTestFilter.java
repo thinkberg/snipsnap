@@ -110,7 +110,8 @@ public class LinkTestFilter extends Filter {
             }
             buffer.append("\">").append(result.group(1)).append("</a>");
           } else {
-            buffer.append("[create <a href=\"" +
+            buffer.append(EscapeFilter.escape('['));
+            buffer.append("create <a href=\"" +
                           "../exec/edit?name=");
             try {
               // TODO 1.4 buffer.append(URLEncoder.encode(key, "iso-8859-1"));
@@ -118,7 +119,8 @@ public class LinkTestFilter extends Filter {
             } catch (Exception e) {
               buffer.append(key);
             }
-            buffer.append("\">").append(result.group(1)).append("</a>]");
+            buffer.append("\">").append(result.group(1)).append("</a>");
+            buffer.append(EscapeFilter.escape(']'));
           }
         }
       } else {

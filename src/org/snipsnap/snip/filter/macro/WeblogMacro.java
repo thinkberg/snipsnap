@@ -56,7 +56,7 @@ public class WeblogMacro extends Macro {
         buffer.append("<p><span class=\"blog-date\">");
         buffer.append(Snip.toDate(entry.getName()));
         buffer.append("</span><p>");
-        buffer.append(entry.getContent());
+        buffer.append(entry.getXMLContent());
         buffer.append("</p>");
         SnipLink.appendLink(buffer, entry.getName(), "Link me");
         buffer.append(" | ");

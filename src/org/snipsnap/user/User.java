@@ -26,6 +26,8 @@ package org.snipsnap.user;
 
 import org.snipsnap.util.Nameable;
 
+import java.sql.Timestamp;
+
 /**
  * User class.
  *
@@ -39,6 +41,7 @@ public class User implements Nameable {
   private String email;
   private String status;
   private Roles roles;
+  private Timestamp cTime, mTime, lastLogin;
 
   public static final String UNKNOWN = "Guest";
 
@@ -46,6 +49,30 @@ public class User implements Nameable {
     this.login = login;
     this.passwd = passwd;
     this.email = email;
+  }
+
+  public Timestamp getCTime() {
+    return cTime;
+  }
+
+  public void setCTime(Timestamp cTime) {
+    this.cTime = cTime;
+  }
+
+  public Timestamp getMTime() {
+    return mTime;
+  }
+
+  public void setMTime(Timestamp mTime) {
+    this.mTime = mTime;
+  }
+
+  public Timestamp getLastLogin() {
+    return lastLogin;
+  }
+
+  public void setLastLogin(Timestamp lastLogin) {
+    this.lastLogin = lastLogin;
   }
 
   public void setStatus(String status) {

@@ -39,6 +39,7 @@ public class Application {
   private static Map currentUsers;
 
   private User user;
+  private Map parameters;
 
   private static ThreadLocal instance = new ThreadLocal() {
     protected synchronized Object initValue() {
@@ -81,6 +82,14 @@ public class Application {
     this.user = user;
   }
 
+  public Map getParameters() {
+    return parameters;
+  }
+
+  public void setParameters(Map parameters) {
+    this.parameters = parameters;
+  }
+
   public void setUser(User user, HttpSession session) {
     setUser(user);
     if (this.user != null) {
@@ -102,7 +111,7 @@ public class Application {
     Iterator iterator = currentUsers.values().iterator();
     while (iterator.hasNext()) {
       User user  = (User) iterator.next();
-      if (! User.UNKNOWN.equals(user.getName()) && ! users.contains(user.getName())) {
+      if (! (User.UNKNOWN.equals(user.getName()) || users.contains(user.getName()))) {
         users.add(user);
       }
     }
