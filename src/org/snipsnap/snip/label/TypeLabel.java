@@ -51,7 +51,7 @@ public class TypeLabel extends BaseLabel {
       while (iter.hasNext()) {
         String typeInfo = ((String) iter.next()).trim();
         if (!"".equals(typeInfo) && !typeInfo.startsWith("#")) {
-          String[] entry = typeInfo.split("\\p{Space}+|\\{Space}*:\\{Space}*");
+          String[] entry = typeInfo.split("\\p{Space}+|:");
           String[] handlers = new String[2];
           switch (entry.length) {
             case 3:
