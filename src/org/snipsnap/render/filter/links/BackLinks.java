@@ -58,7 +58,7 @@ public class BackLinks {
           writer.write(" <span class=\"content\"><a href=\"");
           writer.write(Encoder.escape(url));
           writer.write("\">");
-          writer.write(SnipLink.cutLength(Encoder.escape(url), 90));
+          writer.write(Encoder.escape(SnipLink.cutLength(url, 90)));
           writer.write("</a></span></li>\n");
         }
         writer.write("</ul>");

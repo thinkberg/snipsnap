@@ -42,11 +42,13 @@
          <s:check roles="Authenticated" permission="Edit" snip="${snip}">[<a href="exec/labels?snipname=<c:out value='${snip.nameEncoded}'/>"><fmt:message key="menu.labels.add"/></a>]</s:check>
          <s:check roles="Authenticated" permission="Edit" snip="${snip}" invert="true"><span class="inactive"><fmt:message key="menu.labels"/></span></s:check>
        </div>
-       <table>
-         <c:forEach items="${snip.labels.all}" var="label">
-           <tr><c:out value="${label.listProxy}" escapeXml="false"/></tr>
-         </c:forEach>
-       </table>
+       <c:if test="${not empty snip.labels.all}">
+         <table>
+           <c:forEach items="${snip.labels.all}" var="label">
+             <tr><c:out value="${label.listProxy}" escapeXml="false"/></tr>
+           </c:forEach>
+         </table>
+       </c:if>
      </div>
      <div class="snip-attachments">
        <div>
