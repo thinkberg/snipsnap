@@ -100,8 +100,9 @@ public abstract class OneFileSnipStorage extends FileSnipStorage {
   protected VersionFileNameChecker getVersionFileNameChecker() {
     return new VersionFileNameChecker() {
       public int getVersion(String fileName) {
-        return Integer.parseInt(fileName.substring(fileName.lastIndexOf("-")+1));
+        return Integer.parseInt(fileName.substring(fileName.lastIndexOf("-") + 1));
       }
+
       public boolean accept(File dir, String name) {
         return name.startsWith(getFileName()) && (name.indexOf('-') != -1);
       }
@@ -118,8 +119,8 @@ public abstract class OneFileSnipStorage extends FileSnipStorage {
    */
   protected Map loadVersion(Snip snip, File versionDir, int version) throws IOException {
     if (!versionDir.exists()) {
-       return null;
-     }
+      return null;
+    }
 
     File versionFile = new File(versionDir, getFileName() + "-" + version);
     if (!versionFile.exists()) {
@@ -127,10 +128,15 @@ public abstract class OneFileSnipStorage extends FileSnipStorage {
     }
 
     FileInputStream in = new FileInputStream(versionFile);
-    Map map = loadSnip(in);
-    in.close();
+    Map map = null;
+    try {
+      map = loadSnip(in);
+    } finally {
+      close(in);
+    }
     return map;
   }
+
 
   /**
    * Store version of snip to the file system and
@@ -145,12 +151,14 @@ public abstract class OneFileSnipStorage extends FileSnipStorage {
     }
 
     File file = new File(versionDir, getFileName() + "-" + snip.getVersion());
+    FileOutputStream out = null;
     try {
-      FileOutputStream out = new FileOutputStream(file);
+      out = new FileOutputStream(file);
       storeSnip(snip, out);
-      out.close();
     } catch (IOException e) {
       Logger.log("FileSnipStorage: unable to store version snip" + snip.getName(), e);
+    } finally {
+      close(out);
     }
   }
 
@@ -175,12 +183,14 @@ public abstract class OneFileSnipStorage extends FileSnipStorage {
       file.renameTo(backup);
     }
 
+    FileOutputStream out = null;
     try {
-      FileOutputStream out = new FileOutputStream(file);
+      out = new FileOutputStream(file);
       storeSnip(snip, out);
-      out.close();
     } catch (IOException e) {
       Logger.log("FileSnipStorage: unable to store snip metadata" + snip.getName(), e);
+    } finally {
+      close(out);
     }
   }
 
@@ -199,8 +209,12 @@ public abstract class OneFileSnipStorage extends FileSnipStorage {
     }
 
     FileInputStream in = new FileInputStream(metadataFile);
-    Map map = loadSnip(in);
-    in.close();
+    Map map = null;
+    try {
+      map = loadSnip(in);
+    } finally {
+      close(in);
+    }
     return map;
   }
 }

@@ -40,6 +40,8 @@ import org.snipsnap.versioning.VersionStorage;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -57,7 +59,7 @@ import java.util.*;
 
 public abstract class FileSnipStorage implements CacheableStorage, VersionStorage, SnipStorage {
   public static final String NOT_SUPPORTED_EXCEPTION_MSG =
-    "Method not supported, do not call FileSnipStorage directly";
+      "Method not supported, do not call FileSnipStorage directly";
 
   protected ApplicationAwareMap cache;
 
@@ -342,6 +344,29 @@ public abstract class FileSnipStorage implements CacheableStorage, VersionStorag
     return list;
   }
 
+  /** Helper methods
+   */
+
+  protected void close(OutputStream out) {
+    if (out != null) {
+      try {
+        out.close();
+      } catch (IOException e) {
+        // Intentionelly left empty
+      }
+    }
+  }
+
+  protected void close(InputStream in) {
+    if (in != null) {
+      try {
+        in.close();
+      } catch (IOException e) {
+        // Intentionelly left empty
+      }
+    }
+  }
+
   /**
    * Not implemented, should be handled on a higher level
    * e.g. QuerySnipStorage
@@ -359,7 +384,7 @@ public abstract class FileSnipStorage implements CacheableStorage, VersionStorag
   }
 
   public List storageByRecent(String applicationOid, int size) {
-    throw new MethodNotSupportedException(NOT_SUPPORTED_EXCEPTION_MSG+" : storageByRecent(applicationOid,size)");
+    throw new MethodNotSupportedException(NOT_SUPPORTED_EXCEPTION_MSG + " : storageByRecent(applicationOid,size)");
   }
 
   public List storageByComments(final Snip parent) {

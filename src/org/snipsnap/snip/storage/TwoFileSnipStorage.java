@@ -191,11 +191,17 @@ public abstract class TwoFileSnipStorage extends FileSnipStorage {
       return null;
     }
 
-    FileInputStream metaIn = new FileInputStream(metadataFile);
-    FileInputStream contentIn = new FileInputStream(contentFile);
-    Map map = createSnipFromFile(metaIn, contentIn);
-    contentIn.close();
-    metaIn.close();
+    FileInputStream metaIn = null;
+    FileInputStream contentIn = null;
+    Map map = null;
+    try {
+      metaIn = new FileInputStream(metadataFile);
+      contentIn = new FileInputStream(contentFile);
+      map = createSnipFromFile(metaIn, contentIn);
+    } finally {
+      contentIn.close();
+      metaIn.close();
+    }
     return map;
   }
 
@@ -212,21 +218,24 @@ public abstract class TwoFileSnipStorage extends FileSnipStorage {
     }
 
     File metadataFile = new File(versionDir, getMetadataFileName() + "-" + snip.getVersion());
+    FileOutputStream out = null;
     try {
-      FileOutputStream out = new FileOutputStream(metadataFile);
+      out = new FileOutputStream(metadataFile);
       storeMetadata(snip, out);
-      out.close();
     } catch (IOException e) {
       Logger.log("TwoFileSnipStorage: unable to store version snip metadata" + snip.getName(), e);
+    } finally {
+      close(out);
     }
 
     File contentFile = new File(versionDir, getContentFileName() + "-" + snip.getVersion());
     try {
-      FileOutputStream out = new FileOutputStream(contentFile);
+      out = new FileOutputStream(contentFile);
       storeContent(snip, out);
-      out.close();
     } catch (IOException e) {
       Logger.log("TwoFileSnipStorage: unable to store version snip content" + snip.getName(), e);
+    } finally {
+      close(out);
     }
   }
 
@@ -251,12 +260,14 @@ public abstract class TwoFileSnipStorage extends FileSnipStorage {
       metadataFile.renameTo(backup);
     }
 
+    FileOutputStream out = null;
     try {
-      FileOutputStream out = new FileOutputStream(metadataFile);
+      out = new FileOutputStream(metadataFile);
       storeMetadata(snip, out);
-      out.close();
     } catch (IOException e) {
       Logger.log("TwoFileSnipStorage: unable to store snip metadata" + snip.getName(), e);
+    } finally {
+      close(out);
     }
 
     File contentFile = new File(snipDir, getContentFileName());
@@ -267,11 +278,13 @@ public abstract class TwoFileSnipStorage extends FileSnipStorage {
     }
 
     try {
-      FileOutputStream out = new FileOutputStream(contentFile);
+      out = new FileOutputStream(contentFile);
       storeContent(snip, out);
       out.close();
     } catch (IOException e) {
       Logger.log("TwoFileSnipStorage: unable to store snip content" + snip.getName(), e);
+    } finally {
+      close(out);
     }
   }
 
@@ -293,11 +306,17 @@ public abstract class TwoFileSnipStorage extends FileSnipStorage {
       return null;
     }
 
-    FileInputStream metaIn = new FileInputStream(metadataFile);
-    FileInputStream contentIn = new FileInputStream(contentFile);
-    Map map = createSnipFromFile(metaIn, contentIn);
-    contentIn.close();
-    metaIn.close();
+    FileInputStream metaIn = null;
+    FileInputStream contentIn = null;
+    Map map = null;
+    try {
+      metaIn = new FileInputStream(metadataFile);
+      contentIn = new FileInputStream(contentFile);
+      map = createSnipFromFile(metaIn, contentIn);
+    } finally {
+      contentIn.close();
+      metaIn.close();
+    }
     return map;
   }
 
