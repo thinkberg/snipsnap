@@ -33,6 +33,9 @@ import org.snipsnap.notification.Message;
 import org.snipsnap.notification.MessageService;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.user.Permissions;
+import org.snipsnap.user.Roles;
+import org.snipsnap.user.Security;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -47,6 +50,7 @@ import java.io.InputStream;
 
 public class GroovyFeederLoader extends FeederLoader implements Consumer {
   public final static String SYSTEM_FEEDER_PATH = "SnipSnap/config/feeder/";
+  private final static Roles EXEC_ROLES = new Roles(Roles.ADMIN);
 
   public GroovyFeederLoader() {
     // We're interested in changed snips
@@ -55,10 +59,11 @@ public class GroovyFeederLoader extends FeederLoader implements Consumer {
   }
 
   public void consume(Message messsage) {
-    System.out.println("GroovyFeederLoader: Message received.");
+//    System.out.println("GroovyFeederLoader: Message received.");
     if (Message.SNIP_MODIFIED.equals(messsage.getType())) {
       Snip snip = (Snip) messsage.getValue();
-      if (snip.getName().startsWith(SYSTEM_FEEDER_PATH)) {
+      if (snip.getName().startsWith(SYSTEM_FEEDER_PATH) &&
+        Security.existsPermission(Permissions.EDIT_SNIP, snip, EXEC_ROLES)) {
         try {
           Feeder feeder = compileFeeder(snip.getContent());
           if (null != feeder) {
@@ -80,7 +85,7 @@ public class GroovyFeederLoader extends FeederLoader implements Consumer {
       Class clazz = gcl.parseClass(is, "");
       Object aScript = clazz.newInstance();
       feeder = (Feeder) aScript;
-      System.out.println("Compiled: "+feeder.getName());
+      System.out.println("Compiled: " + feeder.getName());
       //System.out.println("Script="+macroSource);
     } catch (Exception e) {
       System.err.println("Cannot compile groovy feeder: " + e.getMessage());
