@@ -23,36 +23,25 @@
  * --LICENSE NOTICE--
  */
 
-package org.snipsnap.xmlrpc;
+package org.snipsnap.snip.label;
 
-import org.apache.xmlrpc.XmlRpcClient;
-import org.snipsnap.app.Application;
-import org.snipsnap.config.AppConfiguration;
-
-import java.util.Vector;
+import java.util.Map;
 
 /**
- * Pings weblogs.com
+ * Label is attached to Snips
  *
- * @author stephan
+ * @author Stephan J. Schmidt
  * @version $Id$
  */
 
-public class WeblogsPing {
-  public static void ping() {
-    try {
-      AppConfiguration config = Application.get().getConfiguration();
-      if (config.allow(AppConfiguration.PERM_WEBLOGS_PING)) {
-        XmlRpcClient xmlrpc = new XmlRpcClient("http://www.weblogs.com/RPC2");
-        Vector params = new Vector();
-        // @TODO read name and url from configuration
-        params.addElement(config.getName());
-        params.addElement(config.getUrl());
-        xmlrpc.execute("weblogUpdates.ping", params);
-      }
-    } catch (Exception e) {
-      System.err.println("Unable to ping weblogs.com");
-    }
-  }
+public interface Label {
+   public String getListProxy();
+   public String getInputProxy();
+   public void handleInput(Map input);
 
+   public String getType();
+   public String getName();
+   public String getValue();
+   public void setName(String name);
+   public void setValue(String value);
 }

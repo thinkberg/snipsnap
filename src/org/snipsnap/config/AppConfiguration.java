@@ -48,6 +48,8 @@ public class AppConfiguration extends Configuration {
   private final static String APP_LOGGER = "app.logger";
   private final static String APP_JDBC_URL = "app.jdbc.url";
   private final static String APP_JDBC_DRIVER = "app.jdbc.driver";
+  public final static String PERM_WEBLOGS_PING = "weblogsPing";
+  public final static String PERM_EXTERNAL_IMAGES = "externalImages";
 
   protected static AppConfiguration instance;
 
@@ -214,6 +216,6 @@ public class AppConfiguration extends Configuration {
   }
 
   public boolean allowExternalImages() {
-    return allow("externalImages");
+    return allow(AppConfiguration.PERM_WEBLOGS_PING);
   }
 }

@@ -23,7 +23,7 @@
  * --LICENSE NOTICE--
  */
 
-package org.snipsnap.snip;
+package org.snipsnap.snip.label;
 
 import java.util.HashMap;
 import java.util.Iterator;

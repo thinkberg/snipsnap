@@ -31,12 +31,14 @@ import org.snipsnap.jdbc.Finder;
 import org.snipsnap.jdbc.Loader;
 import org.snipsnap.jdbc.FinderFactory;
 import org.snipsnap.snip.filter.LinkTester;
+import org.snipsnap.snip.label.Labels;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
 import org.snipsnap.util.ConnectionManager;
 import org.snipsnap.util.Queue;
 import org.snipsnap.util.log.Logger;
 import org.snipsnap.notification.Notification;
+import org.snipsnap.xmlrpc.WeblogsPing;
 
 import java.sql.*;
 import java.sql.Date;
@@ -193,7 +195,7 @@ public class SnipSpace implements LinkTester, Loader {
     store(snip);
 
     // Ping weblogs.com that we changed our site
-    // WeblogsPing.ping();
+    WeblogsPing.ping();
     return snip;
   }
 

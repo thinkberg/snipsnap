@@ -30,7 +30,7 @@ import org.snipsnap.config.Configuration;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.Links;
-import org.snipsnap.snip.Labels;
+import org.snipsnap.snip.label.Labels;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;

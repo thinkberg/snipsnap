@@ -1,5 +1,6 @@
 0.2.7
 
+- Added feature: Detect search engine bots (Googlebot, Fast Webcrawler)
 - Switched to RSS 2.0 by default
 - Added feature: {version} macro displays SnipSnap version.
 - Added feature: Added description to RSS, remove HTML from snip content
