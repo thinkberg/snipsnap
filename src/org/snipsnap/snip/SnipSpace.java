@@ -157,7 +157,7 @@ public class SnipSpace implements LinkTester {
   }
 
   public List getAll() {
-    if ("full".equals(Application.get().getConfiguration().getCache().toLowerCase())) {
+    if ("full".equals(Application.get().getConfiguration().getCache())) {
       return cache.getCache(Snip.class);
     } else {
       return storage.storageAll();
