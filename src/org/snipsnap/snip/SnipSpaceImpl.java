@@ -29,7 +29,7 @@ import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.interceptor.Aspects;
 import org.snipsnap.notification.Notification;
-import org.snipsnap.snip.sFiletorage.QuerySnipStorage;
+import org.snipsnap.snip.storage.QuerySnipStorage;
 import org.snipsnap.snip.storage.*;
 import org.snipsnap.user.Digest;
 import org.snipsnap.util.Queue;
