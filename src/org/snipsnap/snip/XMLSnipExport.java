@@ -55,7 +55,11 @@ public class XMLSnipExport {
       OutputFormat outputFormat = new OutputFormat();
       outputFormat.setEncoding("UTF-8");
       outputFormat.setNewlines(true);
-      XMLWriter xmlWriter = new XMLWriter(out, outputFormat);
+      XMLWriter xmlWriter = new XMLWriter(out, outputFormat) {
+        protected String escapeElementEntities(String s) {
+          return super.escapeElementEntities(s);
+        }
+      };
       xmlWriter.write(exportDocument);
       xmlWriter.flush();
     } catch (Exception e) {

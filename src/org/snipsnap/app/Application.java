@@ -193,13 +193,13 @@ public class Application {
       AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
 
       if (service.isAuthenticated(user)) {
-        Logger.debug("Removing authenticated user from session: " + user);
+//        Logger.debug("Removing authenticated user from session: " + user);
         user.setLastLogout(user.getLastAccess());
         // we ensure we remove the correct user by setting the OID from the user object
         Application.get().storeObject(Application.OID, user.getApplication());
         UserManagerFactory.getInstance().systemStore(user);
       } else {
-        Logger.debug("Removing unauthenticated user from session: " + user);
+//        Logger.debug("Removing unauthenticated user from session: " + user);
       }
       currentUsersMap.remove(session);
     } else {

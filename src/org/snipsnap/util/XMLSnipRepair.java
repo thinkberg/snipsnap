@@ -36,6 +36,8 @@ import org.dom4j.io.aelfred.DefaultHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLFilter;
 import org.xml.sax.ContentHandler;
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
 import org.xml.sax.helpers.XMLFilterImpl;
 
 import java.io.*;
@@ -105,16 +107,18 @@ public class XMLSnipRepair {
     final long fileLength = file.length();
     SAXReader saxReader = new SAXReader();
     saxReader.setXMLFilter(new XMLFilterImpl() {
+      public InputSource resolveEntity(String publicId, String systemId)
+        throws SAXException, IOException {
+        System.err.println(publicId);
+        return super.resolveEntity(publicId, systemId);
+      }
+
       public void characters(char ch[], int start, int length)
         throws SAXException {
-        System.err.println(ch);
+        System.err.println("== data chunk starting ...");
         super.characters(ch, start, length);
-      }
-    });
-    saxReader.getXMLFilter().setContentHandler(new DefaultHandler() {
-      public void startEntity(String s) throws SAXException {
-        System.err.println("entity: '"+s+"'");
-        super.startEntity(s);
+
+        System.err.println("== end of data chunk");
       }
     });
     System.err.print("0%");
