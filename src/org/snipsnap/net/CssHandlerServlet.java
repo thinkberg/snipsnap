@@ -67,15 +67,14 @@ public class CssHandlerServlet extends HttpServlet {
   }
 
   protected long getLastModified(HttpServletRequest request) {
-    Timestamp ts = (Timestamp) timeStamps.get(request.getServletPath());
+    Timestamp ts = (Timestamp) timeStamps.get(request.getPathInfo());
     return (ts != null ? ts.getTime() / 1000 * 1000 : super.getLastModified(request));
   }
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-
     try {
-      String content = getStyleSheet(request.getServletPath());
+      String content = getStyleSheet(request.getPathInfo());
       response.setContentType("text/css");
       response.setContentLength(content.length());
       BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(response.getOutputStream()));
@@ -85,6 +84,5 @@ public class CssHandlerServlet extends HttpServlet {
       response.sendError(HttpServletResponse.SC_NOT_FOUND);
       return;
     }
-
   }
 }

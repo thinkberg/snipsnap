@@ -236,9 +236,9 @@ public class InitializeDatabase {
     message("creating configuration snip '" + Configuration.SNIPSNAP_CONFIG + "'");
     ByteArrayOutputStream configStream = new ByteArrayOutputStream();
     config.store(configStream);
-    Snip snip = space.create(Configuration.SNIPSNAP_CONFIG, new String(configStream.toString("UTF-8")));
-    snip.getLabels().addLabel(new RenderEngineLabel("RenderEngine", "org.snipsnap.render.PlainTextRenderEngine"));
-    space.store(snip);
+    createConfigSnip(Configuration.SNIPSNAP_CONFIG,
+                     new String(configStream.toString("UTF-8")),
+                     space);
   }
 
   private static User createAdministrator(Configuration config) {

@@ -32,8 +32,8 @@
   <!-- icons and stylesheet -->
   <link rel="shortcut icon" href="<c:out value='${app.configuration.url}/favicon.ico'/>">
   <link rel="icon" href="<c:out value='${app.configuration.url}/favicon.ico'/>">
-  <link rel="STYLESHEET" type="text/css" href="<c:out value='${app.configuration.url}/default.css'/>" />
-  <link rel="STYLESHEET" type="text/css" href="<c:out value='${app.configuration.url}/print.css'/>" media="print" />
+  <link rel="STYLESHEET" type="text/css" href="<c:out value='${app.configuration.url}/css/default.css'/>" />
+  <link rel="STYLESHEET" type="text/css" href="<c:out value='${app.configuration.url}/css/print.css'/>" media="print" />
   <!-- title of this document -->
   <title><c:out value="${app.configuration.name}" default="SnipSnap"/> :: <c:out value="${snip.name}" default=""/></title>
  </head>
