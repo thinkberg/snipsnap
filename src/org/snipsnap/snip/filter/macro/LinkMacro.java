@@ -34,16 +34,19 @@ import com.neotis.snip.SnipLink;
  * @team sonicteam
  * @version $Id$
  */
+
 public class LinkMacro extends Macro {
+  private final static String img = SnipLink.createImage("arrow.right", ">>", "gif");
+
   public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {
     StringBuffer buffer = new StringBuffer();
     if (params.length == 2) {
       buffer.append("<nobr>");
-      SnipLink.appendImage(buffer, "arrow.right", ">>", "gif");
+      buffer.append(img);
       buffer.append("<a href=\"").append(params[1]).append("\">");
       buffer.append(params[0]).append("</a>");
       buffer.append("</nobr>");
-    } else if(params.length == 1) {
+    } else if (params.length == 1) {
       // will be catched by UrlFilter
       buffer.append(params[0]);
     } else {
