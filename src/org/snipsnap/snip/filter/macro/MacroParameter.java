@@ -114,6 +114,8 @@ public class MacroParameter {
           result.put(key, "");
         }
       } else if (value.indexOf("=") != -1) {
+        // Store this for
+        result.put(key, value);
         int index = value.indexOf("=");
         key = value.substring(0, index);
         value = value.substring(index+1);
