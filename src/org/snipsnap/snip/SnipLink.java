@@ -171,24 +171,20 @@ public class SnipLink {
 
   public static String createImage(String name, String alt, String ext) {
     StringBuffer buffer = new StringBuffer();
-    return appendImageWithRoot(buffer, SnipLink.IMAGES_ROOT, name, alt, ext).toString();
+    return appendImageWithRoot(buffer, SnipLink.IMAGES_ROOT, name, alt, ext, null).toString();
   }
 
-  public static StringBuffer appendExternalImage(StringBuffer buffer, String url) {
+  public static StringBuffer appendExternalImage(StringBuffer buffer, String url, String position) {
     buffer.append("<img src=\"");
     buffer.append(url);
-    buffer.append("\" border=\"0\"/>");
+    buffer.append("\" ");
+    if (position != null) {
+      buffer.append("class=\"");
+      buffer.append(position);
+      buffer.append("\" ");
+    }
+    buffer.append("border=\"0\"/>");
     return buffer;
-  }
-
-  /**
-   * Append and image tag to a string buffer.
-   * @param buffer the string buffer to append to
-   * @param name the image name
-   * @return the string buffer
-   */
-  public static StringBuffer appendImage(StringBuffer buffer, String name) {
-    return appendImage(buffer, name, name);
   }
 
   /**
@@ -200,15 +196,11 @@ public class SnipLink {
    * @return the string buffer
    */
   public static StringBuffer appendImage(StringBuffer buffer, String name, String alt) {
-    return appendImageWithRoot(buffer, SnipLink.IMAGES_ROOT, name, alt);
+    return appendImageWithRoot(buffer, SnipLink.IMAGES_ROOT, name, alt, "png", null);
   }
 
-  public static StringBuffer appendImage(StringBuffer buffer, String name, String alt, String ext) {
-    return appendImageWithRoot(buffer, SnipLink.IMAGES_ROOT, name, alt, ext);
-  }
-
-  public static StringBuffer appendImageWithRoot(StringBuffer buffer, String root, String name, String alt) {
-    return appendImageWithRoot(buffer, root, name, alt, "png");
+  public static StringBuffer appendImage(StringBuffer buffer, String name, String alt, String ext, String position) {
+    return appendImageWithRoot(buffer, SnipLink.IMAGES_ROOT, name, alt, ext, position);
   }
 
   /**
@@ -220,7 +212,8 @@ public class SnipLink {
    * @param alt an alternative text
    * @return the string buffer
    */
-  public static StringBuffer appendImageWithRoot(StringBuffer buffer, String root, String name, String alt, String ext) {
+  public static StringBuffer appendImageWithRoot(StringBuffer buffer, String root,
+                                                 String name, String alt, String ext, String position) {
     // extract extension or leave as is, default is to append .png
     int dotIndex = name.lastIndexOf('.');
     if (dotIndex != -1) {
@@ -229,6 +222,9 @@ public class SnipLink {
         ext = imageExt;
         name = name.substring(0, dotIndex);
       }
+    }
+    if(null == ext) {
+      ext = "png";
     }
 
     buffer.append("<img src=\"");
@@ -239,6 +235,11 @@ public class SnipLink {
     if (alt != null) {
       buffer.append(" alt=\"");
       buffer.append(alt);
+      buffer.append("\"");
+    }
+    if(position != null) {
+      buffer.append(" class=\"");
+      buffer.append(position);
       buffer.append("\"");
     }
     buffer.append(" border=\"0\"/>");

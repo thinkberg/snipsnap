@@ -48,7 +48,7 @@ public class IsbnMacro extends Macro {
 
     if (params.length== 1) {
       StringBuffer buffer = new StringBuffer();
-      SnipLink.appendImage(buffer, "arrow.right", ">>", "gif");
+      SnipLink.appendImage(buffer, "arrow.right", ">>", "gif", null);
       writer.write(buffer.toString());
       writer.write(" (<a href=\"http://www.amazon.de/exec/obidos/ASIN/");
       writer.write(params[0]);

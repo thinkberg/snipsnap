@@ -7,6 +7,38 @@
 .bold { font-weight: bold; }
 .italic { font-style: italic; }
 
+/************************************************/
+/* image positioning                            */
+img.left {
+  display: block;
+  left: 0px;
+}
+
+img.right {
+  display: block;
+  right: 0px;
+}
+
+img.center {
+  text-align: center;
+}
+
+img.float-left {
+  float: left;
+  margin-top: 3px;
+  margin-right: 3px;
+  margin-bottom: 3px;
+}
+
+img.float-right {
+  float: right;
+  margin-top: 3px;
+  margin-left: 3px;
+  margin-bottom: 3px;
+}
+
+
+
 .heading-1 {
   font-weight: bold;
   font-size: 12px;

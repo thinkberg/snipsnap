@@ -57,12 +57,14 @@ public class ImageMacro extends Macro {
     if(params.length > 0) {
       if (params[0].startsWith("http://")) {
         if (config.allowExternalImages()) {
-          SnipLink.appendExternalImage(buffer, params[0]);
+          SnipLink.appendExternalImage(buffer, params[0], params.length > 1 ? params[1] : null);
         }
+      } else if(params.length == 3) {
+        SnipLink.appendImage(buffer, snip.getName()+"-image-"+params[0], params[1], null, params[2]);
       } else if (params.length == 2) {
         SnipLink.appendImage(buffer, snip.getName()+"-image-"+params[0], params[1]);
       } else {
-        SnipLink.appendImage(buffer, snip.getName()+"-image-"+params[0]);
+        SnipLink.appendImage(buffer, snip.getName()+"-image-"+params[0], "default");
       }
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
