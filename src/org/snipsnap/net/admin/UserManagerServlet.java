@@ -37,6 +37,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -58,10 +59,15 @@ public class UserManagerServlet extends SnipSnapServlet {
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+    HttpSession session = request.getSession(false);
+    User admin = session != null ? (User)session.getAttribute(AdminServlet.ATT_ADMIN) : null;
+    if(null == admin) {
+      response.sendRedirect("/manager");
+      return;
+    }
     String command = request.getParameter("command");
     // get user manager and store in session
     UserManager um = UserManager.getInstance();
-    request.setAttribute("usermanager", um);
 
     // get user (if possible) and store in session
     String login = request.getParameter("login");
@@ -78,7 +84,7 @@ public class UserManagerServlet extends SnipSnapServlet {
         RequestDispatcher dispatcher = null;
 
         if(EDIT.equals(command)) {
-          dispatcher = request.getRequestDispatcher("/admin/user.jsp");
+          dispatcher = request.getRequestDispatcher("/manager/user.jsp");
         } else if (UPDATE.equals(command)) {
           if(update(request, errors, user)) {
             um.store(user);
@@ -86,13 +92,13 @@ public class UserManagerServlet extends SnipSnapServlet {
             response.sendRedirect(SnipLink.absoluteLink(request, "/manager/usermanager.jsp"));
             return;
           } else {
-            dispatcher = request.getRequestDispatcher("/admin/user.jsp");
+            dispatcher = request.getRequestDispatcher("/manager/user.jsp");
           }
         } else if(CREATE.equals(command)) {
           User tmp = new User(login, "", "");
           if(user != null || !update(request, errors, tmp)) {
             errors.put("fatal", "User with that name already exists! Use Edit to modify.");
-            dispatcher = request.getRequestDispatcher("/admin/newuser.jsp");
+            dispatcher = request.getRequestDispatcher("/manager/newuser.jsp");
           } else {
             user = um.create(tmp.getLogin(), tmp.getPasswd(), tmp.getEmail());
             user.setRoles(tmp.getRoles());
@@ -113,7 +119,7 @@ public class UserManagerServlet extends SnipSnapServlet {
       }
     }
 
-    RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/usermanager.jsp");
+    RequestDispatcher dispatcher = request.getRequestDispatcher("/manager/usermanager.jsp");
     dispatcher.forward(request, response);
   }
 

@@ -47,9 +47,9 @@ import java.io.IOException;
  */
 public class AdminServlet extends SnipSnapServlet {
 
-  private final static String ATT_USERMANAGER = "usermanager";
-  private final static String ATT_CONFIG = "config";
-  private final static String ATT_ADMIN = "admin";
+  protected final static String ATT_USERMANAGER = "usermanager";
+  protected final static String ATT_CONFIG = "config";
+  protected final static String ATT_ADMIN = "admin";
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
@@ -63,9 +63,9 @@ public class AdminServlet extends SnipSnapServlet {
     }
 
     if (um.isAuthenticated(user) && user.isAdmin() && request.getPathInfo() != null) {
-      request.setAttribute(ATT_USERMANAGER, um);
-      request.setAttribute(ATT_CONFIG, app.getConfiguration());
-      request.setAttribute(ATT_ADMIN, user);
+      session.setAttribute(ATT_USERMANAGER, um);
+      session.setAttribute(ATT_CONFIG, app.getConfiguration());
+      session.setAttribute(ATT_ADMIN, user);
 
       String layout = request.getPathInfo();
       if(null == layout || "/".equals(layout)) {

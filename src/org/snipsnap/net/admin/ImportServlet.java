@@ -62,11 +62,16 @@ public class ImportServlet extends HttpServlet {
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+    HttpSession session = request.getSession(false);
+    User admin = session != null ? (User)session.getAttribute(AdminServlet.ATT_ADMIN) : null;
+    if(null == admin) {
+      response.sendRedirect("/manager");
+      return;
+    }
 
     boolean overwrite = "overwrite".equals(request.getParameter("overwrite"));
     String xml = request.getParameter("input");
     Logger.log(xml);
-    HttpSession session = request.getSession();
     session.removeAttribute("errors");
     Map errors = new HashMap();
     session.setAttribute("errors", errors);

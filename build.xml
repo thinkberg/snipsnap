@@ -51,6 +51,7 @@
         <include name="dbrepair.sh"/>
         <include name="exportall.sh"/>
         <include name="devlinks.sh"/>
+        <include name="renimg.sh"/>
       </tarfileset>
       <tarfileset dir="." prefix="${appname}-${server.version}">
         <include name="**"/>
@@ -64,6 +65,7 @@
         <exclude name="dbrepair.sh"/>
         <exclude name="exportall.sh"/>
         <exclude name="devlinks.sh"/>
+        <exclude name="renimg.sh"/>
         <exclude name="src/theme/drrockit/"/>
         <exclude name="src/theme/javangelist/"/>
         <exclude name="src/theme/sib/"/>
@@ -83,6 +85,7 @@
         <include name="dbrepair.sh"/>
         <include name="exportall.sh"/>
         <include name="devlinks.sh"/>
+        <include name="renimg.sh"/>
       </tarfileset>
       <tarfileset dir="." prefix="${appname}-${server.version}">
         <include name="${jar}/${appname}.jar"/>
@@ -104,6 +107,7 @@
         <include name="conf/intermap.txt"/>
         <include name="conf/bookservices.txt"/>
         <include name="conf/apidocs.txt"/>
+        <include name="conf/robotdetect.txt"/>
         <include name="conf/snipsnap.snip"/>
         <include name="license.txt"/>
         <include name="validate.xsl"/>
@@ -117,6 +121,7 @@
         <exclude name="dbrepair.sh"/>
         <exclude name="exportall.sh"/>
         <exclude name="devlinks.sh"/>
+        <exclude name="renimg.sh"/>
       </tarfileset>
     </tar>
   </target>
