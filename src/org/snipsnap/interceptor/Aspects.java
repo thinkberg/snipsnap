@@ -25,12 +25,22 @@
 
 package org.snipsnap.interceptor;
 
+import org.snipsnap.snip.SnipImpl;
+import org.snipsnap.snip.SnipSpaceImpl;
+import org.snipsnap.interceptor.custom.ACLInterceptor;
+import org.snipsnap.interceptor.custom.SnipSpaceACLInterceptor;
+import org.snipsnap.interceptor.custom.StoreInterceptor;
+import org.radeox.util.logging.Logger;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Aspects implements InvocationHandler {
   private Object target = null;
+  private List interceptors;
 
   /** Neat trick, done with some thinking and help from Jon (Nanning) and
    *  Rickard. Thanks.
@@ -58,6 +68,16 @@ public class Aspects implements InvocationHandler {
 
   private Aspects(Object target) {
     this.target = target;
+    interceptors = new ArrayList();
+    // either read from class
+    // or configuration file or use nanning
+    Logger.debug("Aspects: class = "+target.getClass());
+    if (target.getClass().equals(SnipImpl.class)) {
+      interceptors.add(new ACLInterceptor());
+    } else if (target.getClass().equals(SnipSpaceImpl.class)) {
+      interceptors.add(new SnipSpaceACLInterceptor());
+      interceptors.add(new StoreInterceptor());
+    }
   }
 
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
@@ -65,7 +85,7 @@ public class Aspects implements InvocationHandler {
     Object invocationResult = null;
     Object previousThis = currentThis.get();
     currentThis.set(proxy);
-    Invocation i = new Invocation(target, method, args);
+    Invocation i = new Invocation(target, method, args, interceptors);
     try {
       invocationResult = i.next();
     } catch (Throwable throwable) {
