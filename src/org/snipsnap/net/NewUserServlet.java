@@ -50,6 +50,7 @@ public class NewUserServlet extends HttpServlet {
   private final static String ERR_TOO_SHORT = "User name too short (min. 3 characters)!";
   private final static String ERR_ILLEGAL = "Illegal user name! Should only contain letters, numbers and a dot.";
   private final static String ERR_PASSWORD = "Password does not match!";
+  private final static String ERR_PASSWORD_TOO_SHORT = "Password must be at least 3 characters long!";
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
@@ -96,6 +97,12 @@ public class NewUserServlet extends HttpServlet {
       // check whether the password is correctly typed
       if (!password.equals(password2)) {
         errors.put("password", ERR_PASSWORD);
+        sendError(session, errors, request, response);
+        return;
+      }
+
+      if(password.length() < 3) {
+        errors.put("password", ERR_PASSWORD_TOO_SHORT);
         sendError(session, errors, request, response);
         return;
       }
