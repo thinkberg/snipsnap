@@ -100,8 +100,10 @@ public class DBDump {
       toXml("Snip", "snip", connection, out);
 
       out.println("</snipspace>");
+      out.flush();
+      out.close();
     } catch (Exception e) {
-      System.err.println("Error opening out.wiki");
+      System.err.println("error writing output");
     }
     System.err.println("ATTENTION: Check the encoding of the file!");
   }
