@@ -42,11 +42,11 @@ public class AnnotationMacro extends Macro {
     return "note";
   }
 
-  public void execute(Writer writer, String[] params, String content, Snip snip)
+  public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
-    if (params.length == 1) {
+    if (params.getLength() == 1) {
       writer.write("<footnote>");
-      writer.write(params[0]);
+      writer.write(params.get("0"));
       writer.write("</footnote>");
     } else {
       throw new IllegalArgumentException("footnote needs exactly one argument");

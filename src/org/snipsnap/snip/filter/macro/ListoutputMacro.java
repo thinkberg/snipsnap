@@ -89,6 +89,6 @@ public abstract class ListoutputMacro extends Macro {
 
   private final ListFormatter defaultFormatter = new SimpleList();
 
-  public abstract void execute(Writer writer, String[] params, String content, Snip snip) throws IllegalArgumentException, IOException;
+  public abstract void execute(Writer writer, MacroParameter params) throws IllegalArgumentException, IOException;
 }
 

@@ -55,22 +55,22 @@ public class HotSnipMacro extends Macro {
     return "snips-by-hotness";
   }
 
-  public void execute(Writer writer, String[] params, String content, Snip snip)
+  public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
 
     int length = 10;
     boolean showSize = false;
     if(params != null) {
-      if(params.length > 0) {
+      if(params.getLength() > 0) {
         try {
-          length = Integer.parseInt(params[0]);
+          length = Integer.parseInt(params.get("0"));
         } catch (NumberFormatException e) {
-          System.err.println("RecentChangesMacro: illegal parameter count='"+params[0]+"'");
+          System.err.println("RecentChangesMacro: illegal parameter count='"+params.get("0")+"'");
         }
       }
     }
 
-    if (params == null || params.length <= 3) {
+    if (params == null || params.getLength() <= 3) {
       Collection c = space.getHot(length);
       Iterator iterator = c.iterator();
       writer.write("<div id=\"list\"><div class=\"list-title\">Most viewed:");

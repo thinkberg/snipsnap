@@ -49,18 +49,18 @@ public class WeblogMacro extends Macro {
     return "weblog";
   }
 
-  public void execute(Writer writer, String[] params, String content, Snip snip)
+  public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
 
-    if (params == null || params.length < 2) {
+    if (params == null || params.getLength() < 2) {
       int count = 0;
-      if (params != null && params.length == 1) {
-        count = Integer.parseInt(params[0]);
+      if (params != null && params.getLength() == 1) {
+        count = Integer.parseInt(params.get("0"));
       } else {
         count = 10;
       }
 
-      List snips = SnipSpace.getInstance().getChildrenDateOrder(snip, count);
+      List snips = SnipSpace.getInstance().getChildrenDateOrder(params.getSnip(), count);
       Iterator iterator = snips.iterator();
       while (iterator.hasNext()) {
         Snip entry = (Snip) iterator.next();

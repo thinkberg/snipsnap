@@ -46,29 +46,29 @@ public class FieldMacro extends Macro {
   /**
    * {field:id|value|target|button}
    */
-  public void execute(Writer writer, String[] params, String content, Snip snip)
+  public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
 
-    if (params != null && params.length > 0) {
+    if (params != null && params.getLength() > 0) {
       writer.write("<form id=\"form\" action=\"");
-      if(params.length >= 3) {
-        SnipLink.appendUrl(writer, params[2]);
+      if(params.getLength() >= 3) {
+        SnipLink.appendUrl(writer, params.get("2"));
       } else {
-        SnipLink.appendUrl(writer, snip.getName());
+        SnipLink.appendUrl(writer, params.getSnip().getName());
       }
       writer.write("\" method=\"get\">");
       writer.write("<input size=\"18\" name=\"");
-      writer.write(params[0]);
+      writer.write(params.get("0"));
       writer.write("\"");
-      if (params.length >= 2) {
+      if (params.getLength() >= 2) {
         writer.write(" value=\"");
-        writer.write(params[1]);
+        writer.write(params.get("1"));
         writer.write("\"");
       }
       writer.write("/>");
-      if(params.length >= 4) {
+      if(params.getLength() >= 4) {
         writer.write(" <input type=\"submit\" name=\"submit\" value=\"");
-        writer.write(params[3]);
+        writer.write(params.get("3"));
         writer.write("\"/>");
       }
       writer.write("</form>");

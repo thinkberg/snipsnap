@@ -52,16 +52,15 @@ public class SearchMacro extends Macro {
     return "search";
   }
 
-  public void execute(Writer writer, String[] params, String content, Snip snip)
+  public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
 
-    if (params.length == 1 || params.length == 2) {
+    if (params.getLength() == 1 || params.getLength() == 2) {
       int maxHits = 10;
-      if (params.length == 2) {
-          maxHits = Integer.parseInt(params[1]);
+      if (params.getLength() == 2) {
+          maxHits = Integer.parseInt(params.get("1"));
       }
-      String searchString = params[0];
-
+      String searchString = params.get("0");
 
       Hits hits = null;
       try {

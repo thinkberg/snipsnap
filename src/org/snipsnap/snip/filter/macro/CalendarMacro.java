@@ -42,23 +42,23 @@ public class CalendarMacro extends Macro {
     return "calendar";
   }
 
-  public void execute(Writer writer, String[] params, String content, Snip snip)
+  public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
     int year = -1;
     int month = -1;
-    if (params != null && params.length == 2) {
+    if (params != null && params.getLength() == 2) {
       try {
-        year = Integer.parseInt(params[0]);
+        year = Integer.parseInt(params.get("0"));
       } catch (NumberFormatException e) {
-        System.err.println("CalendarMacro: year is not a number: " + params[0]);
+        System.err.println("CalendarMacro: year is not a number: " + params.get("0"));
       }
       try {
-        month = Integer.parseInt(params[1]);
+        month = Integer.parseInt(params.get("1"));
       } catch (NumberFormatException e) {
-        System.err.println("CalendarMacro: month is not a number: " + params[1]);
+        System.err.println("CalendarMacro: month is not a number: " + params.get("1"));
       }
-    } else if(params != null && params.length > 0) {
-      System.err.println("CalendarMacro: illegal number of arguments: "+params.length);
+    } else if(params != null && params.getLength() > 0) {
+      System.err.println("CalendarMacro: illegal number of arguments: "+params.getLength());
     }
 
     Month m = new Month();

@@ -47,17 +47,17 @@ public class LoginsMacro extends ListoutputMacro {
     return "logins";
   }
 
-  public void execute(Writer writer, String[] params, String content, Snip snip)
+  public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException
   {
     String type = "Vertical";
     boolean showSize = true;
     if(params != null) {
-      if(params.length > 0) {
-      type = params[0];
+      if(params.getLength() > 0) {
+      type = params.get("0");
       }
     }
-    if (params == null || params.length <= 2) {
+    if (params == null || params.getLength() <= 2) {
       List users = Application.getCurrentUsers();
       users.addAll(Application.getCurrentNonUsers());
 

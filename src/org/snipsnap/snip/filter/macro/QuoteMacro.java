@@ -53,13 +53,13 @@ public class QuoteMacro extends Preserved {
     return "quote";
   }
 
-  public void execute(Writer writer, String[] params, String content, Snip snip)
+  public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
 
     writer.write("<blockquote class=\"quote\">");
-    writer.write(content);
-    if (null!=params && params.length==1) {
-      writer.write(params[0]);
+    writer.write(params.getContent());
+    if (null!=params && params.getLength()==1) {
+      writer.write(params.get("0"));
     }
     writer.write("</blockquote>");
     return;

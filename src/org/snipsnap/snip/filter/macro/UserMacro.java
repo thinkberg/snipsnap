@@ -42,17 +42,17 @@ public class UserMacro extends ListoutputMacro {
     return "list-of-users";
   }
 
-  public void execute(Writer writer, String[] params, String content, Snip snip)
+  public void execute(Writer writer, MacroParameter params)
     throws IllegalArgumentException, IOException {
     String type = null;
     boolean showSize = true;
     if (params != null) {
-      if (params.length > 0) {
-        type = params[0];
+      if (params.getLength() > 0) {
+        type = params.get("0");
       }
-      showSize = !(params.length > 1 && "nosize".equals(params[1]));
+      showSize = !(params.getLength() > 1 && "nosize".equals(params.get("1")));
     }
-    if (params == null || params.length <= 2) {
+    if (params == null || params.getLength() <= 2) {
       output(writer, "All Users:", UserManager.getInstance().getAll(), "no users. not very popular ;-)", type, showSize);
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");

@@ -53,22 +53,22 @@ public class SinceLastVisitMacro extends ListoutputMacro {
     return "since-last-visit";
   }
 
-  public void execute(Writer writer, String[] params, String content, Snip snip)
+  public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
     String type = null;
     boolean showSize = true;
     String userName = null;
     if(params != null) {
-      if(params.length > 0) {
-        userName = params[0];
+      if(params.getLength() > 0) {
+        userName = params.get("0");
       }
-      if(params.length > 1) {
-        type = params[1];
+      if(params.getLength() > 1) {
+        type = params.get("1");
       }
     }
 
-    if (params.length > 0) {
-      User user = UserManager.getInstance().load(params[0]);
+    if (params.getLength() > 0) {
+      User user = UserManager.getInstance().load(userName);
       System.err.println("Hashcode lastVisit="+((Object) user).hashCode());
       System.err.println("SinceLastVisit: "+user.getLastLogout());
       Collection c = space.getSince(user.getLastLogout());

@@ -45,21 +45,21 @@ public class LinkMacro extends Macro {
     return "link";
   }
 
-  public void execute(Writer writer, String[] params, String content, Snip snip)
+  public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
 
-    if (params.length == 2) {
+    if (params.getLength() == 2) {
       writer.write("<span class=\"nobr\">");
       writer.write(img);
       writer.write("<a href=\"");
-      writer.write(params[1]);
+      writer.write(params.get("1"));
       writer.write("\">");
-      writer.write(params[0]);
+      writer.write(params.get("0"));
       writer.write("</a>");
       writer.write("</span>");
-    } else if (params.length == 1) {
+    } else if (params.getLength() == 1) {
       // will be catched by UrlFilter
-      writer.write(params[0]);
+      writer.write(params.get("0"));
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

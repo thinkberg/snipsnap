@@ -56,14 +56,14 @@ public class ScriptMacro extends Preserved {
     return "script";
   }
 
-  public void execute(Writer writer, String[] params, String content, Snip snip)
+  public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
 
      PythonInterpreter interp =
 	    new PythonInterpreter();
 
     interp.setOut(writer);
-    interp.set("snip", snip);
-    interp.exec(content);
+    interp.set("snip", params.getSnip());
+    interp.exec(params.getContent());
   }
 }

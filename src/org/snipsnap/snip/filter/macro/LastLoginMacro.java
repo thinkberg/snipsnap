@@ -48,11 +48,11 @@ public class LastLoginMacro extends Macro {
     return "last-login";
   }
 
-  public void execute(Writer writer, String[] params, String content, Snip snip)
+  public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
 
-    if (params.length == 1) {
-      User user = UserManager.getInstance().load(params[0]);
+    if (params.getLength() == 1) {
+      User user = UserManager.getInstance().load(params.get("0"));
       writer.write("<b>Last login was:</b> ");
       writer.write(Modified.getNiceTime(user.getLastLogin()));
     } else {

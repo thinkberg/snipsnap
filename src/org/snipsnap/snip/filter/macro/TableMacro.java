@@ -45,10 +45,10 @@ public class TableMacro extends Macro {
     return "table";
   }
 
-  public void execute(Writer writer, String[] params, String content, Snip snip)
+  public void execute(Writer writer, MacroParameter params)
     throws IllegalArgumentException, IOException {
 
-    content = content.trim() + "\n";
+    String content = params.getContent().trim() + "\n";
 
     Table table = new Table();
     StringTokenizer tokenizer = new StringTokenizer(content, "|\n", true);

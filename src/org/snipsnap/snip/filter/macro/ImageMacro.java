@@ -50,21 +50,22 @@ public class ImageMacro extends Macro {
     config = Application.get().getConfiguration();
   }
 
-  public void execute(Writer writer, String[] params, String content, Snip snip)
+  public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
 
     StringBuffer buffer = new StringBuffer();
-    if(params.length > 0) {
-      if (params[0].startsWith("http://")) {
+    Snip snip = params.getSnip();
+    if(params.getLength() > 0) {
+      if (params.get("-").startsWith("http://")) {
         if (config.allowExternalImages()) {
-          SnipLink.appendExternalImage(buffer, params[0], params.length > 1 ? params[1] : null);
+          SnipLink.appendExternalImage(buffer, params.get("0"), params.getLength() > 1 ? params.get("1") : null);
         }
-      } else if(params.length == 3) {
-        SnipLink.appendImage(buffer, snip.getName()+"-image-"+params[0], params[1], null, params[2]);
-      } else if (params.length == 2) {
-        SnipLink.appendImage(buffer, snip.getName()+"-image-"+params[0], params[1]);
+      } else if(params.getLength() == 3) {
+        SnipLink.appendImage(buffer, snip.getName()+"-image-"+params.get("0"), params.get("1"), null, params.get("2"));
+      } else if (params.getLength() == 2) {
+        SnipLink.appendImage(buffer, snip.getName()+"-image-"+params.get("0"), params.get("1"));
       } else {
-        SnipLink.appendImage(buffer, snip.getName()+"-image-"+params[0], "default");
+        SnipLink.appendImage(buffer, snip.getName()+"-image-"+params.get("0"), "default");
       }
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");

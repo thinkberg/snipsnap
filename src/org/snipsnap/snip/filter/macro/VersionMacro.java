@@ -51,7 +51,7 @@ public class VersionMacro extends Macro {
     return "version";
   }
 
-  public void execute(Writer writer, String[] params, String content, Snip snip)
+  public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
       writer.write(version);
       return;

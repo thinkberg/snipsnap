@@ -43,17 +43,17 @@ public class IsbnMacro extends Macro {
     return "isbn";
   }
 
-  public void execute(Writer writer, String[] params, String content, Snip snip)
+  public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
 
-    if (params.length== 1) {
+    if (params.getLength()== 1) {
       StringBuffer buffer = new StringBuffer();
       SnipLink.appendImage(buffer, "arrow.right", ">>", "gif", null);
       writer.write(buffer.toString());
       writer.write(" (<a href=\"http://www.amazon.de/exec/obidos/ASIN/");
-      writer.write(params[0]);
+      writer.write(params.get("0"));
       writer.write("\">Amazon</a> | <a href=\"http://www.preistester.de/cgi-bin/pt/buchs.pl?query=profi&isbn=");
-      writer.write(params[0]);
+      writer.write(params.get("0"));
       writer.write("\">Preistester</a>)");
       return;
     } else {

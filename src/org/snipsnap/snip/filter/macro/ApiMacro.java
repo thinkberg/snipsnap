@@ -43,14 +43,17 @@ public class ApiMacro extends Macro {
     return "api";
   }
 
-  public void execute(Writer writer, String[] params, String content, Snip snip)
+  public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
     String mode;
+    String klass;
 
-    if (params.length == 1) {
+    if (params.getLength() == 1) {
       mode = "java";
-    } else if (params.length == 2) {
-      mode = params[1].toLowerCase();
+      klass = params.get("0");
+    } else if (params.getLength() == 2) {
+      mode = params.get("1").toLowerCase();
+      klass = params.get("0");
     } else {
       throw new IllegalArgumentException("api macro needs one or two paramaters");
     }
@@ -61,18 +64,18 @@ public class ApiMacro extends Macro {
       // Transform java.lang.StringBuffer to
       // http://java.sun.com/j2se/1.4/docs/api/java/lang/StringBuffer.html
       url.append("http://java.sun.com/j2se/1.4/docs/api/");
-      url.append(params[0].replace('.', '/'));
+      url.append(klass.replace('.', '/'));
       url.append(".html");
 
     } else if ("ruby".equals(mode)) {
       url.append("http://www.rubycentral.com/book/ref_c_");
-      url.append(params[0].toLowerCase());
+      url.append(klass.toLowerCase());
       url.append(".html");
     }
     writer.write("<a href=\"");
     writer.write(url.toString());
     writer.write("\">");
-    writer.write(params[0]);
+    writer.write(klass);
     writer.write("</a>");
     return;
   }

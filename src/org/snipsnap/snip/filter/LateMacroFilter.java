@@ -74,41 +74,7 @@ public class LateMacroFilter extends RegexTokenFilter {
     macros.put(macro.getName(), macro);
   }
 
-  /**
-   *
-   * Splits a String on a delimiter to a List. The function works like
-   * the perl-function split.
-   *
-   * @param aString    a String to split
-   * @param delimiter  a delimiter dividing the entries
-   * @return           a Array of splittet Strings
-   */
-
-  public static String[] split(String aString, String delimiter, Map params) {
-    StringTokenizer st = new StringTokenizer(aString, delimiter);
-    String[] result = new String[st.countTokens()];
-    int i = 0;
-
-    while (st.hasMoreTokens()) {
-      String value = st.nextToken();
-      if (value.startsWith("$")) {
-        value = value.substring(1);
-        if (params.containsKey(value)) {
-          result[i++] = (String) params.get(value);
-        } else {
-          result[i++] = "";
-        }
-      } else {
-        result[i++] = value;
-      }
-    }
-
-    return result;
-  }
-
   public void handleMatch(StringBuffer buffer, MatchResult result, Snip snip) {
-    String[] params = null;
-    String content = null;
     String command = result.group(1);
 
 // System.out.println("Parameter block:" + Application.get().getParameters() );
@@ -119,18 +85,20 @@ public class LateMacroFilter extends RegexTokenFilter {
 //        System.err.println(i+" "+result.group(i));
 //      }
 
-      Map paramMap = Application.get().getParameters();
+      MacroParameter mParams = new MacroParameter();
+      mParams.setSnip(snip);
 // {tag} ... {tag}
       if (result.group(1).equals(result.group(result.groups() - 1))) {
 // {tag:1|2} ... {tag}
         if (!"".equals(result.group(2))) {
-          params = split(result.group(2), "|", paramMap);
+          mParams.setParams(result.group(2));
         }
-        content = result.group(3);
+        mParams.setContent(result.group(3));
       } else {
 // {tag}
         if (result.groups() > 1) {
-          params = split(result.group(2), "|", paramMap);
+// {tag:1|2}
+          mParams.setParams(result.group(2));
         }
       }
 
@@ -140,18 +108,18 @@ public class LateMacroFilter extends RegexTokenFilter {
         if (macros.containsKey(command)) {
           Macro macro = (Macro) macros.get(command);
 // recursively filter macros within macros
-          if (null != content) {
-            content = filter(content, snip);
+          if (null != mParams.getContent()) {
+            mParams.setContent(filter(mParams.getContent(), snip));
           }
           Writer writer = new StringBufferWriter(buffer);
-          macro.execute(writer, params, content, snip);
+          macro.execute(writer, mParams);
         } else if (command.startsWith("!")) {
 // @TODO including of other snips
           Snip includeSnip = SnipSpace.getInstance().load(command.substring(1));
           if (null != includeSnip) {
             String included = includeSnip.getContent();
-            Filter paramFilter = new ParamFilter(params);
-            buffer.append(paramFilter.filter(included, null));
+            //Filter paramFilter = new ParamFilter(params);
+            //buffer.append(paramFilter.filter(included, null));
           } else {
             buffer.append(command.substring(1) + " not found.");
           }

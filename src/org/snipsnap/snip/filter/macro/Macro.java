@@ -39,7 +39,7 @@ import java.io.Writer;
 public abstract class Macro {
   public abstract String getName();
 
-  public abstract void execute(Writer writer, String[] params, String content, Snip snip)
+  public abstract void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException;
 
   public String toString() {

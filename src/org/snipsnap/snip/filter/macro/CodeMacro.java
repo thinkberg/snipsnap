@@ -62,17 +62,17 @@ public class CodeMacro extends Preserved {
     return "code";
   }
 
-  public void execute(Writer writer, String[] params, String content, Snip snip)
+  public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
 
     Filter filter = null;
 
-    if (params == null || params.length == 0 || !filters.containsKey(params[0])) {
+    if (params == null || params.getLength() == 0 || !filters.containsKey(params.get("0"))) {
       filter = (Filter) filters.get("java");
     } else {
-      filter = (Filter) filters.get(params[0]);
+      filter = (Filter) filters.get(params.get("0"));
     }
-    String result = filter.filter(content, snip);
+    String result = filter.filter(params.getContent(), params.getSnip());
 
     writer.write("<div class=\"code\"><pre>");
     writer.write(replace(result.trim()));

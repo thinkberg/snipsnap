@@ -42,18 +42,18 @@ public class UserSnipMacro extends ListoutputMacro {
     return "snips-by-user";
   }
 
-  public void execute(Writer writer, String[] params, String content, Snip snip)
+  public void execute(Writer writer, MacroParameter params)
     throws IllegalArgumentException, IOException {
     String type = null;
     boolean showSize = true;
     if (params != null) {
-      if (params.length > 1) {
-        type = params[1];
+      if (params.getLength() > 1) {
+        type = params.get("1");
       }
     }
 
-    if (params.length > 0) {
-      Collection c = space.getByUser(params[0]);
+    if (params.getLength() > 0) {
+      Collection c = space.getByUser(params.get("0"));
       output(writer, "this user's snips:", c, "none written yet.", type, showSize);
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
