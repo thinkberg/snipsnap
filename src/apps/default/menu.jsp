@@ -14,7 +14,8 @@
 <table class="menu" width="100%" border="0" cellpadding="4" cellspacing="1">
  <tr><td>
    <form method="get" action="../space/snipsnap-search">
-     <input type="text" size="18" name="query" style="border: 1px solid #aaaaaa"/> <input type="submit" name="search" value="search"/>
+    <label for="query" style="display:none" accesskey="4">Search for:</label>
+    <input type="text" size="18" name="query" style="border: 1px solid #aaaaaa"/> <input type="submit" name="search" value="search"/>
    </form>
  </td></tr>
  <tr><td>
