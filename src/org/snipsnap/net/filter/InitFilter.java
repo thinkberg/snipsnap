@@ -76,9 +76,13 @@ public class InitFilter implements Filter {
     Application app = Application.getInstance(session);
     AppConfiguration config = app.getConfiguration();
 
+    System.out.println("request: "+request);
+
     String serverName = request.getServerName();
     int serverPort = request.getServerPort();
+    System.out.println("server: "+serverName+":"+serverPort);
     String requestURL = request.getRequestURL().toString();
+    System.out.println("request url: "+requestURL);
     int postServerNameIndex = requestURL.indexOf(serverName) + serverName.length();
     String contextPath = request.getContextPath();
     if(contextPath.length() == 0) {
@@ -86,7 +90,7 @@ public class InitFilter implements Filter {
     } else {
       config.setUrl(requestURL.substring(0, requestURL.indexOf(contextPath, postServerNameIndex) + contextPath.length()));
     }
-    // System.out.println("url: "+config.getUrl());
+    System.out.println("url: "+config.getUrl());
 
     // make sure the request has a correct character encoding
     // the enc-wrapper ensures some methods return correct strings too

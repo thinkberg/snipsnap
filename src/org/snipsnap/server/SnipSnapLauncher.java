@@ -25,6 +25,7 @@
 package org.snipsnap.server;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * SnipSnap launcher that takes care of adding the compiler to the classpath before
@@ -40,31 +41,6 @@ public class SnipSnapLauncher extends Launcher {
    * @param args command line arguments
    */
   public static void main(String[] args) {
-    try {
-      File serverLog = new File("server.log");
-      if(serverLog.exists()) {
-        File serverLogOld = new File("server.log.old");
-        serverLog.renameTo(serverLogOld);
-      }
-      System.setErr(new PrintStream(new FileOutputStream(new File("server.log"))));
-    } catch (FileNotFoundException e) {
-      // ignore and display on standard
-    }
-
-    // setup classpath
-    try {
-      addResource("lib/snipsnap.jar");
-      addResource("lib/org.mortbay.jetty.jar");
-      addResource("lib/javax.servlet.jar");
-      addResource("lib/org.apache.jasper.jar");
-      addResource("lib/jdbcpool.jar");
-      addResource("lib/mckoidb.jar");
-      addResource("lib/org.apache.crimson.jar", "javax.xml.parsers.SAXParserFactory");
-    } catch (IOException e) {
-      System.out.println("SnipSnapLauncher: missing library: "+e.getMessage());
-      e.printStackTrace();
-    }
-
     File toolsJar = new File(new File(System.getProperty("java.home")), "lib/tools.jar");
     if (!toolsJar.exists()) {
       String system = System.getProperty("os.name");
@@ -76,13 +52,17 @@ public class SnipSnapLauncher extends Launcher {
         System.exit(-1);
       }
     }
-
-    // start application
     try {
-      addResource(toolsJar);
+      System.setProperty(Launcher.CLASSPATH, toolsJar.getCanonicalPath());
+    } catch (IOException e) {
+      System.out.println("SnipSnapLauncher: unable to add java compiler library: "+e.getMessage());
+    }
+    System.setProperty(Launcher.ERRORLOG, "server.log");
+
+    try {
       invokeMain("org.snipsnap.server.AppServer", args);
     } catch (Exception e) {
-      System.out.println("SnipSnapLauncher: unable to start server: " + e.getMessage());
+      System.out.println("SnipSnapLauncher: unable to start server: "+e.getMessage());
       e.printStackTrace();
     }
   }

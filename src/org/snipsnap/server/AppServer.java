@@ -30,11 +30,15 @@ import org.mortbay.util.MultiException;
 import org.mortbay.util.InetAddrPort;
 import org.mortbay.http.HttpListener;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.net.URL;
 import java.util.Iterator;
+import java.util.StringTokenizer;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
+import java.util.jar.JarInputStream;
 
 /**
  * Application Server
@@ -46,6 +50,9 @@ public class AppServer {
   protected static Configuration serverConfig;
   protected static Server jettyServer;
 
+  /**
+   * Start application server.
+   */
   public static void main(String args[]) {
     Runtime.getRuntime().addShutdownHook(new Thread() {
       public void run() {

@@ -24,115 +24,83 @@
  */
 package org.snipsnap.server;
 
+import java.io.*;
+import java.util.StringTokenizer;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
+import java.util.jar.JarInputStream;
 import java.net.URL;
-import java.net.MalformedURLException;
-import java.net.URLClassLoader;
-import java.util.List;
-import java.util.LinkedList;
-import java.util.Iterator;
-import java.io.File;
-import java.io.IOException;
-import java.io.FileNotFoundException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * Launcher for Java Applications. Creates the classpath and then starts the application.
  *
  * @version $Id$
- * @author Matthias L. Jugel (thanks to nexos)
+ * @author Matthias L. Jugel
  */
 public class Launcher {
+  public final static String CLASSPATH = "launcher.classpath";
+  public final static String ERRORLOG = "launcher.errlog";
 
-  protected static List urlList = new LinkedList();
+  private static boolean debug = false;
 
-  /**
-   * Make an URL array from a list.
-   * @param list the
-   */
-  protected static URL[] listToURLArray(List list) {
-    return (URL[]) list.toArray(new URL[list.size()]);
+  public static void invokeMain(String mainClassName, String args[])
+    throws IOException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+    // init class path
+    initClassPath(System.getProperty(CLASSPATH));
+
+    // init error log
+    String errorLog = System.getProperty(ERRORLOG);
+    if(errorLog != null && errorLog.length() > 0) {
+      initSystemErr(errorLog);
+    }
+
+    Class mainClass = Launcher.class.getClassLoader().loadClass(mainClassName);
+    Method main = mainClass.getDeclaredMethod("main", new Class[] { String[].class });
+    main.invoke(null, new Object[] { args });
   }
 
-  /**
-   * Add resource only if the class is not already present in the current class path.
-   * @param resource the file resource to add
-   * @param className a class name to check
-   */
-  public static void addResource(File resource, String className) throws IOException {
+  protected static void initSystemErr(String fileName) {
     try {
-      Class.forName(className);
-    } catch (ClassNotFoundException e) {
-      addResource(resource);
+      File serverLog = new File(fileName);
+      if(serverLog.exists()) {
+        File serverLogOld = new File(fileName+".old");
+        serverLog.renameTo(serverLogOld);
+      }
+      System.setErr(new PrintStream(new FileOutputStream(serverLog)));
+    } catch (FileNotFoundException e) {
+      if(debug) {
+        System.err.println("Launcher: System.err not redirected to "+fileName);
+        e.printStackTrace();
+      }
     }
   }
 
-  /**
-   * Add a file resource.
-   * @param resource the file to add
-   */
-  public static void addResource(File resource) throws IOException {
-    URL url;
+  protected static void initClassPath(String extraClassPath) {
+    try {
+      URL location = Launcher.class.getProtectionDomain().getCodeSource().getLocation();
+      JarInputStream jarInputStream = new JarInputStream(location.openStream());
+      Manifest manifest = jarInputStream.getManifest();
+      Attributes mainAttributes = manifest.getMainAttributes();
+      String manifestClassPath = (String)mainAttributes.getValue("Class-Path");
 
-    if (resource.exists()) {
-      url = resource.getCanonicalFile().toURL();
-      urlList.add(url);
-    } else {
-      throw new FileNotFoundException(resource.getCanonicalFile().toString());
+      // append extra class path to manifest class path (after replacing separatorchar)
+      if(extraClassPath != null && extraClassPath.length() > 0) {
+        manifestClassPath += " " + extraClassPath;
+      }
+
+      File directoryBase = new File(location.getFile()).getParentFile();
+      StringBuffer classPath = new StringBuffer(location.getFile());
+      StringTokenizer tokenizer = new StringTokenizer(manifestClassPath, " \t"+File.separatorChar, false);
+      while(tokenizer.hasMoreTokens()) {
+        classPath.append(File.pathSeparatorChar);
+        String file = tokenizer.nextToken();
+        classPath.append(new File(directoryBase, file).getCanonicalPath());
+      }
+      System.setProperty("java.class.path", classPath.toString());
+    } catch (IOException e) {
+      System.err.println("Warning: not running from a jar: make sure your CLASSPATH is set correctly.");
     }
-  }
-
-  /**
-   * Add a resource by naming it in a string. Do not add this resource if the class name
-   * already exists.
-   * @param resource the resource to add
-   * @param className the class name to check
-   */
-  public static void addResource(String resource, String className) throws IOException {
-    addResource(new File(resource), className);
-  }
-
-  /**
-   * Add a resource by naming it in a string.
-   * @param resource the resource to add
-   */
-  public static void addResource(String resource) throws IOException {
-    addResource(new File(resource));
-  }
-
-  /**
-   * Invoke main class' main method after createing a new classloader that contains the
-   * previously added resources.
-   * @param main the main class to start
-   * @param args main method arguments
-   */
-  public static void invokeMain(String main, String[] args) throws MalformedURLException, IOException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-
-    // prepare class path
-    StringBuffer classPath = new StringBuffer();
-    if(urlList.size() > 0) {
-      classPath.append(((URL)urlList.get(0)).getFile());
-    }
-    for(int i = 1; i < urlList.size(); i++) {
-      classPath.append(File.pathSeparatorChar);
-      classPath.append(((URL)urlList.get(i)).getFile());
-    }
-    System.setProperty("java.class.path", classPath.toString());
-
-    // prepare class loader
-    ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-    if(null == classLoader) {
-      classLoader = Launcher.class.getClassLoader();
-    }
-    if(null == classLoader) {
-      ClassLoader.getSystemClassLoader();
-    }
-    URLClassLoader urlClassLoader = URLClassLoader.newInstance(listToURLArray(urlList), classLoader);
-
-    // start main class
-    Thread.currentThread().setContextClassLoader(urlClassLoader);
-    Class mainClass = urlClassLoader.loadClass(main);
-    Method method = mainClass.getDeclaredMethod("main", new Class[]{String[].class});
-    method.invoke(null, new Object[]{args});
   }
 }
