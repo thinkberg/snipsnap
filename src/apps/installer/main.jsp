@@ -3,10 +3,10 @@
   ** @author Matthias L. Jugel
   ** @version $Id$
   -->
-<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
 
 <%@ page pageEncoding="iso-8859-1" %>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
 <% response.setContentType("text/html; charset=UTF-8"); %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -18,12 +18,19 @@
   </head>
   <body>
     <div class="header">
-      <img src="../images/snipsnap-logo.png"/>
+      <img src="images/snipsnap-logo.png"/>
     </div>
-    <div class="content">
-      <c:import url="${step}.jsp"/>
-    </div>
+    <table class="configuration">
+      <tr>
+        <td rowspan="2" class="guide">
+          <fmt:message key="install.guide"/>
+          <div class="step-info"><fmt:message key="install.guide.${step}"/></div>
+        </td>
+        <td class="edit">
+          <div class="step"><fmt:message key="install.step.${step}"/></div>
+          <c:import url="${step}.jsp"/>
+        </td>
+      </tr>
+    </table>
   </body>
 </html>
-
-

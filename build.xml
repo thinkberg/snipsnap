@@ -459,6 +459,7 @@
         <include name="WEB-INF/lib/jstl.jar"/>
       </fileset>
     </copy>
+    <copy file="${src}/apps/default/admin/css/config.css" tofile="${target}/installer/webapp/default.css"/>
     <copy file="${src}/apps/installer/index.jsp" tofile="${target}/installer/webapp/index.jsp"/>
 
     <!-- copy if installer-web.inc is available -->

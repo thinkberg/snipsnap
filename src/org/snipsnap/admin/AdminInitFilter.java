@@ -100,7 +100,7 @@ public class AdminInitFilter implements Filter {
         return;
       }
     }
-    System.out.println("AdminInitFilter: "+path);
+    System.out.println("AdminInitFilter: accessing "+path);
 
     // apply the chain
     chain.doFilter(request, response);
