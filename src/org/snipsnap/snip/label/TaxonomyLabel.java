@@ -94,7 +94,7 @@ public class TaxonomyLabel extends BaseLabel {
           while (iter.hasNext()) {
             Label label = (Label) iter.next();
             if (label.getValue().equals("Category")) {
-              String category = snip.getNameEncoded();
+              String category = snip.getName();
               buffer.append("<option>");
               buffer.append(category);
               buffer.append("</option>");
