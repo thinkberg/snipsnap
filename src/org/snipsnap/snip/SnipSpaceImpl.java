@@ -35,6 +35,7 @@ import org.snipsnap.container.Components;
 import org.snipsnap.notification.Message;
 import org.snipsnap.notification.MessageService;
 import org.snipsnap.snip.storage.*;
+import org.snipsnap.snip.attachment.Attachments;
 import org.snipsnap.user.Digest;
 import org.snipsnap.util.ApplicationAwareMap;
 import org.snipsnap.util.Queue;
@@ -342,6 +343,17 @@ public class SnipSpaceImpl implements SnipSpace {
       service.send(new Message(Message.SNIP_CREATE, snip));
     }
     return snip;
+  }
+
+  public Snip copy(Snip snip, String newName) {
+    SnipSerializer serializer = SnipSerializer.getInstance();
+    Map snipMap = serializer.createSnipMap(snip);
+    snipMap.remove(SnipSerializer.SNIP_CUSER);
+    snipMap.remove(SnipSerializer.SNIP_CTIME);
+    Snip newSnip = create(newName, snip.getContent());
+    newSnip = serializer.deserialize(snipMap, newSnip);
+
+    return newSnip;
   }
 
   public void remove(Snip snip) {

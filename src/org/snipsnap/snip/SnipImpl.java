@@ -24,35 +24,37 @@
  */
 package org.snipsnap.snip;
 
+import org.picocontainer.PicoContainer;
 import org.radeox.api.engine.RenderEngine;
 import org.radeox.api.engine.context.RenderContext;
 import org.radeox.util.logging.Logger;
-import org.radeox.EngineManager;
 import org.snipsnap.app.Application;
 import org.snipsnap.container.Components;
 import org.snipsnap.interceptor.Aspects;
 import org.snipsnap.render.context.SnipRenderContext;
-import org.snipsnap.render.SnipRenderEngine;
 import org.snipsnap.snip.attachment.Attachment;
 import org.snipsnap.snip.attachment.Attachments;
 import org.snipsnap.snip.label.Labels;
-import org.snipsnap.snip.label.RenderLabel;
-import org.snipsnap.snip.label.BooleanLabel;
 import org.snipsnap.snip.label.RenderEngineLabel;
 import org.snipsnap.snip.name.CapitalizeFormatter;
 import org.snipsnap.snip.name.NameFormatter;
 import org.snipsnap.snip.name.PathRemoveFormatter;
+import org.snipsnap.snip.storage.SnipSerializer;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.User;
-import org.picocontainer.PicoContainer;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
+import java.io.BufferedOutputStream;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Central class for snips.
@@ -335,7 +337,7 @@ public class SnipImpl implements Snip {
   }
 
   public Snip getParent() {
-    if (null != parentName && null == parent ) {
+    if (null != parentName && null == parent) {
       parent = SnipSpaceFactory.getInstance().load(parentName);
     }
     return parent;
@@ -500,7 +502,7 @@ public class SnipImpl implements Snip {
   }
 
   public String getTitle() {
-    if(null == nameFormatter) {
+    if (null == nameFormatter) {
       nameFormatter = new CapitalizeFormatter();
       nameFormatter.setParent(new PathRemoveFormatter());
     }
@@ -525,5 +527,47 @@ public class SnipImpl implements Snip {
 
   public String toString() {
     return getName();
+  }
+
+  public Snip copy(String newName) {
+    SnipSpace space = (SnipSpace)Components.getComponent(SnipSpace.class);
+    SnipSerializer serializer = SnipSerializer.getInstance();
+    Map snipMap = serializer.createSnipMap(this);
+    snipMap.remove(SnipSerializer.SNIP_CUSER);
+    snipMap.remove(SnipSerializer.SNIP_CTIME);
+    Snip newSnip = space.create(newName, getContent());
+    newSnip = serializer.deserialize(snipMap, newSnip);
+
+    List atts = newSnip.getAttachments().getAll();
+    Iterator attsIt = atts.iterator();
+    File fileStorePath = new File(Application.get().getConfiguration().getFileStore(), "snips");
+    while(attsIt.hasNext()) {
+      Attachment att = (Attachment)attsIt.next();
+      String location = att.getLocation();
+      File attFile = new File(fileStorePath, location);
+      if(attFile.exists()) {
+        try {
+          File newLocation = new File(newSnip.getName(), attFile.getName());
+          File newAttFile = new File(fileStorePath, newLocation.getPath());
+          newAttFile.getParentFile().mkdirs();
+          BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(newAttFile));
+          BufferedInputStream in = new BufferedInputStream(new FileInputStream(attFile));
+          byte buf[] = new byte[4096];
+          int length = -1;
+          while ((length = in.read(buf)) != -1) {
+            out.write(buf, 0, length);
+          }
+          out.flush();
+          out.close();
+          in.close();
+          att.setLocation(newLocation.getPath());
+        } catch (IOException e) {
+          Logger.warn("SnipImpl: unable to copy attachment: "+attFile, e);
+        }
+      } else {
+        newSnip.getAttachments().removeAttachment(att);
+      }
+    }
+    return newSnip;
   }
 }

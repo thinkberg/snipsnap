@@ -133,4 +133,8 @@ public class MockSnipSpace extends MockObject implements SnipSpace {
   public void addSnip(String name) {
     snips.put(name, name);
   }
+
+  public Snip copy(Snip snip, String newName) {
+    return null;
+  }
 }

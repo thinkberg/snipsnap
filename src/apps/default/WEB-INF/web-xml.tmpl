@@ -143,14 +143,19 @@
     <servlet-class>org.snipsnap.net.RsdServlet</servlet-class>
   </servlet>
 
-    <servlet>
-      <servlet-name>org.snipsnap.net.XmlRpcServlet</servlet-name>
-      <servlet-class>org.snipsnap.net.XmlRpcServlet</servlet-class>
-    </servlet>
+  <servlet>
+    <servlet-name>org.snipsnap.net.XmlRpcServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.XmlRpcServlet</servlet-class>
+  </servlet>
 
   <servlet>
     <servlet-name>org.snipsnap.net.SnipNewServlet</servlet-name>
     <servlet-class>org.snipsnap.net.SnipNewServlet</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>org.snipsnap.net.SnipCopyServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.SnipCopyServlet</servlet-class>
   </servlet>
 
   <servlet>
@@ -358,6 +363,11 @@
   <servlet-mapping>
     <servlet-name>org.snipsnap.net.SnipNewServlet</servlet-name>
     <url-pattern>/exec/new</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>org.snipsnap.net.SnipCopyServlet</servlet-name>
+    <url-pattern>/exec/copy</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>

@@ -116,7 +116,21 @@ public interface SnipSpace  {
    */
   public void delayedStore(Snip snip);
 
+  /**
+   * Create a new snip with the specified content.
+   * @param name the name of the new snip
+   * @param content initial content
+   * @return the new copied snip
+   */
   public Snip create(String name, String content);
+
+  /**
+   * Copy a snip to a new location using all data except, creation user/time.
+   * @param snip the snip to be copied
+   * @param newName the new name
+   * @return the new copied snip
+   */
+  public Snip copy(Snip snip, String newName);
 
   public void remove(Snip snip);
 }

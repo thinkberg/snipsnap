@@ -203,4 +203,6 @@ public interface Snip extends Linkable, Ownable, Nameable, Appendable {
   public SnipPath getPath() throws IOException;
 
   public String getTitle();
+
+  public Snip copy(String newName);
 }
