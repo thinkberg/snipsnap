@@ -49,6 +49,9 @@ import java.util.HashMap;
 public class SnipRenderContext extends BaseRenderContext {
   public static final String LANGUAGE_BUNDLE = "SnipRenderContext.language_bundle";
   public static final String HTTP_REQUEST = "SnipRenderContext.request";
+  public static final String USER = "SnipRenderContext.user";
+  public static final String SNIP = "SnipRenderContext.snip";
+  public static final String CONTAINER = "SnipRenderContext.container";
 
   private Snip snip;
   private SnipSpace space;
@@ -88,9 +91,9 @@ public class SnipRenderContext extends BaseRenderContext {
 
    private void initAttributes() {
     attributes = new HashMap();
-    attributes.put("snip", snip);
-    attributes.put("user", Application.get().getUser());
-    attributes.put("container", Components.getContainer());
+    attributes.put(SNIP, snip);
+    attributes.put(USER, Application.get().getUser());
+    attributes.put(CONTAINER, Components.getContainer());
     attributes.put(HTTP_REQUEST, ((Map) Application.get().getParameters()).get("request"));
   }
 
