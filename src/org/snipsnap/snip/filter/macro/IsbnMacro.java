@@ -56,7 +56,7 @@ public class IsbnMacro extends Macro {
       BookServices.getInstance().isbn(writer, params.get("0"));
       return;
     } else {
-      throw new IllegalArgumentException("Number of arguments does not match");
+      throw new IllegalArgumentException("needs an ISBN numer as argument");
     }
   }
 }

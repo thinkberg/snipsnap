@@ -40,6 +40,6 @@ import org.snipsnap.snip.filter.regex.RegexReplaceFilter;
 public class TypographyFilter extends RegexReplaceFilter {
 
   public TypographyFilter() {
-    super("([^.]|^)\\.\\.\\.([^.]|$)", "&#8230;");
+    super("([^.]|^)[.][.][.](?!\\.)", "$1&#8230;");
   };
 }

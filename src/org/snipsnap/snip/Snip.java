@@ -368,9 +368,9 @@ public class Snip implements Ownable, Nameable, Appendable {
     String tmp = null;
     try {
       tmp = toXML();
-    } catch (Exception e) {
-      e.printStackTrace();
+    } catch(Exception e) {
       tmp = "<span class=\"error\">" + e + "</span>";
+      e.printStackTrace();
     } catch(Error err) {
       err.printStackTrace();
       tmp = "<span class=\"error\">" + err + "</span>";

@@ -153,13 +153,15 @@ public class MacroFilter extends RegexTokenFilter {
           buffer.append(result.group(0));
           return;
         }
+      } catch(IllegalArgumentException e) {
+        buffer.append("<div class=\"error\">" + command + ": "+e.getMessage()+"</div>");
       } catch (Exception e) {
         System.err.println("unable to format macro: " + result.group(1));
+        buffer.append("<div class=\"error\">" + command + "</div>");
         e.printStackTrace();
-        buffer.append("<div class=\"error\">?" + command + (result.length() > 1 ? ":" + result.group(2) : "") + "?</div>");
         return;
-
       }
+
     } else {
       buffer.append("<");
       buffer.append(command.substring(1));

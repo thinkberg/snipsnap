@@ -80,11 +80,16 @@ public class FilterPipe {
     // Apply every filter in _filterList to input string
     while (filterIterator.hasNext()) {
       Filter f = (Filter) filterIterator.next();
-      String tmp = f.filter(output, snip);
-      if (null == tmp) {
-        System.err.println("error while filtering: " + f);
-      } else {
-        output = tmp;
+      try {
+        String tmp = f.filter(output, snip);
+        if (null == tmp) {
+          System.err.println("error while filtering: " + f);
+        } else {
+          output = tmp;
+        }
+      } catch (Exception e) {
+        System.err.println("Filtering exception: "+f+": "+e);
+        e.printStackTrace();
       }
     }
 
