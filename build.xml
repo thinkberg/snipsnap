@@ -136,7 +136,7 @@
 
   <!-- delete compiled class files and created jar/war archives -->
   <target description="clean up compiled code" name="clean">
-    <delete failonerror="false">
+    <delete failonerror="false" includeEmptyDirs="true">
       <fileset dir="${target}" includes="**" excludes="CVS"/>
     </delete>
     <delete failonerror="false">
@@ -215,7 +215,7 @@
     </jar>
   </target>
 
-  <target depends="servlets-jar" name="compile-jsp" description="compile jsp files">
+  <target if="precompile.jsp" depends="servlets-jar" name="compile-jsp" description="compile jsp files">
     <mkdir dir="${target}/jsp/source"/>
     <mkdir dir="${target}/jsp/classes"/>
     <jspc destdir="${target}/jsp/source"
@@ -239,7 +239,7 @@
     </javac>
   </target>
 
-  <target depends="compile-jsp" name="jsp-jar" description="package precompiled jsp files">
+  <target if="precompile.jsp" depends="compile-jsp" name="jsp-jar" description="package precompiled jsp files">
     <jar destfile="${src}/apps/default/WEB-INF/lib/snipsnap-jsp.jar" excludes="**/CVS">
       <fileset dir="${target}/jsp/classes" includes="**"/>
     </jar>
@@ -247,12 +247,13 @@
 
   <!-- create web archive of the template application -->
   <target depends="jsp-jar,theme-jar" description="build template war" name="snipsnap-war">
-    <loadfile property="web.inc" srcfile="${target}/jsp/web.inc"/>
+    <property name="web.inc" value=""/>
+    <loadfile property="web.inc" srcfile="${target}/jsp/web.inc" failonerror="false"/>
     <mkdir dir="${target}/webapp"/>
     <copy todir="${target}/webapp">
       <fileset dir="${src}/apps/default">
         <exclude name="**/CVS"/>
-        <exclude name="**/*.jsp"/>
+        <exclude name="**/*.jsp" if="precompile.jsp"/>
         <exclude name="WEB-INF/web-xml.tmpl"/>
       </fileset>
       <fileset dir="${src}/theme/blue" includes="**" excludes="**/CVS"/>
@@ -307,7 +308,7 @@
     </jar>
   </target>
 
-  <target depends="installer-servlets-jar" name="compile-installer-jsp" description="compile installer jsp files">
+  <target if="precompile.jsp" depends="installer-servlets-jar" name="compile-installer-jsp" description="compile installer jsp files">
     <mkdir dir="${target}/installer/jsp/source"/>
     <mkdir dir="${target}/installer/jsp/classes"/>
     <jspc destdir="${target}/installer/jsp/source"
@@ -343,7 +344,7 @@
     </javac>
   </target>
 
-  <target depends="compile-installer-jsp" name="installer-jsp-jar" description="package precompiled installer jsp files">
+  <target if="precompile.jsp" depends="compile-installer-jsp" name="installer-jsp-jar" description="package precompiled installer jsp files">
     <mkdir dir="${target}/installer/webapp/WEB-INF/lib"/>
     <jar destfile="${target}/installer/webapp/WEB-INF/lib/installer-jsp.jar" excludes="**/CVS">
       <fileset dir="${target}/installer/jsp/classes" includes="**"/>
@@ -360,12 +361,13 @@
 
   <!-- create web archive of the installer web application -->
   <target depends="installer-jsp-jar" description="build installer war" name="installer-war">
-    <loadfile property="installer-web.inc" srcfile="${target}/installer/jsp/web.inc"/>
+    <property name="installer-web.inc" value=""/>
+    <loadfile property="installer-web.inc" srcfile="${target}/installer/jsp/web.inc" failonerror="false"/>
     <mkdir dir="${target}/installer/webapp"/>
     <copy todir="${target}/installer/webapp">
       <fileset dir="${src}/apps/installer">
         <exclude name="**/CVS"/>
-        <exclude name="**/*.jsp"/>
+        <exclude name="**/*.jsp" if="precompile.jsp"/>
         <exclude name="WEB-INF/web-xml.tmpl"/>
       </fileset>
       <fileset dir="${src}/apps/default">
