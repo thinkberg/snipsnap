@@ -53,8 +53,10 @@ public class PostStoreServlet extends SnipSnapServlet {
     String content = request.getParameter("content");
 
     if (request.getParameter("preview") != null) {
-      request.setAttribute("preview", SnipFormatter.toXML(null, content));
-      RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/storepost");
+      request.setAttribute("preview", "HAHAHA");//SnipFormatter.toXML(null, content));
+      request.setAttribute("content", content);
+      request.setAttribute("title", title);
+      RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/post.jsp");
       dispatcher.forward(request, response);
       return;
     } else if (request.getParameter("cancel") == null) {

@@ -1,6 +1,13 @@
 0.3.1
 
 - Added feature: Plugin architecture for source code formatters
+- Added feature: Title for sub blogpost, added permalink to each sub blogpost
+- Added feature: anchor Macro
+- Fixed bug: Preview in comments
+- Added feature: Preview in post blog
+- Fixed some smaler bugs
+- Refactored heavily backend to use in memory queries instead of SQL queries. This
+  should allow us to move to Prevalyer
 
 0.3
 

@@ -11,6 +11,7 @@
  <div class="snip-content">
   <s:check roles="Editor">
   <c:if test="${not empty preview}">
+   Preview:
    <div class="preview"><div class="snip-content"><c:out value="${preview}" escapeXml="false"/></div></div>
   </c:if>
    <form class="form" method="post" action="../exec/storepost">
