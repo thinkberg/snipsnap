@@ -140,7 +140,7 @@ public class RssSnip implements Snip {
   }
 
   public String getXMLContent() {
-    RenderEngine engine = (RenderEngine) Components.getContainer().getComponentInstance(Components.DEFAULT_ENGINE);
+    RenderEngine engine = (RenderEngine) Components.getComponent(Components.DEFAULT_ENGINE);
     RenderContext context = new SnipRenderContext(snip, SnipSpaceFactory.getInstance());
     context.setParameters(Application.get().getParameters());
     return engine.render(content, context);

@@ -29,6 +29,7 @@ import java.util.Collection;
 
 public class Components {
     private static Container container;
+    public final static String DEFAULT_ENGINE = "defaultRenderEngine";
 
     public static synchronized Container getContainer() {
         if (null == container) {
@@ -41,6 +42,10 @@ public class Components {
     public static Object getComponent(Class c) {
         return getContainer().getComponent(c);
     }
+
+    public static Object getComponent(String id) {
+         return getContainer().getComponent(id);
+     }
 
     public static Collection findComponents(Class c) {
         return getContainer().findComponents(c);

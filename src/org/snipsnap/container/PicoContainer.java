@@ -17,6 +17,7 @@ import org.snipsnap.snip.storage.*;
 import org.snipsnap.interceptor.custom.MissingInterceptor;
 import org.snipsnap.interceptor.custom.SnipSpaceACLInterceptor;
 import org.snipsnap.config.ConfigurationProxy;
+import org.snipsnap.config.Globals;
 import org.snipsnap.versioning.*;
 import org.snipsnap.versioning.cookbook.CookbookDifferenceService;
 import org.snipsnap.app.ApplicationStorage;
@@ -43,7 +44,6 @@ import org.radeox.util.Service;
 import javax.sql.DataSource;
 
 public class PicoContainer implements Container {
-    public final static String DEFAULT_ENGINE = "defaultRenderEngine";
 
 
     private static org.picocontainer.MutablePicoContainer container;
@@ -82,7 +82,7 @@ public class PicoContainer implements Container {
         addComponent(AuthenticationService.class, DefaultAuthenticationService.class);
         addComponent(PasswordService.class);
         addComponent(SessionService.class, DefaultSessionService.class);
-        addComponent(DEFAULT_ENGINE, SnipRenderEngine.class);
+        addComponent(Components.DEFAULT_ENGINE, SnipRenderEngine.class);
         addComponent(PlainTextRenderEngine.class);
         addComponent(SnipSpace.class, SnipSpaceImpl.class);
 
@@ -152,8 +152,16 @@ public class PicoContainer implements Container {
         container.registerComponentImplementation(c);
     }
 
+    public void addComponent(String id, Class c) {
+        container.registerComponentImplementation(id, c);
+    }
+
     public void addComponent(Class i, Class c) {
         container.registerComponentImplementation(i, c);
+    }
+
+    public Object getComponent(String id) {
+        return container.getComponentInstance(id);
     }
 
 }

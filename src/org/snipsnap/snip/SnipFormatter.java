@@ -45,9 +45,8 @@ public class SnipFormatter
 	public static String toXML(Snip snip, String content)
 	{
     //@FIXME: This duplicates SnipImpl.toXML()
-    PicoContainer container = Components.getContainer();
-    RenderEngine engine = (RenderEngine) container.getComponentInstance(Components.DEFAULT_ENGINE);
-    RenderContext context = new SnipRenderContext(snip, (SnipSpace) container.getComponentInstance(SnipSpace.class));
+    RenderEngine engine = (RenderEngine) Components.getComponent(Components.DEFAULT_ENGINE);
+    RenderContext context = new SnipRenderContext(snip, (SnipSpace) Components.getComponent(SnipSpace.class));
     context.setParameters(Application.get().getParameters());
     return engine.render(content, context);
   }

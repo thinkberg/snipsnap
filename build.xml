@@ -322,9 +322,10 @@
 
   <target depends="generate" description="compile template application code" name="compile-servlets">
     <mkdir dir="${target}/default/WEB-INF/classes"/>
+    <!-- fix, why junit to compile servlets? -->
     <javac deprecation="${deprecation}" debug="${debug}"
       srcdir="${src}"
-      classpathref="all.classpath"
+      classpathref="test.classpath"
       destdir="${target}/default/WEB-INF/classes"
       excludes="org/snipsnap/admin/**, org/snipsnap/server/**">
       <src path="${src}"/>

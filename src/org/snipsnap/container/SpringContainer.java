@@ -24,13 +24,17 @@ public class SpringContainer implements Container {
     }
 
     public boolean containsComponent(Class c) {
-        factory.containsBean(c.getName());
+        return factory.containsBean(c.getName());
     }
 
     public void addComponent(Class c) {
         RootBeanDefinition definition = new RootBeanDefinition(c);
         definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_CONSTRUCTOR);
         factory.registerBeanDefinition(c.getName(), definition);
+    }
+
+     public Object getComponent(String id) {
+         return factory.getBean(id);
     }
 }
 

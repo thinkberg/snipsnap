@@ -443,14 +443,12 @@ public class SnipImpl implements Snip, ProxyAware {
   }
 
   public String toXML() {
-    PicoContainer container = Components.getContainer();
-
     RenderEngineLabel reLabel =
             (RenderEngineLabel) getLabels().getLabel("RenderEngine");
     RenderEngine engine = null;
     if (reLabel != null) {
       try {
-        engine = (RenderEngine) container.getComponentInstance(Class.forName(reLabel.getValue()));
+        engine = (RenderEngine) Components.getComponent(Class.forName(reLabel.getValue()));
       } catch (ClassNotFoundException e) {
         e.printStackTrace();
       }
@@ -458,12 +456,12 @@ public class SnipImpl implements Snip, ProxyAware {
 
     // make sure we get a render engine
     if (null == engine) {
-      engine = (RenderEngine) container.getComponentInstance(Components.DEFAULT_ENGINE);
+      engine = (RenderEngine) Components.getComponent(Components.DEFAULT_ENGINE);
     }
 
 
     RenderContext context = new SnipRenderContext(proxy,
-                                                  (SnipSpace) container.getComponentInstance(SnipSpace.class));
+                                                  (SnipSpace) Components.getComponent(SnipSpace.class));
     context.setParameters(Application.get().getParameters());
 
     return engine.render(getContent(), context);
