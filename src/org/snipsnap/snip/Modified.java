@@ -26,6 +26,8 @@
 package org.snipsnap.snip;
 
 import org.snipsnap.util.StringUtil;
+import org.snipsnap.user.UserManager;
+import org.snipsnap.container.Components;
 
 import java.sql.Timestamp;
 
@@ -92,9 +94,18 @@ public class Modified {
   public String toString() {
     StringBuffer buffer = new StringBuffer();
     buffer.append("Created by ");
-    SnipLink.appendLink(buffer, cUser);
+    UserManager um = (UserManager) Components.getComponent(UserManager.class);
+    if(um.exists(cUser)) {
+      SnipLink.appendLink(buffer, cUser);
+    } else {
+      buffer.append(cUser);
+    }
     buffer.append(". Last edited by ");
-    SnipLink.appendLink(buffer, mUser);
+    if(um.exists(mUser)) {
+      SnipLink.appendLink(buffer, mUser);
+    } else {
+      buffer.append(mUser);
+    }
     buffer.append(" ");
     buffer.append(getNiceTime(mTime));
     return buffer.toString();
@@ -107,7 +118,12 @@ public class Modified {
   public String getShort() {
     StringBuffer buffer = new StringBuffer();
     buffer.append("<span class=\"snip-name\">");
-    SnipLink.appendLink(buffer, cUser);
+    UserManager um = (UserManager) Components.getComponent(UserManager.class);
+    if(um.exists(cUser)) {
+      SnipLink.appendLink(buffer, cUser);
+    } else {
+      buffer.append(cUser);
+    }
     buffer.append("</span>");
     buffer.append(", ");
     buffer.append(getNiceTime(mTime));
