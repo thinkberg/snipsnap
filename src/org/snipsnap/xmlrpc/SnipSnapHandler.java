@@ -220,7 +220,7 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
       XMLSnipImport.load(importStream, flags);
     } catch (Exception e) {
       System.err.println("SnipSnapHandler.restoreXml: unable to import snips: "+e);
-      e.printStackTrace();
+      throw new IOException(e.getMessage());
     }
     return true;
   }
