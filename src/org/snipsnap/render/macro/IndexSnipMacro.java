@@ -25,9 +25,11 @@
 
 package org.snipsnap.render.macro;
 
+import org.radeox.util.Linkable;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpaceFactory;
+import org.snipsnap.snip.SnipLink;
 import org.snipsnap.util.collection.Collections;
 import org.snipsnap.util.collection.Filterator;
 
@@ -58,7 +60,7 @@ public class IndexSnipMacro extends ListOutputMacro {
   }
 
   public void execute(Writer writer, SnipMacroParameter params)
-      throws IllegalArgumentException, IOException {
+    throws IllegalArgumentException, IOException {
     String type = null;
     boolean showSize = true;
     if (params.getLength() == 1) {
@@ -66,18 +68,25 @@ public class IndexSnipMacro extends ListOutputMacro {
     }
 
     if (params.getLength() < 2) {
-      output(writer, "All Snips:",
-          Collections.filter(SnipSpaceFactory.getInstance().getAll(),
-              new Filterator() {
-                public boolean filter(Object obj) {
-                  String name = ((Snip) obj).getName();
-                  if (name.startsWith("comment-")) {
-                    return true;
-                  }
-                  return false;
-                }
-              }
-          ), "none written yet.", type, showSize);
+      final Snip snip = params.getSnipRenderContext().getSnip();
+      output(writer,
+             new Linkable() {
+               public String getLink() {
+                 return SnipLink.getSpaceRoot()+"/"+snip.getNameEncoded();
+               }
+             },
+             "All Snips:",
+             Collections.filter(SnipSpaceFactory.getInstance().getAll(),
+                                new Filterator() {
+                                  public boolean filter(Object obj) {
+                                    String name = ((Snip) obj).getName();
+                                    if (name.startsWith("comment-")) {
+                                      return true;
+                                    }
+                                    return false;
+                                  }
+                                }
+             ), "none written yet.", type, showSize);
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

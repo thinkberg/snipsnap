@@ -58,7 +58,7 @@ public class VerticalListFormatter implements ListFormatter {
    * @param emptyText Text to display if collection is empty
    * @param showSize If showSize is true then the size of the collection is displayed
    */
-  public void format(Writer writer, String listComment, Collection c, String emptyText, boolean showSize)
+  public void format(Writer writer, Linkable current, String listComment, Collection c, String emptyText, boolean showSize)
       throws IOException {
     writer.write("<div class=\"list\"><div class=\"list-title\">");
     writer.write(listComment);

@@ -78,7 +78,8 @@ public class SinceLastVisitMacro extends ListOutputMacro {
       // Logger.debug("Hashcode lastVisit=" + ((Object) user).hashCode());
       // Logger.debug("SinceLastVisit: " + user.getLastLogout());
       Collection c = SnipSpaceFactory.getInstance().getSince(user.getLastLogout());
-      output(writer, "changed snips since last visit", c, "no recent changes.", type, showSize);
+      output(writer, params.getSnipRenderContext().getSnip(),
+             "changed snips since last visit", c, "no recent changes.", type, showSize);
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

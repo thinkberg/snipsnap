@@ -96,7 +96,8 @@ public class LabelSearchMacro extends ListOutputMacro {
 //    }
 //
     if (params.getLength() > 1) {
-      output(writer, "snips with category:", result, "none found.", type, true);
+      output(writer, params.getSnipRenderContext().getSnip(),
+             "snips with category:", result, "none found.", type, true);
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

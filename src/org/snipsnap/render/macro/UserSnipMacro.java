@@ -65,7 +65,8 @@ public class UserSnipMacro extends ListOutputMacro {
 
     if (params.getLength() > 0) {
       Collection c = SnipSpaceFactory.getInstance().getByUser(params.get("0"));
-      output(writer, "this user's snips:", c, "none written yet.", type, showSize);
+      output(writer, params.getSnipRenderContext().getSnip(),
+             "this user's snips:", c, "none written yet.", type, showSize);
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

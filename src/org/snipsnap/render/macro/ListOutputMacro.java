@@ -28,6 +28,7 @@ package org.snipsnap.render.macro;
 import org.radeox.macro.list.ListFormatter;
 import org.radeox.macro.list.SimpleList;
 import org.radeox.util.Service;
+import org.radeox.util.Linkable;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 
@@ -66,13 +67,13 @@ public abstract class ListOutputMacro extends SnipMacro {
 
   private final static ListFormatter defaultFormatter = new SimpleList();
 
-  public void output(Writer writer, String listComment, Collection c, String emptyText, String style, boolean showSize) throws IOException {
+  public void output(Writer writer, Linkable root, String listComment, Collection c, String emptyText, String style, boolean showSize) throws IOException {
     ListFormatter formatter = (ListFormatter) ListOutputMacro.formatterMap.get(style != null ? style.toLowerCase() : null);
 
     if (formatter != null) {
-      formatter.format(writer, listComment, c, emptyText, showSize);
+      formatter.format(writer, root, listComment, c, emptyText, showSize);
     } else {
-      ListOutputMacro.defaultFormatter.format(writer, listComment, c, emptyText, showSize);
+      ListOutputMacro.defaultFormatter.format(writer, root, listComment, c, emptyText, showSize);
     }
   }
 

@@ -78,7 +78,8 @@ public class RecentWeblogMacro extends ListOutputMacro {
 
     if (params == null || params.getLength() <= 2) {
       Collection c = SnipSnapPing.getInstance().getChanged(length);
-      output(writer, "Recently Changed Weblogs", c, "No new changes", type, showSize);
+      output(writer, params.getSnipRenderContext().getSnip(),
+             "Recently Changed Weblogs", c, "No new changes", type, showSize);
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

@@ -74,7 +74,8 @@ public class LoginsMacro extends ListOutputMacro {
       List users = Application.getCurrentUsers();
       users.addAll(Application.getCurrentNonUsers());
 
-      output(writer, bundle.getString("macro.logins.users"), users, "", type, showSize);
+      output(writer, params.getSnipRenderContext().getSnip(),
+             bundle.getString("macro.logins.users"), users, "", type, showSize);
       int guests = Application.getGuestCount();
       if (guests > 0) {
         MessageFormat formatter = new MessageFormat("");

@@ -74,7 +74,8 @@ public class RecentChangesMacro extends ListOutputMacro {
 
     if (params.getLength() <= 3) {
       List changed = SnipSpaceFactory.getInstance().getChanged(length);
-      output(writer, "Recently Changed:", changed, "No changes yet.", type, showSize);
+      output(writer, params.getSnipRenderContext().getSnip(),
+             "Recently Changed:", changed, "No changes yet.", type, showSize);
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

@@ -57,7 +57,8 @@ public class UserMacro extends ListOutputMacro {
     }
     showSize = !(params.getLength() > 1 && "nosize".equals(params.get("1")));
     if (params.getLength() <= 2) {
-      output(writer, "All Users:", UserManagerFactory.getInstance().getAll(), "no users. not very popular ;-)", type, showSize);
+      output(writer, params.getSnipRenderContext().getSnip(),
+             "All Users:", UserManagerFactory.getInstance().getAll(), "no users. not very popular ;-)", type, showSize);
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }
