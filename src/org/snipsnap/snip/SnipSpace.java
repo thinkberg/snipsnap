@@ -62,6 +62,12 @@ public class SnipSpace implements LinkTester, Loader {
     return instance;
   }
 
+  public static synchronized void removeInstance() {
+    if(instance != null) {
+      instance = null;
+    }
+  }
+
   private SnipSpace() {
   }
 
@@ -137,7 +143,6 @@ public class SnipSpace implements LinkTester, Loader {
     if (exists(name)) {
       snip = load(name);
       snip.setContent(snip.getContent() + "\n\n" + content);
-
     } else {
       snip = create(name, content);
     }

@@ -36,7 +36,6 @@ import org.snipsnap.server.ApplicationLoader;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.User;
 import org.snipsnap.util.Checksum;
-import org.snipsnap.util.ConnectionManager;
 import org.snipsnap.util.JarUtil;
 import org.snipsnap.util.MckoiEmbeddedJDBCDriver;
 
@@ -57,9 +56,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.jar.JarFile;
-import java.sql.SQLException;
-
-import com.mckoi.database.control.DBController;
 
 /**
  * Installer servlet that installs the application.
