@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ** Version: $Id$
+  ** Author: Matthias L. Jugel
+  -->
+<project basedir="." default="build" name="solent sources">
+
+  <property file="conf/build.properties"/>
+
+  <path id="classpath">
+    <pathelement location="${jar}/jakarta.jar"/>
+    <pathelement location="${jar}/mckoidb.jar"/>
+    <pathelement location="${jar}/javax.servlet.jar"/>
+    <pathelement location="${jar}/org.apache.jasper.jar"/>
+    <pathelement location="${jar}/org.mortbay.jetty.jar"/>
+  </path>
+
+  <target depends="clean,jar" description="build binary package" name="bin-tar">
+    <tar destfile="${appname}-${version}.tgz">
+      <tarfileset dir="." prefix="${appname}-${version}" mode="544">
+        <include name="run.sh"/>
+      </tarfileset>
+      <tarfileset dir="." prefix="${appname}-${version}" mode="444">
+	<include name="${jar}/${appname}.jar"/>
+        <include name="${jar}/jakarta.jar"/>
+        <include name="${jar}/mckoidb.jar"/>
+        <include name="${jar}/javax.servlet.jar"/>
+        <include name="${jar}/org.apache.jasper.jar"/>
+        <include name="${jar}/org.mortbay.jetty.jar"/>
+        <include name="conf/server.conf"/>
+        <include name="db"/>
+	<include name="app/**"/>
+	<exclude name="**/CVS"/>
+      </tarfileset>
+    </tar>
+  </target>
+
+  <target description="clean up compiled code" name="clean">
+    <delete dir="${target}/com"/>
+  </target>
+
+  <target depends="build" description="build executable jar" name="jar">
+    <jar destfile="${jar}/${appname}.jar"
+	 excludes="**/CVS" 
+	 manifest="conf/manifest">
+      <fileset dir="cls" includes="com/**"/>
+    </jar>
+  </target>
+
+  <target depends="jar" description="run application server" name="run">
+    <java classname="com.neotis.net.AppServer" fork="true"
+          classpathref="classpath">
+      <classpath path="${jar}/${appname}.jar"/>
+    </java>
+  </target>
+
+  <target description="compile server code" name="build">
+    <javac deprecation="${deprecation}" debug="${debug}" 
+	   srcdir="${src}"
+	   classpathref="classpath"
+           destdir="${target}" 
+	   includes="com/neotis/**"
+	   excludes="com/neotis/config/**,com/neotis/test/**"/>
+  </target>
+
+</project>
+
+
