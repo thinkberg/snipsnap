@@ -574,6 +574,7 @@ public class SnipImpl implements Snip {
         newSnip.getAttachments().removeAttachment(att);
       }
     }
+    space.store(newSnip);
     return newSnip;
   }
 }

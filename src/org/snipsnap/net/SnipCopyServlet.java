@@ -68,6 +68,12 @@ public class SnipCopyServlet extends HttpServlet {
     }
 
     String name = request.getParameter("snip");
+
+    if(null != request.getParameter("cancel")) {
+      response.sendRedirect(config.getSnipUrl(name));
+      return;
+    }
+
     SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
 
     if (null != name && space.exists(name)) {

@@ -30,16 +30,15 @@ import org.apache.commons.dbcp.PoolableConnectionFactory;
 import org.apache.commons.dbcp.PoolingDataSource;
 import org.apache.commons.pool.ObjectPool;
 import org.apache.commons.pool.impl.GenericObjectPool;
+import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
-import org.radeox.util.logging.Logger;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Properties;
 
 /**
  * The connection manager handles all database connections.
@@ -58,7 +57,7 @@ public class ConnectionManager {
   }
 
   public static synchronized void removeInstance() {
-    if(null != instance) {
+    if (null != instance) {
       instance = null;
     }
   }
@@ -78,7 +77,7 @@ public class ConnectionManager {
       }
 
       String jdbcUrl = config.getJdbcUrl();
-      if(jdbcUrl.indexOf("?") != -1) {
+      if (jdbcUrl.indexOf("?") != -1) {
         jdbcUrl = jdbcUrl.concat("&");
       } else {
         jdbcUrl = jdbcUrl.concat("?");
@@ -87,7 +86,7 @@ public class ConnectionManager {
       if (null == jdbcPassword) {
         jdbcPassword = "";
       }
-      jdbcUrl = jdbcUrl.concat("user="+config.getJdbcUser()).concat("&password="+jdbcPassword);
+      jdbcUrl = jdbcUrl.concat("user=" + config.getJdbcUser()).concat("&password=" + jdbcPassword);
       //System.err.println("ConnectionManager: using: "+ jdbcUrl);
       ObjectPool connectionPool = new GenericObjectPool(null);
       ConnectionFactory connectionFactory = new DriverManagerConnectionFactory(jdbcUrl, config.getJdbcUser(), jdbcPassword);
