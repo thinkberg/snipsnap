@@ -183,8 +183,7 @@ public class JDBCSnipStorage implements SnipStorage, CacheableStorage {
     return list;
   }
 
-  public List storageByRecent(int size) {
-    final String applicationOid = (String) Application.get().getObject(Application.OID);
+  public List storageByRecent(final String applicationOid, int size) {
     JDBCTemplate template = new JDBCTemplate(ds);
     final List list = new ArrayList();
     template.query(SNIP_SELECT + "WHERE applicationOid=? ORDER BY mTime DESC", new RowCallbackHandler() {

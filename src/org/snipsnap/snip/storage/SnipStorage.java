@@ -65,7 +65,7 @@ public interface SnipStorage {
 
   public List storageByDateSince(Timestamp date);
 
-  public List storageByRecent(int size);
+  public List storageByRecent(String applicationOid, int size);
 
   public List storageByComments(Snip parent);
 

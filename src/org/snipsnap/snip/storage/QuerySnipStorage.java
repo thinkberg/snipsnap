@@ -53,6 +53,23 @@ public class QuerySnipStorage implements SnipStorage {
       return s1.getName().compareTo(s2.getName());
     }
   };
+
+  private static Comparator nameWithoutPathComparator = new SnipComparator() {
+    public int compare(Snip s1, Snip s2) {
+      return getName(s1).compareTo(getName(s2));
+    }
+
+    public String getName(Snip snip) {
+      String name = snip.getName();
+      int index = name.lastIndexOf("/");
+      if (-1 != index) {
+        return name.substring(index+1);
+      } else {
+        return name;
+      }
+    }
+  };
+
   private static Comparator nameComparatorDesc = new SnipComparator() {
     public int compare(Snip s1, Snip s2) {
       return s2.getName().compareTo(s1.getName());
@@ -126,11 +143,11 @@ public class QuerySnipStorage implements SnipStorage {
   }
 
   public List storageByUser(final String login) {
-    return QueryKit.query(storage.storageAll(), new SnipQuery() {
+    return QueryKit.querySorted(storage.storageAll(), new SnipQuery() {
       public boolean fit(Snip snip) {
         return (login.equals(snip.getCUser()));
       }
-    });
+    }, nameWithoutPathComparator);
   }
 
   public List storageByDateSince(final Timestamp date) {
@@ -139,6 +156,11 @@ public class QuerySnipStorage implements SnipStorage {
         return (date.before(snip.getMTime()));
       }
     });
+  }
+
+  public List storageByRecent(String applicationOid, int size) {
+    return QueryKit.querySorted(storage.storageAll(applicationOid),
+        mTimeComparatorDesc, size);
   }
 
   public List storageByRecent(int size) {

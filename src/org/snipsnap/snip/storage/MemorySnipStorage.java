@@ -174,7 +174,7 @@ public class MemorySnipStorage implements SnipStorage {
     throw new MethodNotSupportedException(NOT_SUPPORTED_EXCEPTION_MSG);
   }
 
-  public List storageByRecent(int size) {
+  public List storageByRecent(String applicationOid, int size) {
     throw new MethodNotSupportedException(NOT_SUPPORTED_EXCEPTION_MSG);
   }
 

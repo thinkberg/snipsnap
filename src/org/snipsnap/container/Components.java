@@ -53,7 +53,6 @@ import org.snipsnap.xmlrpc.*;
 
 import javax.sql.DataSource;
 import java.util.Iterator;
-import java.util.List;
 
 public class Components {
   public final static String DEFAULT_ENGINE = "defaultRenderEngine";

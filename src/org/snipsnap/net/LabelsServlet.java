@@ -90,7 +90,7 @@ public class LabelsServlet extends HttpServlet {
       labelsProxy.append(SnipLink.getExecRoot());
       labelsProxy.append("/removelabel?snipname=");
       labelsProxy.append(snip.getNameEncoded());
-      labelsProxy.append("&labelname=");
+      labelsProxy.append("&amp;labelname=");
       labelsProxy.append(lbl.getName());
       labelsProxy.append("\">remove</a>]");
       labelsProxy.append("</td></tr>");

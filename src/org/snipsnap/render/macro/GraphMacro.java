@@ -62,13 +62,13 @@ public class GraphMacro extends SnipMacro {
 //    writer.write("<br/>");
     writer.write("<img src=\"exec/render?name=");
     writer.write(name);
-    writer.write("&handler=");
+    writer.write("&amp;handler=");
     writer.write(handler);
     // Remove {graph} from start and end offset
     int start = snip.getContent().indexOf('}', params.getStart() + getName().length()) + 1;
     int end = params.getEnd() - getName().length() - 2;
-    writer.write("&start=" + start);
-    writer.write("&end=" + end);
+    writer.write("&amp;start=" + start);
+    writer.write("&amp;end=" + end);
 
 //    writer.write("&start="+params.getContentStart());
 //    writer.write("&end="+params.getContentEnd());

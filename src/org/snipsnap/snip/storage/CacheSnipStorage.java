@@ -117,8 +117,8 @@ public class CacheSnipStorage implements SnipStorage, CacheStorage {
     return storage.storageByDateSince(date);
   }
 
-  public List storageByRecent(int size) {
-    return storage.storageByRecent(size);
+  public List storageByRecent(String applicationOid, int size) {
+    return storage.storageByRecent(applicationOid, size);
   }
 
   public List storageByComments(Snip parent) {

@@ -57,7 +57,7 @@ import java.util.*;
 
 public abstract class FileSnipStorage implements CacheableStorage, VersionStorage, SnipStorage {
   public static final String NOT_SUPPORTED_EXCEPTION_MSG =
-    "Method not supported, do not call FileStorage directly";
+    "Method not supported, do not call FileSnipStorage directly";
 
   protected ApplicationAwareMap cache;
 
@@ -358,8 +358,8 @@ public abstract class FileSnipStorage implements CacheableStorage, VersionStorag
     throw new MethodNotSupportedException(NOT_SUPPORTED_EXCEPTION_MSG);
   }
 
-  public List storageByRecent(int size) {
-    throw new MethodNotSupportedException(NOT_SUPPORTED_EXCEPTION_MSG);
+  public List storageByRecent(String applicationOid, int size) {
+    throw new MethodNotSupportedException(NOT_SUPPORTED_EXCEPTION_MSG+" : storageByRecent(applicationOid,size)");
   }
 
   public List storageByComments(final Snip parent) {

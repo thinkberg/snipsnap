@@ -30,6 +30,7 @@ import org.codehaus.nanning.Aspects;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.app.ApplicationManager;
+import org.snipsnap.app.ApplicationStorage;
 import org.snipsnap.container.Components;
 import org.snipsnap.notification.Message;
 import org.snipsnap.notification.MessageService;
@@ -51,7 +52,7 @@ import java.util.*;
  * TODO move ETag / changed handling to Interceptor
  * TODO move changed to Interceptor
  *
- * @author Stephan J. Schmidt
+ * @author Stephan J. Schmidt  F
  * @version $Id$
  */
 
@@ -69,7 +70,7 @@ public class SnipSpaceImpl implements SnipSpace {
 
   private ApplicationAwareMap blogs;
 
-  public SnipSpaceImpl(SnipStorage storage,
+  public SnipSpaceImpl(SnipStorage  storage,
                        ApplicationManager manager,
                        VersionManager versionManager
                        ) {
@@ -104,11 +105,12 @@ public class SnipSpaceImpl implements SnipSpace {
     //This should also fill the cache
     // This should be moved somewhere down, SnipSpace need not know about
    // different applications
-//    Iterator iterator = manager.getApplications().iterator();
-//    while (iterator.hasNext()) {
-//      String oid = (String) iterator.next();
-//      ((Queue) changed.getObject()).fill(storage.storageByRecent(oid, 50));
-//    }
+    Iterator iterator = manager.getApplications().iterator();
+    System.out.println("apps = "+manager.getApplications());
+    while (iterator.hasNext()) {
+      Map app = (Map) iterator.next();
+      ((Queue) changed.getObject()).fill(this.storage.storageByRecent((String) app.get(ApplicationStorage.OID), 50));
+    }
 
     // We do not store frequent changes right away but
     // collect them in "delayed"

@@ -25,9 +25,9 @@
 
 package org.snipsnap.container;
 
-import org.snipsnap.notification.MessageService;
 import org.snipsnap.notification.Consumer;
 import org.snipsnap.notification.Message;
+import org.snipsnap.notification.MessageService;
 
 
 /**
