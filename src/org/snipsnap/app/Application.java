@@ -77,6 +77,11 @@ public class Application {
     return app;
   }
 
+  public static Application forceGet() {
+    instance.set(null);
+    return get();
+  }
+
   public static void set(Application application) {
     instance.set(application);
   }

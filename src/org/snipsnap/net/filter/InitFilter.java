@@ -196,12 +196,6 @@ public class InitFilter implements Filter {
     // make sure it's an http servlet request
     HttpServletRequest request = (HttpServletRequest) req;
 
-    try {
-      request = new EncRequestWrapper(request, globals.getEncoding() != null ? globals.getEncoding() : "UTF-8");
-    } catch (UnsupportedEncodingException e) {
-      Logger.log(Logger.FATAL, "InitFilter: unsupported encoding '" + req.getCharacterEncoding() + "'", e);
-    }
-
     String path = request.getServletPath();
 
     // make sure XML-RPC is handled directly
@@ -216,7 +210,7 @@ public class InitFilter implements Filter {
     }
 
     HttpSession session = request.getSession();
-    Application app = Application.get();
+    Application app = Application.forceGet();
     ConfigurationManager configManager = ConfigurationManager.getInstance();
     ApplicationManager appManager = null;
 

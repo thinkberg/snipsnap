@@ -93,7 +93,7 @@ public class AppServer {
     // set encoding of the JVM and make sure Jetty decodes URIs correctly
     String enc = serverInfo.getProperty(ServerConfiguration.ENCODING, "UTF-8");
     System.setProperty("file.encoding", enc);
-    System.setProperty("org.mortbay.util.URI.charset", "iso-8859-1");
+    System.setProperty("org.mortbay.util.URI.charset", enc);
 
     // start jetty server and install web application
     try {
