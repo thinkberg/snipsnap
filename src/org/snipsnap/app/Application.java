@@ -62,7 +62,7 @@ public class Application {
   };
 
   public Application() {
-    notification = new NotificationService();
+    // notification = new NotificationService();
   }
 
   public void clearLog() {
@@ -79,7 +79,9 @@ public class Application {
 
   public void notify(int type, Snip snip) {
     System.err.println("Application - notify() "+type);
-    notification.notify(type, snip);
+    if(notification != null) {
+      notification.notify(type, snip);
+    }
   }
 
   public long start() {

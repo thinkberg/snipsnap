@@ -89,8 +89,6 @@ public class AppServer {
       System.setProperty("file.encoding", "iso-8859-1");
     }
 
-    System.out.println("Internal encoding: "+System.getProperty("file.encoding"));
-
     // start jetty server and install web application
     try {
       jettyServer = new Server("./conf/jetty.conf");

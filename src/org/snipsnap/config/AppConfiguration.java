@@ -206,11 +206,11 @@ public class AppConfiguration extends Configuration {
   }
 
   public boolean allow(String action) {
-    return "allow".equals(getProperty(AppConfiguration.APP_PERM + action));
+    return "allow".equals(getProperty(AppConfiguration.APP_PERM + "." + action));
   }
 
   public boolean deny(String action) {
-    return "deny".equals(getProperty(AppConfiguration.APP_PERM + action));
+    return "deny".equals(getProperty(AppConfiguration.APP_PERM + "." + action));
   }
 
   public boolean allowExternalImages() {
