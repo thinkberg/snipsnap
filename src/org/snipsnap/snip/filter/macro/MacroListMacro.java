@@ -46,7 +46,7 @@ import java.io.Writer;
  */
 public class MacroListMacro extends ListoutputMacro {
   public String getName() {
-    return "macro-list";
+    return "list-of-macros";
   }
 
   public void execute(Writer writer, String[] params, String content, Snip snip)

@@ -53,7 +53,7 @@ public class UserMacro extends ListoutputMacro {
       showSize = !(params.length > 1 && "nosize".equals(params[1]));
     }
     if (params == null || params.length <= 2) {
-      output(writer, "users", UserManager.getInstance().getAll(), "no users. not very popular ;-)", type, showSize);
+      output(writer, "all users:", UserManager.getInstance().getAll(), "no users. not very popular ;-)", type, showSize);
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }
