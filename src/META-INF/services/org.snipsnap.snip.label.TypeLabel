@@ -1,3 +1,6 @@
+# Types available in the system with view and edit handlers
+# The syntax is as follows (handlers are optional):
+# <type> [<viewhandler>:[<edithandler>]]
 Person
 Technology
 Meeting

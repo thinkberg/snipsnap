@@ -31,7 +31,7 @@ import org.snipsnap.app.Application;
 import org.snipsnap.container.Components;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.label.MIMETypeLabel;
+import org.snipsnap.snip.label.TypeLabel;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.Security;
@@ -145,12 +145,12 @@ public class PluginServlet extends HttpServlet {
   }
 
   private String getMIMEType(Snip snip) {
-    Collection mimeTypes = snip.getLabels().getLabels("mime-type");
+    Collection mimeTypes = snip.getLabels().getLabels("TypeLabel");
     if (!mimeTypes.isEmpty()) {
       Iterator handlerIt = mimeTypes.iterator();
       while (handlerIt.hasNext()) {
-        MIMETypeLabel mimeType = (MIMETypeLabel) handlerIt.next();
-        return mimeType.getMIMEType();
+        TypeLabel mimeType = (TypeLabel) handlerIt.next();
+        return mimeType.getTypeValue();
       }
     }
     return null;

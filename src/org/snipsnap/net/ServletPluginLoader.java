@@ -32,7 +32,7 @@ import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.label.Label;
 import org.snipsnap.snip.label.Labels;
-import org.snipsnap.snip.label.MIMETypeLabel;
+import org.snipsnap.snip.label.TypeLabel;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -70,11 +70,11 @@ public class ServletPluginLoader {
 
       if (!noLabelsAll) {
         Collection LabelsCat;
-        // Search for all mime-type labels
-        Label label = labels.getLabel("mime-type");
-        if (null != label && label instanceof MIMETypeLabel) {
+        // Search for all type labels
+        Label label = labels.getLabel("TypeLabel");
+        if (null != label && label instanceof TypeLabel) {
           // only add labels that have the type text/gsp
-          String type = ((MIMETypeLabel) label).getMIMEType();
+          String type = ((TypeLabel) label).getTypeValue();
           if ("text/gsp".equalsIgnoreCase(type) || "text/groovy".equalsIgnoreCase(type)) {
             String handler = snip.getName();
             snipPlugins.put(handler, type);

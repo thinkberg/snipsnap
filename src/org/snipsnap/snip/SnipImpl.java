@@ -36,7 +36,7 @@ import org.snipsnap.snip.attachment.Attachment;
 import org.snipsnap.snip.attachment.Attachments;
 import org.snipsnap.snip.label.Labels;
 import org.snipsnap.snip.label.RenderEngineLabel;
-import org.snipsnap.snip.label.MIMETypeLabel;
+import org.snipsnap.snip.label.TypeLabel;
 import org.snipsnap.snip.label.Label;
 import org.snipsnap.snip.name.CapitalizeFormatter;
 import org.snipsnap.snip.name.NameFormatter;
@@ -455,9 +455,9 @@ public class SnipImpl implements Snip {
     //long start = Application.get().start();
     PicoContainer container = Components.getContainer();
 
-//    Label mimeTypeLabel = getLabels().getLabel("mime-type");
-//    if(mimeTypeLabel instanceof MIMETypeLabel) {
-//      String viewHandler = ((MIMETypeLabel)mimeTypeLabel).getViewHandler();
+//    Label mimeTypeLabel = getLabels().getLabel("TypeLabel");
+//    if(mimeTypeLabel instanceof TypeLabel) {
+//      String viewHandler = ((TypeLabel)mimeTypeLabel).getViewHandler();
 //
 //    }
 

@@ -41,6 +41,7 @@ public class AllSnipTests extends TestCase {
     s.addTestSuite(ImageTest.class);
     s.addTestSuite(EncoderTest.class);
     s.addTestSuite(SnipPathTest.class);
+    s.addTestSuite(NiceTimeTest.class);
     s.addTest(AllNameFormatterTests.suite());
     return s;
   }

@@ -42,6 +42,7 @@ import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.Digest;
 import org.snipsnap.user.User;
+import org.apache.xmlrpc.XmlRpc;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;

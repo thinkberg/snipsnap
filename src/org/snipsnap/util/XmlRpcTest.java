@@ -26,6 +26,7 @@
 package org.snipsnap.util;
 
 import org.apache.xmlrpc.XmlRpcClient;
+import org.apache.xmlrpc.XmlRpc;
 import org.radeox.util.logging.Logger;
 
 import java.util.Vector;
@@ -41,6 +42,7 @@ public class XmlRpcTest {
   public static void main(String[] args) {
     try {
       Vector params = new Vector();
+      XmlRpc.setEncoding("UTF-8");
       XmlRpcClient test = new XmlRpcClient("http://localhost:8668/RPC2");
       params.clear();
       // Name of the weblog

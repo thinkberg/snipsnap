@@ -44,8 +44,8 @@ public class CookbookDifferenceService implements DifferenceService {
 
   public List diff(String text1, String text2) {
     CookbookDiff diff = new CookbookDiff();
-    System.err.println("old="+text1);
-    System.err.println("new="+text2);
+//    System.err.println("old="+text1);
+//    System.err.println("new="+text2);
     return diff.diff(text1, text2);
   }
 }

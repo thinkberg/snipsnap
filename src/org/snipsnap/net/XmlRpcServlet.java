@@ -25,6 +25,7 @@
 package org.snipsnap.net;
 
 import org.apache.xmlrpc.XmlRpcServer;
+import org.apache.xmlrpc.XmlRpc;
 import org.picocontainer.PicoContainer;
 import org.snipsnap.config.ConfigurationProxy;
 import org.snipsnap.config.Globals;
@@ -39,6 +40,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.InputStream;
 import java.util.Iterator;
 
 /**
@@ -95,6 +97,14 @@ public class XmlRpcServlet extends HttpServlet {
 
       result = xmlrpc.execute(request.getInputStream(), login, password);
     } else {
+//      InputStream in = request.getInputStream();
+//      StringBuffer buf = new StringBuffer();
+//      byte[] buffer = new byte[1024];
+//      int n = 0;
+//      while ((n = in.read(buffer)) != -1) {
+//        buf.append(new String(buffer, 0, n));
+//      }
+      XmlRpc.setEncoding(globals.getEncoding());
       result = xmlrpc.execute(request.getInputStream());
     }
 

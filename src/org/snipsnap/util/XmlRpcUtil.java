@@ -2,24 +2,23 @@ package org.snipsnap.util;
 
 import org.apache.xmlrpc.XmlRpcClient;
 import org.apache.xmlrpc.XmlRpcException;
+import org.apache.xmlrpc.XmlRpc;
 import org.radeox.util.logging.Logger;
 
 import java.io.IOException;
 import java.util.Vector;
 
-public class XmlRpcPost {
+public class XmlRpcUtil {
   public static void main(String[] args) {
 
     try {
+      XmlRpc.setEncoding("UTF-8");
       XmlRpcClient xmlrpc = new XmlRpcClient("http://localhost:8668/RPC2");
       Vector params = new Vector();
-      params.add("");
-      params.add("");
-      params.add("stephan");
-      params.add("stephan");
-      params.add("boing");
-      params.add(new Boolean(true));
-      String result = (String) xmlrpc.execute("blogger.newPost", params);
+      for(int n = 1; n < args.length; n++) {
+        params.add(new String(args[n].getBytes("UTF-8"), "iso-8859-1"));
+      }
+      String result = (String) xmlrpc.execute(args[0], params);
       Logger.debug("result=" + result);
     } catch (IOException e) {
       Logger.warn("IOException ", e);

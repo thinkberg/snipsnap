@@ -35,6 +35,7 @@ import org.snipsnap.notification.Message;
 import org.snipsnap.notification.MessageService;
 import org.snipsnap.notification.Consumer;
 import org.snipsnap.container.Components;
+import org.apache.xmlrpc.XmlRpc;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -105,6 +106,7 @@ public class WeblogsPing extends Thread implements Consumer {
         String type = line.substring(0, index);
         try {
           PingHandler handler = (PingHandler) Class.forName(type).newInstance();
+          XmlRpc.setEncoding("UTF-8");
           handler.setPingUrl(line.substring(index + 1));
           handlers.add(handler);
         } catch (Exception e) {

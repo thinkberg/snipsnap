@@ -55,8 +55,8 @@ public class DefaultVersionManager implements VersionManager {
   };
 
   public List diff(Snip snip, int version1, int version2) {
-    System.err.println("old="+version1);
-    System.err.println("new="+version2);
+//    System.err.println("old="+version1);
+//    System.err.println("new="+version2);
     return service.diff(loadVersion(snip, version1).getContent(), loadVersion(snip, version2).getContent());
   }
 

@@ -26,6 +26,7 @@
 package org.snipsnap.xmlrpc.ping;
 
 import org.apache.xmlrpc.XmlRpcClient;
+import org.apache.xmlrpc.XmlRpc;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
@@ -55,6 +56,7 @@ public class ExtendedPingHandler implements PingHandler {
     Vector params = new Vector();
     try {
       // Ping blog.gs
+      XmlRpc.setEncoding(config.getEncoding());
       XmlRpcClient blo_gs = new XmlRpcClient(url);
       params.clear();
       // Name of the weblog

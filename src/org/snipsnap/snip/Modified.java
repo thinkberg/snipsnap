@@ -134,19 +134,24 @@ public class Modified {
       return "";
     }
     java.util.Date now = new java.util.Date();
-    long secs = (now.getTime() - time.getTime()) / 1000;
+    return getNiceTime(now.getTime(), time.getTime());
+
+  }
+
+  public static String getNiceTime(long now, long time) {
+    long secs = (now - time) / 1000; // amount of seconds
+
     //int sec = (int) secs % 60;
-    long mins = secs / 60;
-    int min = (int) mins % 60;
-    long hours = mins / 60;
-    int hour = (int) hours % 24;
-    int days = (int) hours / 24;
-    int day = (int) hours % 24;
-    int years = days / 365;
-    int year = days % 365;
+    long mins = secs / 60;        // amount of minutes
+    int min = (int) mins % 60;    // current minute within hour
+    long hours = mins / 60;       // amount of hours
+    int hour = (int) hours % 24;  // hour within day
+    int days = (int) hours / 24;  // amount of days
+    int day = days % 365;         // current day within the year
+    int years = days / 365;       // amount of years
 
     StringBuffer nice = new StringBuffer();
-    if (mins < 60) {
+    if (secs < 60) {
       nice.append(ResourceManager.getString("i18n.messages", "modified.time.just"));
     } else {
       if (hours == 0) {
@@ -160,11 +165,11 @@ public class Modified {
       } else if(years == 0) {
         MessageFormat mf = new MessageFormat(ResourceManager.getString("i18n.messages", "modified.time.days"),
                                              ResourceManager.getLocale("i18n.messages"));
-        mf.format(new Object[]{new Long(day)}, nice, null);
+        mf.format(new Object[]{new Long(days)}, nice, null);
       } else {
         MessageFormat mf = new MessageFormat(ResourceManager.getString("i18n.messages", "modified.time.years"),
                                              ResourceManager.getLocale("i18n.messages"));
-        mf.format(new Object[]{new Long(year), new Long(day)}, nice, null);
+        mf.format(new Object[]{new Long(years), new Long(day)}, nice, null);
       }
     }
     return nice.toString();
