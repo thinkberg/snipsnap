@@ -270,7 +270,9 @@ public class Maintenance implements SetupHandler {
           break;
         }
       }
-      Logger.debug("Found spam-referrer links at '"+snipName+"'");
+      if(foundspam) {
+        Logger.debug("Found spam-referrer links at '"+snipName+"'");
+      }
     }
 
     private void fixParent(Snip snip) {
