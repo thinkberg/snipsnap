@@ -25,31 +25,32 @@
 
 package org.snipsnap.render;
 
-import org.radeox.ImageRenderEngine;
-import org.radeox.IncludeRenderEngine;
-import org.radeox.RenderEngine;
+import org.radeox.engine.ImageRenderEngine;
+import org.radeox.engine.IncludeRenderEngine;
+import org.radeox.engine.BaseRenderEngine;
+import org.radeox.EngineManager;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
 
 
 /**
- * RenderEngine implementation for SnipSnap which understoods e.g.
+ * EngineManager implementation for SnipSnap which understoods e.g.
  * howto include other snips.
  *
  * @author Stephan J. Schmidt
  * @version $Id$
  */
 
-public class SnipRenderEngine extends RenderEngine implements IncludeRenderEngine, ImageRenderEngine {
+public class SnipRenderEngine extends BaseRenderEngine implements IncludeRenderEngine, ImageRenderEngine {
 
   public String getName() {
     return "snipsnap";
   }
 
-  // Register this RenderEngine with the RenderEngine manager
+  // Register this EngineManager with the EngineManager manager
   static {
-    org.radeox.RenderEngine.registerEngine(new SnipRenderEngine());
+    org.radeox.EngineManager.registerEngine(new SnipRenderEngine());
   }
 
   public String include(String name) {

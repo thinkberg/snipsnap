@@ -25,7 +25,7 @@
 package org.snipsnap.snip;
 
 import org.radeox.filter.context.FilterContext;
-import org.radeox.RenderEngine;
+import org.radeox.EngineManager;
 import org.snipsnap.render.filter.context.SnipFilterContext;
 
 /**
@@ -37,6 +37,6 @@ import org.snipsnap.render.filter.context.SnipFilterContext;
 public class SnipFormatter {
   public static String toXML(Snip snip, String content) {
     FilterContext context = new SnipFilterContext(snip);
-    return RenderEngine.getInstance("snipsnap").render(content, context);
+    return EngineManager.getInstance("snipsnap").render(content, context);
   }
 }

@@ -25,7 +25,7 @@
 package org.snipsnap.snip;
 
 import org.snipsnap.app.Application;
-import org.radeox.RenderEngine;
+import org.radeox.EngineManager;
 import org.radeox.util.logging.Logger;
 import org.radeox.filter.context.FilterContext;
 import org.snipsnap.snip.label.Labels;
@@ -365,7 +365,7 @@ public class SnipImpl implements Snip {
     long start = Application.get().start();
 
     FilterContext context = new SnipFilterContext((Snip) Aspects.getThis());
-    String xml = RenderEngine.getInstance().render(content, context);
+    String xml = EngineManager.getInstance("snipsnap").render(content, context);
 
     //String xml = SnipFormatter.toXML(this, getContent());
     Application.get().stop(start, "Formatting " + name);
