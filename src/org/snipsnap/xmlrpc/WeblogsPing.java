@@ -78,7 +78,6 @@ public class WeblogsPing extends Thread implements Consumer {
   }
 
   public void run() {
-    Logger.debug("Config="+config);
     if (config.allow(Configuration.APP_PERM_WEBLOGSPING)) {
       if (handlers.size() > 0) {
         Iterator iterator = handlers.iterator();
