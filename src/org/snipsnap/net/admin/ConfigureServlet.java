@@ -30,20 +30,20 @@ import org.snipsnap.snip.SnipLink;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
+import java.text.DateFormat;
 
 /**
  * @author Matthias L. Jugel
@@ -65,7 +65,7 @@ public class ConfigureServlet extends HttpServlet {
   });
 
   private final static List EXPERT_STEPS = Arrays.asList(new String[]{
-    "permissions", "mail", "moblog", "proxy", /*"expert"*/
+    "permissions", "mail", "moblog", "proxy", "database", "expert"
   });
 
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -106,6 +106,7 @@ public class ConfigureServlet extends HttpServlet {
         int offset = TimeZone.getDefault().getRawOffset() / (60 * 60 *  1000);
         String id = "GMT" + (offset >= 0 ? "+" : "") + offset;
         config.set(Configuration.APP_TIMEZONE, TimeZone.getTimeZone(id).getID());
+        config.set(Configuration.APP_WEBLOGDATEFORMAT, "");
         session.setAttribute("DEFAULTS", "true");
       }
       String step = request.getParameter("step");
