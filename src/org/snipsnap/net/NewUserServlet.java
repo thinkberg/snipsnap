@@ -49,7 +49,7 @@ import java.util.StringTokenizer;
 public class NewUserServlet extends HttpServlet {
   private final static String ERR_EXISTS = "User exists, please user another login name!";
   private final static String ERR_TOO_SHORT = "User name too short (min. 3 characters)!";
-  private final static String ERR_ILLEGAL = "Illegal user name! Should only contain letters, numbers and a dot.";
+  private final static String ERR_ILLEGAL = "Illegal user name! Should only contain letters, numbers, underscore and a dot.";
   private final static String ERR_PASSWORD = "Password does not match!";
   private final static String ERR_PASSWORD_TOO_SHORT = "Password must be at least 3 characters long!";
 
@@ -89,8 +89,8 @@ public class NewUserServlet extends HttpServlet {
         return;
       }
 
-      // TODO 1.4 if(!login.matches("[A-Za-z0-9.][]+")) {
-      StringTokenizer tok = new StringTokenizer(login, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789. ");
+      // TODO 1.4 if(!login.matches("[A-Za-z0-9._ ]+")) {
+      StringTokenizer tok = new StringTokenizer(login, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._ ");
       if(login.startsWith(" ") || tok.hasMoreTokens()) {
         errors.put("login", ERR_ILLEGAL+": "+(tok.hasMoreTokens() ? tok.nextToken() : ""));
         sendError(session, errors, request, response);
