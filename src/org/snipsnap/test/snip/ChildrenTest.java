@@ -44,11 +44,11 @@ public class ChildrenTest extends TestCase {
   }
 
   public void testChildren() {
-    Application app = new Application();
+    Application app = Application.get();
     User user = new User("user 1", "password 1","user@user.de");
     app.setUser(user);
-    Snip snip1 = SnipSpace.getInstance().create("A", "A Content", app);
-    Snip snip2 = SnipSpace.getInstance().create("B", "B Content", app);
+    Snip snip1 = SnipSpace.getInstance().create("A", "A Content");
+    Snip snip2 = SnipSpace.getInstance().create("B", "B Content");
     snip1.addSnip(snip2);
     assertTrue("Children not null", snip1.getChildren() != null);
     assertEquals("Correct Parent", snip1, snip2.getParent());

@@ -57,14 +57,14 @@ public class SnipStoreServlet extends HttpServlet {
       HttpSession session = request.getSession();
       Application app = null;
       if (session != null) {
-        app = (Application) session.getAttribute("app");
+        app = Application.getInstance(session);
         User user = app.getUser();
         if (UserManager.getInstance().isAuthenticated(user)) {
           if (snip != null) {
             snip.setContent(content);
-            space.store(snip, app);
+            space.store(snip);
           } else {
-            snip = space.create(name, content, app);
+            snip = space.create(name, content);
           }
         } else {
           response.sendError(HttpServletResponse.SC_FORBIDDEN);

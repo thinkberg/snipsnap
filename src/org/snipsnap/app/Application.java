@@ -44,8 +44,14 @@ public class Application {
     }
   };
 
-   public static Application get() {
-    return (Application) instance.get();
+  public static Application get() {
+    Application app = (Application) instance.get();
+    // Workaround, because initValue doesn't work
+    if (null == app) {
+      app = new Application();
+      instance.set(app);
+    }
+    return app;
   }
 
   public static void set(Application application) {
@@ -56,11 +62,7 @@ public class Application {
     if (session != null) {
       Application application = (Application) session.getAttribute("app");
       if (null == application) {
-        application = (Application) instance.get();
-        // Workaround, because initValue doesn't work
-        if (null == application) {
-          application = new Application();
-        }
+        application = Application.get();
       }
       instance.set(application);
       return application;
@@ -69,8 +71,8 @@ public class Application {
   }
 
   public User getUser() {
-     return user;
-   }
+    return user;
+  }
 
   public void setUser(User user) {
     this.user = user;

@@ -47,17 +47,17 @@ public class SnipSpaceTest extends TestCase {
   }
 
   public void testLoadSnip() {
-    Application app = new Application();
-    Snip snip1 = SnipSpace.getInstance().create("A","A Content", app);
+    Application app = Application.get();
+    Snip snip1 = SnipSpace.getInstance().create("A","A Content");
     Snip snip2 = SnipSpace.getInstance().load("A");
     assertEquals(snip2.getName(), "A");
     SnipSpace.getInstance().remove(snip1);
   }
 
   public void testParent() {
-    Application app = new Application();
-    Snip snip1 = SnipSpace.getInstance().create("A","A Content", app);
-    Snip snip2 = SnipSpace.getInstance().create("B","B Content", app);
+    Application app = Application.get();
+    Snip snip1 = SnipSpace.getInstance().create("A","A Content");
+    Snip snip2 = SnipSpace.getInstance().create("B","B Content");
     snip2.setParent(snip1);
     assertEquals(snip1, snip2.getParent());
     SnipSpace.getInstance().remove(snip1);
@@ -65,15 +65,15 @@ public class SnipSpaceTest extends TestCase {
   }
 
   public void testExists() {
-    Application app = new Application();
-    Snip snip1 = SnipSpace.getInstance().create("A","A Content", app);
+    Application app = Application.get();
+    Snip snip1 = SnipSpace.getInstance().create("A","A Content");
     assertTrue("Snip exists", SnipSpace.getInstance().exists("A"));
     SnipSpace.getInstance().remove(snip1);
   }
 
   public void testCreateAndDeleteSnip() {
-    Application app = new Application();
-    Snip snip1 = SnipSpace.getInstance().create("A","A Content", app);
+    Application app = Application.get();
+    Snip snip1 = SnipSpace.getInstance().create("A","A Content");
     assertEquals(snip1.getName(), "A");
     assertEquals(snip1.getContent(), "A Content");
     SnipSpace.getInstance().remove(snip1);

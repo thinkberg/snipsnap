@@ -85,13 +85,12 @@ public class Comments {
    * Post a new comment to snip
    *
    * @param content Content of the comment
-   * @param app Application object for security reasons.
    * @return The generated comment (snip)
    */
-  public Snip postComment(String content, Application app) {
+  public Snip postComment(String content) {
     init();
     String name = "comment-" + snip.getName() + "-" + (getCount() + 1);
-    Snip comment = space.create(name, content, app);
+    Snip comment = space.create(name, content);
     System.err.println(comment);
     comment.setCommentedSnip(this.snip);
     comment.addPermission(Permissions.EDIT, Roles.OWNER);

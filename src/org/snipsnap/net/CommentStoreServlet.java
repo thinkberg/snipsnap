@@ -57,10 +57,10 @@ public class CommentStoreServlet extends HttpServlet {
       HttpSession session = request.getSession();
       Application app = null;
       if (session != null) {
-        app = (Application) session.getAttribute("app");
+        app = Application.getInstance(session);
         User user = app.getUser();
         if (snip != null && UserManager.getInstance().isAuthenticated(user)) {
-          snip.getComments().postComment(content, app);
+          snip.getComments().postComment(content);
         } else {
           response.sendError(HttpServletResponse.SC_FORBIDDEN);
         }

@@ -10,10 +10,11 @@ public class PostLog {
   public static void main(String[] args) {
     SnipSpace space = SnipSpace.getInstance();
 
-    Application app = new Application();
+    Application app = Application.get();
+
     User user = UserManager.getInstance().load("funzel");
     app.setUser(user);
 
-    Snip snip = space.post("hallo", app);
+    Snip snip = space.post("hallo");
   }
 }

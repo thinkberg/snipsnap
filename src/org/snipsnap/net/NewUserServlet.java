@@ -111,10 +111,10 @@ public class NewUserServlet extends HttpServlet {
       }
 
       // create user ...
-      Application app = (Application) session.getAttribute("app");
+      Application app = Application.getInstance(session);
       user = um.create(login, password, email);
       app.setUser(user);
-      HomePage.create(login, app);
+      HomePage.create(login);
 
       // store user name and app in cookie and session
       Cookie cookie = new Cookie("userName", user.getLogin());

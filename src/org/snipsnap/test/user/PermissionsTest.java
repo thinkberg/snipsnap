@@ -83,22 +83,21 @@ public class PermissionsTest extends TestCase {
   }
 
   public void testOwner() {
+    Application app = Application.get();
+
     User user1 = new User("user1 1", "password 1","user1@user1.de");
     User user2 = new User("user1 2","password 2","user1@user1.de");
 
-    Application app = new Application();
-    app.setUser(user1);
-
     // create with user1 1
-    Snip snip1 = SnipSpace.getInstance().create("A","A Content", app);
+    Snip snip1 = SnipSpace.getInstance().create("A","A Content");
 
     // modify with user1 2
     app.setUser(user2);
     snip1.setContent("B content");
-    SnipSpace.getInstance().store(snip1, app);
+    SnipSpace.getInstance().store(snip1);
 
     Roles roles = new Roles();
-    roles.add(Security.OWNER);
+    roles.add(Roles.OWNER);
     // user1 2 is not owner of snip
     assertTrue(! Security.hasRoles(user2, snip1, roles));
     // user1 1 is owner of snip

@@ -65,10 +65,7 @@ public class LoginServlet extends HttpServlet {
       }
 
       session.removeAttribute("referrer");
-      Application app = (Application) session.getAttribute("app");
-      if(app == null) {
-        app = new Application();
-      }
+      Application app = Application.getInstance(session);
       app.setUser(user);
       Cookie cookie = new Cookie("userName", user.getLogin());
       cookie.setMaxAge(Integer.MAX_VALUE-2);

@@ -54,10 +54,10 @@ public class PostStoreServlet extends HttpServlet {
       HttpSession session = request.getSession();
       Application app = null;
       if (session != null) {
-        app = (Application) session.getAttribute("app");
+        app = Application.getInstance(session);
         User user = app.getUser();
         if (UserManager.getInstance().isAuthenticated(user)) {
-          SnipSpace.getInstance().post(content, app);
+          SnipSpace.getInstance().post(content);
         } else {
           response.sendError(HttpServletResponse.SC_FORBIDDEN);
         }

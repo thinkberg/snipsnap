@@ -136,27 +136,27 @@ public class CreateDB {
     admin.getRoles().add(Roles.EDITOR);
     UserManager.getInstance().store(admin);
 
-    Application app = new Application();
+    Application app = Application.get();
     app.setUser(admin);
 
     System.out.println("Creating admin homepage");
-    HomePage.create(username, app);
+    HomePage.create(username);
 
     SnipSpace space = SnipSpace.getInstance();
     Snip snip = null;
     System.out.print("Creating about...");
-    snip = space.create("about", "[SnipSnap] is a [Weblog] and [Wiki] tool by [funzel] und [arte]", app);
+    snip = space.create("about", "[SnipSnap] is a [Weblog] and [Wiki] tool by [funzel] und [arte]");
     if (snip != null) {
       System.out.println("ok.");
     } else {
       System.out.println("failed.");
     }
 
-    snip = space.create("start", "{weblog}", app);
+    snip = space.create("start", "{weblog}");
     snip.addPermission(Permissions.EDIT, Roles.EDITOR);
     space.store(snip);
 
-    snip = space.create("snipsnap-index", "{index}", app);
+    snip = space.create("snipsnap-index", "{index}");
     snip.addPermission(Permissions.EDIT, Roles.EDITOR);
     space.store(snip);
 
@@ -166,11 +166,11 @@ public class CreateDB {
       "{link:henso|http://www.henso.com}\\\\ \n" +
       "{link:Lambda|http://lambda.weblogs.com}\\\\ \n" +
       "{link:e7l3|http://www.e7l3.com}\\\\ \n";
-    snip = space.create("snipsnap-blogrolling", rolling, app);
+    snip = space.create("snipsnap-blogrolling", rolling);
     snip.addPermission(Permissions.EDIT, Roles.EDITOR);
     space.store(snip);
 
-    space.post("Welcome to [SnipSnap]. You can now login and add/edit your first post", app);
+    space.post("Welcome to [SnipSnap]. You can now login and add/edit your first post");
     System.out.println("CreateDB: Complete");
   }
 }

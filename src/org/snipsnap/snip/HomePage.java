@@ -39,9 +39,8 @@ public class HomePage {
    * one or appends the snip-by-user to existing one.
    *
    * @param login User for the homepage
-   * @param app Application
    */
-  public static void create(String login, Application app) {
+  public static void create(String login) {
     Snip snip = null;
     String hp = "\n{snips-by-user:"+login+"}";
     SnipSpace space = SnipSpace.getInstance();
@@ -51,7 +50,7 @@ public class HomePage {
         hp );
       space.store(snip);
     } else {
-      snip = space.create(login, hp, app);
+      snip = space.create(login, hp);
     }
 //    snip.addPermission(Permissions.EDIT, Security.OWNER);
 //    space.store(snip);

@@ -30,7 +30,6 @@ import com.neotis.jdbc.Finder;
 import com.neotis.jdbc.Loader;
 import com.neotis.snip.filter.LinkTester;
 import com.neotis.user.Permissions;
-import com.neotis.user.Security;
 import com.neotis.user.Roles;
 import com.neotis.util.ConnectionManager;
 import com.neotis.util.Queue;
@@ -38,9 +37,9 @@ import org.apache.lucene.search.Hits;
 
 import java.sql.*;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Iterator;
 
 /**
  * SnipSpace handles all the data storage.
@@ -106,9 +105,9 @@ public class SnipSpace implements LinkTester, Loader {
     return storageByParentNameOrder(snip, count);
   }
 
-  public Snip post(String content, Application app) {
+  public Snip post(String content) {
     Date date = new Date(new java.util.Date().getTime());
-    return post(content, date, app);
+    return post(content, date);
   }
 
   public void reIndex() {
@@ -117,7 +116,7 @@ public class SnipSpace implements LinkTester, Loader {
     System.out.println("Reindexing");
     while (iterator.hasNext()) {
       Snip snip = (Snip) iterator.next();
-      System.out.print("  " + snip.getName() + " ... " );
+      System.out.print("  " + snip.getName() + " ... ");
       indexer.reIndex(snip);
       System.out.println("ok.");
     }
@@ -127,12 +126,12 @@ public class SnipSpace implements LinkTester, Loader {
     return indexer.search(queryString);
   }
 
-  public Snip post(String content, Date date, Application app) {
+  public Snip post(String content, Date date) {
     Snip start = load("start");
-    return post(start, content, date, app);
+    return post(start, content, date);
   }
 
-  public Snip post(Snip weblog, String content, Date date, Application app) {
+  public Snip post(Snip weblog, String content, Date date) {
     String name = Snip.toName(date);
     Snip snip = null;
     if (exists(name)) {
@@ -140,7 +139,7 @@ public class SnipSpace implements LinkTester, Loader {
       snip.setContent(snip.getContent() + "\n\n" + content);
 
     } else {
-      snip = create(name, content, app);
+      snip = create(name, content);
     }
     snip.setParent(weblog);
     snip.addPermission(Permissions.EDIT, Roles.OWNER);
@@ -168,13 +167,9 @@ public class SnipSpace implements LinkTester, Loader {
     return cache.load(name);
   }
 
-  public void store(Snip snip, Application app) {
-    snip.setMUser(app.getUser());
-    store(snip);
-    return;
-  }
-
   public void store(Snip snip) {
+    Application app = Application.get();
+    snip.setMUser(app.getUser());
     changed.add(snip);
     snip.setMTime(new Timestamp(new java.util.Date().getTime()));
     storageStore(snip);
@@ -182,8 +177,8 @@ public class SnipSpace implements LinkTester, Loader {
     return;
   }
 
-  public Snip create(String name, String content, Application app) {
-    Snip snip = storageCreate(name, content, app);
+  public Snip create(String name, String content) {
+    Snip snip = storageCreate(name, content);
     cache.put(name, snip);
     if (missing.containsKey(name)) {
       missing.remove(name);
@@ -347,11 +342,12 @@ public class SnipSpace implements LinkTester, Loader {
     return;
   }
 
-  private Snip storageCreate(String name, String content, Application app) {
+  private Snip storageCreate(String name, String content) {
     PreparedStatement statement = null;
     ResultSet result = null;
     Connection connection = ConnectionManager.getConnection();
 
+    Application app = Application.get();
     String login = app.getUser().getLogin();
     Snip snip = new Snip(name, content);
     Timestamp cTime = new Timestamp(new java.util.Date().getTime());
