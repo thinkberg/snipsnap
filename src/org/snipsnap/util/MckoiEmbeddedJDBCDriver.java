@@ -40,9 +40,6 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.Iterator;
 
-import org.radeox.util.logging.Logger;
-import org.snipsnap.util.log.SQLLogger;
-
 /**
  * Adaption of the Mckoi JDBC Driver for embedded-only database drivers.
  * Created with help from toby@mckoi.com
@@ -59,7 +56,8 @@ public class MckoiEmbeddedJDBCDriver implements Driver {
         try {
           deregister();
         } catch (SQLException e) {
-          SQLLogger.warn("MckoiEmbeddedJDBCDriver: unable to deregister driver", e);
+          System.err.println("MckoiEmbeddedJDBCDriver: unable to deregister driver: " + e);
+          e.printStackTrace();
         }
       }
     });
@@ -71,16 +69,16 @@ public class MckoiEmbeddedJDBCDriver implements Driver {
       try {
         java.sql.DriverManager.registerDriver(driver = new MckoiEmbeddedJDBCDriver());
       } catch (SQLException e) {
-        SQLLogger.warn("MckoiEmbeddedJDBCDriver: unable to register driver", e);
+        System.err.println("MckoiEmbeddedJDBCDriver: unable to register driver: " + e);
       }
     }
   }
 
   public static void deregister() throws SQLException {
-    Logger.debug("Deregistering JDBC Driver");
+    System.err.println("Deregistering JDBC Driver");
     Iterator it = databases.values().iterator();
-    while(it.hasNext()) {
-      ((DBSystem)it.next()).close();
+    while (it.hasNext()) {
+      ((DBSystem) it.next()).close();
     }
     databases.clear();
 
@@ -148,7 +146,7 @@ public class MckoiEmbeddedJDBCDriver implements Driver {
           // Put the key/value pair in the 'info' object.
           info.put(key, value);
         } else {
-          Logger.warn("Ignoring url variable: '" + token + "'");
+          System.err.println("Ignoring url variable: '" + token + "'");
         }
       } // while (tok.hasMoreTokens())
     }
@@ -156,13 +154,13 @@ public class MckoiEmbeddedJDBCDriver implements Driver {
   }
 
   public Connection connect(String url, Properties info)
-    throws SQLException {
+          throws SQLException {
     if (acceptsURL(url)) {
       try {
         DBSystem dbsystem = MckoiEmbeddedJDBCDriver.getDatabase(url, info);
         return dbsystem.getConnection(info.getProperty("user", ""), info.getProperty("password", ""));
       } catch (IOException e) {
-        Logger.warn("MckoiEmbeddedJDBCDriver: unable to connect", e);
+        System.err.println("MckoiEmbeddedJDBCDriver: unable to get connection: " + e);
         throw new SQLException("MckoiEmbeddedJDBCDriver: unable to get connection: " + e);
       }
     }
@@ -177,7 +175,7 @@ public class MckoiEmbeddedJDBCDriver implements Driver {
    * Ignore for now, just like MDriver from Mckoi
    */
   public DriverPropertyInfo[] getPropertyInfo(String url, Properties info)
-    throws SQLException {
+          throws SQLException {
     return new DriverPropertyInfo[0];
   }
 
