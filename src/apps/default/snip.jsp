@@ -12,7 +12,7 @@
 </s:snip>
 
 <table width="100%" border="0" cellspacing="2" cellpadding="1">
- <c:if test="${snip.name} != 'start'" >
+ <c:if test="${snip.name} != 'start'">
    <tr><td><span class="snip-name"><c:out value="${snip.name}"/></span></td></tr>
    <s:check roles="Authenticated" permission="Edit" snip="${snip}">
      <tr><td>[<a href="/exec/edit?name=<c:out value='${snip.name}'/>">edit</a>]</td></tr>
@@ -20,8 +20,8 @@
    <s:check roles="Authenticated" permission="Edit" snip="${snip}" invert="true">
      <tr><td><span class="inactive">[edit]</span></td></tr>
    </s:check>
-   <tr width="100%"><td><span class="snip-modified"><c:out value="${snip.modified}"/></span></td></tr>
  </c:if>
+   <tr width="100%"><td><span class="snip-modified"><c:out value="${snip.modified}" escapeXml="false"/></span></td></tr>
  <tr>
   <td width="100%">
    <c:out value="${snip.XMLContent}" escapeXml="false" />

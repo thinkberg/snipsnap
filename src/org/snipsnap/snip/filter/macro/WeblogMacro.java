@@ -31,8 +31,7 @@
  */
 package com.neotis.snip.filter.macro;
 
-import com.neotis.snip.Snip;
-import com.neotis.snip.SnipSpace;
+import com.neotis.snip.*;
 
 import java.util.Iterator;
 import java.util.List;
@@ -58,7 +57,7 @@ public class WeblogMacro extends Macro {
         buffer.append("</span><p>");
         buffer.append(entry.getContent());
         buffer.append("</p>");
-        Snip.appendLink(buffer, entry.getName(), "Link me");
+        SnipLink.appendLink(buffer, entry.getName(), "Link me");
         buffer.append(" | ");
         buffer.append(snip.getComments().getCommentString());
         buffer.append("</p><pre>\n\n</pre>");

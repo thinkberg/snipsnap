@@ -25,14 +25,13 @@
 package com.neotis.snip;
 
 import com.neotis.snip.filter.SnipFormatter;
-import com.neotis.user.User;
 import com.neotis.user.Permissions;
-import com.neotis.util.StringUtil;
+import com.neotis.user.User;
 
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -48,8 +47,19 @@ public class Snip implements Ownable {
   private Comments comments;
   private Permissions permissions;
   private String name, content;
-  private Timestamp cTime, mTime;
-  private String cUser, mUser;
+  private Modified modified;
+
+  private void init() {
+    if (null == children) {
+      children = SnipSpace.getInstance().getChildren(this);
+    }
+  }
+
+  public Snip(String name, String content) {
+    this.name = name;
+    this.content = content;
+    this.modified = new Modified();
+  }
 
   public static String toName(Date date) {
     SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
@@ -66,62 +76,8 @@ public class Snip implements Ownable {
     }
   }
 
-  public static String createLink(String name, String view) {
-    StringBuffer buffer = new StringBuffer();
-    return appendLink(buffer, name, view).toString();
-  }
-
-  public static StringBuffer appendLink(StringBuffer buffer, String name) {
-    return appendLink(buffer, name, name);
-  }
-
-  public static StringBuffer appendLink(StringBuffer buffer, String name, String view) {
-    buffer.append(" <a href=\"/space/");
-    buffer.append(name);
-    buffer.append("\">");
-    buffer.append(view);
-    buffer.append("</a> ");
-    return buffer;
-  }
-
-  public String getNiceTime(Timestamp time) {
-    if (time == null) return "";
-    java.util.Date now = new java.util.Date();
-    int secs = (int) (now.getTime() - time.getTime()) / 1000;
-    //int sec = secs % 60;
-    int mins = secs / 60;
-    int min = mins % 60;
-    int hours = mins / 60;
-    int hour = hours % 24;
-    int days = hours / 24;
-    //int years = days / 365;
-
-    StringBuffer nice = new StringBuffer();
-    if (mins == 0) {
-      nice.append("Just a blink of an eye ago.");
-    } else if (hours == 0) {
-      StringUtil.plural(nice, min, "minute");
-      nice.append(" ago.");
-    } else if (days == 0) {
-      StringUtil.plural(nice, hour, "hour");
-      nice.append(", ");
-      StringUtil.plural(nice, min, "minute");
-      nice.append(" ago.");
-    } else {
-      StringUtil.plural(nice, days, "day");
-      nice.append(" ago.");
-    }
-    return nice.toString();
-  }
-
-  public String getModified() {
-    StringBuffer buffer = new StringBuffer();
-    buffer.append("Created by");
-    Snip.appendLink(buffer, cUser);
-    buffer.append("Last Edited by");
-    Snip.appendLink(buffer, mUser);
-    buffer.append(getNiceTime(mTime));
-    return buffer.toString();
+  public Modified getModified() {
+    return modified;
   }
 
   public String getOwner() {
@@ -145,43 +101,43 @@ public class Snip implements Ownable {
   }
 
   public Timestamp getCTime() {
-    return cTime;
+    return modified.getcTime();
   }
 
   public void setCTime(Timestamp cTime) {
-    this.cTime = cTime;
+    this.modified.setcTime(cTime);
   }
 
   public Timestamp getMTime() {
-    return mTime;
+    return modified.getmTime();
   }
 
   public void setMTime(Timestamp mTime) {
-    this.mTime = mTime;
+    this.modified.setmTime(mTime);
   }
 
   public String getCUser() {
-    return cUser;
+    return modified.getcUser();
   }
 
   public void setCUser(User cUser) {
-    this.cUser = cUser.getLogin();
+    this.modified.setcUser(cUser.getLogin());
   }
 
   public void setCUser(String cUser) {
-    this.cUser = cUser;
+    this.modified.setcUser(cUser);
   }
 
   public String getMUser() {
-    return mUser;
+    return modified.getmUser();
   }
 
   public void setMUser(User mUser) {
-    this.mUser = mUser.getLogin();
+    this.modified.setmUser(mUser.getLogin());
   }
 
   public void setMUser(String mUser) {
-    this.mUser = mUser;
+    this.modified.setmUser(mUser);
   }
 
   public List getChildren() {
@@ -233,17 +189,6 @@ public class Snip implements Ownable {
       children.remove(snip);
       // snip.setParent(null);
     }
-  }
-
-  private void init() {
-    if (null == children) {
-      children = SnipSpace.getInstance().getChildren(this);
-    }
-  }
-
-  public Snip(String name, String content) {
-    this.name = name;
-    this.content = content;
   }
 
   public String getName() {

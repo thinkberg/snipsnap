@@ -24,8 +24,7 @@
  */
 package com.neotis.date;
 
-import com.neotis.snip.Snip;
-import com.neotis.snip.SnipSpace;
+import com.neotis.snip.*;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -60,7 +59,6 @@ public class Month {
 
   public Month() {
   }
-
 
   public String toKey(int year, int month, int day) {
     return year + "-" + (month < 10 ? "0" + month : ""+month) + "-" + (day < 10 ? "0" + day : ""+day);
@@ -138,7 +136,7 @@ public class Month {
       String day = "" + i;
 
       if (days.contains(toKey(year, month+1, i))) {
-        day =  Snip.createLink( toKey(year, month+1, i), day);
+        day =  SnipLink.createLink( toKey(year, month+1, i), day);
       }
 
       if (i == todayNumber && month == today.get(Calendar.MONTH) && year == today.get(Calendar.YEAR)) {
