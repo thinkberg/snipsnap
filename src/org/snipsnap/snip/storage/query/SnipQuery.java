@@ -35,10 +35,24 @@ import org.snipsnap.snip.Snip;
  */
 
 public abstract class SnipQuery implements Query {
+  /**
+   * Implementation of the Query interface fit method that
+   * takes an object and casts it to a snip
+   *
+   * @param object Snip to test
+   */
+
   public boolean fit(Object object) {
     if (!(object instanceof Snip)) return false;
     return fit((Snip) object);
   }
+  /**
+   * Determines if a snip matches a query. Should
+   * be implemented by sub-classes.
+   *
+   * @param snip Snip to test
+   * @return fits Returns true if snip matches the query, false otherwise
+   */
 
   public abstract boolean fit(Snip snip);
 }

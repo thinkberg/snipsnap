@@ -50,6 +50,7 @@ public class ACLInterceptor extends InterceptorSupport {
   }
 
   public Object invoke(Invocation invocation) throws Throwable {
+    // hack should a.) also check other methods b.) declare security for every method
     if (invocation.getMethod().getName().startsWith("set")) {
       Snip snip = (Snip) invocation.getTarget();
       User user = Application.get().getUser();

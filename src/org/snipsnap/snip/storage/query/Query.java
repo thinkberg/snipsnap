@@ -33,5 +33,11 @@ package org.snipsnap.snip.storage.query;
  */
 
 public interface Query {
+  /**
+   * Tests if an objects does match the query
+   *
+   * @param object Object to test if it fits the query
+   */
+
   public boolean fit(Object object);
 }

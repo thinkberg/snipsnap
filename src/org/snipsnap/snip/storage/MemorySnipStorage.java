@@ -1,4 +1,4 @@
-/*
+ /*
  * This file is part of "SnipSnap Wiki/Weblog".
  *
  * Copyright (c) 2002 Stephan J. Schmidt, Matthias L. Jugel
@@ -25,63 +25,61 @@
 
 package org.snipsnap.snip.storage;
 
-import org.snipsnap.cache.Cache;
 import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.storage.query.SnipComparator;
-import org.snipsnap.snip.storage.query.SnipQuery;
 
 import java.sql.Timestamp;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Wrapper with finders for in-memory searching. Can
  * be used with JDBC...Storage when all Snips are
  * kept in memory.
  *
+ //@TODO replace with dynamic proxy.
  * @author Stephan J. Schmidt
  * @version $Id$
  */
 
 public class MemorySnipStorage implements SnipStorage {
-  //@TODO replace with dynamic proxy.
+  public final String NOT_SUPPORTED_EXCEPTION_MSG = "Method not supported, do not call MemorySnipStorage directly";
 
   private SnipStorage storage;
-  private Cache cache;
-  private Class type = Snip.class;
-  private Comparator nameComparator, nameComparatorDesc, mTimeComparatorDesc;
 
-  public MemorySnipStorage(SnipStorage storage, Cache cache) {
+  // Use LinkedHashMap in 1.4
+  private Map cacheMap;
+
+  // @TODO Keep list sorted with comparator
+  private List allList;
+
+  public MemorySnipStorage(SnipStorage storage) {
     this.storage = storage;
-    this.cache = cache;
+    cacheMap = new HashMap();
 
-    this.nameComparator = new SnipComparator() {
-      public int compare(Snip s1, Snip s2) {
-        return s1.getName().compareTo(s2.getName());
-      }
-    };
+    if (storage instanceof CacheableStorage) {
+      ((CacheableStorage) storage).setCache(cacheMap);
+    }
+    allList = storage.storageAll();
 
-    this.nameComparatorDesc = new SnipComparator() {
-      public int compare(Snip s1, Snip s2) {
-        return s2.getName().compareTo(s1.getName());
+    if (! (storage instanceof CacheableStorage)) {
+      //@TODO optimize with array
+      Iterator iterator = allList.iterator();
+      while (iterator.hasNext()) {
+        Snip snip = (Snip) iterator.next();
+        cacheMap.put(snip.getName(), snip);
       }
-    };
-
-    this.mTimeComparatorDesc = new SnipComparator() {
-      public int compare(Snip s1, Snip s2) {
-        return s2.getMTime().compareTo(s1.getMTime());
-      }
-    };
+    }
   }
 
   // Basic manipulation methods Load,Store,Create,Remove
   public Snip storageLoad(String name) {
-    return storage.storageLoad(name);
+    return (Snip) cacheMap.get(name);
   }
 
   public Object loadObject(String name) {
-    return storage.loadObject(name);
+    return (Snip) cacheMap.get(name);
   }
 
   public void storageStore(Snip snip) {
@@ -89,99 +87,70 @@ public class MemorySnipStorage implements SnipStorage {
   }
 
   public Snip storageCreate(String name, String content) {
-    return storage.storageCreate(name, content);
+    Snip snip = storage.storageCreate(name, content);
+    allList.add(snip);
+    cacheMap.put(snip.getName(), snip);
+    return snip;
   }
 
   public void storageRemove(Snip snip) {
     storage.storageRemove(snip);
+    allList.remove(snip);
+    cacheMap.remove(snip.getName());
   }
 
-  // Finder methods
   public int storageCount() {
-    return cache.getCache(type).size();
+    return allList.size();
   }
 
   public List storageAll() {
-    return cache.getCache(type);
+    return allList;
   }
+
+  // Finder methods
+  // Those should not be called
+  // MemorySnipStorage should be wrapped with
+  // a Query Storage (e.g. QuerySnipStorage or
+  // a future XPathSnipStorage)
+  public class MethodNotSupportedException extends RuntimeException {
+    public MethodNotSupportedException(String s) {
+      super(s);
+    }
+  };
 
   public List storageByHotness(int size) {
-    return cache.querySorted(
-        new SnipComparator() {
-          public int compare(Snip s1, Snip s2) {
-            return s1.getAccess().getViewCount() < s2.getAccess().getViewCount() ? 1:-1;
-          }
-        }, size, type);
+    throw new MethodNotSupportedException(NOT_SUPPORTED_EXCEPTION_MSG);
   }
 
-  public List storageByUser(final String login) {
-    return cache.query(new SnipQuery() {
-      public boolean fit(Snip snip) {
-        return (login.equals(snip.getCUser()));
-      }
-    }, type);
+  public List storageByUser(String login) {
+    throw new MethodNotSupportedException(NOT_SUPPORTED_EXCEPTION_MSG);
   }
 
-  public List storageByDateSince(final Timestamp date) {
-    return cache.query(new SnipQuery() {
-      public boolean fit(Snip snip) {
-        return (date.before(snip.getMTime()));
-      }
-    }, type);
+  public List storageByDateSince(Timestamp date) {
+    throw new MethodNotSupportedException(NOT_SUPPORTED_EXCEPTION_MSG);
   }
 
   public List storageByRecent(int size) {
-    return cache.querySorted(new SnipComparator() {
-      public int compare(Snip s1, Snip s2) {
-        return s2.getMTime().compareTo(s1.getMTime());
-      }
-    }, size, type);
+    throw new MethodNotSupportedException(NOT_SUPPORTED_EXCEPTION_MSG);
   }
 
-  public List storageByComments(final Snip parent) {
-    return cache.querySorted(new SnipQuery() {
-      public boolean fit(Snip snip) {
-        return (parent == snip.getCommentedSnip());
-      }
-    }, nameComparator, type);
+  public List storageByComments(Snip parent) {
+    throw new MethodNotSupportedException(NOT_SUPPORTED_EXCEPTION_MSG);
   }
 
-  public List storageByParent(final Snip parent) {
-    return cache.query(new SnipQuery() {
-      public boolean fit(Snip snip) {
-        return (parent == snip.getParent());
-      }
-    }, type);
+  public List storageByParent(Snip parent) {
+    throw new MethodNotSupportedException(NOT_SUPPORTED_EXCEPTION_MSG);
   }
 
-  public List storageByParentNameOrder(final Snip parent, int count) {
-    return cache.querySorted(new SnipQuery() {
-      public boolean fit(Snip snip) {
-        return (parent == snip.getParent());
-      }
-    }, nameComparatorDesc, count, type);
+  public List storageByParentNameOrder(Snip parent, int count) {
+    throw new MethodNotSupportedException(NOT_SUPPORTED_EXCEPTION_MSG);
   }
 
   public List storageByParentModifiedOrder(Snip parent, int count) {
-    List result = storageByParent(parent);
-    Collections.sort(result, mTimeComparatorDesc);
-    return result.subList(0, Math.min(count, result.size()));
+    throw new MethodNotSupportedException(NOT_SUPPORTED_EXCEPTION_MSG);
   }
 
-  public List storageByDateInName(final String start, final String end) {
-    return cache.querySorted(new SnipQuery() {
-      public boolean fit(Snip snip) {
-        String name = snip.getName();
-        Snip parent = snip.getParent();
-        //Logger.debug(" name="+name);
-        //if (parent != null) {
-        // Logger.debug(" parent="+parent.getName());
-        //}
-        //Logger.debug(" start="+start);
-        //Logger.debug(" end="+end);
-        return (start.compareTo(name) <= 0 && end.compareTo(name) >= 0 &&
-            null != parent && "start".equals(parent.getName()));
-      }
-    }, nameComparator, type);
+  public List storageByDateInName(String start, String end) {
+    throw new MethodNotSupportedException(NOT_SUPPORTED_EXCEPTION_MSG);
   }
 }

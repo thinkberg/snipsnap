@@ -37,7 +37,7 @@ import org.snipsnap.app.Application;
  **/
 public class SnipFormatter {
   public static String toXML(Snip snip, String content) {
-    RenderContext context = new SnipRenderContext(snip);
+    RenderContext context = new SnipRenderContext(snip, SnipSpaceFactory.getInstance());
     context.setParameters(Application.get().getParameters());
     return EngineManager.getInstance("snipsnap").render(content, context);
   }

@@ -23,42 +23,43 @@
  * --LICENSE NOTICE--
  */
 
-package org.snipsnap.snip.storage.query;
+package org.snipsnap.render.filter;
 
+import org.apache.oro.text.regex.MatchResult;
+import org.radeox.filter.context.FilterContext;
+import org.radeox.filter.regex.RegexTokenFilter;
+import org.radeox.util.StringBufferWriter;
+import org.snipsnap.render.filter.context.SnipFilterContext;
 import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipLink;
 
-import java.util.Comparator;
+import java.io.Writer;
+import java.io.IOException;
 
-/**
- * Compares to snips for sorting
+/*
+ * Class that finds snippets that are surrounded
+ * by PGP wrapper. If the snip is signed with PGP
+ * this si shown with a link to the raw context
  *
- * @author Stephan J. Schmidt
+ * @author stephan
+ * @team sonicteam
  * @version $Id$
  */
 
-public abstract class SnipComparator implements Comparator {
-  /**
-   * Implementation of the Comparator interface compare method that
-   * takes to objects and casts them to snips
-   *
-   * @param o1 Snip to compare
-   * @param o2 Snip to compare
-   */
-  public int compare(Object o1, Object o2) {
-    if (!((o1 instanceof Snip) && (o2 instanceof Snip))) {
-      throw new ClassCastException();
-    }
-    return compare((Snip) o1, (Snip) o2);
+public class PgpFilter extends RegexTokenFilter {
 
+  public PgpFilter() {
+    super("XX", SINGLELINE);
   }
 
-  /**
-   * Compares two snips according to the rules of the Comparator
-   * interface. This method is used for determing the sorting order
-   * of snips.
-   *
-   * @param s1 Snip to compare
-   * @param s2 Snip to compare
-   */
-  public abstract int compare(Snip s1, Snip s2);
+  public void handleMatch(StringBuffer buffer, MatchResult result, FilterContext context) {
+    Snip snip = ((SnipFilterContext) context).getSnip();
+    Writer writer = new StringBufferWriter(buffer);
+    try {
+      SnipLink.appendImage(writer, "key-icon", "");
+      writer.write(result.group(0));
+    } catch (IOException e) {
+      // ignore
+    }
+  }
 }

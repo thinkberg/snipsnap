@@ -25,34 +25,25 @@
 
 package org.snipsnap.jdbc;
 
-import org.snipsnap.cache.Cache;
-
 /**
  * Convenience factory to generate Finders
  *
  * @author stephan
  * @version $Id$
  */
-public class FinderFactory {
-  private Cache cache;
-  private Class type;
-  private String statementRoot;
-  private String keyName;
-  private JDBCCreator creator;
 
-  public FinderFactory(String statement, Cache cache, Class type, String keyName, JDBCCreator creator) {
-    this.cache = cache;
-    this.type = type;
+public class FinderFactory {
+  private String statementRoot;
+
+  public FinderFactory(String statement) {
     this.statementRoot = statement + " ";
-    this.keyName = keyName;
-    this.creator = creator;
   }
 
   public Finder getFinder() {
-    return new Finder(statementRoot, cache, keyName, type, creator);
+    return new Finder(statementRoot);
   }
 
   public Finder getFinder(String statement) {
-    return new Finder(statementRoot + statement, cache, keyName, type, creator);
+    return new Finder(statementRoot + statement);
   }
 }

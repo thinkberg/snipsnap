@@ -36,7 +36,7 @@ import java.util.List;
  * @version $Id$
  */
 
-public interface UserStorage extends Storage {
+public interface UserStorage  {
   public void storageStore(User user);
 
   public User storageCreate(String login, String passwd, String email);

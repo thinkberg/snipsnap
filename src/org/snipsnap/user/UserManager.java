@@ -24,11 +24,10 @@
  */
 package org.snipsnap.user;
 
+import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
-import org.snipsnap.cache.Cache;
 import org.snipsnap.jdbc.FinderFactory;
 import org.snipsnap.snip.storage.JDBCUserStorage;
-import org.radeox.util.logging.Logger;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -41,7 +40,15 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * User manager handles all register, creation and authentication of users.
@@ -70,7 +77,6 @@ public class UserManager {
   private Map robots = new HashMap();
   private Map robotIds = new HashMap();
   private List delayed;
-  private Cache cache;
   private FinderFactory finders;
   private JDBCUserStorage storage;
   private Map authKeys;
@@ -79,9 +85,7 @@ public class UserManager {
     delayed = new LinkedList();
     authKeys = new HashMap();
 
-    cache = Cache.getInstance();
-    storage = new JDBCUserStorage(cache);
-    cache.setLoader(User.class, storage);
+    storage = new JDBCUserStorage();
 
     Timer timer = new Timer();
     timer.schedule(new TimerTask() {
@@ -315,8 +319,6 @@ public class UserManager {
   public User create(String login, String passwd, String email) {
     passwd = Digest.getDigest(passwd);
     User user = storage.storageCreate(login, passwd, email);
-    cache.put(User.class, login, user);
-    // Logger.debug("createUser login="+login+" hashcode="+((Object) user).hashCode());
     return user;
   }
 
@@ -341,16 +343,11 @@ public class UserManager {
   }
 
   public void remove(User user) {
-    cache.remove(User.class, user.getLogin());
     storage.storageRemove(user);
     return;
   }
 
   public User load(String login) {
-    return (User) cache.load(User.class, login);
+    return storage.storageLoad(login);
   }
-
-  // SnipStorage System dependend Methods
-
-
 }

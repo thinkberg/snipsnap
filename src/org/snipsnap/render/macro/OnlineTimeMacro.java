@@ -25,12 +25,11 @@
 
 package org.snipsnap.render.macro;
 
-import org.snipsnap.render.filter.interwiki.InterWiki;
+import org.radeox.macro.Macro;
+import org.radeox.macro.parameter.MacroParameter;
+import org.snipsnap.snip.Modified;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.snip.Modified;
-import org.radeox.macro.parameter.MacroParameter;
-import org.radeox.macro.Macro;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -44,12 +43,13 @@ import java.io.Writer;
  */
 
 public class OnlineTimeMacro extends Macro {
-    private String[] paramDescription =
-     {"none"};
+  private String[] paramDescription =
+      {"none"};
 
   public String[] getParamDescription() {
     return paramDescription;
   }
+
   public String getName() {
     return "online-time";
   }

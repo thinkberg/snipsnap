@@ -25,11 +25,14 @@
 
 package org.snipsnap.jdbc;
 
-import org.snipsnap.cache.Cache;
-import org.snipsnap.util.ConnectionManager;
 import org.radeox.util.logging.Logger;
+import org.snipsnap.util.ConnectionManager;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,89 +46,48 @@ public class Finder {
   private PreparedStatement statement;
   private String statementString;
   private Connection connection;
-  private JDBCCreator creator;
-  private Cache cache;
-  private String keyName;
-  private boolean caching = true;
-  private Class type;
+  private ResultSet result;
 
-  public Finder(String statement, Cache cache, boolean caching, String key, Class type, JDBCCreator creator) {
-    this(statement, cache, key, type, creator);
-    this.caching = caching;
-  }
-
-  public Finder(String statement, Cache cache, String key, Class type, JDBCCreator creator) {
+  public Finder(String statement) {
     try {
       this.connection = ConnectionManager.getConnection();
       this.statementString = statement;
       this.statement = this.connection.prepareStatement(statement);
-      this.keyName = key;
-      this.type = type;
-      this.creator = creator;
     } catch (SQLException e) {
       Logger.warn("Unable to prepare statement: " + statementString);
     }
-    this.cache = cache;
   }
 
-  public void setDate(int column, Timestamp date) {
+  public Finder setDate(int column, Timestamp date) {
     try {
       statement.setTimestamp(column, date);
     } catch (SQLException e) {
       Logger.warn("Unable to set Timestamp value: " + statementString);
     }
+    return this;
   }
 
-  public void setString(int column, String value) {
+  public Finder setString(int column, String value) {
     try {
       statement.setString(column, value);
     } catch (SQLException e) {
       Logger.warn("Unable to set String value: " + statementString);
     }
+    return this;
   }
 
-  public List execute() {
-    return find(statement);
-  }
-
-  public List execute(int count) {
-    return find(statement, count);
-  }
-
-  public List find(PreparedStatement statement) {
-    return find(statement, Integer.MAX_VALUE, new ArrayList());
-  }
-
-  public List find(PreparedStatement statement, int count) {
-    return find(statement, count, new ArrayList(count));
-  }
-
-  public List find(PreparedStatement statement, int count, List resultList) {
-    ResultSet result = null;
-
-    //Logger.debug("execute("+statementString+")");
+  public ResultSet execute() {
     try {
-      result = statement.executeQuery();
-      Object object = null;
-      while (result.next() && count-- > 0) {
-        String name = result.getString(this.keyName);
-        object = cache.get(type, name);
-        if (null == object) {
-          object = creator.createObject(result);
-          if (caching) {
-            cache.put(type, name, object);
-          }
-        }
-
-        resultList.add(object);
-      }
+      return statement.executeQuery();
     } catch (SQLException e) {
-      Logger.warn("Finder: SQL Error", e);
-    } finally {
-      ConnectionManager.close(result);
-      ConnectionManager.close(statement);
-      ConnectionManager.close(connection);
+      Logger.warn("Unable to execute Query "+statementString);
+      return null;
     }
-    return resultList;
+  }
+
+  public void close() {
+    ConnectionManager.close(result);
+    ConnectionManager.close(statement);
+    ConnectionManager.close(connection);
   }
 }

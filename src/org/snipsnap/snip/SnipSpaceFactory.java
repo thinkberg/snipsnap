@@ -25,9 +25,8 @@
 
 package org.snipsnap.snip;
 
-import org.snipsnap.cache.Cache;
-import org.snipsnap.interceptor.Aspects;
 import org.radeox.util.logging.Logger;
+import org.snipsnap.interceptor.Aspects;
 
 
 /**
@@ -53,7 +52,7 @@ public class SnipSpaceFactory {
   public static synchronized void removeInstance() {
     if (instance != null) {
       instance = null;
-      Cache.removeInstance();
+      //@TODO clear cache
     }
   }
 }

@@ -29,6 +29,7 @@ import org.radeox.engine.context.RenderContext;
 import org.radeox.engine.context.BaseRenderContext;
 import org.radeox.engine.RenderEngine;
 import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.render.SnipRenderEngine;
 
 /**
@@ -42,13 +43,15 @@ import org.snipsnap.render.SnipRenderEngine;
 
 public class SnipRenderContext extends BaseRenderContext {
   private Snip snip;
+  private SnipSpace space;
+
   private final static RenderEngine engine = new SnipRenderEngine();
 
-  public SnipRenderContext(Snip snip) {
+  public SnipRenderContext(Snip snip, SnipSpace space) {
+    this.space = space;
     this.snip = snip;
     setRenderEngine(engine);
   }
-
 
   /**
    * Gets the current snip for which the RenderEngine is called
@@ -57,5 +60,13 @@ public class SnipRenderContext extends BaseRenderContext {
    */
   public Snip getSnip() {
     return this.snip;
+  }
+
+  public SnipSpace getSpace() {
+     return space;
+  }
+
+  public void setSpace(SnipSpace space) {
+    this.space = space;
   }
 }

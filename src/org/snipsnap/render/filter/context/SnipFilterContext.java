@@ -57,7 +57,4 @@ public class SnipFilterContext extends BaseFilterContext {
     return new SnipMacroParameter(this.snip, this.context);
   }
 
-  public SnipSpace getSpace() {
-    return SnipSpaceFactory.getInstance();
-  }
 }

@@ -25,18 +25,18 @@
 
 package org.snipsnap.interceptor;
 
-import org.snipsnap.snip.SnipImpl;
-import org.snipsnap.snip.SnipSpaceImpl;
+import org.radeox.util.logging.Logger;
 import org.snipsnap.interceptor.custom.ACLInterceptor;
 import org.snipsnap.interceptor.custom.SnipSpaceACLInterceptor;
 import org.snipsnap.interceptor.custom.StoreInterceptor;
-import org.radeox.util.logging.Logger;
+import org.snipsnap.snip.SnipImpl;
+import org.snipsnap.snip.SnipSpaceImpl;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Aspects implements InvocationHandler {
   private Object target = null;
@@ -47,8 +47,16 @@ public class Aspects implements InvocationHandler {
    */
   static ThreadLocal currentThis = new ThreadLocal();
 
+  public static boolean hasTarget(Object proxy) {
+    return ((Aspects) Proxy.getInvocationHandler(proxy)).hasTarget();
+  }
+
+  private boolean hasTarget() {
+    return null != target;
+  }
+
   public static Object getThis() {
-     return currentThis.get();
+    return currentThis.get();
   }
 
   public static Object newInstance(Object target) {
@@ -63,7 +71,7 @@ public class Aspects implements InvocationHandler {
     Class targetClass = target.getClass();
     Class interfaces[] = interfaceTargets;
     return Proxy.newProxyInstance(targetClass.getClassLoader(),
-      interfaces, new Aspects(target));
+        interfaces, new Aspects(target));
   }
 
   private Aspects(Object target) {

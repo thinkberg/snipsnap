@@ -26,19 +26,16 @@ package org.snipsnap.config;
 
 import org.snipsnap.app.Application;
 import org.snipsnap.snip.HomePage;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.XMLSnipImport;
 import org.snipsnap.snip.SnipSpaceFactory;
+import org.snipsnap.snip.XMLSnipImport;
+import org.snipsnap.snip.storage.JDBCSnipStorage;
+import org.snipsnap.snip.storage.JDBCUserStorage;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
-import org.snipsnap.util.ConnectionManager;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
  * Create initial database and example snips.
@@ -53,70 +50,12 @@ public class CreateDB {
 //    insertData("funzel", "funzel", "stephan@mud.de");
   }
 
-  // The username/password for the database.  This will be the username/
-  // password for the user that has full control over the database.
   public static void createDB(AppConfiguration config) {
     // Make a connection with the database.  This will create the database
     // and log into the newly created database.
-    Connection connection = ConnectionManager.getConnection();
 
-    // --- Set up the database ---
-
-    try {
-      // Create a Statement object to execute the queries on,
-      Statement statement = connection.createStatement();
-
-      System.out.println("CreateDB: Creating Tables");
-
-      // Create a Person table,
-      statement.executeQuery(
-          "    CREATE TABLE Snip ( " +
-          "       name        VARCHAR(100) NOT NULL, " +
-          "       content     TEXT, " +
-          "       cTime       TIMESTAMP, " +
-          "       mTime       TIMESTAMP, " +
-          "       cUser       VARCHAR(55), " +
-          "       mUser       VARCHAR(55), " +
-          "       oUser       VARCHAR(55), " +
-          "       parentSnip  VARCHAR(100), " +
-          "       commentSnip VARCHAR(100), " +
-          "       backLinks   TEXT, " +
-          "       snipLinks   TEXT, " +
-          "       labels      TEXT, " +
-          "       attachments TEXT, " +
-          "       viewCount   INTEGER, " +
-          "       permissions VARCHAR(200) )");
-
-      statement.executeQuery(
-          "    CREATE TABLE SnipUser ( " +
-          "       cTime      TIMESTAMP, " +
-          "       mTime      TIMESTAMP, " +
-          "       lastLogin  TIMESTAMP, " +
-          "       lastAccess TIMESTAMP, " +
-          "       lastLogout TIMESTAMP, " +
-          "       login      VARCHAR(100) NOT NULL, " +
-          "       passwd     VARCHAR(100), " +
-          "       email      VARCHAR(100)," +
-          "       status     VARCHAR(50), " +
-          "       roles      VARCHAR(200) )");
-
-
-      // Close the statement and the connection.
-      statement.close();
-      connection.close();
-
-    } catch (SQLException e) {
-      System.out.println(
-          "An error occured\n" +
-          "The SQLException message is: " + e.getMessage());
-    }
-    // Close the the connection.
-    try {
-      connection.close();
-    } catch (SQLException e2) {
-      e2.printStackTrace(System.err);
-    }
-
+    JDBCSnipStorage.createStorage();
+    JDBCUserStorage.createStorage();
   }
 
   public static void createAdmin(AppConfiguration config) {

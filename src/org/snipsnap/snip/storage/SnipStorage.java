@@ -29,6 +29,7 @@ import org.snipsnap.snip.Snip;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Interface that describes SnipStorage backends for SnipSnap
@@ -37,7 +38,7 @@ import java.util.List;
  * @version $Id$
  */
 
-public interface SnipStorage extends Storage {
+public interface SnipStorage {
   // Basic manipulation methods Load,Store,Create,Remove
   public Snip storageLoad(String name);
 

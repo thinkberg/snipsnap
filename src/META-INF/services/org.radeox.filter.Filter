@@ -1,2 +1,3 @@
 org.snipsnap.render.filter.CalendarFilter
 org.snipsnap.render.filter.LateMacroFilter
+org.snipsnap.render.filter.PgpFilter

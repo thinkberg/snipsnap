@@ -38,6 +38,7 @@ public class AllCommonsTests extends TestCase {
   public static Test suite() {
     TestSuite s = new TestSuite();
     s.addTestSuite(UrlTest.class);
+    s.addTestSuite(QueryListTest.class);
     return s;
   }
 }

@@ -94,7 +94,7 @@ public class RssSnip implements Snip {
   }
 
   public String getXMLContent() {
-    RenderContext context = new SnipRenderContext(snip);
+    RenderContext context = new SnipRenderContext(snip, SnipSpaceFactory.getInstance());
     context.setParameters(Application.get().getParameters());
     return EngineManager.getInstance("snipsnap").render(content, context);
   }

@@ -24,12 +24,12 @@
  */
 package org.snipsnap.render.macro.list;
 
+import org.radeox.macro.list.ListFormatter;
+import org.radeox.util.Linkable;
+import org.radeox.util.Nameable;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.UserManager;
-import org.radeox.util.Linkable;
-import org.radeox.util.Nameable;
-import org.radeox.macro.list.ListFormatter;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -82,6 +82,7 @@ public class VerticalListFormatter implements ListFormatter {
             // String count = name.substring(lastIndex+1);
             realName = name.substring(name.indexOf("-") + 1, lastIndex);
             SnipLink.appendImage(writer, "comment-icon", "");
+            writer.write(" ");
             SnipLink.appendLinkWithRoot(writer, "../comments", SnipLink.encode(realName) + "#" + name, realName);
             //SnipLink.appendLink(writer, name, realName);
             writer.write(" (");
@@ -89,13 +90,16 @@ public class VerticalListFormatter implements ListFormatter {
             writer.write(")");
           } else if (UserManager.getInstance().load(name) != null) {
             SnipLink.appendImage(writer, "person-icon", "");
+            writer.write(" ");
             SnipLink.appendLink(writer, ((Nameable) object).getName());
             //SnipLink.appendLinkWithRoot(writer, "../comments", SnipLink.encode(realName) + "#" + name, realName);
           } else {
+            SnipLink.appendImage(writer, "snip-icon", "");
+            writer.write(" ");
             SnipLink.appendLink(writer, name, realName);
           }
         } else if (object instanceof Linkable) {
-            writer.write(((Linkable) object).getLink());
+          writer.write(((Linkable) object).getLink());
         } else if (object instanceof Nameable) {
           SnipLink.appendLink(writer, ((Nameable) object).getName());
         } else {

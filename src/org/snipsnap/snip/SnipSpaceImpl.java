@@ -27,13 +27,13 @@ package org.snipsnap.snip;
 import org.apache.lucene.search.Hits;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
-import org.snipsnap.cache.Cache;
-import org.snipsnap.jdbc.Finder;
-import org.snipsnap.jdbc.FinderFactory;
-import org.snipsnap.jdbc.JDBCCreator;
 import org.snipsnap.notification.Notification;
+import org.snipsnap.snip.storage.CacheSnipStorage;
+import org.snipsnap.snip.storage.CacheStorage;
+import org.snipsnap.snip.storage.CacheableStorage;
 import org.snipsnap.snip.storage.JDBCSnipStorage;
 import org.snipsnap.snip.storage.MemorySnipStorage;
+import org.snipsnap.snip.storage.QuerySnipStorage;
 import org.snipsnap.snip.storage.SnipStorage;
 import org.snipsnap.user.Digest;
 import org.snipsnap.user.Permissions;
@@ -54,20 +54,27 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * SnipSpace interface handles all the operations with snips like
- * loading, storing, searching et.c
+ * SnipSpace implementation handles all the operations with snips like
+ * loading, storing, searching etc.
+ *
+ * @TODO move indexing to Interceptor
+ * @TODO introduce Missing Interceptor
+ * @TODO move ETag / changed handling to Interceptor
  *
  * @author Stephan J. Schmidt
  * @version $Id$
  */
 
 public class SnipSpaceImpl implements SnipSpace {
+  // @TODO we use map instead of map to increment the
+  // missing counter each time a snip could not be found
+  // List of missing snips
   private Map missing;
+  // List of snips that were changed
   private Queue changed;
+  // List of snips that are scheduled for storage
   private List delayed;
-  private Cache cache;
   private SnipIndexer indexer;
-  private FinderFactory finders;
   private Timer timer;
   private String eTag;
   private SnipStorage storage;
@@ -79,28 +86,34 @@ public class SnipSpaceImpl implements SnipSpace {
     // @TODO missing should probably done with an Interceptor
     missing = new HashMap();
     changed = new Queue(100);
-    cache = Cache.getInstance();
-    storage = new JDBCSnipStorage(cache);
-    finders = new FinderFactory("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions, " +
-        " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
-        " FROM Snip ", cache, Snip.class, "name", (JDBCCreator) storage);
-    cache.setLoader(Snip.class, storage);
+    storage = new JDBCSnipStorage();
 
     // Fully fill the cache with all Snips
     if ("full".equals(Application.get().getConfiguration().getCache())) {
-      Finder finder = finders.getFinder();
-      finder.execute();
-
       // If we keep all snips in memory we can use queries directly on the snip list
-      storage = new MemorySnipStorage(storage, cache);
-      cache.setLoader(Snip.class, storage);
-      Logger.debug("Cache strategy is: keep full, using MemorySnipStorage");
+      // Wrap the real storage with the memory storage wrapper and an in-memory
+      // query class
+      storage = new QuerySnipStorage(new MemorySnipStorage(storage));
+      Logger.debug("Cache strategy is: keep full, using MemorySnipStorage and QuerySnipStorage");
+    } else if ("cache".equals(Application.get().getConfiguration().getCache())
+        && storage instanceof CacheableStorage) {
+      // Otherwise at least wrap the persistence store
+      // with a cache that does not need to load and create objects
+      CacheableStorage old = (CacheableStorage) storage;
+      storage = new CacheSnipStorage(storage);
+      // We have to tell CacheStorage (JDBCSnipStorage) where to get
+      // it's cache from for checking
+      old.setCache(((CacheStorage) storage).getCache());
+
+      Logger.debug("Cache strategy is: cache, using CacheSnipStorage");
     }
 
     indexer = new SnipIndexer();
+    changed.fill(storage.storageByRecent(50));
+    // We do not store frequent changes right away but
+    // collect them in "delayed"
     delayed = new ArrayList();
 
-    changed.fill(storage.storageByRecent(50));
     setETag();
     timer = new Timer();
     timer.schedule(new TimerTask() {
@@ -150,11 +163,7 @@ public class SnipSpaceImpl implements SnipSpace {
   }
 
   public List getAll() {
-    if ("full".equals(Application.get().getConfiguration().getCache())) {
-      return cache.getCache(Snip.class);
-    } else {
-      return storage.storageAll();
-    }
+    return storage.storageAll();
   }
 
   public List getSince(Timestamp date) {
@@ -213,6 +222,8 @@ public class SnipSpaceImpl implements SnipSpace {
     return content = "1 " + title + " {anchor:" + title + "}\n" + content;
   }
 
+  //@TODO perhaps move all post and associated methods to a Blog class that
+  // creates posts -> snips and then only stores snips
   public Snip post(String content, String title) {
     return post(getContent(title, content));
   }
@@ -264,7 +275,7 @@ public class SnipSpaceImpl implements SnipSpace {
   }
 
   public Snip load(String name) {
-    return (Snip) cache.load(Snip.class, name);
+    return storage.storageLoad(name);
   }
 
   public void store(Snip snip) {
@@ -308,7 +319,7 @@ public class SnipSpaceImpl implements SnipSpace {
    */
   public void delayedStrore(Snip snip) {
     //Logger.debug("delayedStore - "+snip.getName());
-    Logger.log(Logger.DEBUG, "delayedStore");
+    Logger.debug("delayedStore");
     synchronized (delayed) {
       if (!delayed.contains(snip)) {
         delayed.add(snip);
@@ -319,9 +330,14 @@ public class SnipSpaceImpl implements SnipSpace {
   public Snip create(String name, String content) {
     name = name.trim();
     Snip snip = storage.storageCreate(name, content);
+<<<<<<< SnipSpaceImpl.java
+    if (missing.containsKey(name.toUpperCase())) {
+      missing.remove(name.toUpperCase());
+=======
     cache.put(Snip.class, name, snip);
     if (missing.containsKey(name.toUpperCase())) {
       missing.remove(name.toUpperCase());
+>>>>>>> 1.2
     }
     changed(snip);
     indexer.index(snip);
@@ -330,7 +346,6 @@ public class SnipSpaceImpl implements SnipSpace {
   }
 
   public void remove(Snip snip) {
-    cache.remove(Snip.class, snip.getName());
     changed.remove(snip);
     storage.storageRemove(snip);
     indexer.removeIndex(snip);

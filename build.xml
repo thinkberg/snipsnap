@@ -151,7 +151,7 @@
   <target depends="jar-server,jar-util,snipsnap-war" description="create all" name="all"/>
 
   <!-- create server code -->
-  <target depends="compile-server,installer-war" description="create server jar" name="jar-server">
+  <target depends="compile-jsp, compile-server,installer-war" description="create server jar" name="jar-server">
     <jar destfile="${jar}/${appname}.jar" excludes="**/CVS" manifest="conf/manifest">
       <fileset dir="${target}/server" includes="**"/>
       <fileset dir=".">
@@ -238,7 +238,7 @@
   </target>
 
   <!-- create web archive of the template application -->
-  <target depends="jsp-jar,theme-jar" description="build template war" name="snipsnap-war">
+  <target depends="theme-jar" description="build template war" name="snipsnap-war">
     <loadfile property="web.inc" srcfile="${target}/jsp/web.inc"/>
     <mkdir dir="${target}/webapp"/>
     <copy todir="${target}/webapp">

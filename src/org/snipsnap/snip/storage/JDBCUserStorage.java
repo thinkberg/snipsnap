@@ -25,16 +25,20 @@
 
 package org.snipsnap.snip.storage;
 
-import org.snipsnap.cache.Cache;
+import org.radeox.util.logging.Logger;
 import org.snipsnap.jdbc.Finder;
 import org.snipsnap.jdbc.FinderFactory;
-import org.snipsnap.jdbc.JDBCCreator;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.User;
 import org.snipsnap.util.ConnectionManager;
-import org.radeox.util.logging.Logger;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,38 +48,46 @@ import java.util.List;
  * @version $Id$
  */
 
-public class JDBCUserStorage implements UserStorage, JDBCCreator {
+public class JDBCUserStorage implements UserStorage {
   private FinderFactory finders;
 
-  public JDBCUserStorage(Cache cache) {
+  public JDBCUserStorage() {
     finders = new FinderFactory("SELECT login, passwd, email, status, roles, " +
         " cTime, mTime, lastLogin, lastAccess, lastLogout " +
-        " FROM SnipUser ", cache, User.class, "login", this);
+        " FROM SnipUser ");
   }
 
-  public Object createObject(ResultSet result) throws SQLException {
-    return createUser(result);
-  }
+  public static void createStorage() {
+    Connection connection = ConnectionManager.getConnection();
+    try {
+      Statement statement = connection.createStatement();
+      System.out.println("CreateDB: Creating User Tables");
+      statement.executeQuery(
+          "    CREATE TABLE SnipUser ( " +
+          "       cTime      TIMESTAMP, " +
+          "       mTime      TIMESTAMP, " +
+          "       lastLogin  TIMESTAMP, " +
+          "       lastAccess TIMESTAMP, " +
+          "       lastLogout TIMESTAMP, " +
+          "       login      VARCHAR(100) NOT NULL, " +
+          "       passwd     VARCHAR(100), " +
+          "       email      VARCHAR(100)," +
+          "       status     VARCHAR(50), " +
+          "       roles      VARCHAR(200) )");
 
-  public User createUser(ResultSet result) throws SQLException {
-    String login = result.getString("login");
-    String passwd = result.getString("passwd");
-    String email = result.getString("email");
-    Timestamp cTime = result.getTimestamp("cTime");
-    Timestamp mTime = result.getTimestamp("mTime");
-    Timestamp lastLogin = result.getTimestamp("lastLogin");
-    Timestamp lastAccess = result.getTimestamp("lastAccess");
-    Timestamp lastLogout = result.getTimestamp("lastLogout");
-    String status = result.getString("status");
-    User user = new User(login, passwd, email);
-    user.setStatus(status);
-    user.setRoles(new Roles(result.getString("roles")));
-    user.setCTime(cTime);
-    user.setMTime(mTime);
-    user.setLastLogin(lastLogin);
-    user.setLastAccess(lastAccess);
-    user.setLastLogout(lastLogout);
-    return user;
+      // Close the statement and the connection.
+      statement.close();
+    } catch (SQLException e) {
+      System.out.println(
+          "An error occured\n" +
+          "The SQLException message is: " + e.getMessage());
+    } finally {
+      try {
+        connection.close();
+      } catch (SQLException e2) {
+        e2.printStackTrace(System.err);
+      }
+    }
   }
 
   public void storageStore(User user) {
@@ -101,7 +113,7 @@ public class JDBCUserStorage implements UserStorage, JDBCCreator {
 
       statement.execute();
     } catch (SQLException e) {
-      Logger.warn("JDBCUserStorage: unable to get store user "+user.getLogin(), e);
+      Logger.warn("JDBCUserStorage: unable to get store user " + user.getLogin(), e);
     } finally {
       ConnectionManager.close(statement);
       ConnectionManager.close(connection);
@@ -140,7 +152,7 @@ public class JDBCUserStorage implements UserStorage, JDBCCreator {
 
       statement.execute();
     } catch (SQLException e) {
-      Logger.warn("JDBCUserStorage: unable to get create user "+login, e);
+      Logger.warn("JDBCUserStorage: unable to get create user " + login, e);
     } finally {
       ConnectionManager.close(result);
       ConnectionManager.close(statement);
@@ -149,7 +161,6 @@ public class JDBCUserStorage implements UserStorage, JDBCCreator {
 
     return user;
   }
-
 
   public void storageRemove(User user) {
     PreparedStatement statement = null;
@@ -160,7 +171,7 @@ public class JDBCUserStorage implements UserStorage, JDBCCreator {
       statement.setString(1, user.getLogin());
       statement.execute();
     } catch (SQLException e) {
-      Logger.warn("JDBCUserStorage: unable to get remove user "+user.getLogin(), e);
+      Logger.warn("JDBCUserStorage: unable to get remove user " + user.getLogin(), e);
     } finally {
       ConnectionManager.close(statement);
       ConnectionManager.close(connection);
@@ -208,7 +219,7 @@ public class JDBCUserStorage implements UserStorage, JDBCCreator {
         user = createUser(result);
       }
     } catch (SQLException e) {
-      Logger.warn("JDBCUserStorage: unable to get load user "+login,e);
+      Logger.warn("JDBCUserStorage: unable to get load user " + login, e);
     } finally {
       ConnectionManager.close(result);
       ConnectionManager.close(statement);
@@ -219,10 +230,50 @@ public class JDBCUserStorage implements UserStorage, JDBCCreator {
 
   public List storageAll() {
     Finder finder = finders.getFinder(" ORDER BY login");
-    return finder.execute();
+    List list = createObjects(finder.execute());
+    finder.close();
+    return list;
   }
 
-  public Object loadObject(String name) {
-    return storageLoad(name);
+
+  public List createObjects(ResultSet result) {
+    return createObjects(result, Integer.MAX_VALUE);
+  }
+
+  public List createObjects(ResultSet result, int size) {
+    List resultList = new ArrayList();
+    if (null != result) {
+      try {
+        User user = null;
+        while (result.next() && size-- > 0) {
+          user = createUser(result);
+          resultList.add(user);
+        }
+      } catch (SQLException e) {
+        Logger.warn("Finder: SQL Error", e);
+      }
+    }
+    return resultList;
+  }
+
+  public User createUser(ResultSet result) throws SQLException {
+    String login = result.getString("login");
+    String passwd = result.getString("passwd");
+    String email = result.getString("email");
+    Timestamp cTime = result.getTimestamp("cTime");
+    Timestamp mTime = result.getTimestamp("mTime");
+    Timestamp lastLogin = result.getTimestamp("lastLogin");
+    Timestamp lastAccess = result.getTimestamp("lastAccess");
+    Timestamp lastLogout = result.getTimestamp("lastLogout");
+    String status = result.getString("status");
+    User user = new User(login, passwd, email);
+    user.setStatus(status);
+    user.setRoles(new Roles(result.getString("roles")));
+    user.setCTime(cTime);
+    user.setMTime(mTime);
+    user.setLastLogin(lastLogin);
+    user.setLastAccess(lastAccess);
+    user.setLastLogout(lastLogout);
+    return user;
   }
 }

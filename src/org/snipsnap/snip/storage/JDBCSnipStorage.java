@@ -25,22 +25,32 @@
 
 package org.snipsnap.snip.storage;
 
+import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
-import org.snipsnap.cache.Cache;
+import org.snipsnap.interceptor.Aspects;
 import org.snipsnap.jdbc.Finder;
 import org.snipsnap.jdbc.FinderFactory;
-import org.snipsnap.jdbc.JDBCCreator;
-import org.snipsnap.snip.*;
+import org.snipsnap.snip.Links;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipFactory;
+import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.snip.attachment.Attachments;
 import org.snipsnap.snip.label.Labels;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.util.ConnectionManager;
 import org.snipsnap.util.log.SQLLogger;
-import org.snipsnap.interceptor.Aspects;
-import org.radeox.util.logging.Logger;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * SnipStorage backend that uses JDBC for persisting data
@@ -49,44 +59,57 @@ import java.util.List;
  * @version $Id$
  */
 
-public class JDBCSnipStorage implements SnipStorage, JDBCCreator {
+public class JDBCSnipStorage implements SnipStorage, CacheableStorage {
   private FinderFactory finders;
+  private Map cache = new HashMap();
 
-  public JDBCSnipStorage(Cache cache) {
+  public JDBCSnipStorage() {
     this.finders = new FinderFactory("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions, " +
         " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
-        " FROM Snip ", cache, Snip.class, "name", this);
+        " FROM Snip ");
   }
 
-  public Object createObject(ResultSet result) throws SQLException {
-    return storageCreateSnip(result);
+  public void setCache(Map cache) {
+    this.cache = cache;
   }
 
-  public Snip storageCreateSnip(ResultSet result) throws SQLException {
-    String name = result.getString("name");
-    String content = result.getString("content");
+  public static void createStorage() {
+    Connection connection = ConnectionManager.getConnection();
+    try {
+      // Create a Statement object to execute the queries on,
+      Statement statement = connection.createStatement();
+      System.out.println("CreateDB: Creating Tables");
 
-    Snip snip = SnipFactory.createSnip(name,content);
-    snip.setCTime(result.getTimestamp("cTime"));
-    snip.setMTime(result.getTimestamp("mTime"));
-    snip.setCUser(result.getString("cUser"));
-    snip.setMUser(result.getString("mUser"));
-    String commentString = result.getString("commentSnip");
-    if (!result.wasNull()) {
-      snip.setCommentedSnip(SnipSpaceFactory.getInstance().load(commentString));
+      // Create a Person table,
+      statement.executeQuery(
+          "    CREATE TABLE Snip ( " +
+          "       name        VARCHAR(100) NOT NULL, " +
+          "       content     TEXT, " +
+          "       cTime       TIMESTAMP, " +
+          "       mTime       TIMESTAMP, " +
+          "       cUser       VARCHAR(55), " +
+          "       mUser       VARCHAR(55), " +
+          "       oUser       VARCHAR(55), " +
+          "       parentSnip  VARCHAR(100), " +
+          "       commentSnip VARCHAR(100), " +
+          "       backLinks   TEXT, " +
+          "       snipLinks   TEXT, " +
+          "       labels      TEXT, " +
+          "       attachments TEXT, " +
+          "       viewCount   INTEGER, " +
+          "       permissions VARCHAR(200) )");
+      statement.close();
+    } catch (SQLException e) {
+      System.out.println(
+          "An error occured\n" +
+          "The SQLException message is: " + e.getMessage());
+    } finally {
+      try {
+        connection.close();
+      } catch (SQLException e2) {
+        e2.printStackTrace(System.err);
+      }
     }
-    String parentString = result.getString("parentSnip");
-    if (!result.wasNull()) {
-      snip.setDirectParent(SnipSpaceFactory.getInstance().load(parentString));
-    }
-    snip.setPermissions(new Permissions(result.getString("permissions")));
-    snip.setBackLinks(new Links(result.getString("backLinks")));
-    snip.setSnipLinks(new Links(result.getString("snipLinks")));
-    snip.setLabels(new Labels(result.getString("labels")));
-    snip.setAttachments(new Attachments(result.getString("attachments")));
-    snip.setViewCount(result.getInt("viewCount"));
-
-    return (Snip) Aspects.newInstance(snip, Snip.class);
   }
 
   public int storageCount() {
@@ -102,7 +125,7 @@ public class JDBCSnipStorage implements SnipStorage, JDBCCreator {
         count = result.getInt(1);
       }
     } catch (SQLException e) {
-      SQLLogger.warn("JDBCSnipStorage: unable to get count",e);
+      SQLLogger.warn("JDBCSnipStorage: unable to get count", e);
     } finally {
       ConnectionManager.close(result);
       ConnectionManager.close(statement);
@@ -113,65 +136,87 @@ public class JDBCSnipStorage implements SnipStorage, JDBCCreator {
 
   public List storageAll() {
     Finder finder = finders.getFinder("ORDER BY name");
-    return finder.execute();
+    List list = createObjects(finder.execute());
+    finder.close();
+    return list;
   }
 
   public List storageByHotness(int size) {
     Finder finder = finders.getFinder("ORDER BY viewCount DESC");
-    return finder.execute(size);
+    List list = createObjects(finder.execute());
+    finder.close();
+    return list;
   }
 
   public List storageByUser(String login) {
-    Finder finder = finders.getFinder("WHERE cUser=?");
-    finder.setString(1, login);
-    return finder.execute();
+    Finder finder = finders.getFinder("WHERE cUser=?")
+           .setString(1, login);
+    List list = createObjects(finder.execute());
+    finder.close();
+    return list;
   }
 
   public List storageByDateSince(Timestamp date) {
-    Finder finder = finders.getFinder("WHERE mTime>=?");
-    finder.setDate(1, date);
-    return finder.execute();
+    Finder finder = finders.getFinder("WHERE mTime>=?")
+           .setDate(1, date);
+    List list = createObjects(finder.execute());
+    finder.close();
+    return list;
   }
 
   public List storageByRecent(int size) {
     Finder finder = finders.getFinder("ORDER by mTime DESC");
-    return finder.execute(size);
+    List list = createObjects(finder.execute(), size);
+    finder.close();
+    return list;
   }
 
   public List storageByComments(Snip parent) {
-    Finder finder = finders.getFinder("WHERE commentSnip=? ORDER BY cTime");
-    finder.setString(1, parent.getName());
-    return finder.execute();
+    Finder finder = finders.getFinder("WHERE commentSnip=? ORDER BY cTime")
+           .setString(1, parent.getName());
+    List list = createObjects(finder.execute());
+    finder.close();
+    return list;
   }
 
   public List storageByParent(Snip parent) {
-    Finder finder = finders.getFinder("WHERE parentSnip=?");
-    finder.setString(1, parent.getName());
-    return finder.execute();
+    Finder finder = finders.getFinder("WHERE parentSnip=?")
+          .setString(1, parent.getName());
+    List list = createObjects(finder.execute());
+    finder.close();
+    return list;
   }
 
   public List storageByParentNameOrder(Snip parent, int count) {
-    Finder finder = finders.getFinder("WHERE parentSnip=? ORDER BY name DESC ");
-    finder.setString(1, parent.getName());
-    return finder.execute(count);
+    Finder finder = finders.getFinder("WHERE parentSnip=? ORDER BY name DESC ")
+           .setString(1, parent.getName());
+    List list = createObjects(finder.execute(), count);
+    finder.close();
+    return list;
   }
 
   public List storageByParentModifiedOrder(Snip parent, int count) {
-    Finder finder = finders.getFinder("WHERE parentSnip=? ORDER BY mTime DESC ");
-    finder.setString(1, parent.getName());
-    return finder.execute(count);
+    Finder finder = finders.getFinder("WHERE parentSnip=? ORDER BY mTime DESC ")
+           .setString(1, parent.getName());
+    List list = createObjects(finder.execute(), count);
+    finder.close();
+    return list;
   }
 
   public List storageByDateInName(String start, String end) {
     Finder finder = finders.getFinder("WHERE name>=? and name<=? and parentSnip=? " +
-        " ORDER BY name");
-    finder.setString(1, start);
-    finder.setString(2, end);
-    finder.setString(3, "start");
-    return finder.execute();
+        " ORDER BY name")
+          .setString(1, start)
+          .setString(2, end)
+          .setString(3, "start");
+    List list = createObjects(finder.execute());
+    finder.close();
+    return list;
   }
 
   public Snip storageLoad(String name) {
+    Logger.debug("LOAD "+name);
+
     Application app = Application.get();
     long start = app.start();
     Snip snip = null;
@@ -188,10 +233,10 @@ public class JDBCSnipStorage implements SnipStorage, JDBCCreator {
 
       result = statement.executeQuery();
       if (result.next()) {
-        snip = storageCreateSnip(result);
+        snip = createSnip(result);
       }
     } catch (SQLException e) {
-      SQLLogger.warn("JDBCSnipStorage: unable to load snip "+name, e);
+      SQLLogger.warn("JDBCSnipStorage: unable to load snip " + name, e);
     } finally {
       ConnectionManager.close(result);
       ConnectionManager.close(statement);
@@ -238,7 +283,7 @@ public class JDBCSnipStorage implements SnipStorage, JDBCCreator {
       statement.setString(16, snip.getName());
       statement.execute();
     } catch (SQLException e) {
-      SQLLogger.warn("JDBCSnipStorage: unable to store snip "+snip.getName(), e);
+      SQLLogger.warn("JDBCSnipStorage: unable to store snip " + snip.getName(), e);
 
     } finally {
       ConnectionManager.close(statement);
@@ -302,7 +347,7 @@ public class JDBCSnipStorage implements SnipStorage, JDBCCreator {
       statement.setInt(15, snip.getViewCount());
       statement.execute();
     } catch (SQLException e) {
-      SQLLogger.warn("JDBCSnipStorage: unable to get create snip "+name, e);
+      SQLLogger.warn("JDBCSnipStorage: unable to get create snip " + name, e);
     } finally {
       ConnectionManager.close(result);
       ConnectionManager.close(statement);
@@ -310,7 +355,7 @@ public class JDBCSnipStorage implements SnipStorage, JDBCCreator {
     }
 
     return (Snip) Aspects.newInstance(snip, Snip.class);
-   }
+  }
 
 
   public void storageRemove(Snip snip) {
@@ -323,7 +368,7 @@ public class JDBCSnipStorage implements SnipStorage, JDBCCreator {
 
       statement.execute();
     } catch (SQLException e) {
-      SQLLogger.warn("JDBCSnipStorage: unable to remove "+snip.getName(), e);
+      SQLLogger.warn("JDBCSnipStorage: unable to remove " + snip.getName(), e);
     } finally {
       ConnectionManager.close(statement);
       ConnectionManager.close(connection);
@@ -331,7 +376,74 @@ public class JDBCSnipStorage implements SnipStorage, JDBCCreator {
     return;
   }
 
-  public Object loadObject(String name) {
-    return storageLoad(name);
+  public List createObjects(ResultSet result) {
+    return createObjects(result, Integer.MAX_VALUE);
+  }
+
+  public synchronized List createObjects(ResultSet result, int size) {
+    List resultList = new ArrayList();
+    if (null != result) {
+      try {
+        while (result.next() && size-- > 0) {
+          String name = result.getString(1);
+          resultList.add(createSnip(result));
+        }
+      } catch (SQLException e) {
+        Logger.warn("Finder: SQL Error", e);
+      }
+    }
+    return resultList;
+  }
+
+  public synchronized Snip createSnip(ResultSet result) throws SQLException {
+    String name = result.getString("name");
+    // Snip proxy = getProxy(name);
+    // if (Apsects.hasTarget(proxy)) {
+    //    return proxy;
+    // }
+    if (cache.containsKey(name)) {
+      return (Snip) cache.get(name);
+    }
+    String content = result.getString("content");
+
+    Snip snip = SnipFactory.createSnip(name, content);
+    snip.setCTime(result.getTimestamp("cTime"));
+    snip.setMTime(result.getTimestamp("mTime"));
+    snip.setCUser(result.getString("cUser"));
+    snip.setMUser(result.getString("mUser"));
+    String commentString = result.getString("commentSnip");
+    // snip.setCommentedSnip(getProxy(commentString));
+    if (!result.wasNull()) {
+      snip.setCommentedSnip(SnipSpaceFactory.getInstance().load(commentString));
+    }
+    String parentString = result.getString("parentSnip");
+    // snip.setDirectParent(getProxy(parentString));
+    if (!result.wasNull()) {
+      snip.setDirectParent(SnipSpaceFactory.getInstance().load(parentString));
+    }
+    snip.setPermissions(new Permissions(result.getString("permissions")));
+    snip.setBackLinks(new Links(result.getString("backLinks")));
+    snip.setSnipLinks(new Links(result.getString("snipLinks")));
+    snip.setLabels(new Labels(result.getString("labels")));
+    snip.setAttachments(new Attachments(result.getString("attachments")));
+    snip.setViewCount(result.getInt("viewCount"));
+
+    // Aspects.setTarget(proxy, snip);
+    // return proxy;
+    snip = (Snip) Aspects.newInstance(snip, Snip.class);
+
+    cache.put(name, snip);
+    return snip;
+  }
+
+  // Return a proxy instance
+  private Snip getProxy(String name) {
+    if (cache.containsKey(name)) {
+      return (Snip) cache.get(name);
+    } else {
+      Snip snip = null; // Aspects.new.....
+      cache.put(name, snip);
+      return snip;
+    }
   }
 }

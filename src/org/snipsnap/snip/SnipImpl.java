@@ -387,7 +387,7 @@ public class SnipImpl implements Snip {
 
   public String toXML() {
     long start = Application.get().start();
-    RenderContext context = new SnipRenderContext((Snip) Aspects.getThis());
+    RenderContext context = new SnipRenderContext((Snip) Aspects.getThis(), SnipSpaceFactory.getInstance());
     context.setParameters(Application.get().getParameters());
     String xml = EngineManager.getInstance("snipsnap").render(content, context);
     Logger.debug(getName() + " is cacheable: "+context.isCacheable());
@@ -420,6 +420,10 @@ public class SnipImpl implements Snip {
   public int hashCode() {
     return this.name.hashCode();
   }
+
+//  public String toString() {
+//    return "{name="+getName()+", parent="+parent+", @"+hashCode()+"}";
+//  }
 
   public boolean equals(Object obj) {
     if (!(obj instanceof Snip)) {
