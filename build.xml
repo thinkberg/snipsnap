@@ -14,7 +14,7 @@
     <pathelement location="${jar}/org.apache.crimson.jar"/>
     <pathelement location="${jar}/org.mortbay.jetty.jar"/>
     <pathelement location="${jar}/mckoidb.jar"/>
-    <pathelement location="${jar}/xmlrpc-1.1.jar"/>
+    <pathelement location="${jar}/xmlrpc-1.2-b1.jar"/>
   </path>
 
   <path id="snipsnap.test">
@@ -32,7 +32,7 @@
     <pathelement location="${jar}/commons-dbcp-1.1.jar"/>
     <pathelement location="${jar}/commons-pool-1.1.jar"/>
     <pathelement location="${jar}/commons-collections.jar"/>
-    <pathelement location="${jar}/xmlrpc-1.1.jar"/>
+    <pathelement location="${jar}/xmlrpc-1.2-b1.jar"/>
     <pathelement location="${jar}/lucene-1.2.jar"/>
     <pathelement location="${jar}/jython.jar"/>
     <pathelement location="${jar}/smack.jar"/>
@@ -111,7 +111,7 @@
         <include name="lib/org.apache.crimson.jar"/>
         <include name="lib/org.mortbay.jetty.jar"/>
         <include name="lib/javax.servlet.jar"/>
-        <include name="lib/xmlrpc-1.1.jar"/>
+        <include name="lib/xmlrpc-1.2-b1.jar"/>
         <include name="lib/mckoidb.jar"/>
         <include name="lib/mysql-connector.jar"/>
         <include name="lib/postgres-jdbc.jar"/>
@@ -409,7 +409,7 @@
         <include name="commons-pool-1.1.jar"/>
         <include name="commons-collections.jar"/>
         <include name="lucene-1.2.jar"/>
-        <include name="xmlrpc-1.1.jar"/>
+        <include name="xmlrpc-1.2-b1.jar"/>
         <include name="dom4j.jar"/>
         <include name="smack.jar"/>
         <include name="aspectjrt.jar"/>

@@ -32,12 +32,16 @@ import org.snipsnap.config.Globals;
 import org.snipsnap.container.Components;
 import org.snipsnap.util.Base64;
 import org.snipsnap.xmlrpc.XmlRpcHandler;
+import org.xml.sax.SAXException;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.FactoryConfigurationError;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.InputStream;
