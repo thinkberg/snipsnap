@@ -56,7 +56,6 @@ public class SnipSnapPingHandler implements PingHandler {
     Vector params = new Vector();
     try {
       // Ping blog.gs
-      XmlRpc.setEncoding(config.getEncoding());
       XmlRpcClient snipsnapServer = new XmlRpcClient(url);
       params.clear();
       // Name of the weblog

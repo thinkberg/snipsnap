@@ -56,7 +56,6 @@ public class RssPingHandler implements PingHandler {
     Vector params = new Vector();
     try {
       // Ping RSS weblogs.com
-      XmlRpc.setEncoding(config.getEncoding());
       XmlRpcClient weblogs_com = new XmlRpcClient(url);
       params.clear();
       // Name of the weblog

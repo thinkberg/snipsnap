@@ -33,6 +33,9 @@ import org.snipsnap.container.Components;
 import org.snipsnap.util.Base64;
 import org.snipsnap.xmlrpc.XmlRpcHandler;
 import org.xml.sax.SAXException;
+import org.dom4j.io.SAXReader;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -45,6 +48,10 @@ import javax.xml.parsers.FactoryConfigurationError;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.InputStream;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.ByteArrayInputStream;
 import java.util.Iterator;
 
 /**
@@ -80,13 +87,13 @@ public class XmlRpcServlet extends HttpServlet {
   }
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws IOException, ServletException {
+    throws IOException, ServletException {
     Globals globals = ConfigurationProxy.getInstance();
-    if(!globals.isInstalled()) {
+    if (!globals.isInstalled()) {
       throw new ServletException("Please finish basic database configuration first.");
     }
 
-    if(!initalized) {
+    if (!initalized) {
       initialize();
     }
 
@@ -101,14 +108,6 @@ public class XmlRpcServlet extends HttpServlet {
 
       result = xmlrpc.execute(request.getInputStream(), login, password);
     } else {
-//      InputStream in = request.getInputStream();
-//      StringBuffer buf = new StringBuffer();
-//      byte[] buffer = new byte[1024];
-//      int n = 0;
-//      while ((n = in.read(buffer)) != -1) {
-//        buf.append(new String(buffer, 0, n));
-//      }
-      XmlRpc.setEncoding(globals.getEncoding());
       result = xmlrpc.execute(request.getInputStream());
     }
 

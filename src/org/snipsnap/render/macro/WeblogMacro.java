@@ -25,19 +25,24 @@
 
 package org.snipsnap.render.macro;
 
-import org.snipsnap.render.filter.links.BackLinks;
-import org.snipsnap.render.macro.parameter.SnipMacroParameter;
-import org.snipsnap.snip.*;
-import org.snipsnap.util.StringUtil;
+import org.radeox.util.i18n.ResourceManager;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
-import org.radeox.util.i18n.ResourceManager;
+import org.snipsnap.render.filter.links.BackLinks;
+import org.snipsnap.render.macro.parameter.SnipMacroParameter;
+import org.snipsnap.snip.Blog;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipSpaceFactory;
+import org.snipsnap.snip.SnipUtil;
+import org.snipsnap.util.StringUtil;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.List;
-import java.text.MessageFormat;
 
 /*
  * Macro that displays a weblog. All subsnips are read and
@@ -49,6 +54,7 @@ import java.text.MessageFormat;
 
 public class WeblogMacro extends SnipMacro {
   private SnipSpace space;
+
   public WeblogMacro() {
     space = SnipSpaceFactory.getInstance();
   }
@@ -66,89 +72,93 @@ public class WeblogMacro extends SnipMacro {
   }
 
   public void execute(Writer writer, SnipMacroParameter params)
-      throws IllegalArgumentException, IOException {
+    throws IllegalArgumentException, IOException {
 
-    if (params.getLength() < 2) {
-      int count = 0;
-      if (params.getLength() == 1) {
-        count = Integer.parseInt(params.get("0"));
-      } else {
-        count = 10;
-      }
-
-      String name = params.getSnipRenderContext().getSnip().getName();
-      Blog blog = space.getBlog(name);
-
-      // order by name
-      // with correct ending /1,/2,/3,...,/11,/12
-      List posts = blog.getPosts(count);
-      //System.out.println("Weblog Posts for '"+name+"': "+posts.size());
-
-      // Convert
-      // - all Snips with start parent -> rename start/2003-05-02
-      // - comments?
-
-      // start/2002-03-01
-      // start/2002-05-06
-      // start/2002-05-06/1
-      // start/2002-05-06/2
-      //
-      // 1. Group by day
-      //    - iterate
-      //    - cut "name/"
-      //    - get day
-      //    - if day changes, render new day
-      // 2. Render each day
-
-      int NAME_INDEX = 0;
-      int DAY_INDEX = 1;
-      int COUNT_INDEX = 2;
-
-      String lastDay = "";
-      Iterator iterator = posts.iterator();
-      while (iterator.hasNext()) {
-        Object object = iterator.next();
-        // System.err.println("Class="+object.getClass());
-        Snip entry = (Snip) object;
-
-        String[] entryName = StringUtil.split(entry.getName(), "/");
-        int slashOffset = entryName.length - 3;
-        String day = (entryName.length > 1 ? entryName[slashOffset + DAY_INDEX] : entryName[0]);
-        // New Day?
-        //System.err.println("entryName="+Arrays.asList(entryName));
-        if (!lastDay.equals(day)) {
-          writer.write("<div class=\"blog-date\">");
-          writer.write(SnipUtil.toDate(day));
-          lastDay = day;
-          writer.write("</div>");
-        }
-
-        Configuration conf = Application.get().getConfiguration();
-
-        writer.write(entry.getXMLContent());
-        writer.write(" <a href=\"");
-        SnipLink.appendUrl(writer, entry.getName());
-        writer.write("\" title=\"");
-        MessageFormat mf = new MessageFormat(ResourceManager.getString("i18n.messages", "macro.anchor.permalink"));
-        writer.write(mf.format(new Object[] { entry.getName() }));
-        writer.write("\">");
-        SnipLink.appendImage(writer, "Icon-Permalink", "PermaLink");
-        writer.write("</a>");
-
-        writer.write("<div class=\"snip-post-comments\">");
-        writer.write(entry.getComments().getCommentString());
-        writer.write(" | ");
-        writer.write(entry.getComments().getPostString());
-        writer.write("</div>\n\n");
-
-        if ("true".equals(conf.getFeatureReferrerShow())) {
-          writer.write("<div class=\"snip-backlinks\">");
-          BackLinks.appendTo(writer, entry.getAccess().getBackLinks(), 5);
-          writer.write("</div>");
-        }
-      }
+    int count = 0;
+    if (params.getLength() > 0) {
+      count = Integer.parseInt(params.get("count", 0));
     } else {
-      throw new IllegalArgumentException("Number of arguments does not match");
+      count = 10;
+    }
+
+    String name;
+    if(params.getLength() > 1) {
+      name = params.get("snip", 1);
+    } else {
+      name = params.getSnipRenderContext().getSnip().getName();
+    }
+    Blog blog = space.getBlog(name);
+
+    if(null == blog) {
+      throw new IllegalArgumentException("unknown weblog "+name);
+    }
+    // order by name
+    // with correct ending /1,/2,/3,...,/11,/12
+    List posts = blog.getPosts(count);
+    //System.out.println("Weblog Posts for '"+name+"': "+posts.size());
+
+    // Convert
+    // - all Snips with start parent -> rename start/2003-05-02
+    // - comments?
+
+    // start/2002-03-01
+    // start/2002-05-06
+    // start/2002-05-06/1
+    // start/2002-05-06/2
+    //
+    // 1. Group by day
+    //    - iterate
+    //    - cut "name/"
+    //    - get day
+    //    - if day changes, render new day
+    // 2. Render each day
+
+    int NAME_INDEX = 0;
+    int DAY_INDEX = 1;
+    int COUNT_INDEX = 2;
+
+    String lastDay = "";
+    Iterator iterator = posts.iterator();
+    while (iterator.hasNext()) {
+      Object object = iterator.next();
+      // System.err.println("Class="+object.getClass());
+      Snip entry = (Snip) object;
+
+      String[] entryName = StringUtil.split(entry.getName(), "/");
+      int slashOffset = entryName.length - 3;
+      String day = (entryName.length > 1 ? entryName[slashOffset + DAY_INDEX] : entryName[0]);
+      // New Day?
+      //System.err.println("entryName="+Arrays.asList(entryName));
+      if (!lastDay.equals(day)) {
+        writer.write("<div class=\"blog-date\">");
+        writer.write(SnipUtil.toDate(day));
+        lastDay = day;
+        writer.write("</div>");
+      }
+
+      Configuration conf = Application.get().getConfiguration();
+
+      writer.write(entry.getXMLContent());
+      writer.write(" <a href=\"");
+      SnipLink.appendUrl(writer, entry.getName());
+      writer.write("\" title=\"");
+      MessageFormat mf = new MessageFormat(ResourceManager.getString("i18n.messages", "macro.anchor.permalink"));
+      writer.write(mf.format(new Object[]{entry.getName()}));
+      writer.write("\">");
+      SnipLink.appendImage(writer, "Icon-Permalink", "PermaLink");
+      writer.write("</a>");
+
+      writer.write("<div class=\"snip-post-comments\">");
+      writer.write(entry.getComments().getCommentString());
+      writer.write(" | ");
+      writer.write(entry.getComments().getPostString());
+      writer.write("</div>\n\n");
+
+      if ("true".equals(conf.getFeatureReferrerShow())) {
+        writer.write("<div class=\"snip-backlinks\">");
+        BackLinks.appendTo(writer, entry.getAccess().getBackLinks(), 5);
+        writer.write("</div>");
+      }
     }
   }
 }

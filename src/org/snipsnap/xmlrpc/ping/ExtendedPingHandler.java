@@ -56,7 +56,6 @@ public class ExtendedPingHandler implements PingHandler {
     Vector params = new Vector();
     try {
       // Ping blog.gs
-      XmlRpc.setEncoding(config.getEncoding());
       XmlRpcClient blo_gs = new XmlRpcClient(url);
       params.clear();
       // Name of the weblog

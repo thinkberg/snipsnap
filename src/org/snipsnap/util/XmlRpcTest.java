@@ -42,7 +42,6 @@ public class XmlRpcTest {
   public static void main(String[] args) {
     try {
       Vector params = new Vector();
-      XmlRpc.setEncoding("UTF-8");
       XmlRpcClient test = new XmlRpcClient("http://localhost:8668/RPC2");
       params.clear();
       // Name of the weblog
