@@ -7,7 +7,7 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %>
 
-<s:check roles="Authenticated">
+<s:check roles="Authenticated" permission="Edit" snip="${snip}">
   <h1 class="header"><c:out value="${snip_name}"/></h1>
   <form name="f" method="POST" action="../exec/store">
     <table border="0" cellpadding="0" cellspacing="2">
@@ -22,6 +22,6 @@
   </form>
 </s:check>
 
-<s:check roles="Authenticated" invert="true">
+<s:check roles="Authenticated" permission="Edit" snip="${snip}" invert="true">
   <a href="../exec/login">Please login!</a>
 </s:check>
