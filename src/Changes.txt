@@ -1,5 +1,7 @@
 0.3.1
 
+- Fixed bug: urls were double decoded (now only '+' is decoded by servlet)
+- Fixed bug: some regexp consumed leading/following characters
 - Added feature: Plugin architecture for source code formatters
 - Added feature: Title for sub blogpost, added permalink to each sub blogpost
 - Added feature: anchor Macro
