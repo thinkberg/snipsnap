@@ -369,7 +369,7 @@ public class ConfigurationMap {
     StringBuffer tmp = new StringBuffer();
     tmp.append("http://");
     try {
-      tmp.append(host == null || host.length() == 0 || "localhost".equals(host) ? InetAddress.getLocalHost().getHostName() : host);
+      tmp.append(host == null || host.length() == 0 /*|| "localhost".equals(host)*/ ? InetAddress.getLocalHost().getHostName() : host);
     } catch (UnknownHostException e) {
       tmp.append(System.getProperty("host", "localhost"));
     }

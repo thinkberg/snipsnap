@@ -94,6 +94,7 @@ public class DefaultUserManager implements UserManager {
     IntHolder holder = countCache.getIntHolder();
     int count = holder.getValue();
     if (-1 == count) {
+      count = storage.storageUserCount();
       holder.setValue(count);
     }
     return count;
@@ -110,6 +111,9 @@ public class DefaultUserManager implements UserManager {
   public User create(String login, String passwd, String email) {
     User user = storage.storageCreate(login, passwd, email);
     IntHolder holder = countCache.getIntHolder();
+    if(holder.getValue() == -1) {
+      holder.setValue(storage.storageUserCount());
+    }
     holder.inc();
     // Remove from missing list
     return user;

@@ -99,12 +99,12 @@ public class SnipIndexer {
       } else {
         create = true;
       }
-      writer = new IndexWriter(f, new SnipAnalyzer(), create);
 
       if (exists) {
         removeIndex(snip);
       }
 
+      writer = new IndexWriter(f, new SnipAnalyzer(), create);
       writer.mergeFactor = 20;
       writer.addDocument(SnipDocument.Document(snip));
       writer.optimize();

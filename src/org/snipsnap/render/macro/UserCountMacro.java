@@ -30,6 +30,7 @@ import org.radeox.macro.BaseMacro;
 import org.radeox.macro.parameter.MacroParameter;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.user.UserManagerFactory;
+import org.snipsnap.container.Components;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -60,7 +61,8 @@ public class UserCountMacro extends BaseMacro {
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
     if (params.getLength() == 0) {
-      writer.write(Integer.toString(UserManagerFactory.getInstance().getUserCount()));
+      UserManager um = (UserManager)Components.getComponent(UserManager.class);
+      writer.write(Integer.toString(um.getUserCount()));
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }
