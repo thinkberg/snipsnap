@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -85,7 +86,7 @@ public class ConfigurationMap {
    * configuration file or null.
    * @return the configuration directory
    */
-  public File getConfDir() {
+  public File getWebInfDir() {
     if (configFile != null) {
       return configFile.getParentFile();
     }
@@ -118,17 +119,21 @@ public class ConfigurationMap {
     load();
   }
 
+  public void load(InputStream stream) throws IOException {
+    properties.load(stream);
+    if (convertOldProperties()) {
+      System.err.println("Configuration: storing converted configuration file to " + getFile());
+      store();
+    }
+  }
+
   /**
    * Loads the configuration from a previously set file.
    * @throws IOException
    */
   public void load() throws IOException {
     if (configFile != null) {
-      properties.load(new FileInputStream(configFile));
-      if (convertOldProperties()) {
-        System.err.println("Configuration: storing converted configuration file to " + getFile());
-        store();
-      }
+      load(new FileInputStream(configFile));
     }
   }
 
@@ -234,7 +239,7 @@ public class ConfigurationMap {
         if (idx > 0) {
           replaced.append(value.substring(0, idx));
         }
-        replaced.append(getConfDir().getPath());
+        replaced.append(getWebInfDir().getPath());
         int endIdx = idx + "%WEBINF%".length();
         if (endIdx < value.length()) {
           replaced.append(value.substring(endIdx));
@@ -343,7 +348,7 @@ public class ConfigurationMap {
   }
 
   public boolean isInstalled() {
-    if (getFile().exists() && new File(getConfDir(), "db").exists()) {
+    if (getWebInfDir() != null && getWebInfDir().exists() && new File(getWebInfDir(), "db").exists()) {
       return true;
     }
     return false;

@@ -82,7 +82,7 @@ public class InitFilter implements Filter {
         int colonIndex = xForwardedHost.indexOf(':');
         String host = xForwardedHost;
         String port = null;
-        if(colonIndex != -1) {
+        if (colonIndex != -1) {
           host = host.substring(0, colonIndex);
           port = xForwardedHost.substring(colonIndex + 1);
         }
@@ -90,7 +90,7 @@ public class InitFilter implements Filter {
         config.set(Configuration.APP_REAL_PORT, port == null ? "80" : port);
       } else {
         String host = request.getServerName();
-        String port = ""+request.getServerPort();
+        String port = "" + request.getServerPort();
         config.set(Configuration.APP_REAL_HOST, host);
         config.set(Configuration.APP_REAL_PORT, port);
         config.set(Configuration.APP_REAL_PATH, request.getContextPath());
@@ -104,25 +104,17 @@ public class InitFilter implements Filter {
       request.setCharacterEncoding(config.getEncoding());
       request = new EncRequestWrapper(request, request.getCharacterEncoding());
     } catch (UnsupportedEncodingException e) {
-      Logger.log(Logger.FATAL, "unsupported encoding '"+config.getEncoding()+"'", e);
+      Logger.log(Logger.FATAL, "unsupported encoding '" + config.getEncoding() + "'", e);
 
     }
 
-    // check for a logged in user
-    User user = app.getUser();
-    if (user == null) {
-      SessionService service = (SessionService) Components.getComponent(SessionService.class);
-      user = service.getUser(request, (HttpServletResponse) response);
-    }
-
-    app.setUser(user, session);
 
     String path = request.getServletPath();
     // make sure we do not enter the default web application unless it's fully installed
     if (!config.isInstalled()) {
       if (path == null || !(path.startsWith("/admin") || path.startsWith("/images"))) {
         String name = config.getName();
-        System.out.println((name == null ? "SnipSnap" : name ) + " is not (fully) configured, redirecting to configuration");
+        System.out.println((name == null ? "SnipSnap" : name) + " is not (fully) configured, redirecting to configuration");
         ((HttpServletResponse) response).sendRedirect(request.getContextPath() + "/admin/configure");
         return;
       }
@@ -130,6 +122,15 @@ public class InitFilter implements Filter {
 
     if (config.isInstalled()) {
       session.setAttribute("space", SnipSpaceFactory.getInstance());
+
+      // check for a logged in user
+      User user = app.getUser();
+      if (user == null) {
+        SessionService service = (SessionService) Components.getComponent(SessionService.class);
+        user = service.getUser(request, (HttpServletResponse) response);
+      }
+
+      app.setUser(user, session);
     }
 
     // why copy? because, getParameterMap() returns an unmodifyable map

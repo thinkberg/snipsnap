@@ -26,6 +26,8 @@ package org.snipsnap.net.admin;
 
 import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
+import org.snipsnap.config.ConfigurationProxy;
+import org.snipsnap.config.ConfigurationMap;
 import org.snipsnap.net.filter.MultipartWrapper;
 import org.snipsnap.snip.SnipLink;
 
@@ -109,7 +111,10 @@ public class ConfigureServlet extends HttpServlet {
 
     HttpSession session = request.getSession();
     Application app = Application.getInstance(session);
-    Configuration config = app.getConfiguration();
+    Configuration config = (Configuration) session.getAttribute(ATT_CONFIG);
+    if(null == config) {
+      config = ConfigurationProxy.newInstance();
+    }
 
     session.setAttribute(ATT_APPLICATION, app);
     session.setAttribute(ATT_CONFIG, config);
@@ -199,8 +204,6 @@ public class ConfigureServlet extends HttpServlet {
             }
           }
         } else {
-          System.out.println("errors: "+errors);
-          
           request.setAttribute("errors", errors);
         }
       }
@@ -219,7 +222,7 @@ public class ConfigureServlet extends HttpServlet {
   }
 
   private void install(Configuration config) throws Exception {
-    System.out.println("Config: " + config);
+    
   }
 
   private Map checkStep(String step, List steps, HttpServletRequest request, Configuration config) {
@@ -526,14 +529,17 @@ public class ConfigureServlet extends HttpServlet {
     }
   }
 
+  /**
+   * Check a path if it is writable. Returns true if one of the parents is writable and
+   * false if one of the parents is not writable.
+   * @param path the path to check
+   * @return whether the path if writable or creatable
+   */
   private boolean checkPath(String path) {
-    System.out.println("checking: "+path);
     File pathFile = new File(path);
     while (pathFile.getParentFile() != null && !pathFile.exists()) {
       pathFile = pathFile.getParentFile();
-      System.out.println("checking: "+pathFile);
     }
-    System.out.println("final: "+(pathFile.exists() && pathFile.canWrite()));
     return pathFile.exists() && pathFile.canWrite();
   }
 
@@ -564,5 +570,4 @@ public class ConfigureServlet extends HttpServlet {
     String encoding = request.getParameter(Configuration.APP_ENCODING);
     config.setEncoding(encoding != null && encoding.length() > 0 ? encoding : "UTF-8");
   }
-
 }

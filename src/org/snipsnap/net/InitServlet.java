@@ -29,6 +29,9 @@ import org.radeox.util.logging.Logger;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.config.ConfigurationProxy;
 import org.snipsnap.config.ServerConfiguration;
+import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.container.Components;
 
 import javax.servlet.*;
 import java.io.File;
@@ -65,6 +68,13 @@ public class InitServlet extends GenericServlet {
         if(!config.isInstalled()) {
           System.out.println("Unconfigured SnipSnap. Please visit the web site");
           System.out.println("and finish the installation procedure.");
+        } else {
+          SnipSpace space = (SnipSpace)Components.getComponent(SnipSpace.class);
+          if(space.exists(Configuration.SNIPSNAP_CONFIG)) {
+            Snip configSnip = space.load(Configuration.SNIPSNAP_CONFIG);
+            String configContent = configSnip.getContent();
+          }
+
         }
       }
       try {

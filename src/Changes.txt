@@ -1,5 +1,6 @@
 0.5
 
+- Added Feature: Installer for WAR (w/ Localization)
 - Developer: Added support for PicoContainer
 - Added feature: moved some messages to messages_en.properties for language packs
 - Added feature: target=... in image macro {image}
