@@ -279,6 +279,15 @@
       includes="org/snipsnap/admin/CommandHandler.java, org/snipsnap/admin/Authenticate.java, org/snipsnap/admin/install/**"/>
   </target>
 
+  <target description="upload to sourceforge" name="publish" depends="">
+    <ftp server="upload.sourceforge.org"
+       remotedir="incoming"
+       userid="anonymous"
+       password="ftp">
+    <fileset dir="../snipsnap*.tgz"/>
+  </ftp>
+  </target>
+
 </project>
 
 
