@@ -1,0 +1,2 @@
+Main-Class: com.neotis.net.AppServer
+Class-Path: jakarta.jar mckoidb.jar javax.servlet.jar org.apache.jasper.jar org.mortbay.jetty.jar
