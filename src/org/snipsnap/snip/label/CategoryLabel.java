@@ -39,6 +39,7 @@ import org.snipsnap.snip.label.BaseLabel;
 import org.snipsnap.snip.label.Label;
 import org.snipsnap.snip.label.Labels;
 import org.snipsnap.user.AuthenticationService;
+import org.snipsnap.util.URLEncoderDecoder;
 
 /**
  * Label which categoriezes snips
@@ -97,7 +98,7 @@ public class CategoryLabel extends BaseLabel {
 // We only want snips with a label Type:Category
             Label label = (Label) iter.next();
             if (label.getValue().equals("Category")) {
-              String category = snip.getNameEncoded();
+              String category = snip.getName();
               buffer.append("<option>");
               buffer.append(category);
               buffer.append("</option>");
