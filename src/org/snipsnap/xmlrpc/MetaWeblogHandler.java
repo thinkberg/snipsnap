@@ -41,6 +41,6 @@ public class MetaWeblogHandler {
      metaWeblog.getPost (postid, username, password) returns struct
      */
     public String newPost(String blogid, String username, String password, String struct, String publish) {
-
+        return "";
     }
 }

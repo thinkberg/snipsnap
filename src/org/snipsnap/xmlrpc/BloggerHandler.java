@@ -45,9 +45,16 @@ public class  BloggerHandler {
       content (string): Contents of the post.
       publish (boolean): If true, the blog will be published immediately after the post is made.
     **/
-    public String newPost(String appkey, String blogid, String username, String password, String content, boolean publish) {
-
+    public String newPost(String appkesy,
+                          String blogid,
+                          String username,
+                          String password,
+                          String content,
+                          boolean publish) {
+        System.out.println("XML-RPC call to newPost()");
+        return "";
     }
+
     /**
     blogger.editPost: Edits a given post. Optionally, will publish the blog after making the edit.
     blogger.getUsersBlogs: Returns information on all the blogs a given user is a member of.
