@@ -48,6 +48,7 @@ import java.io.InputStream;
  */
 public class Application {
   private static Map currentUsers = new HashMap();
+  private static Map globalStore = new HashMap();
 
   private User user;
   private AppConfiguration config;
@@ -201,6 +202,15 @@ public class Application {
       }
       currentUsers.remove(session);
     }
+  }
+
+  // Global memory
+  public void storeObject(String key, Object value) {
+     Application.globalStore.put(key,value);
+  }
+
+  public Object getObject(String key) {
+    return Application.globalStore.get(key);
   }
 
   public void setConfiguration(AppConfiguration config) {

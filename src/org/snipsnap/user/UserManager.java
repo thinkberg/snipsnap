@@ -48,14 +48,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 /**
  * User manager handles all register, creation and authentication of users.
@@ -87,10 +80,11 @@ public class UserManager {
   private Cache cache;
   private FinderFactory finders;
   private JDBCUserStorage storage;
+  private Map authKeys;
 
   protected UserManager() {
     delayed = new LinkedList();
-
+    authKeys = new HashMap();
 
     cache = Cache.getInstance();
     storage = new JDBCUserStorage(cache);
@@ -266,6 +260,29 @@ public class UserManager {
       }
     }
     return null;
+  }
+
+  // Handles forgotten passwords
+
+  public String getPassWordKey() {
+    return getPassWordKey(Application.get().getUser());
+  }
+
+  public String getPassWordKey(User user) {
+    String key = Digest.getDigest(Integer.toString((new Random()).nextInt()));
+    authKeys.put(key, user);
+    return key;
+  }
+
+  public void changePassWord(String key, String passwd) {
+    User user = (User) authKeys.get(key);
+    user.setPasswd(passwd);
+    storage.storageStore(user);
+    authKeys.remove(key);
+  }
+
+  public User getUserFromKey(String key) {
+    return (User) authKeys.get(key);
   }
 
   public User authenticate(String login, String passwd) {

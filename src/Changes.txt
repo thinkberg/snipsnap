@@ -1,3 +1,8 @@
+0.3.2
+
+- Added feature: file-path macro displays a filepath
+- Fixed bug: RSD <settings> was at the wrong place
+
 0.3.1
 
 - Fixed bug: run.bat classpath corrected

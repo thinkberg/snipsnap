@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 /**
- * Manages books to book dealears or comparison services
+ * Manages links to book dealears or comparison services
  *
  * @author Stephan J. Schmidt
  * @version $Id$
@@ -68,12 +68,12 @@ public class BookServices {
   public void addInterMap(BufferedReader reader) throws IOException {
     String line;
     while ((line = reader.readLine()) != null) {
-      int index = line.indexOf(" ");
-      services.put(line.substring(0, index), SnipLink.escape(line.substring(index + 1)));
+      if (! line.startsWith("#")) {
+        int index = line.indexOf(" ");
+        services.put(line.substring(0, index), SnipLink.escape(line.substring(index + 1)));
+      }
     }
   }
-
-
 
   public Writer appendTo(Writer writer) throws IOException {
     Iterator iterator = services.entrySet().iterator();
