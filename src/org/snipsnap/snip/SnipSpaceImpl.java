@@ -34,17 +34,28 @@ import org.snipsnap.app.ApplicationStorage;
 import org.snipsnap.container.Components;
 import org.snipsnap.notification.Message;
 import org.snipsnap.notification.MessageService;
-import org.snipsnap.snip.storage.*;
-import org.snipsnap.snip.attachment.Attachments;
+import org.snipsnap.snip.storage.CacheSnipStorage;
+import org.snipsnap.snip.storage.CacheStorage;
+import org.snipsnap.snip.storage.CacheableStorage;
+import org.snipsnap.snip.storage.MemorySnipStorage;
+import org.snipsnap.snip.storage.QuerySnipStorage;
+import org.snipsnap.snip.storage.SnipStorage;
 import org.snipsnap.user.Digest;
 import org.snipsnap.util.ApplicationAwareMap;
 import org.snipsnap.util.Queue;
 import org.snipsnap.util.mail.PostDaemon;
 import org.snipsnap.versioning.VersionManager;
 
-import java.sql.Timestamp;
-import java.util.*;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * SnipSpace implementation handles all the operations with snips like
