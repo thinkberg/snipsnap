@@ -27,8 +27,7 @@ package org.snipsnap.test;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import org.snipsnap.test.filter.FilterTest;
-import org.snipsnap.test.snip.AllSnips;
+import org.snipsnap.test.snip.AllSnipTests;
 
 public class AllTests extends TestCase {
   public AllTests(String name) {
@@ -37,6 +36,7 @@ public class AllTests extends TestCase {
 
   public static Test suite() {
     TestSuite s = new TestSuite();
+    s.addTest(AllSnipTests.suite());
     return s;
   }
 }

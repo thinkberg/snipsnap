@@ -31,6 +31,7 @@ import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.Links;
 import org.snipsnap.snip.XMLSnipImport;
+import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.snip.label.Labels;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.User;
@@ -80,7 +81,7 @@ public class DBIndexer {
     app.setConfiguration(config);
 
     System.out.print("Starting to index SnipSpace ... ");
-    SnipSpace.getInstance().reIndex();
+    SnipSpaceFactory.getInstance().reIndex();
     System.out.println("done.");
 
     try {

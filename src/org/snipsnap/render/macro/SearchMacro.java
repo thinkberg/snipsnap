@@ -35,6 +35,7 @@ import org.apache.lucene.search.Hits;
 import org.snipsnap.app.Application;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipSpaceFactory;
 import org.radeox.macro.parameter.MacroParameter;
 import org.radeox.macro.Macro;
 import org.radeox.util.logging.Logger;
@@ -51,7 +52,7 @@ public class SearchMacro extends Macro {
       "?2: number of hits to show, defaults to 10"};
 
   public SearchMacro() {
-    space = SnipSpace.getInstance();
+    space = SnipSpaceFactory.getInstance();
   }
 
   public String[] getParamDescription() {
@@ -110,7 +111,7 @@ public class SearchMacro extends Macro {
       }
 
       if (searchString != null && searchString.length() > 0 &&
-          !SnipSpace.getInstance().exists(searchString) &&
+          !SnipSpaceFactory.getInstance().exists(searchString) &&
           UserManager.getInstance().isAuthenticated(Application.get().getUser())) {
         writer.write("<p>There is no snip with <b>");
         writer.write(searchString);

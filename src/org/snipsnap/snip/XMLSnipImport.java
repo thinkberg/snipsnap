@@ -112,7 +112,7 @@ public class XMLSnipImport {
         }
       }
 
-      SnipSpace space = SnipSpace.getInstance();
+      SnipSpace space = SnipSpaceFactory.getInstance();
       if (!missingParent.isEmpty()) {
         System.out.println("Inserting previously missing parents ...");
         Iterator it = missingParent.keySet().iterator();
@@ -219,7 +219,7 @@ public class XMLSnipImport {
    </snip>
    */
   private static void insertSnip(Node snipNode, boolean overwrite) throws SAXException {
-    SnipSpace space = SnipSpace.getInstance();
+    SnipSpace space = SnipSpaceFactory.getInstance();
     UserManager um = UserManager.getInstance();
 
     Map elements = getElements(snipNode);

@@ -35,6 +35,7 @@ package org.snipsnap.render.macro;
 
 
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipSpaceFactory;
 import org.radeox.macro.parameter.MacroParameter;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 import org.snipsnap.user.User;
@@ -76,7 +77,7 @@ public class SinceLastVisitMacro extends ListOutputMacro {
       User user = UserManager.getInstance().load(userName);
       // Logger.debug("Hashcode lastVisit=" + ((Object) user).hashCode());
       // Logger.debug("SinceLastVisit: " + user.getLastLogout());
-      Collection c = SnipSpace.getInstance().getSince(user.getLastLogout());
+      Collection c = SnipSpaceFactory.getInstance().getSince(user.getLastLogout());
       output(writer, "changed snips since last visit", c, "no recent changes.", type, showSize);
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");

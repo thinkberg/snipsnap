@@ -27,6 +27,7 @@ package org.snipsnap.net;
 import org.snipsnap.app.Application;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.util.Base64;
@@ -112,7 +113,7 @@ public class iCalServlet extends HttpServlet {
   }
 
   protected void delete(String name, String file) {
-    SnipSpace space = SnipSpace.getInstance();
+    SnipSpace space = SnipSpaceFactory.getInstance();
     if (space.exists(name)) {
       Snip userSnip = space.load(name);
       Iterator it = userSnip.getChildren().iterator();
@@ -129,7 +130,7 @@ public class iCalServlet extends HttpServlet {
 
   protected void put(String name, String file,
                      HttpServletRequest request, HttpServletResponse response) throws IOException {
-    SnipSpace space = SnipSpace.getInstance();
+    SnipSpace space = SnipSpaceFactory.getInstance();
     if (space.exists(name)) {
       Snip userSnip = space.load(name);
 
@@ -147,7 +148,7 @@ public class iCalServlet extends HttpServlet {
 
   protected void get(String name, String file,
                      HttpServletRequest request, HttpServletResponse response) throws IOException {
-    SnipSpace space = SnipSpace.getInstance();
+    SnipSpace space = SnipSpaceFactory.getInstance();
     if (space.exists(name)) {
       PrintWriter w = response.getWriter();
       Snip userSnip = space.load(name);

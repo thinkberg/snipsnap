@@ -27,6 +27,7 @@ package org.snipsnap.config;
 import org.snipsnap.app.Application;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.render.filter.context.SnipFilterContext;
 import org.radeox.filter.FilterPipe;
 import org.radeox.filter.ListFilter;
@@ -68,7 +69,7 @@ public class Presentation {
     }
     app.setConfiguration(config);
 
-    SnipSpace space = SnipSpace.getInstance();
+    SnipSpace space = SnipSpaceFactory.getInstance();
     FilterPipe fp = new FilterPipe();
     //fp.addFilter(new EscapeFilter());
     //fp.addFilter(new ParamFilter());

@@ -61,12 +61,12 @@ public class JarUtil {
           }
 
           if (extract) {
-            System.out.println("Extracting "+f.getAbsolutePath());
+            System.out.println("Extracting " + f.getAbsolutePath());
             CheckedInputStream fin = new CheckedInputStream(new BufferedInputStream(file.getInputStream(entry)),
-                                                            new Adler32());
-            if(rename) {
-              f = new File(target, entry.getName()+".new");
-              System.out.println("Renaming to "+f.getAbsolutePath());
+                new Adler32());
+            if (rename) {
+              f = new File(target, entry.getName() + ".new");
+              System.out.println("Renaming to " + f.getAbsolutePath());
             }
             BufferedOutputStream fout = new BufferedOutputStream(new FileOutputStream(f));
             int n = 0;
@@ -91,7 +91,7 @@ public class JarUtil {
       JarEntry entry = (JarEntry) entries.nextElement();
       if (!entry.isDirectory()) {
         CheckedInputStream fin = new CheckedInputStream(new BufferedInputStream(file.getInputStream(entry)),
-                                                        new Adler32());
+            new Adler32());
         byte buffer[] = new byte[8192];
         while ((fin.read(buffer)) != -1) {
           /* ignore ... */

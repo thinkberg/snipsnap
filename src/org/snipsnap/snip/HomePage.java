@@ -42,7 +42,7 @@ public class HomePage {
     String hp = "\n\n ~~Describe here who you are!~~\n\n__Configure this box!__\n1. Login\n" +
         "1. Click edit to change this snip\n\n" +
         "{snips-by-user:" + login + "}";
-    SnipSpace space = SnipSpace.getInstance();
+    SnipSpace space = SnipSpaceFactory.getInstance();
     if (space.exists(login)) {
       snip = space.load(login);
       snip.setContent(snip.getContent() + hp);

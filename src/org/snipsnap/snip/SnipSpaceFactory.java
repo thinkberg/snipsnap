@@ -25,19 +25,34 @@
 
 package org.snipsnap.snip;
 
-import org.snipsnap.interceptor.Aspects;
+import org.snipsnap.cache.Cache;
+import org.radeox.util.logging.Logger;
+
 
 /**
- * Single point for creating Snips
+ * SnipSpaceFactory returns SnipSpace instances
  *
  * @author Stephan J. Schmidt
  * @version $Id$
  */
 
-public class SnipFactory {
-  public static Snip createSnip(String name, String content) {
-    return new SnipImpl(name,content);
-    //return (Snip) Aspects.newInstance(new SnipImpl(name, content), Snip.class);
+public class SnipSpaceFactory {
+  private static SnipSpace instance;
+
+  public static synchronized SnipSpace getInstance() {
+    if (null == instance) {
+      Logger.debug("SnipSpaceFactory: Getting new instance.");
+      instance = new SnipSpaceImpl();
+      instance.init();
+      //Logger.debug("Initialized instance="+instance);
+    }
+    return instance;
   }
 
+  public static synchronized void removeInstance() {
+    if (instance != null) {
+      instance = null;
+      Cache.removeInstance();
+    }
+  }
 }

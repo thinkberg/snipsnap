@@ -247,7 +247,7 @@
       srcdir="${src}"
       classpathref="all.classpath"
       destdir="${target}/default/WEB-INF/classes"
-      excludes="org/snipsnap/test/**,org/snipsnap/admin/**, org/snipsnap/server/**">
+      excludes="org/snipsnap/admin/**, org/snipsnap/server/**">
       <src path="${src}"/>
       <src path="${target}/jsp"/>
       <include name="org/snipsnap/**"/>
@@ -287,6 +287,17 @@
       classpathref="all.classpath"
       destdir="${target}/installer/WEB-INF/classes"
       includes="org/snipsnap/admin/CommandHandler.java, org/snipsnap/admin/Authenticate.java, org/snipsnap/admin/install/**"/>
+  </target>
+
+  <target name="test" depends="template-war">
+    <junit printsummary="true">
+       <formatter usefile="false" type="plain"/>
+       <test name="org.snipsnap.test.AllTests"/>
+       <classpath>
+          <pathelement location="./src/apps/default/WEB-INF/lib/snipsnap-servlets.jar"/>
+          <path refid="all.classpath"/>
+       </classpath>
+    </junit>
   </target>
 
   <target description="upload to sourceforge" name="publish" depends="">

@@ -29,6 +29,7 @@ import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.user.User;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipSpaceFactory;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -106,7 +107,7 @@ public class InitFilter implements Filter {
 
     app.setUser(user, session);
     session.setAttribute("app", app);
-    session.setAttribute("space", SnipSpace.getInstance());
+    session.setAttribute("space", SnipSpaceFactory.getInstance());
 
     // why copy? because, getParamMap returns an unmodifyable map
     Map params = request.getParameterMap();

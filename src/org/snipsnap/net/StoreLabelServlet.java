@@ -27,6 +27,7 @@ package org.snipsnap.net;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.snip.label.Label;
 import org.snipsnap.snip.label.LabelManager;
 
@@ -74,7 +75,7 @@ public class StoreLabelServlet extends HttpServlet {
         params.put(name, request.getParameter(name));
       }
       label.handleInput(params);
-      Snip snip = SnipSpace.getInstance().load(snipName);
+      Snip snip = SnipSpaceFactory.getInstance().load(snipName);
       snip.getLabels().addLabel(label);
     }
     response.sendRedirect(SnipLink.absoluteLink(request, "/space/" + SnipLink.encode(snipName)));

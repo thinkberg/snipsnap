@@ -32,6 +32,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 public class Invocation {
   private Iterator chain;
@@ -46,7 +48,7 @@ public class Invocation {
     List interceptors = new ArrayList();
     //Interceptor log = new LogInterceptor();
     //log.setName("Logging");
-    //interceptors.add(new ACLInterceptor());
+    interceptors.add(new ACLInterceptor());
     chain = interceptors.iterator();
   }
 

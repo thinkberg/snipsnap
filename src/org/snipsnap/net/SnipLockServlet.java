@@ -28,6 +28,7 @@ import org.snipsnap.app.Application;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
 
@@ -49,7 +50,7 @@ public class SnipLockServlet extends HttpServlet {
     HttpSession session = request.getSession(false);
 
     String name = request.getParameter("name");
-    SnipSpace space = SnipSpace.getInstance();
+    SnipSpace space = SnipSpaceFactory.getInstance();
     Snip snip = space.load(name);
     if (session != null) {
       Application app = Application.getInstance(session);

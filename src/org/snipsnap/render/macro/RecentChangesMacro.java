@@ -25,6 +25,7 @@
 package org.snipsnap.render.macro;
 
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipSpaceFactory;
 import org.radeox.macro.parameter.MacroParameter;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
@@ -74,7 +75,7 @@ public class RecentChangesMacro extends ListOutputMacro {
     }
 
     if (params.getLength() <= 3) {
-      List changed = SnipSpace.getInstance().getChanged(length);
+      List changed = SnipSpaceFactory.getInstance().getChanged(length);
       output(writer, "Recently Changed:", changed, "No changes yet.", type, showSize);
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");

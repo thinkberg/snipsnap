@@ -36,6 +36,7 @@ import org.snipsnap.snip.label.Labels;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.util.ConnectionManager;
 import org.snipsnap.util.log.SQLLogger;
+import org.snipsnap.interceptor.Aspects;
 import org.radeox.util.logging.Logger;
 
 import java.sql.*;
@@ -72,11 +73,11 @@ public class JDBCSnipStorage implements SnipStorage, JDBCCreator {
     snip.setMUser(result.getString("mUser"));
     String commentString = result.getString("commentSnip");
     if (!result.wasNull()) {
-      snip.setCommentedSnip(SnipSpace.getInstance().load(commentString));
+      snip.setCommentedSnip(SnipSpaceFactory.getInstance().load(commentString));
     }
     String parentString = result.getString("parentSnip");
     if (!result.wasNull()) {
-      snip.setDirectParent(SnipSpace.getInstance().load(parentString));
+      snip.setDirectParent(SnipSpaceFactory.getInstance().load(parentString));
     }
     snip.setPermissions(new Permissions(result.getString("permissions")));
     snip.setBackLinks(new Links(result.getString("backLinks")));
@@ -84,7 +85,8 @@ public class JDBCSnipStorage implements SnipStorage, JDBCCreator {
     snip.setLabels(new Labels(result.getString("labels")));
     snip.setAttachments(new Attachments(result.getString("attachments")));
     snip.setViewCount(result.getInt("viewCount"));
-    return snip;
+
+    return (Snip) Aspects.newInstance(snip, Snip.class);
   }
 
   public int storageCount() {
@@ -307,8 +309,8 @@ public class JDBCSnipStorage implements SnipStorage, JDBCCreator {
       ConnectionManager.close(connection);
     }
 
-    return snip;
-  }
+    return (Snip) Aspects.newInstance(snip, Snip.class);
+   }
 
 
   public void storageRemove(Snip snip) {

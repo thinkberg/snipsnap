@@ -32,6 +32,7 @@
 package org.snipsnap.render.macro;
 
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipSpaceFactory;
 import org.radeox.macro.parameter.MacroParameter;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 
@@ -57,7 +58,7 @@ public class UserSnipMacro extends ListOutputMacro {
     }
 
     if (params.getLength() > 0) {
-      Collection c = SnipSpace.getInstance().getByUser(params.get("0"));
+      Collection c = SnipSpaceFactory.getInstance().getByUser(params.get("0"));
       output(writer, "this user's snips:", c, "none written yet.", type, showSize);
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");

@@ -28,6 +28,7 @@ import org.snipsnap.app.Application;
 import org.snipsnap.snip.HomePage;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.XMLSnipImport;
+import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
@@ -120,7 +121,7 @@ public class CreateDB {
 
   public static void createAdmin(AppConfiguration config) {
     System.out.println("CreateDB: Creating Admin Home Page");
-    SnipSpace.removeInstance();
+    SnipSpaceFactory.removeInstance();
     UserManager.removeInstance();
 
     User admin = UserManager.getInstance().create(config.getAdminLogin(), config.getAdminPassword(), config.getAdminEmail());
@@ -136,7 +137,7 @@ public class CreateDB {
 
   public static void insertData(AppConfiguration config, InputStream data) {
     System.out.println("CreateDB: Inserting Data");
-    SnipSpace.removeInstance();
+    SnipSpaceFactory.removeInstance();
     UserManager.removeInstance();
 
     User admin = UserManager.getInstance().authenticate(config.getAdminLogin(), config.getAdminPassword());
@@ -156,13 +157,13 @@ public class CreateDB {
 
   public static void postFirst(AppConfiguration config) {
     System.out.println("CreateDB: Posting first entry");
-    SnipSpace.removeInstance();
+    SnipSpaceFactory.removeInstance();
     UserManager.removeInstance();
 
     User admin = UserManager.getInstance().authenticate(config.getAdminLogin(), config.getAdminPassword());
     Application app = Application.get();
     app.setUser(admin);
 
-    SnipSpace.getInstance().post("Welcome to [SnipSnap]. You can now login and add/edit your first post");
+    SnipSpaceFactory.getInstance().post("Welcome to [SnipSnap]. You can now login and add/edit your first post");
   }
 }

@@ -62,7 +62,7 @@ public class SnipImpl implements Snip {
 
   private void init() {
     if (null == children) {
-      children = SnipSpace.getInstance().getChildren((Snip) Aspects.getThis());
+      children = SnipSpaceFactory.getInstance().getChildren((Snip) Aspects.getThis());
     }
   }
 
@@ -75,7 +75,7 @@ public class SnipImpl implements Snip {
 
   public void handle(HttpServletRequest request) {
     access.handle(name, request);
-    SnipSpace.getInstance().delayedStrore((Snip) Aspects.getThis());
+    SnipSpaceFactory.getInstance().delayedStrore((Snip) Aspects.getThis());
   }
 
   public Access getAccess() {
@@ -253,11 +253,11 @@ public class SnipImpl implements Snip {
    * @return List of child snips
    */
   public List getChildrenDateOrder() {
-    return SnipSpace.getInstance().getChildrenDateOrder((Snip) Aspects.getThis(), 10);
+    return SnipSpaceFactory.getInstance().getChildrenDateOrder((Snip) Aspects.getThis(), 10);
   }
 
   public List getChildrenModifiedOrder() {
-    return SnipSpace.getInstance().getChildrenModifiedOrder((Snip) Aspects.getThis(), 10);
+    return SnipSpaceFactory.getInstance().getChildrenModifiedOrder((Snip) Aspects.getThis(), 10);
   }
 
   /**
@@ -272,7 +272,7 @@ public class SnipImpl implements Snip {
     if (!children.contains(snip)) {
       snip.setParent((Snip) Aspects.getThis());
       children.add(snip);
-      SnipSpace.getInstance().systemStore(snip);
+      SnipSpaceFactory.getInstance().systemStore(snip);
     }
   }
 
@@ -366,7 +366,7 @@ public class SnipImpl implements Snip {
     RenderContext context = new SnipRenderContext((Snip) Aspects.getThis());
     context.setParameters(Application.get().getParameters());
     String xml = EngineManager.getInstance("snipsnap").render(content, context);
-
+    Logger.debug(getName() + " is cacheable: "+context.isCacheable());
     //String xml = SnipFormatter.toXML(this, getContent());
     Application.get().stop(start, "Formatting " + name);
     return xml;

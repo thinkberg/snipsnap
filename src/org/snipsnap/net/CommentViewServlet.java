@@ -27,6 +27,7 @@ package org.snipsnap.net;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipSpaceFactory;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -53,11 +54,11 @@ public class CommentViewServlet extends HttpServlet {
       name = name.substring(1);
     }
 
-    Snip snip = SnipSpace.getInstance().load(name.replace('+', ' '));
+    Snip snip = SnipSpaceFactory.getInstance().load(name.replace('+', ' '));
     // Snip does not exist
     if (null == snip) {
       System.err.println("Snip does not exist: name=" + name);
-      snip = SnipSpace.getInstance().load("snipsnap-notfound");
+      snip = SnipSpaceFactory.getInstance().load("snipsnap-notfound");
     }
 
     request.setAttribute("snip", snip);

@@ -31,6 +31,7 @@ import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipFormatter;
+import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 
@@ -57,7 +58,7 @@ public class SnipStoreServlet extends HttpServlet {
       throws ServletException, IOException {
 
     String name = request.getParameter("name");
-    SnipSpace space = SnipSpace.getInstance();
+    SnipSpace space = SnipSpaceFactory.getInstance();
     Snip snip = space.load(name);
 
     String content = request.getParameter("content");

@@ -35,7 +35,6 @@ package org.snipsnap.render.filter;
 
 import org.apache.oro.text.regex.*;
 import org.radeox.filter.Filter;
-import org.radeox.filter.LinkTester;
 import org.radeox.filter.context.FilterContext;
 import org.radeox.util.StringBufferWriter;
 import org.radeox.util.logging.Logger;
@@ -43,6 +42,7 @@ import org.snipsnap.app.Application;
 import org.snipsnap.render.filter.interwiki.InterWiki;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.UserManager;
 
 import java.io.IOException;
@@ -59,7 +59,7 @@ public class LinkTestFilter extends Filter {
   private String _substitute;
 
   public LinkTestFilter() {
-    linkTester = SnipSpace.getInstance();
+    linkTester = SnipSpaceFactory.getInstance();
 
     try {
       pattern = compiler.compile("\\[(.*?)\\]");
@@ -122,6 +122,7 @@ public class LinkTestFilter extends Filter {
               } else {
                 SnipLink.appendLink(buffer, targetSnip, result.group(1));
               }
+              context.getRenderContext().setCacheable(true);
             } else if (UserManager.getInstance().isAuthenticated(app.getUser())) {
               SnipLink.createCreateLink(buffer, targetSnip);
             } else {

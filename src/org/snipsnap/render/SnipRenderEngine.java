@@ -35,6 +35,7 @@ import org.snipsnap.render.filter.context.SnipFilterContext;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipSpaceFactory;
 
 
 /**
@@ -59,7 +60,7 @@ public class SnipRenderEngine extends BaseRenderEngine implements IncludeRenderE
   }
 
   public String include(String name) {
-    Snip includeSnip = SnipSpace.getInstance().load(name);
+    Snip includeSnip = SnipSpaceFactory.getInstance().load(name);
     if (null != includeSnip) {
       return includeSnip.getContent();
     } else {

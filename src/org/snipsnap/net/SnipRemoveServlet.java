@@ -27,6 +27,7 @@ package org.snipsnap.net;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipSpaceFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -43,7 +44,7 @@ public class SnipRemoveServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     String name = request.getParameter("name");
-    SnipSpace space = SnipSpace.getInstance();
+    SnipSpace space = SnipSpaceFactory.getInstance();
     Snip snip = space.load(name);
     space.remove(snip);
     response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));

@@ -28,6 +28,7 @@ import org.snipsnap.app.Application;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipSpaceFactory;
 
 import java.text.DateFormatSymbols;
 import java.util.*;
@@ -83,7 +84,7 @@ public class Month {
     public Set getDays(int month, int year) {
         String start = toKey(year, month, 1);
         String end = toKey(year, month, 31);
-        List snips = SnipSpace.getInstance().getByDate(start, end);
+        List snips = SnipSpaceFactory.getInstance().getByDate(start, end);
         Iterator iterator = snips.iterator();
 
         Set days = new HashSet();

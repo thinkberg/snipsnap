@@ -8,7 +8,6 @@
 <%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %>
 
 <div class="snip-wrapper">
- <s:check roles="Authenticated" permission="Edit" snip="${snip}">
   <div class="snip-title">
    <h1 class="snip-name"><c:out value="${snip_name}" escapeXml="false"/></h1>
   </div>
@@ -31,8 +30,4 @@
     </form>
    </div>
   </div>
- </s:check>
- <s:check roles="Authenticated" permission="Edit" snip="${snip}" invert="true">
-  <a href="../exec/login.jsp">Please login before editing!</a>
- </s:check>
 </div>

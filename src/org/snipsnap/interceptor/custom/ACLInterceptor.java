@@ -25,14 +25,14 @@
 
 package org.snipsnap.interceptor.custom;
 
+import org.radeox.util.logging.Logger;
+import org.snipsnap.app.Application;
 import org.snipsnap.interceptor.InterceptorSupport;
 import org.snipsnap.interceptor.Invocation;
-import org.snipsnap.app.Application;
 import org.snipsnap.snip.Snip;
-import org.snipsnap.user.User;
-import org.snipsnap.user.Security;
 import org.snipsnap.user.Roles;
-import org.radeox.util.logging.Logger;
+import org.snipsnap.user.Security;
+import org.snipsnap.user.User;
 
 import java.security.GeneralSecurityException;
 
@@ -49,13 +49,13 @@ public class ACLInterceptor extends InterceptorSupport {
     if (invocation.getMethod().getName().startsWith("set")) {
       Snip snip = (Snip) invocation.getTarget();
       User user = Application.get().getUser();
-      Logger.debug("ACLInterceptor: Method="+invocation.getMethod().getName());
-      Logger.debug("ACLInterceptor: User = "+user);
-      Logger.debug("ACLInterceptor: Snip = "+snip);
-     if (!(Security.checkPermission("Edit", user, snip)
+      //Logger.debug("ACLInterceptor: Method="+invocation.getMethod().getName());
+      //Logger.debug("ACLInterceptor: User = "+user);
+      //Logger.debug("ACLInterceptor: Snip = "+snip);
+      if (!(Security.checkPermission("Edit", user, snip)
           && Security.hasRoles(user, snip, roles))) {
-          Logger.debug("SECURITY EXCEPTION");
-//        throw new GeneralSecurityException("Not allowed to modify object.");
+        //Logger.debug("SECURITY EXCEPTION");
+        throw new GeneralSecurityException("Not allowed to modify object.");
       }
     }
     return invocation.next();

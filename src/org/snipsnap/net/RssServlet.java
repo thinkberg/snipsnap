@@ -27,6 +27,7 @@ package org.snipsnap.net;
 import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.semanticweb.rss.Rssify;
 
 import javax.servlet.RequestDispatcher;
@@ -55,18 +56,18 @@ public class RssServlet extends HttpServlet {
       throws IOException, ServletException {
 
     String eTag = request.getHeader("If-None-Match");
-    if (null != eTag && eTag.equals(SnipSpace.getInstance().getETag())) {
-      response.setHeader("ETag", SnipSpace.getInstance().getETag());
+    if (null != eTag && eTag.equals(SnipSpaceFactory.getInstance().getETag())) {
+      response.setHeader("ETag", SnipSpaceFactory.getInstance().getETag());
       response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
       return;
     } else {
       String version = request.getParameter("version");
       String name = "start";
-      Snip snip = SnipSpace.getInstance().load(name);
+      Snip snip = SnipSpaceFactory.getInstance().load(name);
 
       request.setAttribute("snip", snip);
       request.setAttribute("rsssnips", Rssify.rssify(snip));
-      request.setAttribute("space", SnipSpace.getInstance());
+      request.setAttribute("space", SnipSpaceFactory.getInstance());
       request.setAttribute("config", config);
 
       request.setAttribute("url", config.getUrl("/space"));

@@ -35,6 +35,7 @@ import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipUtil;
+import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.render.filter.links.BackLinks;
 import org.radeox.macro.parameter.MacroParameter;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
@@ -49,7 +50,7 @@ public class WeblogMacro extends SnipMacro {
   private String[] paramDescription = {"?1: number of shown posts"};
 
   public WeblogMacro() {
-    space = SnipSpace.getInstance();
+    space = SnipSpaceFactory.getInstance();
   }
 
   public String getName() {
@@ -75,7 +76,7 @@ public class WeblogMacro extends SnipMacro {
         count = 10;
       }
 
-      List snips = SnipSpace.getInstance().getChildrenDateOrder(params.getSnip(), count);
+      List snips = SnipSpaceFactory.getInstance().getChildrenDateOrder(params.getSnip(), count);
 
       Iterator iterator = snips.iterator();
       while (iterator.hasNext()) {

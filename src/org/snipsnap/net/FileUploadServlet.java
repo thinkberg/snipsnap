@@ -30,6 +30,7 @@ import org.snipsnap.net.filter.MultipartWrapper;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipSpaceFactory;
 
 import javax.mail.BodyPart;
 import javax.mail.MessagingException;
@@ -59,7 +60,7 @@ public class FileUploadServlet extends HttpServlet {
     throws ServletException, IOException {
 
     String name = request.getParameter("name");
-    SnipSpace space = SnipSpace.getInstance();
+    SnipSpace space = SnipSpaceFactory.getInstance();
     Snip snip = space.load(name);
 
     if (request.getParameter("upload") != null) {
@@ -83,7 +84,7 @@ public class FileUploadServlet extends HttpServlet {
           out.close();
           in.close();
           snip.getAttachments().addAttachment(part.getFileName(), contentType, size, file);
-          SnipSpace.getInstance().store(snip);
+          SnipSpaceFactory.getInstance().store(snip);
         } else {
           request.setAttribute("error", "Please provide a file for upload.");
         }

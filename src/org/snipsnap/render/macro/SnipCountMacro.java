@@ -26,6 +26,7 @@
 package org.snipsnap.render.macro;
 
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipSpaceFactory;
 import org.radeox.macro.parameter.MacroParameter;
 import org.radeox.macro.Macro;
 
@@ -58,7 +59,7 @@ public class SnipCountMacro extends Macro {
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
     if (params.getLength() == 0) {
-      writer.write(Integer.toString(SnipSpace.getInstance().getSnipCount()));
+      writer.write(Integer.toString(SnipSpaceFactory.getInstance().getSnipCount()));
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

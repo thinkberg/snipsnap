@@ -27,6 +27,7 @@ package org.snipsnap.net;
 import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipSpaceFactory;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -56,10 +57,10 @@ public class RsdServlet extends HttpServlet {
       throws IOException, ServletException {
 
     String name = "start";
-    Snip snip = SnipSpace.getInstance().load(name);
+    Snip snip = SnipSpaceFactory.getInstance().load(name);
 
     request.setAttribute("snip", snip);
-    request.setAttribute("space", SnipSpace.getInstance());
+    request.setAttribute("space", SnipSpaceFactory.getInstance());
     request.setAttribute("config", config);
 
     request.setAttribute("url", config.getUrl("/space"));

@@ -5,7 +5,8 @@
   --%>
 
 <%@ page import="org.snipsnap.snip.SnipSpace,
-                 org.snipsnap.app.Application"%>
+                 org.snipsnap.app.Application,
+                 org.snipsnap.snip.SnipSpaceFactory"%>
 <%@ page pageEncoding="iso-8859-1" %>
 <% response.setContentType("text/html; charset="+Application.get().getConfiguration().getEncoding()); %>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
@@ -48,8 +49,8 @@
     <c:import url="${page}"/>
     <s:debug/>
    </div>
-   <% for(int i = 1; SnipSpace.getInstance().exists("snipsnap-portlet-"+i); i++) { %>
-    <% pageContext.setAttribute("snip", SnipSpace.getInstance().load("snipsnap-portlet-"+i)); %>
+   <% for(int i = 1; SnipSpaceFactory.getInstance().exists("snipsnap-portlet-"+i); i++) { %>
+    <% pageContext.setAttribute("snip", SnipSpaceFactory.getInstance().load("snipsnap-portlet-"+i)); %>
     <div id="page-portlet-<%=i%>"><s:snip snip="${snip}"/></div>
    <% } %>
  </div>

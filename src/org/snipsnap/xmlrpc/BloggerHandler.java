@@ -28,6 +28,7 @@ package org.snipsnap.xmlrpc;
 import org.snipsnap.app.Application;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 import org.radeox.util.logging.Logger;
@@ -76,7 +77,7 @@ public class BloggerHandler extends XmlRpcSupport {
                         boolean publish) throws XmlRpcException {
     Logger.debug("XML-RPC call to newPost()");
 
-    SnipSpace space = SnipSpace.getInstance();
+    SnipSpace space = SnipSpaceFactory.getInstance();
 
     User user = authenticate(username, password);
 
@@ -138,10 +139,10 @@ public class BloggerHandler extends XmlRpcSupport {
     Logger.debug("XML-RPC call to getRecentPosts()");
 
     User user = authenticate(username, password);
-    Snip snip = SnipSpace.getInstance().load("start");
+    Snip snip = SnipSpaceFactory.getInstance().load("start");
 
     List children =
-        SnipSpace.getInstance().getChildrenDateOrder(snip, numberOfPosts);
+        SnipSpaceFactory.getInstance().getChildrenDateOrder(snip, numberOfPosts);
 
     Vector posts = new Vector(children.size());
     for (Iterator i = children.iterator(); i.hasNext();) {
@@ -178,7 +179,7 @@ public class BloggerHandler extends XmlRpcSupport {
     Logger.debug("XML-RPC call to getRecentPosts()");
 
     User user = authenticate(username, password);
-    Snip snip = SnipSpace.getInstance().load(postId);
+    Snip snip = SnipSpaceFactory.getInstance().load(postId);
     Hashtable post = new Hashtable();
     post.put("content", snip.getXMLContent());
     post.put("userid", snip.getOUser());

@@ -27,6 +27,7 @@ package org.snipsnap.net;
 import org.snipsnap.app.Application;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 
@@ -61,11 +62,11 @@ public class SnipViewServlet extends HttpServlet {
     }
 
     name = name.replace('+', ' ');
-    Snip snip = SnipSpace.getInstance().load(name);
+    Snip snip = SnipSpaceFactory.getInstance().load(name);
 
     // Snip does not exist
     if (null == snip) {
-      snip = SnipSpace.getInstance().load("snipsnap-notfound");
+      snip = SnipSpaceFactory.getInstance().load("snipsnap-notfound");
     }
     snip.handle(request);
     request.setAttribute("snip", snip);

@@ -28,6 +28,7 @@ import org.snipsnap.app.Application;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipFormatter;
+import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 
@@ -54,7 +55,7 @@ public class PostStoreServlet extends HttpServlet {
     if (request.getParameter("preview") != null) {
       // If there is a title, generate preview of snip with title + content
       if (null != title && !"".equals(title)) {
-        request.setAttribute("preview", SnipFormatter.toXML(null, SnipSpace.getInstance().getContent(title, content)));
+        request.setAttribute("preview", SnipFormatter.toXML(null, SnipSpaceFactory.getInstance().getContent(title, content)));
       } else {
         request.setAttribute("preview", SnipFormatter.toXML(null, content));
       }
@@ -71,9 +72,9 @@ public class PostStoreServlet extends HttpServlet {
         User user = app.getUser();
         if (UserManager.getInstance().isAuthenticated(user)) {
           if (null == title || "".equals(title)) {
-            SnipSpace.getInstance().post(content);
+            SnipSpaceFactory.getInstance().post(content);
           } else {
-            SnipSpace.getInstance().post(content, title);
+            SnipSpaceFactory.getInstance().post(content, title);
           }
         } else {
           response.sendError(HttpServletResponse.SC_FORBIDDEN);

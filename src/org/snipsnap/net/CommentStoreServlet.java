@@ -29,6 +29,7 @@ import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipFormatter;
+import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 
@@ -51,7 +52,7 @@ public class CommentStoreServlet extends HttpServlet {
 
     String name = request.getParameter("comment");
     String content = request.getParameter("content");
-    Snip snip = SnipSpace.getInstance().load(name);
+    Snip snip = SnipSpaceFactory.getInstance().load(name);
 
     if (request.getParameter("preview") != null) {
       request.setAttribute("snip", snip);

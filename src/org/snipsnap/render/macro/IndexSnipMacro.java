@@ -33,6 +33,7 @@ package org.snipsnap.render.macro;
 
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipSpaceFactory;
 import org.radeox.macro.parameter.MacroParameter;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 import org.snipsnap.util.collection.Collections;
@@ -67,7 +68,7 @@ public class IndexSnipMacro extends ListOutputMacro {
 
     if (params.getLength() < 2) {
       output(writer, "All Snips:",
-          Collections.filter(SnipSpace.getInstance().getAll(),
+          Collections.filter(SnipSpaceFactory.getInstance().getAll(),
               new Filterator() {
                 public boolean filter(Object obj) {
                   String name = ((Snip) obj).getName();

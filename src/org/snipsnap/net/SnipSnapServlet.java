@@ -26,6 +26,7 @@ package org.snipsnap.net;
 
 import org.snipsnap.app.Application;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 
@@ -56,7 +57,7 @@ public class SnipSnapServlet extends HttpServlet {
 
     app.setUser(user, session);
     session.setAttribute("app", app);
-    session.setAttribute("space", SnipSpace.getInstance());
+    session.setAttribute("space", SnipSpaceFactory.getInstance());
 
     super.service(request, response);
   }

@@ -1,5 +1,6 @@
 <%@ page import="org.snipsnap.snip.SnipSpace,
-                 org.snipsnap.user.UserManager"%>
+                 org.snipsnap.user.UserManager,
+                 org.snipsnap.snip.SnipSpaceFactory"%>
  <!--
   ** Welcome screen
   ** @author Matthias L. Jugel
@@ -19,7 +20,7 @@
    <c:out value="${config.url}"/> (<c:out value="${config.host}" default="*"/><c:out value=":${config.port}${config.contextPath}"/>)
   </td></tr>
   <tr><td><b>Registered Users:</b></td><td><%= UserManager.getInstance().getAll().size() %></td></tr>
-  <tr><td><b>Stored Snips:</b></td><td><%= SnipSpace.getInstance().getAll().size() %></td></tr>
+  <tr><td><b>Stored Snips:</b></td><td><%= SnipSpaceFactory.getInstance().getAll().size() %></td></tr>
  </table>
  <div>
   <h3>Select one of the following actions:</h3>

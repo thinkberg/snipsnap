@@ -27,6 +27,7 @@ package org.snipsnap.jsp;
 import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipSpaceFactory;
 import org.radeox.util.logging.Logger;
 
 import javax.servlet.jsp.JspException;
@@ -59,8 +60,8 @@ public class SnipTag extends TagSupport {
   public void setName(String name) {
     try {
       String snipName = (String) ExpressionEvaluatorManager.evaluate("name", name, String.class, this, pageContext);
-      if (SnipSpace.getInstance().exists(snipName)) {
-        snip = SnipSpace.getInstance().load(snipName);
+      if (SnipSpaceFactory.getInstance().exists(snipName)) {
+        snip = SnipSpaceFactory.getInstance().load(snipName);
       }
     } catch (JspException e) {
       Logger.warn("unable to evaluate expression", e);

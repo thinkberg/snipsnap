@@ -28,6 +28,7 @@ package org.snipsnap.render.macro;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipSpaceFactory;
 import org.radeox.macro.parameter.MacroParameter;
 import org.radeox.macro.Macro;
 import org.radeox.util.logging.Logger;
@@ -51,7 +52,7 @@ public class HotSnipMacro extends Macro {
      {"?1: number of snips to show, defaults to 10"};
 
   public HotSnipMacro() {
-    space = SnipSpace.getInstance();
+    space = SnipSpaceFactory.getInstance();
   }
 
   public String[] getParamDescription() {

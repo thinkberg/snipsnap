@@ -29,6 +29,7 @@ import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipSpaceFactory;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -65,7 +66,7 @@ public class SnipEditServlet extends HttpServlet {
       return;
     }
 
-    Snip snip = SnipSpace.getInstance().load(name);
+    Snip snip = SnipSpaceFactory.getInstance().load(name);
     request.setAttribute("snip", snip);
     request.setAttribute("snip_name", name);
 

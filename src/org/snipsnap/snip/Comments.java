@@ -47,7 +47,7 @@ public class Comments {
 
   public Comments(Snip snip) {
     this.snip = snip;
-    space = SnipSpace.getInstance();
+    space = SnipSpaceFactory.getInstance();
   }
 
   /**
@@ -56,7 +56,7 @@ public class Comments {
    */
   private void init() {
     if (null == comments) {
-      comments = SnipSpace.getInstance().getComments(snip);
+      comments = SnipSpaceFactory.getInstance().getComments(snip);
     }
 
     if (null == users) {
