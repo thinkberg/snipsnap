@@ -122,7 +122,7 @@ public class NewUserServlet extends HttpServlet {
       cookie.setPath(request.getContextPath());
       response.addCookie(cookie);
       session.setAttribute("app", app);
-      response.sendRedirect(SnipLink.absoluteLink(request, "/space/" + login));
+      response.sendRedirect(SnipLink.absoluteLink(request, "/space/" + SnipLink.encode(login)));
       return;
     }
 

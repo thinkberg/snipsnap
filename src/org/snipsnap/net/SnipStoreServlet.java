@@ -25,14 +25,19 @@
 package org.snipsnap.net;
 
 import org.snipsnap.app.Application;
-import org.snipsnap.snip.*;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.filter.SnipFormatter;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 
-import javax.servlet.ServletException;
 import javax.servlet.RequestDispatcher;
-import javax.servlet.http.*;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
@@ -41,43 +46,43 @@ import java.io.IOException;
  * @version $Id$
  */
 public class SnipStoreServlet extends HttpServlet {
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+  public void doPost(HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException {
 
-        String name = request.getParameter("name");
-        SnipSpace space = SnipSpace.getInstance();
-        Snip snip = space.load(name);
+    String name = request.getParameter("name");
+    SnipSpace space = SnipSpace.getInstance();
+    Snip snip = space.load(name);
 
-        String content = request.getParameter("content");
+    String content = request.getParameter("content");
 
-        if (request.getParameter("preview") != null) {
-            request.setAttribute("preview", SnipFormatter.toXML(snip, content));
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/edit");
-            dispatcher.forward(request, response);
-            return;
-        } else if (request.getParameter("cancel") == null) {
-            HttpSession session = request.getSession();
-            Application app = null;
-            if (session != null) {
-                app = Application.getInstance(session);
-                User user = app.getUser();
-                if (UserManager.getInstance().isAuthenticated(user)) {
-                    if (snip != null) {
-                        snip.setContent(content);
-                        space.store(snip);
-                    } else {
-                        snip = space.create(name, content);
-                    }
-                } else {
-                    response.sendError(HttpServletResponse.SC_FORBIDDEN);
-                }
-            }
-        } else if (snip == null) {
-            // return to referrer if the snip cannot be found
-            response.sendRedirect(request.getParameter("referer"));
-            return;
+    if (request.getParameter("preview") != null) {
+      request.setAttribute("preview", SnipFormatter.toXML(snip, content));
+      RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/edit");
+      dispatcher.forward(request, response);
+      return;
+    } else if (request.getParameter("cancel") == null) {
+      HttpSession session = request.getSession();
+      Application app = null;
+      if (session != null) {
+        app = Application.getInstance(session);
+        User user = app.getUser();
+        if (UserManager.getInstance().isAuthenticated(user)) {
+          if (snip != null) {
+            snip.setContent(content);
+            space.store(snip);
+          } else {
+            snip = space.create(name, content);
+          }
+        } else {
+          response.sendError(HttpServletResponse.SC_FORBIDDEN);
         }
-
-        response.sendRedirect(SnipLink.absoluteLink(request, "/space/" + name));
+      }
+    } else if (snip == null) {
+      // return to referrer if the snip cannot be found
+      response.sendRedirect(request.getParameter("referer"));
+      return;
     }
+
+    response.sendRedirect(SnipLink.absoluteLink(request, "/space/" + SnipLink.encode(name)));
+  }
 }

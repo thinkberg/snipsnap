@@ -2,20 +2,20 @@
 <%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %>
 
 <s:check roles="Editor" snip="${snip}">
-  [<a href="../exec/remove?name=<c:out value='${snip.name}'/>">zap!</a>]
+  [<a href="../exec/remove?name=<c:out value='${snip.nameEncoded}'/>">zap!</a>]
 </s:check>
 <s:check roles="Editor">
   <s:checkObject permission="Edit" roles="Editor" snip="${snip}" invert="true">
-    [<a href="../exec/lock?name=<c:out value='${snip.name}'/>">lock</a>]
+    [<a href="../exec/lock?name=<c:out value='${snip.nameEncoded}'/>">lock</a>]
   </s:checkObject>
   <s:checkObject permission="Edit" roles="Editor" snip="${snip}">
-    [<a href="../exec/lock?name=<c:out value='${snip.name}'/>&unlock=true">unlock</a>]
+    [<a href="../exec/lock?name=<c:out value='${snip.nameEncoded}'/>&unlock=true">unlock</a>]
   </s:checkObject>
 </s:check>
-[<a href="http://www.google.com/search?q=<c:out value='${snip.name}'/>">google</a>]
-[<a href="http://www.daypop.com/search?q=<c:out value='${snip.name}'/>">daypop</a>]
+[<a href="http://www.google.com/search?q=<c:out value='${snip.nameEncoded}'/>">google</a>]
+[<a href="http://www.daypop.com/search?q=<c:out value='${snip.nameEncoded}'/>">daypop</a>]
 <s:check roles="Authenticated" permission="Edit" snip="${snip}">
-  [<a href="../exec/edit?name=<c:out value='${snip.name}'/>">edit</a>]
+  [<a href="../exec/edit?name=<c:out value='${snip.nameEncoded}'/>">edit</a>]
 </s:check>
 <s:check roles="Authenticated" permission="Edit" snip="${snip}" invert="true">
   <span class="inactive">[edit]</span>

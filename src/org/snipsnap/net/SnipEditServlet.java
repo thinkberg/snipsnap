@@ -24,11 +24,15 @@
  */
 package org.snipsnap.net;
 
-import org.snipsnap.snip.*;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.SnipSpace;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -40,33 +44,33 @@ import java.io.IOException;
  */
 public class SnipEditServlet extends HttpServlet {
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
-        doGet(request, response);
+  public void doPost(HttpServletRequest request, HttpServletResponse response)
+    throws IOException, ServletException {
+    doGet(request, response);
+  }
+
+  public void doGet(HttpServletRequest request, HttpServletResponse response)
+    throws IOException, ServletException {
+
+    String name = request.getParameter("name");
+    if (null == name) {
+      response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));
+      return;
     }
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
+    Snip snip = SnipSpace.getInstance().load(name);
+    request.setAttribute("snip", snip);
+    request.setAttribute("snip_name", name);
 
-        String name = request.getParameter("name");
-        if (null == name) {
-            response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));
-            return;
-        }
-
-        Snip snip = SnipSpace.getInstance().load(name);
-        request.setAttribute("snip", snip);
-        request.setAttribute("snip_name", name);
-
-        String content = (String) request.getParameter("content");
-        if (null != content) {
-            request.setAttribute("content", content);
-        } else {
-            request.setAttribute("content", snip.getContent());
-        }
-
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/edit.jsp");
-        dispatcher.forward(request, response);
+    String content = (String) request.getParameter("content");
+    if (null != content) {
+      request.setAttribute("content", content);
+    } else {
+      request.setAttribute("content", snip != null ? snip.getContent() : "");
     }
+
+    RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/edit.jsp");
+    dispatcher.forward(request, response);
+  }
 
 }

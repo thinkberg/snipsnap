@@ -22,8 +22,7 @@
   </tr>
   <tr>
    <td colspan="2">
-    <span class="snip-modified"><c:out value="${snip.modified}"
-          escapeXml="false"/>
+    <span class="snip-modified"><c:out value="${snip.modified}" escapeXml="false"/>
    Viewed <c:out value="${snip.access.viewCount}"/> times.</span>
    </td>
   </tr>
