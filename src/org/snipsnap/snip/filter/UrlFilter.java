@@ -22,6 +22,14 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
+
+package org.snipsnap.snip.filter;
+
+import org.snipsnap.snip.filter.regex.RegexTokenFilter;
+import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.Snip;
+import org.apache.oro.text.regex.MatchResult;
+
 /*
  * UrlFilter finds [text] in its input and transforms this
  * to <url name="text">
@@ -30,15 +38,19 @@
  * @team sonicteam
  * @version $Id$
  */
-package org.snipsnap.snip.filter;
-
-import org.snipsnap.snip.filter.regex.RegexReplaceFilter;
-import org.snipsnap.snip.SnipLink;
-
-public class UrlFilter extends RegexReplaceFilter {
+public class UrlFilter extends RegexTokenFilter {
 
   public UrlFilter() {
-    super("([^\"=]|^)((http|ftp)s?://(%[[:digit:]A-Fa-f][[:digit:]A-Fa-f]|[-_.!~*';/?:@#&=+$,[:alnum:]])+)",
-             "$1<span class=\"nobr\">"+SnipLink.createImage("external-link", "&gt;&gt;")+"<a href=\"$2\">$2</a></span>");
+    super("([^\"=]|^)((http|ftp)s?://(%[[:digit:]A-Fa-f][[:digit:]A-Fa-f]|[-_.!~*';/?:@#&=+$,[:alnum:]])+)");
   };
+
+  public void handleMatch(StringBuffer buffer, MatchResult result, Snip snip) {
+    buffer.append(result.group(1));
+    buffer.append("<span class=\"nobr\">");
+    buffer.append(SnipLink.createImage("external-link", "&gt;&gt;"));
+    buffer.append("<a href=\"").append(result.group(2)).append("\">");
+    buffer.append(EscapeFilter.escape(result.group(2).charAt(0)));
+    buffer.append(result.group(2).substring(1));
+    buffer.append("</a></span>");
+  }
 }
