@@ -37,7 +37,7 @@ import org.snipsnap.user.UserManager;
 import java.io.IOException;
 import java.io.Writer;
 
-public class UserMacro extends ListoutputMacro {
+public class UserMacro extends ListOutputMacro {
   public String getName() {
     return "list-of-users";
   }

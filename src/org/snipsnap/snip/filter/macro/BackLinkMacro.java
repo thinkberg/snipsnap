@@ -43,7 +43,7 @@ import java.io.Writer;
  * @author Stephan J. Schmidt
  * @version $Id$
  */
-public class BackLinkMacro extends ListoutputMacro {
+public class BackLinkMacro extends ListOutputMacro {
   public String getName() {
     return "backlinks";
   }

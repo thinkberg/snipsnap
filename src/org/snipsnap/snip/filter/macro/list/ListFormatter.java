@@ -22,41 +22,24 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-/*
- * Macro that displays all Snips by user
- *
- * @author stephan
- * @version $Id$
- */
-
-package org.snipsnap.snip.filter.macro;
-
-import org.snipsnap.snip.Snip;
+package org.snipsnap.snip.filter.macro.list;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;
 
-public class UserSnipMacro extends ListOutputMacro {
-  public String getName() {
-    return "snips-by-user";
-  }
-
-  public void execute(Writer writer, MacroParameter params)
-    throws IllegalArgumentException, IOException {
-    String type = null;
-    boolean showSize = true;
-    if (params != null) {
-      if (params.getLength() > 1) {
-        type = params.get("1");
-      }
-    }
-
-    if (params.getLength() > 0) {
-      Collection c = space.getByUser(params.get("0"));
-      output(writer, "this user's snips:", c, "none written yet.", type, showSize);
-    } else {
-      throw new IllegalArgumentException("Number of arguments does not match");
-    }
-  }
+/**
+ * List formatter interface. List formatter are loaded via the Plugin mechanism.
+ *
+ * @author Matthias L. Jugel
+ * @version $Id$
+ */
+public interface ListFormatter {
+  public String getName();
+  public void format(Writer writer,
+                     String listComment,
+                     Collection c,
+                     String emptyText,
+                     boolean showSize)
+    throws IOException;
 }

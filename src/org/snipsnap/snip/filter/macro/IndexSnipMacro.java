@@ -44,7 +44,7 @@ import java.util.Collection;
 import java.io.IOException;
 import java.io.Writer;
 
-public class IndexSnipMacro extends ListoutputMacro {
+public class IndexSnipMacro extends ListOutputMacro {
   public String getName() {
     return "index";
   }

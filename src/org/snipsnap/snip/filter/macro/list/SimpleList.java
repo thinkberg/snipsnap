@@ -24,9 +24,10 @@
  */
 package org.snipsnap.snip.filter.macro.list;
 
-import org.snipsnap.snip.filter.macro.ListoutputMacro;
+import org.snipsnap.snip.filter.macro.ListOutputMacro;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.util.Nameable;
+import org.snipsnap.serialization.Appendable;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -38,7 +39,10 @@ import java.io.IOException;
  * @author Matthias L. Jugel
  * @version $Id$
  */
-public class SimpleList implements ListoutputMacro.ListFormatter {
+public class SimpleList implements ListFormatter {
+  public String getName() {
+    return "simple";
+  }
 
   /**
    * Create a simple list.
@@ -58,7 +62,9 @@ public class SimpleList implements ListoutputMacro.ListFormatter {
       Iterator nameIterator = c.iterator();
       while (nameIterator.hasNext()) {
         Object object = nameIterator.next();
-        if(object instanceof Nameable) {
+        if(object instanceof Appendable) {
+          ((Appendable)object).appendTo(writer);
+        } else if(object instanceof Nameable) {
           SnipLink.appendLink(writer, ((Nameable)object).getName());
         } else {
           writer.write(object.toString());

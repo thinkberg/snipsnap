@@ -48,7 +48,7 @@ import java.util.Collection;
 import java.io.IOException;
 import java.io.Writer;
 
-public class SinceLastVisitMacro extends ListoutputMacro {
+public class SinceLastVisitMacro extends ListOutputMacro {
   public String getName() {
     return "since-last-visit";
   }

@@ -42,7 +42,7 @@ import java.util.Iterator;
 import java.io.Writer;
 import java.io.IOException;
 
-public class RecentWeblogMacro extends ListoutputMacro {
+public class RecentWeblogMacro extends ListOutputMacro {
   public String getName() {
     return "recent-weblog";
   }

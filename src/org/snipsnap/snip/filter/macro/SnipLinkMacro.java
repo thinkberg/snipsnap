@@ -44,7 +44,7 @@ import java.io.Writer;
  * @author Stephan J. Schmidt
  * @version $Id$
  */
-public class SnipLinkMacro extends ListoutputMacro {
+public class SnipLinkMacro extends ListOutputMacro {
   public String getName() {
     return "sniplinks";
   }

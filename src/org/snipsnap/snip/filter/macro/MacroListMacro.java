@@ -42,7 +42,7 @@ import java.io.Writer;
  * @author Matthias L. Jugel
  * @version $Id$
  */
-public class MacroListMacro extends ListoutputMacro {
+public class MacroListMacro extends ListOutputMacro {
   public String getName() {
     return "list-of-macros";
   }

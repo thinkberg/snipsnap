@@ -42,7 +42,7 @@ import java.io.Writer;
  * @author Matthias L. Jugel
  * @version $Id$
  */
-public class RecentChangesMacro extends ListoutputMacro {
+public class RecentChangesMacro extends ListOutputMacro {
   public String getName() {
     return "recent-changes";
   }
