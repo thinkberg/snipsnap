@@ -35,33 +35,37 @@ package org.snipsnap.snip.filter.macro;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.filter.macro.table.Table;
 
-import java.util.StringTokenizer;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.StringTokenizer;
 
 public class TableMacro extends Macro {
 
-    public String getName() {
-        return "table";
+  public String getName() {
+    return "table";
+  }
+
+  public void execute(Writer writer, String[] params, String content, Snip snip)
+    throws IllegalArgumentException, IOException {
+
+    content = content.trim() + "\n";
+
+    Table table = new Table();
+    StringTokenizer tokenizer = new StringTokenizer(content, "|\n", true);
+    String lastToken = null;
+    while (tokenizer.hasMoreTokens()) {
+      String token = tokenizer.nextToken();
+      if ("\n".equals(token)) {
+        table.newRow();
+      } else if (!"|".equals(token)) {
+        table.addCell(token);
+      } else if("|".equals(lastToken)) {
+        table.addCell(" ");
+      }
+      lastToken = token;
     }
-
-    public void execute(Writer writer, String[] params, String content, Snip snip)
-        throws IllegalArgumentException, IOException {
-
-        content = content.trim() + "\n";
-
-        Table table = new Table();
-        StringTokenizer tokenizer = new StringTokenizer(content, "|\n", true);
-        while (tokenizer.hasMoreTokens()) {
-            String token = tokenizer.nextToken();
-            if ("\n".equals(token)) {
-                table.newRow();
-            } else if (!"|".equals(token)) {
-                table.addCell(token);
-            }
-        }
-        table.calc();
-        table.appendTo(writer);
-        return;
-    }
+    table.calc();
+    table.appendTo(writer);
+    return;
+  }
 }
