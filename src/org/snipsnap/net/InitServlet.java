@@ -61,5 +61,6 @@ public class InitServlet extends GenericServlet {
   }
 
   public void service(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
+    // do nothing
   }
 }

@@ -112,6 +112,11 @@
     <servlet-class>org.snipsnap.net.iCalServlet</servlet-class>
   </servlet>
 
+  <servlet>
+    <servlet-name>org.snipsnap.net.RobotServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.RobotServlet</servlet-class>
+  </servlet>
+
   <!-- servlet mappings -->
   <servlet-mapping>
     <servlet-name>org.snipsnap.net.SnipViewServlet</servlet-name>
@@ -191,6 +196,11 @@
   <servlet-mapping>
     <servlet-name>org.snipsnap.net.iCalServlet</servlet-name>
     <url-pattern>/exec/ical/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>org.snipsnap.net.RobotServlet</servlet-name>
+    <url-pattern>/robots.txt</url-pattern>
   </servlet-mapping>
 
   <!-- ADMIN -->

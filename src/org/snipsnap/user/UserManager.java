@@ -67,20 +67,13 @@ public class UserManager implements Loader {
   private final static String ATT_USER = "user";
   private final static int SECONDS_PER_YEAR = 60 * 60 * 24 * 365;
 
-  private MessageDigest digest;
   private Map authHash = new HashMap();
+  private Map robots = new HashMap();
   private List delayed;
   private Cache cache;
   private FinderFactory finders;
 
   protected UserManager() {
-    try {
-      digest =  MessageDigest.getInstance("SHA1");
-    } catch (NoSuchAlgorithmException e) {
-      System.err.println("UserManager: unable to load digest algorithm: "+e);
-      digest = null;
-    }
-
     delayed = new LinkedList();
 
     cache = Cache.getInstance();
@@ -107,29 +100,23 @@ public class UserManager implements Loader {
     }, 5 * 60 * 1000, 5 * 60 * 1000);
   }
 
-  private String getDigest(User user) {
-    // create a string representation of the digest of current user
-    StringBuffer tmpDigest = new StringBuffer();
-    if (digest != null) {
-      String tmp = user.getLogin() + user.getPasswd() + user.getLastLogin().toString();
-      //System.out.println("encoding: "+tmp);
-      byte buf[] = digest.digest(tmp.getBytes());
-      tmpDigest.setLength(0);
-      for (int i = 0; i < buf.length; i++) {
-        tmpDigest.append(Integer.toHexString(buf[i]).toUpperCase());
-      }
-    }
-    //System.out.println("digest: "+tmpDigest.toString());
-    return tmpDigest.toString();
-  }
-
   // update the auth hash by removing all entries and updating from the database
   private void updateAuthHash() {
     authHash.clear();
     Iterator users = getAll().iterator();
     while (users.hasNext()) {
       User user = (User) users.next();
-      authHash.put(getDigest(user), user);
+      authHash.put(Password.getCookieDigest(user), user);
+    }
+  }
+
+
+  public void addRobot(String address, String name) {
+    User user = (User) robots.get(address);
+    if(user == null) {
+      System.out.println("new robot found: "+address+"."+name);
+      user = new User(name, name, "");
+      robots.put(address, user);
     }
   }
 
@@ -143,16 +130,12 @@ public class UserManager implements Loader {
       Cookie cookie = getCookie(request, COOKIE_NAME);
       if (cookie != null) {
         String auth = cookie.getValue();
-        /*System.out.println("Looking for "+auth);
-        System.out.println("check: "+authHash.containsKey(auth));
-        System.out.println("user: "+authHash.get(auth));*/
         if (!authHash.containsKey(auth)) {
           updateAuthHash();
         }
 
         user = (User) authHash.get(auth);
         if (user != null) {
-          // System.err.println("UserManager: valid hash: "+auth);
           user = authenticate(user.getLogin(), user.getPasswd());
           setCookie(request, response, user);
         } else {
@@ -161,7 +144,10 @@ public class UserManager implements Loader {
       }
 
       if (null == user) {
-        user = new User("Guest", "Guest", "");
+        user = (User)robots.get(request.getRemoteHost());
+        if(null == user) {
+          user = new User("Guest", "Guest", "");
+        }
         removeCookie(request, response);
       }
       session.setAttribute(ATT_USER, user);
@@ -174,7 +160,7 @@ public class UserManager implements Loader {
    * Set cookie with has of encoded user/pass and last login time.
    */
   public void setCookie(HttpServletRequest request, HttpServletResponse response, User user) {
-    String auth = getDigest(user);
+    String auth = Password.getCookieDigest(user);
     // @TODO find better solution by removing by value
     updateAuthHash();
 
@@ -205,19 +191,13 @@ public class UserManager implements Loader {
   public Cookie getCookie(HttpServletRequest request, String name) {
     Cookie cookies[] = request.getCookies();
     for (int i = 0; cookies != null && i < cookies.length; i++) {
-/*
-      System.out.println("Cookie: [" + name + "] " +
-                         cookies[i].getName() + "/" +
-                         cookies[i].getPath() + "/" +
-                         cookies[i].getValue() + " " +
-                         cookies[i].getMaxAge() + "s");
-*/
       if (cookies[i].getName().equals(name)) {
         return cookies[i];
       }
     }
     return null;
   }
+
 
   public User authenticate(String login, String passwd) {
     User user = load(login);
