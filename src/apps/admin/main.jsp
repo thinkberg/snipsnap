@@ -10,7 +10,7 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-    <title>Weblog/Wiki</title>
+    <title>SnipSnap Admin</title>
     <link type="text/css" href="default.css" rel="STYLESHEET"/>
   </head>
   <body>
@@ -20,8 +20,10 @@
          <tr>
            <td valign="top">
              <img src="/images/snipsnap.gif"/>
-             <jsp:include page="/menu.jsp" flush="true"/>
+             <c:import url="/menu.jsp"/>
            </td>
+         </tr>
+         <tr>
            <td valign="top" width="100%">
              <c:import url="${page}"/>
            </td>

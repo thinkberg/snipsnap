@@ -25,6 +25,7 @@
 package com.neotis.admin;
 
 import com.neotis.config.CreateDB;
+import com.neotis.config.Configuration;
 import com.neotis.user.UserManager;
 import com.neotis.util.JarExtractor;
 
@@ -35,6 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.File;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Collection;
@@ -58,6 +60,10 @@ public class Installer extends HttpServlet {
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+
+    PrintWriter out = response.getWriter();
+    writeMessage(out, "Installing SnipSnap ...");
+
     // get or create session and application object
     HttpSession session = request.getSession(false);
     if (null == session) {
@@ -67,9 +73,15 @@ public class Installer extends HttpServlet {
     Map errors = new HashMap();
     session.removeAttribute("errors");
 
-    UserManager um = UserManager.getInstance();
+    // get config from session
     Configuration config = (Configuration) session.getAttribute("config");
+    if(null == config) {
+      sendError(session, null, response);
+      return;
+    }
 
+    writeMessage(out, "Checking user name and password ...");
+    // set user name and email, check that information
     config.setUserName(request.getParameter("username"));
     if (null == config.getUserName() || config.getUserName().length() == 0) {
       errors.put("username", "You must enter a user name!");
@@ -80,8 +92,12 @@ public class Installer extends HttpServlet {
     String password2 = request.getParameter("password2");
     if (null == password || password.length() == 0 || !password.equals(password2)) {
       errors.put("password", "Passwords do not match!");
+    } else {
+      config.setPassword(password);
     }
 
+    writeMessage(out, "Checking server host and port information ...");
+    // set host name and port if provided
     config.setHost(request.getParameter("host"));
     try {
       config.setPort(Integer.parseInt(request.getParameter("port")));
@@ -128,8 +144,9 @@ public class Installer extends HttpServlet {
       }
     }
 
+    writeMessage(out, "Extracting templates ...");
     try {
-      JarExtractor.extract(new JarFile("./lib/SnipSnap-template.war", true), new File("./app/"));
+      JarExtractor.extract(new JarFile("./lib/SnipSnap-template.war", true), new File("./app/"), out);
     } catch (IOException e) {
       errors.put("fatal", "Unable to extract default application, please see server.log for details!");
       sendError(session, errors, response);
@@ -137,9 +154,21 @@ public class Installer extends HttpServlet {
     }
 
 
-
-    CreateDB.createDB(config.getUserName(), password, config.getEmail());
+    writeMessage(out, "Saving local configuration ...");
+    config.setConfigured(true);
     config.save("./conf/local.conf");
+
+    writeMessage(out, "Creating database ...");
+    try {
+      CreateDB.createDB(config.getUserName(), password, config.getEmail());
+    } catch (Exception e) {
+      e.printStackTrace();
+      errors.put("fatal", "Unable to create database: "+e);
+      sendError(session, errors, response);
+      return;
+    }
+
+    writeMessage(out, "Starting your application ...");
     try {
       WebApplicationContext context =
         server.addWebApplication(config.getContextPath(), "./app/");
@@ -151,7 +180,11 @@ public class Installer extends HttpServlet {
       return;
     }
 
-    response.sendRedirect(config.getContextPath());
+    // save again, just to make sure
+    config.save("./conf/local.conf");
+
+    writeMessage(out, "Installation finished.");
+    response.sendRedirect("/admin/exec/finished.jsp");
   }
 
   private void sendError(HttpSession session, Map errors, HttpServletResponse response) throws IOException {
@@ -159,4 +192,8 @@ public class Installer extends HttpServlet {
     response.sendRedirect("/admin/exec/install.jsp");
   }
 
+  private void writeMessage(PrintWriter out, String message) {
+    out.println(message);
+    // out.flush();
+  }
 }

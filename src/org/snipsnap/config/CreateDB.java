@@ -116,7 +116,6 @@ public class CreateDB {
       statement.close();
       connection.close();
 
-      System.err.println("CreateDB: "+username+":"+password+":"+email);
       User admin = UserManager.getInstance().create(username, password, email);
 
       Application app = new Application();

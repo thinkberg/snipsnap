@@ -26,6 +26,7 @@ package com.neotis.admin;
 
 import com.neotis.user.User;
 import com.neotis.user.UserManager;
+import com.neotis.config.Configuration;
 import org.mortbay.http.HttpContext;
 import org.mortbay.http.HttpServer;
 

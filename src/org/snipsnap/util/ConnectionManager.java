@@ -25,6 +25,7 @@
 package com.neotis.util;
 
 import com.bitmechanic.sql.ConnectionPoolManager;
+import com.neotis.config.Configuration;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -74,15 +75,14 @@ public class ConnectionManager {
 
     // The username/password for the database.  This is set when the database
     // is created (see SimpleDatabaseCreateDemo).
-    String username = "funzel";
-    String password = "funzel";
+    Configuration config = new Configuration("./conf/local.conf");
 
     String name = "snipsnap";
 
     try {
       mgr.addAlias(name, "com.mckoi.JDBCDriver",
                    url,
-                   username, password,
+                   config.getUserName(), config.getPassword(),
                    10, // max connections to open
                    300, // seconds a connection can be idle before it is closed
                    120, // seconds a connection can be checked out by a thread

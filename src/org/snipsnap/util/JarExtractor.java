@@ -13,12 +13,17 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 public class JarExtractor {
   public static void extract(JarFile file, File target) throws IOException {
+    extract(file, target, new PrintWriter(System.err));
+  }
+
+  public static void extract(JarFile file, File target, PrintWriter out) throws IOException {
     if (!target.exists()) {
       target.mkdirs();
     }
@@ -30,18 +35,18 @@ public class JarExtractor {
         JarEntry entry = (JarEntry) entries.nextElement();
         File f = new File(target, entry.getName());
         if (entry.isDirectory()) {
-          System.err.println("JarExtractor: creating directory '"+f.getName()+"'");
+          out.println("JarExtractor: creating directory '"+f.getName()+"'");
           f.mkdir();
         } else {
-          System.err.println("JarExtractor: writing file '"+f.getName()+"'");
-          BufferedInputStream in = new BufferedInputStream(file.getInputStream(entry));
-          BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(f));
+          out.println("JarExtractor: writing file '"+f.getName()+"'");
+          BufferedInputStream fin = new BufferedInputStream(file.getInputStream(entry));
+          BufferedOutputStream fout = new BufferedOutputStream(new FileOutputStream(f));
           int n = 0;
-          while ((n = in.read(buf)) >= 0) {
-            out.write(buf, 0, n);
+          while ((n = fin.read(buf)) >= 0) {
+            fout.write(buf, 0, n);
           }
-          in.close();
-          out.close();
+          fin.close();
+          fout.close();
         }
       }
     }

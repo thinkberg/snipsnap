@@ -24,7 +24,7 @@
  */
 package com.neotis.server;
 
-import com.neotis.admin.Configuration;
+import com.neotis.config.Configuration;
 import org.mortbay.http.HttpListener;
 import org.mortbay.http.SocketListener;
 import org.mortbay.jetty.Server;
@@ -80,7 +80,12 @@ public class AppServer {
         System.err.println("AppServer: unable to configure server on port "+config.getPort());
         System.err.println("AppServer: error caused by: "+e);
       }
-      WebApplicationContext context = addApplication(config.getContextPath(), "./app");
+      try {
+        WebApplicationContext context = addApplication(config.getContextPath(), "./app");
+        context.start();
+      } catch (Exception e) {
+        System.out.println("WARNING: unable to start your application: "+e);
+      }
     } else {
       System.out.println("INFO: Server is still unconfigured!");
       System.out.println("INFO: Point your browser to the following address:");
