@@ -1,0 +1,4 @@
+org.snipsnap.serialization.rdf.DefaultRDFLabelSerializer
+org.snipsnap.serialization.rdf.DefaultDAMLLabelSerializer
+org.snipsnap.serialization.rdf.RDFSnipLabelSerializer
+org.snipsnap.serialization.rdf.RDFTypeLabelSerializer
