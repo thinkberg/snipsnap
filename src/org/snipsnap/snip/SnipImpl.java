@@ -335,7 +335,8 @@ public class SnipImpl implements Snip {
 
   public String toXML() {
     long start = Application.get().start();
-    String xml = SnipFormatter.toXML((Snip) Aspects.getThis(), getContent());
+    //String xml = SnipFormatter.toXML((Snip) Aspects.getThis(), getContent());
+    String xml = SnipFormatter.toXML(this, getContent());
     Application.get().stop(start, "Formatting " + name);
     return xml;
   }
