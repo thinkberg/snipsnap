@@ -27,9 +27,9 @@ package org.snipsnap.test.commons;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
+import org.snipsnap.snip.SnipLink;
 import org.snipsnap.test.snip.SnipTestSupport;
 import org.snipsnap.util.URLEncoderDecoder;
-import org.snipsnap.snip.SnipLink;
 
 import java.io.UnsupportedEncodingException;
 
@@ -38,19 +38,35 @@ public class EncoderTest extends SnipTestSupport {
     super(name);
   }
 
+  private final static String UTF8_CHARS = "\u65E5\u672C"; // ?? (nihon)
+  private final static String UTF8_ENCODED = "%E6%97%A5%E6%9C%AC";
+
   String unencodedString = null;
   String encodedString = null;
 
   protected void setUp() throws Exception {
     super.setUp();
-    //System.setProperty("file.encoding", "UTF-8");
-    // the text below is complete nonsense, randomly typed
-    unencodedString = new String("سىزذتازىذتازسذ.شسذز.سىازذتا".getBytes(), "UTF-8");
-    encodedString = "%D8%B3%D9%89%D8%B2%D8%B0%D8%AA%D8%A7%D8%B2%D9%89%D8%B0%D8%AA%D8%A7%D8%B2%D8%B3%D8%B0.%D8%B4%D8%B3%D8%B0%D8%B2.%D8%B3%D9%89%D8%A7%D8%B2%D8%B0%D8%AA%D8%A7";
+    System.setProperty("file.encoding", "UTF-8");
+
+    StringBuffer longUnencodedString = new StringBuffer();
+    for (int chars = 0; chars < 20; chars++) {
+      longUnencodedString.append(UTF8_CHARS);
+    }
+    unencodedString = longUnencodedString.toString();
+
+    StringBuffer longEncodedString = new StringBuffer();
+    for (int chars = 0; chars < 20; chars++) {
+      longEncodedString.append(UTF8_ENCODED);
+    }
+    encodedString = longEncodedString.toString();
   }
 
   public static Test suite() {
     return new TestSuite(EncoderTest.class);
+  }
+
+  public void testUTF8Characters() {
+    assertEquals(UTF8_CHARS, unencodedString.substring(0, UTF8_CHARS.length()));
   }
 
   public void testUTF8Encoding() throws UnsupportedEncodingException {
@@ -63,15 +79,13 @@ public class EncoderTest extends SnipTestSupport {
                  unencodedString, URLEncoderDecoder.decode(encodedString, "UTF-8"));
   }
 
-  /*
   public void testCutLength() throws UnsupportedEncodingException {
-    assertEquals(unencodedString, SnipLink.cutLength(unencodedString, 10));
+    assertEquals(unencodedString.substring(0, 7) + "...", SnipLink.cutLength(unencodedString, 10));
   }
 
   public void testCutLengthLink() throws UnsupportedEncodingException {
     assertEquals("Cutting link text is broken",
-        "<a href=\"/space/"+encodedString+"\">"+unencodedString.substring(0, 22)+"...</a>",
+                 "<a href=\"/space/" + encodedString + "\">" + unencodedString.substring(0, 22) + "...</a>",
                  SnipLink.createLink(unencodedString, SnipLink.cutLength(unencodedString, 25)));
   }
-  */
 }
