@@ -42,8 +42,8 @@
   <c:if test="${snip.notWeblog}">
     <c:choose>
       <c:when test="${snip.comment}">
-        <c:out value="${snip.commentedSnip}" escapeXml="false" /> |
-        <c:out value="${snip.commentedSnip.postString}" escapeXml="false" />
+        <c:out value="${snip.commentedSnip.comments}" escapeXml="false" /> |
+        <c:out value="${snip.commentedSnip.comments.postString}" escapeXml="false" />
       </c:when>
       <c:otherwise>
         <c:out value="${snip.comments}" escapeXml="false" /> |

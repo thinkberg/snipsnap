@@ -35,6 +35,7 @@ package org.snipsnap.util.log;
 
 public class Logger {
   private static LogHandler handler = new ApplicationLogger();
+  // private static LogHandler handler = new NullLogger();
 
   public final static int PERF = 0;
   public final static int DEBUG = 1;
@@ -48,5 +49,9 @@ public class Logger {
 
   public static void log(int level, String output) {
     handler.log(levels[level]+" - "+output);
+  }
+
+  public static void setHandler(LogHandler handler) {
+    Logger.handler = handler;
   }
 }

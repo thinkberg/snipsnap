@@ -25,6 +25,8 @@
 
 package org.snipsnap.snip;
 
+import org.snipsnap.util.log.Logger;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -71,7 +73,7 @@ public class Access {
   }
 
   public void store() {
-   SnipSpace.getInstance().systemStore(snip);
+   SnipSpace.getInstance().delayedStrore(snip);
   }
 
   public boolean isModified() {

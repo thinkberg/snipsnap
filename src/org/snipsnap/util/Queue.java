@@ -72,4 +72,5 @@ public class Queue {
     count = Math.min(count, queue.size());
     return (List) queue.subList(0, count);
   }
+
 }
