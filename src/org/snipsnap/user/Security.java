@@ -67,7 +67,7 @@ public class Security {
     if (object instanceof Ownable) {
       Ownable o = (Ownable) object;
       if (o.isOwner(user)) {
-        roles.add("Owner");
+        roles.add(OWNER);
       }
     }
     return roles;
@@ -75,11 +75,8 @@ public class Security {
 
   public static boolean hasRoles(User user, List roles) {
     Set userRoles = getRoles(user);
-    if (userRoles != null) {
-      userRoles.retainAll(roles);
-      return !userRoles.isEmpty();
-    }
-    return false;
+    userRoles.retainAll(roles);
+    return !userRoles.isEmpty();
   }
 
   public static boolean hasRoles(User user, Snip object, List roles) {

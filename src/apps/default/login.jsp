@@ -17,7 +17,7 @@
   <b>Forgot your password? <a href="/exec/passreminder?login=<%= login != null ? login : "" %>">Mail it back!<a/></b>
  </td></tr>
  <tr><td>
-  <b>Not registered? <a href="/exec/register?login=<%= login != null ? login : "" %>">Register!<a/></b>
+  <b>Not registered? <a href="/exec/register.jsp?login=<%= login != null ? login : "" %>">Register!<a/></b>
  </td></tr>
  </table>
  <br>

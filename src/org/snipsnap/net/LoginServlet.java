@@ -55,7 +55,7 @@ public class LoginServlet extends HttpServlet {
       UserManager um = UserManager.getInstance();
       User user = um.authenticate(login, password);
       if (user == null) {
-        response.sendRedirect("/exec/login?login=" + login + "&message=" + ERR_PASSWORD);
+        response.sendRedirect("/exec/login.jsp?login=" + login + "&message=" + ERR_PASSWORD);
         return;
       }
       HttpSession session = request.getSession(true);

@@ -7,10 +7,6 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %>
 
-<s:snip load="${param['name']}" id="snip">
-  <span class="error">Unable to load snip with name '<c:out value="${name}"/>'!</span>
-</s:snip>
-
 <table width="100%" border="0" cellspacing="2" cellpadding="1">
  <!-- do not display header on weblogs -->
  <c:if test="${snip.notWeblog}">

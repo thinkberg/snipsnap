@@ -47,10 +47,10 @@ public class CheckPermission extends UserAuth {
     Application app = (Application) pageContext.findAttribute("app");
     User user = app.getUser();
     if (snip != null) {
-      System.err.println(snip.getPermissions().toString());
-      return Security.checkPermission(permission, user, snip) && Security.hasRoles(user, snip, roles) && !invertCheck;
+      boolean isTrue = Security.checkPermission(permission, user, snip) && Security.hasRoles(user, snip, roles);
+      return (invertCheck ? !isTrue : isTrue);
     } else {
-      return Security.hasRoles(user, roles) && !invertCheck;
+      return (invertCheck ? !Security.hasRoles(user, roles) : Security.hasRoles(user, roles));
     }
   }
 }

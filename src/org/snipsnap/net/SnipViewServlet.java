@@ -39,41 +39,24 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
- * Layouter and main handler for web sites.
+ * Load a snip to view.
  * @author Matthias L. Jugel
  * @version $Id$
  */
-public class Layouter extends HttpServlet {
+public class SnipViewServlet extends HttpServlet {
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
     throws IOException, ServletException {
 
-    // get or create session and application object
-    HttpSession session = request.getSession(true);
-    Application app = (Application)session.getAttribute("app");
-    if(app == null) {
-      app = new Application();
+    String name = request.getPathInfo();
+    if(null == name) {
+      name = "start";
+    } else {
+      name = name.substring(1);
     }
 
-    User user = app.getUser();
-    if(user == null) {
-      user = UserManager.getInstance().getUser(request);
-    }
-
-    // store user name and app in cookie and session
-    response.addCookie(new Cookie("userName", user.getLogin()));
-    app.setUser(user);
-    session.setAttribute("app", app);
-    session.setAttribute("space", SnipSpace.getInstance());
-
-    String layout = request.getPathInfo();
-    if(null == layout) {
-      response.sendError(HttpServletResponse.SC_FORBIDDEN, "illegal user of layouter");
-      return;
-    }
-
-    request.setAttribute("page", layout);
-    RequestDispatcher dispatcher = request.getRequestDispatcher("/main.jsp");
+    request.setAttribute("snip", SnipSpace.getInstance().load(name));
+    RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/snip.jsp");
     dispatcher.forward(request, response);
   }
 

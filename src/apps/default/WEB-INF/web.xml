@@ -18,6 +18,11 @@
   </servlet>
 
   <servlet>
+    <servlet-name>com.neotis.net.SnipViewServlet</servlet-name>
+    <servlet-class>com.neotis.net.SnipViewServlet</servlet-class>
+  </servlet>
+
+  <servlet>
     <servlet-name>com.neotis.net.SnipStoreServlet</servlet-name>
     <servlet-class>com.neotis.net.SnipStoreServlet</servlet-class>
   </servlet>
@@ -43,7 +48,7 @@
   </servlet>
 
   <servlet-mapping>
-    <servlet-name>com.neotis.net.Layouter</servlet-name>
+    <servlet-name>com.neotis.net.SnipViewServlet</servlet-name>
     <url-pattern>/space/*</url-pattern>
   </servlet-mapping>
 
