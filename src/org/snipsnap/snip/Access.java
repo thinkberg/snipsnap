@@ -93,6 +93,7 @@ public class Access {
             }
 
             String name = SnipLink.decode(url);
+
             if (!Application.get().getConfiguration().getStartSnip().equals(name)
               && !snipName.equals(name)) {
               snipLinks.addLink(name);

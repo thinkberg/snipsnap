@@ -30,6 +30,7 @@ import junit.framework.TestSuite;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.test.snip.SnipTestSupport;
 import org.snipsnap.util.URLEncoderDecoder;
+import org.radeox.util.Encoder;
 
 import java.io.UnsupportedEncodingException;
 
@@ -88,4 +89,5 @@ public class EncoderTest extends SnipTestSupport {
                  "<a href=\"space/" + encodedString + "\">" + unencodedString.substring(0, 22) + "...</a>",
                  SnipLink.createLink(unencodedString, SnipLink.cutLength(unencodedString, 25)));
   }
+
 }

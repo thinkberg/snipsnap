@@ -25,14 +25,16 @@
 
 package org.snipsnap.render;
 
-import org.radeox.engine.BaseRenderEngine;
 import org.radeox.api.engine.ImageRenderEngine;
 import org.radeox.api.engine.IncludeRenderEngine;
 import org.radeox.api.engine.WikiRenderEngine;
 import org.radeox.api.engine.context.RenderContext;
+import org.radeox.engine.BaseRenderEngine;
 import org.radeox.filter.context.FilterContext;
 import org.radeox.macro.MacroRepository;
+import org.radeox.util.Encoder;
 import org.snipsnap.app.Application;
+import org.snipsnap.config.Configuration;
 import org.snipsnap.render.context.SnipRenderContext;
 import org.snipsnap.render.filter.context.SnipFilterContext;
 import org.snipsnap.render.macro.loader.GroovyMacroLoader;
@@ -57,7 +59,7 @@ import java.io.Writer;
 public class SnipRenderEngine extends BaseRenderEngine
     implements WikiRenderEngine, IncludeRenderEngine, ImageRenderEngine {
 
-  private SnipSpace space;
+//  private SnipSpace space;
   private AuthenticationService authService;
 
   public SnipRenderEngine(AuthenticationService authService) {
@@ -88,7 +90,14 @@ public class SnipRenderEngine extends BaseRenderEngine
   }
 
   public void appendCreateLink(StringBuffer buffer, String name, String view) {
-    SnipLink.appendCreateLink(buffer, name);
+    Configuration config = Application.get().getConfiguration();
+    String encodedSpace = config.getEncodedSpace();
+
+    if(name.indexOf(encodedSpace.charAt(0)) == -1) {
+      SnipLink.appendCreateLink(buffer, name);
+    } else {
+      buffer.append("&#91;<span class=\"error\">illegal '"+encodedSpace+"' in "+Encoder.escape(name)+"</span>&#93;");
+    }
   }
 
   public String include(String name) {

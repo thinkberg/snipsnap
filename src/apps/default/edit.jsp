@@ -10,7 +10,7 @@
 
 <div class="snip-wrapper">
   <div class="snip-title">
-   <h1 class="snip-name"><c:out value="${snip_name}" escapeXml="false"/></h1>
+   <h1 class="snip-name"><c:out value="${snip_name}" escapeXml="true"/></h1>
   </div>
   <c:if test="${not empty preview}">
    <div class="preview"><div class="snip-content"><c:out value="${preview}" escapeXml="false"/></div></div>

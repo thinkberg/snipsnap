@@ -26,6 +26,7 @@
 package org.snipsnap.snip;
 
 import org.radeox.util.logging.Logger;
+import org.radeox.util.Encoder;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.util.URLEncoderDecoder;
@@ -56,7 +57,7 @@ public class SnipLink {
     throws IOException {
     writer.write(base);
     writer.write("/");
-    writer.write(SnipLink.encode(name));
+    writer.write(encode(name));
     if(target != null) {
       writer.write("#");
       writer.write(target);
@@ -83,9 +84,9 @@ public class SnipLink {
     writer.write("&#91;create <a href=\"");
     writer.write(getExecRoot());
     writer.write("/edit?name=");
-    writer.write(SnipLink.encode(name));
+    writer.write(encode(name));
     writer.write("\">");
-    writer.write(name);
+    writer.write(Encoder.escape(name));
     writer.write("</a>&#93;");
     return writer;
   }
@@ -94,8 +95,8 @@ public class SnipLink {
     buffer.append("&#91;create <a href=\"");
     buffer.append(getExecRoot());
     buffer.append("/edit?name=");
-    buffer.append(SnipLink.encode(name));
-    buffer.append("\">").append(name).append("</a>&#93;");
+    buffer.append(encode(name));
+    buffer.append("\">").append(Encoder.escape(name)).append("</a>&#93;");
     return buffer;
   }
 
@@ -151,7 +152,7 @@ public class SnipLink {
     writer.write("/");
     writer.write(name);
     writer.write("\">");
-    writer.write(view);
+    writer.write(Encoder.escape(view));
     writer.write("</a>");
     return writer;
   }
@@ -165,7 +166,7 @@ public class SnipLink {
     buffer.append("/");
     buffer.append(name);
     buffer.append("\">");
-    buffer.append(view);
+    buffer.append(Encoder.escape(view));
     buffer.append("</a>");
     return buffer;
   }
@@ -279,7 +280,7 @@ public class SnipLink {
       Configuration config = Application.get().getConfiguration();
       String encodedSpace = config.getEncodedSpace();
       if (null != encodedSpace && encodedSpace.length() > 0) {
-        s.replace(encodedSpace.charAt(0), ' ');
+        s = s.replace(encodedSpace.charAt(0), ' ');
       }
       return URLEncoderDecoder.decode(s, config.getEncoding());
     } catch (UnsupportedEncodingException e) {
