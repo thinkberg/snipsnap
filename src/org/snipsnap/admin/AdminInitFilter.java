@@ -193,7 +193,7 @@ public class AdminInitFilter implements Filter {
 
   protected URL install(String host, String port, String path) {
     try {
-      return adminClient.install(host+"_"+port+"_"+path, host, port, path);
+      return adminClient.install(host+"_"+port+"_"+path.replace('/', '_'), host, port, path);
     } catch (XmlRpcException e) {
       System.err.println("exception: "+e);
     } catch (IOException e) {

@@ -29,6 +29,7 @@ import org.apache.xmlrpc.XmlRpcException;
 
 import java.util.Vector;
 import java.util.Map;
+import java.util.Hashtable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.io.IOException;
@@ -47,9 +48,9 @@ public class AdminXmlRpcClient {
     System.err.println("AdminXmlRpcClient: new client for "+xmlRpcUrl);
   }
 
-  public Map getApplications() throws XmlRpcException, IOException {
+  public Hashtable getApplications() throws XmlRpcException, IOException {
     Vector args = new Vector();
-    return (Map)xmlRpcClient.execute("getApplications", args);
+    return (Hashtable)xmlRpcClient.execute("getApplications", args);
   }
 
   public URL install(String name, String host, String port, String path) throws XmlRpcException, IOException {

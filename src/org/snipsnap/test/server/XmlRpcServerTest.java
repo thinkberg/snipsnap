@@ -36,6 +36,7 @@ import org.snipsnap.server.AdminXmlRpcHandler;
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.Hashtable;
 import java.net.URL;
 
 public class XmlRpcServerTest extends TestCase {
@@ -79,6 +80,15 @@ public class XmlRpcServerTest extends TestCase {
       assertEquals(url, xmlRpcClient.install("test", "localhost", "8668", "/"));
     } catch (XmlRpcException e) {
       fail("installation of application failed: " + e.getMessage());
+    }
+  }
+
+  public void testXmlRpcApplicationList() throws IOException {
+    try {
+      Hashtable list = xmlRpcClient.getApplications();
+      assertEquals(list.size(), 0);
+    } catch (XmlRpcException e) {
+      fail("listing of applications failed: " + e.getMessage());
     }
   }
 

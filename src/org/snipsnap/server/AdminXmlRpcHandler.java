@@ -25,23 +25,22 @@
 package org.snipsnap.server;
 
 import org.apache.xmlrpc.XmlRpcException;
+import org.mortbay.jetty.servlet.WebApplicationContext;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.config.ServerConfiguration;
-import org.mortbay.jetty.servlet.WebApplicationContext;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Properties;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Properties;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 public class AdminXmlRpcHandler extends AuthXmlRpcHandler {
   Properties serverConfig = null;
@@ -62,7 +61,18 @@ public class AdminXmlRpcHandler extends AuthXmlRpcHandler {
     while (appIt.hasNext()) {
       String appName = (String) appIt.next();
       WebApplicationContext context = (WebApplicationContext)ApplicationLoader.applications.get(appName);
-      appList.put(appName, "http://"+context.getHosts()[0]+context.getContextPath());
+      String[] hosts = context.getHosts();
+      if(hosts == null) {
+        hosts = new String[1];
+        try {
+          hosts[0] = InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException e) {
+          hosts[0] = "localhost";
+        }
+      }
+      int port = context.getHttpServer().getListeners()[0].getPort();
+      String url = "http://" + hosts[0] + (port != 80 ? ":"+port : "") + context.getContextPath();
+      appList.put(appName, url);
     }
     return appList;
   }

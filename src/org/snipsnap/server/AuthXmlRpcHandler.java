@@ -62,11 +62,14 @@ public abstract class AuthXmlRpcHandler implements AuthenticatedXmlRpcHandler {
   }
 
   public Object execute(String methodName, Vector args) throws Exception {
-    Class argClasses[] = new Class[args.size()];
-    for (int argNum = 0; argNum < args.size(); argNum++) {
-      argClasses[argNum] = args.get(argNum).getClass();
+    Class argClasses[] = null;
+    if(args.size() > 0) {
+      argClasses = new Class[args.size()];
+      for (int argNum = 0; argNum < args.size(); argNum++) {
+        argClasses[argNum] = args.get(argNum).getClass();
+      }
     }
     Method method = target.getClass().getMethod(methodName, argClasses);
-    return method.invoke(target, args.toArray());
+    return method.invoke(target, (args.size() > 0 ? args.toArray() : null));
   }
 }
