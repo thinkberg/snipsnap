@@ -1,20 +1,41 @@
 package org.snipsnap.util;
 
+import org.snipsnap.config.AppConfiguration;
+
 import java.sql.*;
 import java.util.Properties;
+import java.io.File;
+import java.io.IOException;
 
 public class DBDump {
 
   public static void main(String[] args) {
 
     Connection connection;
+    AppConfiguration config = null;
 
-    String URL = "jdbc:mckoi:local://./applications/SnipSnap/db.conf";
+    if("-config".equals(args[0])) {
+      if(args.length > 1) {
+        try {
+          config = new AppConfiguration(new File(args[1]));
+        } catch (IOException e) {
+          System.err.println("DBDump: unable to read configuration file: "+e);
+          System.exit(-1);
+        }
+      }
+    }
 
-    String username = args[0];
-    String password = args[1];
+    if(config == null) {
+      System.err.println("usage: DBDump [-config file]");
+      System.exit(-1);
+    }
 
-    String driverClass = "com.mckoi.JDBCDriver";
+    String URL = config.getJDBCURL();
+
+    String username = config.getAdminLogin();
+    String password = config.getAdminEmail();
+
+    String driverClass = config.getJDBCDriver();
     try {
       System.err.println("Loading JDBC Driver: " + driverClass);
       Class.forName(driverClass);
@@ -25,8 +46,6 @@ public class DBDump {
     }
 
     Properties props = new Properties();
-    System.err.println("Setting user: " + username);
-    System.err.println("Setting password: " + password);
 
     props.put("user", username);
     props.put("password", password);

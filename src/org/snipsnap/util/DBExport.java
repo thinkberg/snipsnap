@@ -24,41 +24,28 @@
  */
 package org.snipsnap.util;
 
-import org.xml.sax.XMLReader;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Element;
-import org.w3c.dom.DOMException;
-import org.snipsnap.user.User;
-import org.snipsnap.user.UserManager;
+import org.snipsnap.app.Application;
 import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.config.Configuration;
-import org.snipsnap.app.Application;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.FactoryConfigurationError;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
-import java.beans.IntrospectionException;
-import java.beans.PropertyDescriptor;
-import java.beans.Introspector;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Iterator;
 
 public class DBExport {
   public static void main(String args[]) {
-    if(args.length < 3) {
+    if (args.length < 3) {
       System.out.println("usage: DBExport <application>");
       System.exit(-1);
     }
@@ -67,16 +54,16 @@ public class DBExport {
     try {
       serverConfig = new Configuration("./conf/server.conf");
     } catch (IOException e) {
-      System.out.println("Unable to load server config: "+e);
+      System.out.println("Unable to load server config: " + e);
       System.exit(-1);
     }
     Application app = Application.get();
     AppConfiguration config = null;
     try {
       config = new AppConfiguration(
-           new File(serverConfig.getProperty(Configuration.SERVER_WEBAPP_ROOT)+args[0]+"/application.conf"));
+        new File(serverConfig.getProperty(Configuration.SERVER_WEBAPP_ROOT) + args[0] + "/application.conf"));
     } catch (IOException e) {
-      System.out.println("Unable to load application config: "+e);
+      System.out.println("Unable to load application config: " + e);
       System.exit(-1);
     }
     app.setConfiguration(config);
@@ -86,16 +73,19 @@ public class DBExport {
       DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
       Document doc = documentBuilder.newDocument();
 
-      Element root = (Element)doc.createElement("snipspace");
+      Element root = (Element) doc.createElement("snipspace");
       doc.appendChild(root);
       Iterator it = SnipSpace.getInstance().getAll().iterator();
-      while(it.hasNext()) {
-        Snip snip = (Snip)it.next();
+      while (it.hasNext()) {
+        Snip snip = (Snip) it.next();
         Element snipElement = getXMLInstance(snip, doc);
-        if(snipElement != null) {
+        if (snipElement != null) {
+          System.err.println("exporting '"+snip.getName()+"'");
           root.appendChild(snipElement);
         }
       }
+      System.out.println(root.toString());
+      System.err.println("Exported "+root.getChildNodes().getLength()+" snips.");
     } catch (Exception e) {
       System.err.println("error accessing xml parser");
       System.exit(-1);
@@ -114,25 +104,21 @@ public class DBExport {
       for (int i = properties.length - 1; i >= 0; i--) {
         String name = properties[i].getName();
         Method method = properties[i].getReadMethod();
-        Class classType = properties[i].getPropertyType();
-        System.out.println("snip: "+snip+", property: " + name + ", classType=" + classType);
         Object value = null;
 
         if (method != null) {
           try {
             value = method.invoke(snip, args);
           } catch (IllegalAccessException e) {
-            System.err.println("could not access property " + name+": "+e);
+            System.err.println("could not access property " + name + ": " + e);
           } catch (IllegalArgumentException e) {
-            System.err.println("illegal argument for reading property " + name+", "+e);
+            System.err.println("illegal argument for reading property " + name + ", " + e);
           } catch (InvocationTargetException e) {
-            System.err.println("invocation target error for property " + name+", "+e);
+            System.err.println("invocation target error for property " + name + ", " + e);
           }
         }
-        System.err.println("new element: " + name + "='" + value + "'");
         Element prop = doc.createElement(name);
         if (value != null) {
-          System.err.println("adding property " + name + " with value '" + value.toString() + "'");
           prop.appendChild(doc.createTextNode(value.toString()));
           root.appendChild(prop);
         }

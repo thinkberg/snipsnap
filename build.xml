@@ -143,7 +143,7 @@
       srcdir="${src}"
       classpathref="classpath"
       destdir="${target}/server"
-      includes="org/snipsnap/server/**"/>
+      includes="org/snipsnap/server/**, org/snipsnap/util/*JDBC*"/>
   </target>
 
   <target description="compile util code" name="build-util">
@@ -152,7 +152,7 @@
       srcdir="${src}"
       classpathref="classpath"
       destdir="${target}/util"
-      includes="org/snipsnap/util/*Util*, org/snipsnap/util/DB*port.java"/>
+      includes="org/snipsnap/util/*Util.java, org/snipsnap/util/DB*.java, org/snipsnap/util/*JDBC*.java"/>
   </target>
 
   <target description="compile template application code" name="build-template-app">
