@@ -187,7 +187,7 @@ public class SnipSpace implements LinkTester {
     }
     String parentString = result.getString("parentSnip");
     if (!result.wasNull()) {
-      snip.setParent(load(parentString));
+      snip.parent = load(parentString);
     }
     return snip;
   }

@@ -39,7 +39,8 @@ import java.util.List;
  * @version $Id$
  */
 public class Snip {
-  private Snip parent;
+  //@TODO think about that
+  protected Snip parent;
   private List children;
   private Snip comment;
   private Comments comments;
