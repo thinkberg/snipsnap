@@ -99,8 +99,10 @@ public class XMLSnipImport {
             Logger.log("ignoring to import user '"+login+"'");
             continue;
           }
+          Logger.log("loading existing user '" + login + "'");
           user = userManager.load(login);
         } else {
+          Logger.log("creating user '"+login+"'");
           user = userManager.create(login, passwd, email);
         }
 
@@ -126,12 +128,14 @@ public class XMLSnipImport {
         String content = (String) snipMap.get(SnipSerializer.SNIP_CONTENT);
         Snip snip = null;
         if (space.exists(name)) {
+          Logger.log("loading existing snip '" + name + "'");
           snip = space.load(name);
           if ((flags & OVERWRITE) == 0) {
             snip.setContent(snip.getContent() + content);
             snipMap.remove(SnipSerializer.SNIP_CONTENT);
           }
         } else {
+          Logger.log("creating snip '" + name + "'");
           snip = space.create(name, content);
         }
 
