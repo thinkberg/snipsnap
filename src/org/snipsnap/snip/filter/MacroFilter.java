@@ -35,8 +35,7 @@ import org.snipsnap.snip.filter.macro.parameter.SnipMacroParameter;
 import org.snipsnap.snip.filter.macro.context.FilterContext;
 import org.snipsnap.snip.filter.macro.context.SnipFilterContext;
 import org.snipsnap.snip.filter.regex.RegexTokenFilter;
-import sun.misc.Service;
-import sun.misc.ServiceConfigurationError;
+import org.snipsnap.util.Service;
 
 import java.io.Writer;
 import java.util.*;
@@ -74,9 +73,6 @@ public class MacroFilter extends RegexTokenFilter {
       } catch (Exception e) {
         System.err.println("MacroFilter: unable to load macro: " + e);
         e.printStackTrace();
-      } catch (ServiceConfigurationError err) {
-        System.err.println("MacroFilter: error loading macro: " + err);
-        err.printStackTrace();
       }
     }
   }
