@@ -189,7 +189,8 @@ public class User implements Linkable {
   public boolean isAdmin() {
     Application app = Application.get();
     Configuration config = app.getConfiguration();
-    return config.getAdminLogin().equals(login) || getRoles().contains(Roles.ADMIN);
+    return (config.getAdminLogin() != null && config.getAdminLogin().equals(login))
+      || getRoles().contains(Roles.ADMIN);
   }
 
   public void setGuest(boolean guest) {
