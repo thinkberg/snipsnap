@@ -9,7 +9,7 @@
 .error { color: #ff0000; font-weight: bold; }
 .inactive { color: #aaaaaa; }
 .bold { font-weight: bold; }
-.italic { font-decoration: italic; }
+.italic { font-style: italic; }
 
 #Menu {
     //Cudos to www.lazyatom.com
