@@ -110,7 +110,7 @@ public class Comments {
     StringBuffer buffer = new StringBuffer();
 
     if (getCount() > 0) {
-      SnipLink.appendLink(buffer, "../comments", snip.getName(), StringUtil.plural(getCount(), "comment"));
+      SnipLink.appendLinkWithRoot(buffer, "../comments", snip.getName(), StringUtil.plural(getCount(), "comment"));
       buffer.append(" (by ");
       appendUserString(buffer);
       buffer.append(")");
@@ -124,7 +124,7 @@ public class Comments {
 
   public String getPostString() {
     StringBuffer buffer = new StringBuffer();
-    SnipLink.appendLink(buffer, "../comments", snip.getName()+"#post", "post comment");
+    SnipLink.appendLinkWithRoot(buffer, "../comments", snip.getName()+"#post", "post comment");
     return buffer.toString();
   }
 

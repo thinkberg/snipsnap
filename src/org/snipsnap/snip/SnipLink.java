@@ -44,7 +44,7 @@ public class SnipLink {
 
   public static String createLink(String root, String name, String view) {
     StringBuffer buffer = new StringBuffer();
-    return appendLink(buffer, root, name, view).toString();
+    return appendLinkWithRoot(buffer, root, name, view).toString();
   }
 
   public static StringBuffer appendLink(StringBuffer buffer, String name) {
@@ -52,10 +52,10 @@ public class SnipLink {
   }
 
   public static StringBuffer appendLink(StringBuffer buffer, String name, String view) {
-    return appendLink(buffer, "../space", name, view);
+    return appendLinkWithRoot(buffer, "../space", name, view);
   }
 
-  public static StringBuffer appendLink(StringBuffer buffer, String root, String name, String view) {
+  public static StringBuffer appendLinkWithRoot(StringBuffer buffer, String root, String name, String view) {
     buffer.append("<a href=\"");
     buffer.append(root);
     buffer.append("/");
@@ -96,7 +96,7 @@ public class SnipLink {
 
   public static String createImage(String name, String alt, String ext) {
     StringBuffer buffer = new StringBuffer();
-    return appendImage(buffer, SnipLink.IMAGES_ROOT, name, alt, ext).toString();
+    return appendImageWithRoot(buffer, SnipLink.IMAGES_ROOT, name, alt, ext).toString();
   }
 
   /**
@@ -118,11 +118,15 @@ public class SnipLink {
    * @return the string buffer
    */
   public static StringBuffer appendImage(StringBuffer buffer, String name, String alt) {
-    return appendImage(buffer, SnipLink.IMAGES_ROOT, name, alt);
+    return appendImageWithRoot(buffer, SnipLink.IMAGES_ROOT, name, alt);
   }
 
-  public static StringBuffer appendImage(StringBuffer buffer, String root, String name, String alt) {
-    return appendImage(buffer, root, name, alt, "png");
+  public static StringBuffer appendImage(StringBuffer buffer, String name, String alt, String ext) {
+    return appendImageWithRoot(buffer, SnipLink.IMAGES_ROOT, name, alt, ext);
+  }
+
+  public static StringBuffer appendImageWithRoot(StringBuffer buffer, String root, String name, String alt) {
+    return appendImageWithRoot(buffer, root, name, alt, "png");
   }
 
   /**
@@ -134,7 +138,7 @@ public class SnipLink {
    * @param alt an alternative text
    * @return the string buffer
    */
-  public static StringBuffer appendImage(StringBuffer buffer, String root, String name, String alt, String ext) {
+  public static StringBuffer appendImageWithRoot(StringBuffer buffer, String root, String name, String alt, String ext) {
     // extract extension or leave as is, default is to append .png
     int dotIndex = name.lastIndexOf('.');
     if (dotIndex != -1) {
