@@ -9,7 +9,7 @@
 
 /************************************************/
 /* image positioning                            */
-img {
+#page-content img {
   border: 1px solid black;
   padding-top: 2px;
   padding-bottom: 1px;
@@ -142,7 +142,7 @@ img.float-right {
   color: inherit;
   font-weight: bold;
   /* background-color: #DDEEFF; */
-  background:#EADE00;
+  background:##FFFF66;
   color: #000000;
 }
 
