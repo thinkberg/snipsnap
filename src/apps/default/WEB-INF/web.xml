@@ -9,7 +9,7 @@
   ** @version $Id$
   -->
 <web-app>
-  <display-name>Snip</display-name>
+  <display-name>SnipSnap</display-name>
 
   <servlet>
     <servlet-name>com.neotis.net.Layouter</servlet-name>

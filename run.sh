@@ -34,4 +34,4 @@ fi
 CLASSPATH=lib/jakarta.jar:lib/javax.servlet.jar:lib/mckoidb.jar:lib/org.apache.jasper.jar:lib/org.mortbay.jetty.jar:$JAVA_HOME/lib/tools.jar
 
 # execute application server
-$JAVA_HOME/bin/java -cp $CLASSPATH:lib/SnipSnap.jar com.neotis.net.AppServer
+$JAVA_HOME/bin/java -cp $CLASSPATH:lib/SnipSnap.jar com.neotis.net.AppServer 2> server.log

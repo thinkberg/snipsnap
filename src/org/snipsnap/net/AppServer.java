@@ -27,6 +27,7 @@ package com.neotis.net;
 import com.neotis.app.Application;
 import com.neotis.user.User;
 import com.neotis.user.UserManager;
+import org.mortbay.http.HttpListener;
 import org.mortbay.http.HttpRequest;
 import org.mortbay.http.HttpResponse;
 import org.mortbay.http.SecurityConstraint;
@@ -35,9 +36,14 @@ import org.mortbay.http.UserRealm;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.WebApplicationContext;
 import org.mortbay.util.MultiException;
+import org.mortbay.util.InetAddrPort;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Properties;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Application Server
@@ -47,37 +53,61 @@ import java.io.IOException;
 public class AppServer {
 
   private static Server jettyServer;
+  private static WebApplicationContext adminContext;
+  private static Properties config;
 
   public static void main(String args[]) {
     System.out.println("SnipSnap $Revision$");
     System.out.println("Copyright (c) 2002 Stephan J. Schmidt, Matthias L. Jugel. "
                        + "All Rights Reserved.");
     System.out.println("See License Agreement for terms and conditions of use.");
-    startServer();
+    initServer();
+    checkConfig();
   }
 
-  private static void startServer() {
-    if (jettyServer != null) {
-      // gracefully stop server
-      try {
-        jettyServer.stop(true);
-      } catch (InterruptedException e) {
-        System.err.println("AppServer: unable to stop jetty server gracefully");
-      }
-    } else {
-      try {
-        jettyServer = new Server("./conf/server.conf");
-        WebApplicationContext context = jettyServer.addWebApplication("/", "./app");
-        context.setAttribute("javax.servlet.context.tempdir", "./tmp/");
-        jettyServer.start();
-      } catch (MultiException e) {
-        System.err.println("AppServer: unable to start server: " + e);
-        System.exit(-1);
-      } catch (IOException e) {
-        System.err.println("AppServer: configuration not found: " + e);
-      } catch (Exception e) {
-        System.err.println("AppServer: unable to load servlet class: " + e);
-      }
+  /**
+   * Initialize Server and load administrative web application.
+   */
+  private static void initServer() {
+    try {
+      jettyServer = new Server("./conf/server.conf");
+      jettyServer.start();
+      adminContext = addApplication("/admin", "./lib/SnipSnap-admin.war");
+    } catch (IOException e) {
+      System.err.println("AppServer: configuration not found: " + e);
+    } catch (Exception e) {
+      System.err.println("AppServer: unable to load servlet class: " + e);
     }
+  }
+
+  private static void checkConfig() {
+    WebApplicationContext context = addApplication("/", "./app");
+    System.out.println("HACK: added default application: "+context);
+
+    config = new Properties();
+    try {
+      FileInputStream configFile = new FileInputStream("./conf/local.conf");
+      config.load(configFile);
+    } catch(IOException e) {
+      System.out.println("INFO: Server is still unconfigured!");
+      System.out.println("INFO: Point your browser to the following address:");
+      HttpListener listener = jettyServer.getListeners()[0];
+      String host = listener.getHost();
+      if (InetAddrPort.__0_0_0_0.equals(host)) {
+	host = "localhost";
+      }
+      System.out.println("INFO: http://"+host+":"+listener.getPort()+"/admin");
+    }
+  }
+
+  private static WebApplicationContext addApplication(String root, String app) {
+    WebApplicationContext context = null;
+    try {
+      context = jettyServer.addWebApplication(root, app);
+      context.start();
+    } catch (Exception e) {
+      System.err.println("AppServer: configuration not found: " + e);
+    }
+    return context;
   }
 }

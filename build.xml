@@ -37,14 +37,24 @@
   </target>
 
   <target description="clean up compiled code" name="clean">
-    <delete dir="${target}/com"/>
+    <delete>
+      <fileset dir="${target}" includes="**"/>
+    </delete>
   </target>
 
-  <target depends="build" description="build executable jar" name="jar">
+  <target depends="build,admin-war" description="build executable jar" name="jar">
     <jar destfile="${jar}/${appname}.jar"
 	 excludes="**/CVS" 
 	 manifest="conf/manifest">
-      <fileset dir="cls" includes="com/**"/>
+      <fileset dir="${target}/server" includes="com/**"/>
+    </jar>
+  </target>
+
+  <target depends="build" description="build admin war" name="admin-war">
+    <jar destfile="${jar}/${appname}-admin.war"
+	 excludes="**/CVS">
+      <fileset dir="${src}/src/apps/admin" includes="**"/>
+      <fileset dir="${target}/admin" includes="**"/>
     </jar>
   </target>
 
@@ -56,12 +66,19 @@
   </target>
 
   <target description="compile server code" name="build">
+    <mkdir dir="${target}/server"/>
+    <mkdir dir="${target}/admin/WEB-INF/classes"/>
     <javac deprecation="${deprecation}" debug="${debug}" 
 	   srcdir="${src}"
 	   classpathref="classpath"
-           destdir="${target}" 
+           destdir="${target}/server" 
 	   includes="com/neotis/**"
-	   excludes="com/neotis/test/**"/>
+	   excludes="com/neotis/test/**,com/neotis/admin/**"/>
+    <javac deprecation="${deprecation}" debug="${debug}"
+           srcdir="${src}"
+	   classpathref="classpath"
+	   destdir="${target}/admin/WEB-INF/classes"
+	   includes="com/neotis/admin/**"/>
   </target>
 
 </project>

@@ -79,8 +79,10 @@ public class LoginServlet extends HttpServlet {
     if("true".equals(request.getParameter("logoff"))) {
       System.out.println("LoginServlet: Logging user off");
       HttpSession session = request.getSession(true);
-      session.invalidate();
       response.addCookie(new Cookie("userName", "Guest"));
+      response.sendRedirect(referer != null ? referer : "/space/start");
+      session.invalidate();
+      return;
     }
 
     response.sendRedirect(referer != null ? referer : "/space/start");

@@ -1,0 +1,119 @@
+/**
+ * Stylesheet customization for generic formats.
+ * @author Stephan J. Schmidt
+ * @version $Id$
+ */
+
+/************************************************/
+
+.error { color: #ff0000; font-weight: bold; }
+.inactive { color: #aaaaaa; }
+.bold { font-weight: bold }
+.snip-name { font-weight: bold; font-size: 15px; }
+
+.menu {
+
+}
+
+.menuitem {
+  font-weight: bold;
+  font-size: 20px;
+}
+/************************************************/
+/* code formatting */
+.code {
+  margin-top: 4px;
+  margin-bottom: 4px;
+  padding: 5px 5px 5px 5px;
+  background-color: #fffced;
+  border: 1px dashed black;
+  font-family: courier, courier new, monospace;
+  font-size: 12px;
+  line-height: 100%;
+  white-space: pre;
+}
+
+
+.java-keyword {
+  font-weight: bold;
+  color: #0000aa;
+}
+
+.java-object {
+  color: #000088;
+}
+
+.java-quote {
+  color: #00aa00;
+}
+
+.xml-keyword {
+  font-weight: bold;
+}
+
+.xml-tag {
+  color: #0000aa;
+}
+
+
+/* special formatting of a wiki table */
+.snip-table {
+  border: 1px solid #aaaaaa;
+}
+
+.snip-table td {
+  border-top: 1px solid black;
+  padding: 4px 4px 4px 4px;
+}
+
+.snip-table-header {
+  font-weight: bold;
+  background: #ffce9c;
+}
+
+.snip-table-odd {
+  background: #fffced;
+}
+
+.snip-table-even {
+}
+
+
+/************************************************/
+/* tag formatting, page wide and individual */
+body {
+	font-family: verdana, sans-serif;
+	background-color: #ffffff;
+	margin: 10px;
+}
+
+td, p {
+	font-size: 11px;
+	color: rgb(76,76,76);
+	line-height: 15px;
+}
+
+table {
+	empty-cells: show;
+}
+
+input[type=submit] {
+    text-align: center;
+    background: #ffce9c;
+    border: 1px ridge #aaaaaa;
+    font-size: inherit;
+    font-family: inherit;
+    line-height: inherit;
+    vertical-align: middle;
+    margin: 2px;
+}
+
+input, select, textarea {
+    margin: 2px;
+    background: #fffced;
+    font-size: inherit;
+    font-family: courier, courier new, monospace;
+    line-height: inherit;
+    vertical-align: middle;
+    border: 1px ridge #aaaaaa;
+}
