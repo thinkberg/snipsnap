@@ -44,12 +44,13 @@ public class WeblogsPing {
     try {
       AppConfiguration config = Application.get().getConfiguration();
       if (config.allow(AppConfiguration.PERM_WEBLOGS_PING)) {
-        XmlRpcClient xmlrpc = new XmlRpcClient("http://www.weblogs.com/RPC2");
+        XmlRpcClient xmlrpc = new XmlRpcClient("http://rpc.weblogs.com/RPC2");
         Vector params = new Vector();
         // @TODO read name and url from configuration
         params.addElement(config.getName());
         params.addElement(config.getSnipUrl(weblog.getName()));
-        xmlrpc.execute("weblogUpdates.ping", params);
+        Object result = xmlrpc.execute("weblogUpdates.ping", params);
+        System.err.println("weblogs.ping received: "+result);
       }
     } catch (Exception e) {
       System.err.println("Unable to ping weblogs.com");
