@@ -44,6 +44,7 @@ import org.snipsnap.render.macro.WeblogMacro;
 import org.radeox.util.StringBufferWriter;
 import org.radeox.util.logging.Logger;
 import org.radeox.RenderEngine;
+import org.radeox.IncludeRenderEngine;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 
@@ -120,13 +121,16 @@ public class LateMacroFilter extends RegexTokenFilter {
           macro.execute(writer, mParams);
         } else if (command.startsWith("!")) {
 // @TODO including of other snips
-          String include = RenderEngine.getInstance().include(command.substring(1));
-          if (null != include) {
-            //Filter paramFilter = new ParamFilter(params);
-            //buffer.append(paramFilter.filter(included, null));
-            buffer.append(include);
-          } else {
-            buffer.append(command.substring(1) + " not found.");
+          RenderEngine engine = context.getRenderEngine();
+          if (engine instanceof IncludeRenderEngine) {
+            String include = ((IncludeRenderEngine) engine).include(command.substring(1));
+            if (null != include) {
+              //Filter paramFilter = new ParamFilter(params);
+              //buffer.append(paramFilter.filter(included, null));
+              buffer.append(include);
+            } else {
+              buffer.append(command.substring(1) + " not found.");
+            }
           }
           return;
         } else {
