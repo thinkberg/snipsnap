@@ -51,7 +51,8 @@ public class SnipIndexer {
     IndexReader reader = null;
     try {
       reader = IndexReader.open(indexFile);
-      System.err.println("Deleted: "+ reader.delete(new Term("id", snip.getName().hashCode() + "")));
+      int count = reader.delete(new Term("id", snip.getName().hashCode() + ""));
+      // System.err.println("Deleted: "+ count );
     } catch (IOException e) {
       System.err.println("Unable to delete snip " + snip.getName() + " from index.");
       e.printStackTrace();

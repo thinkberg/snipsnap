@@ -39,6 +39,7 @@ import java.sql.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Iterator;
 
 /**
  * SnipSpace handles all the data storage.
@@ -107,6 +108,18 @@ public class SnipSpace implements LinkTester, Loader {
   public Snip post(String content, Application app) {
     Date date = new Date(new java.util.Date().getTime());
     return post(content, date, app);
+  }
+
+  public void reIndex() {
+    List snips = getAll();
+    Iterator iterator = snips.iterator();
+    System.out.println("Reindexing");
+    while (iterator.hasNext()) {
+      Snip snip = (Snip) iterator.next();
+      System.out.print("  " + snip.getName() + " ... " );
+      indexer.reIndex(snip);
+      System.out.println("ok.");
+    }
   }
 
   public Hits search(String queryString) {
