@@ -226,13 +226,43 @@ public class Snip implements Ownable, Nameable {
     return comments;
   }
 
+  /**
+   * Add a child snip. Sets the parent of
+   * the child to this snip and <b>stores</b> the
+   * child because of the new parent.
+   *
+   * @param snip Snip to add as child
+   */
   public void addSnip(Snip snip) {
     init();
     if (!children.contains(snip)) {
       snip.setParent(this);
       children.add(snip);
-      SnipSpace.getInstance().store(snip);
+      SnipSpace.getInstance().systemStore(snip);
     }
+  }
+
+  /**
+   * Removes child snip from this nsip
+   *
+   * @param snip Child to remove
+   */
+  public void removeSnip(Snip snip) {
+    init();
+    if (children.contains(snip)) {
+      children.remove(snip);
+      // snip.setParent(null);
+    }
+  }
+
+  /**
+   * Get a list of child snips, ordered by date with
+   * the newest one first
+   *
+   * @return List of child snips
+   */
+  public List getChildrenDateOrder() {
+    return SnipSpace.getInstance().getChildrenDateOrder(this, 10);
   }
 
   public Snip getParent() {
@@ -249,18 +279,18 @@ public class Snip implements Ownable, Nameable {
     parentSnip.addSnip(this);
   }
 
-  public void removeSnip(Snip snip) {
-    init();
-    if (children.contains(snip)) {
-      children.remove(snip);
-      // snip.setParent(null);
-    }
-  }
-
   public String getName() {
     return name;
   }
 
+  /**
+   * Return a short version of the name.
+   * Useful for vertical snip listings, where
+   * the snips should not be to long.
+   * End of snip name will be replaced with "..."
+   *
+   * @return Short name of snip
+   */
   public String getShortName() {
     String name = getName();
     if (name.length()>20) {
@@ -269,6 +299,12 @@ public class Snip implements Ownable, Nameable {
     return name;
   }
 
+  /**
+   * Return an encoded version of the name,
+   * especially spaces replaced with "+"
+   *
+   * @return encoded name of snip
+   */
   public String getNameEncoded() {
     try {
       return SnipLink.encode(getName());

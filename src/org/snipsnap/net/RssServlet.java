@@ -24,17 +24,18 @@
  */
 package org.snipsnap.net;
 
+import org.snipsnap.config.AppConfiguration;
+import org.snipsnap.config.Configuration;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipLink;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
-import javax.servlet.RequestDispatcher;
 import java.io.IOException;
-import java.net.URLDecoder;
 
 
 /**
@@ -43,15 +44,51 @@ import java.net.URLDecoder;
  * @version $Id$
  */
 public class RssServlet extends HttpServlet {
+  private AppConfiguration config;
+
+  public void init(ServletConfig servletConfig) throws ServletException {
+    String configFile = (String) servletConfig.getServletContext().getAttribute(Configuration.INIT_PARAM);
+    if (null == configFile) {
+      configFile = servletConfig.getServletContext().getRealPath("../application.conf");
+    }
+    try {
+      config = AppConfiguration.getInstance(configFile);
+
+    } catch (IOException e) {
+      e.printStackTrace();
+      System.err.println("InitServlet: Unable to load configuration for this application: " + e);
+    }
+  }
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws IOException, ServletException {
+      throws IOException, ServletException {
 
+    String version = request.getParameter("version");
     String name = "start";
-
     Snip snip = SnipSpace.getInstance().load(name);
+
     request.setAttribute("snip", snip);
-    RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/rss.jsp");
+    request.setAttribute("space", SnipSpace.getInstance());
+    request.setAttribute("config", config);
+
+    StringBuffer url = new StringBuffer();
+    url.append(config.getHost());
+    int port = config.getPort();
+    if (port != 80) {
+      url.append(":");
+      url.append(port);
+    }
+    url.append("/");
+    url.append(config.getContextPath());
+    url.append("/space");
+    request.setAttribute("url", url.toString());
+
+    RequestDispatcher dispatcher;
+    if ("1.0".equals(version)) {
+      dispatcher = request.getRequestDispatcher("/rdf.jsp");
+    } else {
+      dispatcher = request.getRequestDispatcher("/rss.jsp");
+    }
     dispatcher.forward(request, response);
   }
 }
