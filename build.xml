@@ -6,7 +6,7 @@
 <project basedir="." default="jar" name="solent sources">
 
   <property file="conf/build.properties"/>
-  <property file="conf/server.conf"/>
+  <property file="conf/snipsnap.conf"/>
 
   <!-- the overall class path -->
   <path id="classpath">
