@@ -8,7 +8,8 @@
                  java.util.Iterator,
                  com.neotis.snip.Snip,
                  com.neotis.date.Month,
-                 com.neotis.app.Application"%>
+                 com.neotis.app.Application,
+                 com.neotis.user.User"%>
 <jsp:useBean id="user" scope="request" class="com.neotis.jsp.UserBean">
   <jsp:setProperty name="user" property="session" value="<%= session %>"/>
 </jsp:useBean>

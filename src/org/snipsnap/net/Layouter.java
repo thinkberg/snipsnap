@@ -60,6 +60,7 @@ public class Layouter extends HttpServlet {
 
     // store user name and app in cookie and session
     response.addCookie(new Cookie("userName", user.getLogin()));
+    app.setUser(user);
     session.setAttribute("app", app);
 
     String requestURI = request.getRequestURI();
