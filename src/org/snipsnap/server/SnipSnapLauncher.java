@@ -58,7 +58,6 @@ public class SnipSnapLauncher extends Launcher {
     }
     try {
       System.setProperty(Launcher.CLASSPATH, toolsJar.getCanonicalPath());
-      System.out.println(toolsJar.getCanonicalPath());
     } catch (IOException e) {
       System.out.println("SnipSnapLauncher: unable to add java compiler library: "+e.getMessage());
     }
