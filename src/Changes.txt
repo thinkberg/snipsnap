@@ -1,5 +1,11 @@
+0.3.1
+
 0.3
 
+- Added feature: Sky and Oranges themes
+- Changed to newer versions of McKoi and ORO Regex
+- Added feature: NullCodeFilter, {code:none} will now display the content
+  without colorization, useful for e.g. pre formatted texts like shell examples
 - We use RSS/XHTML/CSS buttons from http://www.antipixel.com and
   icons from chris http:/www.langreiter.com , thanks.
 - Added feature: UserCountMacro displays number of registered users
