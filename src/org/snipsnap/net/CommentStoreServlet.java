@@ -96,6 +96,6 @@ public class CommentStoreServlet extends HttpServlet {
       return;
     }
 
-    response.sendRedirect(config.getUrl("/space/"+SnipLink.encode(name)));
+    response.sendRedirect(config.getUrl("/comments/"+SnipLink.encode(name)));
   }
 }
