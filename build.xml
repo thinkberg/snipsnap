@@ -107,20 +107,13 @@
 <!--        <include name="lib/${appname}-theme-*.jar"/>-->
         <include name="lib/${appname}-installer.war"/>
         <include name="lib/${appname}-utils.jar"/>
-        <include name="lib/asm-1.4.1.jar"/>
-        <include name="lib/asm-util-1.4.1.jar"/>
-        <include name="lib/groovy-1.0-rc1-snapshot.jar"/>
-        <include name="lib/org.mortbay.jetty.jar"/>
-        <include name="lib/javax.servlet.jar"/>
         <include name="lib/org.apache.jasper.jar"/>
-        <include name="lib/commons-dbcp-1.1.jar"/>
-        <include name="lib/commons-pool-1.1.jar"/>
-        <include name="lib/commons-collections.jar"/>
+        <include name="lib/org.apache.crimson.jar"/>
+        <include name="lib/org.mortbay.jetty.jar"/>
+        <include name="lib/xmlrpc-1.1.jar"/>
         <include name="lib/mckoidb.jar"/>
         <include name="lib/mysql-connector.jar"/>
         <include name="lib/postgres-jdbc.jar"/>
-        <include name="lib/org.apache.crimson.jar"/>
-        <include name="lib/xmlrpc-1.1.jar"/>
         <include name="conf/jetty.conf"/>
         <include name="license.txt"/>
         <include name="validate.xsl"/>
@@ -130,9 +123,6 @@
         <exclude name="run.bat"/>
         <exclude name="db.sh"/>
         <exclude name="dbrepair.sh"/>
-        <exclude name="exportall.sh"/>
-        <exclude name="devlinks.sh"/>
-        <exclude name="renimg.sh"/>
       </tarfileset>
     </tar>
   </target>
