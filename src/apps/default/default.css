@@ -8,7 +8,8 @@
 
 .error { color: #ff0000; font-weight: bold; }
 .inactive { color: #aaaaaa; }
-.bold { font-weight: bold }
+.bold { font-weight: bold; }
+.italic { font-decoration: italic; }
 
 #Menu {
     //Cudos to www.lazyatom.com
@@ -22,6 +23,7 @@
   font-weight: bold;
   font-size: 20px;
 }
+
 /************************************************/
 /* code formatting */
 .code {
