@@ -24,8 +24,6 @@
  */
 package org.snipsnap.snip;
 
-import org.snipsnap.render.filter.LinkTester;
-
 import org.apache.lucene.search.Hits;
 
 import java.sql.Date;
@@ -40,7 +38,7 @@ import java.util.List;
  * @version $Id$
  */
 
-public interface SnipSpace extends LinkTester {
+public interface SnipSpace  {
   public String getETag();
 
   // A snip is changed by the user (created, stored)

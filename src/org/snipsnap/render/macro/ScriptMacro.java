@@ -22,13 +22,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-/*
- * Macro that replaces external links
- *
- * @author stephan
- * @team sonicteam
- * @version $Id$
- */
 
 package org.snipsnap.render.macro;
 
@@ -38,6 +31,14 @@ import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
+
+/*
+ * Macro that executes a python script
+ *
+ * @author stephan
+ * @team sonicteam
+ * @version $Id$
+ */
 
 public class ScriptMacro extends SnipPreserved {
   private Map filters;

@@ -9,9 +9,10 @@
  <s:checkObject permission="Edit" roles="Editor" snip="${snip}">
   [<a href="../exec/lock?name=<c:out value='${snip.nameEncoded}'/>&unlock=true">unlock</a>]
  </s:checkObject>
-</s:check>
+</s:check><%--
 [<a href="http://www.google.com/search?q=<c:out value='${snip.nameEncoded}'/>">google</a>]
 [<a href="http://www.daypop.com/search?q=<c:out value='${snip.nameEncoded}'/>">daypop</a>]
+<s:check roles="Authenticated" permission="Edit" snip="${snip}">[<a href="../raw/<c:out value='${snip.nameEncoded}'/>">view</a>]</s:check> --%>
 <s:check roles="Authenticated" permission="Edit" snip="${snip}">[<a href="../exec/edit?name=<c:out value='${snip.nameEncoded}'/>">edit</a>]</s:check>
 <s:check roles="Authenticated" permission="Edit" snip="${snip}" invert="true"><span class="inactive">[edit]</span></s:check>
 <s:check roles="Authenticated" permission="Edit" snip="${snip}">[<a href="../exec/upload?name=<c:out value='${snip.nameEncoded}'/>">attach</a>]</s:check>

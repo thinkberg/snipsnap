@@ -22,15 +22,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-/*
- * Class that finds snippets like
- * {link|neotis|http://www.neotis.de} ---> <elink ....>
- * {neotis} -> include neotis wiki
- *
- * @author stephan
- * @team sonicteam
- * @version $Id$
- */
 
 package org.snipsnap.render.filter;
 
@@ -52,6 +43,16 @@ import org.snipsnap.snip.SnipSpace;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
+
+/*
+ * Macro filter that is called later than MacroFilter.
+ * Only used to call {weblog} macro because we do not
+ * want to call filters on already filtered content
+ *
+ * @author stephan
+ * @team sonicteam
+ * @version $Id$
+ */
 
 public class LateMacroFilter extends RegexTokenFilter {
 

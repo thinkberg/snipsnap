@@ -209,19 +209,6 @@ public class SnipLink {
     return appendImageWithRoot(buffer, getImagesRoot(), name, alt, ext, null).toString();
   }
 
-  public static StringBuffer appendExternalImage(StringBuffer buffer, String url, String position) {
-    buffer.append("<img src=\"");
-    buffer.append(url);
-    buffer.append("\" ");
-    if (position != null) {
-      buffer.append("class=\"");
-      buffer.append(position);
-      buffer.append("\" ");
-    }
-    buffer.append("border=\"0\"/>");
-    return buffer;
-  }
-
   /**
    * Append and image tag to a string buffer. Additionally takes an alternative text to display
    * if the browser cannot display the image.

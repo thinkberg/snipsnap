@@ -22,12 +22,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-/*
- * Macro that displays all Snips by user
- *
- * @author stephan
- * @version $Id$
- */
+
 
 package org.snipsnap.render.macro;
 
@@ -43,6 +38,17 @@ import org.snipsnap.user.UserManager;
 
 import java.io.IOException;
 import java.io.Writer;
+
+/*
+ * Macro for fulltext searches in SnipSnap. The macro
+ * displays the search results for the input string. Can be
+ * used in snips to "store" searches. For user defined
+ * searches use a {field} macro combined with the {search}
+ * macro.
+ *
+ * @author stephan
+ * @version $Id$
+ */
 
 public class SearchMacro extends Macro {
   private SnipSpace space;

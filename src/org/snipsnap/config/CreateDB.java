@@ -164,6 +164,15 @@ public class CreateDB {
     Application app = Application.get();
     app.setUser(admin);
 
-    SnipSpaceFactory.getInstance().post("Welcome to [SnipSnap]. You can now login and add/edit your first post");
+    SnipSpaceFactory.getInstance().post("Welcome to [SnipSnap]." +
+           " You can now login and add/edit your first post. There is a __post blog__ link in the menu bar. For help with formatting your post" +
+           " take a look at [snipsnap-help]. To create a link to a page on your site surround a word with \\[ and \\]." +
+           " Putting \\_\\_ around a phrase makes it __bold__ and putting \\~\\~ around it makes the" +
+           " phrase ~~italics~~. You can create links to the internet by just writing the url like "+
+           " http://snipsnap.org or by using \\{link:Name|url\\}. So \\{link:SnipSnap|\\http://snipsnap.org\\} produces " +
+           " {link:SnipSnap|http://snipsnap.org}. Have fun.\n\n" +
+           " Pinging weblogs.com may be turned on. The {link:FAQ|http://snipsnap.org/space/FAQ}" +
+           " explains how to turn this on or off.",
+           "Welcome to SnipSnap");
   }
 }

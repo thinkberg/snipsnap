@@ -25,15 +25,6 @@
 
 package org.snipsnap.render.macro;
 
-/*
- * Macro that displays all cahnged Snips
- * since the users last login
- *
- * @author stephan
- * @version $Id$
- */
-
-
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.radeox.macro.parameter.MacroParameter;
@@ -44,6 +35,16 @@ import org.snipsnap.user.UserManager;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;
+
+
+/*
+ * Macro that displays all changed Snips
+ * since the users last login
+ *
+ * @author stephan
+ * @version $Id$
+ */
+
 
 public class SinceLastVisitMacro extends ListOutputMacro {
   private String[] paramDescription =

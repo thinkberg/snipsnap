@@ -7,7 +7,6 @@ org.snipsnap.render.macro.FieldMacro
 org.snipsnap.render.macro.HotSnipMacro
 org.snipsnap.render.macro.ImageMacro
 org.snipsnap.render.macro.IndexSnipMacro
-org.snipsnap.render.macro.InterWikiMacro
 org.snipsnap.render.macro.LastLoginMacro
 org.snipsnap.render.macro.LastVisitMacro
 org.snipsnap.render.macro.LoginsMacro

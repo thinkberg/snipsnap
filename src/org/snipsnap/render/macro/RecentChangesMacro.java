@@ -35,7 +35,7 @@ import java.io.Writer;
 import java.util.List;
 
 /*
- * Macro that displays a list of currently logged on users.
+ * Macro that displays recently changed snips
  *
  * @author Matthias L. Jugel
  * @version $Id$

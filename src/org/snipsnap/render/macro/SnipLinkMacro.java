@@ -32,7 +32,8 @@ import java.io.IOException;
 import java.io.Writer;
 
 /*
- * Macro that displays a list of the backlinks for the snip
+ * Macro that displays a list of the sniplinks for the snip
+ * This was inspired by the Everything2
  *
  * @author Stephan J. Schmidt
  * @version $Id$

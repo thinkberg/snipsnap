@@ -29,6 +29,7 @@ import org.radeox.engine.context.RenderContext;
 import org.radeox.engine.context.BaseRenderContext;
 import org.radeox.engine.RenderEngine;
 import org.snipsnap.snip.Snip;
+import org.snipsnap.render.SnipRenderEngine;
 
 /**
  * SnipRenderContext implements RenderContext and is used to
@@ -41,9 +42,11 @@ import org.snipsnap.snip.Snip;
 
 public class SnipRenderContext extends BaseRenderContext {
   private Snip snip;
+  private final static RenderEngine engine = new SnipRenderEngine();
 
   public SnipRenderContext(Snip snip) {
     this.snip = snip;
+    setRenderEngine(engine);
   }
 
 

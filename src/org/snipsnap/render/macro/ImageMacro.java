@@ -24,18 +24,19 @@
  */
 package org.snipsnap.render.macro;
 
+import org.radeox.engine.ImageRenderEngine;
+import org.radeox.engine.RenderEngine;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.AppConfiguration;
+import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
-import org.radeox.macro.parameter.MacroParameter;
-import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 
 import java.io.IOException;
 import java.io.Writer;
 
 /*
- * Macro that replaces external links
+ * Macro that displays images
  *
  * @author stephan
  * @team sonicteam
@@ -60,57 +61,77 @@ public class ImageMacro extends SnipMacro {
   public void execute(Writer writer, SnipMacroParameter params)
       throws IllegalArgumentException, IOException {
 
-    StringBuffer buffer = new StringBuffer();
-    Snip snip = params.getSnip();
-    if (params.getLength() > 0) {
-      String img = params.get("img");
-      String alt = null, ext = null, align = null;
-      boolean qualifiedParams = img != null;
-      if (qualifiedParams) {
-        alt = params.get("alt");
-        ext = params.get("ext");
-        align = params.get("align");
-      } else {
-        img = params.get(0);
-        alt = params.get(1);
-        ext = params.get(2);
-        align = params.get(3);
-      }
+    RenderEngine engine = params.getContext().getRenderEngine();
 
-      if (img.startsWith("http://")) {
-        if (config.allowExternalImages()) {
-          SnipLink.appendExternalImage(buffer, img, align);
-        }
-      } else {
-        // Does the name contain an extension?
-        int dotIndex = img.lastIndexOf('.');
-        if (-1 != dotIndex) {
-          ext = img.substring(dotIndex + 1);
-          img = img.substring(0, dotIndex);
-        }
+    if (engine instanceof ImageRenderEngine) {
+      ImageRenderEngine imageEngine = (ImageRenderEngine) engine;
 
-        String imageName = "image-" + snip.getName() + "-" + img;
-        if ("svg".equals(ext)) {
-          // SVG cannot be used with <image>
-          buffer.append("<object data=\"");
-          buffer.append("../images/");
-          buffer.append(imageName);
-          buffer.append(".");
-          buffer.append(ext);
-          buffer.append("\" type=\"image/svg+xml\" width=\"400\" height=\"400\"></object>");
+      StringBuffer buffer = new StringBuffer();
+      if (params.getLength() > 0) {
+        String img = params.get("img");
+        String alt = null, ext = null, align = null;
+        boolean qualifiedParams = img != null;
+        if (qualifiedParams) {
+          alt = params.get("alt");
+          ext = params.get("ext");
+          align = params.get("align");
         } else {
-          SnipLink.appendImage(buffer, imageName, alt, ext, align);
+          img = params.get(0);
+          alt = params.get(1);
+          ext = params.get(2);
+          align = params.get(3);
         }
+
+        if (img.startsWith("http://")) {
+          if (config.allowExternalImages()) {
+            appendExternalImage(buffer, img, align);
+          }
+        } else {
+          // Does the name contain an extension?
+          int dotIndex = img.lastIndexOf('.');
+          if (-1 != dotIndex) {
+            ext = img.substring(dotIndex + 1);
+            img = img.substring(0, dotIndex);
+          }
+
+          Snip snip = params.getSnip();
+          String imageName = "image-" + snip.getName() + "-" + img;
+          if ("svg".equals(ext)) {
+            // SVG cannot be used with <image>
+            buffer.append("<object data=\"");
+            buffer.append("../images/");
+            buffer.append(imageName);
+            buffer.append(".");
+            buffer.append(ext);
+            buffer.append("\" type=\"image/svg+xml\" width=\"400\" height=\"400\"></object>");
+          } else {
+            SnipLink.appendImage(buffer, imageName, alt, ext, align);
+          }
+        }
+      } else {
+        throw new IllegalArgumentException("Number of arguments does not match");
       }
-    } else {
-      throw new IllegalArgumentException("Number of arguments does not match");
+      String link = params.get("link");
+      if (link != null) {
+        buffer.insert(0, "<a href=\"" + link + "\">");
+        buffer.append("</a>");
+      }
+      writer.write(buffer.toString());
+      return;
     }
-    String link = params.get("link");
-    if (link != null) {
-      buffer.insert(0, "<a href=\"" + link + "\">");
-      buffer.append("</a>");
-    }
-    writer.write(buffer.toString());
-    return;
   }
+
+  public static StringBuffer appendExternalImage(StringBuffer buffer, String url, String position) {
+    buffer.append("<img src=\"");
+    buffer.append(url);
+    buffer.append("\" ");
+    if (position != null) {
+      buffer.append("class=\"");
+      buffer.append(position);
+      buffer.append("\" ");
+    }
+    buffer.append("border=\"0\"/>");
+    return buffer;
+  }
+
 }

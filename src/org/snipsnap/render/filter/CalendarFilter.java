@@ -22,15 +22,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-/*
- * Class that finds snippets like
- * {link|neotis|http://www.neotis.de} ---> <elink ....>
- * {neotis} -> include neotis wiki
- *
- * @author stephan
- * @team sonicteam
- * @version $Id$
- */
 
 package org.snipsnap.render.filter;
 
@@ -41,6 +32,14 @@ import org.snipsnap.snip.Snip;
 import org.radeox.filter.regex.RegexTokenFilter;
 import org.snipsnap.render.filter.context.SnipFilterContext;
 import org.radeox.filter.context.FilterContext;
+
+/*
+ * Class that VCAL content
+ *
+ * @author stephan
+ * @team sonicteam
+ * @version $Id$
+ */
 
 public class CalendarFilter extends RegexTokenFilter {
 

@@ -22,12 +22,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-/*
- * Macro that show last logout time from user
- *
- * @author stephan
- * @version $Id$
- */
 
 package org.snipsnap.render.macro;
 
@@ -39,6 +33,13 @@ import org.snipsnap.user.UserManager;
 
 import java.io.IOException;
 import java.io.Writer;
+
+/*
+ * Macro that show last logout time from user
+ *
+ * @author stephan
+ * @version $Id$
+ */
 
 public class LastVisitMacro extends Macro {
   private String[] paramDescription =

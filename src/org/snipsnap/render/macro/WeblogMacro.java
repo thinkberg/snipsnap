@@ -23,12 +23,6 @@
  * --LICENSE NOTICE--
  */
 
-/*
- * Macro that displays all Snips by user
- *
- * @author stephan
- * @version $Id$
- */
 package org.snipsnap.render.macro;
 
 import org.snipsnap.snip.Snip;
@@ -44,6 +38,14 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Iterator;
 import java.util.List;
+
+/*
+ * Macro that displays a weblog. All subsnips are read and
+ * displayed in reverse chronological order.
+ *
+ * @author stephan
+ * @version $Id$
+ */
 
 public class WeblogMacro extends SnipMacro {
   private SnipSpace space;

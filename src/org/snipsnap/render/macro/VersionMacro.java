@@ -26,19 +26,19 @@
 
 package org.snipsnap.render.macro;
 
-/*
- * Macro that displays the running SnipSnap version
- *
- * @author Stephan J. Schmidt
- * @version $Id$
- */
-
 import org.snipsnap.app.Application;
 import org.radeox.macro.parameter.MacroParameter;
 import org.radeox.macro.Macro;
 
 import java.io.IOException;
 import java.io.Writer;
+
+/*
+ * Macro that displays the running SnipSnap version
+ *
+ * @author Stephan J. Schmidt
+ * @version $Id$
+ */
 
 public class VersionMacro extends Macro {
   private String version;

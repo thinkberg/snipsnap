@@ -28,25 +28,28 @@ package org.snipsnap.render;
 import org.radeox.engine.BaseRenderEngine;
 import org.radeox.engine.ImageRenderEngine;
 import org.radeox.engine.IncludeRenderEngine;
+import org.radeox.engine.WikiRenderEngine;
 import org.radeox.engine.context.RenderContext;
 import org.radeox.filter.context.FilterContext;
+import org.radeox.util.logging.Logger;
+import org.snipsnap.app.Application;
 import org.snipsnap.render.context.SnipRenderContext;
 import org.snipsnap.render.filter.context.SnipFilterContext;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipSpaceFactory;
-
+import org.snipsnap.user.UserManager;
 
 /**
- * EngineManager implementation for SnipSnap which understoods e.g.
+ * renderEngine implementation for SnipSnap which understoods e.g.
  * howto include other snips.
  *
  * @author Stephan J. Schmidt
  * @version $Id$
  */
 
-public class SnipRenderEngine extends BaseRenderEngine implements IncludeRenderEngine, ImageRenderEngine {
+public class SnipRenderEngine extends BaseRenderEngine
+    implements WikiRenderEngine, IncludeRenderEngine, ImageRenderEngine {
 
   public String getName() {
     return "snipsnap";
@@ -57,6 +60,26 @@ public class SnipRenderEngine extends BaseRenderEngine implements IncludeRenderE
   // calling Class.forName("org.snipsnap.render.SnipRenderEngine")
   static {
     org.radeox.EngineManager.registerEngine(new SnipRenderEngine());
+  }
+
+  public boolean exists(String name) {
+    return SnipSpaceFactory.getInstance().exists(name);
+  }
+
+  public boolean showCreate() {
+    return UserManager.getInstance().isAuthenticated(Application.get().getUser());
+  }
+
+  public void appendLink(StringBuffer buffer, String name, String view, String anchor) {
+    SnipLink.appendLink(buffer, name, view, anchor);
+  }
+
+  public void appendLink(StringBuffer buffer, String name, String view) {
+    SnipLink.appendLink(buffer, name, view);
+  }
+
+  public void appendCreateLink(StringBuffer buffer, String name, String view) {
+    SnipLink.appendCreateLink(buffer, name);
   }
 
   public String include(String name) {
