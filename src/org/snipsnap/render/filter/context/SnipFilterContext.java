@@ -28,6 +28,7 @@ package org.snipsnap.render.filter.context;
 import org.radeox.macro.parameter.MacroParameter;
 import org.radeox.filter.context.BaseFilterContext;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
+import org.snipsnap.render.context.SnipRenderContext;
 import org.snipsnap.snip.Snip;
 
 /**
@@ -49,6 +50,11 @@ public class SnipFilterContext extends BaseFilterContext {
   public Snip getSnip() {
     return snip;
   }
+
+  public SnipRenderContext getSnipRenderContext() {
+    return (SnipRenderContext) this.context;
+  }
+
 
   public MacroParameter getMacroParameter() {
     return new SnipMacroParameter(this.context);
