@@ -1,5 +1,8 @@
 0.2.6
 
+- Added feature: {since-last-visit:funzel} to show all changed snips since last visit for funzel
+- Added feature: --strike-- for strike through text
+- Added feature: {quote}this is a quote{quote}
 - Fixed bug: # in external links didn't work, <ul><ul> was rendered in weblogs, double images in
   external links in weblog
 - Added feature: Changed snips since last visit
