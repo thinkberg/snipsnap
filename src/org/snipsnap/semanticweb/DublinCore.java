@@ -31,6 +31,7 @@ import org.snipsnap.config.AppConfiguration;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.text.SimpleDateFormat;
 
 /**
@@ -49,13 +50,13 @@ public class DublinCore {
 
   public static Map generate(Snip snip) {
     Map dublinCore = new HashMap();
-    dublinCore.put("Creator", snip.getCUser());
-    dublinCore.put("Title", snip.getName());
-    dublinCore.put("Date", sf.format(snip.getModified().getmTime()));
-    dublinCore.put("Type", "Text");
-    dublinCore.put("Identifier", Application.get().getConfiguration().getSnipUrl(snip.getName()));
-    dublinCore.put("Coyright", "Copyright " + year.format(snip.getModified().getmTime()));
-    dublinCore.put("Language", conf.getLocale());
+    dublinCore.put("creator", snip.getCUser());
+    dublinCore.put("title", snip.getName());
+    dublinCore.put("date", sf.format(snip.getModified().getmTime()));
+    dublinCore.put("type", "Text");
+    dublinCore.put("identifier", Application.get().getConfiguration().getSnipUrl(snip.getName()));
+    dublinCore.put("copyright", "Copyright " + year.format(snip.getModified().getmTime()));
+    dublinCore.put("language", conf.getLocale());
     return dublinCore;
   }
 
