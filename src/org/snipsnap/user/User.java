@@ -131,6 +131,13 @@ public class User implements Nameable {
     return config.getAdminLogin().equals(login);
   }
 
+  public boolean equals(Object obj) {
+    if(obj instanceof User) {
+      this.getName().equals(((User)obj).getName());
+    }
+    return super.equals(obj);
+  }
+
   public String toString() {
     return "User["+login+","+(passwd != null ? "pass set" : "no pass") +","+email+","+status+","+roles+"]";
   }

@@ -55,6 +55,9 @@ public class LoginServlet extends HttpServlet {
     if (request.getParameter("cancel") == null) {
       UserManager um = UserManager.getInstance();
       User user = um.authenticate(login, password);
+      if(Application.getCurrentUsers().contains(user)) {
+        Application.getCurrentUsers().remove(user);
+      }
       HttpSession session = request.getSession(true);
       if (user == null) {
         session.setAttribute("login.login", login);

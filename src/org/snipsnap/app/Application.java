@@ -139,7 +139,7 @@ public class Application {
     Iterator iterator = currentUsers.values().iterator();
     while (iterator.hasNext()) {
       User user  = (User) iterator.next();
-      if (! (User.UNKNOWN.equals(user.getName()) || users.contains(user.getName()))) {
+      if (! (User.UNKNOWN.equals(user.getName()) || users.contains(user))) {
         users.add(user);
       }
     }

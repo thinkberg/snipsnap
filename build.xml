@@ -46,7 +46,7 @@
         <include name="db.sh"/>
         <include name="import.sh"/>
       </tarfileset>
-      <tarfileset dir="." prefix="${appname}-${server.version}" mode="555">
+      <tarfileset dir="." prefix="${appname}-${server.version}" mode="655">
         <include name="${jar}/${appname}.jar"/>
         <include name="${jar}/jdbcpool.jar"/>
         <include name="${jar}/jakarta.jar"/>

@@ -34,14 +34,7 @@
         <input value="Cancel" name="cancel" type="submit" tabindex="0">
       </td></tr>
     </table>
-    <c:choose>
-      <c:when test="${referer != null}">
-        <input name="referer" type="hidden" value="<c:out value='${referer}'/>">
-      </c:when>
-      <c:otherwise>
-        <input name="referer" type="hidden" value="<c:out value='${header["REFERER"]}'/>">
-      </c:otherwise>
-    </c:choose>
+    <input name="referer" type="hidden" value="<c:out value='${referer}' default='${header["REFERER"]}'/>">
   </form>
 </s:check>
 

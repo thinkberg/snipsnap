@@ -122,6 +122,7 @@ public class ApplicationLoader {
       installServer.addListener(listener);
       installServer.start();
     }
+
     if(listener instanceof SocketListener) {
       System.err.println("ApplicationLoader: limiting threads per server to 30");
       ((SocketListener)listener).setMaxThreads(30);
@@ -131,6 +132,8 @@ public class ApplicationLoader {
     WebApplicationContext context = installServer.addWebApplication(config.getContextPath(), root.getAbsolutePath() + "/app");
     context.setAttribute(AppConfiguration.INIT_PARAM, config.getFile().getAbsolutePath());
     context.start();
+
+    installServer.start();
     return context;
   }
 }

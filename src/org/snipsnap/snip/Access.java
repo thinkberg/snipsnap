@@ -64,9 +64,9 @@ public class Access {
         if (index != -1) {
           url = url.substring(0, index);
         }
-        snipLinks.addLink(url);
+        snipLinks.addLink(SnipLink.decode(url));
       } else {
-        backLinks.addLink(referrer);
+        backLinks.addLink(SnipLink.decode(referrer));
       }
     }
     store();

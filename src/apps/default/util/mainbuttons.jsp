@@ -3,7 +3,7 @@
 
 <font size="2">[ <a href="<c:url value='/space/start'/>">start</a> | <a href="<c:url value='/space/snipsnap-index'/>">index</a> |
  <s:check roles="Authenticated">
-    logged in as <a href="<c:url value='/space/${app.user.login}/${app.user.login}'/>"/></a> | <a href="<c:url value='/exec/authenticate?logoff=true'/>">logoff</a>
+    logged in as <a href="<c:url value='/space/${app.user.login}'/>"><c:out value="${app.user.login}"/></a> | <a href="<c:url value='/exec/authenticate?logoff=true'/>">logoff</a>
  </s:check>
  <s:check roles="Authenticated" invert="true">
   <a href="<c:url value='/exec/login.jsp'/>">login</a> or <a href="<c:url value='/exec/register.jsp'/>">register</a>
