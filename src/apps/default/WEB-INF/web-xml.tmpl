@@ -135,6 +135,11 @@
     </servlet>
 
   <servlet>
+    <servlet-name>org.snipsnap.net.SnipNewServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.SnipNewServlet</servlet-class>
+  </servlet>
+
+  <servlet>
     <servlet-name>org.snipsnap.net.SnipEditServlet</servlet-name>
     <servlet-class>org.snipsnap.net.SnipEditServlet</servlet-class>
   </servlet>
@@ -313,6 +318,11 @@
   <servlet-mapping>
     <servlet-name>org.snipsnap.net.StoreLabelServlet</servlet-name>
     <url-pattern>/exec/storelabel</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>org.snipsnap.net.SnipNewServlet</servlet-name>
+    <url-pattern>/exec/new</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
