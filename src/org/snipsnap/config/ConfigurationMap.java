@@ -122,14 +122,14 @@ public class ConfigurationMap {
   public void load() throws IOException {
     if (configFile != null) {
       properties.load(new FileInputStream(configFile));
-      if (transposeOldProperties()) {
+      if (convertOldProperties()) {
         System.err.println("Configuration: storing converted configuration file to " + getFile());
         store();
       }
     }
   }
 
-  private boolean transposeOldProperties() {
+  private boolean convertOldProperties() {
     boolean hasChanged = false;
     Iterator propIt = transposeMap.keySet().iterator();
     while (propIt.hasNext()) {
@@ -223,6 +223,16 @@ public class ConfigurationMap {
     return new Locale(language, country);
   }
 
+  public String getPath() {
+    if("true".equals(get(Configuration.APP_REAL_AUTODETECT))) {
+      String realPath = get(Configuration.APP_REAL_PATH);
+      if(null != realPath) {
+        return realPath;
+      }
+    }
+    return get(Configuration.APP_PATH);
+  }
+
   /**
    * Return base url to Snipsnap instance
    */
@@ -231,7 +241,7 @@ public class ConfigurationMap {
     String port = get(Configuration.APP_REAL_PORT);
     String path = get(Configuration.APP_REAL_PATH);
 
-    if (host == null) {
+    if (null == host) {
       host = get(Configuration.APP_HOST);
       port = get(Configuration.APP_PORT);
       path = get(Configuration.APP_PATH);

@@ -94,7 +94,7 @@ public class InitFilter implements Filter {
         config.set(Configuration.APP_REAL_PORT, port);
         config.set(Configuration.APP_REAL_PATH, request.getContextPath());
       }
-      System.err.println("autoconfigured url: " + config.getUrl());
+      // System.err.println("autoconfigured url: " + config.getUrl());
     }
 
     // make sure the request has a correct character encoding

@@ -133,7 +133,8 @@ public class ApplicationLoader {
       }
     }
 
-    String contextPath = config.getPath();
+    // use get() instead of getPath() to be sure to get the local context path
+    String contextPath = config.get(Configuration.APP_PATH);
     if (contextPath == null || contextPath.length() == 0) {
       contextPath = "/";
     }
@@ -142,7 +143,7 @@ public class ApplicationLoader {
     HttpListener listener[] = AppServer.jettyServer.getListeners();
     HttpListener existingListener = null;
     for (int i = 0; i < listener.length; i++) {
-      int port = Integer.parseInt(config.getPort());
+      int port = Integer.parseInt(config.get(Configuration.APP_PORT));
       if (listener[i].getPort() == port) {
         existingListener = listener[i];
       }
@@ -161,7 +162,7 @@ public class ApplicationLoader {
     }
 
     WebApplicationContext context =
-      AppServer.jettyServer.addWebApplication(config.getHost(),
+      AppServer.jettyServer.addWebApplication(config.get(Configuration.APP_HOST),
                                               contextPath,
                                               extract ? "lib/snipsnap-template.war" : appRoot.getCanonicalPath());
 
