@@ -30,44 +30,30 @@ import org.nanocontainer.nanning.NanningComponentAdapterFactory;
 import org.picocontainer.PicoContainer;
 import org.picocontainer.defaults.DefaultComponentAdapterFactory;
 import org.picocontainer.defaults.DefaultPicoContainer;
+import org.radeox.util.Service;
 import org.snipsnap.app.ApplicationManager;
 import org.snipsnap.app.ApplicationStorage;
 import org.snipsnap.app.JDBCApplicationStorage;
 import org.snipsnap.app.PropertyFileApplicationStorage;
+import org.snipsnap.config.ConfigurationProxy;
+import org.snipsnap.config.Globals;
 import org.snipsnap.interceptor.custom.MissingSnipAspect;
 import org.snipsnap.interceptor.custom.SnipSpaceACLAspect;
 import org.snipsnap.jdbc.LazyDataSource;
 import org.snipsnap.notification.MessageService;
-import org.snipsnap.snip.storage.PropertyFileSnipStorage;
-import org.snipsnap.snip.storage.SnipStorage;
-import org.snipsnap.snip.storage.UserStorage;
-import org.snipsnap.snip.storage.PropertyFileUserStorage;
-import org.snipsnap.snip.storage.JDBCUserStorage;
-import org.snipsnap.snip.storage.JDBCSnipStorage;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipSpaceImpl;
-import org.snipsnap.versioning.DefaultVersionManager;
-import org.snipsnap.versioning.DifferenceService;
-import org.snipsnap.versioning.VersionManager;
-import org.snipsnap.versioning.VersionStorage;
-import org.snipsnap.versioning.JDBCVersionStorage;
-import org.snipsnap.versioning.cookbook.CookbookDifferenceService;
-import org.snipsnap.xmlrpc.GeneratorHandler;
-import org.snipsnap.xmlrpc.SnipSnapHandler;
-import org.snipsnap.xmlrpc.WeblogHandler;
-import org.snipsnap.xmlrpc.WeblogsPingHandler;
-import org.snipsnap.xmlrpc.MetaWeblogAPI;
-import org.snipsnap.xmlrpc.BloggerAPI;
-import org.snipsnap.xmlrpc.MetaWeblogHandler;
-import org.snipsnap.xmlrpc.BloggerHandler;
-import org.snipsnap.config.Globals;
-import org.snipsnap.config.Configuration;
-import org.snipsnap.config.ConfigurationProxy;
-import org.snipsnap.user.*;
 import org.snipsnap.render.PlainTextRenderEngine;
 import org.snipsnap.render.SnipRenderEngine;
+import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipSpaceImpl;
+import org.snipsnap.snip.storage.*;
+import org.snipsnap.user.*;
+import org.snipsnap.versioning.*;
+import org.snipsnap.versioning.cookbook.CookbookDifferenceService;
+import org.snipsnap.xmlrpc.*;
 
 import javax.sql.DataSource;
+import java.util.Iterator;
+import java.util.List;
 
 public class Components {
   public final static String DEFAULT_ENGINE = "defaultRenderEngine";
@@ -132,6 +118,14 @@ public class Components {
         nc.registerComponentImplementation(VersionManager.class, DefaultVersionManager.class);
         nc.registerComponentImplementation(DifferenceService.class, CookbookDifferenceService.class);
 
+        Iterator iterator = Service.providerClasses(Component.class);
+        while (iterator.hasNext()) {
+          Class component = (Class) iterator.next();
+          nc.registerComponentImplementation(component);
+        }
+
+//        Component component = (MessageLogService) nc.getComponentInstance(MessageLogService.class);
+//       System.out.println("keys="+nc.getComponentKeys());
         container = nc;
       } catch (Exception e) {
         e.printStackTrace();

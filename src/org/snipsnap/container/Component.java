@@ -23,26 +23,7 @@
  * --LICENSE NOTICE--
  */
 
-package org.snipsnap.notification.jabber;
+package org.snipsnap.container;
 
-import org.snipsnap.notification.Notifier;
-
-/**
- * Sends notifications via Jabber IM service
- * @author Stephan J. Schmidt
- * @version $Id$
- */
-
-public class JabberNotifier implements Notifier {
-  private JabberBot bot;
-  private String user;
-
-  public JabberNotifier(String user) {
-    this.user = user;
-    bot = JabberBot.getInstance();
-  }
-
-  public void notify(String message) {
-    bot.send(user, message);
-  }
+public interface Component {
 }

@@ -1,5 +1,7 @@
 0.5.1
 
+- Developer: Added javadoc target to build
+- Added feature: Snips with a Type:Template label can be used as templates on snip creation
 - Added feature: Choosing the parent snip for the namespace when creating new snips
 - Improvement: Only the last name of a namespace snip is displayed.
 

@@ -52,4 +52,8 @@ public class Message {
   public Object getValue() {
     return value;
   }
+
+  public String toString() {
+    return "("+type+"="+value+")";
+  }
 }

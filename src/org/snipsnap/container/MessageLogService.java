@@ -1,7 +1,7 @@
 /*
  * This file is part of "SnipSnap Wiki/Weblog".
  *
- * Copyright (c) 2002 Stephan J. Schmidt, Matthias L. Jugel
+ * Copyright (c) 2002-2004 Stephan J. Schmidt, Matthias L. Jugel
  * All Rights Reserved.
  *
  * Please visit http://snipsnap.org/ for updates and contact.
@@ -23,26 +23,30 @@
  * --LICENSE NOTICE--
  */
 
-package org.snipsnap.notification.jabber;
+package org.snipsnap.container;
 
-import org.snipsnap.notification.Notifier;
+import org.snipsnap.notification.MessageService;
+import org.snipsnap.notification.Consumer;
+import org.snipsnap.notification.Message;
+
 
 /**
- * Sends notifications via Jabber IM service
+ * Component that listens to a MessageService and
+ * logs all messages.
+ *
  * @author Stephan J. Schmidt
  * @version $Id$
  */
 
-public class JabberNotifier implements Notifier {
-  private JabberBot bot;
-  private String user;
+public class MessageLogService implements Consumer, Component {
+  private MessageService messageService;
 
-  public JabberNotifier(String user) {
-    this.user = user;
-    bot = JabberBot.getInstance();
+  public MessageLogService(MessageService messageService) {
+    this.messageService = messageService;
+    messageService.register(this);
   }
 
-  public void notify(String message) {
-    bot.send(user, message);
+  public void consume(Message message) {
+    System.out.println("Message: "+message.toString());
   }
 }
