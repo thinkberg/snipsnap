@@ -102,9 +102,9 @@
         </c:forEach>
         <c:forEach items="${newthemes}" var="theme">
           <option value="<c:out value='${theme.key}'/>"
-            <c:if test="${newconfig.theme == theme.key}">selected="selected"</c:if>><fmt:message key="config.app.theme.new">
+            <c:if test="${newconfig.theme == theme.key}">selected="selected"</c:if>><c:if test="${newconfig.configured}"><fmt:message key="config.app.theme.new">
               <fmt:param><c:out value="${theme.key}" escapeXml="true"/></fmt:param>
-            </fmt:message></option>
+            </fmt:message></c:if></option>
         </c:forEach>
       </select>
     </td>
