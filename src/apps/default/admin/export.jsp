@@ -20,7 +20,7 @@
     <td valign="top">Select Output:</td>
     <td>
      <input type="radio" name="output" value="application" checked="checked">
-     Application Home Directory (<c:out value="${config.name}.snip"/>)<br/>
+     Application Home Directory (WEB-INF/<c:out value="${config.name}.snip"/>)<br/>
      <input type="radio" name="output" value="web"> Web Download<br/>
     </td>
    </tr>
