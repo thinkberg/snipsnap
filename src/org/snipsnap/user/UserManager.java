@@ -46,6 +46,11 @@ import java.sql.Timestamp;
 import java.util.*;
 import java.net.URL;
 import java.net.MalformedURLException;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
+import java.io.IOException;
 
 /**
  * User manager handles all register, creation and authentication of users.
@@ -107,8 +112,28 @@ public class UserManager implements Loader {
       // every 5 minutes
     }, 5 * 60 * 1000, 5 * 60 * 1000);
 
-    robotIds.put("Googlebot", "http://www.googlebot.com/bot.html");
-    robotIds.put("FAST-WebCrawler", "http://fast.no/support/crawler.asp");
+    try {
+      BufferedReader crawler = new BufferedReader(
+        new InputStreamReader(new FileInputStream("conf/robotdetect.txt")));
+      String line = null;
+      int ln = 0;
+      while((line = crawler.readLine()) != null) {
+        ln++;
+        if(line.length() > 0 && !line.startsWith("#")) {
+          try {
+            String id = line.substring(0, line.indexOf(' '));
+            String url = line.substring(line.indexOf(' ')+1);
+            robotIds.put(id, url);
+          } catch (Exception e) {
+            System.err.println("UserManager: conf/robotdetect.txt line "+ln+": syntax error");
+            e.printStackTrace();
+          }
+        }
+      }
+    } catch (IOException e) {
+      System.err.println("UserManager: unable to read conf/robotdetect.txt: "+e);
+      e.printStackTrace();
+    }
   }
 
   // update the auth hash by removing all entries and updating from the database
