@@ -33,6 +33,7 @@ import com.neotis.util.Queue;
 import com.neotis.cache.Cache;
 import com.neotis.user.Permissions;
 import com.neotis.user.Security;
+import com.neotis.xmlrpc.WeblogsPing;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -124,6 +125,9 @@ public class SnipSpace implements LinkTester, Loader {
     snip.setParent(weblog);
     snip.addPermission(Permissions.EDIT, Security.OWNER);
     store(snip);
+
+    // Ping weblogs.com that we changed our site
+    // WeblogsPing.ping();
     return snip;
   }
 
