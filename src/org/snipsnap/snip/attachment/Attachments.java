@@ -36,15 +36,14 @@ import org.radeox.util.logging.Logger;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Comparator;
-import java.util.Collections;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Class for grouping and managing attachments for a snip
@@ -66,7 +65,7 @@ public class Attachments {
    * Initialize Attachments object with a serialized string.
    */
   public Attachments(String serialized) {
-    if(null != serialized) {
+    if (null != serialized) {
       if (serialized.startsWith("<" + ATTACHMENTS + ">")) {
         cache = serialized;
       } else {
@@ -86,25 +85,19 @@ public class Attachments {
   private Map attachments = null;
 
   public Attachment addAttachment(String name, String contentType, long size, String location) {
-    if (null == attachments) {
-      deserialize();
-    }
+    deserialize();
     Attachment attachment = new Attachment(name, contentType, size, new Date(), location);
     attachments.put(name, attachment);
     return attachment;
   }
 
   public Attachment getAttachment(String name) {
-    if (null == attachments) {
-      deserialize();
-    }
+    deserialize();
     return (Attachment) attachments.get(name);
   }
 
   public void removeAttachment(String name) {
-    if (null == attachments) {
-      deserialize();
-    }
+    deserialize();
     Attachment attachment = (Attachment) attachments.get(name);
     if (attachment != null) {
       removeAttachment(attachment);
@@ -112,9 +105,7 @@ public class Attachments {
   }
 
   public void removeAttachment(Attachment attachment) {
-    if (null == attachments) {
-      deserialize();
-    }
+    deserialize();
     attachments.remove(attachment.getName());
   }
 
@@ -123,15 +114,14 @@ public class Attachments {
   }
 
   public List getAll() {
-    if (null == attachments) {
-      deserialize();
-    }
+    deserialize();
     List list = new ArrayList(attachments.values());
     Collections.sort(list, attSorter);
     return list;
   }
 
   public boolean isEmpty() {
+    deserialize();
     return null == attachments || attachments.size() == 0;
   }
 
@@ -144,30 +134,38 @@ public class Attachments {
   private final static String DATE = "date";
   private final static String LOCATION = "location";
 
-  private void deserialize() {
-    attachments = new HashMap();
-    if (null != cache && !"".equals(cache)) {
-      Document attXml;
-      try {
-        SAXReader saxReader = new SAXReader();
-        attXml = saxReader.read(new StringReader(cache));
-        Element root = attXml.getRootElement();
-        Iterator it = root.elementIterator(ATTACHMENT);
-        while (it.hasNext()) {
-          Element attElement = (Element) it.next();
-          try {
-            String name = attElement.element(NAME).getText();
-            String contentType = attElement.element(CONTENTTYPE).getTextTrim();
-            int size = Integer.parseInt(attElement.element(SIZE).getTextTrim());
-            Date date = new Date(Long.parseLong(attElement.element(DATE).getTextTrim()));
-            String location = attElement.element(LOCATION).getTextTrim();
-            attachments.put(name, new Attachment(name, contentType, size, date, location));
-          } catch (Exception e) {
-            Logger.warn("Attachments: ignoring attachment: " + attElement);
+  /**
+   * Deserialize the attachments from the database string.
+   * TODO: synchronized due to race conditions while starting up
+   */
+  private synchronized void deserialize() {
+    if (null == attachments) {
+      Logger.log("deserializing attachments");
+      attachments = new HashMap();
+      if (null != cache && !"".equals(cache)) {
+        Document attXml;
+        try {
+          SAXReader saxReader = new SAXReader();
+          attXml = saxReader.read(new StringReader(cache));
+          Element root = attXml.getRootElement();
+          Iterator it = root.elementIterator(ATTACHMENT);
+          while (it.hasNext()) {
+            Element attElement = (Element) it.next();
+            try {
+              String name = attElement.element(NAME).getText();
+              Logger.log("found attachment: " + name);
+              String contentType = attElement.element(CONTENTTYPE).getTextTrim();
+              int size = Integer.parseInt(attElement.element(SIZE).getTextTrim());
+              Date date = new Date(Long.parseLong(attElement.element(DATE).getTextTrim()));
+              String location = attElement.element(LOCATION).getTextTrim();
+              attachments.put(name, new Attachment(name, contentType, size, date, location));
+            } catch (Exception e) {
+              Logger.warn("Attachments: ignoring attachment: " + attElement);
+            }
           }
+        } catch (Exception e) {
+          Logger.warn("Attachments: unable to deserialize: '" + cache + "'");
         }
-      } catch (Exception e) {
-        Logger.warn("Attachments: unable to deserialize: '" + cache + "'");
       }
     }
   }

@@ -311,6 +311,7 @@ public class ConfigureServlet extends HttpServlet {
               Snip configSnip = space.load(Configuration.SNIPSNAP_CONFIG);
               configSnip.setContent(new String(configStream.toString("UTF-8")));
               space.store(configSnip);
+              session.removeAttribute(ATT_CONFIG);
             }
           }
         } else {

@@ -181,6 +181,7 @@ public class SnipImpl implements Snip {
   }
 
   public Attachments getAttachments() {
+    Logger.log(name+".getAttachments()");
     return attachments;
   }
 

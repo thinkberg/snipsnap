@@ -81,6 +81,8 @@ public class FileDownloadServlet extends HttpServlet {
           in.close();
           out.close();
           return;
+        } else {
+          Logger.warn("File '"+file+"' does not exist.");
         }
       } else {
         // legacy: found a default image download
