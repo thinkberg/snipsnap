@@ -16,7 +16,10 @@
    <%-- title/header of a comment --%>
    <div class="comment-title">
     <a name="<c:out value='${comment.name}'/>"/>
-    <h2 class="comment-name"><a href="../comments/<c:out value='${snip.nameEncoded}'/>#<c:out value='${comment.name}'/>"><s:image name="comment"/></a> <c:out value="${comment.modified.short}" escapeXml="false" /></h2>
+    <h2 class="comment-name">
+     <a href="../raw/<c:out value='${comment.name}'/>"><s:image name="comment"/></a> <c:out value="${comment.modified.short}" escapeXml="false" />
+     <a href="../comments/<c:out value='${snip.nameEncoded}'/>#<c:out value='${comment.name}'/>"><s:image name="permalink"/></a>
+    </h2>
     <s:check roles="Owner" permission="Edit" snip="${comment}">
       <div class="comment-buttons">[<a href="../exec/edit?name=<c:out value='${comment.name}'/>">edit</a>]</div>
     </s:check>
