@@ -58,7 +58,7 @@ public class SnipStoreServlet extends HttpServlet {
       try {
         request = new MultipartWrapper(request, config.getEncoding() != null ? config.getEncoding() : "UTF-8");
       } catch (IllegalArgumentException e) {
-        Logger.warn("SnipCopyServlet: multipart/form-data wrapper:" + e.getMessage());
+        Logger.warn("SnipStoreServlet: multipart/form-data wrapper:" + e.getMessage());
       }
     }
 

@@ -97,6 +97,7 @@ public class ConfigureServlet extends HttpServlet {
   protected final static String STEP_EXPORT = "export";
   protected final static String STEP_USERS = "users";
   protected final static String STEP_SEARCH = "search";
+  protected final static String STEP_MAINTENANCE = "maintenance";
 
   private final static List LOGIN_STEPS = Arrays.asList(new String[]{
     STEP_LOGIN
@@ -122,7 +123,8 @@ public class ConfigureServlet extends HttpServlet {
     STEP_USERS,
     STEP_IMPORT,
     STEP_EXPORT,
-    STEP_SEARCH
+    STEP_SEARCH,
+    STEP_MAINTENANCE
   });
 
   private final static List HANDLERS = Arrays.asList(new String[]{

@@ -11,7 +11,7 @@
 <input type="hidden" name="prefix" value="<c:out value="${prefix}"/>"/>
 <c:choose>
   <c:when test="${not empty configuser && configuser.admin}">
-    <c:if test="${not(step == 'import' || step == 'export' || step == 'users' || step == 'search')}">
+    <c:if test="${not(step == 'import' || step == 'export' || step == 'users' || step == 'search' || step == 'maintenance')}">
       <input type="submit" name="save" value="<fmt:message key="config.nav.save"/>"/>
     </c:if>
   </c:when>

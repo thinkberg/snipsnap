@@ -1,5 +1,5 @@
  <%--
-  ** Search Engine Patameter settings
+  ** Search Engine Parameter settings
   ** @author Matthias L. Jugel
   ** @version $Id$
   --%>

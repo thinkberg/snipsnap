@@ -106,21 +106,6 @@ public class XMLSnipRepair {
   private static Document load(File file) throws Exception {
     final long fileLength = file.length();
     SAXReader saxReader = new SAXReader();
-    saxReader.setXMLFilter(new XMLFilterImpl() {
-      public InputSource resolveEntity(String publicId, String systemId)
-        throws SAXException, IOException {
-        System.err.println(publicId);
-        return super.resolveEntity(publicId, systemId);
-      }
-
-      public void characters(char ch[], int start, int length)
-        throws SAXException {
-        System.err.println("== data chunk starting ...");
-        super.characters(ch, start, length);
-
-        System.err.println("== end of data chunk");
-      }
-    });
     System.err.print("0%");
     InputStreamReader reader = new InputStreamReader(new FileInputStream(file), "UTF-8") {
       private long read = 0;
@@ -144,7 +129,7 @@ public class XMLSnipRepair {
 
       private char replaceIfIllegal(char c) {
         if (c < 0x20 && !(c == 0x09 || c == 0x0a || c == 0x0d)) {
-          System.err.println("Replacing illegal character '0x" + Integer.toHexString(c) + "' by space.");
+//          System.err.println("Replacing illegal character '0x" + Integer.toHexString(c) + "' by space.");
           errCount++;
           return (char) 0x20;
         }
