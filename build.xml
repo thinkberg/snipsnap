@@ -7,6 +7,7 @@
 
   <property file="conf/build.properties"/>
 
+  <!-- the overall class path -->
   <path id="classpath">
     <pathelement location="${jar}/jdbcpool.jar"/>
     <pathelement location="${jar}/jakarta.jar"/>
@@ -18,6 +19,7 @@
     <pathelement location="${src}/apps/default/WEB-INF/lib/standard.jar"/>
   </path>
 
+  <!-- build binary distribution package -->
   <target depends="clean,jar" description="build binary package" name="bin-tar">
     <tar destfile="${appname}-${version}.tgz" compression="gzip">
       <tarfileset dir="." prefix="${appname}-${version}" mode="566">
@@ -39,6 +41,7 @@
     </tar>
   </target>
 
+  <!-- delete compiled class files and created jar/war archives -->
   <target description="clean up compiled code" name="clean">
     <delete>
       <fileset dir="${target}" includes="**"/>
@@ -48,6 +51,7 @@
     </delete>
   </target>
 
+  <!-- create a jar containing the server code and compile all supporting applications  -->
   <target depends="build,template-war,admin-war" description="build executable jar" name="jar">
     <jar destfile="${jar}/${appname}.jar"
       excludes="**/CVS"
@@ -56,6 +60,7 @@
     </jar>
   </target>
 
+  <!-- create web archive of the administrative web application -->
   <target depends="build" description="build admin war" name="admin-war">
     <jar destfile="${jar}/${appname}-admin.war"
       excludes="**/CVS">
@@ -64,6 +69,7 @@
     </jar>
   </target>
 
+  <!-- create web archive of the template application -->
   <target depends="build" description="build template war" name="template-war">
     <!-- TODO: Hack to allow running without a war -->
     <jar destfile="${src}/apps/default/WEB-INF/lib/servlets.jar"
@@ -76,6 +82,7 @@
     </jar>
   </target>
 
+  <!-- shortcut for running the server code, deprecated: use run.sh -->
   <target depends="jar" description="run application server" name="run">
     <java classname="com.neotis.server.AppServer" fork="true"
       classpathref="classpath">
@@ -83,6 +90,7 @@
     </java>
   </target>
 
+  <!-- a simple help target to build all applications and server code -->
   <target depends="build-server, build-default-app, build-admin-app"
     description="build all code" name="build"/>
 

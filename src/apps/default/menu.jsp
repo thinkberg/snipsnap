@@ -32,7 +32,7 @@
         <td><input name="login" type="text" size="10" value=""></td>
         <td><input name="password" type="password" size="10" value=""></td>
        <tr><td colspan="2">
-         <input value="Login" name="ok" type="submit"> <a href="/exec/register">Register!</a>
+         <input value="Login" name="ok" type="submit"> <a href="/exec/register.jsp">Register!</a>
        </td></tr>
       </table>
     </form><br>

@@ -67,8 +67,8 @@ public class Layouter extends HttpServlet {
     session.setAttribute("space", SnipSpace.getInstance());
 
     String layout = request.getPathInfo();
-    if(null == layout) {
-      response.sendError(HttpServletResponse.SC_FORBIDDEN, "illegal user of layouter");
+    if(null == layout || "/".equals(layout)) {
+      response.sendRedirect("/");
       return;
     }
 

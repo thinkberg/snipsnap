@@ -40,7 +40,9 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
- * Load a snip to view.
+ * Load a snip to edit. Loads the snip into the request context. In case
+ * the snip is newly created put the name into "snip_name".
+ *
  * @author Matthias L. Jugel
  * @version $Id$
  */
