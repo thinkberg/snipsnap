@@ -26,6 +26,7 @@ package org.snipsnap.render.macro.list;
 
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
+import org.snipsnap.user.UserManager;
 import org.radeox.util.Linkable;
 import org.radeox.util.Nameable;
 import org.radeox.macro.list.ListFormatter;
@@ -86,12 +87,15 @@ public class VerticalListFormatter implements ListFormatter {
             writer.write(" (");
             SnipLink.appendLink(writer, snip.getCUser());
             writer.write(")");
+          } else if (UserManager.getInstance().load(name) != null) {
+            SnipLink.appendImage(writer, "person-icon", "", "png");
+            SnipLink.appendLink(writer, ((Nameable) object).getName());
+            //SnipLink.appendLinkWithRoot(writer, "../comments", SnipLink.encode(realName) + "#" + name, realName);
           } else {
             SnipLink.appendLink(writer, name, realName);
           }
         } else if (object instanceof Linkable) {
             writer.write(((Linkable) object).getLink());
-
         } else if (object instanceof Nameable) {
           SnipLink.appendLink(writer, ((Nameable) object).getName());
         } else {

@@ -40,7 +40,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;
 
-public class UserSnipMacro extends ListOutputMacro {
+public class UserSnipCountMacro extends ListOutputMacro {
   private String[] paramDescription =
      {"1: login name"};
 
@@ -49,24 +49,19 @@ public class UserSnipMacro extends ListOutputMacro {
   }
 
   public String getName() {
-    return "snips-by-user";
+    return "snip-count-by-user";
   }
 
   public String getDescription() {
-    return "Show all snips created by a specified user.";
+    return "Display the number of snips an user wrote.";
   }
 
   public void execute(Writer writer, SnipMacroParameter params)
       throws IllegalArgumentException, IOException {
-    String type = null;
-    boolean showSize = true;
-    if (params.getLength() > 1) {
-        type = params.get("1");
-    }
 
-    if (params.getLength() > 0) {
+    if (params.getLength() == 1) {
       Collection c = SnipSpaceFactory.getInstance().getByUser(params.get("0"));
-      output(writer, "this user's snips:", c, "none written yet.", type, showSize);
+      writer.write(""+c.size());
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

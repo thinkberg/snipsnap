@@ -1,5 +1,6 @@
 0.3.5
 
+- Added feature: {snip-count-by-user:stephan} macro
 - Fixed bug: create link did not follow [create name] format
 - Fixed bug: Correct date format in Dublin core dc:date
 - Security: Fixed posting and editing by unauthorized users

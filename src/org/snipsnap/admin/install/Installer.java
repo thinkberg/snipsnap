@@ -109,7 +109,7 @@ public class Installer extends HttpServlet {
     // set user name and email, check that information
     writeMessage(out, "Checking user name and password ...");
     String adminName = request.getParameter("username");
-    if (checkUserName(adminName)) {
+    if (! checkUserName(adminName)) {
       System.err.println("Installer: user name too short");
       errors.put("login", "You must enter a user name with at least 3 characters!");
     } else {

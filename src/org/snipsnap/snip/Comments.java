@@ -33,6 +33,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.io.StringWriter;
+import java.io.IOException;
 
 /**
  * Handler for comments added to snips.
@@ -118,6 +120,12 @@ public class Comments {
     }
 
     return buffer.toString();
+  }
+
+  public String getPostUrl() throws IOException {
+    StringWriter writer = new StringWriter();
+    SnipLink.appendUrlWithBase(writer, "../comments", SnipLink.encode(snip.getName()), "post");
+    return writer.getBuffer().toString();
   }
 
   public String getPostString() {

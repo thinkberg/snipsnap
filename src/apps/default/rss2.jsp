@@ -35,9 +35,7 @@
         <guid isPermaLink="true"><c:out value="${url}/${child.nameEncoded}"/></guid>
         <content:encoded><s:content snip="${child}" encode="true"/></content:encoded>
         <s:dublinCore snip="${child}" format="xml"/>
-        <!--
-<comments>http://rateyourmusic.com/yaccs/commentsn/blogId=705245&itemId=271</comments>
-        -->
+        <comments><c:out value="${child.comments.postUrl}"/></comments>
       </item>
     </c:forEach>
   </channel>
