@@ -11,12 +11,12 @@
   <engineLink>http://snipsnap.org</engineLink>
   <homePageLink><c:out value="${url}/${snip.nameEncoded}"/></homePageLink>
   <apis>
-   <api name="Blogger" preferred="true" apiLink="<c:out value="${baseurl}"/>/RPC2" blogID=""/>
-   <settings>
-    <docs>http://api.blogger.com/api/</docs>
-    <notes>SnipSnap partially supports Blogger API. SnipSnap will support other XML-RPC and SOAP APIs in the future.</notes>
-  </settings>
-  </api>
+   <api name="Blogger" preferred="true" apiLink="<c:out value="${baseurl}"/>/RPC2" blogID="">
+     <settings>
+       <docs>http://api.blogger.com/api/</docs>
+       <notes>SnipSnap partially supports Blogger API. SnipSnap will support other XML-RPC and SOAP APIs in the future.</notes>
+     </settings>
+   </api>
   </apis>
 </service>
 </rsd>

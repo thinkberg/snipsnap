@@ -250,6 +250,8 @@
     <jar destfile="${jar}/${appname}-installer.war" excludes="**/CVS">
       <fileset dir="${src}/apps/installer" includes="**"/>
       <zipfileset dir="${jar}" prefix="WEB-INF/lib">
+        <include name="${jar}/mail.jar"/>
+        <include name="${jar}/activation.jar"/>
         <include name="mckoidb.jar"/>
         <include name="jdbcpool.jar"/>
         <include name="lucene-1.2.jar"/>
