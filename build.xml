@@ -56,7 +56,7 @@
   <target depends="build" description="build admin war" name="admin-war">
     <jar destfile="${jar}/${appname}-admin.war"
 	 excludes="**/CVS">
-      <fileset dir="${src}/src/apps/admin" includes="**"/>
+      <fileset dir="${src}/apps/admin" includes="**"/>
       <fileset dir="${target}/admin" includes="**"/>
     </jar>
   </target>
