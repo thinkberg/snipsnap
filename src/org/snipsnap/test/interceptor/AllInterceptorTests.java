@@ -27,9 +27,6 @@ package org.snipsnap.test.interceptor;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import org.snipsnap.test.commons.EncoderTest;
-import org.snipsnap.test.snip.PermalinkTest;
-import org.snipsnap.test.snip.ImageTest;
 
 public class AllInterceptorTests extends TestCase {
   public AllInterceptorTests(String name) {

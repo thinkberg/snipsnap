@@ -25,7 +25,6 @@
 package org.snipsnap.admin.install;
 
 import org.snipsnap.admin.util.ApplicationCommand;
-import org.snipsnap.snip.SnipLink;
 import org.snipsnap.util.Checksum;
 import org.snipsnap.util.FileUtil;
 import org.snipsnap.util.JarUtil;

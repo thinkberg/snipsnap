@@ -25,7 +25,7 @@
 
 package org.snipsnap.util;
 
-import java.io.Writer;
+
 
 /**
  * Tells the object to create a link to itself.

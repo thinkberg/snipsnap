@@ -25,9 +25,8 @@
 
 package org.snipsnap.render.macro;
 
-import org.snipsnap.user.UserManager;
-import org.radeox.macro.parameter.MacroParameter;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
+import org.snipsnap.user.UserManager;
 
 import java.io.IOException;
 import java.io.Writer;

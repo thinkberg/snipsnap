@@ -25,9 +25,9 @@
 
 package org.snipsnap.render.macro;
 
-import org.snipsnap.snip.Modified;
-import org.radeox.macro.parameter.MacroParameter;
 import org.radeox.macro.Macro;
+import org.radeox.macro.parameter.MacroParameter;
+import org.snipsnap.snip.Modified;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 

@@ -25,14 +25,12 @@
 package org.snipsnap.jsp;
 
 import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
-import org.snipsnap.snip.Links;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.render.filter.links.BackLinks;
 import org.radeox.util.logging.Logger;
+import org.snipsnap.render.filter.links.BackLinks;
+import org.snipsnap.snip.Snip;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.jstl.core.ConditionalTagSupport;
 import javax.servlet.jsp.tagext.BodyTag;
 import javax.servlet.jsp.tagext.TagSupport;
 
@@ -46,7 +44,7 @@ public class BackLinkTag extends TagSupport {
     }
 
     JspWriter out = pageContext.getOut();
-    Links backLinks = snip.getAccess().getBackLinks();
+//    Links backLinks = snip.getAccess().getBackLinks();
 
     BackLinks.appendTo(out, snip.getAccess().getBackLinks(), this.count);
     return super.doStartTag();

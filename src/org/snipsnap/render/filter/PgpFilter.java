@@ -33,8 +33,8 @@ import org.snipsnap.render.filter.context.SnipFilterContext;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 
-import java.io.Writer;
 import java.io.IOException;
+import java.io.Writer;
 
 /*
  * Class that finds snippets that are surrounded

@@ -25,11 +25,8 @@
 
 package org.snipsnap.util;
 
-import org.snipsnap.serialization.Appendable;
 import org.radeox.util.Linkable;
 
-import java.io.Writer;
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -65,6 +62,10 @@ public class Weblog implements Linkable {
 
   private String getUrl() {
     return this.url;
+  }
+
+  public int hashCode() {
+    return url.hashCode();
   }
 
   public boolean equals(Object obj) {

@@ -51,12 +51,12 @@ public class Links {
   }
 
   public int getSize() {
-    if (null == linkMap) linkMap = deserialize(cache);
+    if (null == linkMap) { linkMap = deserialize(cache); }
     return linkMap.size();
   }
 
   public void addLink(String url) {
-    if (null == linkMap) linkMap = deserialize(cache);
+    if (null == linkMap) { linkMap = deserialize(cache); }
     cache = null;
 
     if (linkMap.containsKey(url)) {
@@ -89,7 +89,7 @@ public class Links {
    * @return Iterator over the urls of Links
    */
   public Iterator iterator() {
-    if (null == linkMap) linkMap = deserialize(cache);
+    if (null == linkMap) { linkMap = deserialize(cache); }
     List keys = new LinkedList(linkMap.keySet());
     Collections.sort(keys, new Comparator() {
       public int compare(Object o1, Object o2) {
@@ -101,7 +101,7 @@ public class Links {
   }
 
   public int getIntCount(String url) {
-    if (null == linkMap) linkMap = deserialize(cache);
+    if (null == linkMap) { linkMap = deserialize(cache); }
     int currentCount = 0;
     if (linkMap.containsKey(url)) {
       currentCount = ((Integer) linkMap.get(url)).intValue();
@@ -116,7 +116,7 @@ public class Links {
   }
 
   public Map deserialize(String links) {
-    if ("".equals(links)) return newLinkMap();
+    if ("".equals(links)) { return newLinkMap(); }
 
     Map linkcounts = newLinkMap();
 
@@ -135,7 +135,7 @@ public class Links {
   }
 
   private String serialize() {
-    if (null == linkMap || linkMap.isEmpty()) return "";
+    if (null == linkMap || linkMap.isEmpty()) { return ""; }
 
     StringBuffer linkBuffer = new StringBuffer();
     Iterator iterator = linkMap.keySet().iterator();

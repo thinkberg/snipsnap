@@ -25,10 +25,9 @@
 
 package org.snipsnap.render.macro;
 
-import org.snipsnap.xmlrpc.SnipSnapPing;
-import org.radeox.macro.parameter.MacroParameter;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
+import org.snipsnap.xmlrpc.SnipSnapPing;
 
 import java.io.IOException;
 import java.io.Writer;

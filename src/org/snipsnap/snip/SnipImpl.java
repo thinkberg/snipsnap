@@ -315,7 +315,7 @@ public class SnipImpl implements Snip {
   }
 
   public void setParent(Snip parentSnip) {
-    if (parentSnip == this.parent) return;
+    if (parentSnip == this.parent) { return; }
 
     if (null != this.parent) {
       this.parent.removeSnip((Snip) Aspects.getThis());

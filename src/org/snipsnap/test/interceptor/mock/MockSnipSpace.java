@@ -1,15 +1,12 @@
 package org.snipsnap.test.interceptor.mock;
 
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.Blog;
 import org.apache.lucene.search.Hits;
+import org.snipsnap.snip.Blog;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipSpace;
 
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 import java.sql.Timestamp;
-import java.sql.Date;
+import java.util.List;
 
 public class MockSnipSpace extends MockObject implements SnipSpace {
   public MockSnipSpace() {

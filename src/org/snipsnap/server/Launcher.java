@@ -25,13 +25,13 @@
 package org.snipsnap.server;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.URL;
 import java.util.StringTokenizer;
 import java.util.jar.Attributes;
-import java.util.jar.Manifest;
 import java.util.jar.JarInputStream;
-import java.net.URL;
-import java.lang.reflect.Method;
-import java.lang.reflect.InvocationTargetException;
+import java.util.jar.Manifest;
 
 /**
  * Launcher for Java Applications. Creates the classpath and then starts the application.

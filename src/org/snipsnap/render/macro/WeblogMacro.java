@@ -25,15 +25,9 @@
 
 package org.snipsnap.render.macro;
 
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipUtil;
-import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.snip.Blog;
 import org.snipsnap.render.filter.links.BackLinks;
-import org.radeox.macro.parameter.MacroParameter;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
+import org.snipsnap.snip.*;
 
 import java.io.IOException;
 import java.io.Writer;

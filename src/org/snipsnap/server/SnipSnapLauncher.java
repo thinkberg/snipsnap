@@ -24,8 +24,8 @@
  */
 package org.snipsnap.server;
 
-import java.io.*;
-import java.lang.reflect.InvocationTargetException;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * SnipSnap launcher that takes care of adding the compiler to the classpath before

@@ -25,12 +25,12 @@
 
 package org.snipsnap.render.macro;
 
-import org.snipsnap.render.macro.parameter.SnipMacroParameter;
-import org.radeox.macro.parameter.MacroParameter;
 import org.radeox.macro.Macro;
+import org.radeox.macro.parameter.MacroParameter;
+import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 
-import java.io.Writer;
 import java.io.IOException;
+import java.io.Writer;
 
 /**
  * Base macro class for macros that deal in a SnipSnap enviroment.

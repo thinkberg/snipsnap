@@ -25,17 +25,15 @@
 
 package org.snipsnap.snip;
 
+import org.radeox.util.Linkable;
+import org.radeox.util.Nameable;
 import org.snipsnap.serialization.Appendable;
-import org.snipsnap.snip.label.Labels;
 import org.snipsnap.snip.attachment.Attachments;
+import org.snipsnap.snip.label.Labels;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.User;
-import org.radeox.util.Nameable;
-import org.radeox.util.Linkable;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.io.Writer;
 import java.sql.Timestamp;
 import java.util.List;
 

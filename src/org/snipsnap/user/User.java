@@ -187,11 +187,15 @@ public class User implements Linkable {
     return nonUser;
   }
 
+  public int hashCode() {
+    return getLogin().hashCode();
+  }
+
   public boolean equals(Object obj) {
     if (obj instanceof User && obj != null && this.getLogin() != null) {
-      this.getLogin().equals(((User) obj).getLogin());
+      return this.getLogin().equals(((User) obj).getLogin());
     }
-    return super.equals(obj);
+    return false;
   }
 
   public String toString() {

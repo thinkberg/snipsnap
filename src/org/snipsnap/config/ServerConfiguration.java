@@ -24,11 +24,7 @@
  */
 package org.snipsnap.config;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.Properties;
 
 /**
@@ -186,7 +182,7 @@ public class ServerConfiguration {
   }
 
   public void setProperty(String name, String value) {
-    if (name == null || value == null) return;
+    if (name == null || value == null) { return; }
     properties.setProperty(name, value);
   }
 

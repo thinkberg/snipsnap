@@ -25,17 +25,11 @@
 
 package org.snipsnap.render.macro.parameter;
 
-import org.snipsnap.app.Application;
-import org.snipsnap.snip.Snip;
-import org.radeox.util.logging.Logger;
-import org.radeox.macro.parameter.BaseMacroParameter;
-import org.radeox.macro.parameter.MacroParameter;
-import org.radeox.filter.context.FilterContext;
 import org.radeox.engine.context.RenderContext;
+import org.radeox.macro.parameter.BaseMacroParameter;
+import org.snipsnap.snip.Snip;
 
 import java.util.HashMap;
-import java.util.Map;
-import java.util.StringTokenizer;
 
 /**
  * Encapsulates parameters for an execute Macro call.

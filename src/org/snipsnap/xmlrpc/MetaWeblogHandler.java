@@ -25,18 +25,17 @@
 
 package org.snipsnap.xmlrpc;
 
-import org.snipsnap.user.User;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.Blog;
 import org.apache.xmlrpc.XmlRpcException;
 import org.radeox.util.logging.Logger;
+import org.snipsnap.snip.Blog;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipSpaceFactory;
+import org.snipsnap.user.User;
 
 import java.util.Hashtable;
-import java.util.Vector;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
 
 /**
  * Handles XML-RPC calls for the MetaWeblog API

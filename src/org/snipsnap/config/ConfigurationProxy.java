@@ -24,12 +24,12 @@
  */
 package org.snipsnap.config;
 
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.lang.reflect.Field;
-import java.io.IOException;
-import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -89,7 +89,7 @@ public class ConfigurationProxy implements InvocationHandler {
     Method targetMethod = getTargetMethod(method);
     if(targetMethod == null) {
       String methodName = method.getName();
-      //System.out.print(methodName+ "(" + (args != null ? "" + Arrays.asList(args) : "") + ") => ");
+      System.out.print(methodName+ "(" + (args != null ? "" + Arrays.asList(args) : "") + ") => ");
       String property = (String)propertyMethodMap.get(methodName);
       if(methodName.startsWith("get")) {
         result = config.get(property);
@@ -102,10 +102,10 @@ public class ConfigurationProxy implements InvocationHandler {
         System.err.println("FATAL: unknown method "+methodName+" called.");
       }
     } else {
-      //System.out.print(targetMethod.getName() + "(" + (args != null ? "" + Arrays.asList(args) : "") + ") => ");
+      System.out.print(targetMethod.getName() + "(" + (args != null ? "" + Arrays.asList(args) : "") + ") => ");
       result = targetMethod.invoke(config, args);
     }
-    //System.out.println(result);
+    System.out.println(result);
     return result;
   }
 
@@ -133,7 +133,7 @@ public class ConfigurationProxy implements InvocationHandler {
   public static Configuration proxy = null;
 
   public static Configuration getInstance() {
-    if(proxy == null) newInstance();
+    if (proxy == null) { newInstance(); }
     return proxy;
   }
 

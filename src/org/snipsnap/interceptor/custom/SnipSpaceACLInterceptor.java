@@ -25,14 +25,13 @@
 
 package org.snipsnap.interceptor.custom;
 
+import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.interceptor.InterceptorSupport;
 import org.snipsnap.interceptor.Invocation;
-import org.snipsnap.snip.Snip;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.Security;
 import org.snipsnap.user.User;
-import org.radeox.util.logging.Logger;
 
 import java.security.GeneralSecurityException;
 

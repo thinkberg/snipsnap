@@ -25,11 +25,9 @@
 package org.snipsnap.net;
 
 import org.radeox.util.logging.Logger;
-import org.snipsnap.util.MckoiEmbeddedJDBCDriver;
 
-import javax.servlet.ServletContextListener;
 import javax.servlet.ServletContextEvent;
-import java.sql.SQLException;
+import javax.servlet.ServletContextListener;
 
 public class ApplicationContextListener implements ServletContextListener {
   public void contextInitialized(ServletContextEvent event) {

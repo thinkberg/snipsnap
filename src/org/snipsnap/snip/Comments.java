@@ -24,17 +24,17 @@
  */
 package org.snipsnap.snip;
 
+import org.radeox.util.logging.Logger;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
 import org.snipsnap.util.StringUtil;
-import org.radeox.util.logging.Logger;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.io.StringWriter;
-import java.io.IOException;
 
 /**
  * Handler for comments added to snips.

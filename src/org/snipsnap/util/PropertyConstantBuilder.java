@@ -24,21 +24,12 @@
  */
 package org.snipsnap.util;
 
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Task;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Iterator;
-import java.util.Properties;
-import java.util.TreeSet;
-import java.util.Date;
-import java.util.StringTokenizer;
+import java.io.*;
 import java.text.SimpleDateFormat;
-import java.text.DateFormat;
+import java.util.*;
 
 public class PropertyConstantBuilder extends Task {
   public static void main(String args[]) {

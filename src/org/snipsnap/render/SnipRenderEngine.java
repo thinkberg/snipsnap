@@ -31,18 +31,17 @@ import org.radeox.engine.IncludeRenderEngine;
 import org.radeox.engine.WikiRenderEngine;
 import org.radeox.engine.context.RenderContext;
 import org.radeox.filter.context.FilterContext;
-import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.render.context.SnipRenderContext;
 import org.snipsnap.render.filter.context.SnipFilterContext;
+import org.snipsnap.serialization.StringBufferWriter;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.UserManager;
-import org.snipsnap.serialization.StringBufferWriter;
 
-import java.io.Writer;
 import java.io.IOException;
+import java.io.Writer;
 
 /**
  * renderEngine implementation for SnipSnap which understoods e.g.

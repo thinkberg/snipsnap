@@ -25,10 +25,10 @@
 
 package org.snipsnap.render.filter.links;
 
-import org.snipsnap.snip.Links;
-import org.snipsnap.snip.SnipLink;
 import org.radeox.util.Encoder;
 import org.radeox.util.logging.Logger;
+import org.snipsnap.snip.Links;
+import org.snipsnap.snip.SnipLink;
 
 import java.io.IOException;
 import java.io.Writer;

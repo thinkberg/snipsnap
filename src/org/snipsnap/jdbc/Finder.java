@@ -28,13 +28,7 @@ package org.snipsnap.jdbc;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.util.ConnectionManager;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.*;
 
 /**
  * Encapsulates finder select queries to the database

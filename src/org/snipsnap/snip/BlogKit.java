@@ -26,7 +26,6 @@
 package org.snipsnap.snip;
 
 import java.sql.Date;
-import java.util.List;
 
 /**
  * Helper methods for blogs.

@@ -115,14 +115,14 @@ public class Permissions {
 
   public boolean exists(String permission, Roles roles) {
     // if no permission is set, then return false
-    if (null == permissions || !permissions.containsKey(permission)) return false;
+    if (null == permissions || !permissions.containsKey(permission)) { return false; }
     Roles permRoles = (Roles) permissions.get(permission);
     return permRoles.containsAny(roles);
   }
 
   public boolean check(String permission, Roles roles) {
     // Policy: If no permission is set, everything is allowed
-    if (null == permissions || !permissions.containsKey(permission)) return true;
+    if (null == permissions || !permissions.containsKey(permission)) { return true; }
     Roles permRoles = (Roles) permissions.get(permission);
 //    Logger.debug("--check");
 //    Logger.debug("permission="+ permission);
@@ -133,7 +133,7 @@ public class Permissions {
   }
 
   public Map deserialize(String permissions) {
-    if ("".equals(permissions)) return new HashMap();
+    if ("".equals(permissions)) { return new HashMap(); }
 
     Map perms = new HashMap();
 
@@ -149,7 +149,7 @@ public class Permissions {
   }
 
   private String serialize() {
-    if (null == permissions || permissions.isEmpty()) return "";
+    if (null == permissions || permissions.isEmpty()) { return ""; }
 
     StringBuffer permBuffer = new StringBuffer();
     Iterator iterator = permissions.keySet().iterator();

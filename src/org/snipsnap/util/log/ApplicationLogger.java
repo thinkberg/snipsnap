@@ -25,8 +25,8 @@
 
 package org.snipsnap.util.log;
 
-import org.snipsnap.app.Application;
 import org.radeox.util.logging.LogHandler;
+import org.snipsnap.app.Application;
 
 /**
  * Concrete Logger that logs to Application

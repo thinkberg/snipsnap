@@ -40,13 +40,7 @@ import org.snipsnap.user.Permissions;
 import org.snipsnap.util.ConnectionManager;
 import org.snipsnap.util.log.SQLLogger;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
-import java.sql.Types;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,16 +56,6 @@ import java.util.Map;
 public class JDBCSnipStorage implements SnipStorage, CacheableStorage {
   private FinderFactory finders;
   private Map cache = new HashMap();
-
-  public JDBCSnipStorage() {
-    this.finders = new FinderFactory("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions, " +
-        " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
-        " FROM Snip ");
-  }
-
-  public void setCache(Map cache) {
-    this.cache = cache;
-  }
 
   public static void createStorage() {
     Connection connection = ConnectionManager.getConnection();
@@ -110,6 +94,16 @@ public class JDBCSnipStorage implements SnipStorage, CacheableStorage {
         e2.printStackTrace(System.err);
       }
     }
+  }
+
+  public JDBCSnipStorage() {
+    this.finders = new FinderFactory("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions, " +
+        " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
+        " FROM Snip ");
+  }
+
+  public void setCache(Map cache) {
+    this.cache = cache;
   }
 
   public int storageCount() {
@@ -385,7 +379,7 @@ public class JDBCSnipStorage implements SnipStorage, CacheableStorage {
     if (null != result) {
       try {
         while (result.next() && size-- > 0) {
-          String name = result.getString(1);
+          //String name = result.getString(1);
           resultList.add(createSnip(result));
         }
       } catch (SQLException e) {

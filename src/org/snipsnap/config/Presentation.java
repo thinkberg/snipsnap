@@ -24,15 +24,15 @@
  */
 package org.snipsnap.config;
 
-import org.snipsnap.app.Application;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.render.filter.context.SnipFilterContext;
 import org.radeox.filter.FilterPipe;
 import org.radeox.filter.ListFilter;
 import org.radeox.filter.context.FilterContext;
 import org.radeox.util.logging.Logger;
+import org.snipsnap.app.Application;
+import org.snipsnap.render.filter.context.SnipFilterContext;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipSpaceFactory;
 
 import java.io.File;
 import java.io.IOException;

@@ -27,19 +27,14 @@ package org.snipsnap.net;
 
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.snip.label.Label;
-import org.snipsnap.snip.label.LabelManager;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServlet;
 import java.io.IOException;
-import java.util.Set;
-import java.util.Iterator;
-import org.snipsnap.snip.label.Labels;
 
 /**
  * Removing a label from a snip

@@ -26,7 +26,6 @@ package org.snipsnap.admin.install;
 
 import org.snipsnap.admin.util.CommandHandler;
 import org.snipsnap.config.ServerConfiguration;
-import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.User;
 
 import javax.servlet.ServletException;

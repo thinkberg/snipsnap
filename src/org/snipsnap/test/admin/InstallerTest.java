@@ -26,10 +26,8 @@
 package org.snipsnap.test.admin;
 
 import junit.framework.Test;
-import junit.framework.TestSuite;
 import junit.framework.TestCase;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.test.snip.SnipTestSupport;
+import junit.framework.TestSuite;
 import org.snipsnap.admin.install.Installer;
 
 public class InstallerTest extends TestCase {

@@ -24,16 +24,11 @@
  */
 package org.snipsnap.net.filter;
 
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
 import org.radeox.util.logging.Logger;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.Iterator;
 
 /**
  * A ServletFilter that parses multipart/form-data requests and wraps the data into

@@ -27,11 +27,7 @@ package org.snipsnap.notification.jabber;
 
 
 import com.echomine.common.SendMessageFailedException;
-import com.echomine.jabber.Jabber;
-import com.echomine.jabber.JabberChatMessage;
-import com.echomine.jabber.JabberContext;
-import com.echomine.jabber.JabberRosterService;
-import com.echomine.jabber.JabberSession;
+import com.echomine.jabber.*;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 

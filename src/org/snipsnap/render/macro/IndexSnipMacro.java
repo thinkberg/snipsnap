@@ -25,11 +25,9 @@
 
 package org.snipsnap.render.macro;
 
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipSpaceFactory;
-import org.radeox.macro.parameter.MacroParameter;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.util.collection.Collections;
 import org.snipsnap.util.collection.Filterator;
 

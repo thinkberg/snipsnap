@@ -26,19 +26,16 @@
 package org.snipsnap.render.filter;
 
 import org.apache.oro.text.regex.MatchResult;
-import org.radeox.filter.context.FilterContext;
-import org.radeox.filter.regex.RegexTokenFilter;
-import org.radeox.filter.Filter;
-import org.radeox.macro.Macro;
-import org.radeox.macro.parameter.MacroParameter;
-import org.snipsnap.render.macro.WeblogMacro;
-import org.radeox.util.StringBufferWriter;
-import org.radeox.util.logging.Logger;
-import org.radeox.EngineManager;
 import org.radeox.engine.IncludeRenderEngine;
 import org.radeox.engine.RenderEngine;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
+import org.radeox.filter.Filter;
+import org.radeox.filter.context.FilterContext;
+import org.radeox.filter.regex.RegexTokenFilter;
+import org.radeox.macro.Macro;
+import org.radeox.macro.parameter.MacroParameter;
+import org.radeox.util.StringBufferWriter;
+import org.radeox.util.logging.Logger;
+import org.snipsnap.render.macro.WeblogMacro;
 
 import java.io.Writer;
 import java.util.HashMap;

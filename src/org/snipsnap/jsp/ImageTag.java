@@ -25,8 +25,8 @@
 package org.snipsnap.jsp;
 
 import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
-import org.snipsnap.snip.SnipLink;
 import org.radeox.util.logging.Logger;
+import org.snipsnap.snip.SnipLink;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;

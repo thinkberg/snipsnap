@@ -99,7 +99,7 @@ public class Labels {
 
   private void deserialize(String labelString) {
     labels = new HashMap();
-    if ("".equals(labelString)) return;
+    if ("".equals(labelString)) { return; }
 
     StringTokenizer tokenizer = new StringTokenizer(labelString, "|");
     while (tokenizer.hasMoreTokens()) {
@@ -113,7 +113,7 @@ public class Labels {
   }
 
   private String serialize() {
-    if (null == labels || labels.isEmpty()) return "";
+    if (null == labels || labels.isEmpty()) { return ""; }
 
     StringBuffer linkBuffer = new StringBuffer();
     Iterator iterator = labels.entrySet().iterator();

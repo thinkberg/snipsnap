@@ -27,8 +27,8 @@ package org.snipsnap.snip;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
-import org.snipsnap.snip.label.Labels;
 import org.snipsnap.snip.label.Label;
+import org.snipsnap.snip.label.Labels;
 
 import java.util.Iterator;
 

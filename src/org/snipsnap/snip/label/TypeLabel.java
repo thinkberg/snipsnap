@@ -25,9 +25,9 @@
 
 package org.snipsnap.snip.label;
 
-import java.util.List;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * TypeLabel assigns a type to a Snip

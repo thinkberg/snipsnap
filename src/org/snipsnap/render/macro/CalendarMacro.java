@@ -24,10 +24,10 @@
  */
 package org.snipsnap.render.macro;
 
-import org.snipsnap.date.Month;
-import org.radeox.macro.parameter.MacroParameter;
 import org.radeox.macro.Macro;
+import org.radeox.macro.parameter.MacroParameter;
 import org.radeox.util.logging.Logger;
+import org.snipsnap.date.Month;
 
 import java.io.IOException;
 import java.io.Writer;

@@ -26,11 +26,11 @@
 
 package org.snipsnap.xmlrpc;
 
-import org.snipsnap.user.User;
-import org.snipsnap.user.UserManager;
-import org.snipsnap.app.Application;
 import org.apache.xmlrpc.XmlRpcException;
 import org.radeox.util.logging.Logger;
+import org.snipsnap.app.Application;
+import org.snipsnap.user.User;
+import org.snipsnap.user.UserManager;
 
 /**
  * Utility base class for XML-RPC handlers.

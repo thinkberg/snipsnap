@@ -65,7 +65,7 @@ public class ExtendedPingHandler implements PingHandler {
       params.addElement(config.getSnipUrl(weblog.getName()));
       // RSS feed
       params.addElement(config.getUrl() + "/exec/rss");
-      Object result = blo_gs.execute("weblogUpdates.extendedPing", params);
+      blo_gs.execute("weblogUpdates.extendedPing", params);
       //Logger.warn("weblogs.ping received: " + result);
     } catch (Exception e) {
       Logger.warn("ExtendedPingHandler: Unable to ping " + url, e);

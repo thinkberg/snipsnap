@@ -30,7 +30,6 @@ import org.snipsnap.interceptor.Invocation;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.List;
 
 /**
  * Interceptor for caching SnipSpace misses. SnipSnap

@@ -28,14 +28,9 @@ package org.snipsnap.test.commons;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipImpl;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.util.URLEncoderDecoder;
 import org.snipsnap.test.snip.SnipTestSupport;
+import org.snipsnap.util.URLEncoderDecoder;
 
-import java.io.Writer;
-import java.io.StringWriter;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 public class EncoderTest extends SnipTestSupport {
@@ -59,15 +54,18 @@ public class EncoderTest extends SnipTestSupport {
   }
 
   public void testUTF8Encoding() throws UnsupportedEncodingException {
-    assertEquals(encodedString, URLEncoderDecoder.encode(unencodedString, "UTF-8"));
+    assertEquals("String UTF-8 is encoded correctly",
+        encodedString, URLEncoderDecoder.encode(unencodedString, "UTF-8"));
   }
 
   public void testUTF8Decoding() throws UnsupportedEncodingException  {
-    assertEquals(unencodedString, URLEncoderDecoder.decode(encodedString, "UTF-8"));
+    assertEquals("String UTF-8 is decoded correctly",
+        unencodedString, URLEncoderDecoder.decode(encodedString, "UTF-8"));
   }
 
   public void testCutLength() throws UnsupportedEncodingException {
-    assertEquals("<a href=\"http://snipsnap.org:8668/space/"+encodedString+"\">"+unencodedString.substring(0, 22)+"...</a>",
+    assertEquals("Encoding works with cutted strings",
+        "<a href=\"http://snipsnap.org:8668/space/"+encodedString+"\">"+unencodedString.substring(0, 22)+"...</a>",
                  SnipLink.createLink(unencodedString, SnipLink.cutLength(unencodedString, 25)));
   }
 }

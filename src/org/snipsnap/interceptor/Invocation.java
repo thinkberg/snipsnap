@@ -25,15 +25,9 @@
 
 package org.snipsnap.interceptor;
 
-import org.snipsnap.interceptor.custom.LogInterceptor;
-import org.snipsnap.interceptor.custom.ACLInterceptor;
-
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 
 public class Invocation {
   private Iterator chain;

@@ -27,15 +27,10 @@ package org.snipsnap.net;
 import org.radeox.util.logging.LogHandler;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.config.Configuration;
-import org.snipsnap.config.ServerConfiguration;
 import org.snipsnap.config.ConfigurationProxy;
+import org.snipsnap.config.ServerConfiguration;
 
-import javax.servlet.GenericServlet;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import java.io.File;
 import java.io.IOException;
 

@@ -26,8 +26,8 @@ package org.snipsnap.snip;
 
 import org.radeox.EngineManager;
 import org.radeox.engine.context.RenderContext;
-import org.snipsnap.render.context.SnipRenderContext;
 import org.snipsnap.app.Application;
+import org.snipsnap.render.context.SnipRenderContext;
 
 /**
  * SnipFormatter supplies some methods for handling Snip Content.

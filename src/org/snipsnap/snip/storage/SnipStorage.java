@@ -29,7 +29,6 @@ import org.snipsnap.snip.Snip;
 
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Interface that describes SnipStorage backends for SnipSnap

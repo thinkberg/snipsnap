@@ -185,18 +185,18 @@ public class XMLSnipImport {
       Logger.debug("creating user '" + login + "'");
       user = um.create(login, passwd, email);
     } else {
-      if (passwd != null) user.setPasswd(passwd);
-      if (email != null) user.setEmail(email);
+      if (passwd != null) { user.setPasswd(passwd); }
+      if (email != null) { user.setEmail(email); }
     }
 
     Logger.debug("modifying user properties for '" + login + "'");
-    if (status != null) user.setStatus(status);
-    if (roles != null) user.setRoles(new Roles(roles));
-    if (cTime != null) user.setCTime(getTimestamp(cTime));
-    if (mTime != null) user.setMTime(getTimestamp(mTime));
-    if (llogin != null) user.setLastLogin(getTimestamp(llogin));
-    if (lastAccess != null) user.setLastAccess(getTimestamp(lastAccess));
-    if (lastLogout != null) user.setLastLogout(getTimestamp(lastLogout));
+    if (status != null) { user.setStatus(status); }
+    if (roles != null) { user.setRoles(new Roles(roles)); }
+    if (cTime != null) { user.setCTime(getTimestamp(cTime)); }
+    if (mTime != null) { user.setMTime(getTimestamp(mTime)); }
+    if (llogin != null) { user.setLastLogin(getTimestamp(llogin)); }
+    if (lastAccess != null) { user.setLastAccess(getTimestamp(lastAccess)); }
+    if (lastLogout != null) { user.setLastLogout(getTimestamp(lastLogout)); }
     um.store(user);
   }
 

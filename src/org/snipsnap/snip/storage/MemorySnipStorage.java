@@ -44,7 +44,8 @@ import java.util.Map;
  */
 
 public class MemorySnipStorage implements SnipStorage {
-  public final String NOT_SUPPORTED_EXCEPTION_MSG = "Method not supported, do not call MemorySnipStorage directly";
+  public static final String NOT_SUPPORTED_EXCEPTION_MSG =
+      "Method not supported, do not call MemorySnipStorage directly";
 
   private SnipStorage storage;
 

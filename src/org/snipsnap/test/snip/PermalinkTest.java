@@ -58,6 +58,7 @@ public class PermalinkTest extends SnipTestSupport {
     } catch (IOException e) {
       // Ignore
     }
-    assertEquals("http://snipsnap.org:8668/space/test#anchor", writer.getBuffer().toString());
+    assertEquals("Url with Permalink is rendered correctly",
+        "http://snipsnap.org:8668/space/test#anchor", writer.getBuffer().toString());
   }
 }

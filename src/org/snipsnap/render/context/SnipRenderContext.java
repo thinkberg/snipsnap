@@ -25,12 +25,11 @@
 
 package org.snipsnap.render.context;
 
-import org.radeox.engine.context.RenderContext;
-import org.radeox.engine.context.BaseRenderContext;
 import org.radeox.engine.RenderEngine;
+import org.radeox.engine.context.BaseRenderContext;
+import org.snipsnap.render.SnipRenderEngine;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.render.SnipRenderEngine;
 
 /**
  * SnipRenderContext implements RenderContext and is used to

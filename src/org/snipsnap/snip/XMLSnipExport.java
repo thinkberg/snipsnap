@@ -31,12 +31,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.StringTokenizer;
 
 /**
@@ -65,8 +60,8 @@ public class XMLSnipExport {
       pw.println("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
       pw.println("<snipspace>");
 
-      if ((exportMask & USERS) != 0) toXml("SnipUser", "user", connection, pw);
-      if ((exportMask & SNIPS) != 0) toXml("Snip", "snip", connection, pw);
+      if ((exportMask & USERS) != 0) { toXml("SnipUser", "user", connection, pw); }
+      if ((exportMask & SNIPS) != 0) { toXml("Snip", "snip", connection, pw); }
 
       pw.println("</snipspace>");
       pw.flush();
@@ -123,15 +118,21 @@ public class XMLSnipExport {
   private static String escape(String in) {
     StringBuffer out = new StringBuffer();
     StringTokenizer t = new StringTokenizer(in, "\0<>&", true);
+    boolean nullBytes = false;
     while (t.hasMoreTokens()) {
       String token = t.nextToken();
       if (token.equals("\0")) {
-        // System.err.println("Found null-byte in data: removing it.");
+        nullBytes = true;
       } else if ("<".equals(token) || ">".equals(token) || "&".equals(token)) {
         out.append("&#x").append(Integer.toHexString(token.charAt(0))).append(";");
       } else {
         out.append(token);
       }
+    }
+
+    // Had we some errors in our data?
+    if (nullBytes) {
+      System.err.println("Found null-byte in data: removing it.");
     }
     return out.toString();
   }

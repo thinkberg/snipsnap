@@ -25,9 +25,9 @@
 
 package org.snipsnap.interceptor.custom;
 
+import org.radeox.util.logging.Logger;
 import org.snipsnap.interceptor.InterceptorSupport;
 import org.snipsnap.interceptor.Invocation;
-import org.radeox.util.logging.Logger;
 
 public class LogInterceptor extends InterceptorSupport {
   public Object invoke(Invocation invocation) throws Throwable {

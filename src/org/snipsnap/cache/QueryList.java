@@ -28,11 +28,7 @@ package org.snipsnap.cache;
 import org.snipsnap.snip.storage.query.Query;
 import org.snipsnap.snip.storage.query.QueryKit;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 /**
  * List with a query interface

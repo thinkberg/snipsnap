@@ -25,11 +25,7 @@
 package org.snipsnap.net;
 
 import org.snipsnap.app.Application;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipFormatter;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipSpaceFactory;
+import org.snipsnap.snip.*;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 

@@ -27,19 +27,12 @@ package org.snipsnap.test.snip;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipImpl;
 import org.snipsnap.snip.Snip;
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
-import org.snipsnap.render.SnipRenderEngine;
-import org.radeox.engine.ImageRenderEngine;
-import org.radeox.engine.RenderEngine;
-import org.radeox.EngineManager;
+import org.snipsnap.snip.SnipImpl;
+import org.snipsnap.snip.SnipLink;
 
-import java.io.Writer;
-import java.io.StringWriter;
 import java.io.IOException;
+import java.io.StringWriter;
 
 public class ImageTest extends SnipTestSupport {
   public ImageTest(String name) {
@@ -57,25 +50,29 @@ public class ImageTest extends SnipTestSupport {
   public void testImage() throws IOException {
     StringWriter writer = new StringWriter();
     SnipLink.appendImage(writer, "test", null);
-    assertEquals("<img src=\"http://snipsnap.org:8668/images/test.png\" alt=\"test\" border=\"0\"/>", writer.toString());
+    assertEquals("Image without alt is rendered",
+        "<img src=\"http://snipsnap.org:8668/images/test.png\" alt=\"test\" border=\"0\"/>", writer.toString());
   }
 
   public void testImageAlt() throws IOException {
     StringWriter writer = new StringWriter();
     SnipLink.appendImage(writer, "test", "alttext");
-    assertEquals("<img src=\"http://snipsnap.org:8668/images/test.png\" alt=\"alttext\" border=\"0\"/>", writer.toString());
+    assertEquals("Image with alt is rendered",
+        "<img src=\"http://snipsnap.org:8668/images/test.png\" alt=\"alttext\" border=\"0\"/>", writer.toString());
   }
 
   public void testImageAltExtension() throws IOException {
     StringWriter writer = new StringWriter();
     SnipLink.appendImage(writer, "test", "alttext", "jpg");
-    assertEquals("<img src=\"http://snipsnap.org:8668/images/test.jpg\" alt=\"alttext\" border=\"0\"/>", writer.toString());
+    assertEquals("Image with alt and extension is rendered",
+        "<img src=\"http://snipsnap.org:8668/images/test.jpg\" alt=\"alttext\" border=\"0\"/>", writer.toString());
   }
 
   public void testSnipAttachedImage() throws IOException {
     StringWriter writer = new StringWriter();
     Snip snip = new SnipImpl("test", "test");
     SnipLink.appendImage(writer, snip, "test", "alttext", "jpg", null);
-    assertEquals("<img src=\"http://snipsnap.org:8668/space/test/test.jpg\" alt=\"alttext\" border=\"0\"/>", writer.toString());
+    assertEquals("Image without position is rendered",
+        "<img src=\"http://snipsnap.org:8668/space/test/test.jpg\" alt=\"alttext\" border=\"0\"/>", writer.toString());
   }
 }

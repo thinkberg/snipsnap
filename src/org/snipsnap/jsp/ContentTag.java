@@ -25,17 +25,14 @@
 package org.snipsnap.jsp;
 
 import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
-import org.snipsnap.snip.Snip;
+import org.jdom.output.XMLOutputter;
 import org.radeox.filter.Filter;
 import org.radeox.filter.HtmlRemoveFilter;
 import org.radeox.util.logging.Logger;
-import org.jdom.Element;
-import org.jdom.Text;
-import org.jdom.output.XMLOutputter;
+import org.snipsnap.snip.Snip;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.jstl.core.ConditionalTagSupport;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.io.IOException;
 

@@ -26,12 +26,12 @@
 package org.snipsnap.semanticweb.rss;
 
 import org.apache.oro.text.regex.*;
-import org.snipsnap.snip.Snip;
 import org.radeox.util.logging.Logger;
+import org.snipsnap.snip.Snip;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Split snips into sub-units for e.g. RSS. By default header titles

@@ -25,10 +25,10 @@
 
 package org.snipsnap.snip;
 
-import org.snipsnap.xmlrpc.WeblogsPing;
-import org.snipsnap.user.Roles;
-import org.snipsnap.user.Permissions;
 import org.snipsnap.semanticweb.rss.Rssify;
+import org.snipsnap.user.Permissions;
+import org.snipsnap.user.Roles;
+import org.snipsnap.xmlrpc.WeblogsPing;
 
 import java.sql.Date;
 import java.util.List;

@@ -1,18 +1,14 @@
 package org.snipsnap.test.interceptor.mock;
 
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.Access;
-import org.snipsnap.snip.Modified;
-import org.snipsnap.snip.Links;
-import org.snipsnap.snip.Comments;
-import org.snipsnap.snip.label.Labels;
+import org.snipsnap.snip.*;
 import org.snipsnap.snip.attachment.Attachments;
-import org.snipsnap.user.User;
+import org.snipsnap.snip.label.Labels;
 import org.snipsnap.user.Permissions;
+import org.snipsnap.user.User;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.Writer;
 import java.io.IOException;
+import java.io.Writer;
 import java.sql.Timestamp;
 import java.util.List;
 

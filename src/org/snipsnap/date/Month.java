@@ -30,13 +30,7 @@ import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpaceFactory;
 
 import java.text.DateFormatSymbols;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Object that generates a View of the month
@@ -151,8 +145,9 @@ public class Month {
     }
     view.append("</caption>");
 
-    if (month < 0 || month > 11)
+    if (month < 0 || month > 11) {
       throw new IllegalArgumentException("Month " + month + " bad, must be 0-11");
+    }
 
     Calendar today = new GregorianCalendar(locale);
     today.setTime(new java.util.Date());
@@ -165,11 +160,12 @@ public class Month {
     // getDay() returns 0 for Sunday, which is just right.
     int leadGap = calendar.get(Calendar.DAY_OF_WEEK);
     leadGap = leadGap - calendar.getFirstDayOfWeek();
-    if (leadGap < 0) leadGap = 6;
+    if (leadGap < 0) { leadGap = 6; }
 
     int daysInMonth = dom[month];
-    if (calendar.isLeapYear(calendar.get(Calendar.YEAR)) && month == 1)
+    if (calendar.isLeapYear(calendar.get(Calendar.YEAR)) && month == 1) {
       ++daysInMonth;
+    }
 
     view.append(getHeader(calendar.getFirstDayOfWeek()));
     // view.append("<tr><td>Mo</td><td>Di</td><td>Mi</td><td>Do</td><td>Fr</td><td>Sa</td><td>So</td></tr>");

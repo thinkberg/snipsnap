@@ -126,7 +126,7 @@ public class Modified {
    * @return Pretty string
    */
   public static String getNiceTime(Timestamp time) {
-    if (time == null) return "";
+    if (time == null) { return ""; }
     java.util.Date now = new java.util.Date();
     long secs = (now.getTime() - time.getTime()) / 1000;
     //int sec = (int) secs % 60;

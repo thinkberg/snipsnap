@@ -38,7 +38,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
-import java.util.Iterator;
 
 /**
  * Adaption of the Mckoi JDBC Driver for embedded-only database drivers.

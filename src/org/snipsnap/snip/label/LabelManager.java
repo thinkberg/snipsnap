@@ -27,10 +27,11 @@ package org.snipsnap.snip.label;
 
 import org.radeox.util.logging.Logger;
 import org.snipsnap.util.Service;
+
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.Iterator;
 
 /**
  * Manages the creation and finding of labels, e.g. by type.
@@ -85,9 +86,9 @@ public class LabelManager {
     }
 
     public Label getLabel(String type) {
-        if (null == type) return null;
+        if (null == type) { return null; }
         Class labelClass = (Class)typeMap.get(type);
-        if (null == labelClass) return null;
+        if (null == labelClass) { return null; }
         Label label = null;
         try {
             label = (Label)labelClass.newInstance();

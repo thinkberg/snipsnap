@@ -24,12 +24,12 @@
  */
 package org.snipsnap.util;
 
-import org.snipsnap.snip.Snip;
 import org.radeox.util.logging.Logger;
+import org.snipsnap.snip.Snip;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Iterator;
 
 /**
  * Queue implementation for Snips.

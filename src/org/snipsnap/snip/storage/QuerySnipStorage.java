@@ -23,7 +23,7 @@
  * --LICENSE NOTICE--
  */
 
-package org.snipsnap.snip.storage;
+package org.snipsnap.snip.sFiletorage;
 
 import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
@@ -47,9 +47,6 @@ import java.util.List;
  */
 
 public class QuerySnipStorage implements SnipStorage {
-  //@TODO replace with dynamic proxy.
-  private SnipStorage storage;
-
   // Count comparators, make the comparator by default
   // with most usages. Make this dynamic
   private static Comparator nameComparator = new SnipComparator() {
@@ -74,9 +71,13 @@ public class QuerySnipStorage implements SnipStorage {
   };
   private static Comparator hotnessComparator = new SnipComparator() {
     public int compare(Snip s1, Snip s2) {
-      return s1.getAccess().getViewCount() < s2.getAccess().getViewCount() ? 1 : -1;
+      return s1.getAccess().getViewCount()
+           < s2.getAccess().getViewCount() ? 1 : -1;
     }
   };
+
+  //@TODO replace with dynamic proxy.
+  private SnipStorage storage;
 
   public QuerySnipStorage(SnipStorage storage) {
     this.storage = storage;

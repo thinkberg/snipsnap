@@ -26,12 +26,12 @@
 package org.snipsnap.render.filter;
 
 import org.apache.oro.text.regex.MatchResult;
+import org.radeox.filter.context.FilterContext;
+import org.radeox.filter.regex.RegexTokenFilter;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
-import org.snipsnap.snip.Snip;
-import org.radeox.filter.regex.RegexTokenFilter;
 import org.snipsnap.render.filter.context.SnipFilterContext;
-import org.radeox.filter.context.FilterContext;
+import org.snipsnap.snip.Snip;
 
 /*
  * Class that VCAL content

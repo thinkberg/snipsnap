@@ -28,10 +28,10 @@ package org.snipsnap.test;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import org.snipsnap.test.snip.AllSnipTests;
 import org.snipsnap.test.admin.AllAdminTests;
 import org.snipsnap.test.commons.AllCommonsTests;
 import org.snipsnap.test.interceptor.AllInterceptorTests;
+import org.snipsnap.test.snip.AllSnipTests;
 
 public class AllTests extends TestCase {
   public AllTests(String name) {

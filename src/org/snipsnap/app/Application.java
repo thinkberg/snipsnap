@@ -33,11 +33,7 @@ import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * The application object contains information about current users and other
@@ -189,7 +185,7 @@ public class Application {
   }
 
   public static void removeCurrentUser(HttpSession session) {
-    if (null == currentUsers) return;
+    if (null == currentUsers) { return; }
 
     if (currentUsers.containsKey(session)) {
       UserManager um = UserManager.getInstance();

@@ -25,7 +25,7 @@
 
 package org.snipsnap.snip.label;
 
-import java.util.Map;
+
 
 /**
  * Stores arbitray attributes with name and value

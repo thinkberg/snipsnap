@@ -29,7 +29,6 @@ import org.snipsnap.admin.install.Authenticate;
 import org.snipsnap.config.ServerConfiguration;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.User;
-import org.snipsnap.server.AppServer;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -38,8 +37,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 /**

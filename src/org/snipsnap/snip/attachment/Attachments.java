@@ -29,16 +29,8 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
-import org.snipsnap.serialization.Appendable;
-import org.snipsnap.snip.SnipLink;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.StringReader;
-import java.io.Writer;
 import java.util.*;
 
 /**
@@ -66,30 +58,30 @@ public class Attachments {
   private Map attachments = null;
 
   public Attachment addAttachment(String name, String contentType, int size, String location) {
-    if (null == attachments) deserialize();
+    if (null == attachments) { deserialize(); }
     Attachment attachment = new Attachment(name, contentType, size, new Date(), location);
     attachments.put(name, attachment);
     return attachment;
   }
 
   public Attachment getAttachment(String name) {
-    if (null == attachments) deserialize();
+    if (null == attachments) { deserialize(); }
     return (Attachment) attachments.get(name);
   }
 
   public void removeAttachment(String name, boolean destroy) {
-    if (null == attachments) deserialize();
+    if (null == attachments) { deserialize(); }
     Attachment attachment = (Attachment) attachments.get(name);
     attachments.remove(name);
   }
 
   public Iterator iterator() {
-    if (null == attachments) deserialize();
+    if (null == attachments) { deserialize(); }
     return attachments.values().iterator();
   }
 
   public Collection getAll() {
-    if (null == attachments) deserialize();
+    if (null == attachments) { deserialize(); }
     return attachments.values();
   }
 
@@ -133,7 +125,7 @@ public class Attachments {
   private final XMLOutputter xmlOutputter = new XMLOutputter();
 
   private String serialize() {
-    if (null == attachments) return cache;
+    if (null == attachments) { return cache; }
 
     List root = new ArrayList();
     Iterator it = attachments.values().iterator();

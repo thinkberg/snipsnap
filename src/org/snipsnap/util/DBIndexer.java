@@ -26,8 +26,8 @@ package org.snipsnap.util;
 
 import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
-import org.snipsnap.config.ServerConfiguration;
 import org.snipsnap.config.ConfigurationProxy;
+import org.snipsnap.config.ServerConfiguration;
 import org.snipsnap.snip.SnipSpaceFactory;
 
 import java.io.File;

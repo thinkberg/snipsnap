@@ -25,15 +25,10 @@
 
 package org.snipsnap.interceptor;
 
-import org.radeox.util.logging.Logger;
-import org.snipsnap.interceptor.custom.ACLInterceptor;
-import org.snipsnap.interceptor.custom.SnipSpaceACLInterceptor;
-import org.snipsnap.interceptor.custom.StoreInterceptor;
-import org.snipsnap.interceptor.custom.MissingInterceptor;
-import org.snipsnap.interceptor.custom.BlogACLInterceptor;
+import org.snipsnap.interceptor.custom.*;
+import org.snipsnap.snip.BlogImpl;
 import org.snipsnap.snip.SnipImpl;
 import org.snipsnap.snip.SnipSpaceImpl;
-import org.snipsnap.snip.BlogImpl;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

@@ -27,13 +27,13 @@
 package org.snipsnap.render.macro;
 
 import org.apache.lucene.search.Hits;
+import org.radeox.macro.Macro;
+import org.radeox.macro.parameter.MacroParameter;
+import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipSpaceFactory;
-import org.radeox.macro.parameter.MacroParameter;
-import org.radeox.macro.Macro;
-import org.radeox.util.logging.Logger;
 import org.snipsnap.user.UserManager;
 
 import java.io.IOException;

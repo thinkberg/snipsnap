@@ -25,10 +25,9 @@
 
 package org.snipsnap.xmlrpc;
 
+import org.apache.xmlrpc.XmlRpcException;
 import org.snipsnap.app.Application;
 import org.snipsnap.user.User;
-import org.snipsnap.user.UserManager;
-import org.apache.xmlrpc.XmlRpcException;
 
 /**
  * Handles XML-RPC calls for the SnbipSnap API

@@ -27,8 +27,6 @@ package org.snipsnap.test.admin;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import org.snipsnap.test.snip.PermalinkTest;
-import org.snipsnap.test.snip.ImageTest;
 
 public class AllAdminTests extends TestCase {
   public AllAdminTests(String name) {

@@ -40,24 +40,28 @@ public final class SnipTokenizer extends Tokenizer {
       }
       ;
       if (dataLen == -1) {
-        if (length > 0)
+        if (length > 0) {
           break;
-        else
+        } else {
           return null;
+        }
       } else
         c = (char) ioBuffer[bufferIndex++];
 
       if (Character.isLetterOrDigit(c)) {
-        if (length == 0)			  // start of token
+        if (length == 0) {			  // start of token
           start = offset - 1;
+        }
 
         buffer[length++] = Character.toLowerCase(c);
         // buffer it
-        if (length == MAX_WORD_LEN)		  // buffer overflow!
+        if (length == MAX_WORD_LEN)	{	  // buffer overflow!
           break;
+        }
 
-      } else if (length > 0)			  // at non-Letter w/ chars
+      } else if (length > 0){			  // at non-Letter w/ chars
         break;					  // return 'em
+      }
 
     }
 

@@ -43,7 +43,7 @@ public class QueryListTest extends TestCase {
 
   public abstract class IntegerQuery implements Query {
     public boolean fit(Object object) {
-      if (!(object instanceof Integer)) return false;
+      if (!(object instanceof Integer)) { return false; }
       return fit((Integer) object);
     }
 
@@ -65,7 +65,7 @@ public class QueryListTest extends TestCase {
   public void testQuery() {
     List test = new ArrayList();
     test.add(new Integer(2));
-    assertEquals(test, list.query(
+    assertEquals("Query returns correct result", test, list.query(
         new IntegerQuery() {
           public boolean fit(Integer i) {
             return i.intValue() == 2;

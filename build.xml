@@ -223,6 +223,31 @@
       includes="org/snipsnap/util/Test*, org/snipsnap/util/*Util.java, org/snipsnap/util/DB*.java, org/snipsnap/util/*JDBC*.java, org/snipsnap/util/mail/**, org/snipsnap/util/*Test.java"/>
   </target>
 
+  <target name="checkstyle">
+        <taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask"/>
+        <pmd rulesetfiles="${check_rules}" shortFilenames="true" printToConsole="true"> 
+        <!-- <pmd rulesetfiles="rulesets/coupling.xml,rulesets/unusedcode.xml,rulesets/basic.xml,rulesets/imports.xml" shortFilenames="true" printToConsole="true"> -->
+            <formatter type="html" toFile="pmd_report.html"/>
+            <fileset dir="./src">
+                <include name="**/*.java"/>
+            </fileset>
+        </pmd>
+    </target>
+
+<!--
+     <taskdef name="jcsc" classname="rj.tools.jcsc.ant.JCSCTask"/>
+     <jcsc rules="./conf/snipsnap.jcsc"
+	resultsformatter="rj.tools.jcsc.ConsoleResultsFormatter" 
+        destdir="./tmp"
+        startpackage="org"
+        worstcount="20"
+        failvalue="0.05">
+     <fileset dir="./src"
+        includes="**/*.java"/>
+    </jcsc>
+  </target>
+-->
+
   <target depends="generate" description="compile test code" name="compile-test">
     <mkdir dir="${target}/test"/>
     <javac deprecation="${deprecation}" debug="${debug}"

@@ -108,7 +108,7 @@ public class Roles {
     Iterator iterator = r1.iterator();
     while (iterator.hasNext()) {
       String s = (String) iterator.next();
-      if (r2.contains(s)) return true;
+      if (r2.contains(s)) { return true; }
     }
     return false;
   }
@@ -122,20 +122,20 @@ public class Roles {
   }
 
   private String serialize(Set roles) {
-    if (null == roles || roles.isEmpty()) return "";
+    if (null == roles || roles.isEmpty()) { return ""; }
 
     StringBuffer buffer = new StringBuffer();
     Iterator iterator = roles.iterator();
     while (iterator.hasNext()) {
       String role = (String) iterator.next();
       buffer.append(role);
-      if (iterator.hasNext()) buffer.append(":");
+      if (iterator.hasNext()) { buffer.append(":"); }
     }
     return buffer.toString();
   }
 
   private Set deserialize(String roleString) {
-    if (null == roleString || "".equals(roleString)) return new HashSet();
+    if (null == roleString || "".equals(roleString)) { return new HashSet(); }
 
     StringTokenizer st = new StringTokenizer(roleString, ":");
     Set roles = new HashSet();
@@ -145,6 +145,10 @@ public class Roles {
     }
 
     return roles;
+  }
+
+  public int hashCode() {
+    return getRoleSet().hashCode();
   }
 
   public boolean equals(Roles obj) {
