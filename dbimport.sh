@@ -15,5 +15,6 @@ fi
 
 # put classpath together
 CLASSPATH=$base/lib/jakarta.jar:$base/lib/mckoidb.jar:$base/lib/jdbcpool.jar:$base/lib/lucene-1.2.jar:$base/lib/org.apache.crimson.jar
+CLASSPATH=$CLASSPATH:lib/muse-jabber-0.8a1.jar:lib/aspectjrt.jar:lib/jdom-b8.jar
 
 $JAVA_HOME/bin/java -cp $CLASSPATH:$base/lib/snipsnap-utils.jar org.snipsnap.util.DBImport $*
