@@ -46,7 +46,7 @@ public class SnipUtil {
 
   public static String toDate(String dateString) {
     SimpleDateFormat in = new SimpleDateFormat("yyyy-MM-dd");
-    SimpleDateFormat out = new SimpleDateFormat(Application.get().getConfiguration().getWeblogDateFormat());
+    SimpleDateFormat out = Application.get().getConfiguration().getWeblogDateFormat();
     try {
       return out.format(in.parse(dateString));
     } catch (ParseException e) {

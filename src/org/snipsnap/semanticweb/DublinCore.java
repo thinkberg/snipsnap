@@ -55,7 +55,7 @@ public class DublinCore {
     dublinCore.put("type", "Text");
     dublinCore.put("identifier", Application.get().getConfiguration().getSnipUrl(snip.getName()));
     dublinCore.put("copyright", "Copyright " + year.format(snip.getModified().getmTime()));
-    dublinCore.put("language", conf.getLocale());
+    dublinCore.put("language", conf.getLocaleString());
     return dublinCore;
   }
 

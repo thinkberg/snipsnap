@@ -28,6 +28,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 /**
  * AppConfiguration Object that contains local installation information.
@@ -97,9 +99,17 @@ public class AppConfiguration extends Configuration {
     return getProperty(AppConfiguration.APP_NAME);
   }
 
-  public String getLocale() {
+  public String getLocaleString() {
     String locale = getProperty(AppConfiguration.APP_LOCALE);
     return locale == null ? "en" : locale;
+  }
+
+  public String getCountry() {
+    return "us";
+  }
+
+  public Locale getLocale() {
+    return new Locale(getLocaleString(),getCountry());
   }
 
   // HOST CONFIGURATION
@@ -245,9 +255,13 @@ public class AppConfiguration extends Configuration {
     return getProperty(AppConfiguration.APP_LOGGER);
   }
 
-  public String getWeblogDateFormat() {
+  public String getWeblogDateFormatString() {
     String format = getProperty(AppConfiguration.APP_WEBLOG_DATE_FORMAT);
     return format == null ? "EEEE, dd. MMMM yyyy" : format;
+  }
+
+  public SimpleDateFormat getWeblogDateFormat() {
+    return new SimpleDateFormat(getWeblogDateFormatString(), getLocale());
   }
 
   public String getTimeZone() {
