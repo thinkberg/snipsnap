@@ -1,4 +1,4 @@
-package org.snipsnap.config;
+package org.snipsnap.util;
 
 import org.apache.xmlrpc.XmlRpcClient;
 import org.apache.xmlrpc.XmlRpcException;

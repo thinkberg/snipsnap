@@ -24,26 +24,24 @@
  */
 package org.snipsnap.server;
 
+import org.mortbay.http.HttpContext;
 import org.mortbay.http.HttpListener;
 import org.mortbay.http.HttpServer;
-import org.mortbay.http.HttpContext;
-import org.mortbay.http.SocketListener;
-import org.mortbay.jetty.servlet.WebApplicationContext;
 import org.mortbay.jetty.Server;
-import org.mortbay.util.MultiException;
+import org.mortbay.jetty.servlet.WebApplicationContext;
 import org.mortbay.util.InetAddrPort;
+import org.mortbay.util.MultiException;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.config.ConfigurationProxy;
 import org.snipsnap.config.ServerConfiguration;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.FileInputStream;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.net.UnknownHostException;
+import java.util.Map;
 
 /**
  *
@@ -176,7 +174,7 @@ public class ApplicationLoader {
       context.setTempDirectory(appRoot.getCanonicalFile());
       context.setExtractWAR(true);
     }
-    context.setAttribute(ServerConfiguration.INIT_PARAM, new File(config.getWebInfDir(), "application.conf").getCanonicalFile());
+    context.setAttribute(ServerConfiguration.INIT_PARAM, new File(config.getWebInfDir(), "application.conf").getCanonicalPath());
     context.start();
 
     applications.put(appName, context);
@@ -203,7 +201,7 @@ public class ApplicationLoader {
     Collection httpServers = Server.getHttpServers();
 
     // try exact match first (host AND port)
-    HttpServer httpServer = (Server) findHost(httpServers, host, port);
+    HttpServer httpServer =  findHost(httpServers, host, port);
     //System.out.print(httpServer != null ? "<!>" : "<?>");
     if (null == httpServer) {
       httpServer = new Server();
@@ -235,6 +233,8 @@ public class ApplicationLoader {
   private static HttpServer findHost(Collection servers, String host, String port) {
     host = (host == null ? "" : host);
 
+    System.out.println("{" + host + ":" + port + "}");
+
     Iterator it = servers.iterator();
     while (it.hasNext()) {
       HttpServer server = (HttpServer) it.next();
@@ -244,19 +244,19 @@ public class ApplicationLoader {
         listenerHost = (listenerHost == null || listenerHost.equals(InetAddrPort.__0_0_0_0) ? "" : listenerHost);
         String listenerPort = "" + listener[i].getPort();
         if (port != null) {
-          //System.out.print("[" + listenerHost + ":" + listenerPort);
+          System.out.print("[" + listenerHost + ":" + listenerPort);
           if (listenerHost.equals(host) && listenerPort.equals(port)) {
-            //System.out.println("!]");
+            System.out.println("!]");
             return server;
           }
         } else {
-          //System.out.print("[" + listenerHost);
+          System.out.print("[" + listenerHost);
           if (listenerHost.equals(host)) {
-            //System.out.print("!]");
+            System.out.print("!]");
             return server;
           }
         }
-        //System.out.print("]");
+        System.out.print("]");
       }
     }
     return null;

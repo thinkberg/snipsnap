@@ -66,11 +66,7 @@ public class ConnectionManager {
       try {
         Class.forName(config.getJdbcDriver());
       } catch (Exception e) {
-        System.out.println(
-          "Unable to register the JDBC Driver.\n" +
-          "Make sure the classpath is correct.\n" +
-          "For example on Win32;  java -cp ../../mckoidb.jar;. SimpleApplicationDemo\n" +
-          "On Unix;  java -cp ../../mckoidb.jar:. SimpleApplicationDemo");
+        System.out.println("Unable to register the JDBC Driver: " + config.getJdbcDriver());
         return;
       }
 
@@ -83,8 +79,8 @@ public class ConnectionManager {
       try {
         mgr.addAlias(name, config.getJdbcDriver(),
                      url,
-                     config.getAdminLogin(),
-                     config.getAdminPassword(),
+                     config.getJdbcUser(),
+                     config.getJdbcPassword(),
                      10, // max connections to open
                      300, // seconds a connection can be idle before it is closed
                      120, // seconds a connection can be checked out by a thread
@@ -95,7 +91,7 @@ public class ConnectionManager {
                      false); // specifies whether to cache statements
         names.add(name);
       } catch (Exception e) {
-        Logger.warn("Unable to add connection alias", e);
+        Logger.warn("Unable to add connection alias for '"+config.getName()+"'", e);
       }
     }
   }
@@ -109,7 +105,7 @@ public class ConnectionManager {
     try {
       return DriverManager.getConnection(ConnectionPoolManager.URL_PREFIX + appName);
     } catch (SQLException e) {
-      Logger.warn("Unable to get connection for application '"+appName+"':", e);
+      Logger.warn("Unable to get connection for application '" + appName + "'", e);
       return null;
     }
   }

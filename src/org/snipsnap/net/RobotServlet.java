@@ -24,11 +24,17 @@
  */
 package org.snipsnap.net;
 
+import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.container.Components;
+import org.snipsnap.config.Configuration;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * Servlet to login recognise a robot. This servlet is mapped to robots.txt
@@ -42,6 +48,16 @@ public class RobotServlet extends HttpServlet {
       throws ServletException, IOException {
     String name = request.getHeader("User-Agent");
     String host = request.getRemoteHost();
-    response.sendError(HttpServletResponse.SC_NOT_FOUND);
+
+    SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
+    if(space.exists(Configuration.SNIPSNAP_CONFIG_ROBOTS_TXT)) {
+      Snip robotstxt = space.load(Configuration.SNIPSNAP_CONFIG_ROBOTS_TXT);
+      PrintWriter writer = new PrintWriter(response.getOutputStream());
+      writer.println(robotstxt.getContent());
+      writer.flush();
+      // TODO add denied robots from SNIPSNAP_CONFIG_ROBOTS
+    } else {
+      response.sendError(HttpServletResponse.SC_NOT_FOUND);
+    }
   }
 }

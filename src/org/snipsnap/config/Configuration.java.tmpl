@@ -37,7 +37,14 @@ import java.io.IOException;
  * @version $Id$
  */
 public interface Configuration {
-  public final static String SNIPSNAP_CONFIG = "snipsnap/config";
+  public final static String SNIPSNAP_CONFIG = "SnipSnap/config";
+  public final static String SNIPSNAP_CONFIG_API = "SnipSnap/config/apidocs";
+  public final static String SNIPSNAP_CONFIG_WIKI = "SnipSnap/config/interwiki";
+  public final static String SNIPSNAP_CONFIG_PING = "SnipSnap/config/weblogsping";
+  public final static String SNIPSNAP_CONFIG_ASIN = "SnipSnap/config/asinservices";
+  public final static String SNIPSNAP_CONFIG_BOOK = "SnipSnap/config/bookservices";
+  public final static String SNIPSNAP_CONFIG_ROBOTS = "SnipSnap/config/robots";
+  public final static String SNIPSNAP_CONFIG_ROBOTS_TXT = "SnipSnap/config/robots.txt";
 
   public String get(String name);
   public void set(String name, String value);
@@ -47,7 +54,8 @@ public interface Configuration {
 
   public void load(InputStream stream) throws IOException;
   public void store(OutputStream stream) throws IOException;
-
+  public void storeBootstrap(OutputStream stream) throws IOException;
+  
   // get all properties
   public Properties getProperties();
   public String getDefault(String name);

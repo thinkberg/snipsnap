@@ -35,6 +35,8 @@ import java.net.UnknownHostException;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.List;
+import java.util.Arrays;
 
 /**
  * Implementation of a configuration map which is used as storage for configuration parameters.
@@ -44,6 +46,17 @@ public class ConfigurationMap {
 
   private final static String DEFAULTS_CONF = "/org/snipsnap/config/defaults.conf";
   private final static String TRANSPOSE_MAP = "/org/snipsnap/config/transpose.map";
+
+  private final static List bootstrap = Arrays.asList(new String[] {
+    Configuration.APP_HOST,
+    Configuration.APP_PORT,
+    Configuration.APP_PATH,
+    Configuration.APP_JDBC_URL,
+    Configuration.APP_JDBC_DRIVER,
+    Configuration.APP_JDBC_USER,
+    Configuration.APP_JDBC_PASSWORD,
+    Configuration.APP_CACHE,
+  });
 
   private Properties properties = null;
   private Properties defaults = null;
@@ -87,13 +100,31 @@ public class ConfigurationMap {
   }
 
   /**
-   * Stores the configuration in a properties file if a file has been set with setFile() or
-   * if the configuration has been loaded from a file. An existing file is overwritten.
+   * Stores the configuration in a properties to the stream given.
    * @param stream the output stream to write the configuration to
    * @throws IOException
    */
   public void store(OutputStream stream) throws IOException {
-    properties.store(stream, "SnipSnap Configuration $Revision$");
+    Properties saveProperties = new Properties();
+    Iterator propIt = properties.keySet().iterator();
+    while (propIt.hasNext()) {
+      String entry = (String) propIt.next();
+      saveProperties.setProperty(entry, properties.getProperty(entry));
+    }
+    saveProperties.store(stream, "SnipSnap Configuration $Revision$");
+  }
+
+  /**
+   * Actually a read-only output file for starting up SnipSnap.
+   * @throws IOException
+   */
+  public void storeBootstrap(OutputStream stream) throws IOException {
+    Properties bootProperties = new Properties();
+    for (int i = 0; i < bootstrap.size(); i++) {
+      String entry = (String) bootstrap.get(i);
+      bootProperties.setProperty(entry, properties.getProperty(entry));
+    }
+    bootProperties.store(stream, "SnipSnap Bootstrap $Revision$");
   }
 
   /**
@@ -131,7 +162,7 @@ public class ConfigurationMap {
           if (newProperty.startsWith("@DUPLICATE")) {
             newProperty = newProperty.substring("@DUPLICATE".length());
             String newValue = properties.getProperty(newProperty);
-            System.out.println("INFO: "+newProperty+"="+newValue);
+            //System.out.println("INFO: "+newProperty+"="+newValue);
             if (null == newValue || "".equals(newValue)) {
               System.out.println("INFO: duplicating value of '" + oldProperty + "' to '" + newProperty + "'");
               properties.setProperty(newProperty, value);

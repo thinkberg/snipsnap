@@ -1,0 +1,11 @@
+#
+# ROBOTS.TXT -- this file is sent to robots accessing the URL /robots.txt
+#
+# *** This only works if SnipSnap is running at the top level of the server ***
+# Keep in mind that robots added to the robot detection with the keyword DENY
+# will be appended to this file and disallowed all access to SnipSnap!
+#
+# Disallow all access to the configuration part
+User-agent: *
+Disallow: /SnipSnap/
+

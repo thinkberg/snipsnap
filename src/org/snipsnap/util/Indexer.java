@@ -1,4 +1,4 @@
-package org.snipsnap.config;
+package org.snipsnap.util;
 
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipSpaceFactory;

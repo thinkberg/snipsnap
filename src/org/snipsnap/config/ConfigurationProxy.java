@@ -24,8 +24,6 @@
  */
 package org.snipsnap.config;
 
-import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -33,7 +31,6 @@ import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
-import java.util.Arrays;
 
 public class ConfigurationProxy implements InvocationHandler {
 

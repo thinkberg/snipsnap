@@ -63,6 +63,7 @@ public class SessionService {
     this.storage = storage;
     this.authService = authService;
 
+    // TODO read from snip and make dependend from SnipSpace
     try {
       BufferedReader crawler = new BufferedReader(
           new InputStreamReader(new FileInputStream("conf/robotdetect.txt")));

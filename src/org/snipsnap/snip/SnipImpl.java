@@ -34,6 +34,7 @@ import org.snipsnap.render.context.SnipRenderContext;
 import org.snipsnap.snip.attachment.Attachment;
 import org.snipsnap.snip.attachment.Attachments;
 import org.snipsnap.snip.label.Labels;
+import org.snipsnap.snip.label.RenderLabel;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.User;
 import org.picocontainer.PicoContainer;
@@ -402,11 +403,17 @@ public class SnipImpl implements Snip {
         (SnipSpace) container.getComponent(SnipSpace.class));
     context.setParameters(Application.get().getParameters());
 
-    // should the engine be set by the engine to the context?
-    String xml = engine.render(content, context);
-    //Logger.debug(getName() + " is cacheable: " + context.isCacheable());
-    //String xml = SnipFormatter.toXML(this, getContent());
-    //Application.get().stop(start, "Formatting " + name);
+    RenderLabel label = (RenderLabel)getLabels().getLabel(RenderLabel.NAME);
+    String xml = "";
+    if(label == null || label.isTrue()) {
+      // should the engine be set by the engine to the context?
+      xml = engine.render(content, context);
+      //Logger.debug(getName() + " is cacheable: " + context.isCacheable());
+      //String xml = SnipFormatter.toXML(this, getContent());
+      //Application.get().stop(start, "Formatting " + name);
+    } else {
+      xml = new StringBuffer("<div id=\"code\"><pre>").append(content).append("</pre></div>").toString();
+    }
     return xml;
   }
 

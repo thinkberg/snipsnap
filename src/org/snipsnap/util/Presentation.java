@@ -22,7 +22,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-package org.snipsnap.config;
+package org.snipsnap.util;
 
 import org.radeox.filter.FilterPipe;
 import org.radeox.filter.ListFilter;
@@ -33,6 +33,9 @@ import org.snipsnap.render.filter.context.SnipFilterContext;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipSpaceFactory;
+import org.snipsnap.config.ServerConfiguration;
+import org.snipsnap.config.Configuration;
+import org.snipsnap.config.ConfigurationProxy;
 
 import java.io.File;
 import java.io.IOException;
