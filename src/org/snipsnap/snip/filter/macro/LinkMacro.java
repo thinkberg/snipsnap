@@ -38,7 +38,7 @@ public class LinkMacro extends Macro {
   public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {
     StringBuffer buffer = new StringBuffer();
     if (params.length == 2) {
-      buffer.append("<img border=\"0\" alt=\">>\" src=\"../images/arrow.right.gif\">");
+      buffer.append("<nobr><img border=\"0\" alt=\">>\" src=\"../images/arrow.right.gif\"></nobr>");
       buffer.append("<a href=\"").append(params[1]).append("\">");
       buffer.append(params[0]).append("</a>");
     } else if(params.length == 1) {
