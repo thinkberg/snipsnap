@@ -24,17 +24,11 @@
  */
 package com.neotis.admin;
 
-import com.neotis.app.Application;
-import com.neotis.user.UserManager;
-import com.neotis.user.User;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
@@ -48,8 +42,11 @@ public class AdminServlet extends HttpServlet {
     throws IOException, ServletException {
 
     String requestURI = request.getRequestURI();
-    String path = requestURI.substring(6)+".jsp";
-    request.setAttribute("page",  path != null ? path : "");
+    String path = requestURI.substring(6) + ".jsp";
+    if (path.length() <= 5) {
+      path = "welcome.jsp";
+    }
+    request.setAttribute("page", path != null ? path : "");
 
     RequestDispatcher dispatcher = request.getRequestDispatcher("/main.jsp");
     dispatcher.forward(request, response);

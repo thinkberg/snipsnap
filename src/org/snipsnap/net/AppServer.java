@@ -24,26 +24,14 @@
  */
 package com.neotis.net;
 
-import com.neotis.app.Application;
-import com.neotis.user.User;
-import com.neotis.user.UserManager;
 import org.mortbay.http.HttpListener;
-import org.mortbay.http.HttpRequest;
-import org.mortbay.http.HttpResponse;
-import org.mortbay.http.SecurityConstraint;
-import org.mortbay.http.UserPrincipal;
-import org.mortbay.http.UserRealm;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.WebApplicationContext;
-import org.mortbay.util.MultiException;
 import org.mortbay.util.InetAddrPort;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * Application Server
@@ -82,21 +70,21 @@ public class AppServer {
 
   private static void checkConfig() {
     WebApplicationContext context = addApplication("/", "./app");
-    System.out.println("HACK: added default application: "+context);
+    System.out.println("HACK: added default application: " + context);
 
     config = new Properties();
     try {
       FileInputStream configFile = new FileInputStream("./conf/local.conf");
       config.load(configFile);
-    } catch(IOException e) {
+    } catch (IOException e) {
       System.out.println("INFO: Server is still unconfigured!");
       System.out.println("INFO: Point your browser to the following address:");
       HttpListener listener = jettyServer.getListeners()[0];
       String host = listener.getHost();
       if (InetAddrPort.__0_0_0_0.equals(host)) {
-	host = "localhost";
+        host = "localhost";
       }
-      System.out.println("INFO: http://"+host+":"+listener.getPort()+"/admin");
+      System.out.println("INFO: http://" + host + ":" + listener.getPort() + "/admin");
     }
   }
 
@@ -109,5 +97,9 @@ public class AppServer {
       System.err.println("AppServer: configuration not found: " + e);
     }
     return context;
+  }
+
+  public static Server getServer() {
+    return jettyServer;
   }
 }

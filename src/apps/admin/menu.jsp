@@ -4,8 +4,10 @@
   ** @version $Id$
   -->
 
-<table class="menu" width="100%" border="0" cellpadding="4" cellspacing="1">
- <tr><td class="menuitem">Applications<td></tr>
- <tr><td class="menuitem">User<td></tr>
- <tr><td class="menuitem">Server<td></tr>
+<table class="menu" border="0" cellpadding="4" cellspacing="1">
+ <tr>
+   <td class="menuitem"><a href="server">Server</a><td>
+   <td class="menuitem"><a href="apps">Application</a><td>
+   <td class="menuitem"><a href="user">User</a><td>
+ </tr>
 </table>

@@ -68,7 +68,6 @@ public class UserManager {
       }
       session.setAttribute("user", user);
     }
-    System.out.println("User found: "+user.getLogin());
     return user;
   }
 
