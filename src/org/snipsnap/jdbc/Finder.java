@@ -25,16 +25,16 @@
 
 package com.neotis.jdbc;
 
+import com.neotis.cache.Cache;
 import com.neotis.snip.Snip;
-import com.neotis.snip.SnipSpace;
 import com.neotis.util.ConnectionManager;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Connection;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Encapsulates finder select queries to the database
@@ -45,16 +45,18 @@ import java.util.ArrayList;
 public class Finder {
   PreparedStatement statement;
   Connection connection;
-  SnipSpace space;
+  Cache cache;
+  Loader loader;
 
-  public Finder(String statement, SnipSpace space) {
+  public Finder(String statement, Cache cache, Loader loader) {
     try {
       this.connection = ConnectionManager.getConnection();
       this.statement = this.connection.prepareStatement(statement);
+      this.loader = loader;
     } catch (SQLException e) {
       System.out.println("Unable to prepare statement.");
     }
-    this.space = space;
+    this.cache = cache;
   }
 
   public void setString(int column, String value) {
@@ -73,11 +75,12 @@ public class Finder {
     return find(statement, count);
   }
 
+
   public List find(PreparedStatement statement) {
     return find(statement, Integer.MAX_VALUE);
   }
 
-  public List find(PreparedStatement statement, int count) throws SQLException {
+  public List find(PreparedStatement statement, int count) {
     ResultSet result = null;
     List snips = new ArrayList();
 
@@ -85,7 +88,12 @@ public class Finder {
       result = statement.executeQuery();
       Snip snip = null;
       while (result.next() && --count > 0) {
-        snip = space.cacheLoad(result);
+        String name = result.getString("name");
+        snip = cache.get(name);
+        if (null == snip ) {
+          snip = loader.createSnip(result);
+          cache.put(name, snip);
+        }
         snips.add(snip);
       }
     } catch (SQLException e) {
@@ -97,5 +105,4 @@ public class Finder {
     }
     return snips;
   }
-
 }

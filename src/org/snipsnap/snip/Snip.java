@@ -41,7 +41,7 @@ import java.util.List;
  */
 public class Snip {
   //@TODO think about that
-  protected Snip parent;
+  public Snip parent;
   private List children;
   private Snip comment;
   private Comments comments;

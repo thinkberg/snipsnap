@@ -25,9 +25,12 @@
 package com.neotis.snip;
 
 import com.neotis.app.Application;
+import com.neotis.jdbc.Finder;
+import com.neotis.jdbc.Loader;
 import com.neotis.snip.filter.LinkTester;
 import com.neotis.util.ConnectionManager;
 import com.neotis.util.Queue;
+import com.neotis.cache.Cache;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -36,36 +39,37 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.neotis.jdbc.Finder;
 
 /**
  * SnipSpace handles all the data storage.
  * @author Stephan J. Schmidt
  * @version $Id$
  */
-public class SnipSpace implements LinkTester {
-  private Map cache;
+public class SnipSpace implements LinkTester, Loader {
   private Map missing;
   private Queue changed;
+  private Cache cache;
 
   private static SnipSpace instance;
 
   public static synchronized SnipSpace getInstance() {
     if (null == instance) {
       instance = new SnipSpace();
+      instance.init();
     }
     return instance;
   }
 
   private SnipSpace() {
+  }
+
+  private void init() {
     missing = new HashMap();
     changed = new Queue(10);
-    cache = new HashMap();
+    cache = new Cache((Loader) this);
     changed.fill(storageByRecent(10));
   }
 
@@ -121,6 +125,7 @@ public class SnipSpace implements LinkTester {
     if (missing.containsKey(name)) {
       return false;
     }
+
     if (null == load(name)) {
       missing.put(name, new Integer(0));
       return false;
@@ -130,16 +135,7 @@ public class SnipSpace implements LinkTester {
   }
 
   public Snip load(String name) {
-    Snip snip = null;
-    if (cache.containsKey(name)) {
-      snip = (Snip) cache.get(name);
-    } else {
-      snip = storageLoad(name);
-      if (null != snip) {
-        cache.put(name, snip);
-      }
-    }
-    return snip;
+    return cache.load(name);
   }
 
   public void store(Snip snip, Application app) {
@@ -154,7 +150,6 @@ public class SnipSpace implements LinkTester {
     storageStore(snip);
     return;
   }
-
 
   public Snip create(String name, String content, Application app) {
     Snip snip = storageCreate(name, content, app);
@@ -195,23 +190,10 @@ public class SnipSpace implements LinkTester {
     return snip;
   }
 
-  public Snip cacheLoad(ResultSet result) throws SQLException {
-    Snip snip = null;
-    String name = result.getString("name");
-
-    if (cache.containsKey(name)) {
-      snip = (Snip) cache.get(name);
-    } else {
-      snip = createSnip(result);
-      cache.put(name, snip);
-    }
-    return snip;
-  }
-
   private List storageByRecent(int size) {
     Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip " +
                                " FROM Snip " +
-                               " ORDER by mTime DESC", this);
+                               " ORDER by mTime DESC", cache, (Loader) this);
 
     return finder.execute(size);
   }
@@ -219,7 +201,7 @@ public class SnipSpace implements LinkTester {
   private List storageByUser(String login) {
     Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip " +
                                " FROM Snip " +
-                               " WHERE cUser=?", this);
+                               " WHERE cUser=?", cache, (Loader) this);
     finder.setString(1, login);
     return finder.execute();
   }
@@ -227,7 +209,7 @@ public class SnipSpace implements LinkTester {
   private List storageByComments(Snip parent) {
     Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip " +
                                " FROM Snip " +
-                               " WHERE commentSnip=?", this);
+                               " WHERE commentSnip=?", cache, (Loader) this);
     finder.setString(1, parent.getName());
     return finder.execute();
   }
@@ -235,7 +217,7 @@ public class SnipSpace implements LinkTester {
   private List storageByParent(Snip parent) {
     Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip " +
                                " FROM Snip " +
-                               " WHERE parentSnip=?", this);
+                               " WHERE parentSnip=?", cache, (Loader) this);
     finder.setString(1, parent.getName());
     return finder.execute();
   }
@@ -244,7 +226,7 @@ public class SnipSpace implements LinkTester {
     Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip " +
                                " FROM Snip " +
                                " WHERE parentSnip=? " +
-                               " ORDER BY name DESC ", this);
+                               " ORDER BY name DESC ", cache , (Loader) this);
     finder.setString(1, parent.getName());
     return finder.execute(count);
   }
@@ -253,14 +235,14 @@ public class SnipSpace implements LinkTester {
     Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip " +
                                " FROM Snip " +
                                " WHERE name>=? and name<=? and parentSnip=? " +
-                               " ORDER BY name", this);
+                               " ORDER BY name", cache, (Loader) this);
     finder.setString(1, start);
     finder.setString(2, end);
     finder.setString(3, "start");
     return finder.execute();
   }
 
-  private Snip storageLoad(String name) {
+  public Snip storageLoad(String name) {
     Snip snip = null;
     PreparedStatement statement = null;
     ResultSet result = null;
