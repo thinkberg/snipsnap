@@ -25,7 +25,7 @@
           logged in as <a href="/space/<c:out value='${app.user.login}'/>"><c:out value="${app.user.login}"/></a> | <a href="/exec/authenticate?logoff=true">logoff</a>
        </s:check>
        <s:check roles="Authenticated" invert="true">
-        login or register
+        <a href="/exec/login.jsp">login</a> or <a href="/exec/register.jsp">register</a>
        </s:check> ]</font>
      </div>
      </td>
@@ -41,7 +41,14 @@
      </td>
     </tr>
    </table>
-   </td></tr></table>
+   </td></tr>
+   <tr><td colspan="2">
+   <p align="center">
+   Copyright 2000-2002 Matthias L. Jugel, Stephan J.Schmidt <a href="http://www.snipsnap.org">www.snipsnap.org</a>
+
+   </p>
+   </td></tr>
+   </table>
  </body>
 </html>
 

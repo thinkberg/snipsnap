@@ -15,7 +15,7 @@
   <tr><td width="100%">
     <c:out value="${snip.XMLContent}" escapeXml="false" />
   </td></tr>
-  <tr><td><hr></td></tr>
+  <tr><td height="20"></td></tr>
   <tr><td>
     <table width="100%" border="0" cellspacing="2" cellpadding="1">
       <c:forEach items="${snip.comments.comments}" var="comment" >
@@ -37,6 +37,7 @@
            <c:out value="${comment.XMLContent}" escapeXml="false" />
           </td>
         </tr>
+        <tr><td height="20"></td></tr>
       </c:forEach>
     </table>
   </td></tr>
