@@ -1,0 +1,62 @@
+/**
+ * General Stylesheet definitions.
+ * @author Matthias L. Jugel
+ * @version $Id$
+ */
+
+/* error messages and error positions should be marked red */
+.error { color: #ff0000; font-weight: bold;	background-color: inherit;}
+.error-position { background-color: #ffaaaa; color: inherit;}
+
+/* inactive buttons are greyed out */
+.inactive { color: #aaaaaa; background-color: inherit;}
+
+/************************************************/
+/* ANCHOR tag                                   */
+a {
+	color: #ce6a22;
+	background-color: inherit;
+	text-decoration: none;
+	font-weight: 400;
+}
+a:link {
+  color:#ce6a22;
+  background-color: inherit;
+}
+a:visited {
+  color:#ce6a22;
+  background-color: inherit;
+}
+a:hover {
+  color: inherit;
+  background-color: #eee;
+}
+
+/************************************************/
+/* table tag                                    */
+table {
+	empty-cells: show;
+}
+
+
+
+/************************************************/
+/* input tag                                    */
+
+input[type=submit] {
+  color: inherit;
+  background-color: #e2deca;
+  border: 1px ridge #d2beaa ;
+	font-family: Verdana, sans serif;
+}
+
+input, select, textarea {
+  line-height: inherit;
+  /*vertical-align: middle; a bug in IE5.2-mac crashes with this*/
+	border:1px dashed #999;
+  font-size: inherit;
+  font-family: courier, courier new, monospaced;
+}
+
+
+

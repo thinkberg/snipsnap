@@ -1,0 +1,89 @@
+/**
+ * General Stylesheet definitions.
+ * @author Matthias L. Jugel
+ * @version $Id$
+ */
+
+body {
+  background-color: #ffffff;
+  color: #4c4c4c;
+  width: 800px;
+  font-size: 70%;
+  font-family: "Lucida Grande", "Trebuchet MS", Verdana, Geneva, Lucida, Helvetica, sans-serif;
+  margin: 20px;
+  padding: 0px;}
+
+#page-logo {
+  display: block;
+  width: 100%;
+}
+
+#page-title {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+
+	padding: 17px 0px 7px 0px;
+	border-style: solid;
+	border-color: black;
+	border-width: 1px 0px;
+	line-height: 11px;
+	color: inherit;
+	background-color: #eeeeee;
+	font-size: 14px;
+	voice-family: inherit;
+	height: 14px; /* the correct height */
+  text-align: right;
+}
+
+#page-tagline {
+  display: inline;
+  font-size: 120%;
+  padding-right: 10px;
+}
+
+#page-buttons {
+  display: inline;
+  padding-right: 5px;
+}
+
+#page-wrapper {
+  position: relative;
+  margin-top: 10px;
+  width: 100%;
+  height: auto;
+}
+
+#page-content {
+  position: absolute;
+  float: right;
+  left: 0px;
+  width: 590px;
+  max-width: 590px;
+}
+
+#page-portlet-1 {
+  position: absolute;
+  top: 0px;
+  left: 600px;
+  width: 190px;
+	border: 1px dashed #999999;
+	line-height: 14px;
+  padding: 5px;
+  margin-bottom: 5px;
+}
+
+#page-portlet-2 {
+  display: none; /* hide */
+}
+
+
+/* the actual content */
+#page-bottom {
+  position: relative;
+  bottom: 0px;
+  margin-top: 10px;
+  text-align: center;
+  width: 100%;
+  font-size: 100%;
+}

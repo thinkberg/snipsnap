@@ -1,0 +1,90 @@
+/**
+ * Javangelist Layout
+ */
+
+body {
+  background-color: #ffffff;
+  color: #4c4c4c;
+  width: 800px;
+  font-size: 70%;
+  font-family: "Lucida Grande", "Trebuchet MS", Verdana, Geneva, Lucida, Helvetica, sans-serif;
+}
+
+#page-logo {
+  position: absolute;
+  display: block;
+  width: 200px;
+  top: 10px;
+  left: 10px;
+}
+
+#page-title {
+  position: absolute;
+  display: block;
+  width: 560px;
+  top: 10px;
+  left: 235px;
+
+	padding:10px;
+	color: inherit;
+	background-color: #fffced;
+	font-size: inherit;
+	height: 14px;
+}
+
+#page-tagline {
+  display: inline;
+  font-size: 120%;
+  padding-right: 10px;
+}
+
+#page-buttons {
+  display: inline;
+  padding-right: 0px;
+}
+
+#page-wrapper {
+  position: absolute;
+  top: 40px;
+  left: 10px;
+  padding-top: 10px;
+  width: 580px;;
+  height: auto;
+}
+
+#page-content {
+  position: absolute;
+  float: right;
+  left: 225px;
+  width: 580px;
+  max-width: 580px;
+}
+
+#page-portlet-1 {
+  position: absolute;
+  top: 200px;
+  left: 0px;
+  width: 200px;
+	line-height: 14px;
+  padding: 5px;
+  margin-bottom: 5px;
+}
+
+#page-portlet-2 {
+  display: none; /* hide */
+}
+
+
+/* the actual content */
+#page-bottom {
+  position: relative;
+  bottom: 0px;
+  margin-top: 10px;
+  text-align: center;
+  width: 100%;
+  font-size: 100%;
+}
+
+#copyright:before {
+  content: "Copyright 2000-2002 Matthias L. Jugel, Stephan J. Schmidt";
+}
