@@ -47,7 +47,7 @@ public class ImageTag extends TagSupport {
         alt = (String) ExpressionEvaluatorManager.evaluate("alt", alt, String.class, this, pageContext);
       }
       if(ext != null) {
-        ext = (String) ExpressionEvaluatorManager.evaluate("ext", alt, String.class, this, pageContext);
+        ext = (String) ExpressionEvaluatorManager.evaluate("ext", ext, String.class, this, pageContext);
       }
     } catch (JspException e) {
       System.err.println("unable to evaluate expression: " + e);
