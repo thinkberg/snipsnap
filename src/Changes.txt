@@ -1,5 +1,6 @@
 0.2.8
 
+- Added Feature: {image} tag allows positioned and floating images
 - Added snipsnap-help to default snips (contains text formatting)
 - Introduced: {list-of-macros}
 - Replaced {snips-by-recent} by {recent-changes} macro
