@@ -28,9 +28,25 @@ package org.snipsnap.xmlrpc;
 import org.apache.xmlrpc.XmlRpcException;
 import org.snipsnap.app.Application;
 import org.snipsnap.user.User;
+import org.snipsnap.snip.XMLSnipExport;
+import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.container.Components;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.sax.SAXTransformerFactory;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.beans.XMLEncoder;
 
 /**
- * Handles XML-RPC calls for the SnbipSnap API
+ * Handles XML-RPC calls for the SnipSnap API
  *
  * @author Stephan J. Schmidt
  * @version $Id$
@@ -64,5 +80,22 @@ public class SnipSnapHandler extends XmlRpcSupport {
   public boolean authenticateUser(String login, String passwd) throws XmlRpcException {
     User user = authenticate(login, passwd);
     return (null != user);
+  }
+
+  public byte[] getBackup() throws IOException {
+    ByteArrayOutputStream backupStream = new ByteArrayOutputStream();
+    Document backup = XMLSnipExport.getBackupDocument();
+    StreamResult streamResult = new StreamResult(backupStream);
+    TransformerFactory tf = SAXTransformerFactory.newInstance();
+    try {
+      Transformer serializer = tf.newTransformer();
+      serializer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+      serializer.setOutputProperty(OutputKeys.INDENT, "yes");
+      serializer.transform(new DOMSource(backup), streamResult);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    return backupStream.toByteArray();
   }
 }

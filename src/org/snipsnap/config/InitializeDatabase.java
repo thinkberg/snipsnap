@@ -88,7 +88,7 @@ public class InitializeDatabase {
     JDBCUserStorage.createStorage();
 
     (new File(config.getFilePath())).mkdirs();
-    (new File(config.getIndexPath())).mkdirs();
+    //(new File(config.getIndexPath())).mkdirs();
 
     // get an instance of the snip space
     SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);

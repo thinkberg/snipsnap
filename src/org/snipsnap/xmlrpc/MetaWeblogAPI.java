@@ -38,7 +38,7 @@ import java.util.Vector;
  * @version $Id$
  */
 
-public interface MetaWeblogAPI {
+public interface MetaWeblogAPI extends XmlRpcHandler {
   public String getName();
 
   public Vector getRecentPosts(String blogid,

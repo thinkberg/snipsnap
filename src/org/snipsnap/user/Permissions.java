@@ -55,7 +55,7 @@ public class Permissions {
   }
 
   public Permissions(String permissions) {
-    //@TODO late desirialization
+    //@TODO late deserialization
     this.permissions = deserialize(permissions);
   }
 

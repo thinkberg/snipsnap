@@ -36,16 +36,24 @@ import org.snipsnap.snip.label.Labels;
 import org.snipsnap.snip.storage.query.Query;
 import org.snipsnap.snip.storage.query.QueryKit;
 import org.snipsnap.user.Permissions;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.sax.SAXTransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.FileInputStream;
+import java.io.BufferedInputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,13 +61,12 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * SnipStorage backend that uses files for persisting data. This storage
  * has limitations in the snip name length and possibly characters as well
  * since not all filesystems can store UTF-8 file names.
- * 
+ *
  * TODO: optimize file system usage by keeping a consistent map of files
  *
  * @author Matthias L. Jugel
@@ -67,31 +74,18 @@ import java.util.Properties;
  */
 
 public class FileSnipStorage implements SnipStorage, CacheableStorage {
+  private final static String SNIP_XML = "snip.xml";
+
+  private static DocumentBuilder documentBuilder;
+
   private Map cache = new HashMap();
-
-  private final static String SNIP_NAME = "Name";
-  private final static String SNIP_CTIME = "CTime";
-  private final static String SNIP_MTIME = "MTime";
-  private final static String SNIP_CUSER = "CUser";
-  private final static String SNIP_MUSER = "MUser";
-  private final static String SNIP_PARENT = "ParentSnip";
-  private final static String SNIP_COMMENTED = "CommentedSnip";
-  private final static String SNIP_PERMISSIONS = "Permissions";
-  private final static String SNIP_OUSER = "Owner";
-  private final static String SNIP_BACKLINKS = "BackLinks";
-  private final static String SNIP_SNIPLINKS = "SnipLinks";
-  private final static String SNIP_LABELS = "Labels";
-  private final static String SNIP_ATTACHMENTS = "Attachments";
-  private final static String SNIP_VIEWCOUNT = "ViewCount";
-
-  private final static String SNIP_FILE_PROPERTIES = "content.info";
-  private final static String SNIP_FILE_CONTENT = "content.txt";
+  private SnipSerializer serializer = SnipSerializer.getInstance();
 
   public static void createStorage() {
-    // there is nothing to create here, all handled dynamically
   }
 
-  public FileSnipStorage() {
+  public FileSnipStorage() throws ParserConfigurationException {
+    documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
   }
 
   public void setCache(Map cache) {
@@ -107,17 +101,17 @@ public class FileSnipStorage implements SnipStorage, CacheableStorage {
   public List storageAll() {
     Application app = Application.get();
     File fileStore = new File(app.getConfiguration().getFilePath());
-    return traverseFileStore(fileStore, new ArrayList());
+    long start = app.start();
+    List all = traverseFileStore(fileStore, new ArrayList());
+    app.stop(start, "storageAll()");
+    return all;
   }
 
   private List traverseFileStore(File root, List list) {
-    try {
-      Snip snip = createSnip(root);
-      if (snip != null) {
-        list.add(snip);
-      }
-    } catch (IOException e) {
-      // ignored because empty dirs may exist
+    // it is unclear whether the name of the directory is correct on every file system
+    Snip snip = createSnip(root.getName(), root);
+    if (snip != null) {
+      list.add(snip);
     }
 
     File[] files = root.listFiles();
@@ -221,11 +215,7 @@ public class FileSnipStorage implements SnipStorage, CacheableStorage {
     File fileStore = new File(app.getConfiguration().getFilePath());
     File snipDir = new File(fileStore, name);
 
-    try {
-      snip = createSnip(snipDir);
-    } catch (IOException e) {
-      Logger.log("unable to load snip", e);
-    }
+    snip = createSnip(name, snipDir);
     app.stop(start, "storageLoad - " + name);
     return snip;
   }
@@ -267,72 +257,39 @@ public class FileSnipStorage implements SnipStorage, CacheableStorage {
     File fileStore = new File(app.getConfiguration().getFilePath());
     File snipDir = new File(fileStore, snip.getName());
 
-    File snipPropsFile = new File(snipDir, SNIP_FILE_PROPERTIES);
-    File snipFile = new File(snipDir, SNIP_FILE_CONTENT);
+    File snipFile = new File(snipDir, SNIP_XML);
 
     if (snipFile.exists()) {
       File backup = new File(snipFile.getPath() + ".removed");
       snipFile.renameTo(backup);
     }
-
-    if (snipPropsFile.exists()) {
-      File backup = new File(snipPropsFile.getPath() + ".removed");
-      snipPropsFile.renameTo(backup);
-    }
   }
 
-  private synchronized Snip createSnip(File snipDir) throws IOException {
-    File snipPropsFile = new File(snipDir, SNIP_FILE_PROPERTIES);
-    File snipFile = new File(snipDir, SNIP_FILE_CONTENT);
-
-    if (!snipPropsFile.exists()) {
-      return null;
-    }
-
-    Properties snipProps = new Properties();
-    snipProps.load(new FileInputStream(snipPropsFile));
-
-    String name = snipProps.getProperty(SNIP_NAME);
-    //System.out.println("createSnip('" + name + "')");
+  private synchronized Snip createSnip(String name, File snipDir) {
     if (cache.containsKey(name.toUpperCase())) {
       return (Snip) cache.get(name.toUpperCase());
     }
 
-    StringBuffer content = new StringBuffer();
+    return createSnip(snipDir);
+  }
+
+  private synchronized Snip createSnip(File snipDir) {
+    File snipFile = new File(snipDir, SNIP_XML);
+
     if (snipFile.exists()) {
-      BufferedReader snipReader = new BufferedReader(new FileReader(snipFile));
-      char[] buffer = new char[8192];
-      int length = 0;
-      while ((length = snipReader.read(buffer)) != -1) {
-        content.append(buffer, 0, length);
+      try {
+        Document snipDocument = documentBuilder.parse(new BufferedInputStream(new FileInputStream(snipFile)));
+        Snip snip = serializer.deserialize(snipDocument.getFirstChild(), SnipFactory.createSnip("", ""));
+        snip = (Snip) Aspects.newInstance(snip, Snip.class);
+        cache.put(snip.getName().toUpperCase(), snip);
+        return snip;
+      } catch (SAXException e) {
+        Logger.log("FileSnipStorage: unable to parse " + snipFile, e);
+      } catch (IOException e) {
+        Logger.log("FileSnipStorage: i/o exception while parsing " + snipFile, e);
       }
     }
-    Snip snip = SnipFactory.createSnip(name, content.toString());
-
-    snip.setCTime(new Timestamp(Long.parseLong(snipProps.getProperty(SNIP_CTIME))));
-    snip.setMTime(new Timestamp(Long.parseLong(snipProps.getProperty(SNIP_MTIME))));
-    snip.setCUser(snipProps.getProperty(SNIP_CUSER));
-    snip.setMUser(snipProps.getProperty(SNIP_MUSER));
-    String parentName = snipProps.getProperty(SNIP_PARENT);
-    if (parentName.trim().length() != 0) {
-      snip.setParentName(parentName);
-    }
-    String commentedName = snipProps.getProperty(SNIP_COMMENTED);
-    if (commentedName.trim().length() != 0) {
-      snip.setCommentedName(commentedName);
-    }
-    snip.setPermissions(new Permissions(snipProps.getProperty(SNIP_PERMISSIONS)));
-    snip.setBackLinks(new Links(snipProps.getProperty(SNIP_BACKLINKS)));
-    snip.setSnipLinks(new Links(snipProps.getProperty(SNIP_SNIPLINKS)));
-    snip.setLabels(new Labels(snipProps.getProperty(SNIP_LABELS)));
-    snip.setAttachments(new Attachments(snipProps.getProperty(SNIP_ATTACHMENTS)));
-    snip.setViewCount(Integer.parseInt(snipProps.getProperty(SNIP_VIEWCOUNT)));
-
-    // Aspects.setTarget(proxy, snip);
-    // return proxy;
-    snip = (Snip) Aspects.newInstance(snip, Snip.class);
-    cache.put(name.toUpperCase(), snip);
-    return snip;
+    return null;
   }
 
   private void storeSnip(Snip snip, File snipDir) {
@@ -340,14 +297,7 @@ public class FileSnipStorage implements SnipStorage, CacheableStorage {
       snipDir.mkdirs();
     }
 
-    File snipPropsFile = new File(snipDir, "content.info");
-    File snipFile = new File(snipDir, "content.txt");
-
-    if (snipPropsFile.exists()) {
-      Logger.log("FileSnipStorage: backing up " + snipPropsFile.getPath());
-      File backup = new File(snipPropsFile.getPath() + ".bck");
-      snipPropsFile.renameTo(backup);
-    }
+    File snipFile = new File(snipDir, SNIP_XML);
 
     if (snipFile.exists()) {
       Logger.log("FileSnipStorage: backing up " + snipFile.getPath());
@@ -355,42 +305,20 @@ public class FileSnipStorage implements SnipStorage, CacheableStorage {
       snipFile.renameTo(backup);
     }
 
-    Properties snipProps = new Properties();
-    snipProps.setProperty(SNIP_NAME, notNull(snip.getName()));
-    snipProps.setProperty(SNIP_CTIME, "" + snip.getCTime().getTime());
-    snipProps.setProperty(SNIP_MTIME, "" + snip.getMTime().getTime());
-    snipProps.setProperty(SNIP_CUSER, notNull(snip.getCUser()));
-    snipProps.setProperty(SNIP_MUSER, notNull(snip.getMUser()));
-    Snip parent = snip.getParent();
-    snipProps.setProperty(SNIP_PARENT, null == parent ? "" : parent.getName());
-    Snip comment = snip.getCommentedSnip();
-    snipProps.setProperty(SNIP_COMMENTED, null == comment ? "" : comment.getName());
-    snipProps.setProperty(SNIP_PERMISSIONS, snip.getPermissions().toString());
-    snipProps.setProperty(SNIP_OUSER, notNull(snip.getOUser()));
-    snipProps.setProperty(SNIP_BACKLINKS, snip.getBackLinks().toString());
-    snipProps.setProperty(SNIP_SNIPLINKS, snip.getSnipLinks().toString());
-    snipProps.setProperty(SNIP_LABELS, snip.getLabels().toString());
-    snipProps.setProperty(SNIP_ATTACHMENTS, snip.getAttachments().toString());
-    snipProps.setProperty(SNIP_VIEWCOUNT, "" + snip.getViewCount());
+    Document snipDocument = documentBuilder.newDocument();
+    snipDocument.appendChild(serializer.serialize(snipDocument, snip));
+
     try {
-      snipProps.store(new FileOutputStream(snipPropsFile), "Properties for " + snip.getName());
-    } catch (IOException e) {
-      Logger.log("FileSnipStorage: unable to store properties for '" + snip.getName() + "'");
+      BufferedOutputStream xmlStream = new BufferedOutputStream(new FileOutputStream(snipFile));
+      StreamResult streamResult = new StreamResult(xmlStream);
+      TransformerFactory tf = SAXTransformerFactory.newInstance();
+      Transformer serializer = tf.newTransformer();
+      serializer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+      serializer.setOutputProperty(OutputKeys.INDENT, "yes");
+      serializer.transform(new DOMSource(snipDocument), streamResult);
+    } catch (Exception e) {
+      e.printStackTrace();
     }
 
-    PrintWriter snipWriter = null;
-    try {
-      snipWriter = new PrintWriter(new BufferedWriter(new FileWriter(snipFile)));
-      snipWriter.print(snip.getContent());
-    } catch (IOException e) {
-      Logger.log("FileSnipStorage: unable to store snip " + snip.getName(), e);
-    } finally {
-      snipWriter.flush();
-      snipWriter.close();
-    }
-  }
-
-  private String notNull(String str) {
-    return str == null ? "" : str;
   }
 }

@@ -39,8 +39,7 @@ public class CheckPermission extends UserAuth {
   }
 
   protected boolean condition() throws JspTagException {
-    // TODO: why not Application.get() ?
-    Application app = (Application) pageContext.findAttribute("app");
+    Application app = Application.get();
     User user = app.getUser();
     if (snip != null) {
       boolean isTrue = Security.checkPermission(permission, user, snip) && Security.hasRoles(user, snip, roles);

@@ -67,8 +67,12 @@ public class SnipViewServlet extends HttpServlet {
     } else {
       name = name.substring(1);
     }
-    name = name.replace('+', ' ');
-
+    String encodedSpace = config.getEncodedSpace();
+    if(encodedSpace != null && encodedSpace.length() > 0) {
+      name = name.replace(encodedSpace.charAt(0), ' ');
+    }
+    //System.out.println("name='"+name+"'");
+    
     // load snip and set attributes for request
     Snip snip = SnipSpaceFactory.getInstance().load(name);
 

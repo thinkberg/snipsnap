@@ -57,7 +57,7 @@ public class BlogImpl implements Blog {
     this.space = space;
     // May not be initialized, so set it to something sane
     if (blogName == null || "".equals(blogName)) {
-      blogName = "start";
+      blogName = Application.get().getConfiguration().getStartSnip();
     }
     this.name = blogName;
     this.blog = space.load(name);

@@ -37,7 +37,7 @@ import java.util.Vector;
  * @version $Id$
  */
 
-public interface BloggerAPI {
+public interface BloggerAPI extends XmlRpcHandler {
   public String getName();
 
   public String newPost(String appkey,

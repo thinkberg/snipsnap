@@ -108,12 +108,11 @@ public class ImageMacro extends SnipMacro {
           }
 
           Snip snip = params.getSnip();
-          int slashIndex = imageName.indexOf('/');
+          int slashIndex = imageName.lastIndexOf('/');
           if(-1 != slashIndex) {
-            // @TODO change to work with namespaces
             String snipName = imageName.substring(0, slashIndex);
-            imageName = imageName.substring(slashIndex + 1);
             snip = SnipSpaceFactory.getInstance().load(snipName);
+            imageName = imageName.substring(slashIndex + 1);
           }
 
           if ("svg".equals(ext)) {

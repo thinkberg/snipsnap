@@ -35,14 +35,14 @@
   <link rel="STYLESHEET" type="text/css" href="<c:out value='${app.configuration.url}/css/default.css'/>" />
   <link rel="STYLESHEET" type="text/css" href="<c:out value='${app.configuration.url}/css/print.css'/>" media="print" />
   <!-- title of this document -->
-  <title><c:out value="${app.configuration.name}" default="SnipSnap"/> :: <c:out value="${snip.name}" default=""/></title>
+  <title><c:out value="${app.configuration.name}" default="SnipSnap"/> :: <c:out value="${snip.name}"/></title>
  </head>
  <body>
   <div id="page-logo">
    <c:choose>
-    <c:when test="${snip.name=='start' && not(empty app.configuration.logo)}"><s:image name="${app.configuration.logo}" alt="${app.configuration.name}"/></c:when>
-    <c:when test="${snip.name=='start' && empty app.configuration.logo}"><c:out value="${app.configuration.name}" default="SnipSnap"/></c:when>
-    <c:when test="${snip.name!='start' && not(empty app.configuration.logo)}"><a href="<c:out value='${app.configuration.url}'/>" accesskey="1"><s:image name="${app.configuration.logo}" alt="${app.configuration.name}"/></a></c:when>
+    <c:when test="${snip.name==app.configuration.startSnip && not(empty app.configuration.logo)}"><s:image name="${app.configuration.logo}" alt="${app.configuration.name}"/></c:when>
+    <c:when test="${snip.name==app.configuration.startSnip && empty app.configuration.logo}"><c:out value="${app.configuration.name}" default="SnipSnap"/></c:when>
+    <c:when test="${snip.name!=app.configuration.startSnip && not(empty app.configuration.logo)}"><a href="<c:out value='${app.configuration.url}'/>" accesskey="1"><s:image name="${app.configuration.logo}" alt="${app.configuration.name}"/></a></c:when>
     <c:otherwise><a href="/" accesskey="1"><c:out value="${app.configuration.name}" default="SnipSnap"/></a></c:otherwise>
    </c:choose>
   </div>

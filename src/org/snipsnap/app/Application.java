@@ -27,16 +27,20 @@ package org.snipsnap.app;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.config.ConfigurationProxy;
+import org.snipsnap.container.Components;
 import org.snipsnap.notification.NotificationService;
 import org.snipsnap.snip.Snip;
-import org.snipsnap.user.User;
-import org.snipsnap.user.UserManager;
+import org.snipsnap.snip.name.NameFormatter;
 import org.snipsnap.user.AuthenticationService;
+import org.snipsnap.user.User;
 import org.snipsnap.user.UserManagerFactory;
-import org.snipsnap.container.Components;
 
 import javax.servlet.http.HttpSession;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The application object contains information about current users and other

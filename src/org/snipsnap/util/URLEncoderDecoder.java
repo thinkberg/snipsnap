@@ -72,11 +72,7 @@ public class URLEncoderDecoder {
     for (int i = 0; i < buf.length; i++) {
       int c = (int) buf[i];
       if (dontNeedEncoding.get(c & 0xFF)) {
-        if (c == ' ') {
-          result.append('+');
-        } else {
-          result.append((char) c);
-        }
+        result.append((char) c);
       } else {
         result.append('%').append(Integer.toHexString(c & 0xFF).toUpperCase());
       }
@@ -94,10 +90,8 @@ public class URLEncoderDecoder {
     int length = 0;
     for (int i = 0; i < s.length(); i++) {
       char c = s.charAt(i);
-      if (c == '+') {
-        buf[length++] = (byte) ' ';
-      } else if (c == '%') {
-        buf[length++] = (byte)Integer.parseInt(s.substring(i + 1, i + 3), 16);
+      if (c == '%') {
+        buf[length++] = (byte) Integer.parseInt(s.substring(i + 1, i + 3), 16);
         i += 2;
       } else {
         buf[length++] = (byte) c;

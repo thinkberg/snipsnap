@@ -26,11 +26,10 @@
 package org.snipsnap.snip.label;
 
 import org.snipsnap.app.Application;
+import org.snipsnap.container.Components;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.user.UserManager;
 import org.snipsnap.user.AuthenticationService;
-import org.snipsnap.container.Components;
 
 /**
  * SnipLabel connects a Snip to another Snip (should it be possible to reference more than one Snip?)

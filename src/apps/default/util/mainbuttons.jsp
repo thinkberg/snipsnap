@@ -3,7 +3,7 @@
 <%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %>
 
 [ <c:choose>
- <c:when test="${snip.name=='start'}"><span class="inactive"><fmt:message key="menu.start"/></span></c:when>
+ <c:when test="${snip.name==app.configuration.startSnip}"><span class="inactive"><fmt:message key="menu.start"/></span></c:when>
  <c:otherwise><a href="<c:out value='${app.configuration.path}'/>/space/<c:out value='${app.configuration.startSnip}'/>"><fmt:message key="menu.start"/></a></c:otherwise>
 </c:choose> | <a href="<c:out value='${app.configuration.path}'/>/space/snipsnap-index"><fmt:message key="menu.index"/></a> |
 <s:check roles="Authenticated"><fmt:message key="menu.loggedIn"><fmt:param><a href="<c:out value='${app.configuration.path}/space/${app.user.login}'/>"><c:out value="${app.user.login}"/></a></fmt:param></fmt:message> | <a href="<c:out value='${app.configuration.path}'/>/exec/authenticate?logoff=true"><fmt:message key="menu.logoff"/></a></s:check>

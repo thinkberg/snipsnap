@@ -9,7 +9,7 @@
 <c:if test="${snip.notWeblog}">
  <div class="snip-path"><s:path snip="${snip}"/></div>
  <div class="snip-title">
-  <h1 class="snip-name"><c:out value="${snip.name}"/>
+  <h1 class="snip-name"><c:out value="${snip.title}"/>
 
   <c:if test="${snip.comment}">
    <span class="snip-commented-snip"><s:image name="commented"/> <a href="<c:out value='${app.configuration.path}'/>/comments/<c:out value='${snip.commentedSnip.nameEncoded}'/>"><c:out value='${snip.commentedSnip.name}'/></a></span>

@@ -91,7 +91,6 @@ public class Comments {
     init();
     String name = "comment-" + snip.getName() + "-" + (getCount() + 1);
     Snip comment = space.create(name, content);
-    Logger.debug(comment.toString());
     comment.setCommentedSnip(this.snip);
     comment.addPermission(Permissions.EDIT, Roles.OWNER);
     space.store(comment);

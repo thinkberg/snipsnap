@@ -259,7 +259,12 @@ public class SnipLink {
   public static String encode(String s) {
     try {
       Configuration config = Application.get().getConfiguration();
-      return URLEncoderDecoder.encode(s, config.getEncoding());
+      String encodedSpace = config.getEncodedSpace();
+      if(null != encodedSpace && encodedSpace.length() > 0) {
+        return URLEncoderDecoder.encode(s, config.getEncoding()).replace(' ', encodedSpace.charAt(0));
+      } else {
+        return URLEncoderDecoder.encode(s, config.getEncoding());
+      }
     } catch (UnsupportedEncodingException e) {
       Logger.log(Logger.FATAL, "unsupported encoding: " + e);
       return s;
@@ -269,6 +274,10 @@ public class SnipLink {
   public static String decode(String s) {
     try {
       Configuration config = Application.get().getConfiguration();
+      String encodedSpace = config.getEncodedSpace();
+      if (null != encodedSpace && encodedSpace.length() > 0) {
+        s.replace(encodedSpace.charAt(0), ' ');
+      }
       return URLEncoderDecoder.decode(s, config.getEncoding());
     } catch (UnsupportedEncodingException e) {
       Logger.log(Logger.FATAL, "unsupported encoding: " + e);

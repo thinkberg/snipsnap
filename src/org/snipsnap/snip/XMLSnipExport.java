@@ -26,13 +26,24 @@ package org.snipsnap.snip;
 
 import org.radeox.util.logging.Logger;
 import org.snipsnap.util.ConnectionManager;
+import org.snipsnap.container.Components;
+import org.snipsnap.snip.storage.SnipSerializer;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.sql.*;
 import java.util.StringTokenizer;
+import java.util.List;
+import java.util.Iterator;
+import java.beans.XMLEncoder;
 
 /**
  * Import
@@ -135,5 +146,31 @@ public class XMLSnipExport {
       System.err.println("Found null-byte in data: removing it.");
     }
     return out.toString();
+  }
+
+  private static DocumentBuilder documentBuilder = null;
+  public static Document getBackupDocument() {
+    try {
+      DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+      documentBuilder = documentBuilderFactory.newDocumentBuilder();
+    } catch (FactoryConfigurationError error) {
+      System.err.println("Unable to create document builder factory: " + error);
+    } catch (ParserConfigurationException e) {
+      System.err.println("Unable to create document builder");
+      e.printStackTrace();
+    }
+
+    Document backupDoc = documentBuilder.newDocument();
+    Node root = backupDoc.appendChild(backupDoc.createElement("snipspace"));
+
+    SnipSpace space = (SnipSpace)Components.getComponent(SnipSpace.class);
+    SnipSerializer serializer = SnipSerializer.getInstance();
+    Iterator snipListIterator = space.getAll().iterator();
+    while (snipListIterator.hasNext()) {
+      Snip snip = (Snip) snipListIterator.next();
+      Node node = serializer.serialize(backupDoc, snip);
+      root.appendChild(node);
+    }
+    return backupDoc;
   }
 }

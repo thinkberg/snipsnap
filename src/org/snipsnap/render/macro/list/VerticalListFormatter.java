@@ -77,7 +77,7 @@ public class VerticalListFormatter implements ListFormatter {
         if (object instanceof Snip) {
           Snip snip = (Snip) object;
           String name = snip.getName();
-          String realName = name;
+          String realName = snip.getTitle();
           if (name.startsWith("comment-")) {
             int lastIndex = name.lastIndexOf("-");
             // String count = name.substring(lastIndex+1);

@@ -48,9 +48,10 @@ public class SnipPath {
   //@TODO: make this a object not static, return object from Snip
   public Writer append(Writer writer, SnipSpace space) {
     try {
+      Configuration config = Application.get().getConfiguration();
       String name = snip.getName();
-      if (!name.startsWith("start")) {
-        SnipLink.appendLink(writer, "start");
+      if (!name.startsWith(config.getStartSnip())) {
+        SnipLink.appendLink(writer, config.getStartSnip());
         writer.write(" > ");
       }
 
