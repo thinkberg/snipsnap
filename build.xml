@@ -192,6 +192,7 @@
         <include name="conf/copyright.txt"/>
       </fileset>
       <fileset dir="${src}" includes="org/snipsnap/config/defaults.conf"/>
+      <fileset dir="${src}" includes="org/snipsnap/config/transpose.map"/>
     </jar>
   </target>
 
@@ -209,6 +210,7 @@
     <jar destfile="${jar}/${appname}-utils.jar" excludes="**/CVS">
       <fileset dir="${target}/util" includes="**"/>
       <fileset dir="${src}" includes="org/snipsnap/config/defaults.conf"/>
+      <fileset dir="${src}" includes="org/snipsnap/config/transpose.map"/>
     </jar>
   </target>
 
@@ -247,6 +249,7 @@
       <fileset dir="${target}/default/WEB-INF/classes" includes="**"/>
       <fileset dir="${src}" includes="META-INF/**"/>
       <fileset dir="${src}" includes="org/snipsnap/config/defaults.conf"/>
+      <fileset dir="${src}" includes="org/snipsnap/config/transpose.map"/>
     </jar>
   </target>
 
@@ -400,6 +403,7 @@
       <fileset dir="${target}/installer/servlets" includes="**"/>
       <fileset dir="." includes="conf/snipsnap.conf"/>
       <fileset dir="${src}" includes="org/snipsnap/config/defaults.conf"/>
+      <fileset dir="${src}" includes="org/snipsnap/config/transpose.conf"/>
     </jar>
   </target>
 
