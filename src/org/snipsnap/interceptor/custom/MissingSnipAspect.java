@@ -50,29 +50,56 @@ import java.util.Map;
 public class MissingSnipAspect implements Aspect {
   Pointcut existsPc = P.methodName("exists.*");
   Pointcut createPc = P.methodName("create.*");
+  Pointcut removePc = P.methodName("remove.*");
 
   private Map missing;
+  private Map existing;
+
+  public MissingSnipAspect() {
+    this.missing = new HashMap();
+    this.existing = new HashMap();
+  }
 
   public void advise(AspectInstance instance) {
     Class klass = instance.getClassIdentifier();
-    System.out.println("class="+klass);
-    System.out.println("instance="+instance);
+//    System.out.println("class="+klass);
+//    System.out.println("instance="+instance);
     if (klass != null && klass.equals(SnipSpace.class)) {
-
       existsPc.advise(instance, new MethodInterceptor() {
         public Object invoke(Invocation invocation) throws Throwable {
           String name = ((String)
               invocation.getArgs()[0]).toUpperCase();
           // Snip is in the missing list
           if (missing.containsKey(name)) {
-            System.out.println("Miss.");
+            //System.out.println("Hit=" + name);
             return new Boolean(false);
+          } else if (existing.containsKey(name)) {
+            return new Boolean(true);
           }
+
+          //System.out.println("Miss=" + name);
           Boolean result = (Boolean)
               invocation.invokeNext();
+          //System.out.println("Result=" + name + " exists?=" + result);
           // The snip does not exist so put it in the missing list
           if (result.equals(Boolean.FALSE)) {
             missing.put(name, new Integer(0));
+          } else {
+            existing.put(name, new Integer(0));
+          }
+          return result;
+        }
+      });
+
+
+      removePc.advise(instance, new MethodInterceptor() {
+        public Object invoke(Invocation invocation) throws Throwable {
+          String name = ((String) invocation.getArgs()[0]).toUpperCase();
+
+          Object result = invocation.invokeNext();
+
+          if (existing.containsKey(name)) {
+            existing.remove(name);
           }
           return result;
         }
@@ -91,10 +118,6 @@ public class MissingSnipAspect implements Aspect {
         }
       });
     }
-  }
-
-  public MissingSnipAspect() {
-    this.missing = new HashMap();
   }
 
   public void introduce(AspectInstance instance) {
