@@ -6,7 +6,7 @@
 
 <%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %>
 
-<s:check roles="Authenticated">
+<s:check roles="Editor">
  <h1 class="header">Post To Weblog</h1>
  <form name="f" method="POST" action="../exec/storepost">
    <table border="0" cellpadding="0" cellspacing="2">
@@ -21,6 +21,6 @@
  </form>
 </s:check>
 
-<s:check roles="Authenticated" invert="true">
- <a href="../exec/login.jsp">Please login!</a>
+<s:check roles="Editor" invert="true">
+ Please <a href="../exec/login.jsp">login!</a> as editor.
 </s:check>

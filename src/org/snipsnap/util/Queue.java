@@ -69,7 +69,7 @@ public class Queue {
   }
 
   public List get(int count) {
-    count = Math.min(count-1, queue.size());
-    return (List) queue.subList(0, count-1);
+    count = Math.min(count, queue.size());
+    return (List) queue.subList(0, count);
   }
 }

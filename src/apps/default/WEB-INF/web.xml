@@ -32,6 +32,11 @@
   </servlet>
 
   <servlet>
+    <servlet-name>com.neotis.net.SnipRemoveServlet</servlet-name>
+    <servlet-class>com.neotis.net.SnipRemoveServlet</servlet-class>
+  </servlet>
+
+  <servlet>
     <servlet-name>com.neotis.net.PostStoreServlet</servlet-name>
     <servlet-class>com.neotis.net.PostStoreServlet</servlet-class>
   </servlet>
@@ -79,6 +84,11 @@
   <servlet-mapping>
     <servlet-name>com.neotis.net.SnipStoreServlet</servlet-name>
     <url-pattern>/exec/store</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>com.neotis.net.SnipRemoveServlet</servlet-name>
+    <url-pattern>/exec/remove</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>

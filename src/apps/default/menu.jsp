@@ -11,11 +11,12 @@
 <%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %>
 
 <table class="menu" width="200" border="0" cellpadding="4" cellspacing="1">
- <s:check roles="Authenticated">
-   <tr><td>
-     <a href="../exec/post.jsp">post blog</a>
-   </td></tr>
- </s:check>
+ <tr><td>
+   <form>
+     <input type="text" size="18" name="query" style="border: 1px solid #aaaaaa"> <input type="submit" name="search" value="search">
+   </form>
+ </tr></td>
+ <tr><td></td></tr>
  <tr><td>
    <s:snip load="snipsnap-intro" id="intro"/>
    <c:out value="${intro.XMLContent}" escapeXml="false"/>

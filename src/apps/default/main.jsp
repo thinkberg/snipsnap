@@ -32,13 +32,7 @@
     <tr><td colspan="2"><a href="http://www.snipsnap.org"><s:image name="snip"/></a></td></tr>
     <tr><td colspan="2">
      <div id="Header">Bigger. Better. Faster. More.
-      <font size="2">[ <a href="../space/start">start</a> | <a href="../space/snipsnap-index">index</a> |
-       <s:check roles="Authenticated">
-          logged in as <a href="../space/<c:out value='${app.user.login}'/>"><c:out value="${app.user.login}"/></a> | <a href="../exec/authenticate?logoff=true">logoff</a>
-       </s:check>
-       <s:check roles="Authenticated" invert="true">
-        <a href="../exec/login.jsp">login</a> or <a href="../exec/register.jsp">register</a>
-       </s:check> ]</font>
+      <c:import url="util/mainbuttons.jsp"/>
      </div>
      </td>
     </tr>

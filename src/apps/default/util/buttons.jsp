@@ -10,6 +10,6 @@
   <span class="inactive">[edit]</span>
 </s:check>
 <s:check roles="Editor" snip="${snip}">
-  [<a href="../exec/remove?name=<c:out value='${snip.name}'/>">remove</a>]
+  [<a href="../exec/remove?name=<c:out value='${snip.name}'/>">zap!</a>]
 </s:check>
 

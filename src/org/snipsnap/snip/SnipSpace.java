@@ -73,7 +73,7 @@ public class SnipSpace implements LinkTester, Loader {
   }
 
   public List getChanged() {
-    return getChanged(10);
+    return getChanged(15);
   }
 
   public List getChanged(int count) {
