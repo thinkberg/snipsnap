@@ -30,6 +30,7 @@ import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
+import org.snipsnap.config.Configuration;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -48,6 +49,7 @@ public class SnipViewServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
 
+    Configuration config = Application.get().getConfiguration();
     UserManager um = UserManager.getInstance();
     User user = Application.get().getUser();
     if (um.isAuthenticated(user)) {
@@ -57,7 +59,7 @@ public class SnipViewServlet extends HttpServlet {
     // handle the snip name
     String name = request.getPathInfo();
     if (null == name || "/".equals(name)) {
-      name = Application.get().getConfiguration().getStartSnip();
+      name = config.getStartSnip();
     } else {
       name = name.substring(1);
     }
@@ -99,7 +101,9 @@ public class SnipViewServlet extends HttpServlet {
 
     // Snip does not exist
     if (null == snip) {
-      if (true) {
+      if (config.allow(Configuration.APP_PERM_CREATESNIP)) {
+        response.sendRedirect("/exec/edit?name=" + name);
+      } else {
         if ("snipsnap-notfound".equals(name)) {
           response.sendError(HttpServletResponse.SC_NOT_FOUND,
               "Internal Error: could not find snipsnap-notfound page<br>"
@@ -107,8 +111,6 @@ public class SnipViewServlet extends HttpServlet {
           return;
         }
         response.sendRedirect("/space/snipsnap-notfound?name=" + name);
-      } else {
-        response.sendRedirect("/exec/edit?name=" + name);
       }
       return;
     }
