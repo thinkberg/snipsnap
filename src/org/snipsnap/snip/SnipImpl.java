@@ -547,7 +547,8 @@ public class SnipImpl implements Snip {
     File fileStorePath = new File(Application.get().getConfiguration().getFileStore(), "snips");
     while(attsIt.hasNext()) {
       Attachment oldAtt = (Attachment)attsIt.next();
-      Attachment att = new Attachment(oldAtt.getName(), oldAtt.getContentType(), oldAtt.getSize(), oldAtt.getDate(), oldAtt.getLocation());
+      Attachment att = newSnip.getAttachments().addAttachment(oldAtt.getName(), oldAtt.getContentType(), oldAtt.getSize(), oldAtt.getLocation());
+      att.setDate(oldAtt.getDate());
       String location = att.getLocation();
       File attFile = new File(fileStorePath, location);
       if(attFile.exists()) {

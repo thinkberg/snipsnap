@@ -46,6 +46,8 @@ import javax.servlet.http.HttpSession;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.FileOutputStream;
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -347,6 +349,11 @@ public class ConfigureServlet extends HttpServlet {
               Snip configSnip = space.load(Configuration.SNIPSNAP_CONFIG);
               configSnip.setContent(new String(configStream.toString("UTF-8")));
               space.store(configSnip);
+
+              FileOutputStream globalsOs = new FileOutputStream(new File(config.getWebInfDir(), "application.conf"));
+              config.storeGlobals(globalsOs);
+              globalsOs.flush();
+              globalsOs.close();
             }
           }
         } else {

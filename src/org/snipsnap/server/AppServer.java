@@ -141,6 +141,8 @@ public class AppServer {
         }
       }
       System.out.println("ATTENTION: http://" + host + ":" + listener.getPort() + "/install/" + serverInfo.getProperty(ServerConfiguration.ADMIN_PASS));
+      System.out.println("ATTENTION: To force setup of a specific host and port add '?expert=true'");
+      System.out.println("ATTENTION: to the above URL.");
     } else {
       System.out.println(ApplicationLoader.getApplicationCount() + " applications loaded and running (" + errors + " errors).");
     }

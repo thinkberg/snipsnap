@@ -84,7 +84,7 @@ public class ConnectionManager {
         jdbcUrl = jdbcUrl.concat("?");
       }
       String jdbcPassword = config.getJdbcPassword();
-      if (null != jdbcPassword) {
+      if (null == jdbcPassword) {
         jdbcPassword = "";
       }
       jdbcUrl = jdbcUrl.concat("user="+config.getJdbcUser()).concat("&password="+jdbcPassword);
