@@ -55,10 +55,10 @@ public class QuoteMacro extends Preserved {
 
     buffer.append("<div class=\"quote\"><blockquote>");
     buffer.append(content);
-    buffer.append("</blockquote>");
     if (null!=params && params.length==1) {
       buffer.append(params[0]);
     }
+    buffer.append("</blockquote>");
     buffer.append("</div>");
     return;
   }
