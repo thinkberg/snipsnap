@@ -26,7 +26,7 @@
 package org.snipsnap.render.filter;
 
 import org.radeox.filter.regex.RegexTokenFilter;
-import org.radeox.filter.regex.MatchResult;
+import org.radeox.regex.MatchResult;
 import org.radeox.filter.context.FilterContext;
 import org.radeox.util.StringBufferWriter;
 import org.snipsnap.render.filter.context.SnipFilterContext;

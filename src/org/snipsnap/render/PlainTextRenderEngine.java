@@ -38,6 +38,8 @@ import org.radeox.filter.context.FilterContext;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.io.Reader;
+import java.io.BufferedReader;
 
 /**
  * Renderengine for preformattet text.
@@ -75,6 +77,23 @@ public class PlainTextRenderEngine implements RenderEngine {
     plainText.append(fp.filter(content, filterContext));
     plainText.append("</pre></div>").toString();
     return plainText.toString();
+  }
+
+  /**
+   * Render an input with text markup from a Reader and write the result to a writer
+   *
+   * @param in Reader to read the input from
+   * @param context Special context for the render engine, e.g. with
+   *                configuration information
+   */
+  public String render(Reader in, RenderContext context) throws IOException {
+    StringBuffer buffer = new StringBuffer();
+    BufferedReader inputReader = new BufferedReader(in);
+    String line;
+    while ((line = inputReader.readLine()) != null) {
+      buffer.append(line);
+    }
+    return render(buffer.toString(), context);
   }
 
   public void render(Writer out, String content, RenderContext context) throws IOException {
