@@ -22,7 +22,11 @@
      <a href="comments/<c:out value='${snip.nameEncoded}'/>#<c:out value='${comment.name}'/>"><s:image name="Icon-Permalink"/></a>
     </h2>
     <s:check roles="Owner" permission="Edit" snip="${comment}">
-      <div class="comment-buttons">[<a href="exec/edit?name=<c:out value='${comment.name}'/>"><fmt:message key="menu.edit"/></a>]</div>
+      <div class="comment-buttons">[<a href="exec/edit?name=<c:out value='${comment.nameEncoded}'/>"><fmt:message key="menu.edit"/></a>]
+      <s:check roles="Admin">
+         [<a href="exec/remove?name=<c:out value='${comment.nameEncoded}'/>" onClick="return confirm('<fmt:message key="dialog.deleteSnipSure"/>');"><fmt:message key="menu.delete"/></a>]
+      </s:check>
+      </div>
     </s:check>
    </div>
    <%-- content --%>
