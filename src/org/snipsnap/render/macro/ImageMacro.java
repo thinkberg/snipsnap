@@ -37,7 +37,6 @@ import org.snipsnap.snip.SnipSpaceFactory;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.ResourceBundle;
 
 /*
  * Macro that displays images
@@ -67,7 +66,7 @@ public class ImageMacro extends SnipMacro {
   }
 
   public void execute(Writer writer, SnipMacroParameter params)
-    throws IllegalArgumentException, IOException {
+          throws IllegalArgumentException, IOException {
 
     RenderEngine engine = params.getContext().getRenderEngine();
 
@@ -95,14 +94,14 @@ public class ImageMacro extends SnipMacro {
         if (link != null) {
           writer.write("<a href=\"" + Encoder.escape(link) + "\"");
           if (target != null) {
-            writer.write("target=\""+ Encoder.escape(target) +"\"");
+            writer.write("target=\"" + Encoder.escape(target) + "\"");
           }
           writer.write(">");
         }
 
         String imageName = img;
 
-        if (imageName.startsWith("http://")) {
+        if (imageName.startsWith("http://") || imageName.startsWith("https://")) {
           if (config.allow(Configuration.APP_PERM_EXTERNALIMAGES)) {
             appendExternalImage(writer, imageName, align);
           }
@@ -116,7 +115,7 @@ public class ImageMacro extends SnipMacro {
 
           Snip snip = params.getSnipRenderContext().getSnip();
           int slashIndex = imageName.lastIndexOf('/');
-          if(-1 != slashIndex) {
+          if (-1 != slashIndex) {
             String snipName = imageName.substring(0, slashIndex);
             snip = SnipSpaceFactory.getInstance().load(snipName);
             imageName = imageName.substring(slashIndex + 1);
