@@ -89,11 +89,7 @@ public class CommandHandler extends HttpServlet {
     Configuration config = (Configuration) session.getAttribute(ATT_CONFIG);
     if (null == config) {
       try {
-        // prepare configuration and store admin user information to check password against
-        Properties defaults = new Properties();
-        defaults.load(CommandHandler.class.getResourceAsStream("/conf/snipsnap.conf"));
-        config = new Configuration();
-        config.load(defaults);
+        config = new Configuration("conf/snipsnap.conf");
         config.setFile(new File(configFile));
         config.load();
       } catch (IOException e) {
