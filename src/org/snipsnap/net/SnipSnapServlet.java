@@ -24,46 +24,44 @@
  */
 package org.snipsnap.net;
 
-import org.snipsnap.app.Application;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
+import org.snipsnap.app.Application;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.ServletException;
+import javax.servlet.RequestDispatcher;
 import java.io.IOException;
+import java.net.URLDecoder;
+
 
 /**
- * Servlet to store comments.
+ * Basic Servlet
  * @author Matthias L. Jugel
  * @version $Id$
  */
-public class PostStoreServlet extends SnipSnapServlet {
-  public void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+public class SnipSnapServlet extends HttpServlet {
+  protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    // get or create session and application object
+    HttpSession session = request.getSession(true);
+    Application app = Application.getInstance(session);
+    UserManager um = UserManager.getInstance();
 
-    String name = request.getParameter("post");
-    if (request.getParameter("cancel") == null) {
-      String content = request.getParameter("content");
-
-      HttpSession session = request.getSession();
-      Application app = null;
-      if (session != null) {
-        app = Application.getInstance(session);
-        User user = app.getUser();
-        if (UserManager.getInstance().isAuthenticated(user)) {
-          SnipSpace.getInstance().post(content);
-        } else {
-          response.sendError(HttpServletResponse.SC_FORBIDDEN);
-        }
-      }
+    User user = app.getUser();
+    if (user == null) {
+      user = um.getUser(request, response);
     }
 
-    response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));
+    app.setUser(user, session);
+    session.setAttribute("app", app);
+    session.setAttribute("space", SnipSpace.getInstance());
+
+    super.service(request, response);
   }
 }

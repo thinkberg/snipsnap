@@ -57,20 +57,6 @@ public class Layouter extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
     throws IOException, ServletException {
 
-    // get or create session and application object
-    HttpSession session = request.getSession(true);
-    Application app = Application.getInstance(session);
-    UserManager um = UserManager.getInstance();
-
-    User user = app.getUser();
-    if (user == null) {
-      user = um.getUser(request, response);
-    }
-
-    app.setUser(user, session);
-    session.setAttribute("app", app);
-    session.setAttribute("space", SnipSpace.getInstance());
-
     Map params = request.getParameterMap();
     Iterator iterator = params.keySet().iterator();
     Map paramMap = new HashMap();
@@ -79,7 +65,7 @@ public class Layouter extends HttpServlet {
       String[] values = (String[]) params.get(key);
       paramMap.put(key, values[0]);
     }
-    app.setParameters(paramMap);
+    Application.get().setParameters(paramMap);
 
     // page attribute overrides pathinfo
     String layout = (String)request.getAttribute(ATT_PAGE);

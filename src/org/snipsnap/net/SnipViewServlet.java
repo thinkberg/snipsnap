@@ -42,7 +42,7 @@ import java.net.URLDecoder;
  * @author Matthias L. Jugel
  * @version $Id$
  */
-public class SnipViewServlet extends HttpServlet {
+public class SnipViewServlet extends SnipSnapServlet {
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
     throws IOException, ServletException {

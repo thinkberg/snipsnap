@@ -43,7 +43,7 @@ import java.io.IOException;
  * @author Matthias L. Jugel
  * @version $Id$
  */
-public class CommentStoreServlet extends HttpServlet {
+public class CommentStoreServlet extends SnipSnapServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
 

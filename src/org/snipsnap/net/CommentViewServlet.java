@@ -46,13 +46,13 @@ import java.net.URLDecoder;
  * @author Matthias L. Jugel
  * @version $Id$
  */
-public class CommentViewServlet extends HttpServlet {
+public class CommentViewServlet extends SnipSnapServlet {
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws IOException, ServletException {
+      throws IOException, ServletException {
 
     String name = request.getPathInfo();
-    if(null == name) {
+    if (null == name) {
       response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));
       return;
     } else {
@@ -61,10 +61,10 @@ public class CommentViewServlet extends HttpServlet {
     // TODO 1.4 name = URLDecoder.decode(name, "iso-8859-1");
     name = SnipLink.decode(name);
 
-        Snip snip = SnipSpace.getInstance().load(name);
+    Snip snip = SnipSpace.getInstance().load(name);
     // Snip does not exist
     if (null == snip) {
-      System.err.println("Snip does not exist: name="+name);
+      System.err.println("Snip does not exist: name=" + name);
       snip = SnipSpace.getInstance().load("snipsnap-notfound");
     }
 

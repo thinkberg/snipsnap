@@ -43,7 +43,7 @@ import java.io.IOException;
  * @author Stephan J. Schmidt
  * @version $Id$
  */
-public class SnipLockServlet extends HttpServlet {
+public class SnipLockServlet extends SnipSnapServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     HttpSession session = request.getSession(false);

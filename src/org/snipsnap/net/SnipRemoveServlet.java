@@ -39,7 +39,7 @@ import java.io.IOException;
  * @author Matthias L. Jugel
  * @version $Id$
  */
-public class SnipRemoveServlet extends HttpServlet {
+public class SnipRemoveServlet extends SnipSnapServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     String name = request.getParameter("name");

@@ -48,7 +48,7 @@ import java.util.Set;
  * @author Matthias L. Jugel
  * @version $Id$
  */
-public class UserManagerServlet extends HttpServlet {
+public class UserManagerServlet extends SnipSnapServlet {
 
   public final static String EDIT = "edit";
   public final static String UPDATE = "update";

@@ -43,7 +43,7 @@ import java.io.IOException;
  * @author Matthias L. Jugel
  * @version $Id$
  */
-public class AdminServlet extends HttpServlet {
+public class AdminServlet extends SnipSnapServlet {
 
   private final static String ATT_USERMANAGER = "usermanager";
   private final static String ATT_CONFIG = "config";
