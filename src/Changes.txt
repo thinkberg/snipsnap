@@ -1,5 +1,7 @@
 0.2.6
 
+- Fixed bug: # in external links didn't work, <ul><ul> was rendered in weblogs, double images in
+  external links in weblog
 - Added feature: Changed snips since last visit
 - Added feature: RSS Autodiscovery, RSS
 - Added feature: {image:http://boing.org/boing.gif} for external images
