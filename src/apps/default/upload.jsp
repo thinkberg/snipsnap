@@ -72,7 +72,7 @@
           <input value="<fmt:message key="snip.attachments.upload"/>" name="upload" type="submit"/>
           <input id="<fmt:message key="snip.attachments.delete"/>" value="Delete File(s)" name="delete" type="submit"/></br>
         </s:check>
-        <input value="<fmt:message key="dialog.cancel"/>" name="cancel" type="submit"/>
+        <input value="<fmt:message key="dialog.back.to"><fmt:param value="${snip.name}"/></fmt:message>" name="cancel" type="submit"/>
        </td>
       </tr>
      </table>

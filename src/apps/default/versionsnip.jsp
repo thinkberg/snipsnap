@@ -11,18 +11,25 @@
 <div class="snip-wrapper">
   <%-- include snip header and content --%>
   <div class="snip-title">
-   <h1 class="snip-name">
-     <fmt:message key="snip.version.title">
-       <fmt:param value="${version}" />
-       <fmt:param value="${snip.title}" />
-     </fmt:message>
-     <c:if test="${version > 1}">
-      <a href="exec/version?name=<c:out value='${snip.nameEncoded}'/>&version=<c:out value="${version-1}"/>">#<c:out value="${version-1}"/></a> &lt;
-     </c:if>
-     <c:if test="${version < maxVersion }">
-      &gt; <a href="exec/version?name=<c:out value='${snip.nameEncoded}'/>&version=<c:out value="${version+1}"/>">#<c:out value="${version+1}"/></a>
-    </c:if>
-    ... #<c:out value="${maxVersion}"/></h1>
+    <h1 class="snip-name">
+      <fmt:message key="snip.version.title">
+        <fmt:param value="${version}" />
+        <fmt:param value="${snip.title}" />
+      </fmt:message>
+
+      (<c:if test="${version > 1}">
+        <a href="exec/version?name=<c:out value='${snip.nameEncoded}'/>&version=<c:out value="${version-1}"/>">
+          <fmt:message key="snip.version"><fmt:param value="${version-1}"/></fmt:message>
+        </a> &lt;
+      </c:if>
+      <c:if test="${version < maxVersion }">
+        <a href="exec/version?name=<c:out value='${snip.nameEncoded}'/>&version=<c:out value="${version+1}"/>">
+          <fmt:message key="snip.version"><fmt:param value="${version+1}"/></fmt:message>
+        </a> &gt;
+      </c:if>
+      ... <c:out value="${maxVersion}"/>)
+    </h1>
+
     <div class="snip-info">
       <c:out value="${snip.modified}" escapeXml="false"/>.
       <fmt:message key="snip.viewed">

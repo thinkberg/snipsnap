@@ -10,19 +10,19 @@
 
 <div class="snip-wrapper">
   <div class="snip-title">
-   <h1 class="snip-name"><fmt:message key="snip.diff.title"/> <c:out value="${snip}" escapeXml="false"/></h1>
+   <h1 class="snip-name">
+     <fmt:message key="snip.diff.title"/> <c:out value="${snip}" escapeXml="false"/>
+     <fmt:message key="snip.diff.changes" >
+       <fmt:param>
+         <a href="exec/version?name=<c:out value='${snip.nameEncoded}'/>&amp;version=<c:out value="${oldVersion}"/>">#<c:out value="${oldVersion}"/></a>
+       </fmt:param>
+       <fmt:param>
+         <a href="exec/version?name=<c:out value='${snip.nameEncoded}'/>&amp;version=<c:out value="${newVersion}"/>">#<c:out value="${newVersion}"/></a>
+       </fmt:param>
+     </fmt:message>
+   </h1>
   </div>
-  <p>
-  <fmt:message key="snip.diff.changes" >
-    <fmt:param>
-      <a href="exec/version?name=<c:out value='${snip.nameEncoded}'/>&amp;version=<c:out value="${oldVersion}"/>">#<c:out value="${oldVersion}"/></a>
-    </fmt:param>
-    <fmt:param>
-      <a href="exec/version?name=<c:out value='${snip.nameEncoded}'/>&amp;version=<c:out value="${newVersion}"/>">#<c:out value="${newVersion}"/></a>
-    </fmt:param>
-  </fmt:message>
-  </p>
-  <div class="diff">
+  <table class="diff">
     <c:forEach items="${diff}" var="changeInfo">
       <c:choose>
         <c:when test="${changeInfo.type=='DELETE'}">
@@ -72,4 +72,11 @@
 <%--      <c:out value="${diff}"/>--%>
 <%--    </pre>--%>
   </div>
+  <table class="wiki-table">
+    <tr>
+     <td class="form-buttons">
+       <input value="<fmt:message key="dialog.back.to"><fmt:param value="${snip.nameEncoded}"/></fmt:message>" name="cancel" type="submit"/>
+     </td>
+   </tr>
+ </table>
 </div>
