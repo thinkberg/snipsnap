@@ -24,9 +24,10 @@
  */
 package org.snipsnap.admin;
 
+import org.apache.xmlrpc.XmlRpcException;
 import org.snipsnap.config.ServerConfiguration;
 import org.snipsnap.net.filter.EncRequestWrapper;
-import org.snipsnap.server.AdminServer;
+import org.snipsnap.server.AdminXmlRpcClient;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -36,19 +37,26 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AdminInitFilter implements Filter {
 
   private final static String DEFAULT_ENCODING = "UTF-8";
 
+  protected final static String ATT_AUTHENTICATED = "authenticated";
+  protected final static String ATT_SERVERCONFIG = "serverconfig";
   protected final static String ATT_CONFIG = "config";
   protected final static String ATT_STEP = "step";
+  protected final static String ATT_ERRORS = "errors";
 
 
   protected final static String PARAM_INSTALL = "install";
@@ -56,13 +64,22 @@ public class AdminInitFilter implements Filter {
   protected final static String PARAM_PORT = "app.port";
   protected final static String PARAM_PATH = "app.path";
 
-  Properties serverConfig = new Properties();
+  protected AdminXmlRpcClient adminClient;
+  private Properties serverConfig = new Properties();
 
   public void init(FilterConfig config) throws ServletException {
+    System.out.println("init()");
     try {
       serverConfig.load(new FileInputStream("conf/server.conf"));
     } catch (IOException e) {
       System.err.println("AdminInitFilter: unable to load server config: "+e);
+    }
+    try {
+      adminClient = new AdminXmlRpcClient(serverConfig.getProperty(ServerConfiguration.ADMIN_HOST, "localhost"),
+                                          serverConfig.getProperty(ServerConfiguration.ADMIN_PORT),
+                                          serverConfig.getProperty(ServerConfiguration.ADMIN_PASS));
+    } catch (MalformedURLException e) {
+      throw new ServletException(e);
     }
   }
 
@@ -84,7 +101,9 @@ public class AdminInitFilter implements Filter {
     }
 
     // get or create session and application object
-    HttpSession session = request.getSession(false);
+    HttpSession session = request.getSession(true);
+    Properties config = null;
+    Map errors = new HashMap();
 
     String path = request.getServletPath();
     if(null == path || "".equals(path)) {
@@ -99,33 +118,48 @@ public class AdminInitFilter implements Filter {
       String step = null;
 
       // check authentication and verify session
-      if (null == session || null == session.getAttribute(ATT_CONFIG)) {
+      if (!"true".equals(session.getAttribute(ATT_AUTHENTICATED))) {
         String serverPass = serverConfig.getProperty(ServerConfiguration.ADMIN_PASS);
         String installPass = path;
         if(installPass == null || "".equals(installPass) || "/".equals(installPass)) {
           installPass = "/" + request.getParameter("password");
         }
 
-        if (installPass == null || "".equals(installPass) || serverPass.equals(installPass.substring(1))) {
+        if (installPass == null || "".equals(installPass) || !serverPass.equals(installPass.substring(1))) {
           step = "login";
+        } else {
+          session.setAttribute(ATT_AUTHENTICATED, "true");
         }
       }
 
+
       if(null == step) {
+        config = (Properties) session.getAttribute(ATT_CONFIG);
+        if (null == config) {
+          config = new Properties();
+          config.load(AdminInitFilter.class.getResourceAsStream("/org/snipsnap/config/defaults.conf"));
+        }
+
         if(null == request.getParameter(PARAM_INSTALL)) {
           step = "install";
         } else {
-          String url = install(request.getParameter(PARAM_HOST),
+          URL url = install(request.getParameter(PARAM_HOST),
                                request.getParameter(PARAM_PORT),
                                request.getParameter(PARAM_PATH));
-          ((HttpServletResponse)response).sendRedirect(url);
-          return;
+          if(url != null) {
+            ((HttpServletResponse)response).sendRedirect(url.toString());
+            return;
+          } else {
+            errors.put("fatal", "unknown");
+            step = "install";
+          }
         }
       }
 
       request.setAttribute(ATT_STEP, step);
-      session.setAttribute(ATT_CONFIG, serverConfig);
-      session = request.getSession(true);
+      session.setAttribute(ATT_SERVERCONFIG, serverConfig);
+      session.setAttribute(ATT_CONFIG, config);
+      request.setAttribute(ATT_ERRORS, errors);
       dispatcher.forward(request, response);
       return;
     }
@@ -134,10 +168,14 @@ public class AdminInitFilter implements Filter {
     chain.doFilter(request, response);
   }
 
-  protected String install(String host, String port, String path) {
-    int adminPort = Integer.parseInt(serverConfig.getProperty(ServerConfiguration.ADMIN_PORT));
-    String args = (null == host ? "" : host) + (null == port ? "" : ":"+port) + (null == path ? "" : " "+path);
-    AdminServer.execute(adminPort, AdminServer.CMD_INSTALL, args);
-    return "";
+  protected URL install(String host, String port, String path) {
+    try {
+      return adminClient.install(host+"_"+port+"_"+path, host, port, path);
+    } catch (XmlRpcException e) {
+      System.err.println("exception: "+e);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return null;
   }
 }

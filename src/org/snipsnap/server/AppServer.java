@@ -120,6 +120,7 @@ public class AppServer {
       WebServer xmlRpcServer = new WebServer(Integer.parseInt(serverInfo.getProperty(ServerConfiguration.ADMIN_PORT)));
       // xmlRpcServer.setParanoid(true);
       xmlRpcServer.addHandler("$default", new AdminXmlRpcHandler(serverInfo));
+      xmlRpcServer.start();
     } catch (Exception e) {
       System.out.println("ERROR: can't start administrative server interface (XML-RPC): "+e.getMessage());
       e.printStackTrace();

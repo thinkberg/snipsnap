@@ -29,29 +29,38 @@ import org.apache.xmlrpc.XmlRpcException;
 
 import java.util.Vector;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.io.IOException;
 
 public class AdminXmlRpcClient {
   XmlRpcClient xmlRpcClient = null;
 
-  public AdminXmlRpcClient(String host, int port, String password) throws MalformedURLException  {
-    String xmlRpcUrl = "http://" + host + (port != 80 ? ":" + port : "") + "/";
-    xmlRpcClient = new XmlRpcClient(xmlRpcUrl);
-    xmlRpcClient.setBasicAuthentication("admin", password);
+  public AdminXmlRpcClient(String host, String port, String password) throws MalformedURLException {
+    this(host, Integer.parseInt(port), password);
   }
 
-  public void install(String name, String host, String port, String path) throws XmlRpcException, IOException {
+  public AdminXmlRpcClient(String host, int port, String password) throws MalformedURLException  {
+    String xmlRpcUrl = "http://" + host + (port != 80 ? ":" + port : "") + "/RPC2";
+    xmlRpcClient = new XmlRpcClient(xmlRpcUrl);
+    xmlRpcClient.setBasicAuthentication("admin", password);
+    System.err.println("AdminXmlRpcClient: new client for "+xmlRpcUrl);
+  }
+
+  public URL install(String name, String host, String port, String path) throws XmlRpcException, IOException {
+    System.out.println("install("+name+","+host+","+port+","+path+")");
     Vector args = new Vector();
     args.addElement(name);
     args.addElement(host);
     args.addElement(port);
     args.addElement(path);
-    xmlRpcClient.execute("install", args);
+    return new URL((String)xmlRpcClient.execute("install", args));
   }
 
-  public void delete(String name) throws XmlRpcException, IOException {
+  public void delete(String name, boolean backup) throws XmlRpcException, IOException {
+    System.out.println("delete(" + name + "," + backup +")");
     Vector args = new Vector();
     args.addElement(name);
+    args.addElement(new Boolean(backup));
     xmlRpcClient.execute("delete", args);
   }
 }

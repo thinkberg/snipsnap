@@ -29,6 +29,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import org.snipsnap.test.snip.SnipTestSupport;
 import org.snipsnap.util.URLEncoderDecoder;
+import org.snipsnap.snip.SnipLink;
 
 import java.io.UnsupportedEncodingException;
 
@@ -42,6 +43,7 @@ public class EncoderTest extends SnipTestSupport {
 
   protected void setUp() throws Exception {
     super.setUp();
+    //System.setProperty("file.encoding", "UTF-8");
     // the text below is complete nonsense, randomly typed
     unencodedString = new String("سىزذتازىذتازسذ.شسذز.سىازذتا".getBytes(), "UTF-8");
     encodedString = "%D8%B3%D9%89%D8%B2%D8%B0%D8%AA%D8%A7%D8%B2%D9%89%D8%B0%D8%AA%D8%A7%D8%B2%D8%B3%D8%B0.%D8%B4%D8%B3%D8%B0%D8%B2.%D8%B3%D9%89%D8%A7%D8%B2%D8%B0%D8%AA%D8%A7";
@@ -52,12 +54,12 @@ public class EncoderTest extends SnipTestSupport {
   }
 
   public void testUTF8Encoding() throws UnsupportedEncodingException {
-    assertEquals("String UTF-8 is encoded correctly",
+    assertEquals("String UTF-8 is not correctly encoded",
                  encodedString, URLEncoderDecoder.encode(unencodedString, "UTF-8"));
   }
 
   public void testUTF8Decoding() throws UnsupportedEncodingException {
-    assertEquals("String UTF-8 is decoded correctly",
+    assertEquals("String UTF-8 is not correctly decoded",
                  unencodedString, URLEncoderDecoder.decode(encodedString, "UTF-8"));
   }
 
@@ -67,7 +69,7 @@ public class EncoderTest extends SnipTestSupport {
   }
 
   public void testCutLengthLink() throws UnsupportedEncodingException {
-    assertEquals("Encoding works with cutted strings",
+    assertEquals("Cutting link text is broken",
         "<a href=\"/space/"+encodedString+"\">"+unencodedString.substring(0, 22)+"...</a>",
                  SnipLink.createLink(unencodedString, SnipLink.cutLength(unencodedString, 25)));
   }

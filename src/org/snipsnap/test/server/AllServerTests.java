@@ -22,31 +22,20 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-
-package org.snipsnap.test;
+package org.snipsnap.test.server;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import org.snipsnap.test.commons.AllCommonsTests;
-import org.snipsnap.test.components.AllComponentsTests;
-import org.snipsnap.test.interceptor.AllInterceptorTests;
-import org.snipsnap.test.server.AllServerTests;
-import org.snipsnap.test.snip.AllSnipTests;
 
-public class AllTests extends TestCase {
-  public AllTests(String name) {
+public class AllServerTests extends TestCase {
+  public AllServerTests(String name) {
     super(name);
   }
 
   public static Test suite() {
     TestSuite s = new TestSuite();
-    s.addTest(AllSnipTests.suite());
-    //s.addTest(AllAdminTests.suite());
-    s.addTest(AllCommonsTests.suite());
-    s.addTest(AllComponentsTests.suite());
-    s.addTest(AllInterceptorTests.suite());
-    s.addTest(AllServerTests.suite());
+    s.addTestSuite(XmlRpcServerTest.class);
     return s;
   }
 }

@@ -46,14 +46,15 @@ public class AdminXmlRpcHandler extends AuthXmlRpcHandler {
   }
 
   protected boolean authenticate(String user, String password) {
-    System.err.println("authenticate("+user+","+password+")");
-    return serverConfig.getProperty(ServerConfiguration.ADMIN_PASS).equals(password);
+    boolean isOkay = serverConfig.getProperty(ServerConfiguration.ADMIN_PASS).equals(password);
+    return isOkay;
   }
 
-  public void install(String name, String host, String port, String path) throws XmlRpcException {
-    System.out.println("install("+name+","+port+","+path+")");
+  public String install(String name, String host, String port, String path) throws XmlRpcException {
+    System.out.println("AdminXmlRpcHandler: install("+name+","+port+","+path+")");
     File root = new File(serverConfig.getProperty(ServerConfiguration.WEBAPP_ROOT));
-    File webInf = new File(root, name+"/webapp/WEB-INF");
+    File webAppDir = new File(root, name + "/webapp");;
+    File webInf = new File(webAppDir, "WEB-INF");
     webInf.mkdirs();
 
     File applicationConf = new File(webInf, "application.conf");
@@ -64,11 +65,14 @@ public class AdminXmlRpcHandler extends AuthXmlRpcHandler {
       installConfig.setProperty(Configuration.APP_PATH, path);
       try {
         installConfig.store(new FileOutputStream(applicationConf), " Bootstrap Configuration");
-      } catch (IOException e) {
+        ApplicationLoader.loadApplication(root.getPath(), name);
+        return "http://"+host+":"+port+path;
+      } catch (Exception e) {
         applicationConf.delete();
         throw new XmlRpcException(0, "unable to write '"+applicationConf.getPath()+"'");
       }
     } else {
+      System.err.println("error: "+applicationConf + " exists");
       throw new XmlRpcException(0, "'"+applicationConf.getPath()+"' exists, delete application first");
     }
   }
@@ -80,21 +84,26 @@ public class AdminXmlRpcHandler extends AuthXmlRpcHandler {
    * @param name
    * @return
    */
-  public boolean delete(String name, boolean backup) throws XmlRpcException {
-    System.out.println("install(" + name);
+  public Boolean delete(String name, Boolean backup) throws XmlRpcException {
+    System.err.println("AdminXmlRpcHandler: delete(" + name+")");
     File root = new File(serverConfig.getProperty(ServerConfiguration.WEBAPP_ROOT));
     File app = new File(root, name);
     if(app.exists()) {
-      if(backup) {
+      try {
+        ApplicationLoader.unloadApplication(root.getPath(), name);
+      } catch (Exception e) {
+        System.err.println("AdminXmlRpcHandler: unload failed: "+e);
+      }
+      if(backup.booleanValue()) {
         try {
           createBackupJar(name+".backup.jar", app);
         } catch (IOException e) {
           throw new XmlRpcException(0, "unable to create backup file: "+e);
         }
       }
-      return app.delete();
+      return new Boolean(app.delete());
     }
-    return true;
+    return Boolean.TRUE;
   }
 
   private void createBackupJar(String jarName, File file) throws IOException {

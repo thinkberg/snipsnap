@@ -62,7 +62,7 @@ public class AdminClient {
       if("install".equals(commands.get(0))) {
         client.install((String)commands.get(1), (String)commands.get(2), (String)commands.get(3), (String)commands.get(4));
       } else if("delete".equals(commands.get(0))) {
-        client.delete((String)commands.get(1));
+        client.delete((String)commands.get(1), new Boolean((String)commands.get(2)).booleanValue());
       }
     } catch (Exception e) {
       System.err.println("AdminClient: error executing command: " + e);

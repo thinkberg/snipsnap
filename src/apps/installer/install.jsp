@@ -12,8 +12,8 @@
   <tr>
     <td><fmt:message key="install.app.host.text"/></td>
     <td>
-      <fmt:message key="install.app.host.host"/><br/>
-      <input type="text" name="app.host" size="40" value="<c:out value='${config.host}'/>">
+      <fmt:message key="install.app.host"/><br/>
+      <input type="text" name="app.host" size="40" value="<c:out value='${config["app.host"]}'/>">
       <c:if test="${!empty errors['app.host']}"><img src="images/attention.jpg"></c:if>
     </td>
   </tr>
@@ -21,7 +21,7 @@
     <td><fmt:message key="install.app.port.text"/></td>
     <td>
       <fmt:message key="install.app.port"/><br/>
-      <input type="text" name="app.port" size="40" value="<c:out value='${config.port}'/>">
+      <input type="text" name="app.port" size="40" value="<c:out value='${config["app.port"]}'/>">
       <c:if test="${!empty errors['app.port']}"><img src="images/attention.jpg"></c:if>
     </td>
   </tr>
@@ -29,7 +29,7 @@
     <td><fmt:message key="install.app.path.text"/></td>
     <td>
       <fmt:message key="install.app.path"/><br/>
-      <input type="text" name="app.path" size="40" value="<c:out value='${config.path}'/>">
+      <input type="text" name="app.path" size="40" value="<c:out value='${config["app.path"]}'/>">
       <c:if test="${!empty errors['app.path']}"><img src="images/attention.jpg"></c:if>
     </td>
   </tr>
