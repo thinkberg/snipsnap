@@ -63,7 +63,7 @@ public class AppServer {
     // load server defaults configuration
     try {
       serverInfo.load(AppServer.class.getResourceAsStream("/conf/snipsnap.conf"));
-    } catch (IOException e) {
+    } catch (Exception e) {
       System.err.println("AppServer: warning: unable to load server defaults: " + e);
     }
     System.setProperty(ServerConfiguration.VERSION, serverInfo.getProperty(ServerConfiguration.VERSION, "<unknown version>"));
@@ -150,9 +150,9 @@ public class AppServer {
     System.out.println("SnipSnap "+ System.getProperty(ServerConfiguration.VERSION));
 
     // output version and copyright information
-    BufferedReader copyrightReader = new BufferedReader(new InputStreamReader(AppServer.class.getResourceAsStream("/conf/copyright.txt")));
-    String line = null;
     try {
+      BufferedReader copyrightReader = new BufferedReader(new InputStreamReader(AppServer.class.getResourceAsStream("/conf/copyright.txt")));
+      String line = null;
       while ((line = copyrightReader.readLine()) != null) {
         System.out.println(line);
       }
