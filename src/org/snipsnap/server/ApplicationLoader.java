@@ -34,6 +34,7 @@ import org.mortbay.util.InetAddrPort;
 import org.snipsnap.config.AppConfiguration;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -62,11 +63,7 @@ public class ApplicationLoader {
             File configFile = new File(files[i], "application.conf");
             if (configFile.exists()) {
               try {
-                AppConfiguration config = new AppConfiguration(configFile);
-                WebApplicationContext context = loadApplication(config);
-                applications.put(files[i], context);
-                System.out.println("Started application '" + files[i].getName() + "' " +
-                                   config.getUrl());
+                loadApplication(new AppConfiguration(configFile));
               } catch (Exception e) {
                 errors++;
                 e.printStackTrace();
@@ -80,6 +77,28 @@ public class ApplicationLoader {
       }
     }
     return errors;
+  }
+
+  private static File getConfigFile(String root, String name) {
+    File rootDir = new File(root);
+    if (rootDir.exists()) {
+      if (rootDir.isDirectory()) {
+        File appDir = new File(rootDir, normalize(name));
+        if(appDir.isDirectory()) {
+          return new File(appDir, "application.conf");
+        }
+      }
+    }
+    return null;
+  }
+
+  public static void reloadApplication(String root, String name) throws Exception {
+    File configFile = getConfigFile(root, normalize(name));
+    if(configFile != null) {
+      AppConfiguration config = new AppConfiguration(configFile);
+      unloadApplication(config);
+      loadApplication(config);
+    }
   }
 
   public static int getApplicationErrorCount() {
@@ -141,6 +160,19 @@ public class ApplicationLoader {
     context.setAttribute(AppConfiguration.INIT_PARAM, config.getFile().getAbsolutePath());
     context.start();
 
+    applications.put(config.getName(), context);
+    System.out.println("Started application '" + config.getName() + "' " + config.getUrl());
+
     return context;
+  }
+
+  public static void unloadApplication(AppConfiguration config) {
+    WebApplicationContext context = (WebApplicationContext)applications.get(config.getName());
+    context.destroy();
+    System.out.println("Stopped application '" + config.getName() +"'");
+  }
+
+  private static String normalize(String name) {
+    return name.replace(' ', '_');
   }
 }

@@ -28,6 +28,7 @@ exit
 
 rem put classpath together
 set CLASSPATH=%CLASSPATH%;lib/xmlrpc-1.1.jar;lib/jakarta.jar;lib/javax.servlet.jar;lib/mckoidb.jar;lib/org.apache.jasper.jar;lib/org.mortbay.jetty.jar;lib/jdbcpool.jar;lib/lucene-1.2.jar;lib/jython.jar;%JAVA_HOME%/lib/tools.jar
+set CLASSPATH=%CLASSPATH%;lib/muse-jabber-0.8a1.jar:lib/aspectjrt.jar;lib/jdom-b8.jar
 
 if $1 == "stop" set cmdline="-admin shutdown"
 
