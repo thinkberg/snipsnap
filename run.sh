@@ -47,6 +47,11 @@ if [ "$1" = "import" ]; then
   exit 0
 fi
 
+if [ "$1" = "-debug" ]; then
+  DBG="-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5000"
+fi
+
+
 # execute application server
-$JAVA_HOME/bin/java -cp $CLASSPATH:lib/snipsnap.jar org.snipsnap.server.AppServer $cmdline 2> server.log
+$JAVA_HOME/bin/java $DBG -cp $CLASSPATH:lib/snipsnap.jar org.snipsnap.server.AppServer $cmdline 2> server.log
 
