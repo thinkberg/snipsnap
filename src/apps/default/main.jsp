@@ -22,7 +22,7 @@
       href="<c:out value='${app.configuration.url}/exec/rsd'/>"/>
   <link rel="alternate" type="application/rss+xml" title="RSS"
       href="<c:out value='${app.configuration.url}/exec/rss'/>"/>
-  <link rel="index" href="snipsnap-index"/>
+  <link rel="index" href="../space/snipsnap-index"/>
   <s:geoUrl/>
   <s:dublinCore snip="${snip}"/>
   <title><c:out value="${app.configuration.name}" default="SnipSnap"/> :: <c:out value="${snip.name}" default=""/></title>
