@@ -61,9 +61,14 @@ public class AppServer {
     try {
       jettyServer = new Server("./conf/server.conf");
       jettyServer.start();
-      adminContext = addApplication("/admin", "./lib/snipsnap-admin.war");
+
     } catch (IOException e) {
       System.err.println("AppServer: configuration not found: " + e);
+    } catch (Exception e) {
+      System.err.println("AppServer: unable to load servlet class: " + e);
+    }
+    try {
+      adminContext = addApplication("/admin", "./lib/snipsnap-admin.war");
     } catch (Exception e) {
       System.err.println("AppServer: unable to load servlet class: " + e);
     }

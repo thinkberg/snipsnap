@@ -20,8 +20,8 @@ if [ ! -f $JAVA_HOME/lib/tools.jar ]; then
   exit 
 fi
 
-if [ ! -f $base/$jar/SnipSnap.jar ]; then
-  echo "$jar/SnipSnap.jar missing, please compile application first"
+if [ ! -f $base/$jar/snipsnap.jar ]; then
+  echo "$jar/snipsnap.jar missing, please compile application first"
   exit
 fi
 
@@ -29,11 +29,5 @@ fi
 # put classpath together
 CLASSPATH=lib/xmlrpc-1.1.jar:lib/jakarta.jar:lib/javax.servlet.jar:lib/mckoidb.jar:lib/org.apache.jasper.jar:lib/org.mortbay.jetty.jar:lib/jdbcpool.jar:$JAVA_HOME/lib/tools.jar
 
-
-#if [ ! -x $base/db/data ]; then
-#  echo "No database found, creating one ..."
-#  $JAVA_HOME/bin/java -cp $CLASSPATH:lib/SnipSnap.jar com.neotis.config.CreateDB
-#fi
-
 # execute application server
-$JAVA_HOME/bin/java -cp $CLASSPATH:lib/SnipSnap.jar com.neotis.server.AppServer 2> server.log
+$JAVA_HOME/bin/java -cp $CLASSPATH:lib/snipsnap.jar com.neotis.server.AppServer 2> server.log
