@@ -24,12 +24,21 @@
  */
 package com.neotis.admin;
 
+import com.neotis.user.User;
+import com.neotis.user.UserManager;
+import org.mortbay.http.HttpContext;
+import org.mortbay.http.HttpServer;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.FileInputStream;
+import java.util.Collection;
+import java.util.Properties;
 
 /**
  * Main AdminServlet
@@ -41,14 +50,33 @@ public class AdminServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
     throws IOException, ServletException {
 
-    String requestURI = request.getRequestURI();
-    String path = requestURI.substring(6) + ".jsp";
-    if (path.length() <= 5) {
-      path = "welcome.jsp";
+    // get or create session and application object
+    HttpSession session = request.getSession(true);
+    UserManager um = UserManager.getInstance();
+    Collection servers = HttpServer.getHttpServers();
+    Configuration config = (Configuration) session.getAttribute("config");
+    if(null == config) {
+      config = new Configuration("./conf/local.conf");
     }
-    request.setAttribute("page", path != null ? path : "");
 
+    session.setAttribute("um", um);
+    session.setAttribute("servers", servers);
+    session.setAttribute("config", config);
+
+    String command = request.getPathInfo();
+    if (null == command || "/".equals(command)) {
+      if(config.isConfigured()) {
+        command = "/welcome.jsp";
+      } else {
+        command = "/install.jsp";
+      }
+    }
+
+    request.setAttribute("page", command);
     RequestDispatcher dispatcher = request.getRequestDispatcher("/main.jsp");
+    if(null == dispatcher) {
+      dispatcher = request.getRequestDispatcher(command);
+    }
     dispatcher.forward(request, response);
   }
 

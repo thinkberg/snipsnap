@@ -4,22 +4,25 @@
   ** @version $Id$
   -->
 
-<%@ page import="com.neotis.server.AppServer,
-                 org.mortbay.jetty.Server,
-                 org.mortbay.http.HttpContext"%>
-<%
-  Server server = AppServer.getServer();
-  HttpContext context[] = server.getContexts();
-%>
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 
-<h3>Willkommen bei SnipSnap</h3>
+<h3>SnipSnap Übersicht</h3>
 
-<% if(null == context) { %>
-  <b>The application is not yet configured.</b>
-<% } else { %>
-  <b>The application is configured:
-     <% for(int i = 0; i < context.length; i++) { %>
-       <%= context[i] %>
-     <% } %>
-  </b>
-<% } %>
+<table border="0" cellpadding="2" cellspacing="0">
+  <tr><td bgcolor="table-header" colspan="2">Konfigurierte Applikationen</td></tr>
+  <c:forEach items="${servers}" var="server">
+    <tr>
+      <td rowspan="<c:out value='${server.contexts}'/>"><c:out value="${server}"/></td>
+    </tr>
+    <c:forEach items="${server.contexts}" var="context">
+      <tr>
+        <td><td>
+        <td><c:out value="${context.contextPath}"/></td>
+        <td>
+          <c:forEach items="${context.virtualHosts}" var="host"/>
+            <c:out value="${host}" default="ALL"/>,
+          </c:forEach>
+      </tr>
+    </c:forEach>
+  </c:forEach>
+</table>

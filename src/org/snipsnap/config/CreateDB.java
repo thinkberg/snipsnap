@@ -43,10 +43,12 @@ import java.sql.Statement;
 public class CreateDB {
 
   public static void main(String[] args) {
-    createDB();
+    createDB("funzel", "funzel", "stephan@mud.de");
   }
 
-  private static void createDB() {
+  // The username/password for the database.  This will be the username/
+  // password for the user that has full control over the database.
+  public static void createDB(String username, String password, String email) {
     System.out.println();
 
     // Register the Mckoi JDBC Driver
@@ -66,13 +68,6 @@ public class CreateDB {
     // The 'create=true' argument means we want to create the database.  If
     // the database already exists, it can not be created.
     String url = "jdbc:mckoi:local://conf/db.conf?create=true";
-
-    // The username/password for the database.  This will be the username/
-    // password for the user that has full control over the database.
-    // ( Don't use this demo username/password in your application! )
-    String username = "funzel";
-    String password = "funzel";
-    String email = "stephan@mud.de";
 
     // Make a connection with the database.  This will create the database
     // and log into the newly created database.
@@ -121,6 +116,7 @@ public class CreateDB {
       statement.close();
       connection.close();
 
+      System.err.println("CreateDB: "+username+":"+password+":"+email);
       User admin = UserManager.getInstance().create(username, password, email);
 
       Application app = new Application();

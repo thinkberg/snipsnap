@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
 <!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
- "http://java.sun.com/j2ee/dtds/web-app_2_3.dtd">
+ "http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <!--
   ** WebApp for Admin.
@@ -17,41 +17,24 @@
   </servlet>
 
   <servlet>
-    <servlet-name>com.neotis.admin.Application</servlet-name>
-    <servlet-class>com.neotis.admin.Application</servlet-class>
+    <servlet-name>com.neotis.admin.Installer</servlet-name>
+    <servlet-class>com.neotis.admin.Installer</servlet-class>
   </servlet>
 
   <servlet-mapping>
     <servlet-name>com.neotis.admin.AdminServlet</servlet-name>
-    <url-pattern>/</url-pattern>
+    <url-pattern>/exec/*</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
-    <servlet-name>com.neotis.admin.Application</servlet-name>
-    <url-pattern>/exec/app</url-pattern>
+    <servlet-name>com.neotis.admin.Installer</servlet-name>
+    <url-pattern>/exec/install</url-pattern>
   </servlet-mapping>
 
-  <!--
-  <security-constraint>
-    <web-resource-collection>
-      <web-resource-name>auth</web-resource-name>
-      <url-pattern>/exec/edit</url-pattern>
-    </web-resource-collection>
-    <auth-constraint>
-      <role-name>user</role-name>
-    </auth-constraint>
-  </security-constraint>
+  <!-- TAGLIBS -->
+  <taglib>
+    <taglib-uri>http://java.sun.com/jstl/core</taglib-uri>
+    <taglib-location>/WEB-INF/c.tld</taglib-location>
+  </taglib>
 
-  <login-config>
-    <auth-method>FORM</auth-method>
-    <form-login-config>
-      <form-login-page>/exec/login</form-login-page>
-      <form-error-page>/exec/login</form-error-page>
-    </form-login-config>
-  </login-config>
-
-  <security-role>
-    <role-name>user</role-name>
-  </security-role>
-  -->
 </web-app>

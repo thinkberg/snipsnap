@@ -1,24 +1,31 @@
 /**
- * Stylesheet customization for generic formats.
- * @author Stephan J. Schmidt
+ * Stylesheet customization for admin application.
+ * @author Matthias L. Jugel
  * @version $Id$
  */
 
 /************************************************/
 
 .error { color: #ff0000; font-weight: bold; }
-.inactive { color: #aaaaaa; }
-.bold { font-weight: bold }
-.snip-name { font-weight: bold; font-size: 15px; }
-
 .menu {
+
 }
 
 .menuitem {
-  background-color: #aaaaaa;
   font-weight: bold;
-  font-size: 10px;
+  font-size: 13px;
 }
+
+/* special formatting of a wiki table */
+.table-header {
+  font-size: 12px;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #aaaaaa;
+}
+
+
+
 /************************************************/
 /* tag formatting, page wide and individual */
 body {
@@ -39,8 +46,8 @@ table {
 
 input[type=submit] {
     text-align: center;
-    background: #ffce9c;
-    border: 1px ridge #aaaaaa;
+    background: #cccccc;
+    border: 1px ridge #888888;
     font-size: inherit;
     font-family: inherit;
     line-height: inherit;
@@ -50,7 +57,7 @@ input[type=submit] {
 
 input, select, textarea {
     margin: 2px;
-    background: #fffced;
+    background: #cccccc;
     font-size: inherit;
     font-family: courier, courier new, monospace;
     line-height: inherit;

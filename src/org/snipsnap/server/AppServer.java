@@ -24,12 +24,13 @@
  */
 package com.neotis.server;
 
+import com.neotis.admin.Configuration;
 import org.mortbay.http.HttpListener;
+import org.mortbay.http.SocketListener;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.WebApplicationContext;
 import org.mortbay.util.InetAddrPort;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -69,14 +70,18 @@ public class AppServer {
   }
 
   private static void checkConfig() {
-    WebApplicationContext context = addApplication("/", "./app");
-    System.out.println("HACK: added default application: " + context);
-
-    config = new Properties();
-    try {
-      FileInputStream configFile = new FileInputStream("./conf/local.conf");
-      config.load(configFile);
-    } catch (IOException e) {
+    Configuration config = new Configuration("./conf/local.conf");
+    if (config.isConfigured()) {
+      try {
+        jettyServer.addListener(new SocketListener(new InetAddrPort(config.getPort())));
+      } catch (IllegalArgumentException e) {
+        System.err.println("AppServer: illegal number for port: "+config.getPort());
+      } catch (IOException e) {
+        System.err.println("AppServer: unable to configure server on port "+config.getPort());
+        System.err.println("AppServer: error caused by: "+e);
+      }
+      WebApplicationContext context = addApplication(config.getContextPath(), "./app");
+    } else {
       System.out.println("INFO: Server is still unconfigured!");
       System.out.println("INFO: Point your browser to the following address:");
       HttpListener listener = jettyServer.getListeners()[0];
@@ -94,7 +99,7 @@ public class AppServer {
       context = jettyServer.addWebApplication(root, app);
       context.start();
     } catch (Exception e) {
-      System.err.println("AppServer: configuration not found: " + e);
+      System.err.println("AppServer: default configuration not found: " + e);
     }
     return context;
   }
