@@ -52,10 +52,7 @@ public class Layouter extends HttpServlet {
 
     // get or create session and application object
     HttpSession session = request.getSession(true);
-    Application app = (Application) session.getAttribute("app");
-    if (app == null) {
-      app = new Application();
-    }
+    Application app = Application.getInstance(session);
 
     User user = app.getUser();
     if (user == null) {

@@ -37,16 +37,40 @@ import javax.servlet.http.HttpSession;
 public class Application {
   private User user;
 
-  public User getUser() {
-    return user;
+  private static ThreadLocal instance = new ThreadLocal() {
+    protected synchronized Object initValue() {
+      System.out.println("Reading init value.");
+      return new Application();
+    }
+  };
+
+   public static Application get() {
+    return (Application) instance.get();
+  }
+
+  public static void set(Application application) {
+    instance.set(application);
   }
 
   public static Application getInstance(HttpSession session) {
     if (session != null) {
-      return (Application) session.getAttribute("app");
+      Application application = (Application) session.getAttribute("app");
+      if (null == application) {
+        application = (Application) instance.get();
+        // Workaround, because initValue doesn't work
+        if (null == application) {
+          application = new Application();
+        }
+      }
+      instance.set(application);
+      return application;
     }
     return null;
   }
+
+  public User getUser() {
+     return user;
+   }
 
   public void setUser(User user) {
     this.user = user;

@@ -29,6 +29,7 @@ import com.neotis.util.StringUtil;
 import com.neotis.user.Permissions;
 import com.neotis.user.Security;
 import com.neotis.user.Roles;
+import com.neotis.user.User;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -109,7 +110,6 @@ public class Comments {
    */
   public String getCommentString() {
     StringBuffer buffer = new StringBuffer();
-
     if (getCount() > 0) {
       SnipLink.appendLinkWithRoot(buffer, "../comments", snip.getName(), StringUtil.plural(getCount(), "comment"));
       buffer.append(" (by ");
