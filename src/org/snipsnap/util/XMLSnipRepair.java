@@ -232,6 +232,8 @@ public class XMLSnipRepair {
     System.err.print("STEP 2.3: fixing snip data (" + snipData.size() + ")");
     if(webAppRoot != null) {
       System.out.println(" and attachments ...");
+    } else {
+      System.out.println();
     }
     Iterator snipIt = snipData.values().iterator();
     while (snipIt.hasNext()) {
