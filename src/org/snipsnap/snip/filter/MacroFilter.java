@@ -83,6 +83,8 @@ public class MacroFilter extends RegexTokenFilter {
     add(new CalendarMacro());
     add(new MacroListMacro());
     add(new InterWikiMacro());
+    add(new BackLinkMacro());
+    add(new SnipLinkMacro());
   }
 
   public static MacroFilter getInstance() {

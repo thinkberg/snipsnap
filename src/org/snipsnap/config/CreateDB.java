@@ -99,7 +99,7 @@ public class CreateDB {
         "       lastAccess TIMESTAMP, " +
         "       lastLogout TIMESTAMP, " +
         "       login      VARCHAR(100) NOT NULL, " +
-        "       passwd     VARCHAR(20), " +
+        "       passwd     VARCHAR(100), " +
         "       email      VARCHAR(100)," +
         "       status     VARCHAR(50), " +
         "       roles      VARCHAR(200) )");

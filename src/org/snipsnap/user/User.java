@@ -126,8 +126,10 @@ public class User implements Nameable {
     return email;
   }
 
+  // Set passwd of user. Takes unecrypted
+  // passwd and then sets an encrypted version
   public void setPasswd(String passwd) {
-    this.passwd = passwd;
+    this.passwd = Digest.getDigest(passwd);
   }
 
   public String getPasswd() {

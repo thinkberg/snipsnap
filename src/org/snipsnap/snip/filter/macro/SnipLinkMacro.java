@@ -24,53 +24,48 @@
  */
 package org.snipsnap.snip.filter.macro;
 
-import org.snipsnap.date.Month;
 import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.filter.MacroFilter;
+import org.snipsnap.snip.filter.links.BackLinks;
+import org.snipsnap.snip.filter.links.SnipLinks;
+import org.snipsnap.user.UserManager;
+import org.snipsnap.user.User;
+import org.snipsnap.app.Application;
 
+import java.util.*;
 import java.io.IOException;
 import java.io.Writer;
 
 /*
- * Macro that displays a list of currently logged on users.
+ * Macro that displays a list of the backlinks for the snip
  *
- * @author Matthias L. Jugel
+ * @author Stephan J. Schmidt
  * @version $Id$
  */
-
-public class CalendarMacro extends Macro {
+public class SnipLinkMacro extends ListoutputMacro {
   public String getName() {
-    return "calendar";
+    return "sniplinks";
   }
 
   public String getDescription() {
-    return "Displays a monthly calendar view with links to postings.";
+    return "Renders a table of sniplinks for the snip.";
   }
 
   public void execute(Writer writer, MacroParameter params)
-      throws IllegalArgumentException, IOException {
-    int year = -1;
-    int month = -1;
-    if (params != null && params.getLength() == 2) {
-      try {
-        year = Integer.parseInt(params.get("0"));
-      } catch (NumberFormatException e) {
-        System.err.println("CalendarMacro: year is not a number: " + params.get("0"));
+      throws IllegalArgumentException, IOException
+  {
+    String start = "#ffffff";
+    String end = "#b0b0b0";
+    int width = 4;
+    if (params == null || params.getLength() > 1) {
+      if (params.getLength() == 1) {
+        width  = Integer.parseInt(params.get("0"));
       }
-      try {
-        month = Integer.parseInt(params.get("1"));
-      } catch (NumberFormatException e) {
-        System.err.println("CalendarMacro: month is not a number: " + params.get("1"));
-      }
-    } else if(params != null && params.getLength() > 0) {
-      System.err.println("CalendarMacro: illegal number of arguments: "+params.getLength());
-    }
-
-    Month m = new Month();
-    if (-1 == year || -1 == month) {
-      writer.write(m.getView());
+      SnipLinks.appendTo(writer, params.getSnip().getAccess().getBackLinks(), width, start, end);
     } else {
-      writer.write(m.getView(month, year));
+      throw new IllegalArgumentException("SnipLinkMacro: number of arguments does not match");
     }
   }
-
 }

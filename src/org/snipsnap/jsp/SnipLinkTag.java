@@ -28,11 +28,13 @@ import org.apache.taglibs.standard.lang.support.ExpressionEvaluatorManager;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.Links;
 import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.filter.links.SnipLinks;
 import org.snipsnap.util.ColorRange;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.tagext.BodyTag;
 import javax.servlet.jsp.jstl.core.ConditionalTagSupport;
 import java.util.Iterator;
 import java.io.IOException;
@@ -44,37 +46,12 @@ public class SnipLinkTag extends TagSupport {
   int width = 4;
 
   public int doStartTag() throws JspException {
+    if(snip==null){ return BodyTag.SKIP_BODY;}
+
     JspWriter out = pageContext.getOut();
     Links snipLinks = snip.getAccess().getSnipLinks();
-    Iterator iterator = snipLinks.iterator();
+    SnipLinks.appendTo(out,snip.getAccess().getSnipLinks(), this.width, this.start, this.end);
 
-    int size = snipLinks.getSize();
-    int percentPerCell = 100/width;
-    ColorRange cr = new ColorRange(start, end, Math.max(size <= 20 ? size : 20, 8));
-
-    try {
-      int i = 0;
-      out.println("<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\">");
-      out.println("<caption>see also:</caption>");
-      out.println("<tr>");
-      while (iterator.hasNext() && i < 20) {
-        if (i % width == 0 && i!= 0 ) {
-          out.print("</tr><tr>");
-        }
-        String url = (String) iterator.next();
-        out.print("<td bgcolor=\"");
-        out.print(cr.getColor(i++));
-        out.print("\" width=\"");
-        out.print(percentPerCell);
-        out.print("%\">");
-        out.print(SnipLink.createLink(url, SnipLink.cutLength(url, 25)));
-        // out.print(" - " + snipLinks.getIntCount(url));
-        out.println("</td>");
-      }
-      out.println("</tr></table>");
-    } catch (IOException e) {
-      System.err.println("unable print to JSP writer: " + e);
-    }
     return super.doStartTag();
   }
 

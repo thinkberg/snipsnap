@@ -1,5 +1,7 @@
 0.2.8
 
+- Added feature: {backlinks} macro lists backlinks, e.g. {backlinks:10}
+- Added feature: {sniplinks} macro lists sniplinks, e.g. {sniplinks:4}
 - Fixed bug: escape '-' and '*' within code macro
 - Fixed bug: first start on a different port than 8668
 - Added feature: Introduced Skins for SnipSnap

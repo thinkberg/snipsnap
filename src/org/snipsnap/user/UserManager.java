@@ -218,7 +218,7 @@ public class UserManager implements Loader {
 
   public User authenticate(String login, String passwd) {
     User user = load(login);
-    if (null != user && user.getPasswd().equals(passwd)) {
+    if (null != user && (user.getPasswd().equals(passwd) || Digest.authenticate(passwd, user.getPasswd()))) {
       user.lastLogin();
       storageStore(user);
       return user;
@@ -244,6 +244,7 @@ public class UserManager implements Loader {
   }
 
   public User create(String login, String passwd, String email) {
+    passwd = Digest.getDigest(passwd);
     User user = storageCreate(login, passwd, email);
     cache.put(User.class, login, user);
     // System.err.println("createUser login="+login+" hashcode="+((Object) user).hashCode());
