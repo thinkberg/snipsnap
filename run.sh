@@ -16,6 +16,10 @@ if [ ! -f $base/$jar/neotis.jar ]; then
   exit
 fi
 
+echo "(c) 2002 Stephan Schmidt and Matthias L. Jugel"
+echo "All Rights Reserved"
+echo "See License Agreement for terms and conditions of use."
+
 if [ ! -x $base/db/data ]; then
   echo "No database found, creating one ..."
   $JAVA_HOME/bin/java -cp lib/neotis.jar com.neotis.config.CreateDB
