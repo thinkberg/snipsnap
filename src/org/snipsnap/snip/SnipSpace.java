@@ -236,7 +236,7 @@ public class SnipSpace implements LinkTester, Loader {
    * @param snip The snip to store
    */
   public void systemStore(Snip snip) {
-    System.err.println("systemStore - "+snip.getName());
+    //System.err.println("systemStore - "+snip.getName());
     Application app = Application.get();
     long start = app.start();
     storageStore(snip);
@@ -256,7 +256,7 @@ public class SnipSpace implements LinkTester, Loader {
    * @param snip Snip to delay for storage
    */
   public void delayedStrore(Snip snip) {
-    System.err.println("delayedStore - "+snip.getName());
+    //System.err.println("delayedStore - "+snip.getName());
     Logger.log(Logger.DEBUG, "delayedStore");
     synchronized (delayed) {
       if (!delayed.contains(snip)) {
