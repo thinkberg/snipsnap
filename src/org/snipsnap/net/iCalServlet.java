@@ -31,6 +31,7 @@ import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.user.AuthenticationService;
+import org.snipsnap.user.UserManagerFactory;
 import org.snipsnap.util.Base64;
 import org.snipsnap.container.Components;
 
@@ -56,7 +57,7 @@ public class iCalServlet extends HttpServlet {
 
   public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     HttpSession session = request.getSession(true);
-    UserManager um = UserManager.getInstance();
+    UserManager um = UserManagerFactory.getInstance();
 
     String method = request.getMethod();
     String pathInfo = request.getPathInfo();

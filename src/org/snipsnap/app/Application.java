@@ -32,6 +32,7 @@ import org.snipsnap.snip.Snip;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.user.AuthenticationService;
+import org.snipsnap.user.UserManagerFactory;
 import org.snipsnap.container.Components;
 
 import javax.servlet.http.HttpSession;
@@ -197,7 +198,7 @@ public class Application {
       if (service.isAuthenticated(user)) {
         Logger.debug("Removing user from session: " + user.getLogin());
         user.setLastLogout(user.getLastAccess());
-        UserManager.getInstance().systemStore(user);
+        UserManagerFactory.getInstance().systemStore(user);
       }
       currentUsers.remove(session);
     }

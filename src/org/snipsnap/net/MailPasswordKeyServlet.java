@@ -30,6 +30,7 @@ import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.user.PasswordService;
+import org.snipsnap.user.UserManagerFactory;
 import org.snipsnap.util.mail.Mail;
 import org.snipsnap.container.Components;
 
@@ -56,7 +57,7 @@ public class MailPasswordKeyServlet extends HttpServlet {
     String login = request.getParameter("login");
 
     if (request.getParameter("cancel") == null) {
-      UserManager um = UserManager.getInstance();
+      UserManager um = UserManagerFactory.getInstance();
       User user = um.load(login);
 
       if (user == null) {

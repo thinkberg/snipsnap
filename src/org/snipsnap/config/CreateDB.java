@@ -31,10 +31,7 @@ import org.snipsnap.snip.XMLSnipImport;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.storage.JDBCSnipStorage;
 import org.snipsnap.snip.storage.JDBCUserStorage;
-import org.snipsnap.user.Roles;
-import org.snipsnap.user.User;
-import org.snipsnap.user.UserManager;
-import org.snipsnap.user.AuthenticationService;
+import org.snipsnap.user.*;
 import org.snipsnap.container.Components;
 
 import java.io.IOException;
@@ -59,13 +56,13 @@ public class CreateDB {
   public static void createAdmin(Configuration config) {
     System.out.println("CreateDB: Creating Admin Home Page");
     SnipSpaceFactory.removeInstance();
-    UserManager.removeInstance();
+    UserManagerFactory.removeInstance();
 
-    User admin = UserManager.getInstance().create(config.getAdminLogin(),
+    User admin = UserManagerFactory.getInstance().create(config.getAdminLogin(),
                                                   config.getAdminPassword(),
                                                   config.getAdminPassword());
     admin.getRoles().add(Roles.EDITOR);
-    UserManager.getInstance().store(admin);
+    UserManagerFactory.getInstance().store(admin);
 
     Application app = Application.get();
     app.setUser(admin);
@@ -77,7 +74,7 @@ public class CreateDB {
   public static void insertData(Configuration config, InputStream data) {
     System.out.println("CreateDB: Inserting Data");
     SnipSpaceFactory.removeInstance();
-    UserManager.removeInstance();
+    UserManagerFactory.removeInstance();
 
     User admin = ((AuthenticationService) Components.getComponent(AuthenticationService.class)).authenticate(config.getAdminLogin(),
                                                         config.getAdminPassword());
@@ -98,7 +95,7 @@ public class CreateDB {
   public static void postFirst(Configuration config) {
     System.out.println("CreateDB: Posting first entry");
     SnipSpaceFactory.removeInstance();
-    UserManager.removeInstance();
+    UserManagerFactory.removeInstance();
 
     User admin = ((AuthenticationService) Components.getComponent(AuthenticationService.class)).authenticate(config.getAdminLogin(),
                                                         config.getAdminPassword());

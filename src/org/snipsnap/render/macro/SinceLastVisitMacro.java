@@ -29,6 +29,7 @@ import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
+import org.snipsnap.user.UserManagerFactory;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -73,7 +74,7 @@ public class SinceLastVisitMacro extends ListOutputMacro {
     }
 
     if (params.getLength() > 0) {
-      User user = UserManager.getInstance().load(userName);
+      User user = UserManagerFactory.getInstance().load(userName);
       // Logger.debug("Hashcode lastVisit=" + ((Object) user).hashCode());
       // Logger.debug("SinceLastVisit: " + user.getLastLogout());
       Collection c = SnipSpaceFactory.getInstance().getSince(user.getLastLogout());

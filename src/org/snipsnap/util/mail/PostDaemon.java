@@ -31,6 +31,7 @@ import org.snipsnap.config.Configuration;
 import org.snipsnap.snip.BlogKit;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.UserManager;
+import org.snipsnap.user.UserManagerFactory;
 
 import javax.mail.*;
 import java.io.*;
@@ -137,7 +138,7 @@ public class PostDaemon {
 
               // BUG
               String user = Application.get().getConfiguration().getAdminLogin();
-              Application.get().setUser(UserManager.getInstance().load(user));
+              Application.get().setUser(UserManagerFactory.getInstance().load(user));
               SnipSpaceFactory.getInstance().getBlog().post(writer.getBuffer().toString(), title);
             } catch (Exception e) {
               Logger.warn("PostDaemon Error:", e);

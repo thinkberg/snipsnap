@@ -30,6 +30,7 @@ import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.user.AuthenticationService;
+import org.snipsnap.user.UserManagerFactory;
 import org.snipsnap.container.Components;
 import org.snipsnap.container.SessionService;
 
@@ -56,7 +57,7 @@ public class AdminServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     // get user manager and store in session
-    UserManager um = UserManager.getInstance();
+    UserManager um = UserManagerFactory.getInstance();
     HttpSession session = request.getSession();
     Application app = Application.getInstance(session);
     User user = app.getUser();

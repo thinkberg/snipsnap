@@ -28,10 +28,7 @@ import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.snip.attachment.Attachments;
 import org.snipsnap.snip.label.Labels;
-import org.snipsnap.user.Permissions;
-import org.snipsnap.user.Roles;
-import org.snipsnap.user.User;
-import org.snipsnap.user.UserManager;
+import org.snipsnap.user.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -165,7 +162,7 @@ public class XMLSnipImport {
    * @param snipNode the snip node the user is stored in
    */
   private static void insertUser(Node snipNode) throws SAXException {
-    UserManager um = UserManager.getInstance();
+    UserManager um = UserManagerFactory.getInstance();
 
     Map elements = getElements(snipNode);
 
@@ -222,7 +219,7 @@ public class XMLSnipImport {
    */
   private static void insertSnip(Node snipNode, boolean overwrite) throws SAXException {
     SnipSpace space = SnipSpaceFactory.getInstance();
-    UserManager um = UserManager.getInstance();
+    UserManager um = UserManagerFactory.getInstance();
 
     Map elements = getElements(snipNode);
 

@@ -6,6 +6,7 @@ import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
+import org.snipsnap.user.UserManagerFactory;
 
 public class PostLog {
   public static void main(String[] args) {
@@ -13,7 +14,7 @@ public class PostLog {
 
     Application app = Application.get();
 
-    User user = UserManager.getInstance().load("funzel");
+    User user = UserManagerFactory.getInstance().load("funzel");
     app.setUser(user);
 
     Snip snip = blog.post("hallo");

@@ -27,6 +27,7 @@ package org.snipsnap.render.macro;
 
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 import org.snipsnap.user.UserManager;
+import org.snipsnap.user.UserManagerFactory;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -56,7 +57,7 @@ public class UserMacro extends ListOutputMacro {
     }
     showSize = !(params.getLength() > 1 && "nosize".equals(params.get("1")));
     if (params.getLength() <= 2) {
-      output(writer, "All Users:", UserManager.getInstance().getAll(), "no users. not very popular ;-)", type, showSize);
+      output(writer, "All Users:", UserManagerFactory.getInstance().getAll(), "no users. not very popular ;-)", type, showSize);
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

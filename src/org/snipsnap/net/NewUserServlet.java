@@ -30,6 +30,7 @@ import org.snipsnap.snip.HomePage;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
+import org.snipsnap.user.UserManagerFactory;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -72,7 +73,7 @@ public class NewUserServlet extends HttpServlet {
 
 
       if (request.getParameter("cancel") == null) {
-        UserManager um = UserManager.getInstance();
+        UserManager um = UserManagerFactory.getInstance();
         User user = um.load(login);
         // check whether user exists or not
         if (user != null) {

@@ -29,6 +29,7 @@ import org.snipsnap.config.Configuration;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.user.AuthenticationService;
+import org.snipsnap.user.UserManagerFactory;
 import org.snipsnap.container.Components;
 import org.snipsnap.container.SessionService;
 
@@ -56,7 +57,7 @@ public class LoginServlet extends HttpServlet {
     String referer = request.getParameter("referer");
 
     if (request.getParameter("cancel") == null) {
-      UserManager um = UserManager.getInstance();
+      UserManager um = UserManagerFactory.getInstance();
       User user = ((AuthenticationService) Components.getComponent(AuthenticationService.class)).authenticate(login, password);
       if (Application.getCurrentUsers().contains(user)) {
         Application.getCurrentUsers().remove(user);

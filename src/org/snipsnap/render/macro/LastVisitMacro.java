@@ -30,6 +30,7 @@ import org.radeox.macro.parameter.MacroParameter;
 import org.snipsnap.snip.Modified;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
+import org.snipsnap.user.UserManagerFactory;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -61,7 +62,7 @@ public class LastVisitMacro extends Macro {
       throws IllegalArgumentException, IOException {
 
     if (params.getLength() == 1) {
-      User user = UserManager.getInstance().load(params.get("0"));
+      User user = UserManagerFactory.getInstance().load(params.get("0"));
       writer.write("<b>Last visit was:</b> ");
       writer.write(Modified.getNiceTime(user.getLastLogout()));
     } else {

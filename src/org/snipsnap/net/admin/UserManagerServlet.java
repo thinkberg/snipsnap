@@ -30,6 +30,7 @@ import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
+import org.snipsnap.user.UserManagerFactory;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -66,7 +67,7 @@ public class UserManagerServlet extends HttpServlet {
     }
     String command = request.getParameter("command");
     // get user manager and store in session
-    UserManager um = UserManager.getInstance();
+    UserManager um = UserManagerFactory.getInstance();
 
     // get user (if possible) and store in session
     String login = request.getParameter("login");

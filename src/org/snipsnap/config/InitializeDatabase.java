@@ -37,6 +37,7 @@ import org.snipsnap.snip.storage.JDBCUserStorage;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
+import org.snipsnap.user.UserManagerFactory;
 import org.snipsnap.util.ConnectionManager;
 import org.snipsnap.render.PlainTextRenderEngine;
 
@@ -151,7 +152,7 @@ public class InitializeDatabase {
   private static User createAdministrator(Configuration config) {
     // create admin account
     message("creating administrator account and snip");
-    UserManager um = UserManager.getInstance();
+    UserManager um = UserManagerFactory.getInstance();
     User admin = um.load(config.getAdminLogin());
     if (admin != null) {
       message("overriding administrator: " + admin);

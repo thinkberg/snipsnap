@@ -32,6 +32,7 @@ import org.snipsnap.server.Shutdown;
 import org.snipsnap.snip.XMLSnipImport;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
+import org.snipsnap.user.UserManagerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -70,7 +71,7 @@ public class DBImport {
     }
     app.setConfiguration(config);
 
-    UserManager um = UserManager.getInstance();
+    UserManager um = UserManagerFactory.getInstance();
     User user = um.load(args[1]);
     app.setUser(user);
 

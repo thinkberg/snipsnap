@@ -30,6 +30,7 @@ import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
+import org.snipsnap.user.UserManagerFactory;
 
 /**
  * Post an example comment.
@@ -41,7 +42,7 @@ public class PostComment {
     SnipSpace space = SnipSpaceFactory.getInstance();
 
     Application app = Application.get();
-    User user = UserManager.getInstance().load("funzel");
+    User user = UserManagerFactory.getInstance().load("funzel");
     app.setUser(user);
 
     Snip snip = space.load("about");

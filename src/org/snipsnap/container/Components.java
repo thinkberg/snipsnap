@@ -55,7 +55,7 @@ public class Components {
         NanningNanoContainer nc = new NanningNanoContainer(new DefaultComponentFactory(), c, as);
         //c.registerComponent("org.snipsnap.notification.NotificationService");
         nc.registerComponentByClass(org.snipsnap.snip.storage.JDBCUserStorage.class);
-        nc.registerComponentByClass(org.snipsnap.user.UserManager.class);
+        nc.registerComponent(org.snipsnap.user.UserManager.class, org.snipsnap.user.DefaultUserManager.class);
         nc.registerComponentByClass(org.snipsnap.user.AuthenticationService.class);
         nc.registerComponentByClass(org.snipsnap.user.PasswordService.class);
         nc.registerComponentByClass(org.snipsnap.container.SessionService.class);
