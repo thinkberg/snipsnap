@@ -121,7 +121,7 @@ public class FileSnipStorage implements SnipStorage, CacheableStorage {
     }
 
     File[] files = root.listFiles();
-    for (int entry = 0; entry < files.length; entry++) {
+    for (int entry = 0; files != null && entry < files.length; entry++) {
       if (files[entry].isDirectory()) {
         traverseFileStore(files[entry], list);
       }
