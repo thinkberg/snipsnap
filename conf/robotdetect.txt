@@ -1,7 +1,9 @@
 # This file contains User-Agent mappings for robots
 Googlebot http://www.googlebot.com/bot.html
 FAST-WebCrawler http://fast.no/support/crawler.asp
-Slurp http://www.inktomi.com/slurp.html IGNORE
+Slurp http://www.inktomi.com/slurp.html
+Teoma http://www.teoma.com/
+Syndic8 http://www.syndic8.com
 ZyBorg http://www.WISEnutbot.com IGNORE
 Scooter ??? IGNORE
 larbon liston@cc.gatech.edu IGNORE
@@ -11,4 +13,4 @@ BlogBot ??? IGNORE
 TurnitinBot http://www.turnitin.com/robot/crawlerinfo.html IGNORE
 Mercator ??? IGNORE
 EvilBot ??? IGNORE
-Teoma ??? IGNORE
+NIF http://www.newsisfree.com/robot.php IGNORE
