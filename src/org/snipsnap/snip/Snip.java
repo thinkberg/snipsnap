@@ -132,6 +132,10 @@ public class Snip implements Ownable {
     return user.getLogin().equals(getOwner());
   }
 
+  public void addPermission(String permission, String role) {
+    permissions.add(permission, role);
+  }
+
   public void setPermissions(Permissions permissions) {
     this.permissions = permissions;
   }

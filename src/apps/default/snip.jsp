@@ -11,15 +11,17 @@
   <jsp:setProperty name="snip" property="*"/>
 </jsp:useBean>
 
+<c:out value="${snip}"/>
+
 <table width="100%" border="0" cellspacing="2" cellpadding="1">
-   <tr><td><span class="snip-name"><jsp:getProperty name="snip" property="name" /></span></td></tr>
-   <s:checkRoles roles="Authenticated">
-     <tr><td>[<a href="/exec/edit?name=<%= snip.getName() %>">edit</a>]</td></tr>
-   </s:checkRoles>
-   <s:checkRoles roles="Authenticated" invert="true">
-     <tr><td><span class="inactive">[edit]</span></td></tr>
-   </s:checkRoles>
  <% if (! "start".equals(snip.getName())) { %>
+   <tr><td><span class="snip-name"><jsp:getProperty name="snip" property="name" /></span></td></tr>
+   <s:check roles="Authenticated" permission="Edit" snip="${snip}">
+     <tr><td>[<a href="/exec/edit?name=<%= snip.getName() %>">edit</a>]</td></tr>
+   </s:check>
+   <s:check roles="Authenticated" permission="Edit" snip="${snip}" invert="true">
+     <tr><td><span class="inactive">[edit]</span></td></tr>
+   </s:check>
    <tr width="100%"><td><span class="snip-modified"><%= snip.getModified() %></span></td></tr>
  <% } %>
  <tr>

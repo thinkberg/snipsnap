@@ -39,6 +39,7 @@ import java.util.*;
 
 public class Security {
   public final static String AUTHENTICATED = "Authenticated";
+  public final static String OWNER = "Owner";
 
   public static Set getRoles(User user) {
     Set userRoles = user.getRoles();

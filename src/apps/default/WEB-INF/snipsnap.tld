@@ -18,6 +18,7 @@
     </attribute>
     <attribute>
       <name>snip</name>
+      <rtexprvalue>true</rtexprvalue>
       <type>com.neotis.snip.Snip</type>
       <description>snip to check roles against</description>
     </attribute>
@@ -27,5 +28,30 @@
       <description>invert the check</description>
     </attribute>
   </tag>
+
+  <tag>
+    <name>check</name>
+    <tag-class>com.neotis.jsp.CheckPermission</tag-class>
+    <attribute>
+      <name>permission</name>
+      <description>permission to check</description>
+    </attribute>
+    <attribute>
+      <name>roles</name>
+      <required>true</required>
+      <description>roles to check user against</description>
+    </attribute>
+    <attribute>
+      <name>snip</name>
+      <type>com.neotis.snip.Snip</type>
+      <description>snip to check roles against</description>
+    </attribute>
+    <attribute>
+      <name>invert</name>
+      <type>java.lang.Boolean</type>
+      <description>invert the check</description>
+    </attribute>
+  </tag>
+
 </taglib>
 

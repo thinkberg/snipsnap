@@ -36,34 +36,19 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 
-public class UserAuth extends ConditionalTagSupport {
-  protected List roles;
-  protected Snip snip;
+public class CheckPermission extends UserAuth {
+  protected String permission;
 
-  protected boolean invertCheck = false;
-
-  public void setRoles(String roles) {
-    StringTokenizer tok = new StringTokenizer(roles, ":,");
-    this.roles = new ArrayList();
-    while (tok.hasMoreTokens()) {
-      String token = tok.nextToken();
-      this.roles.add(token);
-    }
-  }
-
-  public void setSnip(Snip snip) {
-    this.snip = snip;
-  }
-
-  public void setInvert(Boolean value) {
-    invertCheck = value.booleanValue();
+  public void setPermission(String permission) {
+    this.permission = permission;
   }
 
   protected boolean condition() throws JspTagException {
     Application app = (Application) pageContext.findAttribute("app");
     User user = app.getUser();
     if (snip != null) {
-      return Security.hasRoles(user, snip, roles) && !invertCheck;
+      System.err.println(snip.getPermissions().toString());
+      return Security.checkPermission(permission, user, snip) && Security.hasRoles(user, snip, roles) && !invertCheck;
     } else {
       return Security.hasRoles(user, roles) && !invertCheck;
     }
