@@ -43,6 +43,7 @@ public class ServerConfiguration {
   public final static String ADMIN_USER = "snipsnap.server.admin.user";
   public final static String ADMIN_PASS = "snipsnap.server.admin.password";
   public final static String ADMIN_PORT = "snipsnap.server.admin.port";
+  public final static String ADMIN_HOST = "snipsnap.server.admin.host";
   public final static String ADMIN_EMAIL = "snipsnap.server.admin.email";
   public final static String WEBAPP_ROOT = "snipsnap.server.webapp.root";
 

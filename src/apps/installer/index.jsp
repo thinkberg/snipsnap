@@ -4,4 +4,4 @@
   ** @version $Id$
   -->
 
-<% response.sendRedirect(request.getContextPath() + "/setup"); return; %>
+<% response.sendRedirect(request.getContextPath() + "/"); return; %>

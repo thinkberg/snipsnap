@@ -1,0 +1,135 @@
+/*
+ * This file is part of "SnipSnap Wiki/Weblog".
+ *
+ * Copyright (c) 2002 Stephan J. Schmidt, Matthias L. Jugel
+ * All Rights Reserved.
+ *
+ * Please visit http://snipsnap.org/ for updates and contact.
+ *
+ * --LICENSE NOTICE--
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * --LICENSE NOTICE--
+ */
+package org.snipsnap.server;
+
+import org.apache.xmlrpc.XmlRpcException;
+import org.snipsnap.config.Configuration;
+import org.snipsnap.config.ServerConfiguration;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Properties;
+import java.util.jar.JarEntry;
+import java.util.jar.JarOutputStream;
+import java.util.jar.Manifest;
+
+public class AdminXmlRpcHandler extends AuthXmlRpcHandler {
+  Properties serverConfig = null;
+
+  public AdminXmlRpcHandler(Properties config) {
+    super();
+    serverConfig = config;
+  }
+
+  protected boolean authenticate(String user, String password) {
+    System.err.println("authenticate("+user+","+password+")");
+    return serverConfig.getProperty(ServerConfiguration.ADMIN_PASS).equals(password);
+  }
+
+  public void install(String name, String host, String port, String path) throws XmlRpcException {
+    System.out.println("install("+name+","+port+","+path+")");
+    File root = new File(serverConfig.getProperty(ServerConfiguration.WEBAPP_ROOT));
+    File webInf = new File(root, name+"/webapp/WEB-INF");
+    webInf.mkdirs();
+
+    File applicationConf = new File(webInf, "application.conf");
+    if(!applicationConf.exists()) {
+      Properties installConfig = new Properties();
+      installConfig.setProperty(Configuration.APP_HOST, host);
+      installConfig.setProperty(Configuration.APP_PORT, port);
+      installConfig.setProperty(Configuration.APP_PATH, path);
+      try {
+        installConfig.store(new FileOutputStream(applicationConf), " Bootstrap Configuration");
+      } catch (IOException e) {
+        applicationConf.delete();
+        throw new XmlRpcException(0, "unable to write '"+applicationConf.getPath()+"'");
+      }
+    } else {
+      throw new XmlRpcException(0, "'"+applicationConf.getPath()+"' exists, delete application first");
+    }
+  }
+
+  /**
+   * Remove a web application from the server. Handle with care, because this deletes
+   * all the data you might have stored in that web application including snips and
+   * attachments.
+   * @param name
+   * @return
+   */
+  public boolean delete(String name, boolean backup) throws XmlRpcException {
+    System.out.println("install(" + name);
+    File root = new File(serverConfig.getProperty(ServerConfiguration.WEBAPP_ROOT));
+    File app = new File(root, name);
+    if(app.exists()) {
+      if(backup) {
+        try {
+          createBackupJar(name+".backup.jar", app);
+        } catch (IOException e) {
+          throw new XmlRpcException(0, "unable to create backup file: "+e);
+        }
+      }
+      return app.delete();
+    }
+    return true;
+  }
+
+  private void createBackupJar(String jarName, File file) throws IOException {
+    JarOutputStream jar = new JarOutputStream(new FileOutputStream(jarName),
+                                              new Manifest());
+    System.err.println("Jar: created '"+jarName + "'");
+    try {
+      addToJarFile(jar, file);
+    } finally {
+      jar.close();
+    }
+  }
+
+  private void addToJarFile(JarOutputStream jar, File file) throws IOException {
+    JarEntry entry = new JarEntry(file.getPath());
+    jar.putNextEntry(entry);
+    if(file.isDirectory()) {
+      File[] fileList = file.listFiles();
+      for(int fileNo = 0; fileNo < fileList.length; fileNo++) {
+        addToJarFile(jar, fileList[fileNo]);
+      }
+    } else {
+      FileInputStream fileStream = new FileInputStream(file);
+      try {
+        byte buffer[] = new byte[4096];
+        int bytesRead;
+        while ((bytesRead = fileStream.read(buffer)) != -1) {
+          jar.write(buffer, 0, bytesRead);
+        }
+        System.err.println("Jar: added '"+file.getPath()+"'");
+      } catch (IOException e) {
+        System.err.println("Jar: error adding '"+file.getPath()+"': "+e);
+      } finally {
+        fileStream.close();
+      }
+    }
+  }
+}

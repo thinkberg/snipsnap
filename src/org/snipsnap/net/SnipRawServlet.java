@@ -66,7 +66,6 @@ public class SnipRawServlet extends HttpServlet {
     Snip snip = SnipSpaceFactory.getInstance().load(name);
 
     ServletOutputStream out = response.getOutputStream();
-
     response.setContentType("text/plain; charset="+Application.get().getConfiguration().getEncoding());
     // Snip does not exist
     if (null != snip) {

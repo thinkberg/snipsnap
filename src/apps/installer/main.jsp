@@ -23,12 +23,14 @@
     <table class="configuration">
       <tr>
         <td rowspan="2" class="guide">
-          <fmt:message key="install.guide"/>
+          <fmt:message key="install.guide"/><br/>
           <div class="step-info"><fmt:message key="install.guide.${step}"/></div>
         </td>
         <td class="edit">
           <div class="step"><fmt:message key="install.step.${step}"/></div>
-          <c:import url="${step}.jsp"/>
+          <form class="form" method="post" action="<c:url value='/'/>">
+            <c:import url="${step}.jsp"/>
+          </form>
         </td>
       </tr>
     </table>

@@ -15,6 +15,7 @@
     <pathelement location="${jar}/org.mortbay.jetty.jar"/>
     <pathelement location="${jar}/jdbcpool.jar"/>
     <pathelement location="${jar}/mckoidb.jar"/>
+    <pathelement location="${jar}/xmlrpc-1.1.jar"/>
   </path>
 
   <!-- the overall class path -->
@@ -117,14 +118,6 @@
         <include name="${jar}/${appname}-installer.war"/>
         <include name="${jar}/${appname}-utils.jar"/>
         <include name="conf/jetty.conf"/>
-<!--        <include name="conf/db.conf"/>-->
-<!--        <include name="conf/romaji.properties"/>-->
-<!--        <include name="conf/messages_*.properties"/>-->
-<!--        <include name="conf/intermap.txt"/>-->
-<!--        <include name="conf/bookservices.txt"/>-->
-<!--        <include name="conf/apidocs.txt"/>-->
-<!--        <include name="conf/robotdetect.txt"/>-->
-<!--        <include name="conf/snipsnap.snip"/>-->
         <include name="license.txt"/>
         <include name="validate.xsl"/>
         <include name="README"/>
@@ -234,8 +227,15 @@
     <javac deprecation="${deprecation}" debug="${debug}"
       srcdir="${src}"
       classpathref="all.classpath"
-      destdir="${target}/util"
-      includes="org/snipsnap/util/Test*, org/snipsnap/util/*Util.java, org/snipsnap/util/DB*.java, org/snipsnap/util/*JDBC*.java, org/snipsnap/util/mail/**, org/snipsnap/util/*Test.java"/>
+      destdir="${target}/util">
+      <include name="org/snipsnap/util/Test*"/>
+      <include name="org/snipsnap/util/*Util.java"/>
+      <include name="org/snipsnap/util/DB*.java"/>
+      <include name="org/snipsnap/util/*JDBC*.java"/>
+      <include name="org/snipsnap/util/mail/**"/>
+      <include name="org/snipsnap/util/*Test.java"/>
+      <include name="org/snipsnap/server/AdminClient.java"/>
+    </javac>
   </target>
 
   <target name="checkstyle">
@@ -476,26 +476,6 @@
         <filter token="PRECOMPILED-JSP" value="${installer-web.inc}"/>
       </filterset>
     </copy>
-
-<!--    <copy todir="${target}/installer/webapp/WEB-INF/lib">-->
-<!--      <fileset dir="${jar}">-->
-<!--        <include name="radeox.jar"/>-->
-<!--        <include name="jena.jar"/>-->
-<!--        <include name="commons-logging.jar"/>-->
-<!--        <include name="jakarta-oro.jar"/>-->
-<!--        <include name="lucene-1.2.jar"/>-->
-<!--        <include name="xmlrpc-1.1.jar"/>-->
-<!--        <include name="jdom-b8.jar"/>-->
-<!--        <include name="aspectjrt.jar"/>-->
-<!--        <include name="jython.jar"/>-->
-<!--        <include name="mail.jar"/>-->
-<!--        <include name="activation.jar"/>-->
-<!--        <include name="j2h.jar"/>-->
-<!--        <include name="picocontainer-1.0.jar"/>-->
-<!--        <include name="nanocontainer-1.0.jar"/>-->
-<!--        <include name="nanning.jar"/>-->
-<!--      </fileset>-->
-<!--    </copy>-->
 
     <jar destfile="${jar}/${appname}-installer.war">
       <fileset dir="${target}/installer/webapp" includes="**"/>

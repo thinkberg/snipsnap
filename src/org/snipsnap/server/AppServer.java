@@ -30,6 +30,8 @@ import org.mortbay.util.InetAddrPort;
 import org.mortbay.util.MultiException;
 import org.snipsnap.config.ServerConfiguration;
 import org.snipsnap.user.Digest;
+import org.apache.xmlrpc.XmlRpcServer;
+import org.apache.xmlrpc.WebServer;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -64,7 +66,7 @@ public class AppServer {
     try {
       serverInfo.load(AppServer.class.getResourceAsStream("/conf/snipsnap.conf"));
     } catch (IOException e) {
-      // ignore
+      System.err.println("AppServer: warning: unable to load server defaults: " + e);
     }
     System.setProperty(ServerConfiguration.VERSION, serverInfo.getProperty(ServerConfiguration.VERSION));
 
@@ -79,7 +81,7 @@ public class AppServer {
       try {
         serverInfo.store(new FileOutputStream("conf/server.conf"), " SnipSnap Server Configuration");
       } catch (IOException e1) {
-        System.err.println("WARNING: unable to store local server configuration: " + e);
+        System.err.println("AppServer: warning: unable to store local server configuration: " + e);
       }
     }
     serverInfo = parseArguments(args, serverInfo);
@@ -102,9 +104,8 @@ public class AppServer {
       }
       jettyServer = new Server(getResource("/conf/jetty.conf", "./conf/jetty.conf"));
       jettyServer.start();
-      new AdminServer(serverInfo);
     } catch (IOException e) {
-      System.err.println("WARNING: admin server configuration not found: " + e);
+      System.err.println("AppServer: warning: admin server configuration not found: " + e);
     } catch (MultiException e) {
       Iterator exceptions = e.getExceptions().iterator();
       while (exceptions.hasNext()) {
@@ -113,6 +114,15 @@ public class AppServer {
         System.out.println("ERROR: can't start server: " + ex.getMessage());
       }
       System.exit(-1);
+    }
+
+    try {
+      WebServer xmlRpcServer = new WebServer(Integer.parseInt(serverInfo.getProperty(ServerConfiguration.ADMIN_PORT)));
+      // xmlRpcServer.setParanoid(true);
+      xmlRpcServer.addHandler("$default", new AdminXmlRpcHandler(serverInfo));
+    } catch (Exception e) {
+      System.out.println("ERROR: can't start administrative server interface (XML-RPC): "+e.getMessage());
+      e.printStackTrace();
     }
 
     // now, after loading all possible services we will look for applications and start them
@@ -129,7 +139,7 @@ public class AppServer {
           host = System.getProperty("host", "localhost");
         }
       }
-      System.out.println("ATTENTION: http://" + host + ":" + listener.getPort() + "/install/"+ serverInfo.getProperty(ServerConfiguration.ADMIN_PASS));
+      System.out.println("ATTENTION: http://" + host + ":" + listener.getPort() + "/install/" + serverInfo.getProperty(ServerConfiguration.ADMIN_PASS));
     } else {
       System.out.println(ApplicationLoader.getApplicationCount() + " applications loaded and running (" + errors + " errors).");
     }

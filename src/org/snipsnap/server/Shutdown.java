@@ -45,7 +45,7 @@ public class Shutdown {
       } catch (Exception e) {
         Code.ignore(e);
       }
-      System.out.println("SnipSnap shutdown procedure finished.");
+      System.out.println("INFO: SnipSnap shutdown procedure finished.");
       Log.event("Application: stopped server");
     }
   }

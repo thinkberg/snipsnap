@@ -26,6 +26,7 @@ package org.snipsnap.admin;
 
 import org.snipsnap.config.ServerConfiguration;
 import org.snipsnap.net.filter.EncRequestWrapper;
+import org.snipsnap.server.AdminServer;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -36,6 +37,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletResponse;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -44,7 +46,15 @@ import java.util.Properties;
 public class AdminInitFilter implements Filter {
 
   private final static String DEFAULT_ENCODING = "UTF-8";
-  protected final static String ATT_CONFIG = "installer.config";
+
+  protected final static String ATT_CONFIG = "config";
+  protected final static String ATT_STEP = "step";
+
+
+  protected final static String PARAM_INSTALL = "install";
+  protected final static String PARAM_HOST = "app.host";
+  protected final static String PARAM_PORT = "app.port";
+  protected final static String PARAM_PATH = "app.path";
 
   Properties serverConfig = new Properties();
 
@@ -77,33 +87,57 @@ public class AdminInitFilter implements Filter {
     HttpSession session = request.getSession(false);
 
     String path = request.getServletPath();
-    System.out.println("path="+path);
-    if(path == null || !(path.startsWith("/images") || path.endsWith(".css"))) {
+    if(null == path || "".equals(path)) {
+      System.out.println("Redirecting '"+path+"' -> "+ request.getContextPath() + "/");
+      ((HttpServletResponse)response).sendRedirect(request.getContextPath()+"/");
+      return;
+    }
+
+    // except css files and images everything is protected
+    if(!(path.startsWith("/images") || path.endsWith(".css"))) {
+      RequestDispatcher dispatcher = request.getRequestDispatcher("main.jsp");
+      String step = null;
+
       // check authentication and verify session
       if (null == session || null == session.getAttribute(ATT_CONFIG)) {
         String serverPass = serverConfig.getProperty(ServerConfiguration.ADMIN_PASS);
         String installPass = path;
-        if(installPass == null || "".equals(installPass)) {
+        if(installPass == null || "".equals(installPass) || "/".equals(installPass)) {
           installPass = "/" + request.getParameter("password");
         }
-        RequestDispatcher dispatcher = request.getRequestDispatcher("main.jsp");
 
-        if (installPass == null || "".equals(installPass) ||
-          !serverPass.equals(installPass.substring(1))) {
-          request.setAttribute("step", "login");
-        } else {
-          session = request.getSession(true);
-          session.setAttribute(ATT_CONFIG, serverConfig);
-          request.setAttribute("step", "install");
+        if (installPass == null || "".equals(installPass) || serverPass.equals(installPass.substring(1))) {
+          step = "login";
         }
-        dispatcher.forward(request, response);
-        return;
       }
+
+      if(null == step) {
+        if(null == request.getParameter(PARAM_INSTALL)) {
+          step = "install";
+        } else {
+          String url = install(request.getParameter(PARAM_HOST),
+                               request.getParameter(PARAM_PORT),
+                               request.getParameter(PARAM_PATH));
+          ((HttpServletResponse)response).sendRedirect(url);
+          return;
+        }
+      }
+
+      request.setAttribute(ATT_STEP, step);
+      session.setAttribute(ATT_CONFIG, serverConfig);
+      session = request.getSession(true);
+      dispatcher.forward(request, response);
+      return;
     }
-    System.out.println("AdminInitFilter: accessing "+path);
 
     // apply the chain
     chain.doFilter(request, response);
   }
 
+  protected String install(String host, String port, String path) {
+    int adminPort = Integer.parseInt(serverConfig.getProperty(ServerConfiguration.ADMIN_PORT));
+    String args = (null == host ? "" : host) + (null == port ? "" : ":"+port) + (null == path ? "" : " "+path);
+    AdminServer.execute(adminPort, AdminServer.CMD_INSTALL, args);
+    return "";
+  }
 }

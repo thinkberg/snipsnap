@@ -41,13 +41,20 @@ import java.util.Properties;
  * @version $Id$
  */
 public class AdminServer implements Runnable {
+  public final static String CMD_SHUTDOWN = "shutdown";
+  public final static String CMD_START = "start";
+  public final static String CMD_STOP = "stop";
+  public final static String CMD_RELOAD = "reload";
+  public final static String CMD_INSTALL = "install";
+
 
   public final static List COMMANDS = Arrays.asList(
       new String[]{
-        "shutdown",
-        "start <appname>",
-        "stop <appname>",
-        "reload <appname>"
+        CMD_SHUTDOWN,
+        CMD_START+" <appname>",
+        CMD_STOP+" <appname>",
+        CMD_RELOAD+" <appname>",
+        CMD_INSTALL+" <appname> <host>:<port> <path>",
       });
 
   /**

@@ -44,6 +44,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
+ * Application Server handler that loads, starts, stops and unloads applications.
  *
  * @author Matthias L. Jugel
  * @version $Id$
