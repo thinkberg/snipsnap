@@ -1,4 +1,6 @@
-<%@ page import="java.util.List"%> <%--
+<%@ page import="java.util.List"%>
+
+<%--
   ** Guide Menu
   ** @author Matthias L. Jugel
   ** @version $Id$

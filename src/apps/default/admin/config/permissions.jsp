@@ -1,7 +1,7 @@
 <%@ page import="java.util.*,
                  org.snipsnap.config.Configuration"%>
  <%--
-  ** Guide Menu
+  ** Permission settings
   ** @author Matthias L. Jugel
   ** @version $Id$
   --%>
@@ -9,36 +9,38 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
 
-<% Configuration cfg = (Configuration)pageContext.findAttribute("config"); %>
 <table>
   <tr><th colspan="2"><fmt:message key="admin.config.step.permissions"/></th></tr>
   <tr>
-    <td><fmt:message key="admin.config.app.perm.notification"/></td>
+    <td><fmt:message key="admin.config.app.perm.register.text"/></td>
     <td>
+      <fmt:message key="admin.config.app.perm.register"/><br/>
+      <input type="checkbox" name="app.perm.register"
+        <c:if test="${config.permRegister == 'allow'}">checked="checked"</c:if>>
+    </td>
+  </tr>
+  <tr>
+    <td><fmt:message key="admin.config.app.perm.weblogsPing.text"/></td>
+    <td>
+      <fmt:message key="admin.config.app.perm.weblogsPing"/><br/>
+      <input type="checkbox" name="app.perm.weblogsPing"
+        <c:if test="${config.permWeblogsPing == 'allow'}">checked="checked"</c:if>>
+    </td>
+  </tr>
+    <tr>
+    <td><fmt:message key="admin.config.app.perm.notification.text"/></td>
+    <td>
+      <fmt:message key="admin.config.app.perm.notification"/><br/>
       <input type="checkbox" name="app.perm.notification"
-        <% if(cfg.allow(Configuration.APP_PERM_NOTIFICATION)) { %>checked="checked" <% } %>>
+        <c:if test="${config.permNotification == 'allow'}">checked="checked"</c:if>>
     </td>
   </tr>
   <tr>
-    <td><fmt:message key="admin.config.app.perm.weblogsPing"/></td>
+    <td><fmt:message key="admin.config.app.perm.externalImages.text"/></td>
     <td>
-      <input type="checkbox" name="app.perm.weblogsPing"
-        <% if (cfg.allow(Configuration.APP_PERM_WEBLOGSPING)) { %>checked="checked" <% } %>>
+      <fmt:message key="admin.config.app.perm.externalImages"/><br/>
+      <input type="checkbox" name="app.perm.externalImages"
+        <c:if test="${config.permExternalImages == 'allow'}">checked="checked"</c:if>>
     </td>
-  </tr>
-  <tr>
-    <td><fmt:message key="admin.config.app.perm.externalImages"/></td>
-    <td>
-      <input type="checkbox" name="app.perm.weblogsPing"
-        <%
-          if (cfg.allow(Configuration.APP_PERM_WEBLOGSPING)) {
-        %>checked="checked" <%
-          }
-        %>>
-    </td>
-  </tr>
-  <tr>
-    <td><fmt:message key="admin.config.app.geoCoordinates"/></td>
-    <td><input type="text" value="<c:out value='${config.geoCoordinates}'/>"></td>
   </tr>
 </table>

@@ -1,6 +1,6 @@
 <%@ page import="java.util.*"%>
  <%--
-  ** Guide Menu
+  ** Localization settings.
   ** @author Matthias L. Jugel
   ** @version $Id$
   --%>
@@ -13,8 +13,9 @@
 <table>
   <tr><th colspan="2"><fmt:message key="admin.config.step.localization"/></th></tr>
   <tr>
-    <td><fmt:message key="admin.config.app.country"/></td>
+    <td><fmt:message key="admin.config.app.country.text"/></td>
     <td>
+      <fmt:message key="admin.config.app.country"/><br/>
       <select size="1" name="app.country">
         <c:forEach items="${locales}" var="locale">
           <c:choose>
@@ -30,8 +31,9 @@
     </td>
   </tr>
   <tr>
-    <td><fmt:message key="admin.config.app.language"/></td>
+    <td><fmt:message key="admin.config.app.language.text"/></td>
     <td>
+      <fmt:message key="admin.config.app.language"/><br/>
       <select size="1" name="app.language">
         <%
           Map languages = new TreeMap();
@@ -48,8 +50,9 @@
     </td>
   </tr>
   <tr>
-    <td><fmt:message key="admin.config.app.timezone"/></td>
+    <td><fmt:message key="admin.config.app.timezone.text"/></td>
     <td>
+      <fmt:message key="admin.config.app.timezone"/><br/>
       <select size="1" name="app.timezone">
         <%
           Map timezones = new TreeMap();
@@ -72,7 +75,10 @@
     </td>
   </tr>
   <tr>
-    <td><fmt:message key="admin.config.app.geoCoordinates"/></td>
-    <td><input type="text" value="<c:out value='${config.geoCoordinates}'/>"></td>
+    <td><fmt:message key="admin.config.app.geoCoordinates.text"/></td>
+    <td>
+      <fmt:message key="admin.config.app.geoCoordinates"/><br/>
+      <input type="text" value="<c:out value='${config.geoCoordinates}'/>">
+    </td>
   </tr>
 </table>

@@ -1,5 +1,5 @@
 <%--
-  ** Guide Menu
+  ** First Login / Admin
   ** @author Matthias L. Jugel
   ** @version $Id$
   --%>
@@ -10,19 +10,26 @@
 <table>
   <tr><th colspan="2"><fmt:message key="admin.config.step.administrator"/></th></tr>
   <tr>
-    <td><fmt:message key="admin.config.app.admin.login"/></td>
-    <td><input type="text" name="app.admin.login" value="<c:out value='${config.adminLogin}' default=""/>"></td>
+    <td><fmt:message key="admin.config.app.admin.login.text"/></td>
+    <td>
+      <fmt:message key="admin.config.app.admin.login"/><br/>
+      <input type="text" name="app.admin.login" value="<c:out value='${config.adminLogin}' default=""/>">
+    </td>
   </tr>
   <tr>
-    <td><fmt:message key="admin.config.app.admin.email"/></td>
-    <td><input type="text" name="app.admin.email" value="<c:out value='${config.adminEmail}' default=""/>"></td>
+    <td><fmt:message key="admin.config.app.admin.password.text"/></td>
+    <td>
+      <fmt:message key="admin.config.app.admin.password"/><br/>
+      <input type="text" name="app.admin.password" value=""><br/>
+      <fmt:message key="admin.config.app.admin.password.vrfy"/><br/>
+      <input type="text" name="app.admin.password.vrfy" value="">
+    </td>
   </tr>
   <tr>
-    <td><fmt:message key="admin.config.app.admin.password"/></td>
-    <td><input type="text" name="app.admin.password" value=""></td>
-  </tr>
-  <tr>
-    <td><fmt:message key="admin.config.app.admin.password.vrfy"/></td>
-    <td><input type="text" name="app.admin.password.vrfy" value=""></td>
+    <td><fmt:message key="admin.config.app.admin.email.text"/></td>
+    <td>
+      <fmt:message key="admin.config.app.admin.email"/><br/>
+      <input type="text" name="app.admin.email" value="<c:out value='${config.adminEmail}' default=""/>">
+    </td>
   </tr>
 </table>

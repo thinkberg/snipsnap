@@ -1,6 +1,6 @@
 <%@ page import="org.snipsnap.config.Configuration"%>
  <%--
-  ** Guide Menu
+  ** Basic Settings of the Application
   ** @author Matthias L. Jugel
   ** @version $Id$
   --%>
@@ -11,47 +11,41 @@
 <table>
   <tr><th colspan="2"><fmt:message key="admin.config.step.application"/></th></tr>
   <tr>
-    <td><fmt:message key="admin.config.app.name.txt"/></td>
+    <td><fmt:message key="admin.config.app.name.text"/></td>
     <td>
       <fmt:message key="admin.config.app.name"/><br/>
-      <input type="text" name="app.name" value="<c:out value='${config.name}' default="My SnipSnap"/>">
+      <input type="text" name="app.name" value="<c:out value='${config.name}'/>" size="40">
     </td>
   </tr>
   <tr>
-    <td><fmt:message key="admin.config.app.tagline.txt"/></td>
-    <td><input type="text" name="app.tagline" value="<c:out value='${config.tagline}' default="Where I keep my Knowledge"/>"></td>
-  </tr>
-  <tr>
-    <td><fmt:message key="admin.config.app.logo.txt"/></td>
-    <td><input type="file" name="app.logo" value="<c:out value='${config.logo}'/>" accept="image/*"></td>
-  </tr>
-  <tr>
-    <td><fmt:message key="admin.config.app.perm.register.txt"/></td>
+    <td><fmt:message key="admin.config.app.tagline.text"/></td>
     <td>
-      <input type="checkbox" name="app.perm.register"
-        <c:if test="${config.permRegister == 'allow'}">checked="checked"</c:if>>
+       <fmt:message key="admin.config.app.tagline"/><br/>
+      <input type="text" name="app.tagline" value="<c:out value='${config.tagline}'/>" size="40">
     </td>
   </tr>
   <tr>
-    <td><fmt:message key="admin.config.app.perm.notification"/></td>
+    <td><fmt:message key="admin.config.app.logo.text"/></td>
     <td>
-      <input type="checkbox" name="app.perm.notification"
-        <c:if test="${config.permNotification == 'allow'}">checked="checked"</c:if>>
+      <fmt:message key="admin.config.app.logo"/><br/>
+      <input type="file" name="app.logo" value="<c:out value='${config.logo}'/>" accept="image/*">
     </td>
   </tr>
   <tr>
-    <td><fmt:message key="admin.config.app.perm.weblogsPing"/></td>
+    <td><fmt:message key="admin.config.usage.text"/></td>
     <td>
-      <input type="checkbox" name="app.perm.weblogsPing"
-        <c:if test="${config.permWeblogsPing == 'allow'}">checked="checked"</c:if>>
+      <input type="radio" name="usage" value="public"
+        <c:if test="${usage == 'public'}">checked="checked"</c:if>
+      ><fmt:message key="admin.config.usage.public"/><br/>
+      <input type="radio" name="usage" value="closed"
+        <c:if test="${usage == 'closed'}">checked="checked"</c:if>
+      ><fmt:message key="admin.config.usage.closed"/><br/>
+      <input type="radio" name="usage" value="intranet"
+        <c:if test="${usage == 'intranet'}">checked="checked"</c:if>
+      ><fmt:message key="admin.config.usage.intranet"/><br/>
+      <input type="radio" name="usage" value="custom"
+        <c:if test="${usage == 'custom'}">checked="checked"</c:if>
+      ><fmt:message key="admin.config.usage.custom"/>
     </td>
   </tr>
-  <tr>
-    <td><fmt:message key="admin.config.app.perm.externalImages"/></td>
-    <td>
-      <input type="checkbox" name="app.perm.externalImages"
-        <c:if test="${config.permExternalImages == 'allow'}">checked="checked"</c:if>>
-    </td>
-  </tr>
-
 </table>
