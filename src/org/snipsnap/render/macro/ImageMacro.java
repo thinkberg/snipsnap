@@ -69,22 +69,28 @@ public class ImageMacro extends SnipMacro {
 
       if (params.getLength() > 0) {
         String img = params.get("img");
-        String alt = null, ext = null, align = null;
+        String alt = null, ext = null, align = null, target = null;
         boolean qualifiedParams = img != null;
         if (qualifiedParams) {
           alt = params.get("alt");
           ext = params.get("ext");
           align = params.get("align");
+          target = params.get("target");
         } else {
           img = params.get(0);
           alt = params.get(1);
           ext = params.get(2);
           align = params.get(3);
+          target = params.get(4);
         }
 
         String link = params.get("link");
         if (link != null) {
-          writer.write("<a href=\"" + link + "\">");
+          writer.write("<a href=\"" + link + "\"");
+          if (target != null) {
+            writer.write("target=\""+target+"\"");
+          }
+          writer.write(">");
         }
 
         String imageName = img;
