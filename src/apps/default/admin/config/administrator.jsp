@@ -24,6 +24,7 @@
       <c:if test="${!empty errors['app.admin.password']}"><img src="images/attention.jpg"></c:if><br/>
       <fmt:message key="config.app.admin.password.vrfy"/><br/>
       <input type="password" name="app.admin.password.vrfy" value="">
+      <c:if test="${!empty errors['app.admin.password']}"><img src="images/attention.jpg"></c:if><br/>
       <div class="hint">
         <c:if test="${not empty config.adminPassword}">
           <fmt:message key="config.password.set" />

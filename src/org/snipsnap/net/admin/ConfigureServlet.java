@@ -28,7 +28,6 @@ import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.net.filter.MultipartWrapper;
 import org.snipsnap.snip.SnipLink;
-import org.snipsnap.util.MckoiEmbeddedJDBCDriver;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -40,13 +39,21 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
-import java.text.SimpleDateFormat;
-import java.text.DateFormat;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.net.Socket;
 import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * @author Matthias L. Jugel
@@ -168,21 +175,21 @@ public class ConfigureServlet extends HttpServlet {
               // if we see a "next" and this is the end it must be expert settings
               if (null != request.getParameter(ATT_ADVANCED)) {
                 session.setAttribute(ATT_ADVANCED, "true");
-                if(request.getParameter("advanced.all") != null) {
+                if (request.getParameter("advanced.all") != null) {
                   steps = addSteps(steps, EXPERT_STEPS);
                 } else {
                   List list = new ArrayList();
                   Iterator it = request.getParameterMap().keySet().iterator();
-                  while(it.hasNext()) {
-                    String advStep = (String)it.next();
-                    if(advStep.startsWith("advanced.step.")) {
+                  while (it.hasNext()) {
+                    String advStep = (String) it.next();
+                    if (advStep.startsWith("advanced.step.")) {
                       advStep = advStep.substring("advanced.step.".length());
                       list.add(advStep);
                     }
                   }
                   addSteps(steps, list);
                 }
-                step = (String)steps.get(idx);
+                step = (String) steps.get(idx);
               } else {
                 step = (String) steps.get(idx + 1);
               }
@@ -192,6 +199,8 @@ public class ConfigureServlet extends HttpServlet {
             }
           }
         } else {
+          System.out.println("errors: "+errors);
+          
           request.setAttribute("errors", errors);
         }
       }
@@ -498,9 +507,7 @@ public class ConfigureServlet extends HttpServlet {
 
   private void setupDatabase(HttpServletRequest request, Configuration config, Map errors) {
     boolean internalDatabase = request.getParameter("app.jdbc.internal") != null;
-    System.out.println(config.getProperties().get(Configuration.APP_JDBC_DRIVER));
-    System.out.println("internal database: "+internalDatabase);
-    if(internalDatabase) {
+    if (internalDatabase) {
       config.setJdbcDriver(config.getDefault(Configuration.APP_JDBC_DRIVER));
       config.setJdbcUrl(config.getDefault(Configuration.APP_JDBC_URL));
       config.setJdbcUser("snipsnap");
@@ -520,10 +527,13 @@ public class ConfigureServlet extends HttpServlet {
   }
 
   private boolean checkPath(String path) {
+    System.out.println("checking: "+path);
     File pathFile = new File(path);
-    while(pathFile.getParentFile() != null && !pathFile.exists()) {
+    while (pathFile.getParentFile() != null && !pathFile.exists()) {
       pathFile = pathFile.getParentFile();
+      System.out.println("checking: "+pathFile);
     }
+    System.out.println("final: "+(pathFile.exists() && pathFile.canWrite()));
     return pathFile.exists() && pathFile.canWrite();
   }
 
@@ -532,12 +542,27 @@ public class ConfigureServlet extends HttpServlet {
     config.setStartSnip(null == startSnip || "".equals(startSnip) ? "start" : startSnip);
     config.setPermCreateSnip(allowDeny(request.getParameter(Configuration.APP_PERM_CREATESNIP)));
     String indexPath = request.getParameter(Configuration.APP_INDEX_PATH);
-    if(indexPath != null && indexPath.length() > 0) {
-      if(!checkPath(indexPath)) {
+    if (indexPath != null && indexPath.length() > 0) {
+      config.setIndexPath(indexPath);
+      indexPath = config.getIndexPath();
+      if (!checkPath(indexPath)) {
         errors.put(Configuration.APP_INDEX_PATH, Configuration.APP_INDEX_PATH);
       }
     }
-    
+    String filePath = request.getParameter(Configuration.APP_FILE_PATH);
+    if (filePath != null && filePath.length() > 0) {
+      config.setFilePath(filePath);
+      filePath = config.getFilePath();
+      if (!checkPath(filePath)) {
+        errors.put(Configuration.APP_FILE_PATH, Configuration.APP_FILE_PATH);
+      }
+    }
+    String logger = request.getParameter(Configuration.APP_LOGGER);
+    config.setLogger(logger != null && logger.length() > 0 ? logger : "org.radeox.util.logging.NullLogger");
+    String cache = request.getParameter(Configuration.APP_CACHE);
+    config.setCache(cache != null && cache.length() > 0 ? cache : "full");
+    String encoding = request.getParameter(Configuration.APP_ENCODING);
+    config.setEncoding(encoding != null && encoding.length() > 0 ? encoding : "UTF-8");
   }
 
 }

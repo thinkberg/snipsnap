@@ -39,8 +39,7 @@
                 <c:forEach items="${errors}" var="error">
                   <li>
                    <fmt:message key="config.error.${error.value}">
-                     <%-- check for null --%>
-                     <fmt:param value=" ${config.properties[error.key]}"/>
+                     <fmt:param><c:out value="${config.properties[error.key]}"/></fmt:param>
                    </fmt:message>
                   </li>
                 </c:forEach>

@@ -27,7 +27,6 @@ package org.snipsnap.test.commons;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import org.snipsnap.snip.SnipLink;
 import org.snipsnap.test.snip.SnipTestSupport;
 import org.snipsnap.util.URLEncoderDecoder;
 
@@ -54,12 +53,12 @@ public class EncoderTest extends SnipTestSupport {
 
   public void testUTF8Encoding() throws UnsupportedEncodingException {
     assertEquals("String UTF-8 is encoded correctly",
-        encodedString, URLEncoderDecoder.encode(unencodedString, "UTF-8"));
+                 encodedString, URLEncoderDecoder.encode(unencodedString, "UTF-8"));
   }
 
-  public void testUTF8Decoding() throws UnsupportedEncodingException  {
+  public void testUTF8Decoding() throws UnsupportedEncodingException {
     assertEquals("String UTF-8 is decoded correctly",
-        unencodedString, URLEncoderDecoder.decode(encodedString, "UTF-8"));
+                 unencodedString, URLEncoderDecoder.decode(encodedString, "UTF-8"));
   }
 
   /*
