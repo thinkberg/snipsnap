@@ -57,7 +57,6 @@ import java.util.TimerTask;
  * @TODO move indexing to Interceptor
  * @TODO move ETag / changed handling to Interceptor
  * @TODO move changed to Interceptor
- * @TODO add Blog object for Post etc.
  *
  * @author Stephan J. Schmidt
  * @version $Id$

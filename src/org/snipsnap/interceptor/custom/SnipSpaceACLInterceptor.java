@@ -47,13 +47,7 @@ public class SnipSpaceACLInterceptor extends InterceptorSupport {
 
   public Object invoke(Invocation invocation) throws Throwable {
     String method = invocation.getMethod().getName();
-    if (method.startsWith("post")) {
-      User user = Application.get().getUser();
-      if (!Security.hasRoles(user, null, roles)) {
-        //Logger.debug("SECURITY EXCEPTION");
-        throw new GeneralSecurityException("Not allowed to post.");
-      }
-    } else if(method.equals("remove")) {
+    if(method.equals("remove")) {
       User user = Application.get().getUser();
       if (!Security.hasRoles(user, null, roles)) {
         Logger.debug("SECURITY EXCEPTION");

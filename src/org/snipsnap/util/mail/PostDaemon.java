@@ -30,6 +30,7 @@ import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.snip.Blog;
+import org.snipsnap.snip.BlogKit;
 import org.snipsnap.user.UserManager;
 import org.radeox.util.logging.Logger;
 
@@ -102,7 +103,7 @@ public class PostDaemon {
 // Get directory
         Message message[] = folder.getMessages();
 
-        String name = Blog.getPostName();
+        String name = BlogKit.getPostName();
 
         for (int i = 0, n = message.length; i < n; i++) {
           StringWriter writer = new StringWriter();

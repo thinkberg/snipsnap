@@ -1,23 +1,24 @@
 0.5
 
-- Developer: Refactore blog functionality to class Blog
+- Fixed bug: strike through with dashes, --Test-Text-- did not render
+- Developer: Refactored blog functionality to class Blog
 - Developer: Refactored missing to MissingInterceptor in SnipSpace
 - Fixed bug: /raw/ had problems with UTF-8 characters
 - Added feature: Aliases for links [alias|link]
 - Added feature: app.perm.register=deny prevents registering
 
-0.4.2
+0.4.2 - 2003-03-18
 
-- fixed a major security bug
-- fixed shutdown behaviour to cleanly close database
+- Fixed bug: fixed a major security bug
+- Fixed bug: fixed shutdown behaviour to cleanly close database
 
-0.4.1
+0.4.1 - 2003-03-24
 
-- fixed performance bug for MacroFilter
+- Fixed bug: fixed performance bug for MacroFilter
 - startup message requiring JAVA_HOME removed (unnecessary)
 - removed -server command line option from startup scripts
 
-0.4
+0.4 - 2003-03-18
 
 - Fixed bug: Added more methods to XML-RPC Blogger API
 - Added feature: XML-RPC MetaWeblog API support

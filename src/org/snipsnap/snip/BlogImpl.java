@@ -51,21 +51,12 @@ public class BlogImpl implements Blog {
     this.blog = space.load(name);
   }
 
-  public static String getPostName() {
-    Date date = new Date(new java.util.Date().getTime());
-    return SnipUtil.toName(date);
-  }
-
-  public static String getContent(String title, String content) {
-    return content = "1 " + title + " {anchor:" + title + "}\n" + content;
-  }
-
   public String getName() {
     return this.name;
   }
 
   public Snip post(String content, String title) {
-    return post(getContent(title, content));
+    return post(BlogKit.getContent(title, content));
   }
 
   public Snip post(String content) {

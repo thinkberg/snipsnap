@@ -25,11 +25,7 @@
 package org.snipsnap.net;
 
 import org.snipsnap.app.Application;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipFormatter;
-import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.snip.Blog;
+import org.snipsnap.snip.*;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 
@@ -56,7 +52,7 @@ public class PostStoreServlet extends HttpServlet {
     if (request.getParameter("preview") != null) {
       // If there is a title, generate preview of snip with title + content
       if (null != title && !"".equals(title)) {
-        request.setAttribute("preview", SnipFormatter.toXML(null, Blog.getContent(title, content)));
+        request.setAttribute("preview", SnipFormatter.toXML(null, BlogKit.getContent(title, content)));
       } else {
         request.setAttribute("preview", SnipFormatter.toXML(null, content));
       }
