@@ -25,11 +25,9 @@
 
 package com.neotis.snip;
 
-import com.neotis.jsp.ImageTag;
-
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  *  Generates links for snips
@@ -37,7 +35,6 @@ import java.util.Arrays;
  * @author stephan
  * @version $Id$
  */
-
 public class SnipLink {
 
   public static String createLink(String name, String view) {
@@ -74,7 +71,6 @@ public class SnipLink {
   }
 
   private final static String IMAGES_ROOT = "../images";
-  private String ext = "png";
   private static List extensions = Arrays.asList(new String[]{"png", "jpg", "jpeg", "gif"});
 
   /**
@@ -159,7 +155,7 @@ public class SnipLink {
       buffer.append(alt);
       buffer.append("\"");
     }
-    buffer.append(">");
+    buffer.append(" border=\"0\">");
     return buffer;
   }
 }
