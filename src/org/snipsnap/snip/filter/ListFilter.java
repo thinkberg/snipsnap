@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.FileReader;
 import java.io.FileNotFoundException;
+import java.io.File;
 import java.util.StringTokenizer;
 import java.util.Map;
 import java.util.HashMap;
@@ -54,7 +55,7 @@ public class ListFilter extends RegexTokenFilter {
   private final static Map closeList = new HashMap();
 
   public ListFilter() {
-    super("^[[:space:]]*([-*][[:space:]]+|[iIaA1ghHkKj]\\.[[:space:]]+)(\r?\n[[:space:]]*(?:[-*][[:space:]]+|[iIaA1ghHkKj]\\.[[:space:]]+)|.)*$", MULTILINE);
+    super("^[[:space:]]*([-*][[:space:]]+|[iIaA1ghHkKj]\\.[[:space:]]+)(\r?\n[[:space:]]*(?:([-*][[:space:]]+)|([iIaA1ghHkKj]\\.[[:space:]]+))|.*)*$", MULTILINE);
     openList.put("-", "<ul class=\"minus\">");
     openList.put("*", "<ul class=\"star\">");
     openList.put("i", "<ol class=\"roman\">");
@@ -123,10 +124,11 @@ public class ListFilter extends RegexTokenFilter {
     }
     buffer.append(closeList.get(lastBullet));
   }
-/*
+
   public static void main(String args[]) {
     Logger.setHandler(new SystemOutLogger());
     BufferedReader reader = null;
+    Logger.log(new File(args[0]).getAbsolutePath());
     try {
       reader = new BufferedReader(new FileReader(args[0]));
     } catch (FileNotFoundException e) {
@@ -147,5 +149,5 @@ public class ListFilter extends RegexTokenFilter {
     System.out.println(filter.filter(buf, null));
 
   }
-*/
+
 }
