@@ -65,5 +65,22 @@
     </attribute>
   </tag>
 
+  <tag>
+    <name>image</name>
+    <tag-class>com.neotis.jsp.ImageTag</tag-class>
+    <attribute>
+      <name>name</name>
+      <required>true</required>
+    </attribute>
+    <attribute>
+      <name>alt</name>
+      <required>false</required>
+    </attribute>
+    <attribute>
+      <name>ext</name>
+      <required>false</required>
+    </attribute>
+  </tag>
+
 </taglib>
 

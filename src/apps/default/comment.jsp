@@ -37,7 +37,7 @@
   <table width="100%" border="0" cellspacing="2" cellpadding="1">
    <c:forEach items="${snip.comments.comments}" var="comment" >
     <tr>
-     <td><img src="../images/comment.png"/></td>
+     <td><s:image name="comment"/></td>
      <td>
       <span class="comment-author"><c:out value="${comment.modified.short}" 
                                       escapeXml="false" /></span>

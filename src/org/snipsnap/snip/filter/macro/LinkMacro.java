@@ -25,6 +25,7 @@
 package com.neotis.snip.filter.macro;
 
 import com.neotis.snip.Snip;
+import com.neotis.snip.SnipLink;
 
 /*
  * Macro that replaces external links
@@ -37,9 +38,11 @@ public class LinkMacro extends Macro {
   public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {
     StringBuffer buffer = new StringBuffer();
     if (params.length == 2) {
-      buffer.append("<nobr><img border=\"0\" alt=\">>\" src=\"../images/arrow.right.gif\"></nobr>");
+      buffer.append("<nobr>");
+      SnipLink.appendImage(buffer, "arrow.right", ">>", "gif");
       buffer.append("<a href=\"").append(params[1]).append("\">");
       buffer.append(params[0]).append("</a>");
+      buffer.append("</nobr>");
     } else if(params.length == 1) {
       // will be catched by UrlFilter
       buffer.append(params[0]);

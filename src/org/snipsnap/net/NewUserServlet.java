@@ -85,11 +85,13 @@ public class NewUserServlet extends HttpServlet {
         sendError(session, errors, request, response);
         return;
       }
-      user = um.create(login, password, email);
 
+      // create user ...
       Application app = (Application) session.getAttribute("app");
+      user = um.create(login, password, email);
       app.setUser(user);
       HomePage.create(login, app);
+
       // store user name and app in cookie and session
       Cookie cookie = new Cookie("userName", user.getLogin());
       cookie.setMaxAge(Integer.MAX_VALUE-2);

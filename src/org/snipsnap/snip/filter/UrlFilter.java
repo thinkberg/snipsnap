@@ -33,11 +33,12 @@
 package com.neotis.snip.filter;
 
 import com.neotis.snip.filter.regex.RegexReplaceFilter;
+import com.neotis.snip.SnipLink;
 
 public class UrlFilter extends RegexReplaceFilter {
 
   public UrlFilter() {
     super("([^\"]|^)((http|ftp)s?://(%[[:digit:]A-Fa-f][[:digit:]A-Fa-f]|[-_.!~*';/?:@&=+$,[:alnum:]])+)",
-             "$1<nobr><img border=\"0\" alt=\">>\" src=\"../images/arrow.right.gif\"><a href=\"$2\">$2</a></nobr>");
+             "$1<nobr>"+SnipLink.createImage("arrow.right", ">>", "gif")+"<a href=\"$2\">$2</a></nobr>");
   };
 }
