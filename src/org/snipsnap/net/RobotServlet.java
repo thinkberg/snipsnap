@@ -44,14 +44,11 @@ import java.io.IOException;
  * @version $Id$
  */
 public class RobotServlet extends HttpServlet {
+
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+    String name = request.getHeader("User-Agent");
     String host = request.getRemoteHost();
-    String name = "Unknown Robot";
-    if(host.endsWith("googlebot.com")) {
-      name = "GoogleBot";
-    }
-    UserManager.getInstance().addRobot(host, name);
     response.sendError(HttpServletResponse.SC_NOT_FOUND);
   }
 }

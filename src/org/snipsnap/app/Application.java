@@ -159,7 +159,19 @@ public class Application {
     Iterator iterator = currentUsers.values().iterator();
     while (iterator.hasNext()) {
       User user  = (User) iterator.next();
-      if (! (User.UNKNOWN.equals(user.getName()) || users.contains(user))) {
+      if (! (user.isGuest() || user.isNonUser() || users.contains(user))) {
+        users.add(user);
+      }
+    }
+    return users;
+  }
+
+  public static List getCurrentNonUsers() {
+    List users = new ArrayList();
+    Iterator iterator = currentUsers.values().iterator();
+    while (iterator.hasNext()) {
+      User user  = (User) iterator.next();
+      if (user.isNonUser() && !users.contains(user)) {
         users.add(user);
       }
     }
@@ -171,7 +183,7 @@ public class Application {
     Iterator iterator = currentUsers.values().iterator();
     while (iterator.hasNext()) {
       User user = (User) iterator.next();
-      if (User.UNKNOWN.equals(user.getLogin())) {
+      if (user.isGuest() && !user.isNonUser()) {
         count++;
       }
     }

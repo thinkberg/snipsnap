@@ -110,16 +110,6 @@ public class UserManager implements Loader {
     }
   }
 
-
-  public void addRobot(String address, String name) {
-    User user = (User) robots.get(address);
-    if(user == null) {
-      System.out.println("new robot found: "+address+" '"+name+"'");
-      //user = new User(name, name, "");
-      robots.put(address, user);
-    }
-  }
-
   /**
    * Get user from session or cookie.
    */
@@ -144,9 +134,17 @@ public class UserManager implements Loader {
       }
 
       if (null == user) {
-        //user = (User)robots.get(request.getRemoteHost());
-        if(null == user) {
+        String agent = request.getHeader("User-Agent");
+        if(agent != null && agent.toLowerCase().indexOf("googlebot") != -1) {
+          user = (User)robots.get("GoogleBot");
+          if(null == user) {
+            user = new User("GoogleBot", "GoogleBot", "http://www.googlebot.com/bot.html");
+            user.setNonUser(true);
+            robots.put(user.getLogin(), user);
+          }
+        } else {
           user = new User("Guest", "Guest", "");
+          user.setGuest(true);
         }
         removeCookie(request, response);
       }
@@ -211,7 +209,7 @@ public class UserManager implements Loader {
   }
 
   public boolean isAuthenticated(User user) {
-    return user != null && !"Guest".equals(user.getLogin());
+    return user != null && !user.isGuest();
   }
 
   public Object createObject(ResultSet result) throws SQLException {

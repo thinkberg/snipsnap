@@ -24,9 +24,13 @@
  <tr><td>
   <b>Users:</b><br/>
   <% pageContext.setAttribute("users", Application.getCurrentUsers()); %>
+  <% pageContext.setAttribute("nonusers", Application.getCurrentNonUsers()); %>
   <% pageContext.setAttribute("guests", new Integer(Application.getGuestCount())); %>
   <c:forEach var="user" items="${users}">
    <a href="<c:url value='/space/${user.name}'/>"><c:out value="${user.name}"/></a><br/>
+  </c:forEach>
+  <c:forEach var="user" items="${nonusers}">
+   <a href="<c:url value='${user.email}'/>"><c:out value="${user.name}"/></a><br/>
   </c:forEach>
   ... and <c:out value="${guests}"/> Guests.
  </td></tr>

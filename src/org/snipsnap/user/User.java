@@ -45,7 +45,8 @@ public class User implements Nameable {
   private Roles roles;
   private Timestamp cTime, mTime, lastLogin, lastAccess, lastLogout;
 
-  public static final String UNKNOWN = "Guest";
+  private boolean guest = false;
+  private boolean nonUser = false;
 
   public User(String login, String passwd, String email) {
     this.login = login;
@@ -157,6 +158,22 @@ public class User implements Nameable {
     Application app = Application.get();
     AppConfiguration config = app.getConfiguration();
     return config.getAdminLogin().equals(login);
+  }
+
+  public void setGuest(boolean guest) {
+    this.guest = guest;
+  }
+
+  public boolean isGuest() {
+    return guest;
+  }
+
+  public void setNonUser(boolean nonUser) {
+    this.nonUser = nonUser;
+  }
+
+  public boolean isNonUser() {
+    return nonUser;
   }
 
   public boolean equals(Object obj) {
