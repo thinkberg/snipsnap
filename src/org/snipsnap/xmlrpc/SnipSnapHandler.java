@@ -66,6 +66,7 @@ import java.util.Vector;
  */
 
 public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler {
+  // @TODO use Gabriel instead
   private final static List FREE_METHODS = Arrays.asList(new String[]{
     "getVersion",
     "authenticateUser"
@@ -116,12 +117,11 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
     if (FREE_METHODS.contains(method)) {
       return super.execute(method, vector);
     } else if (PREFIX_METHODS.contains(method)) {
-      ApplicationManager appManager = (ApplicationManager) Components.getComponent(ApplicationManager.class);
       if(!(vector.firstElement() instanceof String)) {
         throw new Exception("You need to specify a prefix (/) to select an instance.");
       }
       String prefix = (String) vector.firstElement();
-      String appOid = appManager.getApplication(prefix);
+      String appOid = applicationManager.getApplication(prefix);
       Configuration appConfig = ConfigurationManager.getInstance().getConfiguration(appOid);
       if (appConfig != null) {
         if(prefix.equals(vector.get(0))) {
@@ -233,8 +233,7 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
 
   public String install(String prefix, Hashtable appConfig) throws Exception {
     ConfigurationManager configManager = ConfigurationManager.getInstance();
-    ApplicationManager appManager = (ApplicationManager) Components.getComponent(ApplicationManager.class);
-    String appOid = appManager.getApplication(prefix);
+    String appOid = applicationManager.getApplication(prefix);
     Configuration config = configManager.getConfiguration(appOid);
 
     // only set new values if config does not exits
