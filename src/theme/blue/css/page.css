@@ -63,8 +63,8 @@ body {
 
 #page-wrapper {
   position: relative;
-	margin: 0px;
-	padding: 0px;
+  margin: 0px;
+  padding: 0px;
   background: #FFF;
 }
 
@@ -80,8 +80,7 @@ body {
   position: absolute;
   left: 70%;
   top: 0px;
-  height: 100%;
-  width: 25%;
+  width: 26%;
   margin: 0px;
   padding-right: 15px;
   padding-left: 15px;
@@ -111,9 +110,10 @@ body {
 #page-bottom {
   padding-top: 15px;
   padding-bottom: 15px;
+  padding-right: 33%;
   margin: 0px;
   margin-top: -11px;
-  width: 100%;
+  width: 67%;
   background:#FFF;
   text-align: center;
 }
