@@ -57,7 +57,7 @@ public class AdminXmlRpcClient {
   }
 
   public void shutdown() throws XmlRpcException, IOException {
-    xmlRpcClient.execute("shutdown", null);
+    xmlRpcClient.execute("shutdown", new Vector());
   }
 
   public URL install(String name, String host, String port, String path) throws XmlRpcException, IOException {

@@ -78,7 +78,17 @@ public class AdminXmlRpcHandler extends AuthXmlRpcHandler {
   }
 
   public void shutdown() {
-    Shutdown.shutdown();
+    new Thread() {
+      public void run() {
+        System.err.println("AdminXmlRpcHandler: shutdown waiting for 1s ...");
+        try {
+          currentThread().wait(1000);
+        } catch (InterruptedException e) {
+          System.err.println("AdminXmlRpcHandler: shutdown delay cancelled");
+        }
+        System.exit(0);
+      }
+    }.start();
   }
 
   public String install(String name, String host, String port, String path) throws Exception {
