@@ -119,6 +119,8 @@ public class UserManager {
   // Storage System dependend Methods
 
   private String serialize(Set roles) {
+    if (null == roles || roles.isEmpty()) return "";
+
     StringBuffer buffer = new StringBuffer();
     Iterator iterator = roles.iterator();
     while (iterator.hasNext()) {
@@ -130,6 +132,8 @@ public class UserManager {
   }
 
   private Set deserialize(String roleString) {
+    if ("".equals(roleString)) return new HashSet();
+
     StringTokenizer st = new StringTokenizer(roleString, ":");
     Set roles = new HashSet();
 

@@ -71,7 +71,14 @@ public class Security {
     return !userRoles.isEmpty();
   }
 
-  // "Edit", "SnipSnap", "funzel"
+  /**
+   * Check if the user has the permission on the object
+   *
+   * @param permission the permission to check, e.g. "Edit"
+   * @param user the user to check permissions for, e.g. "funzel"
+   * @param object the object that should be manipulated
+   * @return
+   */
   public static boolean checkPermission(String permission, User user, Snip object) {
     Map permissions = object.getPermissions();
     Set permRoles = (Set) permissions.get(permission);

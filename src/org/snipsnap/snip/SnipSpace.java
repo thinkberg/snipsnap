@@ -39,9 +39,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * SnipSpace handles all the data storage.
@@ -170,6 +168,69 @@ public class SnipSpace implements LinkTester, Loader {
 
   // Storage System dependend Methods
 
+  private String serialize(Map permissions) {
+    if (null==permissions || permissions.isEmpty()) return "";
+
+    StringBuffer permBuffer = new StringBuffer();
+    Iterator iterator = permissions.keySet().iterator();
+    while (iterator.hasNext()) {
+      String permission = (String) iterator.next();
+      permBuffer.append(permission);
+      permBuffer.append(":");
+      Set roles = (Set) permissions.get(permission);
+      Iterator rolesIterator = roles.iterator();
+      while (rolesIterator.hasNext()) {
+        String role = (String) rolesIterator.next();
+        permBuffer.append(role);
+        if (rolesIterator.hasNext()) {
+          permBuffer.append(",");
+        }
+      }
+      if (iterator.hasNext()) {
+        permBuffer.append("|");
+      }
+    }
+    return permBuffer.toString();
+  }
+
+  private String after(String string, String delimiter) {
+    return string.substring(string.indexOf(delimiter));
+  }
+
+  private String before(String string, String delimiter) {
+    return string.substring(0, string.indexOf(delimiter));
+  }
+
+  private Set getRoles(String rolesString) {
+    Set roles = new HashSet();
+    StringTokenizer tokenizer = new StringTokenizer(after(rolesString,":"), ",");
+    while (tokenizer.hasMoreTokens()) {
+      String role = tokenizer.nextToken();
+      roles.add(role);
+    }
+    return roles;
+  }
+
+  private String getPermission(String rolesString) {
+    return before(rolesString, ":");
+  }
+
+  public Map deserialize(String permissions) {
+    if ("".equals(permissions)) return new HashMap();
+
+    Map perms  = new HashMap();
+
+    StringTokenizer tokenizer = new StringTokenizer(permissions, "|");
+    while (tokenizer.hasMoreTokens()) {
+      String permission = tokenizer.nextToken();
+      Set roles = getRoles(permission);
+      permission = getPermission(permission);
+      perms.put(permission, roles);
+    }
+
+    return perms;
+  }
+
   public Snip createSnip(ResultSet result) throws SQLException {
     String name = result.getString("name");
     String content = result.getString("content");
@@ -187,11 +248,12 @@ public class SnipSpace implements LinkTester, Loader {
     if (!result.wasNull()) {
       snip.parent = load(parentString);
     }
+    snip.setPermissions(deserialize(result.getString("permissions")));
     return snip;
   }
 
   private List storageByRecent(int size) {
-    Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip " +
+    Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions " +
                                " FROM Snip " +
                                " ORDER by mTime DESC", cache, (Loader) this);
 
@@ -199,7 +261,7 @@ public class SnipSpace implements LinkTester, Loader {
   }
 
   private List storageByUser(String login) {
-    Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip " +
+    Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions " +
                                " FROM Snip " +
                                " WHERE cUser=?", cache, (Loader) this);
     finder.setString(1, login);
@@ -207,7 +269,7 @@ public class SnipSpace implements LinkTester, Loader {
   }
 
   private List storageByComments(Snip parent) {
-    Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip " +
+    Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions " +
                                " FROM Snip " +
                                " WHERE commentSnip=?", cache, (Loader) this);
     finder.setString(1, parent.getName());
@@ -215,7 +277,7 @@ public class SnipSpace implements LinkTester, Loader {
   }
 
   private List storageByParent(Snip parent) {
-    Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip " +
+    Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions " +
                                " FROM Snip " +
                                " WHERE parentSnip=?", cache, (Loader) this);
     finder.setString(1, parent.getName());
@@ -223,7 +285,7 @@ public class SnipSpace implements LinkTester, Loader {
   }
 
   private List storageByParentNameOrder(Snip parent, int count) {
-    Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip " +
+    Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions " +
                                " FROM Snip " +
                                " WHERE parentSnip=? " +
                                " ORDER BY name DESC ", cache , (Loader) this);
@@ -232,7 +294,7 @@ public class SnipSpace implements LinkTester, Loader {
   }
 
   private List storageByDateInName(String start, String end) {
-    Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip " +
+    Finder finder = new Finder("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions " +
                                " FROM Snip " +
                                " WHERE name>=? and name<=? and parentSnip=? " +
                                " ORDER BY name", cache, (Loader) this);
@@ -249,7 +311,7 @@ public class SnipSpace implements LinkTester, Loader {
     Connection connection = ConnectionManager.getConnection();
 
     try {
-      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip " +
+      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions " +
                                               " FROM Snip " +
                                               " WHERE name=?");
       statement.setString(1, name);
@@ -274,7 +336,7 @@ public class SnipSpace implements LinkTester, Loader {
 
     try {
       statement = connection.prepareStatement("UPDATE Snip SET name=?, content=?, cTime=?, mTime=?, " +
-                                              " cUser=?, mUser=?, parentSnip=?, commentSnip=? " +
+                                              " cUser=?, mUser=?, parentSnip=?, commentSnip=?, permissions=? " +
                                               " WHERE name=?");
       statement.setString(1, snip.getName());
       statement.setString(2, snip.getContent());
@@ -294,8 +356,8 @@ public class SnipSpace implements LinkTester, Loader {
       } else {
         statement.setString(8, comment.getName());
       }
-      statement.setString(9, snip.getName());
-
+      statement.setString(9, serialize(snip.getPermissions()));
+      statement.setString(10, snip.getName());
       statement.execute();
     } catch (SQLException e) {
       e.printStackTrace();
@@ -322,8 +384,8 @@ public class SnipSpace implements LinkTester, Loader {
 
     try {
       statement = connection.prepareStatement("INSERT INTO Snip (name, content, cTime, mTime, " +
-                                              " cUser, mUser, parentSnip, commentSnip) " +
-                                              " VALUES (?,?,?,?,?,?,?,?)");
+                                              " cUser, mUser, parentSnip, commentSnip, permissions) " +
+                                              " VALUES (?,?,?,?,?,?,?,?,?)");
       statement.setString(1, name);
       statement.setString(2, content);
       statement.setTimestamp(3, cTime);
@@ -342,6 +404,7 @@ public class SnipSpace implements LinkTester, Loader {
       } else {
         statement.setString(8, comment.getName());
       }
+      statement.setString(9, serialize(snip.getPermissions()));
 
       statement.execute();
     } catch (SQLException e) {
