@@ -17,18 +17,19 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="<c:out value='${app.configuration.locale}'/>" xml:lang="<c:out value='${app.configuration.locale}'/>">
  <head>
+  <base href="<c:out value="${app.configuration.url}"/>">
   <meta http-equiv="Content-Type" content="text/html; charset=<c:out value='${app.configuration.encoding}'/>"/>
   <meta http-equiv="Generator" content="SnipSnap/<c:out value="${app.configuration.version}"/>"/>
   <link rel="EditURI" type="application/rsd+xml" title="RSD" href="<c:out value='${app.configuration.url}/exec/rsd'/>"/>
   <link rel="alternate" type="application/rss+xml" title="RSS" href="<c:out value='${app.configuration.url}/exec/rss'/>"/>
   <link rel="index" href="<c:out value='${app.configuration.url}/space/snipsnap-index'/>"/>
   <link rel="shortcut icon" href="<c:out value='${app.configuration.url}/favicon.ico'/>">
-  <link rel="icon" href="<c:out value='${app.configuration.url}/favicon.ico'/>">
+  <link rel="icon" href="/favicon.ico">
   <s:geoUrl/>
   <s:dublinCore snip="${snip}"/>
   <title><c:out value="${app.configuration.name}" default="SnipSnap"/> :: <c:out value="${snip.name}" default=""/></title>
-  <link type="text/css" href="<c:out value='${app.configuration.path}/default.css'/>" rel="STYLESHEET"/>
-  <link type="text/css" href="<c:out value='${app.configuration.path}/print.css'/>" media="print" rel="STYLESHEET"/>
+  <link type="text/css" href="/default.css" rel="STYLESHEET"/>
+  <link type="text/css" href="/print.css" media="print" rel="STYLESHEET"/>
  </head>
  <body>
   <div id="page-logo">

@@ -218,13 +218,16 @@ ol.HEBREW { list-style-type: hebrew; }
 /* calendar display                             */
 .calendar {
   border-spacing: 0px;
+  font-size: 0.7em;
 }
 
 .calendar td {
   text-align: right;
+  padding: 0px;
 }
 
 .calendar caption {
+  font-size: 1em;
   text-align: left;
   font-weight: bold;
 }

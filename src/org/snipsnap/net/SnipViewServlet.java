@@ -28,6 +28,7 @@ import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpaceFactory;
+import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.config.Configuration;
@@ -65,13 +66,12 @@ public class SnipViewServlet extends HttpServlet {
     }
     name = name.replace('+', ' ');
 
-    // TODO: make load from snipspace work with name spaces
     // load snip and set attributes for request
     Snip snip = SnipSpaceFactory.getInstance().load(name);
 
     String subname = null;
     if (null == snip) {
-      // handle sub snips and attachments (TODO: handle more than one level)
+      // handle attachments
       int slashIndex = name.indexOf('/');
       if (slashIndex != -1) {
         subname = name.substring(slashIndex + 1);
@@ -86,7 +86,6 @@ public class SnipViewServlet extends HttpServlet {
     request.setAttribute("URI", request.getRequestURL().toString());
 
     if (subname != null && subname.length() > 0) {
-      // TODO work with sub snips as well, not just attachments
       try {
         request.setAttribute(FileDownloadServlet.FILENAME, subname);
         RequestDispatcher dispatcher =
@@ -110,7 +109,7 @@ public class SnipViewServlet extends HttpServlet {
               + "This may indicate that either the installation has failed or the Database is corrupted.");
           return;
         }
-        response.sendRedirect("/space/snipsnap-notfound?name=" + name);
+        response.sendRedirect(SnipLink.absoluteLink("/space/snipsnap-notfound?name=" + name));
       }
       return;
     }

@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
+import java.util.Iterator;
 
 /**
  * Adaption of the Mckoi JDBC Driver for embedded-only database drivers.
@@ -75,13 +76,13 @@ public class MckoiEmbeddedJDBCDriver implements Driver {
 
   public static void deregister() throws SQLException {
     //System.err.println("Deregistering JDBC Driver: "+MckoiEmbeddedJDBCDriver.class.getClassLoader());
-//    Iterator it = databases.values().iterator();
-//    while (it.hasNext()) {
-//      DBSystem dbSystem = (DBSystem)it.next();
-//      System.err.println("MckoiEmbeddedJDBCDriver: closing database: "+dbSystem);
-//      dbSystem.close();
-//    }
-//    databases.clear();
+    Iterator it = databases.values().iterator();
+    while (it.hasNext()) {
+      DBSystem dbSystem = (DBSystem)it.next();
+      System.err.println("MckoiEmbeddedJDBCDriver: closing database: "+dbSystem);
+      dbSystem.close();
+    }
+    databases.clear();
 
     java.sql.DriverManager.deregisterDriver(driver);
     driver = null;
