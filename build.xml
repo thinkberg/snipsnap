@@ -31,6 +31,8 @@
       <tarfileset dir="." prefix="${appname}-${server.version}" mode="755">
         <include name="run.sh"/>
         <include name="db.sh"/>
+        <include name="db.sh"/>
+        <include name="db.sh"/>
       </tarfileset>
       <tarfileset dir="." prefix="${appname}-${server.version}">
         <include name="**"/>
@@ -45,7 +47,7 @@
       <tarfileset dir="." prefix="${appname}-${server.version}" mode="755">
         <include name="run.sh"/>
         <include name="db.sh"/>
-        <include name="import.sh"/>
+        <include name="dbdump.sh"/>
         <include name="export.sh"/>
       </tarfileset>
       <tarfileset dir="." prefix="${appname}-${server.version}" mode="655">

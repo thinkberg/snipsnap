@@ -1,4 +1,5 @@
 #! /bin/sh
+# $Id$
 base=`dirname $0`
 jar=lib
 if [ "$JAVA_HOME" = "" ]; then
@@ -13,6 +14,6 @@ if [ ! -f $base/$jar/snipsnap.jar ]; then
 fi
 
 # put classpath together
-CLASSPATH=$base/lib/mckoidb.jar:$base/lib/snipsnap-utils.jar
+CLASSPATH=$base/lib/jakarta.jar:$base/lib/mckoidb.jar:$base/lib/jdbcpool.jar:$base/lib/lucene-1.2.jar:$base/lib/org.apache.crimson.jar
 
-$JAVA_HOME/bin/java -cp $CLASSPATH org.snipsnap.util.DBDump $*
+$JAVA_HOME/bin/java -cp $CLASSPATH:$base/lib/snipsnap-utils.jar org.snipsnap.util.DBImport $*
