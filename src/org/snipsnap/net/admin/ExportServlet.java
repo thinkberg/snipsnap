@@ -70,8 +70,7 @@ public class ExportServlet extends HttpServlet {
     OutputStream out = null;
     if ("application".equals(output)) {
       Configuration config = Application.get().getConfiguration();
-      File outFile = new File(config.getFile().getParentFile(),
-                              config.getName() + ".snip");
+      File outFile = new File(config.getWebInfDir(), config.getName() + ".snip");
       out = new FileOutputStream(outFile);
     } else if ("web".equals(output)) {
       response.setContentType("text/xml");

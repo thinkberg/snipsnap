@@ -26,7 +26,7 @@
 package org.snipsnap.snip.label;
 
 import org.radeox.util.logging.Logger;
-import org.snipsnap.util.Service;
+import org.radeox.util.Service;
 
 import java.util.HashMap;
 import java.util.Iterator;

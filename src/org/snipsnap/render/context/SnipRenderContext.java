@@ -55,7 +55,7 @@ public class SnipRenderContext extends BaseRenderContext {
     this.snip = snip;
     Locale locale = Application.get().getConfiguration().getLocale();
     //@TODO: optimize lookups perhaps with factory
-    set(SnipRenderContext.LANGUAGE_BUNDLE, ResourceBundle.getBundle("messages", locale));
+    set(SnipRenderContext.LANGUAGE_BUNDLE, ResourceBundle.getBundle("i18n.messages", locale));
     set(RenderContext.LANGUAGE_LOCALE, locale);
   }
 

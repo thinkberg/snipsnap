@@ -68,7 +68,6 @@ public class AppServer {
     System.setProperty(ServerConfiguration.VERSION, serverInfo.getProperty(ServerConfiguration.VERSION));
 
     // output version and copyright information
-    System.out.println("SnipSnap " + serverInfo.getProperty(ServerConfiguration.VERSION));
     BufferedReader copyrightReader = new BufferedReader(new InputStreamReader(AppServer.class.getResourceAsStream("/conf/copyright.txt")));
     String line = null;
     try {

@@ -38,6 +38,7 @@ import org.snipsnap.config.ServerConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Collection;
@@ -67,7 +68,7 @@ public class ApplicationLoader {
           File configFile = getConfigFile(root, files[i].getName());
           if (configFile.exists()) {
             try {
-              loadApplication(ConfigurationProxy.newInstance(configFile));
+              loadApplication(loadNewConfiguration(configFile));
             } catch (Exception e) {
               errors++;
               e.printStackTrace();
@@ -101,10 +102,17 @@ public class ApplicationLoader {
     return null;
   }
 
+  private static Configuration loadNewConfiguration(File configFile) throws IOException {
+    Configuration config = ConfigurationProxy.newInstance();
+    config.setWebInfDir(configFile.getParentFile());
+    config.load(new FileInputStream(configFile));
+    return config;
+  }
+
   public static void reloadApplication(String root, String name) throws Exception {
     File configFile = getConfigFile(root, normalize(name));
     if (configFile != null) {
-      Configuration config = ConfigurationProxy.newInstance(configFile);
+      Configuration config = loadNewConfiguration(configFile);
       unloadApplication(config);
       loadApplication(config);
     }
@@ -113,16 +121,14 @@ public class ApplicationLoader {
   public static void loadApplication(String root, String name) throws Exception {
     File configFile = getConfigFile(root, normalize(name));
     if (configFile != null) {
-      Configuration config = ConfigurationProxy.newInstance(configFile);
-      loadApplication(config);
+      loadApplication(loadNewConfiguration(configFile));
     }
   }
 
   public static void unloadApplication(String root, String name) throws Exception {
     File configFile = getConfigFile(root, normalize(name));
     if (configFile != null) {
-      Configuration config = ConfigurationProxy.newInstance(configFile);
-      unloadApplication(config);
+      unloadApplication(loadNewConfiguration(configFile));
     }
   }
 
@@ -155,7 +161,7 @@ public class ApplicationLoader {
       contextPath = "/";
     }
 
-    File appRoot = config.getFile().getParentFile().getParentFile();
+    File appRoot = config.getWebInfDir().getParentFile();
     boolean extract = appRoot.getName().equals("webapp");
     if (extract) {
       appRoot = appRoot.getParentFile();
@@ -170,7 +176,7 @@ public class ApplicationLoader {
       context.setTempDirectory(appRoot.getCanonicalFile());
       context.setExtractWAR(true);
     }
-    context.setAttribute(ServerConfiguration.INIT_PARAM, config.getFile().getCanonicalPath());
+    context.setAttribute(ServerConfiguration.INIT_PARAM, new File(config.getWebInfDir(), "application.conf").getCanonicalFile());
     context.start();
 
     applications.put(appName, context);

@@ -27,9 +27,18 @@ package org.snipsnap.net.admin;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.config.ConfigurationProxy;
-import org.snipsnap.config.ConfigurationMap;
+import org.snipsnap.container.Components;
 import org.snipsnap.net.filter.MultipartWrapper;
+import org.snipsnap.snip.HomePage;
 import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.XMLSnipImport;
+import org.snipsnap.snip.storage.JDBCSnipStorage;
+import org.snipsnap.snip.storage.JDBCUserStorage;
+import org.snipsnap.user.Roles;
+import org.snipsnap.user.User;
+import org.snipsnap.user.UserManager;
+import org.snipsnap.util.ConnectionManager;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -37,25 +46,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.TimeZone;
+import java.util.*;
 
 /**
  * @author Matthias L. Jugel
@@ -71,7 +69,7 @@ public class ConfigureServlet extends HttpServlet {
   protected final static String ATT_FINISH = "finish";
   protected final static String ATT_STEPS = "steps";
   protected final static String ATT_STEP = "step";
-  protected final static String ATT_ERROR = "error";
+  protected final static String ATT_ERRORS = "errors";
 
   protected final static String STEP_APPLICATION = "application";
   protected final static String STEP_THEME = "theme";
@@ -112,7 +110,7 @@ public class ConfigureServlet extends HttpServlet {
     HttpSession session = request.getSession();
     Application app = Application.getInstance(session);
     Configuration config = (Configuration) session.getAttribute(ATT_CONFIG);
-    if(null == config) {
+    if (null == config) {
       config = ConfigurationProxy.newInstance();
     }
 
@@ -166,12 +164,17 @@ public class ConfigureServlet extends HttpServlet {
               paramMap.put(key, values[0]);
             }
 
+            // save current config
+            Configuration currentConfig = Application.get().getConfiguration();
             try {
+              config.setWebInfDir(currentConfig.getWebInfDir());
               install(config);
               response.sendRedirect(config.getUrl());
               return;
             } catch (Exception e) {
-              request.setAttribute(ATT_ERROR, "FATAL: Unable to configure. See server log for details");
+              // restore config just to be sure
+              Application.get().setConfiguration(currentConfig);
+              errors.put("fatal", "fatal");
               e.printStackTrace();
             }
           } else {
@@ -204,7 +207,7 @@ public class ConfigureServlet extends HttpServlet {
             }
           }
         } else {
-          request.setAttribute("errors", errors);
+          request.setAttribute(ATT_ERRORS, errors);
         }
       }
 
@@ -221,8 +224,98 @@ public class ConfigureServlet extends HttpServlet {
     response.sendRedirect(SnipLink.absoluteLink("/"));
   }
 
+  private void message(String message) {
+    System.out.println("Configuration [" + Application.get().getConfiguration().getName() + "] " + message);
+  }
+
   private void install(Configuration config) throws Exception {
-    
+    // set new config
+    Application.get().setConfiguration(config);
+
+    if ("org.snipsnap.util.MckoiEmbeddedJDBCDriver".equals(config.getJdbcDriver())) {
+      message("creating internal database");
+      config.setJdbcUser("snipsnap");
+      config.setJdbcPassword("snipsnap");
+      File dbDir = new File(config.getWebInfDir(), "db");
+      dbDir.mkdir();
+      String jdbcUrl = config.getProperties().getProperty(Configuration.APP_JDBC_URL);
+      String dbConfFile = config.getJdbcUrl().substring("jdbc:mckoi:local://".length());
+      config.set(Configuration.APP_JDBC_URL, jdbcUrl + "?create=true");
+      Properties dbConf = new Properties();
+      dbConf.load(getClass().getResourceAsStream("/defaults/mckoidb.conf"));
+      message("storing database configuration for local database: '" + dbConfFile + "'");
+      dbConf.store(new FileOutputStream(dbConfFile), "SnipSnap Database configuration: " + config.get(Configuration.APP_NAME));
+      // create database
+      ConnectionManager.getConnection().close();
+      config.setJdbcUrl(jdbcUrl);
+    }
+    // initialize storages
+    message("creating storages");
+    JDBCSnipStorage.createStorage();
+    JDBCUserStorage.createStorage();
+
+    (new File(config.getFilePath())).mkdirs();
+    (new File(config.getIndexPath())).mkdirs();
+
+
+    // create admin account
+    message("creating administrator account");
+    UserManager um = UserManager.getInstance();
+    User admin = um.load(config.getAdminLogin());
+    if (admin != null) {
+      message("overriding administrator: " + admin);
+      um.remove(admin);
+    }
+    admin = um.create(config.getAdminLogin(),
+                      config.getAdminPassword(),
+                      config.getAdminEmail());
+    admin.getRoles().add(Roles.ADMIN);
+    admin.getRoles().add(Roles.EDITOR);
+    um.store(admin);
+    config.setAdminLogin(null);
+    config.setAdminPassword(null);
+    config.setAdminEmail(null);
+
+    Application app = Application.get();
+    app.setUser(admin);
+
+    message("creating admin home page");
+    HomePage.create(config.getAdminLogin());
+
+    // load defaults
+    InputStream data = getClass().getResourceAsStream("/defaults/snipsnap.snip");
+    XMLSnipImport.load(data, XMLSnipImport.OVERWRITE | XMLSnipImport.IMPORT_USERS | XMLSnipImport.IMPORT_SNIPS);
+
+    String ping = config.get(Configuration.APP_PERM_WEBLOGSPING);
+    String notify = config.get(Configuration.APP_PERM_NOTIFICATION);
+
+    config.set(Configuration.APP_PERM_WEBLOGSPING, "deny");
+    config.set(Configuration.APP_PERM_NOTIFICATION, "deny");
+
+    message("posting initial weblog entry");
+    SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
+    space.getBlog().post("Welcome to [SnipSnap]." +
+                         " You can now login and add/edit your first post. There is a __post blog__ link in the menu bar. For help with formatting your post" +
+                         " take a look at [snipsnap-help]. To create a link to a page on your site surround a word with \\[ and \\]." +
+                         " Putting \\_\\_ around a phrase makes it __bold__ and putting \\~\\~ around it makes the" +
+                         " phrase ~~italics~~. You can create links to the internet by just writing the url like " +
+                         " http://snipsnap.org or by using \\{link:Name|url\\}. So \\{link:SnipSnap|\\http://snipsnap.org\\} produces " +
+                         " {link:SnipSnap|http://snipsnap.org}. Have fun.\n\n" +
+                         " Pinging weblogs.com may be turned on. The {link:FAQ|http://snipsnap.org/space/FAQ}" +
+                         " explains how to turn this on or off.",
+                         "Welcome to SnipSnap");
+
+    config.set(Configuration.APP_PERM_WEBLOGSPING, ping);
+    config.set(Configuration.APP_PERM_NOTIFICATION, notify);
+
+    // last, but not least store to file and configuration snip
+    message("storing configuration file for bootstrapping SnipSnap");
+    File configFile = new File(Application.get().getConfiguration().getWebInfDir(), "application.conf");
+    config.store(new FileOutputStream(configFile));
+    message("creating configuration snip '" + Configuration.SNIPSNAP_CONFIG + "'");
+    ByteArrayOutputStream configStream = new ByteArrayOutputStream();
+    config.store(configStream);
+    space.create(Configuration.SNIPSNAP_CONFIG, new String(configStream.toString()));
   }
 
   private Map checkStep(String step, List steps, HttpServletRequest request, Configuration config) {

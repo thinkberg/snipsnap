@@ -62,8 +62,8 @@ public class DBImport {
     Application app = Application.get();
     Configuration config = null;
     try {
-      config = ConfigurationProxy.newInstance(
-        new File(serverConfig.getProperty(ServerConfiguration.WEBAPP_ROOT) + "/" + args[0] + "/WEB-INF/application.conf"));
+      config = ConfigurationProxy.newInstance();
+      config.load(new FileInputStream(serverConfig.getProperty(ServerConfiguration.WEBAPP_ROOT) + "/" + args[0] + "/WEB-INF/application.conf"));
     } catch (IOException e) {
       System.out.println("Unable to load application config: " + e);
       System.exit(-1);

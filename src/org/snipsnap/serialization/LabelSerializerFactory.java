@@ -3,7 +3,7 @@ package org.snipsnap.serialization;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
-import org.snipsnap.util.Service;
+import org.radeox.util.Service;
 import org.radeox.util.logging.Logger;
 
 /** @author gis */

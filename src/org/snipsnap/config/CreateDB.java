@@ -47,12 +47,6 @@ import java.io.InputStream;
  */
 public class CreateDB {
 
-  public static void main(String[] args) {
-    System.err.println("NOT IMPLEMENTED.");
-//    createDB("funzel", "funzel", "stephan@mud.de");
-//    insertData("funzel", "funzel", "stephan@mud.de");
-  }
-
   public static void createDB(Configuration config) {
     // Make a connection with the database.  This will create the database
     // and log into the newly created database.

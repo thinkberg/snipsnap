@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
+import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -82,7 +83,9 @@ public class Applications extends HttpServlet {
   private Configuration loadApp(File dir) throws IOException {
     File configFile = new File(dir, "WEB-INF/application.conf");
     if (configFile.exists() && !configFile.isDirectory()) {
-      return ConfigurationProxy.newInstance(configFile);
+      Configuration config = ConfigurationProxy.newInstance();
+      config.load(new FileInputStream(configFile));
+      return config;
     } else {
       throw new IOException(configFile.getAbsolutePath() + " is not a configuration file");
     }

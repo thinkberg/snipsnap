@@ -25,10 +25,9 @@
 package org.snipsnap.config;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -48,7 +47,8 @@ public class ConfigurationMap {
 
   private Properties properties = null;
   private Properties defaults = null;
-  private File configFile = null;
+
+  private File webInfDir = null;
 
   // internal transposition map for old property file versions
   private Properties transposeMap = null;
@@ -72,13 +72,9 @@ public class ConfigurationMap {
     }
   }
 
-  public ConfigurationMap(File file) throws IOException {
-    this();
-    load(file);
-  }
 
-  public ConfigurationMap(String filePath) throws IOException {
-    this(new File(filePath));
+  public void setWebInfDir(File dir) {
+    webInfDir = dir;
   }
 
   /**
@@ -87,54 +83,30 @@ public class ConfigurationMap {
    * @return the configuration directory
    */
   public File getWebInfDir() {
-    if (configFile != null) {
-      return configFile.getParentFile();
-    }
-    return null;
+    return webInfDir;
   }
 
   /**
-   * Change the file to store the configuration in.
-   * @param file the new file
-   */
-  public void setFile(File file) {
-    configFile = file;
-  }
-
-  /**
-   * The currently set file where the configuration was loaded or will be stored.
-   * @return the configuration file
-   */
-  public File getFile() {
-    return configFile;
-  }
-
-  /**
-   * Loads the configuration from a specific file overriding any previously set file.
-   * @param file the file to load from
+   * Stores the configuration in a properties file if a file has been set with setFile() or
+   * if the configuration has been loaded from a file. An existing file is overwritten.
+   * @param stream the output stream to write the configuration to
    * @throws IOException
    */
-  public void load(File file) throws IOException {
-    setFile(file);
-    load();
+  public void store(OutputStream stream) throws IOException {
+    properties.store(stream, "SnipSnap Configuration $Revision$");
   }
 
-  public void load(InputStream stream) throws IOException {
+  /**
+   * Load configuration from input stream. This method returns true if the load was
+   * successful as is and false if a change has occurred and the configuration should
+   * be stored back in its new form.
+   * @param stream the input stream where properties are contained
+   * @return true for as is loading and false for internally changed content
+   * @throws IOException
+   */
+  public boolean load(InputStream stream) throws IOException {
     properties.load(stream);
-    if (convertOldProperties()) {
-      System.err.println("Configuration: storing converted configuration file to " + getFile());
-      store();
-    }
-  }
-
-  /**
-   * Loads the configuration from a previously set file.
-   * @throws IOException
-   */
-  public void load() throws IOException {
-    if (configFile != null) {
-      load(new FileInputStream(configFile));
-    }
+    return !convertOldProperties();
   }
 
   private boolean convertOldProperties() {
@@ -159,6 +131,7 @@ public class ConfigurationMap {
           if (newProperty.startsWith("@DUPLICATE")) {
             newProperty = newProperty.substring("@DUPLICATE".length());
             String newValue = properties.getProperty(newProperty);
+            System.out.println("INFO: "+newProperty+"="+newValue);
             if (null == newValue || "".equals(newValue)) {
               System.out.println("INFO: duplicating value of '" + oldProperty + "' to '" + newProperty + "'");
               properties.setProperty(newProperty, value);
@@ -198,17 +171,6 @@ public class ConfigurationMap {
   }
 
   /**
-   * Stores the configuration in a properties file if a file has been set with setFile() or
-   * if the configuration has been loaded from a file. An existing file is overwritten.
-   * @throws IOException
-   */
-  public void store() throws IOException {
-    if (configFile != null) {
-      properties.store(new FileOutputStream(configFile), "SnipSnap configuration $Revision$");
-    }
-  }
-
-  /**
    * Set configuration parameter.
    * @param name the configuration parameter name as in Configuration interface
    * @see Configuration
@@ -232,7 +194,7 @@ public class ConfigurationMap {
 
   // TODO replace with generic replacement method
   private String replaceTokens(String value) {
-    if(value != null) {
+    if (value != null) {
       int idx = value.indexOf("%WEBINF%");
       if (idx != -1) {
         StringBuffer replaced = new StringBuffer();
@@ -247,7 +209,7 @@ public class ConfigurationMap {
         return replaced.toString();
       }
     }
-    
+
     return value;
   }
 
@@ -348,10 +310,7 @@ public class ConfigurationMap {
   }
 
   public boolean isInstalled() {
-    if (getWebInfDir() != null && getWebInfDir().exists() && new File(getWebInfDir(), "db").exists()) {
-      return true;
-    }
-    return false;
+    return new File(getWebInfDir(), "application.conf").exists();
   }
 
   public String getVersion() {

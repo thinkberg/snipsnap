@@ -89,7 +89,6 @@ public class FileDownloadServlet extends HttpServlet {
         if (getServletContext().getResource(oldStyleFile) != null) {
           RequestDispatcher dispatcher = request.getRequestDispatcher(oldStyleFile);
           if (dispatcher != null) {
-            System.out.println("dispatcher: " + dispatcher);
             dispatcher.forward(request, response);
             return;
           }

@@ -268,8 +268,8 @@ public class Installer extends HttpServlet {
     app.setConfiguration(config);
 
     writeMessage(out, "Saving local configuration ...");
-    config.setFile(new File(webInf.getAbsoluteFile(), "application.conf"));
-
+    File appConfFile = new File(webInf.getAbsoluteFile(), "application.conf");
+    config.store(new FileOutputStream(appConfFile));
 
     writeMessage(out, "Creating database ...");
     boolean useMcKoi = request.getParameter("usemckoi") != null ? true : false;
@@ -321,7 +321,6 @@ public class Installer extends HttpServlet {
       }
     }
 
-    config.store();
     writeMessage(out, "Starting application ...");
     if (!AdminServer.execute(Integer.parseInt(serverConfig.getProperty(ServerConfiguration.ADMIN_PORT)), "start", config.getName())) {
       System.out.println("Cannot execute administrative command: 'start " + config.getName() + "'");

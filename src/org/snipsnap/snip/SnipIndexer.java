@@ -54,7 +54,7 @@ public class SnipIndexer {
     if (indexFile == null) {
       String file = Application.get().getConfiguration().getIndexPath();
       if(null == file) {
-        indexFile = new File(Application.get().getConfiguration().getFile().getParent(), "index");
+        indexFile = new File(Application.get().getConfiguration().getWebInfDir(), "index");
       } else {
         indexFile = new File(file);
       }

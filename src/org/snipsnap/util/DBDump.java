@@ -8,6 +8,7 @@ import org.snipsnap.snip.XMLSnipExport;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.FileInputStream;
 
 /**
  * Dump current database contents. The database is read directly and meta-data
@@ -26,7 +27,8 @@ public class DBDump {
     if (args.length > 0 && "-config".equals(args[0])) {
       if (args.length > 1) {
         try {
-          config = ConfigurationProxy.newInstance(new File(args[1]));
+          config = ConfigurationProxy.newInstance();
+          config.load(new FileInputStream(new File(args[1])));
         } catch (IOException e) {
           System.err.println("DBDump: unable to read configuration file: " + e);
           System.exit(-1);

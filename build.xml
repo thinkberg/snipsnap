@@ -116,15 +116,15 @@
         <include name="${jar}/${appname}-theme-*.jar"/>
         <include name="${jar}/${appname}-installer.war"/>
         <include name="${jar}/${appname}-utils.jar"/>
-        <include name="conf/db.conf"/>
         <include name="conf/jetty.conf"/>
-        <include name="conf/romaji.properties"/>
-        <include name="conf/messages_*.properties"/>
-        <include name="conf/intermap.txt"/>
-        <include name="conf/bookservices.txt"/>
-        <include name="conf/apidocs.txt"/>
-        <include name="conf/robotdetect.txt"/>
-        <include name="conf/snipsnap.snip"/>
+<!--        <include name="conf/db.conf"/>-->
+<!--        <include name="conf/romaji.properties"/>-->
+<!--        <include name="conf/messages_*.properties"/>-->
+<!--        <include name="conf/intermap.txt"/>-->
+<!--        <include name="conf/bookservices.txt"/>-->
+<!--        <include name="conf/apidocs.txt"/>-->
+<!--        <include name="conf/robotdetect.txt"/>-->
+<!--        <include name="conf/snipsnap.snip"/>-->
         <include name="license.txt"/>
         <include name="validate.xsl"/>
         <include name="README"/>
@@ -192,12 +192,16 @@
 
   <!-- create server code -->
   <target depends="compile-jsp, compile-server,installer-war" description="create server jar" name="jar-server">
+    <copy file="conf/copyright.txt" tofile="${target}/server/conf/copyright.txt" filtering="true">
+      <filterset>
+        <filter  token="VERSION" value="${snipsnap.server.version}"/>
+      </filterset>
+    </copy>
     <jar destfile="${jar}/${appname}.jar" excludes="**/CVS" manifest="conf/manifest">
       <fileset dir="${target}/server" includes="**"/>
       <fileset dir=".">
         <include name="conf/snipsnap.conf"/>
         <include name="conf/jetty.conf"/>
-        <include name="conf/copyright.txt"/>
       </fileset>
       <fileset dir="${src}" includes="org/snipsnap/config/defaults.conf"/>
       <fileset dir="${src}" includes="org/snipsnap/config/transpose.map"/>
@@ -331,10 +335,11 @@
 
     <copy file="${src}/apps/default/index.jsp" tofile="${target}/webapp/index.jsp"/>
 
-    <copy todir="${target}/webapp/WEB-INF/classes">
-      <fileset dir="conf">
-        <include name="messages_*.properties"/>
-     </fileset>
+    <copy file="conf/copyright.txt" filtering="true"
+      todir="${target}/webapp/WEB-INF/classes/defaults">
+      <filterset>
+        <filter token="VERSION" value="${snipsnap.server.version}"/>
+      </filterset>
     </copy>
 
     <copy todir="${target}/webapp/WEB-INF/lib">

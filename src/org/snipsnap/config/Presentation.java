@@ -36,6 +36,7 @@ import org.snipsnap.snip.SnipSpaceFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.FileInputStream;
 import java.util.StringTokenizer;
 
 /**
@@ -61,8 +62,8 @@ public class Presentation {
     Logger.debug("Loading application config.");
     Configuration config = null;
     try {
-      config = ConfigurationProxy.newInstance(
-        new File(serverConfig.getProperty(ServerConfiguration.WEBAPP_ROOT) + args[0] + "/application.conf"));
+      config = ConfigurationProxy.newInstance();
+      config.load(new FileInputStream(serverConfig.getProperty(ServerConfiguration.WEBAPP_ROOT) + args[0] + "/application.conf"));
     } catch (IOException e) {
       Logger.warn("Unable to load application config: " + e);
       System.exit(-1);

@@ -191,7 +191,7 @@ public class PostDaemon {
     try {
       if (part != null  && part.getFileName() != null) {
         Configuration config = Application.get().getConfiguration();
-        File imageDir = new File(config.getFile().getParentFile().getParentFile(), "images");
+        File imageDir = new File(config.getWebInfDir().getParentFile(), "images");
         File file = new File(imageDir, "image-" + name + "-" + part.getFileName());
         Logger.debug("Uploading '" + part.getFileName() + "' to '" + file.getAbsolutePath() + "'");
         FileOutputStream out = new FileOutputStream(file);

@@ -29,13 +29,22 @@ import org.radeox.util.logging.Logger;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.config.ConfigurationProxy;
 import org.snipsnap.config.ServerConfiguration;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.Snip;
 import org.snipsnap.container.Components;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipSpace;
 
-import javax.servlet.*;
+import javax.servlet.GenericServlet;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 /**
  * Only used to initialize configuration. The configuration file may either be set using
@@ -50,31 +59,49 @@ public class InitServlet extends GenericServlet {
 
     // check servlet context and then local servlet parameter or assume WEB-INF
     String configParam = (String) context.getAttribute(ServerConfiguration.INIT_PARAM);
+    if(null != configParam) {
+      BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/defaults/copyright.txt")));
+      try {
+        String line;
+        while (null != (line = br.readLine())) {
+          System.out.println(line);
+        }
+      } catch (IOException e) {
+        // create copyright output if the copyrights file was not found
+        System.out.println("SnipSnap (unknown version)");
+        System.out.println("Copyright (c) 2003 Fraunhofer Gesellschaft");
+        System.out.println("Fraunhofer Institute for Computer Architecture and Software Technology");
+        System.out.println("All Rights Reserved. See License Agreement for terms and conditions of use.");
+      }
+    }
     if (null == configParam) {
       configParam = context.getRealPath(context.getInitParameter(ServerConfiguration.INIT_PARAM));
     }
     if (null == configParam) {
       configParam = context.getRealPath("/WEB-INF/application.conf");
     }
-    File configFile = new File(configParam);
 
     // create new configuration instance
     try {
       Configuration config = ConfigurationProxy.newInstance();
-      if (configFile.exists()) {
-        config.load(configFile);
-      } else {
-        config.setFile(configFile);
-        if(!config.isInstalled()) {
-          System.out.println("Unconfigured SnipSnap. Please visit the web site");
-          System.out.println("and finish the installation procedure.");
-        } else {
-          SnipSpace space = (SnipSpace)Components.getComponent(SnipSpace.class);
-          if(space.exists(Configuration.SNIPSNAP_CONFIG)) {
-            Snip configSnip = space.load(Configuration.SNIPSNAP_CONFIG);
-            String configContent = configSnip.getContent();
-          }
+      config.setWebInfDir(new File(context.getRealPath("/WEB-INF")));
 
+      File configFile = new File(configParam);
+      if (configFile.exists()) {
+        // load initial config (containing the jdbc url/user/pass)
+        config.load(new FileInputStream(configFile));
+      }
+
+      if (!config.isInstalled()) {
+        System.out.println("Unconfigured SnipSnap. Please visit the following web site");
+        System.out.println("and finish the installation procedure.");
+        System.out.println(">> " + config.getUrl());
+      } else {
+        SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
+        if (space.exists(Configuration.SNIPSNAP_CONFIG)) {
+          Snip configSnip = space.load(Configuration.SNIPSNAP_CONFIG);
+          String configContent = configSnip.getContent();
+          config.load(new ByteArrayInputStream(configContent.getBytes()));
         }
       }
       try {
