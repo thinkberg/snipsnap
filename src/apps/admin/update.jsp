@@ -21,7 +21,7 @@
       <input type="hidden" name="context" value="<c:out value='${context}'/>">
       There is an update of the web application available on <a href="http://snipsnap.org">SnipSnap</a>.
       <input type="submit" name="download" value="Click to Download Update">
-      <c:out value="${available}"/>
+      <br><c:out value="${available}"/>
     </form>
   </div>
 <% } %>
@@ -61,7 +61,11 @@
     <tr>
       <td colspan="4">
         <input type="submit" name="check" value="Check Again">
-        <c:if test="${!(empty installable) and !(empty updated)}"><input type="submit" name="update" value="Update Application"></c:if>
+        <% Set installable = (Set)pageContext.findAttribute("installable"); %>
+        <% Set updated = (Set)pageContext.findAttribute("updated"); %>
+        <% if((installable != null && !installable.isEmpty()) || (updated != null && !updated.isEmpty())) { %>
+          <input type="submit" name="update" value="Update Application">
+        <% } %>
         <input type="submit" name="cancel" value="Cancel/Back">
       </td>
     </tr>

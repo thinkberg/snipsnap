@@ -73,6 +73,11 @@ public class Update extends HttpServlet {
           ApplicationCommand.execute(srv, ctx, ApplicationCommand.CMD_APPLICATION_REMOVE);
           update(request.getParameterValues("install"), request.getParameterValues("extract"), ctx, errors);
           ApplicationCommand.execute(srv, ctx, ApplicationCommand.CMD_APPLICATION_ADD);
+          try {
+            Thread.sleep(200);
+          } catch (InterruptedException e) {
+            System.err.println("Updater: interrupted while waiting for application to sync ..."+e);
+          }
           ApplicationCommand.execute(srv, ctx, ApplicationCommand.CMD_APPLICATION_START);
         } else if (request.getParameter("download") != null) {
           try {
