@@ -150,7 +150,7 @@ public class SnipSpaceImpl implements SnipSpace {
       // every 5 minutes
     }, 5 * 60 * 1000, 5 * 60 * 1000);
 
-    // getting this will trigger Postdaemon
+    // start post daemon
     PostDaemon.getInstance();
   }
 

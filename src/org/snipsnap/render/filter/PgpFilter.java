@@ -49,7 +49,7 @@ import java.io.Writer;
 public class PgpFilter extends RegexTokenFilter {
 
   public PgpFilter() {
-    super("XX", SINGLELINE);
+    super("--PGP SIGNED--", SINGLELINE);
   }
 
   public void handleMatch(StringBuffer buffer, MatchResult result, FilterContext context) {

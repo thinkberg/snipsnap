@@ -26,22 +26,40 @@
 package org.snipsnap.util.mail;
 
 import org.radeox.util.logging.Logger;
-import org.snipsnap.container.Components;
 import org.snipsnap.app.Application;
 import org.snipsnap.app.ApplicationManager;
 import org.snipsnap.config.Configuration;
-import org.snipsnap.snip.BlogKit;
+import org.snipsnap.config.ConfigurationManager;
+import org.snipsnap.container.Components;
 import org.snipsnap.snip.Blog;
+import org.snipsnap.snip.BlogKit;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.User;
-import org.snipsnap.user.UserManager;
 import org.snipsnap.user.UserManagerFactory;
 
-import javax.mail.*;
-import java.io.*;
+import javax.mail.Address;
+import javax.mail.Flags;
+import javax.mail.Folder;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.Part;
+import javax.mail.Session;
+import javax.mail.Store;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Date;
+import java.util.Calendar;
 
 /**
  * Automatically reads post from a source (e.g. Pop3) and
@@ -51,128 +69,156 @@ import java.util.TimerTask;
  * @version $Id$
  */
 
-public class PostDaemon {
-  private static PostDaemon instance;
-  private String host, username, password;
-  private String mailPassword;
-  private Timer pop3Timer;
-  private boolean active;
-  private int minutes;
+public class PostDaemon extends TimerTask {
+  private final static int INTERVAl = 5;
+
+  private static PostDaemon postDaemon;
 
   public static synchronized PostDaemon getInstance() {
-    if (null == instance) {
-      instance = new PostDaemon();
+    if (null == postDaemon) {
+      postDaemon = new PostDaemon();
     }
-    return instance;
+    return postDaemon;
   }
 
-  public PostDaemon() {
-    Configuration conf = Application.get().getConfiguration();
-    try {
-      minutes = Integer.parseInt(conf.getMailPop3Interval());
-    } catch (NumberFormatException e) {
-      minutes = 15;
-      Logger.warn("PostDaemon: interval config not correct, using default " + minutes + " minutes.");
-    }
-    host = conf.getMailPop3Host();
-    username = conf.getMailPop3User();
-    password = conf.getMailPop3Password();
-    mailPassword = conf.getMailBlogPassword();
-    if (null == host || null == username || null == password || null == mailPassword) {
-      active = false;
-      Logger.warn("PostDaemon: not started");
-    } else {
-      active = true;
-      Logger.warn("PostDaemon: started, getting mail every " + minutes + " minutes.");
-      pop3Timer = new Timer();
-      pop3Timer.schedule(new TimerTask() {
-        
-        public void run() {
-          process();
-        }
-      }, minutes * 60 * 1000, minutes * 60 * 1000);
-    }
+  private Timer pop3Timer;
+  private Map pop3Tasks = new HashMap();
+
+  /**
+   * Create new post daemon and start execution.
+   */
+  protected PostDaemon() {
+    pop3Timer = new Timer();
+    pop3Timer.schedule(this, INTERVAl * 60 * 1000, INTERVAl * 60 * 1000);
   }
 
-  public void process() {
-    if (active) {
+  /**
+   * Execute mobile/email posts.
+   */
+  public void run() {
+    ConfigurationManager configManager = ConfigurationManager.getInstance();
+    Iterator oids = configManager.getOids();
+
+
+    while (oids.hasNext()) {
+      String appOid = (String) oids.next();
+      Configuration config = configManager.getConfiguration(appOid);
+
+      Logger.debug("PostDaemon: checking pop3: "+appOid);
+
+      int minutes = -1;
       try {
-        // Create empty properties
-        Properties props = new Properties();
+        minutes = Integer.parseInt(config.getMailPop3Interval());
+      } catch (NumberFormatException e) {
+        Logger.warn("PostDaemon: interval is not a number: " + config.getMailPop3Interval());
+      }
+      String pop3Host = config.getMailPop3Host();
+      String pop3User = config.getMailPop3User();
+      String pop3Pass = config.getMailPop3Password();
+      String mailPass = config.getMailBlogPassword();
 
-        // Get session
-        Session session = Session.getDefaultInstance(props, null);
+      Date date = new Date();
+      Long executionTime = (Long) pop3Tasks.get(appOid);
+      if (minutes >= 5 && null != pop3Host && null != pop3User && null != mailPass) {
+        if (null == executionTime || executionTime.longValue() <= date.getTime()) {
+          Logger.debug("PostDaemon: processing "+pop3Host+":"+pop3User);
+          // only execute if the settings allow it
+          Application.get().storeObject(Application.OID, appOid);
+          Application.get().setConfiguration(config);
 
-        // Get the store
-        Store store = session.getStore("pop3");
-        store.connect(host, username, password);
+          process(pop3Host, pop3User, pop3Pass, mailPass);
 
-// Get folder
-        Folder folder = store.getFolder("INBOX");
-        folder.open(Folder.READ_WRITE);
-
-// Get directory
-        Message message[] = folder.getMessages();
-
-        String name = BlogKit.getPostName();
-
-        for (int i = 0, n = message.length; i < n; i++) {
-          StringWriter writer = new StringWriter();
-
-          Logger.debug(i + ": " + message[i].getFrom()[0]
-                       + "\t" + message[i].getSubject());
-          Logger.debug(message[i].getContentType());
-
-          Address sender = message[i].getFrom()[0];
-          String title = message[i].getSubject();
-          if (title != null && title.startsWith(mailPassword)) {
-            // only correct sender
-            // cut password from title
-            title = title.substring(mailPassword.length()).trim();
-
-            try {
-              String contentType = message[i].getContentType();
-              if (contentType.startsWith("text/plain")) {
-                writer.write((String) message[i].getContent());
-              } else if (contentType.startsWith("image/")) {
-                processImage(writer, message[i], name);
-              } else if (contentType.startsWith("multipart/")) {
-                // process multipart message
-                processMultipart(writer, (Multipart) message[i].getContent(), name);
-              }
-
-              // BUG
-              Application app = Application.get();
-              ApplicationManager appManager = (ApplicationManager) Components.getComponent(ApplicationManager.class);
-              String appOid = appManager.getApplication("/");
-              app.storeObject(Application.OID, appOid);
-              String user = app.getConfiguration().getAdminLogin();
-              Logger.debug(user);
-              Logger.debug((String) app.getObject(Application.OID));
-              User admin = UserManagerFactory.getInstance().load(user);
-              Logger.debug(admin.toString());
-              app.setUser(admin);
-              Blog blog = SnipSpaceFactory.getInstance().getBlog();
-              blog.post(writer.getBuffer().toString(), title);
-
-            } catch (Exception e) {
-              Logger.warn("PostDaemon Error:", e);
-            } finally {
-              // Delete message, either because we processed it or we couldn't
-              // process it
-              message[i].setFlag(Flags.Flag.DELETED, true);
-            }
-          } else {
-            Logger.warn("PostDaemon: Wrong password.");
-          }
+          // set new execution point by adding current time and interval
+          pop3Tasks.put(appOid, new Long(date.getTime() + (minutes * 60 * 1000)));
         }
-// Close connection
-        folder.close(true);
-        store.close();
-      } catch (Exception e) {
-        Logger.warn("PostDaemon Error", e);
       }
     }
+  }
+
+  private void process(String pop3Host, String pop3User, String pop3Pass, String mailPass) {
+    try {
+      // Create empty properties
+      Properties props = new Properties();
+
+      // Get session
+      Session session = Session.getDefaultInstance(props, null);
+
+      // Get the store
+      Store store = session.getStore("pop3");
+      store.connect(pop3Host, pop3User, pop3Pass);
+
+      // Get folder
+      Folder folder = store.getFolder("INBOX");
+      folder.open(Folder.READ_WRITE);
+
+      // Get directory
+      Message message[] = folder.getMessages();
+
+      String name = BlogKit.getPostName();
+
+      for (int i = 0, n = message.length; i < n; i++) {
+        if(message[i].getFlags().contains(Flags.Flag.DELETED)) {
+          continue;
+        }
+        
+        StringWriter writer = new StringWriter();
+
+        Logger.debug(i + ": " + message[i].getFrom()[0]
+                     + "\t" + message[i].getSubject());
+        Logger.debug(message[i].getContentType());
+
+        Address sender = message[i].getFrom()[0];
+        String title = message[i].getSubject();
+        if (title != null && title.startsWith(mailPass)) {
+          // only correct sender
+          // cut password from title
+          title = title.substring(mailPass.length()).trim();
+
+          try {
+            String contentType = message[i].getContentType();
+            if (contentType.startsWith("text/plain")) {
+              writer.write((String) message[i].getContent());
+            } else if (contentType.startsWith("image/")) {
+              processImage(writer, message[i], name);
+            } else if (contentType.startsWith("multipart/")) {
+              // process multipart message
+              processMultipart(writer, (Multipart) message[i].getContent(), name);
+            }
+
+            // BUG
+            Application app = Application.get();
+            ApplicationManager appManager = (ApplicationManager) Components.getComponent(ApplicationManager.class);
+            String appOid = appManager.getApplication("/");
+            app.storeObject(Application.OID, appOid);
+            String user = app.getConfiguration().getAdminLogin();
+            Logger.debug(user);
+            Logger.debug((String) app.getObject(Application.OID));
+            User admin = UserManagerFactory.getInstance().load(user);
+            Logger.debug(admin.toString());
+            app.setUser(admin);
+            Blog blog = SnipSpaceFactory.getInstance().getBlog();
+            Logger.debug("PostDaemon: posting '"+title);
+
+            blog.post(writer.getBuffer().toString(), title);
+
+          } catch (Exception e) {
+            Logger.warn("PostDaemon Error:", e);
+          } finally {
+            // Delete message, either because we processed it or we couldn't
+            // process it
+            message[i].setFlag(Flags.Flag.DELETED, true);
+          }
+        } else {
+          Logger.warn("PostDaemon: wrong mail blog password: "+title);
+        }
+      }
+      // Close connection
+      folder.close(true);
+      store.close();
+    } catch (Exception e) {
+      Logger.warn("PostDaemon Error", e);
+    }
+
   }
 
   public void processImage(Writer writer, Part part, String name) throws MessagingException, IOException {
@@ -229,4 +275,5 @@ public class PostDaemon {
     }
 
   }
+
 }

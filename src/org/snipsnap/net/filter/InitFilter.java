@@ -40,6 +40,7 @@ import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.Digest;
 import org.snipsnap.user.User;
+import org.snipsnap.util.mail.PostDaemon;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
