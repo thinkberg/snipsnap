@@ -70,6 +70,10 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
   });
 
   private final static List PREFIX_METHODS = Arrays.asList(new String[]{
+    "getSnip",
+    "createSnip",
+    "removeSnip",
+    "getSnipAsXml",
     "dumpXml",
     "restoreXml",
   });
@@ -114,7 +118,9 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
       String appOid = applicationManager.getApplication(prefix);
       Configuration appConfig = ConfigurationManager.getInstance().getConfiguration(appOid);
       if (appConfig != null) {
-        vector.remove(0);
+        if(prefix.equals(vector.get(0))) {
+          vector.remove(0);
+        }
         Application.get().setConfiguration(appConfig);
         Application.get().storeObject(Application.OID, appOid);
         return super.execute(method, vector, user, password);
