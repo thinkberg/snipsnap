@@ -144,9 +144,9 @@ public class InitFilter implements Filter {
     if (uri != null) {
       paramMap.put("URI", config.getUrl(uri));
     } else {
-      String base = config.getPath() + (path != null ? path : "");
       String pathInfo = request.getPathInfo();
-      paramMap.put("URI", config.getUrl(base + (pathInfo != null ? pathInfo : "")));
+      paramMap.put("URI", config.getUrl((path != null ? path : "") +
+                                        (pathInfo != null ? pathInfo : "")));
     }
     paramMap.put("RSS", config.getUrl("/exec/rss"));
     app.setParameters(paramMap);
