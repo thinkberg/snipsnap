@@ -11,7 +11,7 @@
 <html>
  <head>
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-  <title><c:out value="${snip.name} | " default=""/>SnipSnap</title>
+  <title>SnipSnap :: <c:out value="${snip.name}" default=""/></title>
   <link type="text/css" href="../default.css" rel="STYLESHEET"/>
   <script>
   <!--

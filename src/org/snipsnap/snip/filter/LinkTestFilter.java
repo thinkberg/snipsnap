@@ -88,7 +88,7 @@ public class LinkTestFilter extends Filter {
         if (-1 != colonIndex) {
           String extSpace = key.substring(0, colonIndex);
           key = key.substring(colonIndex+1);
-          buffer.append("<a href=\"http://www.langreiter.com/space/\"");
+          buffer.append("<a href=\"http://www.langreiter.com/space/");
           try {
             buffer.append(URLEncoder.encode(key, "iso-8859-1"));
           } catch (UnsupportedEncodingException e) {
