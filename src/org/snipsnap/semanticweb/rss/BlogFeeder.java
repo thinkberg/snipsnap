@@ -27,6 +27,7 @@ package org.snipsnap.semanticweb.rss;
 
 import org.snipsnap.snip.Blog;
 import org.snipsnap.snip.SnipSpaceFactory;
+import org.snipsnap.snip.Snip;
 
 import java.util.List;
 
@@ -44,4 +45,9 @@ public class BlogFeeder implements Feeder {
       Blog blog = SnipSpaceFactory.getInstance().getBlog();
       return blog.getFlatPosts();
   };
+
+  public Snip getContextSnip() {
+    Blog blog = SnipSpaceFactory.getInstance().getBlog();
+    return blog.getSnip();
+  }
 }

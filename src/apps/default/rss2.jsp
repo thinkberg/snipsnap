@@ -31,7 +31,7 @@
        <item>
         <title><c:out value="${child.name}" escapeXml="true"/></title>
         <link><c:out value="${url}/${child.nameEncoded}"/></link>
-        <description><s:content snip="${child}" removeHtml="true"/></description>
+        <description><s:content snip="${child}" removeHtml="true" encode="true"/></description>
         <guid isPermaLink="true"><c:out value="${url}/${child.nameEncoded}"/></guid>
         <content:encoded><s:content snip="${child}" encode="true"/></content:encoded>
         <s:dublinCore snip="${child}" format="xml"/>

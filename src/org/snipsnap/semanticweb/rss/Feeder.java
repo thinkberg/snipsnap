@@ -25,6 +25,8 @@
 
 package org.snipsnap.semanticweb.rss;
 
+import org.snipsnap.snip.Snip;
+
 import java.util.List;
 
 /*
@@ -39,4 +41,5 @@ import java.util.List;
 
 public interface Feeder {
   public List getFeed();
+  public Snip getContextSnip();
 }

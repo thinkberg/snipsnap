@@ -31,6 +31,7 @@ import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.semanticweb.rss.BlogFeeder;
 import org.snipsnap.semanticweb.rss.Feeder;
+import org.snipsnap.semanticweb.rss.RecentlySnipChangedFeeder;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -63,11 +64,16 @@ public class RssServlet extends HttpServlet {
       return;
     } else {
       String version = request.getParameter("version");
+      String type = request.getParameter("type");
 
-      Feeder feeder = new BlogFeeder();
+      Feeder feeder = null;
+      if ("recentlychanged".equals(type)) {
+        feeder = new RecentlySnipChangedFeeder();
+      }  else {
+        feeder = new BlogFeeder();
+      }
 
-      Blog blog = SnipSpaceFactory.getInstance().getBlog();
-      Snip snip = blog.getSnip();
+      Snip snip = feeder.getContextSnip();
 
       request.setAttribute("snip", snip);
       request.setAttribute("rsssnips", feeder.getFeed());
