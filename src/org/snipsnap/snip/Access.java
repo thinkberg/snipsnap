@@ -63,9 +63,9 @@ public class Access {
     if (um.isAuthenticated(user)) {
       user.lastAccess();
       um.getInstance().delayedStrore(user);
-      System.err.println("Authenticaded, setting last access");
+      /*// System.err.println("Authenticaded, setting last access");
     } else {
-      System.err.println("Not authenticaded no lastAccess.");
+      System.err.println("Not authenticaded no lastAccess.");*/
     }
 
     incViewCount();

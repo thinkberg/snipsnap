@@ -130,7 +130,7 @@ public class AppConfiguration extends Configuration {
   public String getUrl() {
     StringBuffer url = new StringBuffer();
     String domain = getProperty(AppConfiguration.APP_DOMAIN);
-    if (null != domain) {
+    if (domain != null && domain.length() > 0) {
       url.append(domain);
     } else {
       url.append("http://");

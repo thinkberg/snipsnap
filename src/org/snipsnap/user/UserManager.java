@@ -203,10 +203,7 @@ public class UserManager {
   }
 
   public User authenticate(String login, String passwd) {
-    System.err.println("login="+login);
-    System.err.println("passwd="+passwd);
     User user = storageLoad(login);
-    System.err.println("user="+user);
     if (null != user && user.getPasswd().equals(passwd)) {
       user.lastLogin();
       storageStore(user);

@@ -31,6 +31,7 @@ import org.mortbay.util.MultiException;
 import org.snipsnap.config.Configuration;
 
 import java.io.IOException;
+import java.io.File;
 import java.util.Iterator;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -41,9 +42,8 @@ import java.net.UnknownHostException;
  * @version $Id$
  */
 public class AppServer {
-
-
-  protected static Configuration adminConfig;
+  protected static Configuration snipsnapConfig;
+  protected static Configuration serverConfig;
   protected static Server jettyServer;
 
   public static void main(String args[]) {
@@ -55,20 +55,31 @@ public class AppServer {
     });
 
     try {
-      adminConfig = new Configuration("conf/server.conf");
-      System.setProperty("snipsnap."+Configuration.SERVER_VERSION, adminConfig.getVersion());
+      snipsnapConfig = new Configuration("conf/snipsnap.conf");
+      System.setProperty("snipsnap."+Configuration.SERVER_VERSION, snipsnapConfig.getVersion());
     } catch (IOException e) {
       e.printStackTrace();
-      System.out.println("ERROR: unable to read server configuration, aborting");
+      System.out.println("ERROR: unable to read snipsnap default configuration, aborting");
       System.exit(-1);
     }
 
-    System.out.println("SnipSnap " + adminConfig.getProperty(Configuration.SERVER_VERSION));
+    System.out.println("SnipSnap " + snipsnapConfig.getVersion());
     System.out.println("Copyright (c) 2002 Stephan J. Schmidt, Matthias L. Jugel. "
                        + "All Rights Reserved.");
     System.out.println("See License Agreement for terms and conditions of use.");
 
-    adminConfig = parseArguments(args, adminConfig);
+    // if not server.conf exists create one
+    try {
+      serverConfig = new Configuration("conf/server.conf");
+    } catch (IOException e) {
+      try {
+        serverConfig = new Configuration("conf/snipsnap.conf");
+        serverConfig.store(new File("conf/server.conf"));
+      } catch (IOException e1) {
+        System.err.println("ERROR: unable to store server.conf, aborting");
+        System.exit(-1);
+      }
+    }
 
     // start jetty server and install web application
     try {
@@ -90,14 +101,14 @@ public class AppServer {
 
     // start the administrative network interface
     try {
-      new AdminServer(Integer.parseInt(adminConfig.getProperty(Configuration.SERVER_ADMIN_PORT).trim()));
+      new AdminServer(Integer.parseInt(serverConfig.getProperty(Configuration.SERVER_ADMIN_PORT).trim()));
     } catch (Exception e) {
       e.printStackTrace();
       System.out.println("ERROR: unable to start administration server: " + e);
     }
 
     // now, after loading all possible services we will look for applications and start them
-    int errors = ApplicationLoader.loadApplications(adminConfig.getProperty(Configuration.SERVER_WEBAPP_ROOT));
+    int errors = ApplicationLoader.loadApplications(serverConfig.getProperty(Configuration.SERVER_WEBAPP_ROOT));
     if (errors == 0 && ApplicationLoader.getApplicationCount() == 0) {
       System.out.println("ATTENTION: Server is still unconfigured!");
       System.out.println("ATTENTION: Point your browser to the following address:");

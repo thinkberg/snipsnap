@@ -18,13 +18,13 @@
     <c:set value="${config.value}" var="cfg"/>
     <tr class="table-<c:out value='${idx.count mod 2}'/>">
       <td>
-        <a href="http://<c:out value='${cfg.host}' default='localhost'/><c:out value=':${cfg.port}' default=''/><c:out value='${cfg.contextPath}'/>"><c:out value="${config.key}"/></a>
+        <a href="<c:out value='${cfg.url}'/>"><c:out value="${config.key}"/></a>
       </td>
       <td><c:out value="${cfg.host}" default="*" /><c:out value=":${cfg.port}" default=""/></td>
       <td><c:out value="${cfg.contextPath}"/></td>
       <td><c:out value="${cfg.JDBCURL}"/></td>
       <td>
-        <a href="http://<c:out value='${cfg.host}' default='localhost'/><c:out value=':${cfg.port}' default=''/><c:out value='${cfg.contextPath}'/>space/<c:out value='${cfg.adminLogin}'/>"><c:out value="${cfg.adminLogin}"/></a> (<c:out value="${cfg.adminEmail}" default="no email"/>)</td>
+        <a href="<c:out value='${cfg.url}'/>/space/<c:out value='${cfg.adminLogin}'/>"><c:out value="${cfg.adminLogin}"/></a> (<c:out value="${cfg.adminEmail}" default="no email"/>)</td>
     </tr>
   </c:forEach>
   <tr><td colspan="5">

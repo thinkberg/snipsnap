@@ -24,12 +24,12 @@
  */
 package org.snipsnap.config;
 
-import java.util.Properties;
 import java.io.File;
-import java.io.IOException;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Properties;
 
 /**
  * A configuration object. Contains information about server and admin login.
@@ -38,7 +38,7 @@ import java.io.FileInputStream;
  */
 public class Configuration {
 
-  private Properties properties = new Properties();
+  private Properties properties;
 
   public final static String INIT_PARAM = "config";
 
@@ -56,7 +56,7 @@ public class Configuration {
    * Create an instance of configuration, unconfigured
    */
   public Configuration() {
-    /* create a new configuration with not content */
+    properties = new Properties();
   }
 
   /**
@@ -74,8 +74,14 @@ public class Configuration {
    * @throws IOException
    */
   public Configuration(File file) throws IOException {
+    this();
     this.file = file;
     properties.load(new FileInputStream(file));
+  }
+
+
+  public Configuration(Configuration config) {
+    properties = (Properties)config.properties.clone();
   }
 
   /**
@@ -95,7 +101,7 @@ public class Configuration {
    * @throws IOException
    */
   public void store() throws IOException {
-    if(file != null) {
+    if (file != null) {
       store(file);
     } else {
       throw new IOException("no configuration file known, use store(File file)");
@@ -108,7 +114,8 @@ public class Configuration {
    * @throws IOException
    */
   public void store(File configFile) throws IOException {
-    FileOutputStream out = new FileOutputStream(configFile);
+    setFile(configFile);
+    FileOutputStream out = new FileOutputStream(file);
     store(out);
     out.close();
   }
@@ -150,8 +157,8 @@ public class Configuration {
 
   public String getVersion() {
     String version = getProperty(SERVER_VERSION);
-    if(null == version) {
-      version = System.getProperty("snipsnap."+SERVER_VERSION);
+    if (null == version) {
+      version = System.getProperty("snipsnap." + SERVER_VERSION);
     }
     return version;
   }
