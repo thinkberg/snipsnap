@@ -3,9 +3,11 @@ package com.neotis.snip;
 import com.neotis.util.ConnectionManager;
 
 import java.sql.*;
+import java.util.Map;
 
 public class SnipSpace {
   private Connection connection;
+  private Map cache;
 
   private static SnipSpace instance;
 
@@ -21,31 +23,39 @@ public class SnipSpace {
   }
 
   public boolean exists(String name) {
-      return (null != load(name));
+    return (null != load(name));
   }
 
   public Snip load(String name) {
     Snip snip = null;
-    PreparedStatement statement = null;
-    ResultSet result = null;
-
-    try {
-      statement = connection.prepareStatement("SELECT name, content FROM Snip WHERE name=?");
-      statement.setString(1, name);
-
-      result = statement.executeQuery();
-      if (result.next()) {
-        snip = new Snip(result.getString("name"), result.getString("content"));
+    if (cache.containsKey(name)) {
+      snip = (Snip) cache.get(name);
+    } else {
+      snip = storageLoad(name);
+      if (null != snip) {
+        cache.put(name, snip);
       }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    } finally {
-      ConnectionManager.close(statement);
     }
     return snip;
   }
 
   public void store(Snip snip) {
+    storageStore(snip);
+    return;
+  }
+
+  public Snip create(String name, String content) {
+    Snip snip = storageCreate(name, content);
+    cache.put(name, snip);
+  }
+
+  public void remove(Snip snip) {
+    cache.remove(snip.getName());
+    storageRemove(snip);
+    return;
+  }
+
+  private void storageStore(Snip snip) {
     PreparedStatement statement = null;
 
     try {
@@ -63,7 +73,7 @@ public class SnipSpace {
     return;
   }
 
-  public Snip create(String name, String content) {
+  private Snip storageCreate(String name, String content) {
     PreparedStatement statement = null;
     ResultSet result = null;
 
@@ -84,7 +94,8 @@ public class SnipSpace {
     return snip;
   }
 
-  public void remove(Snip snip) {
+
+  private void storageRemove(Snip snip) {
     PreparedStatement statement = null;
 
     try {
@@ -99,4 +110,26 @@ public class SnipSpace {
     }
     return;
   }
+
+  private Snip storageLoad(String name) {
+    Snip snip = null;
+    PreparedStatement statement = null;
+    ResultSet result = null;
+
+    try {
+      statement = connection.prepareStatement("SELECT name, content FROM Snip WHERE name=?");
+      statement.setString(1, name);
+
+      result = statement.executeQuery();
+      if (result.next()) {
+        snip = new Snip(result.getString("name"), result.getString("content"));
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    } finally {
+      ConnectionManager.close(statement);
+    }
+    return snip;
+  }
+
 }

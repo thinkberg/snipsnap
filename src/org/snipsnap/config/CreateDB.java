@@ -6,7 +6,10 @@ import java.sql.*;
 public class CreateDB {
 
   public static void main(String[] args) {
+    createDB();
+  }
 
+  private static void createDB() {
     System.out.println();
 
     // Register the Mckoi JDBC Driver
@@ -15,10 +18,10 @@ public class CreateDB {
     }
     catch (Exception e) {
       System.out.println(
-	 "Unable to register the JDBC Driver.\n" +
-	 "Make sure the classpath is correct.\n" +
-	 "For example on Win32;  java -cp ../../mckoidb.jar;. SimpleApplicationDemo\n" +
-	 "On Unix;  java -cp ../../mckoidb.jar:. SimpleApplicationDemo");
+     "Unable to register the JDBC Driver.\n" +
+     "Make sure the classpath is correct.\n" +
+     "For example on Win32;  java -cp ../../mckoidb.jar;. SimpleApplicationDemo\n" +
+     "On Unix;  java -cp ../../mckoidb.jar:. SimpleApplicationDemo");
       return;
     }
 
@@ -42,8 +45,8 @@ public class CreateDB {
     }
     catch (SQLException e) {
       System.out.println(
-	 "Unable to create the database.\n" +
-	 "The reason: " + e.getMessage());
+     "Unable to create the database.\n" +
+     "The reason: " + e.getMessage());
       return;
     }
 
@@ -58,15 +61,16 @@ public class CreateDB {
 
       // Create a Person table,
       statement.executeQuery(
-	  "    CREATE TABLE Snip ( " +
-	  "       name      VARCHAR(100) NOT NULL, " +
-	  "       content   TEXT ) " );
+      "    CREATE TABLE Snip ( " +
+      "       name      VARCHAR(100) NOT NULL, " +
+      "       content   TEXT, " +
+      "       parentSnip VARCHAR(100) ) " );
 
       System.out.println("-- Inserting Data --");
 
       statement.executeQuery(
-	  "    INSERT INTO Snip ( name, content ) VALUES " +
-	  "      ( 'about', 'This software is QPL' ) ");
+      "    INSERT INTO Snip ( name, content, parentSnip ) VALUES " +
+      "      ( 'about', 'This software is QPL', null ) ");
 
       System.out.println("--- Complete ---");
 
@@ -77,8 +81,8 @@ public class CreateDB {
     }
     catch (SQLException e) {
       System.out.println(
-	"An error occured\n" +
-	"The SQLException message is: " + e.getMessage());
+    "An error occured\n" +
+    "The SQLException message is: " + e.getMessage());
 
     }
 
@@ -89,6 +93,5 @@ public class CreateDB {
     catch (SQLException e2) {
       e2.printStackTrace(System.err);
     }
-
   }
 }
