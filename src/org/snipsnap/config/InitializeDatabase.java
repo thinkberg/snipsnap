@@ -34,6 +34,7 @@ import org.snipsnap.snip.attachment.Attachments;
 import org.snipsnap.snip.label.RenderEngineLabel;
 import org.snipsnap.snip.storage.JDBCSnipStorage;
 import org.snipsnap.snip.storage.JDBCUserStorage;
+import org.snipsnap.snip.storage.Storage;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.User;
@@ -82,6 +83,7 @@ public class InitializeDatabase {
 
     // initialize storages
     message("creating storages");
+    // TODO: make generic or check for type of storage
     JDBCSnipStorage.createStorage();
     JDBCUserStorage.createStorage();
 
