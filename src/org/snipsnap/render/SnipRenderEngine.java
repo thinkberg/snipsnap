@@ -122,7 +122,6 @@ public class SnipRenderEngine extends BaseRenderEngine
 
   public String render(String content, RenderContext context) {
     init();
-    System.out.println("RENDERING: "+ ((SnipRenderContext) context).getSnip());
     FilterContext filterContext = new SnipFilterContext(((SnipRenderContext) context).getSnip());
     filterContext.setRenderContext(context);
     context.setRenderEngine(this);
