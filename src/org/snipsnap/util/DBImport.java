@@ -100,6 +100,11 @@ public class DBImport {
       System.out.println("Unable to load import file: "+e);
       System.exit(-1);
     }
+    try {
+      Thread.sleep(20);
+    } catch (InterruptedException e) {
+      // ignore
+    }
     System.exit(0);
   }
 
