@@ -54,7 +54,7 @@ public class BackLinkTag extends TagSupport {
         out.print(": <a href=\"");
         out.print(url);
         out.print("\">");
-        out.print(SnipLink.cutLength(url, 80));
+        out.print(SnipLink.cutLength(url, 90));
         out.println("</a><br/>");
       }
     } catch (IOException e) {
