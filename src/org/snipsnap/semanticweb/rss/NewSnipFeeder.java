@@ -51,7 +51,7 @@ public class NewSnipFeeder implements Feeder {
   private String snipName;
   private Query newAndNotCommentQuery = new SnipQuery() {
       public boolean fit(Snip snip) {
-        return isComment(snip) && (snip.getVersion() == 0);
+        return (! isComment(snip)) && (snip.getVersion() == 1);
       }
     };
 
