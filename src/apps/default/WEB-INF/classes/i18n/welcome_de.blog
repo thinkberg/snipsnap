@@ -1,15 +1,15 @@
 Willkommen bei SnipSnap
-Sie können sich jetzt anmelden und Ihren ersten Beitrag hinzufügen/editieren.
-Klicken Sie auf den __Blog abschicken__ Verweis in der Menüzeile. Für Hilfe bei
+Sie kÃ¶nnen sich jetzt anmelden und Ihren ersten Beitrag hinzufÃ¼gen/editieren.
+Klicken Sie auf den __Blog abschicken__ Verweis in der MenÃ¼zeile. FÃ¼r Hilfe bei
 der Formatiereung Ihres Beitrags schauen Sie sich [snipsnap-help] an.
-Um einen Link auf eine Seite innerhalb Ihrer Site zu erzeugen, umschließen Sie
-den Namen mit eckigen Klammern (\[ und \]). Mit \_\_ umschlossene Ausdrücke
-werden __fett__ wiedergegeben und \~\~  um einen Ausdruck bewirkt, daß er
-~~kursiv~~ ausgegeben wird. Sie können einen Link in das Internet erzeugen,
+Um einen Link auf eine Seite innerhalb Ihrer Site zu erzeugen, umschlieÃŸen Sie
+den Namen mit eckigen Klammern (\[ und \]). Mit \_\_ umschlossene AusdrÃ¼cke
+werden __fett__ wiedergegeben und \~\~  um einen Ausdruck bewirkt, daÃŸ er
+~~kursiv~~ ausgegeben wird. Sie kÃ¶nnen einen Link in das Internet erzeugen,
 indem Sie die URL einfach in dieser Form angeben http://snipsnap.org oder durch
 Benutzung von \{link:Name|url\}. Der Verweise \{link:SnipSnap|\http://snipsnap.org\}
 beispielsweise erzeugt {link:SnipSnap|http://snipsnap.org}.
 
 Das Benachrichtigen von weblogs.com kann aktiviert werden. Die 
-{link:FAQ|http://snipsnap.org/space/FAQ} erklären wie dies ein- oder
+{link:FAQ|http://snipsnap.org/space/FAQ} erklÃ¤ren wie dies ein- oder
 ausgeschaltet werden kann.

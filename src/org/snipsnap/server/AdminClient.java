@@ -68,7 +68,7 @@ public class AdminClient {
       System.exit(0);
     } else {
       System.err.println("usage: AdminClient command arguments");
-      System.err.println("       command may be either an XML-RPC method or 'repair'");
+      System.err.println("       command may be either an XML-RPC method, 'repair' or 'checklocale'");
     }
     System.exit(1);
   }

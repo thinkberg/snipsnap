@@ -221,7 +221,7 @@ public class InitializeDatabase {
 
 
   private static String getResourceAsString(InputStream is) throws IOException {
-    BufferedReader in = new BufferedReader(new InputStreamReader(is));
+    BufferedReader in = new BufferedReader(new InputStreamReader(is, "UTF-8"));
     StringBuffer contents = new StringBuffer();
     String line = null;
     while ((line = in.readLine()) != null) {
