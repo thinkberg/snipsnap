@@ -58,7 +58,7 @@ public class ACLInterceptor extends InterceptorSupport {
       //Logger.debug("ACLInterceptor: Method="+invocation.getMethod().getName());
       //Logger.debug("ACLInterceptor: User = "+user);
       //Logger.debug("ACLInterceptor: Snip = "+snip);
-      if(!user.isAdmin()) {// TODO: checking for the admin is a hack
+      if(user != null && !user.isAdmin()) {// TODO: checking for the admin is a hack
         if (!(Security.checkPermission("Edit", user, snip)
             || Security.hasRoles(user, snip, roles))) {
           //Logger.debug("SECURITY EXCEPTION");

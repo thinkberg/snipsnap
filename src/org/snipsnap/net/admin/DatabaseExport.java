@@ -181,7 +181,7 @@ public class DatabaseExport implements SetupHandler {
       this.users = users;
       this.exportIgnore = ignore;
       this.filePath = filePath;
-      maxValue = snips.size() + users.size();
+      maxValue = (snips != null ? snips.size() : 0) + (users != null ? users.size() : 0);
     }
 
     public void run() {
