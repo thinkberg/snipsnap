@@ -40,8 +40,8 @@ import java.util.List;
  */
 
 public interface Feeder {
-  public List getFeed();
-  public List getFeed(int count);
+  public List getFeed(FeederContext context);
+  public List getFeed(FeederContext context, int count);
   public String getName();
   public Snip getContextSnip();
 }

@@ -33,6 +33,7 @@ import org.snipsnap.snip.storage.query.QueryKit;
 import org.snipsnap.snip.storage.query.Query;
 import org.snipsnap.app.Application;
 import org.snipsnap.feeder.Feeder;
+import org.snipsnap.feeder.FeederContext;
 
 import java.util.List;
 
@@ -67,12 +68,12 @@ public class NewCommentFeeder implements Feeder {
     return "comments";
   }
 
-  public List getFeed() {
+  public List getFeed(FeederContext context) {
     List changed = space.getChanged();
     return QueryKit.query(changed, commentQuery);
   }
 
-  public List getFeed(int count) {
+  public List getFeed(FeederContext context, int count) {
     List changed = space.getChanged();
     return QueryKit.query(changed, commentQuery, count);
   }

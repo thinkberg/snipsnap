@@ -31,6 +31,7 @@ import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.app.Application;
 import org.snipsnap.feeder.Feeder;
+import org.snipsnap.feeder.FeederContext;
 
 import java.util.List;
 
@@ -54,13 +55,13 @@ public class RecentlySnipChangedFeeder implements Feeder {
     return "recentlychanged";
   }
 
-  public List getFeed(int count) {
+  public List getFeed(FeederContext context, int count) {
     List changed = space.getChanged(count);
     return changed;
   }
 
-  public List getFeed() {
-    return getFeed(10);
+  public List getFeed(FeederContext context) {
+    return getFeed(context, 10);
   };
 
   public Snip getContextSnip() {

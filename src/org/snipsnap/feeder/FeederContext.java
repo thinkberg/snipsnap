@@ -23,49 +23,17 @@
  * --LICENSE NOTICE--
  */
 
-package org.snipsnap.semanticweb.rss;
-
-import org.snipsnap.snip.Blog;
-import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.feeder.Feeder;
-import org.snipsnap.feeder.FeederContext;
-
-import java.util.List;
+package org.snipsnap.feeder;
 
 /*
- * Generates a feed of snips from a blog which can then be
- * serialized to RSS, RDF, Atom, ...
+ * Stores the context for the feeder.
  *
  * @author stephan
  * @team sonicteam
- * @version $Id$
+ * @version $Id: Feeder.java 1802 2005-03-14 14:44:53Z stephan $
  */
 
-public class BlogFeeder implements Feeder {
-  private Blog blog;
-
-  public BlogFeeder() {
-    blog = SnipSpaceFactory.getInstance().getBlog();
-  }
-
-  public BlogFeeder(String blogName) {
-    blog = SnipSpaceFactory.getInstance().getBlog(blogName);
-  }
-
-  public String getName() {
-    return "blog";
-  }
-
-  public List getFeed(FeederContext context, int count) {
-    return blog.getFlatPosts();
-  }
-
-  public List getFeed(FeederContext context) {
-      return blog.getFlatPosts();
-  };
-
-  public Snip getContextSnip() {
-    return blog.getSnip();
-  }
+public interface FeederContext {
+  public Object get(String key);
+  public void set(String key, Object value);
 }

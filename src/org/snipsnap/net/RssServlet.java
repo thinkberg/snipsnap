@@ -29,6 +29,8 @@ import org.snipsnap.config.Configuration;
 import org.snipsnap.container.Components;
 import org.snipsnap.feeder.Feeder;
 import org.snipsnap.feeder.FeederRepository;
+import org.snipsnap.feeder.BasicFeederContext;
+import org.snipsnap.feeder.FeederContext;
 import org.snipsnap.render.PlainTextRenderEngine;
 import org.snipsnap.semanticweb.rss.BlogFeeder;
 import org.snipsnap.snip.Snip;
@@ -43,9 +45,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Iterator;
+import java.util.*;
 import java.text.SimpleDateFormat;
 
 import com.sun.syndication.feed.synd.*;
@@ -63,6 +63,9 @@ public class RssServlet extends HttpServlet {
   // For date and time see http://www.w3.org/TR/NOTE-datetime
   private static SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
   private static SimpleDateFormat year = new SimpleDateFormat("yyyy");
+
+  public RssServlet() {
+  }
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
@@ -104,60 +107,54 @@ public class RssServlet extends HttpServlet {
         }
       }
 
-      Snip snip = feeder.getContextSnip();
+      SyndFeedI feed = createFeed(version, config, feeder, count);
 
-      SyndFeedI feed = new SyndFeed();
-      // old snipsnaps supported 1.0 0.92 plain else=2.0
-      // rome supports
-      // rss_0.90, rss_0.91, rss_0.92, rss_0.93, rss_0.94, rss_1.0 rss_2.0 or atom_0.3
-      if ("rss_0.90".equals(version)) {
-        feed.setFeedType("rss_0.90");
-      } else if ("rss_0.91".equals(version)) {
-        feed.setFeedType("rss_0.91");
-      } else if ("0.92".equals(version) || "rss_0.92".equals(version)) {
-        feed.setFeedType("rss_0.92");
-      } else if ("rss_0.93".equals(version)) {
-        feed.setFeedType("rss_0.93");
-      } else if ("rss_0.94".equals(version)) {
-        feed.setFeedType("rss_0.94");
-      } else if ("1.0".equals(version) || "rss_1.0".equals(version)) {
-        feed.setFeedType("rss_1.0");
-      } else if ("rss_2.0".equals(version)) {
-        feed.setFeedType("rss_2.0");
-      } else if ("atom_0.3".equals(version)) {
-        feed.setFeedType("atom_0.3");
-      } else {
-        feed.setFeedType("atom_0.3");
+      SyndFeedOutput output = new SyndFeedOutput();
+      try {
+        output.output(feed, new OutputStreamWriter(response.getOutputStream()));
+      } catch (FeedException e) {
+        e.printStackTrace();
       }
+    }
+  }
 
-      // feed.setEtag(SnipSpaceFactory.getInstance().getETag());
-      String url = config.getUrl("/space");
-      feed.setTitle(config.getName());
-      feed.setLink(url + "/" + snip.getNameEncoded());
-      feed.setDescription(config.getTagline());
-      feed.setCopyright("Copyright "+year.format(snip.getModified().getmTime()));
-      feed.setLanguage(config.getLocale().getLanguage());
+  private SyndFeedI createFeed(String version, Configuration config, Feeder feeder, int count) {
 
-      List entries = new ArrayList();
-      SyndEntryI entry;
-      SyndContentI description;
+    SyndFeedI feed = new SyndFeed();
 
-      List rssSnips = feeder.getFeed(count);
-      Iterator iterator = rssSnips.iterator();
-      while (iterator.hasNext()) {
-        Snip rssSnip = (Snip) iterator.next();
+    Snip snip = feeder.getContextSnip();
+    feed.setFeedType(getFeedVersion(version));
 
-        entry = new SyndEntry();
-        entry.setTitle(rssSnip.getName());
-        entry.setLink(url + "/" + rssSnip.getNameEncoded());
-        // entry.setPublishedDate();
-        description = new SyndContent();
-        description.setType("text/html");
-        description.setValue(rssSnip.getXMLContent());
-        entry.setDescription(description);
-        entry.setAuthor(rssSnip.getCUser());
-        entry.setPublishedDate(rssSnip.getModified().getmTime());
-        entries.add(entry);
+    // feed.setEtag(SnipSpaceFactory.getInstance().getETag());
+    String url = config.getUrl("/space");
+    feed.setTitle(config.getName());
+    feed.setLink(url + "/" + snip.getNameEncoded());
+    feed.setDescription(config.getTagline());
+    feed.setCopyright("Copyright "+year.format(snip.getModified().getmTime()));
+    feed.setLanguage(config.getLocale().getLanguage());
+
+    List entries = new ArrayList();
+    SyndEntryI entry;
+    SyndContentI description;
+
+    FeederContext context = new BasicFeederContext();
+
+    List rssSnips = feeder.getFeed(context, count);
+    Iterator iterator = rssSnips.iterator();
+    while (iterator.hasNext()) {
+      Snip rssSnip = (Snip) iterator.next();
+
+      entry = new SyndEntry();
+      entry.setTitle(rssSnip.getName());
+      entry.setLink(url + "/" + rssSnip.getNameEncoded());
+      // entry.setPublishedDate();
+      description = new SyndContent();
+      description.setType("text/html");
+      description.setValue(rssSnip.getXMLContent());
+      entry.setDescription(description);
+      entry.setAuthor(rssSnip.getCUser());
+      entry.setPublishedDate(rssSnip.getModified().getmTime());
+      entries.add(entry);
 
 //         <item>
 //        <title><c:out value="${child.name}" escapeXml="true"/></title>
@@ -168,15 +165,30 @@ public class RssServlet extends HttpServlet {
 //        <s:dublinCore snip="${child}" format="xml"/>
 //        <comments><c:out value="${child.comments.postUrl}"/></comments>
 //      </item>
-      }
-      feed.setEntries(entries);
-
-      SyndFeedOutput output = new SyndFeedOutput();
-      try {
-        output.output(feed, new OutputStreamWriter(response.getOutputStream()));
-      } catch (FeedException e) {
-        e.printStackTrace();
-      }
     }
+    feed.setEntries(entries);
+    return feed;
   }
+
+  private String getFeedVersion(String version) {
+      // old snipsnaps supported 1.0 0.92 plain else=2.0
+      // rome supports
+      // rss_0.90, rss_0.91, rss_0.92, rss_0.93, rss_0.94, rss_1.0 rss_2.0 or atom_0.3
+      Map versions = new HashMap();
+      versions.put("rss_0.90", "rss_0.90");
+      versions.put("0.92", "rss_0.92");
+      versions.put("rss_0.92", "rss_0.92");
+      versions.put("rss_0.93", "rss_0.93");
+      versions.put("rss_0.94", "rss_0.94");
+      versions.put("1.0", "rss_1.0");
+      versions.put("rss_1.0", "rss_1.0");
+      versions.put("rss_2.0", "rss_2.0");
+      versions.put("atom_0.3", "atom_0.3");
+
+      if (versions.containsKey(version)) {
+        return (String) versions.get(version);
+      } else {
+        return "atom_0.3";
+      }
+      }
 }
