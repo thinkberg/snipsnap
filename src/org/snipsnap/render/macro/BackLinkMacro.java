@@ -52,6 +52,7 @@ public class BackLinkMacro extends ListOutputMacro {
     if (params.getLength() == 1) {
       count = Integer.parseInt(params.get("0"));
     }
-    BackLinks.appendTo(writer, params.getSnip().getAccess().getBackLinks(), count);
+    // Dangerous!!
+    BackLinks.appendTo(writer, params.getSnipRenderContext().getSnip().getAccess().getBackLinks(), count);
   }
 }

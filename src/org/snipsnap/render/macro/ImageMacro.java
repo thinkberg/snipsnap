@@ -107,7 +107,7 @@ public class ImageMacro extends SnipMacro {
             imageName = imageName.substring(0, dotIndex);
           }
 
-          Snip snip = params.getSnip();
+          Snip snip = params.getSnipRenderContext().getSnip();
           int slashIndex = imageName.lastIndexOf('/');
           if(-1 != slashIndex) {
             String snipName = imageName.substring(0, slashIndex);

@@ -28,6 +28,7 @@ package org.snipsnap.render.macro.parameter;
 import org.radeox.api.engine.context.RenderContext;
 import org.radeox.macro.parameter.BaseMacroParameter;
 import org.snipsnap.snip.Snip;
+import org.snipsnap.render.context.SnipRenderContext;
 
 import java.util.HashMap;
 
@@ -63,5 +64,7 @@ public class SnipMacroParameter extends BaseMacroParameter  {
     return snip;
   }
 
-
+  public SnipRenderContext getSnipRenderContext() {
+    return (SnipRenderContext) context;
+  }
 }

@@ -75,4 +75,6 @@ public class SnipRenderContext extends BaseRenderContext {
   public void setSpace(SnipSpace space) {
     this.space = space;
   }
+
+  // public Map getAttributes();
 }

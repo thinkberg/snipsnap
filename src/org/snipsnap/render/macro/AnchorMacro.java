@@ -70,7 +70,7 @@ public class AnchorMacro extends SnipMacro {
       writer.write(anchor);
       writer.write("\"/>");
       writer.write("<a href=\"");
-      Snip snip = params.getSnip();
+      Snip snip = params.getSnipRenderContext().getSnip();
       if (null != snip) {
         SnipLink.appendUrl(writer, snip.getName(), anchor);
       } else {

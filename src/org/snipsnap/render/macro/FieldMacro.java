@@ -59,7 +59,7 @@ public class FieldMacro extends SnipMacro {
       if (params.getLength() >= 3) {
         SnipLink.appendUrl(writer, params.get("2"));
       } else {
-        SnipLink.appendUrl(writer, params.getSnip().getName());
+        SnipLink.appendUrl(writer, params.getSnipRenderContext().getSnip().getName());
       }
       writer.write("\" method=\"get\">");
       writer.write("<input size=\"18\" name=\"");

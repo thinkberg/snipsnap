@@ -80,7 +80,7 @@ public class WeblogMacro extends SnipMacro {
         count = 10;
       }
 
-      String name = params.getSnip().getName();
+      String name = params.getSnipRenderContext().getSnip().getName();
       Blog blog = space.getBlog(name);
 
       // order by name

@@ -26,6 +26,7 @@
 package org.snipsnap.render.macro;
 
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
+import org.snipsnap.snip.Snip;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -52,7 +53,8 @@ public class GraphMacro extends SnipMacro {
 
   public void execute(Writer writer, SnipMacroParameter params)
     throws IllegalArgumentException, IOException {
-    String name = params.getSnip().getName();
+    Snip snip = params.getSnipRenderContext().getSnip();
+    String name = snip.getName();
     String handler = params.get("handler", 0);
 //    writer.write(""+params.getContentStart());
 //    writer.write(":"+ params.getContentEnd());
@@ -63,7 +65,7 @@ public class GraphMacro extends SnipMacro {
     writer.write("&handler=");
     writer.write(handler);
     // Remove {graph} from start and end offset
-    int start = params.getSnip().getContent().indexOf('}', params.getStart() + getName().length()) + 1;
+    int start = snip.getContent().indexOf('}', params.getStart() + getName().length()) + 1;
     int end = params.getEnd() - getName().length() - 2;
     writer.write("&start=" + start);
     writer.write("&end=" + end);

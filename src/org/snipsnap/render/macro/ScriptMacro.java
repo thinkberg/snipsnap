@@ -61,7 +61,7 @@ public class ScriptMacro extends SnipPreserved {
         new PythonInterpreter();
 
     interp.setOut(writer);
-    interp.set("snip", params.getSnip());
+    interp.set("snip", params.getSnipRenderContext().getSnip());
     interp.exec(params.getContent());
   }
 }
