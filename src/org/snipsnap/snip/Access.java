@@ -87,7 +87,10 @@ public class Access {
         try {
           while ((line = reader.readLine()) != null) {
             if (!line.startsWith("#")) {
-              cachedBlackList.add(line.trim());
+              line = line.trim();
+              if(!"".equals(line)) {
+                cachedBlackList.add(line.trim());
+              }
             }
           }
         } catch (IOException e) {

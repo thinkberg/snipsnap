@@ -183,9 +183,15 @@ public class Maintenance implements SetupHandler {
           while(blackListIt.hasNext()) {
             String entry = ((String)blackListIt.next()).toLowerCase();
             if(entry.startsWith("pattern:")) {
-              backLinks.removeLinkByPattern(entry.substring("pattern:".length()));
+              removed = backLinks.removeLinkByPattern(entry.substring("pattern:".length()));
+              if(removed > 0) {
+                Logger.debug("removed link by pattern: "+ entry.substring("pattern:".length()));
+              }
             } else {
-              backLinks.removeLink(entry);
+              removed = backLinks.removeLink(entry);
+              if (removed > 0) {
+                Logger.debug("removed link by domain: " + entry);
+              }
             }
           }
           if(removed > 0) {
@@ -259,6 +265,7 @@ public class Maintenance implements SetupHandler {
       while(backLinksIt.hasNext()) {
         String url = (String) backLinksIt.next();
         if(! Access.isValidReferrer(url)) {
+          Logger.warn("invalid referrer url: '"+url+"'");
           fixSpam.add(snip);
           break;
         }
