@@ -202,7 +202,9 @@
       <fileset dir="${target}/server" includes="org/snipsnap/server/*Launcher*"/>
     </jar>
     <jar destfile="${jar}/${appname}-server.jar" excludes="**/CVS, org/snipsnap/server/*Launcher*" manifest="conf/manifest">
-      <fileset dir="${target}/server" includes="**"/>
+      <fileset dir="${target}/server" includes="**">
+       <exclude name="org/snipsnap/server/*Launcher*"/>
+      </fileset>
       <fileset dir=".">
         <include name="conf/snipsnap.conf"/>
         <include name="conf/jetty.conf"/>

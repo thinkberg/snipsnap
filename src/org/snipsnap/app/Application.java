@@ -175,8 +175,11 @@ public class Application {
       return;
     }
 
-    Map currentUsersMap = currentUsers.getMap();
-    if (null == currentUsersMap) {
+    String appOid = (String) Application.get().getObject(Application.OID);
+    Map currentUsersMap = null;
+    if (null != appOid) {
+      currentUsersMap = currentUsers.getMap(appOid);
+    } else {
       currentUsersMap = currentUsers.findMap(session);
     }
 
