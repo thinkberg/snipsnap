@@ -27,6 +27,7 @@ package org.snipsnap.server;
 import org.mortbay.http.HttpListener;
 import org.mortbay.http.HttpServer;
 import org.mortbay.http.SocketListener;
+import org.mortbay.http.RequestLog;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.WebApplicationContext;
 import org.mortbay.util.InetAddrPort;
@@ -126,6 +127,7 @@ public class ApplicationLoader {
       System.err.println("ApplicationLoader: limiting threads per server to 30");
       ((SocketListener) listener).setMaxThreads(30);
     }
+
 
     // start web application context
     File appRoot = new File(root.getAbsoluteFile(), "app");
