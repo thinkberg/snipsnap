@@ -47,8 +47,8 @@ import java.text.NumberFormat;
  */
 public class XMLSnipRepair {
   public static void main(String args[]) {
-    if (args.length < 3) {
-      System.err.println("usage: XMLSnipRepair <input file> <output file> <webapp directory>");
+    if (args.length < 2) {
+      System.err.println("usage: XMLSnipRepair <input file> <output file> [<webapp directory>]");
       System.exit(0);
     }
 
@@ -64,7 +64,7 @@ public class XMLSnipRepair {
     }
 
     System.err.println("STEP 2: checking SnipSpace consistency ...");
-    Document repaired = repair(document, new File(args[2]));
+    Document repaired = repair(document, args.length > 2 ? new File(args[2]) : null);
 
     System.err.println("STEP 3: writing output file ...");
     OutputFormat outputFormat = new OutputFormat();
@@ -229,12 +229,17 @@ public class XMLSnipRepair {
     }
 
     int attCount = 0;
-    System.err.println("STEP 2.3: fixing snip data (" + snipData.size() + ") and attachments ...");
+    System.err.print("STEP 2.3: fixing snip data (" + snipData.size() + ")");
+    if(webAppRoot != null) {
+      System.out.println(" and attachments ...");
+    }
     Iterator snipIt = snipData.values().iterator();
     while (snipIt.hasNext()) {
       Element snipEl = (Element) snipIt.next();
-      attCount += storeAttachments(snipEl, new File(webAppRoot, "/WEB-INF/files"));
-      attCount += storeOldImages(snipEl, new File(webAppRoot, "/images"));
+      if(webAppRoot != null) {
+        attCount += storeAttachments(snipEl, new File(webAppRoot, "/WEB-INF/files"));
+        attCount += storeOldImages(snipEl, new File(webAppRoot, "/images"));
+      }
       rootEl.add(snipEl.detach());
     }
     System.err.println("Added " + attCount + " attachments.");
