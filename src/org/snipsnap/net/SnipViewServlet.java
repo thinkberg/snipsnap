@@ -95,7 +95,7 @@ public class SnipViewServlet extends HttpServlet {
 
     // Snip does not exist
     if (null == snip) {
-      response.sendRedirect("/space/snipsnap-notfound");
+      response.sendRedirect("/space/snipsnap-notfound?name="+name);
       return;
     }
 
