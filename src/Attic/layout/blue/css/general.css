@@ -48,15 +48,12 @@ table {
 
 input[type=submit] {
   margin-top: 2px;
-  border: 1px solid #003366;
-  padding: 1px;
-  font-family: verdana, arial, sans-serif;
 }
 
 input, select, textarea {
-  border: 1px solid #003366;
-  padding: 1px;
+  font-size: inherit;
   font-family: courier, courier new, monospaced;
 }
+
 
 
