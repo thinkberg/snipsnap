@@ -126,6 +126,10 @@ public class SnipSpace implements LinkTester, Loader {
     eTag = Digest.getDigest(new java.util.Date().toString());
   }
 
+  public int getSnipCount() {
+    return storageCount();
+  }
+
   public List getChanged() {
     return getChanged(15);
   }
@@ -342,6 +346,28 @@ public class SnipSpace implements LinkTester, Loader {
     snip.setAttachments(new Attachments(result.getString("attachments")));
     snip.setViewCount(result.getInt("viewCount"));
     return snip;
+  }
+
+  private int storageCount() {
+    PreparedStatement statement = null;
+    ResultSet result = null;
+    Connection connection = ConnectionManager.getConnection();
+    int count = -1;
+    try {
+      statement = connection.prepareStatement("SELECT count(*) " +
+                                              " FROM Snip ");
+      result = statement.executeQuery();
+      if (result.next()) {
+        count = result.getInt(1);
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    } finally {
+      ConnectionManager.close(result);
+      ConnectionManager.close(statement);
+      ConnectionManager.close(connection);
+    }
+    return count;
   }
 
   private List storageAll() {

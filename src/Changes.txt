@@ -1,5 +1,7 @@
 0.3
 
+- We use RSS/XHTML/CSS buttons from http://www.antipixel.com and
+  icons from chris http:/www.langreiter.com , thanks.
 - Added feature: UserCountMacro displays number of registered users
 - Added feature: SnipCountMacro displays number of snips (all)
 - Added feature: TypographyFilter will replace "..." with ellepsis entity
@@ -12,7 +14,7 @@
 - Added feature: {sniplinks} macro lists sniplinks, e.g. {sniplinks:4}
 - Fixed bug: escape '-' and '*' within code macro
 - Fixed bug: first start on a different port than 8668
-- Added feature: Introduced Themes for SnipSnap, using a more
+- Added feature: Introduced themes for SnipSnap, using a more
   Weblog like theme similiar to MovableType
 - Added feature: Interwiki (e.g. [Wiki@MoinMoin]) reads from a standard
   intermap file in conf/intermap.txt

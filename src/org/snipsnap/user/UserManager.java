@@ -146,6 +146,10 @@ public class UserManager implements Loader {
     }
   }
 
+  public int getUserCount() {
+    return storageUserCount();
+  }
+
   /**
    * Get user from session or cookie.
    */
@@ -435,6 +439,28 @@ public class UserManager implements Loader {
       ConnectionManager.close(connection);
     }
     return;
+  }
+
+  private int storageUserCount() {
+    PreparedStatement statement = null;
+    ResultSet result = null;
+    Connection connection = ConnectionManager.getConnection();
+    int count = -1;
+
+    try {
+      statement = connection.prepareStatement("SELECT count(*) FROM SnipUser");
+      result = statement.executeQuery();
+      if (result.next()) {
+        count = result.getInt(1);
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    } finally {
+      ConnectionManager.close(result);
+      ConnectionManager.close(statement);
+      ConnectionManager.close(connection);
+    }
+    return count;
   }
 
   private User storageLoad(String login) {
