@@ -105,14 +105,16 @@ public class CreateDB {
         "       cUser     VARCHAR(55), " +
         "       mUser     VARCHAR(55), " +
         "       parentSnip VARCHAR(100), " +
-        "       commentSnip VARCHAR(100) ) ");
+        "       commentSnip VARCHAR(100), " +
+        "       permissions VARCHAR(200) ");
 
       statement.executeQuery(
         "    CREATE TABLE User ( " +
         "       login    VARCHAR(100) NOT NULL, " +
         "       passwd   VARCHAR(20), " +
         "       email    VARCHAR(100)," +
-        "       status   VARCHAR(50) )");
+        "       status   VARCHAR(50), " +
+        "       roles    VARCHAR(200) ");
 
       System.out.println("-- Inserting Data --");
 

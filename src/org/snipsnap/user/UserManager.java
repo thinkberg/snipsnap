@@ -33,6 +33,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.*;
 
 /**
  * User manager handles all register, creation and authentication of users.
@@ -54,13 +55,13 @@ public class UserManager {
 
   public User getUser(HttpServletRequest request) {
     HttpSession session = request.getSession(true);
-    User user = (User)session.getAttribute("user");
-    if(user == null) {
-      Cookie cookie =  getCookie(request, "userName");
-      if(cookie != null) {
+    User user = (User) session.getAttribute("user");
+    if (user == null) {
+      Cookie cookie = getCookie(request, "userName");
+      if (cookie != null) {
         user = load(cookie.getValue());
       }
-      if(user == null) {
+      if (user == null) {
         user = new User("Guest", "Guest", "");
       }
       session.setAttribute("user", user);
@@ -76,9 +77,9 @@ public class UserManager {
    */
   private Cookie getCookie(HttpServletRequest request, String name) {
     Cookie cookies[] = request.getCookies();
-    for(int i = 0; cookies != null && i < cookies.length; i++) {
-      if(cookies[i].getName().equals(name)) {
-	return cookies[i];
+    for (int i = 0; cookies != null && i < cookies.length; i++) {
+      if (cookies[i].getName().equals(name)) {
+        return cookies[i];
       }
     }
     return null;
@@ -117,13 +118,37 @@ public class UserManager {
 
   // Storage System dependend Methods
 
+  private String serialize(Set roles) {
+    StringBuffer buffer = new StringBuffer();
+    Iterator iterator = roles.iterator();
+    while (iterator.hasNext()) {
+      String role = (String) iterator.next();
+      buffer.append(role);
+      if (iterator.hasNext()) buffer.append(":");
+    }
+    return buffer.toString();
+  }
+
+  private Set deserialize(String roleString) {
+    StringTokenizer st = new StringTokenizer(roleString, ":");
+    Set roles = new HashSet();
+
+    while (st.hasMoreTokens()) {
+      roles.add(st.nextToken());
+    }
+
+    return roles;
+  }
+
   private User createUser(ResultSet result) throws SQLException {
     String login = result.getString("login");
     String passwd = result.getString("passwd");
     String email = result.getString("email");
     String status = result.getString("status");
+    Set roles = deserialize(result.getString("roles"));
     User user = new User(login, passwd, email);
     user.setStatus(status);
+    user.setRoles(roles);
     return user;
   }
 
@@ -132,11 +157,12 @@ public class UserManager {
     Connection connection = ConnectionManager.getConnection();
 
     try {
-      statement = connection.prepareStatement("UPDATE User SET login=?, passwd=?, email=?, status=?");
+      statement = connection.prepareStatement("UPDATE User SET login=?, passwd=?, email=?, status=?, roles=?");
       statement.setString(1, user.getLogin());
       statement.setString(2, user.getPasswd());
       statement.setString(3, user.getEmail());
       statement.setString(3, user.getStatus());
+      statement.setString(4, serialize(user.getRoles()));
 
       statement.execute();
     } catch (SQLException e) {
@@ -156,11 +182,12 @@ public class UserManager {
     User user = new User(login, passwd, email);
 
     try {
-      statement = connection.prepareStatement("INSERT INTO User (login,passwd, email, status) VALUES (?,?,?,?)");
+      statement = connection.prepareStatement("INSERT INTO User (login,passwd, email, status, roles) VALUES (?,?,?,?,?)");
       statement.setString(1, login);
       statement.setString(2, passwd);
       statement.setString(3, email);
       statement.setString(4, "");
+      statement.setString(5, "");
 
       statement.execute();
     } catch (SQLException e) {
@@ -199,7 +226,7 @@ public class UserManager {
     Connection connection = ConnectionManager.getConnection();
 
     try {
-      statement = connection.prepareStatement("SELECT login, passwd, email, status FROM User WHERE login=?");
+      statement = connection.prepareStatement("SELECT login, passwd, email, status, roles FROM User WHERE login=?");
       statement.setString(1, login);
 
       result = statement.executeQuery();

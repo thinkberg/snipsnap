@@ -9,7 +9,6 @@
 
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 
-
 <table class="menu" width="100%" border="0" cellpadding="4" cellspacing="1">
  <tr><td class="menuitem">Start<td></tr>
  <tr><td class="menuitem">Index<td></tr>
@@ -21,7 +20,7 @@
     <c:when test="${app.user.login != 'Guest'}">
       logged in as <a href="/space/<c:out value='${app.user.login}'/>"><c:out value="${app.user.login}"/></a> | <a href="/exec/authenticate?logoff=true">logoff</a>
       <br>
-      <a href="/exec/post">post comment</a>
+      <a href="/exec/post">post blog</a>
     </c:when>
     <c:otherwise>
       <form method="POST" action="/exec/authenticate">

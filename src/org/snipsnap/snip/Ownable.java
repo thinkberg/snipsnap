@@ -22,56 +22,19 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-package com.neotis.user;
 
-import java.util.Set;
+package com.neotis.snip;
+
+import com.neotis.user.User;
 
 /**
- * User class.
- * @author Stephan J. Schmidt
+ *  Interface for all objects that can be owned
+ *
+ * @author stephan
  * @version $Id$
  */
-public class User {
 
-  private String login;
-  private String passwd;
-  private String email;
-  private String status;
-  private Set roles;
-
-  public User(String login, String passwd, String email) {
-    this.login = login;
-    this.passwd = passwd;
-    this.email = email;
-  }
-
-  public void setStatus(String status) {
-    this.status = status;
-    return;
-  }
-
-  public String getStatus() {
-    return status;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public String getPasswd() {
-    return passwd;
-  }
-
-  public String getLogin() {
-    return login;
-  }
-
-  public void setRoles(Set roles) {
-    this.roles = roles;
-    return;
-  }
-
-  public Set getRoles() {
-    return roles;
-  }
+public interface Ownable {
+  public String getOwner();
+  public boolean isOwner(User user);
 }

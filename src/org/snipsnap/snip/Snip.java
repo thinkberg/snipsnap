@@ -33,19 +33,20 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Central class for snips.
  * @author Stephan J. Schmidt
  * @version $Id$
  */
-public class Snip {
+public class Snip implements Ownable {
   //@TODO think about that
   public Snip parent;
   private List children;
   private Snip comment;
   private Comments comments;
-
+  private Map permissions;
   private String name, content;
   private Timestamp cTime, mTime;
   private String cUser, mUser;
@@ -121,6 +122,22 @@ public class Snip {
     Snip.appendLink(buffer, mUser);
     buffer.append(getNiceTime(mTime));
     return buffer.toString();
+  }
+
+  public String getOwner() {
+    return getMUser();
+  }
+
+  public boolean isOwner(User user) {
+    return user.getLogin().equals(getOwner());
+  }
+
+  public void setPermissions(Map permissions) {
+    this.permissions = permissions;
+  }
+
+  public Map getPermissions() {
+    return permissions;
   }
 
   public Timestamp getCTime() {
