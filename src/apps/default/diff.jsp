@@ -68,8 +68,8 @@
         </c:when>
       </c:choose>
     </c:forEach>
-    <pre>
-      <c:out value="${diff}"/>
-    </pre>
+<%--    <pre>--%>
+<%--      <c:out value="${diff}"/>--%>
+<%--    </pre>--%>
   </div>
 </div>
