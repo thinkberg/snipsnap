@@ -66,7 +66,7 @@ public class HotSnipMacro extends ListoutputMacro {
 
       while (iterator.hasNext()) {
         Snip hotSnip = (Snip) iterator.next();
-        writer.write(hotSnip.getViewCount());
+        writer.write(""+hotSnip.getViewCount());
         writer.write(": ");
         SnipLink.appendLink(writer, hotSnip);
         writer.write("<br/>");
