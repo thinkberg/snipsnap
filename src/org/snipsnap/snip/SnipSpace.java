@@ -87,6 +87,10 @@ public class SnipSpace implements LinkTester {
     return storageByParent(snip);
   }
 
+  public List getChildrenDateOrder(Snip snip, int count) {
+    return storageByParentNameOrder(snip, count);
+  }
+
   public Snip post(String content, Application app) {
     Date date = new Date(new java.util.Date().getTime());
     return post(content, date, app);
@@ -203,13 +207,17 @@ public class SnipSpace implements LinkTester {
   }
 
   private List find(PreparedStatement statement) {
+    return find(statement, Integer.MAX_VALUE);
+  }
+
+  private List find(PreparedStatement statement, int count) {
     ResultSet result = null;
     List snips = new ArrayList();
 
     try {
       result = statement.executeQuery();
       Snip snip = null;
-      while (result.next()) {
+      while (result.next() && --count>0 ) {
         snip = cacheLoad(result);
         snips.add(snip);
       }
@@ -231,13 +239,7 @@ public class SnipSpace implements LinkTester {
       statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip " +
                                               " FROM Snip "+
                                               " ORDER by mTime DESC");
-
-      result = statement.executeQuery();
-      Snip snip = null;
-      while (result.next() && --size > 0) {
-        snip = cacheLoad(result);
-        snips.add(snip);
-      }
+      snips = find(statement, size);
     } catch (SQLException e) {
       e.printStackTrace();
     } finally {
@@ -304,6 +306,28 @@ public class SnipSpace implements LinkTester {
       statement.setString(1, parent.getName());
 
       children = find(statement);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    } finally {
+      ConnectionManager.close(statement);
+      ConnectionManager.close(connection);
+    }
+    return children;
+  }
+
+  private List storageByParentNameOrder(Snip parent, int count) {
+    PreparedStatement statement = null;
+    Connection connection = ConnectionManager.getConnection();
+    List children = null;
+
+    try {
+      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip " +
+                                              " FROM Snip " +
+                                              " WHERE parentSnip=? " +
+                                              " ORDER BY name DESC ");
+      statement.setString(1, parent.getName());
+
+      children = find(statement, count);
     } catch (SQLException e) {
       e.printStackTrace();
     } finally {

@@ -52,7 +52,7 @@ public class WeblogMacro extends Macro {
   public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {
     if (params.length == 0) {
       buffer.setLength(0);
-      List snips = snip.getChildren();
+      List snips = SnipSpace.getInstance().getChildrenDateOrder(snip, 10);
       Iterator iterator = snips.iterator();
       while (iterator.hasNext()) {
         Snip entry = (Snip) iterator.next();
