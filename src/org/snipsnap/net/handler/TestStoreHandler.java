@@ -24,15 +24,12 @@
  */
 package org.snipsnap.net.handler;
 
-import org.snipsnap.net.ServletPlugin;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
 import org.radeox.util.logging.Logger;
+import org.snipsnap.net.ServletPlugin;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
 import java.io.IOException;
 
 public class TestStoreHandler implements ServletPlugin {
