@@ -98,8 +98,9 @@ public class MacroFilter extends RegexTokenFilter {
     macros.put(macro.getName(), macro);
   }
 
-  public Collection getMacroList() {
-    return macros.values();
+  public List getMacroList() {
+    //@DANGER
+    return new ArrayList(macros.values());
   }
 
   public void handleMatch(StringBuffer buffer, MatchResult result, Snip snip) {

@@ -32,10 +32,7 @@ import org.snipsnap.user.UserManager;
 import org.snipsnap.user.User;
 import org.snipsnap.app.Application;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 import java.io.IOException;
 import java.io.Writer;
 
@@ -53,18 +50,30 @@ public class MacroListMacro extends ListoutputMacro {
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException
   {
-    String type = null;
-    boolean showSize = true;
-    if(params != null) {
-      if(params.getLength() > 0) {
-        type = params.get("0");
-      }
-    }
-
-    if (params == null || params.getLength() <= 2) {
-      output(writer, "Macros:", MacroFilter.getInstance().getMacroList(), "", type, showSize);
+    if (params == null || params.getLength() == 0) {
+      appendTo(writer);
     } else {
       throw new IllegalArgumentException("MacroListMacro: number of arguments does not match");
     }
   }
+
+  public Writer appendTo(Writer writer) throws IOException {
+    List macroList = MacroFilter.getInstance().getMacroList();
+    Collections.sort(macroList);
+    Iterator iterator = macroList.iterator();
+    writer.write("{table}\n");
+    writer.write("Macro|Description|Parameters\n");
+    while (iterator.hasNext()) {
+      Macro macro = (Macro) iterator.next();
+      writer.write(macro.getName());
+      writer.write("|");
+      writer.write(macro.getDescription());
+      writer.write("|");
+      writer.write(macro.getParamDescription());
+      writer.write("\n");
+    }
+    writer.write("{table}");
+    return writer;
+  }
+
 }

@@ -36,13 +36,28 @@ import org.snipsnap.snip.Snip;
 import java.io.IOException;
 import java.io.Writer;
 
-public abstract class Macro {
+public abstract class Macro implements Comparable {
+  protected String description = " ";
+  protected String paramsDescription = " ";
+
   public abstract String getName();
+
+  public String getDescription() {
+    return description;
+  }
+  public String getParamDescription() {
+    return paramsDescription;
+  }
 
   public abstract void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException;
 
   public String toString() {
     return getName();
+  }
+
+  public int compareTo(Object object) {
+    Macro macro = (Macro) object;
+    return getName().compareTo(macro.getName());
   }
 }
