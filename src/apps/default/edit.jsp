@@ -1,8 +1,8 @@
-<!--
+<%--
   ** Template for editing Snips.
   ** @author Matthias L. Jugel
   ** @version $Id$
-  -->
+  --%>
 
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %>

@@ -37,6 +37,11 @@
   </servlet>
 
   <servlet>
+    <servlet-name>com.neotis.net.SnipSearchServlet</servlet-name>
+    <servlet-class>com.neotis.net.SnipSearchServlet</servlet-class>
+  </servlet>
+
+  <servlet>
     <servlet-name>com.neotis.net.PostStoreServlet</servlet-name>
     <servlet-class>com.neotis.net.PostStoreServlet</servlet-class>
   </servlet>
@@ -89,6 +94,11 @@
   <servlet-mapping>
     <servlet-name>com.neotis.net.SnipRemoveServlet</servlet-name>
     <url-pattern>/exec/remove</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>com.neotis.net.SnipSearchServlet</servlet-name>
+    <url-pattern>/exec/search</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>

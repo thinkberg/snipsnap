@@ -25,20 +25,19 @@
 package com.neotis.net;
 
 import com.neotis.app.Application;
-import com.neotis.user.UserManager;
-import com.neotis.user.User;
-import com.neotis.snip.SnipSpace;
 import com.neotis.snip.SnipLink;
+import com.neotis.snip.SnipSpace;
+import com.neotis.user.User;
+import com.neotis.user.UserManager;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Calendar;
 import java.net.URLDecoder;
 
 /**
@@ -53,23 +52,23 @@ public class Layouter extends HttpServlet {
 
     // get or create session and application object
     HttpSession session = request.getSession(true);
-    Application app = (Application)session.getAttribute("app");
-    if(app == null) {
+    Application app = (Application) session.getAttribute("app");
+    if (app == null) {
       app = new Application();
     }
 
     User user = app.getUser();
-    if(user == null) {
+    if (user == null) {
       user = UserManager.getInstance().getUser(request);
     }
 
     // store user name and app in cookie and session
     Cookie cookie = UserManager.getInstance().getCookie(request, "userName");
-    if(null == cookie) {
+    if (null == cookie) {
       cookie = new Cookie("userName", user.getLogin());
     }
     cookie.setPath(request.getContextPath());
-    cookie.setMaxAge(Integer.MAX_VALUE-2);
+    cookie.setMaxAge(Integer.MAX_VALUE - 2);
     response.addCookie(cookie);
     app.setUser(user);
     session.setAttribute("app", app);
@@ -77,19 +76,26 @@ public class Layouter extends HttpServlet {
 
     //TODO 1.4 String layout = URLDecoder.decode(request.getPathInfo(), "iso-8869-1");
     String layout = URLDecoder.decode(request.getPathInfo());
-    if(null == layout || "/".equals(layout)) {
+    if (null == layout || "/".equals(layout)) {
       response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));
       return;
     }
 
     request.setAttribute("page", layout);
     RequestDispatcher dispatcher = null;
-    if(layout.endsWith(".jsp")) {
+    if (layout.endsWith(".jsp")) {
       dispatcher = request.getRequestDispatcher("/main.jsp");
     } else {
       dispatcher = request.getRequestDispatcher(layout);
     }
-    dispatcher.forward(request, response);
+    if (dispatcher != null) {
+      dispatcher.forward(request, response);
+    } else {
+      response.sendRedirect(SnipLink.absoluteLink(request, "/"));
+    }
   }
 
+  protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    doGet(request, response);
+  }
 }

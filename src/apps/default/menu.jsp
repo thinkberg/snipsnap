@@ -1,18 +1,18 @@
 <%@ page import="com.neotis.date.Month,
                  com.neotis.snip.Snip,
                  com.neotis.snip.SnipSpace"%>
- <!--
+ <%--
   ** Menu template
   ** @author Matthias L. Jugel
   ** @version $Id$
-  -->
+  --%>
 
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %>
 
 <table class="menu" width="200" border="0" cellpadding="4" cellspacing="1">
  <tr><td>
-   <form>
+   <form method="POST" action="../exec/search">
      <input type="text" size="18" name="query" style="border: 1px solid #aaaaaa"> <input type="submit" name="search" value="search">
    </form>
  </tr></td>
@@ -23,14 +23,14 @@
  </td></tr>
  <tr><td>
   <b>Recent Changes:</b><br>
-  <!-- replace this with a JSTL tag ala  s:recent/> -->
+  <%-- replace this with a JSTL tag ala  s:recent/> --%>
   <c:forEach var="snip" items="${space.changed}">
    <a href="../space/<c:out value='${snip.nameEncoded}'/>"><c:out value="${snip.name}"/></a><br/>
   </c:forEach>
  </td></tr>
  <tr><td>
   <p>
-  <!-- replace this with a JSTL tag ala  s:calendar/> -->
+  <%-- replace this with a JSTL tag ala  s:calendar/> --%>
   <% Month m = new Month(); %>
   <%= m.getView() %>
   </p>

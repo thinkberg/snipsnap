@@ -1,14 +1,14 @@
-<!--
+<%--
   ** Snip display template.
   ** @author Matthias L. Jugel
   ** @version $Id$
-  -->
+  --%>
 
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %>
 
 <table width="100%" border="0" cellspacing="2" cellpadding="1">
- <!-- do not display header on weblogs -->
+ <%-- do not display header on weblogs --%>
  <c:if test="${snip.notWeblog}">
   <tr>
    <td><span class="snip-name"><c:out value="${snip.name}"/></span>
@@ -36,16 +36,16 @@
  <tr><td colspan="2"></td></tr>
  </tr>
  <tr><td colspan="2">
-  <!-- do not display comments on start page, only on posted
-        entries -->
+  <%-- do not display comments on start page, only on posted
+        entries --%>
   <c:if test="${snip.notWeblog}">
    <c:out value="${snip.comments}" escapeXml="false" /> |
    <c:out value="${snip.comments.postString}" escapeXml="false" />
   </c:if>
  </td></tr>
- <!--
+ <%--
  <tr>
   <td>Referrer: <%=request.getHeader("REFERER")%></td>
  </tr>
- -->
+ --%>
 </table>

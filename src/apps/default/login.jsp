@@ -1,8 +1,8 @@
-<!--
+<%--
   ** Template for a login screen.
   ** @author Matthias L. Jugel
   ** @version $Id$
-  -->
+  --%>
 
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %>
@@ -10,7 +10,7 @@
 <h1 class="header">Login</h1>
 
 <s:check roles="Authenticated" invert="true">
-  <!-- display error message -->
+  <%-- display error message --%>
   <c:if test="${error != null}">
     <div class="error"><c:out value="${error}"/></div>
 

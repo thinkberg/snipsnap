@@ -1,8 +1,8 @@
-<!--
+<%--
   ** weblog post template.
   ** @author Matthias L. Jugel
   ** @version $Id$
-  -->
+  --%>
 
 <%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %>
 

@@ -1,8 +1,8 @@
-<!--
+<%--
   ** Main layout template.
   ** @author Matthias L. Jugel
   ** @version $Id$
-  -->
+  --%>
 
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %>
@@ -14,7 +14,7 @@
   <title>SnipSnap :: <c:out value="${snip.name}" default=""/></title>
   <link type="text/css" href="../default.css" rel="STYLESHEET"/>
   <script>
-  <!--
+  <%--
     // auto focus special forms
     function setFocus() {
       if(document.f) {
@@ -23,7 +23,7 @@
         }
       }
     }
-  -->
+  --%>
   </script>
  </head>
  <body onLoad="setFocus();">

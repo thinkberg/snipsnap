@@ -1,14 +1,14 @@
-<!--
+<%--
   ** Registration page template.
   ** @author Matthias L. Jugel
   ** @version $Id$
-  -->
+  --%>
 
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 
 <h1 class="header">Register User</h1>
 
-<!-- display error message -->
+<%-- display error message --%>
 <c:forEach items="${errors}" var="error">
   <div class="error"><c:out value="${error.value}"/></div>
 </c:forEach>
