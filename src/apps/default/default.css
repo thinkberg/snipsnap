@@ -20,9 +20,9 @@
 }
 
 .menu {
-    /* Cudos to www.lazyatom.com */
+  /* Cudos to www.lazyatom.com */
 	color: #eeeeee;
-    background-color: inherit;
+  background-color: inherit;
 	border: 1px dashed #999999;
 	line-height:14px;
 }
@@ -152,6 +152,9 @@
 .snip-table-0 {
 }
 
+.sniplinks {
+  table-layout: auto;
+}
 
 /************************************************/
 /* tag formatting, page wide and individual */

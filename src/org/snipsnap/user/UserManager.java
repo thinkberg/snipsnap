@@ -112,14 +112,14 @@ public class UserManager implements Loader {
     StringBuffer tmpDigest = new StringBuffer();
     if (digest != null) {
       String tmp = user.getLogin() + user.getPasswd() + user.getLastLogin().toString();
-      // System.out.println("encoding: "+tmp);
+      //System.out.println("encoding: "+tmp);
       byte buf[] = digest.digest(tmp.getBytes());
       tmpDigest.setLength(0);
       for (int i = 0; i < buf.length; i++) {
         tmpDigest.append(Integer.toHexString(buf[i]).toUpperCase());
       }
     }
-    // System.out.println("md5hash: "+md5hex.toString());
+    //System.out.println("digest: "+tmpDigest.toString());
     return tmpDigest.toString();
   }
 
@@ -143,6 +143,9 @@ public class UserManager implements Loader {
       Cookie cookie = getCookie(request, COOKIE_NAME);
       if (cookie != null) {
         String auth = cookie.getValue();
+        /*System.out.println("Looking for "+auth);
+        System.out.println("check: "+authHash.containsKey(auth));
+        System.out.println("user: "+authHash.get(auth));*/
         if (!authHash.containsKey(auth)) {
           updateAuthHash();
         }

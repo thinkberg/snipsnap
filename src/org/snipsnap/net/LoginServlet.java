@@ -86,6 +86,10 @@ public class LoginServlet extends HttpServlet {
       HttpSession session = request.getSession(true);
       UserManager.getInstance().removeCookie(request, response);
       session.invalidate();
+    } else if("true".equals(request.getParameter("timeout"))) {
+      HttpSession session = request.getSession(true);
+      Application.removeCurrentUser(session);
+      session.invalidate();
     }
 
     response.sendRedirect(referer);
