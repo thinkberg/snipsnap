@@ -69,13 +69,17 @@ public class SnipSpace implements LinkTester, Loader {
 
   private void init() {
     missing = new HashMap();
-    changed = new Queue(10);
+    changed = new Queue(50);
     cache = new Cache((Loader) this);
-    changed.fill(storageByRecent(10));
+    changed.fill(storageByRecent(50));
   }
 
   public List getChanged() {
-    return changed.get();
+    return getChanged(10);
+  }
+
+  public List getChanged(int count) {
+    return changed.get(count);
   }
 
   public List getAll() {

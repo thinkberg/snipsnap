@@ -22,54 +22,25 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-package com.neotis.util;
 
-import com.neotis.snip.Snip;
+package com.neotis.snip;
 
-import java.util.LinkedList;
-import java.util.List;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
 
 /**
- * Queue implementation for Snips.
- * @author Stephan J. Schmidt
+ * Prepares a snip for indexing by lucene
+ *
+ * @author stephan
  * @version $Id$
  */
-public class Queue {
-  private LinkedList queue;
-  private int size;
 
-  public Queue(int size) {
-    this.size = size;
-    queue = new LinkedList();
-  }
+public class SnipDocument {
+  public static Document Document(Snip snip) {
+    Document doc = new Document();
 
-  public void fill(List list) {
-    queue.clear();
-    queue.addAll(list);
-  }
-
-  public Snip add(Snip snip) {
-    if (queue.contains(snip)) {
-      queue.remove(snip);
-    }
-
-    if (queue.size() == size) {
-      queue.removeLast();
-    }
-    queue.addFirst(snip);
-    return snip;
-  }
-
-  public void remove(Snip snip) {
-    queue.remove(snip);
-  }
-
-  public List get() {
-    return (List) queue;
-  }
-
-  public List get(int count) {
-    count = Math.min(count-1, queue.size());
-    return (List) queue.subList(0, count-1);
+    doc.add(Field.Text("content", snip.getContent()));
+    doc.add(Field.Text("title", snip.getName()));
+    return doc;
   }
 }
