@@ -37,6 +37,7 @@ import java.security.GeneralSecurityException;
 
 /**
  * Access Control Interceptor for checking permissions of set operations on objects.
+ *
  * @author Stephan J. Schmidt
  * @version $Id$
  */
@@ -58,15 +59,16 @@ public class ACLInterceptor extends InterceptorSupport {
       //Logger.debug("ACLInterceptor: Method="+invocation.getMethod().getName());
       //Logger.debug("ACLInterceptor: User = "+user);
       //Logger.debug("ACLInterceptor: Snip = "+snip);
-      if(user != null && !user.isAdmin()) {// TODO: checking for the admin is a hack
+      if (user != null && !user.isAdmin()) {// TODO: checking for the admin is a hack
         if (!(Security.checkPermission("Edit", user, snip)
-            || Security.hasRoles(user, snip, roles))) {
+                || Security.hasRoles(user, snip, roles))) {
           //Logger.debug("SECURITY EXCEPTION");
-          throw new GeneralSecurityException(snip.getName()+": "+user+" is not allowed to modify object");
+          throw new GeneralSecurityException(snip.getName() + ": " + user + " is not allowed to modify object");
         }
       }
     } else if ("getContent".equals(name) || "getXMLContent".equals(name)) {
-      if (user != null && "SnipSnap/config".equals(snip.getName()) && ! user.isAdmin() ) {
+      String snipName = snip.getName();
+      if (user != null && ("SnipSnap/config".equals(snipName) || snipName.startsWith("SnipSnap/blacklist")) && !user.isAdmin()) {
         return "content protected";
       }
     }
