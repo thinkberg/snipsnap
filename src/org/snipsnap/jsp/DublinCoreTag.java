@@ -60,7 +60,7 @@ public class DublinCoreTag extends TagSupport {
             out.println(">");
           }
         } else {
-          out.println("<link rel=\"schema.DC\" href=\"http://purl.org/DC/elements/1.1/\">");
+          out.println("<link rel=\"schema.DC\" href=\"http://purl.org/DC/elements/1.1/\"/>");
           Iterator iterator = dublinCore.keySet().iterator();
           while (iterator.hasNext()) {
             String name = (String) iterator.next();
@@ -69,7 +69,7 @@ public class DublinCoreTag extends TagSupport {
             out.print(name);
             out.print("\" content=\"");
             out.print(value);
-            out.println("\">");
+            out.println("\"/>");
           }
         }
       } catch (IOException e) {

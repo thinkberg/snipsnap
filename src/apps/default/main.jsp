@@ -10,12 +10,12 @@
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 	   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<link rel="alternate" type="application/rss+xml" title="RSS"
-      href="<c:out value='${app.configuration.url}/exec/rss'/>"/>
-<link rel="index" href="snipsnap-index"/>
 <html>
  <head>
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
+  <link rel="alternate" type="application/rss+xml" title="RSS"
+      href="<c:out value='${app.configuration.url}/exec/rss'/>"/>
+  <link rel="index" href="snipsnap-index"/>
   <s:dublinCore snip="${snip}"/>
   <title><c:out value="${app.configuration.name}" default="SnipSnap"/> :: <c:out value="${snip.name}" default=""/></title>
   <link type="text/css" href="<c:url value='/default.css'/>" rel="STYLESHEET"/>
