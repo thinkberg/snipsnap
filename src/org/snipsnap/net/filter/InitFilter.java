@@ -44,6 +44,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.net.URL;
 
 /**
  * A ServletFilter that takes care of uninstalled web applications and creating the
@@ -75,12 +76,16 @@ public class InitFilter implements Filter {
     AppConfiguration config = app.getConfiguration();
 
     String serverName = request.getServerName();
+    int serverPort = request.getServerPort();
     String requestURL = request.getRequestURL().toString();
-    String contextPath = request.getContextPath();
     int postServerNameIndex = requestURL.indexOf(serverName) + serverName.length();
-    config.setUrl(requestURL.substring(0, requestURL.indexOf(contextPath, postServerNameIndex) + contextPath.length()));
-
-    //System.out.println("base url: "+config.getUrl());
+    String contextPath = request.getContextPath();
+    if(contextPath.length() == 0) {
+      config.setUrl(requestURL.substring(0, requestURL.indexOf("/", postServerNameIndex)));
+    } else {
+      config.setUrl(requestURL.substring(0, requestURL.indexOf(contextPath, postServerNameIndex) + contextPath.length()));
+    }
+    // System.out.println("url: "+config.getUrl());
 
     // make sure the request has a correct character encoding
     // the enc-wrapper ensures some methods return correct strings too
