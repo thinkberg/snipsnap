@@ -136,7 +136,7 @@ public class DBDump {
             Timestamp time = (Timestamp) object;
             out.print(time.getTime());
           } else {
-            out.print(escape((String)object));
+            out.print(escape(object.toString()));
           }
           out.println("</" + name + ">");
         }
