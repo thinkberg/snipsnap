@@ -10,8 +10,9 @@
   <td>
    <jsp:getProperty name="snip" property="XMLContent" />
   </td>
+  </tr>
+  <tr>
   <td>Referrer: <%=request.getHeader("REFERER")%></td>
-
  </tr>
 </table>
 

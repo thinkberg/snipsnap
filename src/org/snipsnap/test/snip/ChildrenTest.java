@@ -21,7 +21,6 @@ public class ChildrenTest extends TestCase {
     Snip snip1 = SnipSpace.getInstance().create("A", "A Content");
     Snip snip2 = SnipSpace.getInstance().create("B", "B Content");
     snip1.addSnip(snip2);
-    System.err.println("Past:" + snip1.getChildren());
     assertEquals("Correct Parent", snip1, snip2.getParent());
     assertTrue("Children not null", snip1.getChildren() != null);
     assertTrue("One Child", snip1.getChildren().size() == 1);

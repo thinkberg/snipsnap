@@ -52,9 +52,7 @@ public class Snip {
   }
 
   public Collection getChildren() {
-    System.err.println("pre getChildren:" + children);
     init();
-    System.err.println("getChildren:" + children);
     return children;
   }
 
@@ -76,7 +74,7 @@ public class Snip {
       if (null != this.parent) {
         this.parent.removeSnip(this);
       }
-      this.parent = parent;
+      this.parent = parentSnip;
     }
   }
 
@@ -90,9 +88,7 @@ public class Snip {
 
   private void init() {
     if (null == children) {
-      System.err.println("Is null.");
       children = SnipSpace.getInstance().getChildren(this);
-      System.err.println(children);
     }
   }
 
