@@ -45,7 +45,12 @@ public class CoordinatesTag extends TagSupport {
       if (null != coordinates) {
         out.print("<meta name=\"ICBM\" content=\"");
         out.print(coordinates);
-        out.print("\"/>");
+        out.println("\"/>");
+        out.print("<meta name=\"geo.position\" content=\"");
+        out.print(coordinates.replace(',', ';'));
+        out.println("\">");
+//        out.println("<META NAME=\"geo.placename\" CONTENT=\"London, Ontario\">");
+//        out.println("<META NAME=\"geo.region\" CONTENT=\"CA-ON\">");
       }
     } catch (IOException e) {
       Logger.warn("CoordinatesTag: unable print to JSP writer", e);
