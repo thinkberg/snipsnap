@@ -71,15 +71,8 @@ public class Update extends HttpServlet {
       if (request.getParameter("cancel") == null) {
         if (request.getParameter("update") != null) {
           ApplicationCommand.execute(srv, ctx, ApplicationCommand.CMD_APPLICATION_REMOVE);
-
           update(request.getParameterValues("install"), request.getParameterValues("extract"), ctx, errors);
           ApplicationCommand.execute(srv, ctx, ApplicationCommand.CMD_APPLICATION_ADD);
-          try {
-            Thread.sleep(500);
-          } catch (InterruptedException e) {
-            System.err.println("Updater: interrupted while waiting for application to sync ..."+e);
-          }
-
           ApplicationCommand.execute(srv, ctx, ApplicationCommand.CMD_APPLICATION_START);
         } else if (request.getParameter("download") != null) {
           try {
@@ -122,6 +115,8 @@ public class Update extends HttpServlet {
     try {
       JarFile template = new JarFile("./lib/snipsnap-template.war");
       JarUtil.extract(template, new File("./app" + ctx), install, unpack);
+      // TODO: hack to read servlets jar before restarting
+      JarUtil.checksumJar(new JarFile("./app"+ctx+"/WEB-INF/lib/servlets.jar"));
       JarUtil.checksumJar(template).store(new File("./app" + ctx + "/WEB-INF/CHECKSUMS"));
     } catch (Exception e) {
       errors.put("update", "Unable to update your application, see server.log for details!");

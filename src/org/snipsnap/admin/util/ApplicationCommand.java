@@ -27,6 +27,7 @@ package com.neotis.admin.util;
 import org.mortbay.http.HttpContext;
 import org.mortbay.http.HttpServer;
 import org.mortbay.jetty.Server;
+import org.mortbay.jetty.servlet.WebApplicationContext;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -51,11 +52,6 @@ public class ApplicationCommand {
         if (CMD_APPLICATION_ADD.equals(command)) {
           try {
             ((Server) server).addWebApplication(ctx, "./app" + ctx);
-            try {
-              Thread.sleep(5000);
-            } catch (InterruptedException e) {
-              System.err.println("Updater: interrupted while waiting for application to sync ..." + e);
-            }
           } catch (IOException e) {
             System.err.println("Application: unable to add context: " + srv + ":" + ctx);
           }
@@ -77,11 +73,6 @@ public class ApplicationCommand {
                 }
               } catch (Exception e) {
                 System.err.println("Application: unable to " + command + " server=" + server + ", context=" + context);
-              }
-              try {
-                Thread.sleep(5000);
-              } catch (InterruptedException e) {
-                System.err.println("Application: interrupted while waiting for application to sync ..." + e);
               }
               return;
             }
