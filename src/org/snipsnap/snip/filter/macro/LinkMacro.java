@@ -39,7 +39,7 @@ import java.io.Writer;
  */
 
 public class LinkMacro extends Macro {
-  private final static String img = SnipLink.createImage("arrow.right", ">>", "gif");
+  private final static String img = SnipLink.createImage("arrow.right", "&gt;&gt;", "gif");
 
   public String getName() {
     return "link";

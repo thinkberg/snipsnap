@@ -39,6 +39,6 @@ public class UrlFilter extends RegexReplaceFilter {
 
   public UrlFilter() {
     super("([^\"]|^)((http|ftp)s?://(%[[:digit:]A-Fa-f][[:digit:]A-Fa-f]|[-_.!~*';/?:@#&=+$,[:alnum:]])+)",
-             "$1<span class=\"nobr\">"+SnipLink.createImage("arrow.right", ">>", "gif")+"<a href=\"$2\">$2</a></span>");
+             "$1<span class=\"nobr\">"+SnipLink.createImage("arrow.right", "&gt;&gt;", "gif")+"<a href=\"$2\">$2</a></span>");
   };
 }
