@@ -46,6 +46,8 @@
         <exclude name="dbexport.sh"/>
         <exclude name="dbimport.sh"/>
         <exclude name="dbrepair.sh"/>
+        <exclude name="exportall.sh"/>
+        <exclude name="validate.sh"/>
       </tarfileset>
     </tar>
   </target>
