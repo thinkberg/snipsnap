@@ -88,9 +88,9 @@ public class SnipViewServlet extends HttpServlet {
       snip = space.load(name);
     }
 
-
+    Application.get().getParameters().put("viewed", snip);
     request.setAttribute("snip", snip);
-    request.setAttribute("URI", request.getRequestURL().toString());
+//    request.setAttribute("URI", request.getRequestURL().toString());
 
     if (subname != null && subname.length() > 0) {
       try {
