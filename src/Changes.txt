@@ -1,5 +1,11 @@
 0.3.5
 
+- Fixed bug: Sometimes comments were in wrong order
+- Fixed bug: Some urls (search) missed a '/'
+- Fixed bug: Under some circumstances SnipSnap escaped HTML
+- Added feature: Added {online-time} which displays a string since when the weblog was created
+- Added feature: Permalink for comments
+- Added feature: Snips from persons now have a icon in the listing
 - Added feature: {snip-count-by-user:stephan} macro
 - Fixed bug: create link did not follow [create name] format
 - Fixed bug: Correct date format in Dublin core dc:date

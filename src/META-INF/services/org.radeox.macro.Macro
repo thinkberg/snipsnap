@@ -10,6 +10,7 @@ org.snipsnap.render.macro.IndexSnipMacro
 org.snipsnap.render.macro.LastLoginMacro
 org.snipsnap.render.macro.LastVisitMacro
 org.snipsnap.render.macro.LoginsMacro
+org.snipsnap.render.macro.OnlineTimeMacro
 org.snipsnap.render.macro.RecentChangesMacro
 org.snipsnap.render.macro.RecentWeblogMacro
 org.snipsnap.render.macro.SearchMacro

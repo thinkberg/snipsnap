@@ -139,11 +139,11 @@ public class MemorySnipStorage implements SnipStorage {
   }
 
   public List storageByComments(final Snip parent) {
-    return cache.query(new SnipQuery() {
+    return cache.querySorted(new SnipQuery() {
       public boolean fit(Snip snip) {
         return (parent == snip.getCommentedSnip());
       }
-    }, type);
+    }, nameComparator, type);
   }
 
   public List storageByParent(final Snip parent) {
