@@ -23,11 +23,13 @@
    <c:out value="${intro.XMLContent}" escapeXml="false"/>
  </td></tr>
  <tr><td>
-  </b>Also here are</b>:<br/>
+  <b>Users:</b><br/>
   <% pageContext.setAttribute("users", Application.getCurrentUsers()); %>
+  <% pageContext.setAttribute("guests", new Integer(Application.getGuestCount())); %>
   <c:forEach var="user" items="${users}">
    <a href="../space/<c:out value='${user.name}'/>"><c:out value="${user.name}"/></a><br/>
   </c:forEach>
+  ... and <c:out value="${guests}"/> Guests.
  </td></tr>
  <tr><td>
   <b>Recent Changes:</b><br>

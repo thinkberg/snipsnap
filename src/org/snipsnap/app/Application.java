@@ -97,8 +97,28 @@ public class Application {
     currentUsers.put(session,user);
   }
 
-  public static Collection getCurrentUsers() {
-    return currentUsers.values();
+  public static List getCurrentUsers() {
+    List users = new ArrayList();
+    Iterator iterator = currentUsers.values().iterator();
+    while (iterator.hasNext()) {
+      User user  = (User) iterator.next();
+      if (! User.UNKNOWN.equals(user.getName()) && ! users.contains(user.getName())) {
+        users.add(user);
+      }
+    }
+    return users;
+  }
+
+  public static int getGuestCount() {
+    int count=0;
+    Iterator iterator = currentUsers.values().iterator();
+    while (iterator.hasNext()) {
+      User user = (User) iterator.next();
+      if (User.UNKNOWN.equals(user.getLogin())) {
+        count++;
+      }
+    }
+    return count;
   }
 
   public static void removeCurrentUser(HttpSession session) {

@@ -40,6 +40,8 @@ public class User implements Nameable {
   private String status;
   private Roles roles;
 
+  public static final String UNKNOWN = "Guest";
+
   public User(String login, String passwd, String email) {
     this.login = login;
     this.passwd = passwd;
