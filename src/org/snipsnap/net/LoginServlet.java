@@ -92,12 +92,12 @@ public class LoginServlet extends HttpServlet {
       HttpSession session = request.getSession();
       SessionService service = (SessionService) Components.getComponent(SessionService.class);
       service.removeCookie(request, response);
-      Application.removeCurrentUser(session);
+//      Application.removeCurrentUser(session);
       Application.get().setUser(null);
       session.invalidate();
     } else if ("true".equals(request.getParameter("timeout"))) {
       HttpSession session = request.getSession();
-      Application.removeCurrentUser(session);
+      //Application.removeCurrentUser(session);
       session.invalidate();
     }
 

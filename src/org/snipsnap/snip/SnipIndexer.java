@@ -120,7 +120,7 @@ public class SnipIndexer {
     return;
   }
 
-  private void index(Snip snip, boolean exists) {
+  private synchronized void index(Snip snip, boolean exists) {
     IndexWriter writer = null;
 
     try {
