@@ -1,3 +1,9 @@
+<!--
+  ** Template for a login screen.
+  ** @author Matthias L. Jugel
+  ** @version $Id$
+  -->
+
 <h1 class="header">Login</h1>
 
 <% String login = request.getParameter("login"); %>

@@ -1,3 +1,9 @@
+<!--
+  ** Snip display template.
+  ** @author Matthias L. Jugel
+  ** @version $Id$
+  -->
+
 <jsp:useBean id="snip" scope="request" class="com.neotis.jsp.SnipBean" >
   <jsp:setProperty name="snip" property="*"/>
 </jsp:useBean>

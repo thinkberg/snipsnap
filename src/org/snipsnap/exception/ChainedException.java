@@ -1,12 +1,11 @@
+package com.neotis.exception;
+
 /**
  * ChainedException is a base class for Exception and support wrapping original exceptions
  *
- * @author stephan
+ * @author Stephan J. Schmidt
  * @version $Id$
  **/
-
-package com.neotis.exception;
-
 public class ChainedException extends Exception {
   private Throwable cause=null;
 

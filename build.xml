@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ** Version: $Id$
-  ** Author: Matthias L. Jugel
+  ** @author Matthias L. Jugel
+  ** @version $Id$
   -->
 <project basedir="." default="build" name="solent sources">
 

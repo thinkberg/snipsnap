@@ -12,6 +12,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+/**
+ * Servlet to login a user by checking user name and password.
+ * @author Matthias L. Jugel
+ * @version $Id$
+ */
 public class LoginServlet extends HttpServlet {
   private final static String ERR_PASSWORD = "User name and password do not match!";
 

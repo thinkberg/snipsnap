@@ -1,9 +1,4 @@
 #! /bin/sh
-echo "APPNAME ..."
-echo "(c) 2002 Stephan Schmidt and Matthias L. Jugel. All Rights Reserved."
-echo "See License Agreement for terms and conditions of use."
-echo ""
-
 base=`dirname $0`
 jar=lib
 if [ "$JAVA_HOME" = "" ]; then

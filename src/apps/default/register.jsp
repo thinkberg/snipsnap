@@ -1,3 +1,9 @@
+<!--
+  ** Registration page template.
+  ** @author Matthias L. Jugel
+  ** @version $Id$
+  -->
+
 <h1 class="header">Register User</h1>
 
 <% String login = request.getParameter("login"); %>

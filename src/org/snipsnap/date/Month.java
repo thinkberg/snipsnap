@@ -6,10 +6,9 @@ import java.util.GregorianCalendar;
 /**
  * Object that generates a View of the month
  *
- * @author stephan
+ * @author Stephan J. Schmidt
  * @version $Id$
  **/
-
 public class Month {
 
   private String[] months = {

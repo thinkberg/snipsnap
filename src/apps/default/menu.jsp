@@ -1,3 +1,9 @@
+<!--
+  ** Menu template
+  ** @author Matthias L. Jugel
+  ** @version $Id$
+  -->
+
 <%@ page import="com.neotis.snip.SnipSpace,
                  java.util.Iterator,
                  com.neotis.snip.Snip,

@@ -1,5 +1,10 @@
 package com.neotis.user;
 
+/**
+ * User class.
+ * @author Stephan J. Schmidt
+ * @version $Id$
+ */
 public class User {
 
   private String login;

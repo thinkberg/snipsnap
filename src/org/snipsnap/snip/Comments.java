@@ -1,7 +1,6 @@
 package com.neotis.snip;
 
 import com.neotis.app.Application;
-import com.neotis.user.User;
 import com.neotis.util.StringUtil;
 
 import java.util.HashSet;
@@ -9,6 +8,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Handler for comments added to snips.
+ * @author Stephan J. Schmidt
+ * @version $Id$
+ */
 public class Comments {
   private Snip snip;
   private List comments;
@@ -54,9 +58,9 @@ public class Comments {
 
   public String getCommentString() {
     StringBuffer buffer = new StringBuffer();
-    Snip.appendLink(buffer, "comments-"+snip.getName(), StringUtil.plural(getCount(), "comment"));
+    Snip.appendLink(buffer, "comments-" + snip.getName(), StringUtil.plural(getCount(), "comment"));
 
-    if (getCount()>0) {
+    if (getCount() > 0) {
       buffer.append("(by ");
       appendUserString(buffer);
       buffer.append(")");

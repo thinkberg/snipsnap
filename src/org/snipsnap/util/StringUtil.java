@@ -1,5 +1,11 @@
 package com.neotis.util;
 
+/**
+ * Helper utility for string handling.
+ *
+ * @author Stephan J. Schmidt
+ * @version $Id$
+ */
 public class StringUtil {
   public static String plural(int i, String s1, String s2) {
     StringBuffer buffer = new StringBuffer();

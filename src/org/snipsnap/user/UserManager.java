@@ -10,6 +10,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * User manager handles all register, creation and authentication of users.
+ * @author Stephan J. Schmidt
+ * @version $Id$
+ */
 public class UserManager {
   private static UserManager instance;
 

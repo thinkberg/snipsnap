@@ -12,6 +12,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+/**
+ * Servlet to store snips into the database after they have been edited.
+ * @author Matthias L. Jugel
+ * @version $Id$
+ */
 public class SnipStoreServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {

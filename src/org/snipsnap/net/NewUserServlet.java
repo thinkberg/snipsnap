@@ -13,6 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+/**
+ * Servlet to register a new user.
+ * @author Matthias L. Jugel
+ * @version $Id$
+ */
 public class NewUserServlet extends HttpServlet {
   private final static String ERR_EXISTS = "User exists, please user another login name!";
   private final static String ERR_PASSWORD = "Password does not match!";

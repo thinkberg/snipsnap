@@ -13,6 +13,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+/**
+ * Create initial database and example snips.
+ * @author Stephan J. Schmidt
+ * @version $Id$
+ */
 public class CreateDB {
 
   public static void main(String[] args) {

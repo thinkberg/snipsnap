@@ -6,18 +6,22 @@ import com.neotis.util.ConnectionManager;
 import com.neotis.util.Queue;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * SnipSpace handles all the data storage.
+ * @author Stephan J. Schmidt
+ * @version $Id$
+ */
 public class SnipSpace implements LinkTester {
   private Connection connection;
   private Map cache;

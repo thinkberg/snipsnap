@@ -1,38 +1,48 @@
 package com.neotis.util;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
+/**
+ * The connection manager handles all database connections.
+ *
+ * @author Stephan J. Schmidt
+ * @version $Id$
+ */
 public class ConnectionManager {
   public static Connection getConnection() {
-// Register the Mckoi JDBC Driver
+    // Register the Mckoi JDBC Driver
     try {
       Class.forName("com.mckoi.JDBCDriver").newInstance();
     } catch (Exception e) {
       System.out.println(
-          "Unable to register the JDBC Driver.\n" +
-          "Make sure the classpath is correct.\n" +
-          "For example on Win32;  java -cp ../../mckoidb.jar;. SimpleApplicationDemo\n" +
-          "On Unix;  java -cp ../../mckoidb.jar:. SimpleApplicationDemo");
+        "Unable to register the JDBC Driver.\n" +
+        "Make sure the classpath is correct.\n" +
+        "For example on Win32;  java -cp ../../mckoidb.jar;. SimpleApplicationDemo\n" +
+        "On Unix;  java -cp ../../mckoidb.jar:. SimpleApplicationDemo");
       return null;
     }
 
-// This URL specifies we are connecting with a local database.  The
-// configuration file for the database is found at './ExampleDB.conf'
+    // This URL specifies we are connecting with a local database.  The
+    // configuration file for the database is found at './ExampleDB.conf'
     String url = "jdbc:mckoi:local://conf/db.conf";
 
-// The username/password for the database.  This is set when the database
-// is created (see SimpleDatabaseCreateDemo).
+    // The username/password for the database.  This is set when the database
+    // is created (see SimpleDatabaseCreateDemo).
     String username = "funzel";
     String password = "funzel";
 
-// Make a connection with the database.
+    // Make a connection with the database.
     Connection connection;
     try {
       connection = DriverManager.getConnection(url, username, password);
     } catch (SQLException e) {
       System.out.println(
-          "Unable to make a connection to the database.\n" +
-          "The reason: " + e.getMessage());
+        "Unable to make a connection to the database.\n" +
+        "The reason: " + e.getMessage());
       return null;
     }
     return connection;
@@ -46,6 +56,7 @@ public class ConnectionManager {
       }
     }
   }
+
   public static void close(ResultSet result) {
     if (null != result) {
       try {

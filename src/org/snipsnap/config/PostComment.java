@@ -6,6 +6,11 @@ import com.neotis.snip.SnipSpace;
 import com.neotis.user.User;
 import com.neotis.user.UserManager;
 
+/**
+ * Post an example comment.
+ * @author Stephan J. Schmidt
+ * @version $Id$
+ */
 public class PostComment {
   public static void main(String[] args) {
     SnipSpace space = SnipSpace.getInstance();

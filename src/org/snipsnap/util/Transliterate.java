@@ -5,6 +5,13 @@ import java.util.Enumeration;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+/**
+ * Transliterate 16-bit unicode characters to ASCII for conversion of
+ * non-ascii characters in a URL.
+ *
+ * @author Matthias L. Jugel
+ * @version $Id$
+ */
 public class Transliterate {
   Properties asciinative = new Properties();
   Properties nativeascii = new Properties();

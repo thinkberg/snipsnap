@@ -9,7 +9,11 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-
+/**
+ * Central class for snips.
+ * @author Stephan J. Schmidt
+ * @version $Id$
+ */
 public class Snip {
   private Snip parent;
   private List children;
