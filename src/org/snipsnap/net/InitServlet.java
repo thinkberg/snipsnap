@@ -45,8 +45,6 @@ public class InitServlet extends GenericServlet {
   public void init(ServletConfig servletConfig) throws ServletException {
     ServletContext context = servletConfig.getServletContext();
 
-    System.out.println(context.getRealPath("/WEB-INF/application.conf"));
-
     // check servlet context and then local servlet parameter or assume WEB-INF
     String config = (String) context.getAttribute(Configuration.INIT_PARAM);
     if (null == config) {
@@ -72,8 +70,10 @@ public class InitServlet extends GenericServlet {
       }
 
       if (appConfiguration.allow(AppConfiguration.PERM_WEBLOGS_PING)) {
-        System.out.println("WARNING " + appConfiguration.getName() + ": Weblogs ping is enabled. This means that SnipSnap sends notifications to hosts\n" +
-                           "on the internet when your weblog changes. To turn this off take a look at the FAQ\non http://snipsnap.org");
+        System.out.println("WARNING: " + appConfiguration.getName() + ": Weblogs ping is enabled.\n"+
+                           "This means that SnipSnap sends notifications to hosts on the internet\n"+
+                           "when your weblog changes. To turn this off take a look at the FAQ at\n"+
+                           ">> http://snipsnap.org/space/faq <<\n");
       }
     } catch (IOException e) {
       e.printStackTrace();

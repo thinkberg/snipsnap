@@ -76,6 +76,10 @@ public class SnipLink {
     return appendUrlWithBase(writer, getSpaceRoot(), name, null);
   }
 
+  public static Writer appendCommentsUrl(Writer writer, String name, String target) throws IOException {
+    return appendUrlWithBase(writer, getCommentsRoot(), name, target);
+  }
+
   /**
    * Append a create link for the specified name.
    */
@@ -183,6 +187,9 @@ public class SnipLink {
     return Application.get().getConfiguration().getUrl("/exec");
   }
 
+  private static String getCommentsRoot() {
+    return Application.get().getConfiguration().getUrl("/comments");
+  }
   private static List extensions = Arrays.asList(new String[]{"png", "jpg", "jpeg", "gif"});
 
 
@@ -201,7 +208,7 @@ public class SnipLink {
   /**
    * Append and image tag to a string buffer. Additionally takes an alternative text to display
    * if the browser cannot display the image.
-   * @param buffer the string buffer to append to
+   * @param writer the writer to append to
    * @param root the root path for images
    * @param name the image name
    * @param alt an alternative text

@@ -124,7 +124,7 @@ public class Comments {
 
   public String getPostUrl() throws IOException {
     StringWriter writer = new StringWriter();
-    SnipLink.appendUrlWithBase(writer, "../comments", SnipLink.encode(snip.getName()), "post");
+    SnipLink.appendCommentsUrl(writer, snip.getName(), "post");
     return writer.getBuffer().toString();
   }
 

@@ -165,7 +165,13 @@ public class AppConfiguration extends Configuration {
     if (null == url) {
       url = getProperty(AppConfiguration.APP_DOMAIN);
       if (url != null) {
-        System.out.println("Please edit application.conf and change app.domain to app.url!");
+        setProperty(AppConfiguration.APP_URL, url);
+        try {
+          store();
+        } catch (IOException e) {
+          System.out.println("WARNING: "+getName()+": unable to store configuration. Edit application.conf and change app.domain to app.url");
+          e.printStackTrace();
+        }
       }
     }
     if (null == url || url.length() == 0) {
