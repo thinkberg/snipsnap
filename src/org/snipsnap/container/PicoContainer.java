@@ -47,6 +47,7 @@ public class PicoContainer implements Container {
     private static org.picocontainer.MutablePicoContainer container;
 
     public PicoContainer() {
+        container = new DefaultPicoContainer();
     }
 
     public void init() {
@@ -58,7 +59,7 @@ public class PicoContainer implements Container {
 
       DynaopComponentAdapterFactory factory = new DynaopComponentAdapterFactory(
           new DefaultComponentAdapterFactory(), aspects);
-      MutablePicoContainer container = new DefaultPicoContainer(factory);
+      container = new DefaultPicoContainer(factory);
 
 
       Globals globals = ConfigurationProxy.getInstance();

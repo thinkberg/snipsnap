@@ -32,7 +32,7 @@ public class Components {
 
     private static Container container;
 
-    private static synchronized Container getContainer() {
+    public static synchronized Container getContainer() {
         if (null == container) {
             container = new PicoContainer();
             container.init();
