@@ -33,10 +33,27 @@ public class User {
 
   private String login;
   private String passwd;
+  private String email;
+  private String status;
 
-  public User(String login, String passwd) {
+  public User(String login, String passwd, String email) {
     this.login = login;
     this.passwd = passwd;
+    this.email = email;
+  }
+
+
+  public void setStatus(String status) {
+    this.status = status;
+    return;
+  }
+
+  public String getStatus() {
+    return status;
+  }
+
+  public String getEmail() {
+    return email;
   }
 
   public String getPasswd() {

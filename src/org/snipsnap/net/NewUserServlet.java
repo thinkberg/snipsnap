@@ -67,7 +67,7 @@ public class NewUserServlet extends HttpServlet {
         response.sendRedirect("/exec/register?login=" + login + "&email=" + email + "&message=" + ERR_PASSWORD);
         return;
       }
-      user = um.create(login, password);
+      user = um.create(login, password, email);
 
       HttpSession session = request.getSession(true);
       Application app = (Application) session.getAttribute("app");

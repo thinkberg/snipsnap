@@ -36,6 +36,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -203,6 +204,26 @@ public class SnipSpace implements LinkTester {
     return snip;
   }
 
+  private List find(PreparedStatement statement) {
+    ResultSet result = null;
+    List snips = new ArrayList();
+
+    try {
+      result = statement.executeQuery();
+      Snip snip = null;
+      while (result.next()) {
+        snip = cacheLoad(result);
+        snips.add(snip);
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    } finally {
+      ConnectionManager.close(statement);
+      ConnectionManager.close(result);
+    }
+    return snips;
+  }
+
   private List storageByRecent(int size) {
     PreparedStatement statement = null;
     ResultSet result = null;
@@ -229,24 +250,16 @@ public class SnipSpace implements LinkTester {
 
   private List storageByUser(String login) {
     PreparedStatement statement = null;
-    ResultSet result = null;
-    List snips = new ArrayList();
-
+    List snips = null;
     try {
       statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip FROM Snip WHERE cUser=?");
       statement.setString(1, login);
 
-      result = statement.executeQuery();
-      Snip snip = null;
-      while (result.next()) {
-        snip = cacheLoad(result);
-        snips.add(snip);
-      }
+      snips = find(statement);
     } catch (SQLException e) {
       e.printStackTrace();
     } finally {
       ConnectionManager.close(statement);
-      ConnectionManager.close(result);
     }
     return snips;
   }
@@ -254,56 +267,41 @@ public class SnipSpace implements LinkTester {
 
   private List storageByComments(Snip parent) {
     PreparedStatement statement = null;
-    ResultSet result = null;
-    List comments = new ArrayList();
+    List comments = null;
 
     try {
       statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip FROM Snip WHERE commentSnip=?");
       statement.setString(1, parent.getName());
 
-      result = statement.executeQuery();
-      Snip snip = null;
-      while (result.next()) {
-        snip = cacheLoad(result);
-        comments.add(snip);
-      }
+      comments = find(statement);
     } catch (SQLException e) {
       e.printStackTrace();
     } finally {
       ConnectionManager.close(statement);
-      ConnectionManager.close(result);
     }
     return comments;
   }
 
   private List storageByParent(Snip parent) {
     PreparedStatement statement = null;
-    ResultSet result = null;
-    List children = new ArrayList();
+    List children = null;
 
     try {
       statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip FROM Snip WHERE parentSnip=?");
       statement.setString(1, parent.getName());
 
-      result = statement.executeQuery();
-      Snip snip = null;
-      while (result.next()) {
-        snip = cacheLoad(result);
-        children.add(snip);
-      }
+      children = find(statement);
     } catch (SQLException e) {
       e.printStackTrace();
     } finally {
       ConnectionManager.close(statement);
-      ConnectionManager.close(result);
     }
     return children;
   }
 
   private List storageByDateInName(String start, String end) {
     PreparedStatement statement = null;
-    ResultSet result = null;
-    List children = new ArrayList();
+    List children = null;
 
     try {
       System.out.println("Finding: "+start+" "+end);
@@ -312,19 +310,35 @@ public class SnipSpace implements LinkTester {
       statement.setString(2, end);
       statement.setString(3, "start");
 
-      result = statement.executeQuery();
-      Snip snip = null;
-      while (result.next()) {
-        snip = cacheLoad(result);
-        children.add(snip);
-      }
+      children = find(statement);
     } catch (SQLException e) {
       e.printStackTrace();
     } finally {
       ConnectionManager.close(statement);
-      ConnectionManager.close(result);
     }
     return children;
+  }
+
+  private Snip storageLoad(String name) {
+    Snip snip = null;
+    PreparedStatement statement = null;
+    ResultSet result = null;
+
+    try {
+      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip FROM Snip WHERE name=?");
+      statement.setString(1, name);
+
+      result = statement.executeQuery();
+      if (result.next()) {
+        snip = createSnip(result);
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    } finally {
+      ConnectionManager.close(result);
+      ConnectionManager.close(statement);
+    }
+    return snip;
   }
 
   private void storageStore(Snip snip) {
@@ -424,25 +438,4 @@ public class SnipSpace implements LinkTester {
     return;
   }
 
-  private Snip storageLoad(String name) {
-    Snip snip = null;
-    PreparedStatement statement = null;
-    ResultSet result = null;
-
-    try {
-      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip FROM Snip WHERE name=?");
-      statement.setString(1, name);
-
-      result = statement.executeQuery();
-      if (result.next()) {
-        snip = createSnip(result);
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    } finally {
-      ConnectionManager.close(result);
-      ConnectionManager.close(statement);
-    }
-    return snip;
-  }
 }

@@ -33,7 +33,6 @@ import com.neotis.user.UserManager;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -74,6 +73,7 @@ public class CreateDB {
     // ( Don't use this demo username/password in your application! )
     String username = "funzel";
     String password = "funzel";
+    String email = "stephan@mud.de";
 
     // Make a connection with the database.  This will create the database
     // and log into the newly created database.
@@ -92,7 +92,6 @@ public class CreateDB {
     try {
       // Create a Statement object to execute the queries on,
       Statement statement = connection.createStatement();
-      ResultSet result;
 
       System.out.println("-- Creating Tables --");
 
@@ -111,7 +110,9 @@ public class CreateDB {
       statement.executeQuery(
         "    CREATE TABLE User ( " +
         "       login    VARCHAR(100) NOT NULL, " +
-        "       passwd   VARCHAR(20) )");
+        "       passwd   VARCHAR(20), " +
+        "       email    VARCHAR(100)," +
+        "       status   VARCHAR(50) )");
 
       System.out.println("-- Inserting Data --");
 
@@ -119,7 +120,7 @@ public class CreateDB {
       statement.close();
       connection.close();
 
-      User admin = UserManager.getInstance().create(username, password);
+      User admin = UserManager.getInstance().create(username, password,email);
 
       Application app = new Application();
       app.setUser(admin);

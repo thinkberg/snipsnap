@@ -64,7 +64,7 @@ public class UserManager {
         user = load(cookie.getValue());
       }
       if(user == null) {
-        user = new User("Guest", "Guest");
+        user = new User("Guest", "Guest", "");
       }
       session.setAttribute("user", user);
     }
@@ -98,8 +98,8 @@ public class UserManager {
     }
   }
 
-  public User create(String login, String passwd) {
-    return storageCreate(login, passwd);
+  public User create(String login, String passwd, String email) {
+    return storageCreate(login, passwd, email);
   }
 
   public void store(User user) {
@@ -121,7 +121,10 @@ public class UserManager {
   private User createUser(ResultSet result) throws SQLException {
     String login = result.getString("login");
     String passwd = result.getString("passwd");
-    User user = new User(login, passwd);
+    String email = result.getString("email");
+    String status = result.getString("status");
+    User user = new User(login, passwd, email);
+    user.setStatus(status);
     return user;
   }
 
@@ -129,9 +132,11 @@ public class UserManager {
     PreparedStatement statement = null;
 
     try {
-      statement = connection.prepareStatement("UPDATE User SET login=?, passwd=?");
+      statement = connection.prepareStatement("UPDATE User SET login=?, passwd=?, email=?, status=?");
       statement.setString(1, user.getLogin());
       statement.setString(2, user.getPasswd());
+      statement.setString(3, user.getEmail());
+      statement.setString(3, user.getStatus());
 
       statement.execute();
     } catch (SQLException e) {
@@ -142,16 +147,18 @@ public class UserManager {
     return;
   }
 
-  private User storageCreate(String login, String passwd) {
+  private User storageCreate(String login, String passwd, String email) {
     PreparedStatement statement = null;
     ResultSet result = null;
 
-    User user = new User(login, passwd);
+    User user = new User(login, passwd, email);
 
     try {
-      statement = connection.prepareStatement("INSERT INTO User (login,passwd) VALUES (?,?)");
+      statement = connection.prepareStatement("INSERT INTO User (login,passwd, email, status) VALUES (?,?,?,?)");
       statement.setString(1, login);
       statement.setString(2, passwd);
+      statement.setString(3, email);
+      statement.setString(4, "");
 
       statement.execute();
     } catch (SQLException e) {
@@ -186,7 +193,7 @@ public class UserManager {
     ResultSet result = null;
 
     try {
-      statement = connection.prepareStatement("SELECT login, passwd FROM User WHERE login=?");
+      statement = connection.prepareStatement("SELECT login, passwd, email, status FROM User WHERE login=?");
       statement.setString(1, login);
 
       result = statement.executeQuery();
