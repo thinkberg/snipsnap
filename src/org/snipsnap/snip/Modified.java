@@ -125,7 +125,7 @@ public class Modified {
    * @param time Timestamp to pretty print
    * @return Pretty string
    */
-  public String getNiceTime(Timestamp time) {
+  public static String getNiceTime(Timestamp time) {
     if (time == null) return "";
     java.util.Date now = new java.util.Date();
     int secs = (int) (now.getTime() - time.getTime()) / 1000;

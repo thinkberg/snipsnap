@@ -53,7 +53,6 @@ public class Snip implements Ownable, Nameable {
   private Access access;
   private Labels labels;
 
-
   private void init() {
     if (null == children) {
       children = SnipSpace.getInstance().getChildren(this);
@@ -152,6 +151,10 @@ public class Snip implements Ownable, Nameable {
 
   public int getViewCount() {
     return access.getViewCount();
+  }
+
+  public void setViewCount(int count) {
+    access.setViewCount(count);
   }
 
   public int incViewCount() {

@@ -29,7 +29,10 @@ import org.snipsnap.cache.Cache;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.util.ConnectionManager;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,7 +80,6 @@ public class Finder {
   public List execute(int count) {
     return find(statement, count);
   }
-
 
   public List find(PreparedStatement statement) {
     return find(statement, Integer.MAX_VALUE);

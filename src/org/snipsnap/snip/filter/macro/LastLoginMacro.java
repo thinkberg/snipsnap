@@ -34,6 +34,7 @@ package org.snipsnap.snip.filter.macro;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.Modified;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.user.User;
 
@@ -42,13 +43,14 @@ import java.util.List;
 
 public class LastLoginMacro extends ListoutputMacro {
   public String getName() {
-    return "list-login";
+    return "last-login";
   }
 
   public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
     if (params.length == 1) {
       User user = UserManager.getInstance().load(params[0]);
-      buffer.append(user.getLastLogin());
+      buffer.append("<b>Last login was:</b> ");
+      buffer.append(Modified.getNiceTime(user.getLastLogin()));
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

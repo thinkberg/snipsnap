@@ -59,6 +59,10 @@ public class SnipLink {
     return appendLinkWithRoot(buffer, root, name, view).toString();
   }
 
+  public static StringBuffer appendLink(StringBuffer buffer, Snip snip) {
+    return appendLink(buffer, snip.getName());
+  }
+
   public static StringBuffer appendLink(StringBuffer buffer, String name) {
     return appendLink(buffer, name, name);
   }
