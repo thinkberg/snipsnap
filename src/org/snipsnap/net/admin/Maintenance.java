@@ -30,6 +30,8 @@ import org.snipsnap.config.Configuration;
 import org.snipsnap.container.Components;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.XMLSnipExport;
+import org.snipsnap.snip.storage.SnipSerializer;
 import org.radeox.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -147,9 +149,8 @@ public class Maintenance implements SetupHandler {
           }
           currentCount++;
         }
-        repair = true;
       } else {
-        snipCount = fixParents.size() + fixComments.size();
+        snipCount = fixParents.size() + fixComments.size() + fixDuplicates.size();
         currentCount = 0;
         Iterator parentIt = fixParents.iterator();
         while (parentIt.hasNext()) {
@@ -167,7 +168,6 @@ public class Maintenance implements SetupHandler {
           currentCount++;
           commentIt.remove();
         }
-        repair = false;
       }
     }
 
