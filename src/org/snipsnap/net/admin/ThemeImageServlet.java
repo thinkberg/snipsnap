@@ -33,6 +33,8 @@ import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.attachment.Attachment;
+import org.snipsnap.snip.attachment.storage.AttachmentStorage;
+import org.snipsnap.container.Components;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -53,11 +55,12 @@ public class ThemeImageServlet extends HttpServlet {
 
     Configuration config = Application.get().getConfiguration();
     Map installedThemes = ThemeHelper.getInstalledThemes();
+    AttachmentStorage storage = (AttachmentStorage) Components.getComponent(AttachmentStorage.class);
     if(installedThemes.containsKey(name)) {
       Snip themeSnip = (Snip)installedThemes.get(name);
       Attachment att = themeSnip.getAttachments().getAttachment("screenshot.png");
       if(att != null) {
-        sendImage(response, new FileInputStream(new File(config.getFilePath(), att.getLocation())),
+        sendImage(response, storage.getInputStream(att),
                   (int) att.getSize(), att.getContentType());
         return;
       }
