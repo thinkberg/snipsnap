@@ -6,7 +6,8 @@
  <tr><td class="menuitem">index<td></tr>
  <tr><td class="menuitem">search<td></tr>
  <table>
-  <tr><td><b>Recent changes:</b></td></tr>
+  <tr><td><b>Recent changes:</b>
+  <p>
   <% SnipSpace space = SnipSpace.getInstance();
    Iterator iterator = space.getChanged().iterator();
    while (iterator.hasNext()) {
@@ -16,7 +17,15 @@
   <%
    }
   %>
+  </p>
+  </td></tr>
   </table>
+
+  <p>
+  <% Snip rolling = space.load("weblog::blogrolling"); %>
+  <%= rolling.toXML() %>
+  </p>
+
 </table>
 
 

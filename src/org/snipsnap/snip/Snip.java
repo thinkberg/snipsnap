@@ -16,6 +16,16 @@ public class Snip {
   private Timestamp cTime, mTime;
   private String cUser, mUser;
 
+  public StringBuffer plural(StringBuffer buffer, int i, String s) {
+    buffer.append(i);
+    buffer.append(" ");
+    buffer.append(s);
+    if (i>1) {
+      buffer.append("s");
+    }
+    return buffer;
+  }
+
   public String getNiceTime(Timestamp time) {
     if(time == null) return "";
     java.util.Date now = new java.util.Date();
@@ -28,17 +38,22 @@ public class Snip {
     int days = hours / 24;
     //int years = days / 365;
 
-    String nice = "";
+    StringBuffer nice = new StringBuffer();
     if (mins==0) {
-      nice = "Just a blink of an eye ago.";
+      nice.append("Just a blink of an eye ago.");
     } else if (hours==0) {
-      nice = min + " minutes ago.";
+      plural(nice, min, "minute");
+      nice.append(" ago.");
     } else if (days==0) {
-      nice = hour + " hours, " + min +  " minutes ago.";
+      plural(nice, hour, "hour");
+      nice.append(", ");
+      plural(nice, min, "minute");
+      nice.append(" ago.");
     } else {
-      nice = days + " days ago.";
+      plural(nice, days, "day");
+      nice.append(" ago.");
     }
-    return nice;
+    return nice.toString();
   }
 
   public String getModified() {
