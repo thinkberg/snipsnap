@@ -49,6 +49,11 @@ public class IndexSnipMacro extends ListOutputMacro {
     return "index";
   }
 
+  public String getDescription() {
+    return "Displays a list of all snips of the system. Comment snips are filtered out.";
+  }
+
+
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException,IOException {
     String type = null;

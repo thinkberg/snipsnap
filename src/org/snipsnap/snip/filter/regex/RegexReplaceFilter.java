@@ -40,6 +40,10 @@ import org.snipsnap.util.log.Logger;
 
 public class RegexReplaceFilter extends RegexFilter {
 
+  public RegexReplaceFilter() {
+    super();
+  }
+
   /**
    * create a new regular expression that takes input as multiple lines
    */

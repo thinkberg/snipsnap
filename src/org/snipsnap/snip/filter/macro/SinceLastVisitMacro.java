@@ -53,6 +53,10 @@ public class SinceLastVisitMacro extends ListOutputMacro {
     return "since-last-visit";
   }
 
+  public String getDescription() {
+    return "Show all snips that have been changed since the last visit of the user.";
+  }
+
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
     String type = null;

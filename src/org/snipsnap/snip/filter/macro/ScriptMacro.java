@@ -32,19 +32,11 @@
 
 package org.snipsnap.snip.filter.macro;
 
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.filter.Filter;
-import org.snipsnap.snip.filter.JavaCodeFilter;
-import org.snipsnap.snip.filter.SqlCodeFilter;
-import org.snipsnap.snip.filter.XmlCodeFilter;
 import org.python.util.PythonInterpreter;
-import org.python.core.PyObject;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.io.StringWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Map;
 
 public class ScriptMacro extends Preserved {
   private Map filters;
@@ -56,11 +48,15 @@ public class ScriptMacro extends Preserved {
     return "script";
   }
 
+  public String getDescription() {
+    return "Execute a piece of python source code.";
+  }
+
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
 
-     PythonInterpreter interp =
-	    new PythonInterpreter();
+    PythonInterpreter interp =
+        new PythonInterpreter();
 
     interp.setOut(writer);
     interp.set("snip", params.getSnip());

@@ -33,24 +33,38 @@
 package org.snipsnap.snip.filter.macro;
 
 import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.filter.Filter;
-import org.snipsnap.snip.filter.JavaCodeFilter;
-import org.snipsnap.snip.filter.SqlCodeFilter;
-import org.snipsnap.snip.filter.XmlCodeFilter;
+import org.snipsnap.snip.filter.*;
+import org.snipsnap.snip.filter.macro.code.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Iterator;
 import java.io.IOException;
 import java.io.Writer;
+
+import sun.misc.Service;
+import sun.misc.ServiceConfigurationError;
 
 public class CodeMacro extends Preserved {
   private Map filters;
 
   public CodeMacro() {
     filters = new HashMap();
-    filters.put("xml", new XmlCodeFilter());
-    filters.put("java", new JavaCodeFilter());
-    filters.put("sql", new SqlCodeFilter());
+
+    Iterator formatterIt = Service.providers(SourceCodeFormatter.class);
+    while (formatterIt.hasNext()) {
+      try {
+        SourceCodeFormatter formatter = (SourceCodeFormatter) formatterIt.next();
+        filters.put(formatter.getName(), formatter);
+        System.err.println("Loaded code formatter: " + formatter.getName());
+      } catch (Exception e) {
+        System.err.println("CodeMacro: unable to load code formatter: " + e);
+        e.printStackTrace();
+      } catch (ServiceConfigurationError err) {
+        System.err.println("CodeMacro: error loading code formatters: " + err);
+        err.printStackTrace();
+      }
+    }
 
     addSpecial('[');
     addSpecial(']');
@@ -63,6 +77,12 @@ public class CodeMacro extends Preserved {
   public String getName() {
     return "code";
   }
+
+  public String getDescription() {
+    return "Displays a chunk of code with syntax highlighting, for example Java, XML and SQL. The none type will "+
+           "do nothing and is useful for unknown code types.";
+  }
+
 
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {

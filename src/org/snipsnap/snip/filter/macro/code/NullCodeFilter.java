@@ -22,44 +22,25 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
+
+package org.snipsnap.snip.filter.macro.code;
+
+import org.snipsnap.snip.filter.regex.RegexReplaceFilter;
+
 /*
- * Macro that replaces external links
+ * Dummy filter that does nothing
  *
  * @author stephan
  * @team sonicteam
  * @version $Id$
  */
 
-package org.snipsnap.snip.filter.macro;
+public class NullCodeFilter extends RegexReplaceFilter implements SourceCodeFormatter {
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Map;
-
-public class QuoteMacro extends Preserved {
-  private Map filters;
-
-  public QuoteMacro() {
+  public NullCodeFilter() {
   }
 
   public String getName() {
-    return "quote";
-  }
-
-  public String getDescription() {
-    return "Display quotations.";
-  }
-
-
-  public void execute(Writer writer, MacroParameter params)
-      throws IllegalArgumentException, IOException {
-
-    writer.write("<blockquote class=\"quote\">");
-    writer.write(params.getContent());
-    if (null != params && params.getLength() == 1) {
-      writer.write(params.get("0"));
-    }
-    writer.write("</blockquote>");
-    return;
+    return "none";
   }
 }

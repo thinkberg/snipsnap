@@ -22,7 +22,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-package org.snipsnap.snip.filter;
+package org.snipsnap.snip.filter.macro.code;
 
 /*
  * XmlCodeFilter colourizes Xml Code
@@ -34,7 +34,7 @@ package org.snipsnap.snip.filter;
 
 import org.snipsnap.snip.filter.regex.RegexReplaceFilter;
 
-public class XmlCodeFilter extends RegexReplaceFilter {
+public class XmlCodeFilter extends RegexReplaceFilter implements SourceCodeFormatter {
 
   private static final String KEYWORDS = "\\b(xsl:[^&]*)\\b";
   private static final String TAGS = "(&lt;.*?&gt;)";
@@ -44,5 +44,9 @@ public class XmlCodeFilter extends RegexReplaceFilter {
     super(QUOTE, "<span class=\"xml-quote\">\"$1\"</class>");
     addRegex(TAGS, "<span class=\"xml-tag\">$1</class>");
     addRegex(KEYWORDS, "<span class=\"xml-keyword\">$1</class>");
-  };
+  }
+
+  public String getName() {
+    return "xml";
+  }
 }

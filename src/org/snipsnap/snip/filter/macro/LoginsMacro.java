@@ -47,6 +47,10 @@ public class LoginsMacro extends ListOutputMacro {
     return "logins";
   }
 
+  public String getDescription() {
+    return "Displays all currently logged in users and guests.";
+  }
+
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException
   {

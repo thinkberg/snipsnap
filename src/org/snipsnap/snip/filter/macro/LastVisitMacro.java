@@ -48,6 +48,10 @@ public class LastVisitMacro extends Macro {
     return "last-visit";
   }
 
+  public String getDescription() {
+    return "Show the last login of the user, which usually is the last logout time.";
+  }
+
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
 

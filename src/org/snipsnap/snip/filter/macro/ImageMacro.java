@@ -47,6 +47,10 @@ public class ImageMacro extends Macro {
     return "image";
   }
 
+  public String getDescription() {
+    return "Displays an image file.";
+  }
+
   public ImageMacro() {
     config = Application.get().getConfiguration();
   }

@@ -4,7 +4,7 @@ org.snipsnap.snip.filter.macro.ApiDocMacro
 org.snipsnap.snip.filter.macro.ApiMacro
 org.snipsnap.snip.filter.macro.BackLinkMacro
 org.snipsnap.snip.filter.macro.CalendarMacro
-org.snipsnap.snip.filter.macro.CodeMacro
+#org.snipsnap.snip.filter.macro.CodeMacro
 org.snipsnap.snip.filter.macro.FieldMacro
 org.snipsnap.snip.filter.macro.HotSnipMacro
 org.snipsnap.snip.filter.macro.ImageMacro

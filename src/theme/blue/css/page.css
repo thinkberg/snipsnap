@@ -10,45 +10,46 @@ body {
   font-size:11px;
   font-weight:normal;
   line-height:16px;
-
-  margin: 20px 20px 20px 20px;
-  background: #EEE;
+  background: #FFFFFF;
+  margin: 0px;
 }
 
 #page-logo {
   font-family: georgia, times new roman, times, serif;
-  color:#FFF;
-  font-size: 24px;
+  color:#FFFF00;
+  font-size: 36px;
   font-weight: normal;
-  border-left:1px solid #FFF;
-  border-right:1px solid #FFF;
-  border-top:1px solid #FFF;
-  background:#003366;
-  padding-top: 15px;
+  background:#FF8800;
+  padding-top: 2.5em;
+  padding-bottom: 0.5em;
   padding-left: 15px;
   padding-right: 15px;
 }
 
 #page-logo * {
   font-family: georgia, times new roman, times, serif;
-  font-size: 24px;
+  color:#FFFF00;
+  font-size: 36px;
   font-weight:normal;
-  color: #ffffff;
 }
 
 #page-title {
   font-family:verdana, arial, sans-serif;
   font-size: 10px;
+  padding: 10px;
+  padding-bottom: 2em;
+  text-align: right;
+  background: #FFAA66;
+  color: #000000;
 }
 
 #page-tagline {
+  display: inline;
+  text-align: right;
   font-family:verdana, arial, sans-serif;
-  color:#FFF;
+  color:#000000;
   font-size:11px;
   font-weight:bold;
-  border-left:1px solid #FFF;
-  border-right:1px solid #FFF;
-  background:#003366;
   padding-left: 15px;
   padding-right: 15px;
   padding-top: 5px;
@@ -56,9 +57,22 @@ body {
 }
 
 #page-buttons {
-  padding:15px;
-  background:#FFF;
-  text-align:center;
+  display: inline;
+  background: inherit;
+  width: auto;
+}
+
+#page-buttons .inactive {
+  color:#000000;
+}
+
+#page-buttons a:link {
+  color: #000000;
+  text-decoration: underline;
+}
+#page-buttons a:visited	{
+  color: #000000;
+  text-decoration: underline;
 }
 
 #page-wrapper {
@@ -71,6 +85,7 @@ body {
 #page-content {
   float: left;
   display: table-cell;
+  padding-top: 2em;
   padding-left: 15px;
   padding-right: 15px;
   padding-bottom: 15px;
@@ -84,10 +99,10 @@ body {
   display: table-cell;
   top: 0px;
   width: 29%;
+  padding-top: 2em;
   padding-left:15px;
   margin-bottom:15px;
-  background:#FFF;
-  border-left: 1px solid #003366;
+  background:#FCF0E0;
 
   font-family: verdana, arial, sans-serif;
   color: #666;

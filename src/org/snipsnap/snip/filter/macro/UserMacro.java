@@ -42,6 +42,10 @@ public class UserMacro extends ListOutputMacro {
     return "list-of-users";
   }
 
+  public String getDescription() {
+    return "Displays a list of all users.";
+  }
+
   public void execute(Writer writer, MacroParameter params)
     throws IllegalArgumentException, IOException {
     String type = null;

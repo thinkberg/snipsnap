@@ -42,6 +42,10 @@ public class AnnotationMacro extends Macro {
     return "note";
   }
 
+  public String getDescription() {
+    return "Render a footnote. Not fully implemented and does not work.";
+  }
+
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
     if (params.getLength() == 1) {

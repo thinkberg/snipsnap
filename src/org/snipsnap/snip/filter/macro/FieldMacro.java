@@ -43,6 +43,10 @@ public class FieldMacro extends Macro {
     return "field";
   }
 
+  public String getDescription() {
+    return "Display a form inout field and submit button.";
+  }
+
   /**
    * {field:id|value|target|button}
    */

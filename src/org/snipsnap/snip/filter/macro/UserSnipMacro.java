@@ -43,6 +43,10 @@ public class UserSnipMacro extends ListOutputMacro {
     return "snips-by-user";
   }
 
+  public String getDescription() {
+    return "Show all snips created by a specified user.";
+  }
+
   public void execute(Writer writer, MacroParameter params)
     throws IllegalArgumentException, IOException {
     String type = null;

@@ -47,6 +47,11 @@ public class RecentWeblogMacro extends ListOutputMacro {
     return "recent-weblog";
   }
 
+  public String getDescription() {
+    return "Displays a list of recently changed weblogs. Only works when the weblogs "+
+           " ping your site.";
+  }
+
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
     String type = "Vertical";

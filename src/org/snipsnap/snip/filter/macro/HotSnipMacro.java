@@ -55,6 +55,10 @@ public class HotSnipMacro extends Macro {
     return "snips-by-hotness";
   }
 
+  public String getDescription() {
+    return "Displays a list of snips sorted by their \"hotness\" (view count).";
+  }
+
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
 

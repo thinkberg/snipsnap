@@ -47,6 +47,10 @@ public class RecentChangesMacro extends ListOutputMacro {
     return "recent-changes";
   }
 
+  public String getDescription() {
+    return "Displays a list of recently changes snips.";
+  }
+
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
 

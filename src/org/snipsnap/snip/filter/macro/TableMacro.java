@@ -45,6 +45,10 @@ public class TableMacro extends Macro {
     return "table";
   }
 
+  public String getDescription() {
+    return "Displays a table.";
+  }
+
   public void execute(Writer writer, MacroParameter params)
     throws IllegalArgumentException, IOException {
 

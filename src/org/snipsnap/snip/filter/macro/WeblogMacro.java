@@ -49,6 +49,10 @@ public class WeblogMacro extends Macro {
     return "weblog";
   }
 
+  public String getDescription() {
+    return "Renders the sub-snips of the snip as a weblog.";
+  }
+
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
 

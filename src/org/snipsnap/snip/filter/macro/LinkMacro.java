@@ -45,6 +45,10 @@ public class LinkMacro extends Macro {
     return "link";
   }
 
+  public String getDescription() {
+    return "Generate a weblink.";
+  }
+
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
 

@@ -22,21 +22,38 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-
-package org.snipsnap.snip.filter;
-
-import org.snipsnap.snip.filter.regex.RegexReplaceFilter;
-
 /*
- * Dummy filter that does nothing
+ * JavaCodeFilter colourizes Java Code
  *
  * @author stephan
  * @team sonicteam
  * @version $Id$
  */
+package org.snipsnap.snip.filter.macro.code;
 
-public class NullCodeFilter extends RegexReplaceFilter {
+import org.snipsnap.snip.filter.regex.RegexReplaceFilter;
 
-  public NullCodeFilter() {
-  };
+public class SqlCodeFilter extends RegexReplaceFilter implements SourceCodeFormatter {
+
+  private static final String KEYWORDS =
+      "\\b(SELECT|DELETE|UPDATE|WHERE|FROM|GROUP|BY|HAVING)\\b";
+
+  private static final String OBJECTS =
+      "\\b(VARCHAR)" +
+      "\\b";
+
+  private static final String QUOTES =
+      "\"(([^\"\\\\]|\\.)*)\"";
+
+
+  public SqlCodeFilter() {
+    super(QUOTES, "<span class=\"sql-quote\">\"$1\"</class>");
+    addRegex(OBJECTS, "<span class=\"sql-object\">$1</class>");
+    addRegex(KEYWORDS, "<span class=\"sql-keyword\">$1</class>");
+  }
+
+
+  public String getName() {
+    return "sql";
+  }
 }

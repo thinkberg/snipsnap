@@ -52,6 +52,10 @@ public class SearchMacro extends Macro {
     return "search";
   }
 
+  public String getDescription() {
+    return "Search for snips containing the word.";
+  }
+
   public void execute(Writer writer, MacroParameter params)
       throws IllegalArgumentException, IOException {
 

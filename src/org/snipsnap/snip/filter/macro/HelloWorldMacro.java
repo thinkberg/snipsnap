@@ -41,7 +41,7 @@ public class HelloWorldMacro extends Macro {
   }
 
   public String getDescription() {
-    return "Say hello.";
+    return "Say hello example macro.";
   }
 
   public void execute(Writer writer, MacroParameter params)

@@ -29,11 +29,11 @@
  * @team sonicteam
  * @version $Id$
  */
-package org.snipsnap.snip.filter;
+package org.snipsnap.snip.filter.macro.code;
 
 import org.snipsnap.snip.filter.regex.RegexReplaceFilter;
 
-public class JavaCodeFilter extends RegexReplaceFilter {
+public class JavaCodeFilter extends RegexReplaceFilter implements SourceCodeFormatter {
 
   private static final String KEYWORDS =
       "\\b(abstract|break|byvalue|case|cast|catch|" +
@@ -59,5 +59,9 @@ public class JavaCodeFilter extends RegexReplaceFilter {
     super(QUOTES, "<span class=\"java-quote\">\"$1\"</span>");
     addRegex(KEYWORDS, "<span class=\"java-keyword\">$1</span>");
     addRegex(OBJECTS, "<span class=\"java-object\">$1</span>");
-  };
+  }
+
+  public String getName() {
+    return "java";
+  }
 }
