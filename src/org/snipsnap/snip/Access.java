@@ -25,26 +25,25 @@
 
 package org.snipsnap.snip;
 
-import org.snipsnap.app.Application;
-import org.snipsnap.user.User;
-import org.snipsnap.container.Components;
-import org.snipsnap.xmlrpc.ping.PingHandler;
-import org.snipsnap.util.ApplicationAwareMap;
 import org.radeox.util.logging.Logger;
+import org.snipsnap.app.Application;
+import org.snipsnap.container.Components;
+import org.snipsnap.user.User;
+import org.snipsnap.util.ApplicationAwareMap;
 
 import javax.servlet.http.HttpServletRequest;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.List;
-import java.util.Iterator;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.sql.Timestamp;
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Stores Access information for a snip like viewCount, backLinks, ...
@@ -63,38 +62,39 @@ public class Access {
 
   /**
    * Get a list of blacklisted referrers as a list of patterns.
+   *
    * @return the blacklist patterns
    */
   public static List getReferrerBlackList() {
     List cachedBlackList = (List) blackListCache.getObject();
 
-    SnipSpace space = (SnipSpace)Components.getComponent(SnipSpace.class);
-    if(space.exists(BLACKLIST)) {
+    SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
+    if (space.exists(BLACKLIST)) {
       Snip blackListSnip = space.load(BLACKLIST);
       Timestamp mTime = blackListSnip.getMTime();
       String appOid = (String) Application.get().getObject(Application.OID);
-      Timestamp cachedMTime = (Timestamp)lastModified.get(appOid);
+      Timestamp cachedMTime = (Timestamp) lastModified.get(appOid);
 
       // update blacklist from snip if it does not exist or is new
-      if(null == cachedMTime || cachedMTime.getTime() < mTime.getTime()) {
+      if (null == cachedMTime || cachedMTime.getTime() < mTime.getTime()) {
         cachedBlackList.clear();
         lastModified.put(appOid, mTime);
 
         String content = blackListSnip.getContent();
         BufferedReader reader =
-          new BufferedReader(new InputStreamReader(new ByteArrayInputStream(content.getBytes())));
+                new BufferedReader(new InputStreamReader(new ByteArrayInputStream(content.getBytes())));
         String line;
         try {
           while ((line = reader.readLine()) != null) {
             if (!line.startsWith("#")) {
               line = line.trim();
-              if(!"".equals(line)) {
+              if (!"".equals(line)) {
                 cachedBlackList.add(line.trim());
               }
             }
           }
         } catch (IOException e) {
-          Logger.warn("Referrer Blacklist Error: "+e.getLocalizedMessage());
+          Logger.warn("Referrer Blacklist Error: " + e.getLocalizedMessage());
           e.printStackTrace();
         }
       }
@@ -156,7 +156,7 @@ public class Access {
             String name = SnipLink.decode(url);
 
             if (!Application.get().getConfiguration().getStartSnip().equals(name)
-              && !snipName.equals(name)) {
+                && !snipName.equals(name)) {
               snipLinks.addLink(name);
             }
           }
@@ -220,19 +220,19 @@ public class Access {
         return false;
       }
       List blackList = Access.getReferrerBlackList();
-      if(null != blackList && !blackList.isEmpty()) {
+      if (null != blackList && !blackList.isEmpty()) {
         Iterator blackListIt = blackList.iterator();
-        while(blackListIt.hasNext()) {
-          String entry = ((String)blackListIt.next()).toLowerCase();
-          if(entry.startsWith("pattern:")) {
+        while (blackListIt.hasNext()) {
+          String entry = ((String) blackListIt.next()).toLowerCase();
+          if (entry.startsWith("pattern:")) {
             String pattern = entry.substring("pattern:".length()).trim();
             if (url.matches(pattern)) {
-              Logger.warn("invalid referrer url '"+url+"' by pattern '"+pattern+"'");
+              Logger.warn("invalid referrer url '" + url + "' by pattern '" + pattern + "'");
               return false;
             }
           } else {
             String host = new URL(url).getHost().toLowerCase();
-            if (host.endsWith(entry)) {
+            if (host.endsWith(entry.trim())) {
               Logger.warn("invalid referrer url '" + url + "' by domain '" + entry + "'");
               return false;
             }
@@ -240,7 +240,7 @@ public class Access {
         }
       }
     } catch (MalformedURLException e) {
-      Logger.warn("invalid referrer url '" + url + "': " +e.getMessage());
+      Logger.warn("invalid referrer url '" + url + "': " + e.getMessage());
       return false;
     }
     return true;

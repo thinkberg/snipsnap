@@ -24,17 +24,17 @@
  */
 package org.snipsnap.net;
 
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.label.Label;
-import org.snipsnap.snip.label.LabelManager;
-import org.snipsnap.config.Configuration;
+import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
+import org.snipsnap.config.Configuration;
 import org.snipsnap.container.Components;
 import org.snipsnap.net.filter.MultipartWrapper;
-import org.radeox.util.logging.Logger;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipSpaceFactory;
+import org.snipsnap.snip.label.Label;
+import org.snipsnap.snip.label.LabelManager;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -70,11 +70,10 @@ public class StoreLabelServlet extends HttpServlet {
   }
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws IOException, ServletException {
+          throws IOException, ServletException {
     Configuration config = Application.get().getConfiguration();
 
     String snipName = request.getParameter("snipname");
-
 
     // cancel pressed
     if (null != request.getParameter("cancel")) {
@@ -82,22 +81,13 @@ public class StoreLabelServlet extends HttpServlet {
       return;
     }
 
-    if(null == request.getParameter("back")) {
+    if (null == request.getParameter("back")) {
       Snip snip = ((SnipSpace) Components.getComponent(SnipSpace.class)).load(snipName);
       String labelType = request.getParameter("labeltype");
-      String labelName = request.getParameter("labelname");
-      Label label = null;
-      if(null != labelName) {
-        label = snip.getLabels().getLabel(labelName);
-      }
 
-      if(null != label) {
-        snip.getLabels().removeLabel(label.getName(), label.getValue());
-        handleLabel(label, request);
-        snip.getLabels().addLabel(label);
-        SnipSpaceFactory.getInstance().store(snip);
-      } else if(null != labelType) {
-        LabelManager manager = (LabelManager)Components.getComponent(LabelManager.class);
+      Label label = null;
+      if (null != labelType) {
+        LabelManager manager = (LabelManager) Components.getComponent(LabelManager.class);
         label = manager.getLabel(labelType);
         handleLabel(label, request);
         snip.getLabels().addLabel(label);

@@ -29,10 +29,10 @@ import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.container.Components;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.Access;
 import org.snipsnap.snip.Links;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipSpace;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -71,7 +71,7 @@ public class Maintenance implements SetupHandler {
       workerThreads.put(appOid, workerThread);
 
       setRunning(workerThread, request.getSession());
-    } else if(request.getParameter("dorepair") != null) {
+    } else if (request.getParameter("dorepair") != null) {
       CheckConsistency repairThread = new CheckConsistency(appOid, true);
       repairThread.setParentsToFix(workerThread.getParentsToFix());
       repairThread.setCommentsToFix(workerThread.getCommentsToFix());
@@ -81,9 +81,9 @@ public class Maintenance implements SetupHandler {
       workerThreads.put(appOid, repairThread);
 
       setRunning(repairThread, request.getSession());
-    }  else {
+    } else {
       request.getSession().removeAttribute("running");
-      if(workerThread != null && !workerThread.isAlive()) {
+      if (workerThread != null && !workerThread.isAlive()) {
         request.setAttribute("fixComments", workerThread.getCommentsToFix());
         request.setAttribute("fixParents", workerThread.getParentsToFix());
         request.setAttribute("duplicates", workerThread.getDuplicates());
@@ -96,13 +96,13 @@ public class Maintenance implements SetupHandler {
   }
 
   private void setRunning(CheckConsistency workerThread, HttpSession session) {
-    Map statusMap = (Map)session.getAttribute("running");
-    if(null == statusMap) {
+    Map statusMap = (Map) session.getAttribute("running");
+    if (null == statusMap) {
       statusMap = new HashMap();
     }
     statusMap.put("max", new Integer(workerThread.getMax()));
     statusMap.put("current", new Integer(workerThread.getCurrent()));
-    if(workerThread.isRepairing()) {
+    if (workerThread.isRepairing()) {
       statusMap.put("maintenance", "repairing");
     } else {
       statusMap.put("maintenance", "checking");
@@ -146,14 +146,14 @@ public class Maintenance implements SetupHandler {
         while (snipIt.hasNext()) {
           Snip snip = (Snip) snipIt.next();
           check(snip, space);
-          if(!uniqeSnipNames.add(snip.getName())) {
+          if (!uniqeSnipNames.add(snip.getName())) {
             fixDuplicates.add(snip);
           }
           currentCount++;
         }
       } else {
         snipCount = fixParents.size() +
-          fixComments.size() + fixDuplicates.size() + fixSpam.size();
+                    fixComments.size() + fixDuplicates.size() + fixSpam.size();
         currentCount = 0;
         Iterator parentIt = fixParents.iterator();
         while (parentIt.hasNext()) {
@@ -173,27 +173,27 @@ public class Maintenance implements SetupHandler {
         }
         List blackList = Access.getReferrerBlackList();
         Iterator spamIt = fixSpam.iterator();
-        while(spamIt.hasNext()) {
+        while (spamIt.hasNext()) {
           Snip snip = (Snip) spamIt.next();
           Links backLinks = snip.getBackLinks();
 
           Iterator blackListIt = blackList.iterator();
           boolean storeModifiedSnip = false;
-          while(blackListIt.hasNext()) {
-            String entry = ((String)blackListIt.next()).toLowerCase();
-            if(entry.startsWith("pattern:")) {
-              if(backLinks.removeLinkByPattern(entry.substring("pattern:".length())) > 0) {
+          while (blackListIt.hasNext()) {
+            String entry = ((String) blackListIt.next()).toLowerCase();
+            if (entry.startsWith("pattern:")) {
+              if (backLinks.removeLinkByPattern(entry.substring("pattern:".length()).trim()) > 0) {
                 storeModifiedSnip = true;
-                Logger.debug("removed link by pattern: "+ entry.substring("pattern:".length()));
+                Logger.debug("removed link by pattern: '" + entry.substring("pattern:".length()).trim() + "'");
               }
             } else {
-              if (backLinks.removeLink(entry) > 0) {
+              if (backLinks.removeLink(entry.trim()) > 0) {
                 storeModifiedSnip = true;
                 Logger.debug("removed link by domain: " + entry);
               }
             }
           }
-          if(storeModifiedSnip) {
+          if (storeModifiedSnip) {
             space.systemStore(snip);
           }
           spamIt.remove();
@@ -231,7 +231,7 @@ public class Maintenance implements SetupHandler {
     }
 
     public void setSpamList(List snips) {
-      fixSpam =  snips;
+      fixSpam = snips;
     }
 
     public List getSpamList() {
@@ -260,18 +260,18 @@ public class Maintenance implements SetupHandler {
         }
       }
 
-      Iterator backLinksIt =snip.getBackLinks().iterator();
+      Iterator backLinksIt = snip.getBackLinks().iterator();
       boolean foundspam = false;
-      while(backLinksIt.hasNext()) {
+      while (backLinksIt.hasNext()) {
         String url = (String) backLinksIt.next();
-        if(! Access.isValidReferrer(url)) {
+        if (!Access.isValidReferrer(url)) {
           foundspam = true;
           fixSpam.add(snip);
           break;
         }
       }
-      if(foundspam) {
-        Logger.debug("Found spam-referrer links at '"+snipName+"'");
+      if (foundspam) {
+        Logger.debug("Found spam-referrer links at '" + snipName + "'");
       }
     }
 
