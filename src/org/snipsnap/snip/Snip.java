@@ -316,7 +316,7 @@ public class Snip implements Ownable, Nameable {
    * @return Short name of snip
    */
   public String getShortName() {
-    SnipLink.cutLength(getName(), 20);
+    return SnipLink.cutLength(getName(), 20);
   }
 
   /**
