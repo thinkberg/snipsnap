@@ -59,6 +59,7 @@ public class AppServer {
       }
     });
 
+    System.out.println("ClassLoader: "+AppServer.class.getClassLoader());
     // load server defaults configuration
     try {
       serverInfo.load(AppServer.class.getResourceAsStream("/conf/snipsnap.conf"));

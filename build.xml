@@ -197,6 +197,9 @@
         <filter  token="VERSION" value="${snipsnap.server.version}"/>
       </filterset>
     </copy>
+    <jar destfile="${jar}/${appname}-launcher.jar" excludesfile="**/CVS" manifest="conf/launcher.manifest">
+      <fileset dir="${target}/server" includes="org/snipsnap/server/*Launcher*"/>
+    </jar>
     <jar destfile="${jar}/${appname}.jar" excludes="**/CVS" manifest="conf/manifest">
       <fileset dir="${target}/server" includes="**"/>
       <fileset dir=".">
