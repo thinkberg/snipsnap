@@ -1,4 +1,4 @@
 @echo off
 rem $Id$
-java -server -jar lib\snipsnap.jar
+java -Xmx128m -server -jar lib\snipsnap.jar
 pause
