@@ -14,13 +14,14 @@
    <%-- display error message --%>
    <c:if test="${error != null}">
     <div class="error"><c:out value="${error}"/></div>
-    <div><b>Forgot your password? <a href="../exec/passreminder?login=<c:out value='${login.login}'/>">Mail it back!<a/></b></div>
-    <div><b>Not registered? <a href="../exec/register.jsp?login=<c:out value='${login.login}'/>">Register!<a/></b></div>
+    <div><b>Forgot your password? <a href="../exec/forgot.jsp?login=<c:out value='${tmpLogin}'/>">Reset your password!</a></b></div>
+    <div><b>Not registered? <a href="../exec/register.jsp?login=<c:out value='${tmpLogin}'/>">Register now!</a></b></div>
+    <p/>
    </c:if>
    <%-- the login form --%>
    <form class="form" method="post" action="../exec/authenticate">
     <table>
-     <tr><td><label for="login">User name:</label></td><td><input id="login" name="login" type="text" size="20" value="<c:out value='${login.login}'/>" tabindex="0"/></td></tr>
+     <tr><td><label for="login">User name:</label></td><td><input id="login" name="login" type="text" size="20" value="<c:out value='${tmpLogin}'/>" tabindex="0"/></td></tr>
      <tr><td><label for="password">Password:</label></td><td><input id="password" name="password" type="password" size="20" value="" tabindex="0"/></td></tr>
      <tr><td class="form-buttons" colspan="2">
       <input value="Login" name="ok" type="submit" tabindex="0"/>

@@ -25,23 +25,17 @@
 package org.snipsnap.net;
 
 import org.snipsnap.app.Application;
+import org.snipsnap.snip.SnipLink;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.util.mail.Mail;
-import org.snipsnap.util.log.Logger;
-import org.snipsnap.config.AppConfiguration;
 
-import javax.servlet.ServletException;
 import javax.servlet.RequestDispatcher;
-import javax.servlet.http.Cookie;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.net.URL;
-import java.net.MalformedURLException;
 
 /**
  * Generates a password key to change the password. The key
@@ -72,19 +66,24 @@ public class ChangePasswordServlet extends HttpServlet {
         return;
       }
 
-      Logger.log("User="+user);
-      Logger.log("Key="+key);
-      if(Application.getCurrentUsers().contains(user)) {
-        Application.getCurrentUsers().remove(user);
+      if (null != user) {
+        if (Application.getCurrentUsers().contains(user)) {
+          Application.getCurrentUsers().remove(user);
+        }
+        HttpSession session = request.getSession(true);
+        Application app = Application.getInstance(session);
+        app.setUser(user, session);
+        session.setAttribute("app", app);
+
+        um.setCookie(request, response, user);
+        response.sendRedirect(SnipLink.absoluteLink(request, "/space/" + SnipLink.encode(user.getLogin())));
+      } else {
+        request.setAttribute("error", "Your reset key has been manipulated. Try again, please.");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/forgot.jsp");
+        dispatcher.forward(request, response);
       }
-      HttpSession session = request.getSession(true);
-      Application app = Application.getInstance(session);
-      app.setUser(user, session);
-      session.setAttribute("app", app);
-
-      um.setCookie(request, response, user);
-      response.sendRedirect(SnipLink.absoluteLink(request, "/space/" + SnipLink.encode(user.getLogin())));
-
-  }
+    } else {
+      response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));
+    }
   }
 }

@@ -31,6 +31,7 @@ import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 
 import javax.servlet.ServletException;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -67,11 +68,6 @@ public class NewUserServlet extends HttpServlet {
     HttpSession session = request.getSession(true);
     session.removeAttribute("errors");
     Map errors = new HashMap();
-
-    Map register = new HashMap();
-    register.put("login", login);
-    register.put("email", email);
-    session.setAttribute("register", register);
 
     if (request.getParameter("cancel") == null) {
       UserManager um = UserManager.getInstance();
@@ -131,8 +127,9 @@ public class NewUserServlet extends HttpServlet {
   }
 
   private void sendError(HttpSession session, Map errors, HttpServletRequest request, HttpServletResponse response)
-    throws IOException {
+    throws ServletException, IOException {
     session.setAttribute("errors", errors);
-    response.sendRedirect(SnipLink.absoluteLink(request, "/exec/register.jsp"));
+    RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/register.jsp");
+    dispatcher.forward(request, response);
   }
 }

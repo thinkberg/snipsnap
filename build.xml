@@ -3,7 +3,7 @@
   ** @author Matthias L. Jugel
   ** @version $Id$
   -->
-<project basedir="." default="all" name="solent sources">
+<project basedir="." default="all" name="SnipSnap">
 
   <property file="conf/build.properties"/>
   <property file="conf/snipsnap.conf"/>

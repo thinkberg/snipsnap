@@ -30,6 +30,7 @@ import org.snipsnap.user.UserManager;
 import org.snipsnap.snip.SnipLink;
 
 import javax.servlet.ServletException;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -60,10 +61,11 @@ public class LoginServlet extends HttpServlet {
       }
       HttpSession session = request.getSession(true);
       if (user == null) {
-        session.setAttribute("login.login", login);
-        session.setAttribute("referrer", referer);
-        session.setAttribute("error", ERR_PASSWORD);
-        response.sendRedirect(SnipLink.absoluteLink(request, "/exec/login.jsp"));
+        request.setAttribute("tmpLogin", login);
+        request.setAttribute("referrer", referer);
+        request.setAttribute("error", ERR_PASSWORD);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/login.jsp");
+        dispatcher.forward(request, response);
         return;
       }
 

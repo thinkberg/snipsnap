@@ -41,6 +41,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.URL;
 import java.net.MalformedURLException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Generates a password key to change the password. The key
@@ -62,7 +64,9 @@ public class MailPasswordKeyServlet extends HttpServlet {
       User user = um.load(login);
 
       if (user == null) {
-//        response.sendRedirect(SnipLink.absoluteLink(request, "/exec/login.jsp"));
+        request.setAttribute("error", "User name '"+login+"' does not exist!");
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/forgot.jsp");
+        dispatcher.forward(request, response);
         return;
       }
 
@@ -82,9 +86,13 @@ public class MailPasswordKeyServlet extends HttpServlet {
           "\">"+ url + "</a>";
 
       Mail.getInstance().sendMail(sender, receiver, subject, content);
+    } else {
+      response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));
+      return;
     }
 
-    request.setAttribute("error", "You should receive an email with instructions soon.");
+
+    request.setAttribute("error", "Check your inbox. You should receive an email with instructions soon.");
     RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/forgot.jsp");
     dispatcher.forward(request, response);
   }

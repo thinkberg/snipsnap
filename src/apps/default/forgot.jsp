@@ -8,18 +8,18 @@
 
 <div class="snip-wrapper">
  <div class="snip-title"><h1 class="snip-name">Reset Password</h1></div>
+ <p/>Enter your user name. You will receive a key by email that resets your password.<p/>
  <%-- display error message --%>
- <c:forEach items="${errors}" var="error">
-  <div class="error"><c:out value="${error.value}"/></div>
- </c:forEach>
+ <c:if test="${error != null}">
+  <div class="error"><c:out value="${error}"/><p/></div>
+ </c:if>
  <div class="snip-content">
-  Enter your user name to retrieve a password reset key by mail.
   <form class="form" method="post" action="../exec/mailkey">
    <table>
     <tr <c:if test="${errors['login'] != null}">class="error-position"</c:if>>
-     <td><label for="login">User name:</label></td><td><input id="login" name="login" type="text" size="20" value="<c:out value="${register['login']}"/>"/></td></tr>
-    <tr><td class="form-buttons">
-     <input value="Mail reset key" name="mail" type="submit"/>
+     <td><label for="login">User name:</label></td><td><input id="login" name="login" type="text" size="20" value="<c:out value="${param['login']}"/>"/></td></tr>
+    <tr><td class="form-buttons" colspan="2">
+     <input value="Mail Reset Key" name="mail" type="submit"/>
      <input value="Cancel" name="cancel" type="submit"/>
     </td></tr>
    </table>

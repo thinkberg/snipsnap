@@ -42,8 +42,6 @@ import org.snipsnap.snip.filter.regex.RegexTokenFilter;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.AppConfiguration;
 
-import java.util.*;
-
 public class CalendarFilter extends RegexTokenFilter {
 
   public CalendarFilter() {
@@ -56,7 +54,7 @@ public class CalendarFilter extends RegexTokenFilter {
     AppConfiguration config = app.getConfiguration();
     Snip parent = snip.getParent();
 
-    buffer.append("subscribe to <a href=\"");
+    buffer.append("subscribe to").append(" <a href=\"");
 
     String file = null;
     StringBuffer url = new StringBuffer("/exec/ical/");
@@ -72,6 +70,6 @@ public class CalendarFilter extends RegexTokenFilter {
     String webcalUrl = config.getUrl(url.toString());
     webcalUrl = webcalUrl.substring(webcalUrl.indexOf("//")+2);
     buffer.append("webcal://").append(webcalUrl);
-    buffer.append("\">calendar ").append(file).append("</a>");
+    buffer.append("\">").append("calendar ").append(file).append("</a>");
   }
 }
