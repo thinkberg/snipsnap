@@ -216,8 +216,9 @@
 
   <!-- create utility code -->
   <target depends="compile-util" description="build util jar" name="jar-util">
-    <jar destfile="${jar}/${appname}-utils.jar" excludes="**/CVS">
+    <jar destfile="${jar}/${appname}-utils.jar" excludes="**/CVS" manifest="conf/utils.manifest" >
       <fileset dir="${target}/util" includes="**"/>
+      <fileset dir="." includes="conf/snipsnap.conf"/> 
       <fileset dir="${src}" includes="org/snipsnap/config/defaults.conf"/>
       <fileset dir="${src}" includes="org/snipsnap/config/transpose.map"/>
     </jar>

@@ -52,6 +52,8 @@ public class AdminClient {
     if(commands.size() > 0) {
       execute(commands, config);
       System.exit(0);
+    } else {
+      System.out.println("usage: AdminClient command arguments");
     }
     System.exit(1);
   }
