@@ -25,12 +25,16 @@
 
 package org.snipsnap.snip;
 
+import org.snipsnap.app.Application;
+import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.serialization.StringBufferWriter;
 import org.snipsnap.snip.filter.EscapeFilter;
 import org.snipsnap.util.URLEncoderDecoder;
+import org.snipsnap.util.log.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.Arrays;
 import java.util.List;
@@ -277,28 +281,23 @@ public class SnipLink {
 
   // TODO 1.4 buffer.append(URLEncoder.encode(key, "iso-8859-1"));
   public static String encode(String s) {
-    /*
-      try {
-        URLEncoder.encode(s, "ISO-8859-1");
-      } catch (UnsupportedEncodingException e) {
-        cat.error("unsupported encoding", e);
-        return s;
-      }
-    */
-    return URLEncoderDecoder.encode(s);
+    try {
+      AppConfiguration config = Application.get().getConfiguration();
+      return URLEncoderDecoder.encode(s, config.getEncoding());
+    } catch (UnsupportedEncodingException e) {
+      Logger.log(Logger.FATAL, "unsupported encoding: " + e);
+      return s;
+    }
   }
 
   public static String decode(String s) {
-    /*
-      try {
-        URLDecoder.decode(s, "ISO-8859-1");
-      } catch (UnsupportedEncodingException e) {
-        cat.error("unsupported encoding", e);
-        return s;
-      }
-    */
-
-    return URLEncoderDecoder.decode(s);
+    try {
+      AppConfiguration config = Application.get().getConfiguration();
+      return URLEncoderDecoder.decode(s, config.getEncoding());
+    } catch (UnsupportedEncodingException e) {
+      Logger.log(Logger.FATAL, "unsupported encoding: " + e);
+      return s;
+    }
   }
 
   public static String cutLength(String url, int len) {

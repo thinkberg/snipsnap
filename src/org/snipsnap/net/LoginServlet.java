@@ -62,14 +62,14 @@ public class LoginServlet extends HttpServlet {
       HttpSession session = request.getSession(true);
       if (user == null) {
         request.setAttribute("tmpLogin", login);
-        request.setAttribute("referrer", referer);
+        request.setAttribute("referer", referer);
         request.setAttribute("error", ERR_PASSWORD);
         RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/login.jsp");
         dispatcher.forward(request, response);
         return;
       }
 
-      session.removeAttribute("referrer");
+      session.removeAttribute("referer");
       Application app = Application.getInstance(session);
       app.setUser(user, session);
 

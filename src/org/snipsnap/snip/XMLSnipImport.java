@@ -60,7 +60,7 @@ public class XMLSnipImport {
    * @param document the document to load from
    * @param overwrite whether or not to overwrite existing content
    */
-  public static void load(InputStream in, boolean overwrite) throws IOException {
+  public static void load(InputStream in, int flags) throws IOException {
     DocumentBuilder documentBuilder = null;
     try {
       DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -74,65 +74,74 @@ public class XMLSnipImport {
     Document document = null;
     try {
       document = documentBuilder.parse(in);
-      load(document, overwrite);
+      load(document, flags);
     } catch (SAXException e) {
       e.printStackTrace();
       throw new IOException("Error parsing document: " + e);
     }
   }
 
+
+  public final static int IMPORT_USERS = 0x01;
+  public final static int IMPORT_SNIPS = 0x02;
+  public final static int OVERWRITE = 0x04;
+
   /**
    * Load snips and users into the SnipSpace from an xml document.
    * @param document the document to load from
    * @param overwrite whether or not to overwrite existing content
    */
-  public static void load(Document document, boolean overwrite) throws SAXException {
-
+  public static void load(Document document, int flags) throws SAXException {
     NodeList children = document.getChildNodes().item(0).getChildNodes();
-    for (int i = 0; i < children.getLength(); i++) {
-      Node node = children.item(i);
-      if ("user".equals(node.getNodeName())) {
-        insertUser(node);
-      }
-    }
 
-    for (int i = 0; i < children.getLength(); i++) {
-      Node node = children.item(i);
-      if ("snip".equals(node.getNodeName())) {
-        insertSnip(node, overwrite);
-      }
-    }
-
-    SnipSpace space = SnipSpace.getInstance();
-    if (!missingParent.isEmpty()) {
-      System.out.println("Inserting previously missing parents ...");
-      Iterator it = missingParent.keySet().iterator();
-      while (it.hasNext()) {
-        Snip snip = (Snip) it.next();
-        String parentName = (String) missingParent.get(snip);
-        if (space.exists(parentName)) {
-          System.out.println("setting parent of '" + snip.getName() + "' to '" + parentName + "'");
-          snip.setParent(space.load(parentName));
-          space.systemStore(snip);
-        } else {
-          System.out.println("parent '" + parentName + "' for snip '" + snip.getName() + "' missing");
+    if ((flags & IMPORT_USERS) != 0) {
+      for (int i = 0; i < children.getLength(); i++) {
+        Node node = children.item(i);
+        if ("user".equals(node.getNodeName())) {
+          insertUser(node);
         }
       }
     }
 
-    if (!missingCommentSnip.isEmpty()) {
-      System.out.println("Inserting previously missing commented snips ...");
-      Iterator it = missingCommentSnip.keySet().iterator();
-      while (it.hasNext()) {
-        Snip snip = (Snip) it.next();
-        String parentName = (String) missingCommentSnip.get(snip);
-        System.out.println("snip: " + snip + ", " + parentName);
-        if (space.exists(parentName)) {
-          System.out.println("setting commented snip of '" + snip.getName() + "' to '" + parentName + "'");
-          snip.setCommentedSnip(space.load(parentName));
-          space.systemStore(snip);
-        } else {
-          System.out.println("snip '" + parentName + "' for comment '" + snip.getName() + "' missing");
+    if ((flags & IMPORT_SNIPS) != 0) {
+      for (int i = 0; i < children.getLength(); i++) {
+        Node node = children.item(i);
+        if ("snip".equals(node.getNodeName())) {
+          insertSnip(node, (flags & OVERWRITE) != 0);
+        }
+      }
+
+      SnipSpace space = SnipSpace.getInstance();
+      if (!missingParent.isEmpty()) {
+        System.out.println("Inserting previously missing parents ...");
+        Iterator it = missingParent.keySet().iterator();
+        while (it.hasNext()) {
+          Snip snip = (Snip) it.next();
+          String parentName = (String) missingParent.get(snip);
+          if (space.exists(parentName)) {
+            System.out.println("setting parent of '" + snip.getName() + "' to '" + parentName + "'");
+            snip.setParent(space.load(parentName));
+            space.systemStore(snip);
+          } else {
+            System.out.println("parent '" + parentName + "' for snip '" + snip.getName() + "' missing");
+          }
+        }
+      }
+
+      if (!missingCommentSnip.isEmpty()) {
+        System.out.println("Inserting previously missing commented snips ...");
+        Iterator it = missingCommentSnip.keySet().iterator();
+        while (it.hasNext()) {
+          Snip snip = (Snip) it.next();
+          String parentName = (String) missingCommentSnip.get(snip);
+          System.out.println("snip: " + snip + ", " + parentName);
+          if (space.exists(parentName)) {
+            System.out.println("setting commented snip of '" + snip.getName() + "' to '" + parentName + "'");
+            snip.setCommentedSnip(space.load(parentName));
+            space.systemStore(snip);
+          } else {
+            System.out.println("snip '" + parentName + "' for comment '" + snip.getName() + "' missing");
+          }
         }
       }
     }

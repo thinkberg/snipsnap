@@ -25,8 +25,8 @@
 
 package org.snipsnap.util;
 
+import java.io.UnsupportedEncodingException;
 import java.util.BitSet;
-import java.util.StringTokenizer;
 
 /**
  * Replacement for URLEncoder/URLDecoder of the standard SDK. This was necessary,
@@ -59,17 +59,15 @@ public class URLEncoderDecoder {
   }
 
 
-  public static String encode(String s) {
+  public static String encode(String s, String enc) throws UnsupportedEncodingException {
+    byte[] buf = s.getBytes(enc);
     StringBuffer result = new StringBuffer();
-    for (int i = 0; i < s.length(); i++) {
-      int c = (int) s.charAt(i);
-      if (dontNeedEncoding.get(c)) {
-        // @TODO sometimes it is bad to encode space to +
+    for (int i = 0; i < buf.length; i++) {
+      int c = (int) buf[i];
+      if (dontNeedEncoding.get(c & 0xFF)) {
         if (c == ' ') {
           result.append('+');
-        } /*else if (c == '+') {
-          result.append('\0')
-        }*/ else {
+        } else {
           result.append((char) c);
         }
       } else {
@@ -79,20 +77,20 @@ public class URLEncoderDecoder {
     return result.toString();
   }
 
-  public static String decode(String s) {
+  public static String decode(String s, String enc) throws UnsupportedEncodingException {
+    byte[] buf = new byte[s.length()];
     StringBuffer result = new StringBuffer();
-    for(int i = 0; i < s.length(); i++) {
+    for (int pos= 0, i = 0; i < buf.length; i++) {
       char c = s.charAt(i);
-      // @TODO sometimes it is bad to deencode space to +
-      if(c == '+') {
-        result.append(' ');
-      } else if(c == '%') {
-        result.append((char)Integer.parseInt(s.substring(i+1, i+3), 16));
-        i+= 2;
+      if (c == '+') {
+        buf[pos++] = (byte) ' ';
+      } else if (c == '%') {
+        buf[pos++] = (byte)Integer.parseInt(s.substring(i + 1, i + 3), 16);
+        i += 2;
       } else {
-        result.append(c);
+        buf[pos++] = (byte) c;
       }
     }
-    return result.toString();
+    return new String(buf, enc);
   }
 }

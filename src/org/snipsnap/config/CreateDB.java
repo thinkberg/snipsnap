@@ -145,7 +145,7 @@ public class CreateDB {
 
     System.out.println("Importing default snips.");
     try {
-      XMLSnipImport.load(data, true);
+      XMLSnipImport.load(data, XMLSnipImport.OVERWRITE|XMLSnipImport.IMPORT_USERS|XMLSnipImport.IMPORT_SNIPS);
     } catch (IOException e) {
       System.out.println("CreateDB: import failed!");
     }

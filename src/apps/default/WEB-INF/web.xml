@@ -11,6 +11,16 @@
 <web-app>
   <display-name>SnipSnap</display-name>
 
+  <filter>
+    <filter-name>org.snipsnap.net.filter.MultipartFilter</filter-name>
+    <filter-class>org.snipsnap.net.filter.MultipartFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>org.snipsnap.net.filter.MultipartFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
   <listener>
     <listener-class>org.snipsnap.user.SessionListener</listener-class>
   </listener>

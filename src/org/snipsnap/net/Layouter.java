@@ -60,29 +60,10 @@ public class Layouter extends SnipSnapServlet {
 
   public void init(ServletConfig config) throws ServletException {
     super.init(config);
-    /* load all macros found in the services plugin control file */
-/*
-    Iterator macroIt = Service.providers(HttpServlet.class);
-    while(macroIt.hasNext()) {
-      try {
-        Macro macro = (Macro)macroIt.next();
-        add(macro);
-        System.err.println("Loaded macro: "+macro.getName());
-      } catch (Exception e) {
-        System.err.println("MacroFilter: unable to load macro: "+e);
-        e.printStackTrace();
-      } catch(ServiceConfigurationError err) {
-        System.err.println("MacroFilter: error loading macro: "+err);
-        err.printStackTrace();
-      }
-    }
-*/
-
   }
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
     throws IOException, ServletException {
-
 
     // page attribute overrides pathinfo
     String layout = (String)request.getAttribute(ATT_PAGE);

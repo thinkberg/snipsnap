@@ -33,6 +33,7 @@ import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.util.mail.InputStreamDataSource;
 import org.snipsnap.util.log.Logger;
+import org.snipsnap.net.filter.MultipartWrapper;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -44,6 +45,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.ParameterList;
 import javax.mail.internet.ContentDisposition;
+import javax.mail.internet.MimeUtility;
 import javax.mail.Multipart;
 import javax.mail.BodyPart;
 import javax.mail.MessagingException;
@@ -60,35 +62,11 @@ public class SnipStoreServlet extends SnipSnapServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
 
-    if(request.getContentType().startsWith("multipart/form-data")) {
-      System.out.println(request.getContentType());
-      InputStream in = request.getInputStream();
-      DataSource ds = new InputStreamDataSource(request.getInputStream(), request.getContentType());
-      try {
-        MimeMultipart multipart = new MimeMultipart(ds);
-        int count = multipart.getCount();
-        for(int i = 0; i < count; i++) {
-          MimeBodyPart body = (MimeBodyPart)multipart.getBodyPart(i);
-          ContentDisposition disp = new ContentDisposition(body.getHeader("Content-disposition", null));
-          System.out.println(disp.getParameter("name")+"["+disp.getParameter("filename")+","+body.getContentType()+","+body.getDisposition()+"]: '"+body.getContent()+"'");
-        }
-      } catch (MessagingException e) {
-        System.err.println(e.getMessage());
-      } catch (IOException e) {
-        System.err.println(e.getMessage());
-      }
-
-      RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/edit");
-      dispatcher.forward(request, response);
-      return;
-    }
-
     String name = request.getParameter("name");
     SnipSpace space = SnipSpace.getInstance();
     Snip snip = space.load(name);
 
     String content = request.getParameter("content");
-
     if (request.getParameter("preview") != null) {
       request.setAttribute("preview", SnipFormatter.toXML(snip, content));
       RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/edit");

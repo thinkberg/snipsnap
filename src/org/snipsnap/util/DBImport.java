@@ -88,14 +88,15 @@ public class DBImport {
       System.exit(-1);
     }
 
-    boolean overwrite = args.length == 4 && "overwrite".equals(args[3]);
+    int importMask = XMLSnipImport.IMPORT_SNIPS + XMLSnipImport.IMPORT_USERS;
+    importMask += (args.length == 4 && "overwrite".equals(args[3]) ? XMLSnipImport.OVERWRITE : 0);
 
     System.err.println("Disabling weblogs ping and jabber notification ...");
     config.setProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_WEBLOGS_PING, "deny");
     config.setProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_NOTIFICATION, "deny");
 
     try {
-      XMLSnipImport.load(new FileInputStream(args[2]), overwrite);
+      XMLSnipImport.load(new FileInputStream(args[2]), importMask);
     } catch (IOException e) {
       System.out.println("Unable to load import file: "+e);
       System.exit(-1);

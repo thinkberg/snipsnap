@@ -1,5 +1,8 @@
 0.3.2
 
+- Added full UTF-8 support for complete uni-language capabilities
+- Added feature: importing snips from web frontend
+- Fixed bug: referer corrected after multiple login tries
 - Added feature: upgraded to RSD 1.0
 - Added feature: link into a snip with [sniname#anchor]. Useful for pointing to sub postings
 - Fixed bug: double encrypten when importing dump from 0.3a

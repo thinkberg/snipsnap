@@ -166,6 +166,7 @@ public class Configuration {
   }
 
   public void setProperty(String name, String value) {
+    if(name == null || value == null) return;
     properties.setProperty(name, value);
   }
 

@@ -4,3 +4,7 @@ FAST-WebCrawler http://fast.no/support/crawler.asp
 Slurp http://www.inktomi.com/slurp.html IGNORE
 ZyBorg http://www.WISEnutbot.com IGNORE
 Scooter ??? IGNORE
+larbon liston@cc.gatech.edu IGNORE
+Baiduspider http://www.baidu.com/search/spider.htm IGNORE
+Infoseek http://www.infoseek.com/ IGNORE
+BlogBot ??? IGNORE

@@ -24,6 +24,12 @@
     <td valign="top">Overwrite existing content?</td>
     <td><input type="checkbox" name="overwrite" checked="checked"></td>
    </tr>
+   <tr>
+    <td valign="top">Select Data</td>
+    <td>
+     <input type="checkbox" name="data" value="users" checked="checked"> Users
+     <input type="checkbox" name="data" value="snips" checked="checked"> Snips
+   </tr>
    <tr><td class="form-buttons" colspan="2">
     <input value="Import" name="ok" type="submit" tabindex="0"/>
    <input value="Cancel" name="cancel" type="submit" tabindex="0"/>

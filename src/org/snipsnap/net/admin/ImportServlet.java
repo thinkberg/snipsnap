@@ -33,13 +33,17 @@ import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.util.log.Logger;
+import org.snipsnap.net.filter.MultipartWrapper;
 
 import javax.servlet.ServletException;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.BodyPart;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.File;
@@ -63,28 +67,53 @@ public class ImportServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
     HttpSession session = request.getSession(false);
+    Application.getInstance(session);
     User admin = session != null ? (User)session.getAttribute(AdminServlet.ATT_ADMIN) : null;
-    if(null == admin) {
-      response.sendRedirect("/manager");
+    if(null == admin || !(request instanceof MultipartWrapper)) {
+      response.sendRedirect(SnipLink.absoluteLink(request, "/manager"));
       return;
     }
 
-    boolean overwrite = "overwrite".equals(request.getParameter("overwrite"));
-    String xml = request.getParameter("input");
-    Logger.log(xml);
-    session.removeAttribute("errors");
     Map errors = new HashMap();
-    session.setAttribute("errors", errors);
+    request.setAttribute("errors", errors);
 
-//    try {
-//      XMLSnipImport.load(new ByteArrayInputStream(xml.getBytes()), overwrite);
-//    } catch (IOException e) {
-//      errors.put("message", ERR_IOEXCEPTION);
-//      response.sendRedirect(SnipLink.absoluteLink(request, "/manager/export.jsp"));
-//      return;
-//    }
+    MultipartWrapper req = (MultipartWrapper)request;
 
-    errors.put("message", "not implemented yet");
-    response.sendRedirect(SnipLink.absoluteLink(request, "/manager/import.jsp"));
+    boolean overwrite = request.getParameter("overwrite") != null;
+    String data[] = request.getParameterValues("data");
+    int importMask = 0;
+    for(int i = 0; i < data.length; i++) {
+      if("users".equals(data[i])) {
+        importMask = importMask | XMLSnipExport.USERS;
+      }
+      if("snips".equals(data[i])) {
+        importMask = importMask | XMLSnipExport.SNIPS;
+      }
+    }
+
+    BodyPart file = req.getBodyPart("input");
+
+    System.err.println("Disabling weblogs ping and jabber notification ...");
+    AppConfiguration config = Application.get().getConfiguration();
+    String ping = config.getProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_WEBLOGS_PING);
+    String noty = config.getProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_NOTIFICATION);
+    config.setProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_WEBLOGS_PING, "deny");
+    config.setProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_NOTIFICATION, "deny");
+
+    try {
+      XMLSnipImport.load(file.getInputStream(), importMask);
+      errors.put("message", OK_IMPORTED);
+    } catch (Exception e) {
+      System.err.println("ImportServlet: unable to import snips: "+e);
+      e.printStackTrace();
+      errors.put("message", ERR_IOEXCEPTION);
+    }
+
+    System.err.println("Resetting weblogs ping and jabber notification to config settings ...");
+    config.setProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_WEBLOGS_PING, ping);
+    config.setProperty(AppConfiguration.APP_PERM + "." + AppConfiguration.PERM_NOTIFICATION, noty);
+
+    RequestDispatcher dispatcher = request.getRequestDispatcher("/manager/import.jsp");
+    dispatcher.forward(request, response);
   }
 }

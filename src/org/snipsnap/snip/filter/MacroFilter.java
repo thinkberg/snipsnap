@@ -105,7 +105,7 @@ public class MacroFilter extends RegexTokenFilter {
   public void handleMatch(StringBuffer buffer, MatchResult result, Snip snip) {
     String command = result.group(1);
 
-    Logger.log("Parameter block:" + Application.get().getParameters());
+//    Logger.log("Parameter block:" + Application.get().getParameters());
 
 // {$peng} are variables not macros.
     if (command != null) {

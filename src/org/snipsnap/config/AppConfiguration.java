@@ -52,6 +52,8 @@ public class AppConfiguration extends Configuration {
   public final static String APP_TAGLINE = "app.tagline";
   public final static String APP_LOGO = "app.logo";
   public final static String APP_LOGGER = "app.logger";
+  public final static String APP_ENCODING = "app.encoding";
+  public final static String APP_LOCALE = "app.locale";
   public final static String APP_JDBC_URL = "app.jdbc.url";
   public final static String APP_JDBC_DRIVER = "app.jdbc.driver";
 
@@ -97,7 +99,8 @@ public class AppConfiguration extends Configuration {
   }
 
   public String getLocale() {
-    return "en";
+   String locale = getProperty(AppConfiguration.APP_LOCALE);
+   return locale == null ? "en" : locale;
   }
 
   // HOST CONFIGURATION
@@ -251,6 +254,11 @@ public class AppConfiguration extends Configuration {
   public String getTimeZone() {
     String timezone = getProperty(AppConfiguration.APP_TIMEZONE);
     return timezone == null ? "+1.00" : timezone;
+  }
+
+  public String getEncoding() {
+    String encoding = getProperty(AppConfiguration.APP_ENCODING);
+    return encoding == null ? "UTF-8" : encoding;
   }
 
   public boolean allow(String action) {
