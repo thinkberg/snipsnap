@@ -174,6 +174,7 @@ public class Application {
       if (service.isAuthenticated(user)) {
         Logger.debug("Removing user from session: " + user.getLogin());
         user.setLastLogout(user.getLastAccess());
+        Application.get().storeObject(Application.OID, user.getApplication());
         UserManagerFactory.getInstance().systemStore(user);
       }
       currentUsers.getMap().remove(session);
