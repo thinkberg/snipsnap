@@ -25,6 +25,7 @@
 package org.snipsnap.snip.filter.macro.list;
 
 import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.filter.macro.ListOutputMacro;
 import org.snipsnap.util.Nameable;
 import org.snipsnap.util.Linkable;
@@ -66,8 +67,25 @@ public class VerticalListFormatter implements ListFormatter {
         writer.write("<li>");
         if(object instanceof Linkable) {
           writer.write(((Linkable)object).getLink());
+        } else if(object instanceof Snip) {
+          Snip snip = (Snip) object;
+          String name = snip.getName();
+          String realName = name;
+          if (name.startsWith("comment-")) {
+            int lastIndex = name.lastIndexOf("-");
+            // String count = name.substring(lastIndex+1);
+            realName = name.substring(name.indexOf("-")+1, lastIndex);
+            SnipLink.appendImage(writer, "comment", "", "png");
+            SnipLink.appendLink(writer, name, realName );
+            writer.write(" (");
+            SnipLink.appendLink(writer, snip.getMUser());
+            writer.write(")");
+          } else {
+            SnipLink.appendLink(writer, name, realName);
+          }
         } else if(object instanceof Nameable) {
-          SnipLink.appendLink(writer, ((Nameable)object).getName());
+          SnipLink.appendLink(writer, ((Nameable)object).getName() );
+
         } else {
           writer.write(object.toString());
         }
