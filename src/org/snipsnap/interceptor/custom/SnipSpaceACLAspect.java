@@ -1,23 +1,3 @@
-package org.snipsnap.interceptor.custom;
-
-
-import org.radeox.util.logging.Logger;
-import org.snipsnap.app.Application;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.user.Roles;
-import org.snipsnap.user.Security;
-import org.snipsnap.user.User;
-import org.codehaus.nanning.config.P;
-import org.codehaus.nanning.config.Pointcut;
-import org.codehaus.nanning.config.Aspect;
-import org.codehaus.nanning.AspectInstance;
-import org.codehaus.nanning.MethodInterceptor;
-import org.codehaus.nanning.Invocation;
-
-import java.lang.reflect.Method;
-import java.security.GeneralSecurityException;
-import java.util.Iterator;
-
 /*
  * This file is part of "SnipSnap Wiki/Weblog".
  *
@@ -43,13 +23,31 @@ import java.util.Iterator;
  * --LICENSE NOTICE--
  */
 
+package org.snipsnap.interceptor.custom;
+
+
+import org.codehaus.nanning.AspectInstance;
+import org.codehaus.nanning.Invocation;
+import org.codehaus.nanning.MethodInterceptor;
+import org.codehaus.nanning.config.Aspect;
+import org.codehaus.nanning.config.P;
+import org.codehaus.nanning.config.Pointcut;
+import org.radeox.util.logging.Logger;
+import org.snipsnap.app.Application;
+import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.user.Roles;
+import org.snipsnap.user.Security;
+import org.snipsnap.user.User;
+
+import java.security.GeneralSecurityException;
+
 public class SnipSpaceACLAspect implements Aspect {
   Pointcut removePc = P.methodName("remove.*");
   private Roles roles;
 
   public SnipSpaceACLAspect() {
     roles = new Roles();
-    roles.add("Editor");
+    roles.add("Admin");
   }
 
   public void introduce(AspectInstance instance) {

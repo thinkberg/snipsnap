@@ -34,5 +34,5 @@ package org.snipsnap.notification;
  */
 
 public interface Consumer {
-  public void consume(Message messsage);
+  public void consume(Message message);
 }

@@ -25,20 +25,14 @@
 
 package org.snipsnap.render.filter;
 
-import org.radeox.api.engine.IncludeRenderEngine;
-import org.radeox.api.engine.RenderEngine;
-import org.radeox.filter.regex.RegexTokenFilter;
-import org.radeox.filter.regex.MatchResult;
-import org.radeox.filter.Filter;
-import org.radeox.filter.context.FilterContext;
-import org.radeox.macro.Macro;
-import org.radeox.macro.parameter.MacroParameter;
-import org.radeox.util.StringBufferWriter;
-import org.radeox.util.logging.Logger;
+import org.radeox.api.engine.context.InitialRenderContext;
+import org.radeox.filter.MacroFilter;
+import org.radeox.macro.Repository;
 import org.snipsnap.render.macro.WeblogMacro;
 
-import java.io.Writer;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /*
@@ -51,102 +45,33 @@ import java.util.Map;
  * @version $Id$
  */
 
-public class LateMacroFilter extends RegexTokenFilter {
+public class LateMacroFilter extends MacroFilter {
+  protected Repository macroRepository = new Repository() {
+    private Map macros = new HashMap();
 
-  private static LateMacroFilter instance;
-
-  private Map macros;
-  private static Object monitor = new Object();
-
-  public LateMacroFilter() {
-    super("\\{([^:}]+):?(.*?)\\}(.*?)\\{(\\1)\\}", SINGLELINE);
-    addRegex("\\{([^:}]+):?(.*?)\\}", "", MULTILINE);
-
-    macros = new HashMap();
-
-    add(new WeblogMacro());
-  }
-
-  public static Filter getInstance() {
-    synchronized (monitor) {
-      if (null == instance) {
-        instance = new LateMacroFilter();
-      }
+    public boolean containsKey(String key) {
+      return macros.containsKey(key);
     }
-    return instance;
-  }
 
-  public void add(Macro macro) {
-    macros.put(macro.getName(), macro);
-  }
-
-  public void handleMatch(StringBuffer buffer, MatchResult result, FilterContext context) {
-    String command = result.group(1);
-
-// Logger.debug("Parameter block:" + Application.get().getParameters() );
-
-// {$peng} are variables not macros.
-    if (!command.startsWith("$")) {
-//      for (int i=0; i<result.groups(); i++) {
-//        Logger.debug(i+" "+result.group(i));
-//      }
-
-      MacroParameter mParams = context.getMacroParameter();
-
-// {tag} ... {tag}
-      if (result.group(1).equals(result.group(result.groups() - 1))) {
-// {tag:1|2} ... {tag}
-        if (!"".equals(result.group(2))) {
-          mParams.setParams(result.group(2));
-        }
-        mParams.setContent(result.group(3));
-      } else {
-// {tag}
-        if (result.groups() > 1) {
-// {tag:1|2}
-          mParams.setParams(result.group(2));
-        }
-      }
-
-// @DANGER: recursive calls may replace macros in included source code
-      try {
-        if (macros.containsKey(command)) {
-          Macro macro = (Macro) macros.get(command);
-// recursively filter macros within macros
-          if (null != mParams.getContent()) {
-            mParams.setContent(filter(mParams.getContent(), context));
-          }
-          Writer writer = new StringBufferWriter(buffer);
-          macro.execute(writer, mParams);
-        } else if (command.startsWith("!")) {
-// @TODO including of other snips
-          RenderEngine engine = context.getRenderContext().getRenderEngine();
-          if (engine instanceof IncludeRenderEngine) {
-            String include = ((IncludeRenderEngine) engine).include(command.substring(1));
-            if (null != include) {
-              //Filter paramFilter = new ParamFilter(params);
-              //buffer.append(paramFilter.filter(included, null));
-              buffer.append(include);
-            } else {
-              buffer.append(command.substring(1) + " not found.");
-            }
-          }
-          return;
-        } else {
-          buffer.append(result.group(0));
-          return;
-        }
-      } catch (IllegalArgumentException e) {
-        buffer.append("<div class=\"error\">" + command + ": " + e.getMessage() + "</div>");
-      } catch (Exception e) {
-        Logger.warn("unable to format macro: " + result.group(1), e);
-        buffer.append("<div class=\"error\">" + command + "</div>");
-        return;
-      }
-    } else {
-      buffer.append("<");
-      buffer.append(command.substring(1));
-      buffer.append(">");
+    public Object get(String key) {
+      return macros.get(key);
     }
+
+    public List getPlugins() {
+      return new ArrayList(macros.values());
+    }
+
+    public void put(String key, Object value) {
+      macros.put(key, value);
+    }
+  };
+
+  public void setInitialContext(InitialRenderContext context) {
+    WeblogMacro weblogMacro = new WeblogMacro();
+    macroRepository.put(weblogMacro.getName(), weblogMacro);
+  }
+
+  protected Repository getMacroRepository() {
+    return macroRepository;
   }
 }

@@ -29,12 +29,19 @@ import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.xmlrpc.ping.PingHandler;
+import org.snipsnap.notification.Message;
+import org.snipsnap.notification.MessageService;
+import org.snipsnap.notification.Consumer;
+import org.snipsnap.container.Components;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -46,7 +53,9 @@ import java.util.List;
  * @version $Id$
  */
 
-public class WeblogsPing extends Thread {
+public class WeblogsPing extends Thread implements Consumer {
+  private final static String WEBLOGSPING = "SnipSnap/config/weblogsping";
+
   private Configuration config;
   private Snip weblog;
   private static List handlers;
@@ -54,41 +63,42 @@ public class WeblogsPing extends Thread {
   public WeblogsPing(Configuration configuration, Snip weblog) {
     this.config = configuration;
     this.weblog = weblog;
+
+    MessageService service = (MessageService) Components.getComponent(MessageService.class);
+    service.register(this);
+
+    SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
+    Snip weblogsPingSnip = space.load(WEBLOGSPING);
+    try {
+      updateHandlers(weblogsPingSnip.getContent());
+    } catch (IOException e) {
+      Logger.warn("unable to initialize weblogs ping handlers: " + e);
+      e.printStackTrace();
+    }
   }
 
-  public void init() {
-    if (null == handlers) {
-      handlers = new ArrayList();
-      boolean fileNotFound = false;
-      try {
-        BufferedReader br = new BufferedReader(
-            new InputStreamReader(
-                new FileInputStream(getFileName())));
-        addHandler(br);
-      } catch (IOException e) {
-        Logger.warn("Unable to read " + getFileName(), e);
-        fileNotFound = true;
-      }
-
-      if (fileNotFound) {
-        BufferedReader br = null;
-        try {
-          br = new BufferedReader(
-              new InputStreamReader(
-                  WeblogsPing.class.getResourceAsStream(getFileName())));
-          addHandler(br);
-        } catch (Exception e) {
-          Logger.warn("Unable to read " + getFileName() + " from jar", e);
+  public void run() {
+    Logger.debug("Config="+config);
+    if (config.allow(Configuration.APP_PERM_WEBLOGSPING)) {
+      if (handlers.size() > 0) {
+        Iterator iterator = handlers.iterator();
+        while (iterator.hasNext()) {
+          PingHandler handler = (PingHandler) iterator.next();
+          handler.ping(weblog);
         }
       }
     }
   }
 
-  private String getFileName() {
-    return "conf/weblogsping.txt";
+  public static void ping(Snip weblog) {
+    new WeblogsPing(Application.get().getConfiguration(), weblog).start();
   }
 
-  public void addHandler(BufferedReader reader) throws IOException {
+  public void updateHandlers(String data) throws IOException {
+    handlers = new ArrayList();
+
+    BufferedReader reader =
+      new BufferedReader(new InputStreamReader(new ByteArrayInputStream(data.getBytes())));
     String line;
     while ((line = reader.readLine()) != null) {
       if (!line.startsWith("#")) {
@@ -105,23 +115,18 @@ public class WeblogsPing extends Thread {
     }
   }
 
-  public void run() {
-    Logger.debug("Config="+config);
-    if (config.allow(Configuration.APP_PERM_WEBLOGSPING)) {
-      if (null == handlers) {
-        init();
-      }
-      if (handlers.size() > 0) {
-        Iterator iterator = handlers.iterator();
-        while (iterator.hasNext()) {
-          PingHandler handler = (PingHandler) iterator.next();
-          handler.ping(weblog);
+  public void consume(Message message) {
+    if (Message.SNIP_MODIFIED.equals(message.getType())) {
+      Snip snip = (Snip) message.getValue();
+      if (WEBLOGSPING.equals(snip.getName())) {
+        try {
+          Logger.log("reloading weblogs ping handler for: " + snip.getApplication());
+          updateHandlers(snip.getContent());
+        } catch (IOException e) {
+          System.err.println("ConfigurationManager: unable to reload configuration: " + e);
+          e.printStackTrace();
         }
       }
     }
-  }
-
-  public static void ping(Snip weblog) {
-    new WeblogsPing(Application.get().getConfiguration(), weblog).start();
   }
 }
