@@ -27,7 +27,7 @@
   <% pageContext.setAttribute("users", Application.getCurrentUsers()); %>
   <% pageContext.setAttribute("guests", new Integer(Application.getGuestCount())); %>
   <c:forEach var="user" items="${users}">
-   <a href="../space/<c:out value='${user.name}'/>"><c:out value="${user.name}"/></a><br/>
+   <a href="<c:url value='/space/${user.name}'/>"><c:out value="${user.name}"/></a><br/>
   </c:forEach>
   ... and <c:out value="${guests}"/> Guests.
  </td></tr>
@@ -35,7 +35,7 @@
   <b>Recent Changes:</b><br>
   <%-- replace this with a JSTL tag ala  s:recent/> --%>
   <c:forEach var="snip" items="${space.changed}">
-   <a href="../space/<c:out value='${snip.nameEncoded}'/>"><c:out value="${snip.name}"/></a><br/>
+   <a href="<c:url value='/space/${snip.nameEncoded}'/>"><c:out value="${snip.name}"/></a><br/>
   </c:forEach>
  </td></tr>
  <tr><td>

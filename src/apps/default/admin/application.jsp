@@ -24,5 +24,8 @@
     <td><b>Host:</b></td>
     <td><c:out value="${config.host}" default="*"/><c:out value=":${config.port}" default=""/></td>
   </tr>
+  <tr>
+    <td colspan="2">Use the <i>Installer</i> to update the application.</td>
+  </tr>
 </table>
 

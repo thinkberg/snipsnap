@@ -12,7 +12,7 @@
  <head>
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
   <title>SnipSnap :: <c:out value="${snip.name}" default=""/></title>
-  <link type="text/css" href="../default.css" rel="STYLESHEET"/>
+  <link type="text/css" href="<c:url value='/default.css'/>" rel="STYLESHEET"/>
   <script>
   <!--
     // auto focus special forms
@@ -46,7 +46,7 @@
      </td>
      <td valign="top">
       <div id="Menu">
-      <jsp:include page="/menu.jsp" flush="true"/>
+        <jsp:include page="/menu.jsp" flush="true"/>
       </div>
      </td>
     </tr>

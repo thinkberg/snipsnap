@@ -27,6 +27,9 @@ package org.snipsnap.net;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
+import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.HomePage;
+import org.snipsnap.app.Application;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -50,6 +53,7 @@ public class UserManagerServlet extends HttpServlet {
   public final static String EDIT = "edit";
   public final static String UPDATE = "update";
   public final static String REMOVE = "remove";
+  public final static String CREATE = "create";
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
@@ -63,15 +67,41 @@ public class UserManagerServlet extends HttpServlet {
     User user = um.load(login);
     request.setAttribute("user", user);
 
+    Map errors = new HashMap();
+
     if (request.getParameter("ok") != null) {
       if (REMOVE.equals(command)) {
         um.remove(user);
         request.removeAttribute("user");
       } else {
+        RequestDispatcher dispatcher = null;
+
         if (UPDATE.equals(command)) {
-          update(request);
+          if(update(request, errors, user)) {
+            um.store(user);
+            errors.put("", OK_USER_UPDATED);
+          }
+          dispatcher = request.getRequestDispatcher("/exec/admin/user.jsp");
+        } else if(CREATE.equals(command)) {
+          User tmp = new User(login, "", "");
+          if(user != null || !update(request, errors, tmp)) {
+            errors.put("fatal", "User with that name already exists! Use Edit to modify.");
+            dispatcher = request.getRequestDispatcher("/exec/admin/newuser.jsp");
+          } else {
+            user = um.create(tmp.getLogin(), tmp.getPasswd(), tmp.getEmail());
+            user.setRoles(tmp.getRoles());
+            user.setStatus(tmp.getStatus());
+            um.store(user);
+            Application.get().setUser(user);
+            HomePage.create(user.getLogin());
+            errors.put("", OK_USER_CREATED);
+            response.sendRedirect(SnipLink.absoluteLink(request, "/exec/admin/usermanager.jsp"));
+            return;
+          }
         }
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/admin/user.jsp");
+
+        request.setAttribute("user", user);
+        request.setAttribute("errors", errors);
         dispatcher.forward(request, response);
         return;
       }
@@ -88,14 +118,12 @@ public class UserManagerServlet extends HttpServlet {
   private final static String ERR_UNKNOWN_ROLES = "Acceptable roles include: ";
   private final static String ERR_WRONG_PASSWORD = "Passwords do not match!";
   private final static String OK_USER_UPDATED = "User information has been updated.";
+  private final static String OK_USER_CREATED = "User has been created.";
 
   /**
    * Update a user, check validity and equality of the input.
    */
-  private void update(HttpServletRequest request) {
-    UserManager um = UserManager.getInstance();
-    String login = request.getParameter("login");
-    User user = um.load(login);
+  private boolean update(HttpServletRequest request, Map errors, User user) {
 
     String email = request.getParameter("email");
     String nPass = request.getParameter("password.new");
@@ -104,7 +132,6 @@ public class UserManagerServlet extends HttpServlet {
     String roles[] = request.getParameterValues("roles");
 
     boolean modified = false;
-    Map errors = new HashMap();
     if (!user.getEmail().equals(email)) {
       modified = true;
       user.setEmail(email);
@@ -135,12 +162,7 @@ public class UserManagerServlet extends HttpServlet {
       }
     }
 
-    if (modified) {
-      um.store(user);
-      errors.put("", OK_USER_UPDATED);
-    }
-    request.setAttribute("user", user);
-    request.setAttribute("errors", errors);
+    return modified;
   }
 
   private Set parseRoles(String roles[]) {

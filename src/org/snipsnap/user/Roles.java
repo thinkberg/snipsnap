@@ -44,6 +44,7 @@ public class Roles {
 
   public final static String AUTHENTICATED = "Authenticated";
   public final static String OWNER = "Owner";
+  public final static String ADMIN = "Admin";
   public final static String EDITOR = "Editor";
   public final static String NOCOMMENT = "NoComment";
 
@@ -53,6 +54,7 @@ public class Roles {
     if (ROLES == null) {
       ROLES = new TreeSet();
       ROLES.add(EDITOR);
+      ROLES.add(ADMIN);
       ROLES.add(NOCOMMENT);
       ROLES = Collections.unmodifiableSet(ROLES);
     }

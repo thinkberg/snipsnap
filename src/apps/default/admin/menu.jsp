@@ -33,7 +33,7 @@
       </c:when>
       <c:otherwise>
         <td width="50%" align="middle" class="snip-table-odd">
-          <b>User Management</b>
+          <b><a href="<c:out value='${base}'/>usermanager.jsp">User Management</a></b>
         </td>
       </c:otherwise>
     </c:choose>
