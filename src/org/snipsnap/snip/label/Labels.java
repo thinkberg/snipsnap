@@ -48,11 +48,14 @@ public class Labels {
   }
 
   public void addLabel(Label label) {
+    cache = null;
+    labels.put(label.getName(), label);
   }
 
   public void addLabel(String name, String value) {
     cache = null;
-    labels.put(name, value);
+    Label label = createDefaultLabel(name, value);
+    labels.put(name, label);
   }
 
   public Label getLabel(String name) {
@@ -63,16 +66,23 @@ public class Labels {
     return labels.keySet();
   }
 
-  public void deserialize(String labelString) {
+  private Label createDefaultLabel(String name, String value)
+  {
+    Label label = LabelManager.getInstance().getDefaulLabel();
+    label.setName( name );
+    label.setValue( value );
+    return label; 
+  }
+
+  private void deserialize(String labelString) {
     labels = new HashMap();
     if ("".equals(labelString)) return;
 
     StringTokenizer tokenizer = new StringTokenizer(labelString, "|");
     while (tokenizer.hasMoreTokens()) {
-      String label = tokenizer.nextToken();
-      String value = getValue(label);
-      String name = getName(label);
-      labels.put(name, value);
+      String labelToken = tokenizer.nextToken();
+      Label label = createDefaultLabel( getName( labelToken ), getValue( labelToken ) );
+      labels.put( label.getName(), label );
     }
     return;
   }
@@ -83,11 +93,12 @@ public class Labels {
     StringBuffer linkBuffer = new StringBuffer();
     Iterator iterator = labels.keySet().iterator();
     while (iterator.hasNext()) {
-      String url = (String) iterator.next();
-      linkBuffer.append(url);
+      String name = (String) iterator.next();
+      linkBuffer.append(name);
       linkBuffer.append(":");
-      Integer count = (Integer) labels.get(url);
-      linkBuffer.append(count);
+      Label label = (Label) labels.get( name );
+      String value = label.getValue();
+      linkBuffer.append(value);
       if (iterator.hasNext()) {
         linkBuffer.append("|");
       }
@@ -103,8 +114,8 @@ public class Labels {
     return string.substring(0, string.indexOf(delimiter));
   }
 
-  private String getName(String rolesString) {
-    return before(rolesString, ":");
+  private String getName(String labelString) {
+    return before(labelString, ":");
   }
 
   private String getValue(String labelString) {
