@@ -86,6 +86,10 @@ public class AppConfiguration extends Configuration {
     return getProperty(AppConfiguration.APP_NAME);
   }
 
+  public String getLocale() {
+    return "en";
+  }
+
   // HOST CONFIGURATION
   public void setHost(String host) {
     setProperty(AppConfiguration.APP_HOST, host);

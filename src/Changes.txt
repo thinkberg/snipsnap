@@ -1,5 +1,6 @@
 0.2.6
 
+- Added feature: Dublin Core support
 - Added feature: Broader search: searching for tree will no also find treehouse
 - Added feature: Snip names are case insensitive
 - Added feature: Jabber notification for new snips and User logins

@@ -16,6 +16,7 @@
 <html>
  <head>
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
+  <s:dublinCore snip="${snip}"/>
   <title><c:out value="${app.configuration.name}" default="SnipSnap"/> :: <c:out value="${snip.name}" default=""/></title>
   <link type="text/css" href="<c:url value='/default.css'/>" rel="STYLESHEET"/>
  </head>

@@ -13,6 +13,20 @@
     <tag-class>org.snipsnap.jsp.DebugTag</tag-class>
    </tag>
 
+   <tag>
+    <name>dublinCore</name>
+    <tag-class>org.snipsnap.jsp.DublinCoreTag</tag-class>
+    <attribute>
+      <name>snip</name>
+      <type>org.snipsnap.snip.Snip</type>
+      <description>snip to get dublin core information for</description>
+    </attribute>
+    <attribute>
+      <name>format</name>
+      <description>output format, e.g xml, defaults to html</description>
+    </attribute>
+   </tag>
+
   <tag>
     <name>backLinks</name>
     <tag-class>org.snipsnap.jsp.BackLinkTag</tag-class>
