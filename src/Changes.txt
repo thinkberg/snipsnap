@@ -1,5 +1,6 @@
 0.2.8
 
+- Fixed bug: list detection
 - Changed macro interface: User Writer instead of StringBuffer and Refactoring
   "Introduce Parameter Object"
 - Added Feature: {image} tag allows positioned and floating images
