@@ -21,7 +21,7 @@
  <s:check roles="Admin" invert="true">
    <s:checkObject roles="Editor" permission="Edit" snip="${snip}" invert="true">
     [<a href="exec/lock?name=<c:out value='${snip.nameEncoded}'/>"><fmt:message key="menu.lock"/></a>]
-   </s:checkObject>>
+   </s:checkObject>
    <s:checkObject roles="Editor" permission="Edit" snip="${snip}">
     [<a href="exec/lock?name=<c:out value='${snip.nameEncoded}'/>&amp;unlock=true"><fmt:message key="menu.unlock"/></a>]
    </s:checkObject>
