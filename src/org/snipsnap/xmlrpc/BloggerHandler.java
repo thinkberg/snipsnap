@@ -27,10 +27,10 @@
 package org.snipsnap.xmlrpc;
 
 import org.snipsnap.app.Application;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.Snip;
 
 /**
  * Handles XML-RPC calls for the Blogger API
@@ -40,44 +40,44 @@ import org.snipsnap.snip.Snip;
  * @version $Id$
  */
 
-public class  BloggerHandler {
-    /**
-     * From the spec:
-     * blogger.newPost(): Makes a new post to a designated blog. Optionally, will publish the blog after making the post.
-      appkey (string): Unique identifier/passcode of the application sending the post. (See access info.)
-      blogid (string): Unique identifier of the blog the post will be added to.
-      username (string): Login for a Blogger user who has permission to post to the blog.
-      password (string): Password for said username.
-      content (string): Contents of the post.
-      publish (boolean): If true, the blog will be published immediately after the post is made.
-    **/
-    public String newPost(String appkesy,
-                          String blogid,
-                          String username,
-                          String password,
-                          String content,
-                          boolean publish) {
-        System.out.println("XML-RPC call to newPost()");
+public class BloggerHandler {
+  /**
+   * From the spec:
+   * blogger.newPost(): Makes a new post to a designated blog. Optionally, will publish the blog after making the post.
+   * appkey (string): Unique identifier/passcode of the application sending the post. (See access info.)
+   * blogid (string): Unique identifier of the blog the post will be added to.
+   * username (string): Login for a Blogger user who has permission to post to the blog.
+   * password (string): Password for said username.
+   * content (string): Contents of the post.
+   * publish (boolean): If true, the blog will be published immediately after the post is made.
+   **/
+  public String newPost(String appkesy,
+                        String blogid,
+                        String username,
+                        String password,
+                        String content,
+                        boolean publish) {
+    System.out.println("XML-RPC call to newPost()");
 
-        UserManager um = UserManager.getInstance();
-        SnipSpace space = SnipSpace.getInstance();
+    UserManager um = UserManager.getInstance();
+    SnipSpace space = SnipSpace.getInstance();
 
-        User user = um.authenticate(username, password);
-        if (user == null) {
-          return "";
-        } else {
-          Application.get().setUser(user);
-        }
-
-        Snip snip = space.post(content);
-        return "";
+    User user = um.authenticate(username, password);
+    if (user == null) {
+      return "";
+    } else {
+      Application.get().setUser(user);
     }
 
-    /**
-    blogger.editPost: Edits a given post. Optionally, will publish the blog after making the edit.
-    blogger.getUsersBlogs: Returns information on all the blogs a given user is a member of.
-    blogger.getUserInfo: Authenticates a user and returns basic user info (name, email, userid, etc.).
-    blogger.getTemplate: Returns the main or archive index template of a given blog.
-    blogger.setTemplate: Edits the main or archive index template of a given blog.
-    */
+    Snip snip = space.post(content);
+    return "";
+  }
+
+  /**
+   blogger.editPost: Edits a given post. Optionally, will publish the blog after making the edit.
+   blogger.getUsersBlogs: Returns information on all the blogs a given user is a member of.
+   blogger.getUserInfo: Authenticates a user and returns basic user info (name, email, userid, etc.).
+   blogger.getTemplate: Returns the main or archive index template of a given blog.
+   blogger.setTemplate: Edits the main or archive index template of a given blog.
+   */
 }

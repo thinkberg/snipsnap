@@ -110,7 +110,7 @@ public class UserManager implements Loader {
     Iterator users = getAll().iterator();
     while (users.hasNext()) {
       User user = (User) users.next();
-      authHash.put(Password.getCookieDigest(user), user);
+      authHash.put(Digest.getCookieDigest(user), user);
     }
   }
 
@@ -173,7 +173,7 @@ public class UserManager implements Loader {
    * Set cookie with has of encoded user/pass and last login time.
    */
   public void setCookie(HttpServletRequest request, HttpServletResponse response, User user) {
-    String auth = Password.getCookieDigest(user);
+    String auth = Digest.getCookieDigest(user);
     // @TODO find better solution by removing by value
     updateAuthHash();
 

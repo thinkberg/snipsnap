@@ -24,52 +24,39 @@
  */
 package org.snipsnap.user;
 
-import org.snipsnap.util.ConnectionManager;
-import org.snipsnap.util.log.Logger;
-import org.snipsnap.cache.Cache;
-import org.snipsnap.jdbc.Loader;
-import org.snipsnap.jdbc.FinderFactory;
-import org.snipsnap.jdbc.Finder;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.*;
 
 /**
- * Password handler for encrypting passwords.
+ * Digest handler for encrypting passwords.
  * @author Matthias L. Jugel
  * @version $Id$
  */
-public class Password {
+public class Digest {
   private static MessageDigest digest;
 
   static {
     try {
-      digest =  MessageDigest.getInstance("SHA1");
+      digest = MessageDigest.getInstance("SHA1");
     } catch (NoSuchAlgorithmException e) {
-      System.err.println("UserManager: unable to load digest algorithm: "+e);
+      System.err.println("UserManager: unable to load digest algorithm: " + e);
       digest = null;
     }
+  }
+
+  public static String getDigest(String s) {
+    if (digest != null) {
+      return digestToHexString(digest.digest(s.getBytes()));
+    }
+    return "";
   }
 
   /**
    * Get a hexadecimal cookie digest from a user.
    */
   public static String getCookieDigest(User user) {
-    if (digest != null) {
-      String tmp = user.getLogin() + user.getPasswd() + user.getLastLogin().toString();
-      return digestToHexString(digest.digest(tmp.getBytes()));
-    }
-    return "";
+    String tmp = user.getLogin() + user.getPasswd() + user.getLastLogin().toString();
+    return getDigest(tmp);
   }
 
   /**
@@ -82,12 +69,16 @@ public class Password {
   /**
    * Make a hexadecimal character string out of a byte array digest
    */
-  private static String digestToHexString(byte[] digest) {
-    StringBuffer hexString = new StringBuffer();
-    hexString.setLength(0);
-    for (int i = 0; i < digest.length; i++) {
-      hexString.append(Integer.toHexString(digest[i]).toUpperCase());
+  public static String digestToHexString(byte[] digest) {
+    byte b = 0;
+    StringBuffer buffer = new StringBuffer();
+
+    for (int i = 0; i < digest.length; ++i) {
+      b = digest[i];
+      int value = (b & 0x7F) + (b < 0 ? 128 : 0);
+      buffer.append(value < 16 ? "0" : "");
+      buffer.append(Integer.toHexString(value).toUpperCase());
     }
-    return hexString.toString();
+    return buffer.toString();
   }
 }

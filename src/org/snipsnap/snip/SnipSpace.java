@@ -34,6 +34,7 @@ import org.snipsnap.snip.filter.LinkTester;
 import org.snipsnap.snip.label.Labels;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
+import org.snipsnap.user.Digest;
 import org.snipsnap.util.ConnectionManager;
 import org.snipsnap.util.Queue;
 import org.snipsnap.util.log.Logger;
@@ -121,36 +122,7 @@ public class SnipSpace implements LinkTester, Loader {
   }
 
   public void setETag() {
-    MessageDigest digest;
-    // Modify eTag
-    try {
-      digest =  MessageDigest.getInstance("SHA1");
-    } catch (NoSuchAlgorithmException e) {
-      System.err.println("UserManager: unable to load digest algorithm: "+e);
-      digest = null;
-    }
-
-    if (null != digest) {
-      String tmp = new java.util.Date().toString();
-      eTag = digestToHexString(digest.digest(tmp.getBytes()));
-    }
-  }
-
-  // @TODO refactor
-  /**
-   * Make a hexadecimal character string out of a byte array digest
-   */
-  private static String digestToHexString(byte[] digest) {
-      byte b = 0;
-      StringBuffer buffer = new StringBuffer();
-
-      for (int i = 0; i < digest.length; ++i) {
-           b = digest[i];
-          int value = (b & 0x7F) + (b < 0 ? 128 : 0);
-          buffer.append(value < 16 ? "0" : "");
-          buffer.append(Integer.toHexString(value).toUpperCase());
-      }
-      return buffer.toString();
+    eTag = Digest.getDigest(new java.util.Date().toString());
   }
 
   public List getChanged() {
