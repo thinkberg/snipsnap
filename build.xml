@@ -271,6 +271,7 @@
         <include name="jdbcpool.jar"/>
         <include name="lucene-1.2.jar"/>
         <include name="xmlrpc-1.1.jar"/>
+        <include name="jdom-b8.jar"/>
       </zipfileset>
       <zipfileset dir="${src}/apps/default">
         <include name="WEB-INF/c.tld"/>
