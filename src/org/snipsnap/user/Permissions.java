@@ -60,47 +60,37 @@ public class Permissions {
     return serialize();
   }
 
-  public static boolean containsAny(Set s1, Set s2) {
-    // Optimize to use the smaller set
-    Iterator iterator = s1.iterator();
-    while (iterator.hasNext()) {
-      String s = (String) iterator.next();
-      if (s2.contains(s)) return true;
-    }
-    return false;
-  }
-
   public void add(String permission) {
     init();
     if (! permissions.containsKey(permission)) {
-      permissions.put(permission,  new HashSet());
+      permissions.put(permission,  new Roles());
     }
   }
 
   public void add(String permission, String role) {
     init();
     if (! permissions.containsKey(permission)) {
-      permissions.put(permission,  new HashSet());
+      permissions.put(permission,  new Roles());
     }
     ((Set) permissions.get(permission)).add(role);
     return;
   }
 
-  public void add(String permission, Set roles) {
+  public void add(String permission, Roles roles) {
     init();
     if (! permissions.containsKey(permission)) {
       permissions.put(permission,  new HashSet());
     }
-    ((Set) permissions.get(permission)).addAll(roles);
+    ((Set) permissions.get(permission)).addAll(roles.roleSet());
     return;
   }
 
-  public boolean check(String permission, Set roles) {
+  public boolean check(String permission, Roles roles) {
     // Policy: If no permission is set, everything is allowed
     if (null == permissions || ! permissions.containsKey(permission)) return true;
     // Copy !
-    Set permRoles = (Set) permissions.get(permission);
-    return containsAny(roles, permRoles);
+    Roles permRoles = (Roles) permissions.get(permission);
+    return permRoles.containsAny(roles);
   }
 
   public Map deserialize(String permissions) {
@@ -111,7 +101,7 @@ public class Permissions {
     StringTokenizer tokenizer = new StringTokenizer(permissions, "|");
     while (tokenizer.hasMoreTokens()) {
       String permission = tokenizer.nextToken();
-      Set roles = getRoles(permission);
+      Roles roles = getRoles(permission);
       permission = getPermission(permission);
       perms.put(permission, roles);
     }
@@ -128,7 +118,7 @@ public class Permissions {
       String permission = (String) iterator.next();
       permBuffer.append(permission);
       permBuffer.append(":");
-      Set roles = (Set) permissions.get(permission);
+      Roles roles = (Roles) permissions.get(permission);
       Iterator rolesIterator = roles.iterator();
       while (rolesIterator.hasNext()) {
         String role = (String) rolesIterator.next();
@@ -156,8 +146,8 @@ public class Permissions {
     return before(rolesString, ":");
   }
 
-  private Set getRoles(String rolesString) {
-    Set roles = new HashSet();
+  private Roles getRoles(String rolesString) {
+    Roles roles = new Roles();
     StringTokenizer tokenizer = new StringTokenizer(after(rolesString,":"), ",");
     while (tokenizer.hasMoreTokens()) {
       String role = tokenizer.nextToken();

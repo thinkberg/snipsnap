@@ -24,9 +24,6 @@
  */
 package com.neotis.user;
 
-import java.util.Set;
-import java.util.HashSet;
-
 /**
  * User class.
  *
@@ -39,7 +36,7 @@ public class User {
   private String passwd;
   private String email;
   private String status;
-  private Set roles;
+  private Roles roles;
 
   public User(String login, String passwd, String email) {
     this.login = login;
@@ -79,14 +76,14 @@ public class User {
     return login;
   }
 
-  public void setRoles(Set roles) {
+  public void setRoles(Roles roles) {
     this.roles = roles;
     return;
   }
 
-  public Set getRoles() {
+  public Roles getRoles() {
     if (null == roles) {
-      roles = new HashSet();
+      roles = new Roles();
     }
     return roles;
   }

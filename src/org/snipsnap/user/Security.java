@@ -28,8 +28,6 @@ package com.neotis.user;
 import com.neotis.snip.Snip;
 import com.neotis.snip.Ownable;
 
-import java.util.*;
-
 /**
  * Security manager for checking permission, roles etc.
  *
@@ -47,8 +45,8 @@ public class Security {
    * @param user User to check
    * @return List of roles
    */
-  public static Set getRoles(User user) {
-    Set userRoles = user.getRoles();
+  public static Roles getRoles(User user) {
+    Roles userRoles = user.getRoles();
     if (UserManager.getInstance().isAuthenticated(user)) {
       userRoles.add(AUTHENTICATED);
     }
@@ -62,8 +60,8 @@ public class Security {
    * @param object Object with possible owner
    * @return List of roles for user and object
    */
-  public static Set getRoles(User user, Snip object) {
-    Set roles = getRoles(user);
+  public static Roles getRoles(User user, Snip object) {
+    Roles roles = getRoles(user);
     if (object instanceof Ownable) {
       Ownable o = (Ownable) object;
       if (o.isOwner(user)) {
@@ -73,14 +71,14 @@ public class Security {
     return roles;
   }
 
-  public static boolean hasRoles(User user, Set roles) {
-    Set userRoles = getRoles(user);
-    return Permissions.containsAny(roles, userRoles);
+  public static boolean hasRoles(User user, Roles roles) {
+    Roles userRoles = getRoles(user);
+    return userRoles.containsAny(roles);
   }
 
-  public static boolean hasRoles(User user, Snip object, Set roles) {
-    Set userRoles = getRoles(user, object);
-    return Permissions.containsAny(roles, userRoles);
+  public static boolean hasRoles(User user, Snip object, Roles roles) {
+    Roles userRoles = getRoles(user, object);
+    return userRoles.containsAny(roles);
   }
 
   /**

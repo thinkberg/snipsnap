@@ -130,41 +130,14 @@ public class UserManager {
 
   // Storage System dependend Methods
 
-  private String serialize(Set roles) {
-    if (null == roles || roles.isEmpty()) return "";
-
-    StringBuffer buffer = new StringBuffer();
-    Iterator iterator = roles.iterator();
-    while (iterator.hasNext()) {
-      String role = (String) iterator.next();
-      buffer.append(role);
-      if (iterator.hasNext()) buffer.append(":");
-    }
-    return buffer.toString();
-  }
-
-  private Set deserialize(String roleString) {
-    if (null == roleString || "".equals(roleString)) return new HashSet();
-
-    StringTokenizer st = new StringTokenizer(roleString, ":");
-    Set roles = new HashSet();
-
-    while (st.hasMoreTokens()) {
-      roles.add(st.nextToken());
-    }
-
-    return roles;
-  }
-
   private User createUser(ResultSet result) throws SQLException {
     String login = result.getString("login");
     String passwd = result.getString("passwd");
     String email = result.getString("email");
     String status = result.getString("status");
-    Set roles = deserialize(result.getString("roles"));
     User user = new User(login, passwd, email);
     user.setStatus(status);
-    user.setRoles(roles);
+    user.setRoles(new Roles(result.getString("roles")));
     return user;
   }
 
@@ -180,7 +153,7 @@ public class UserManager {
       statement.setString(2, user.getPasswd());
       statement.setString(3, user.getEmail());
       statement.setString(4, user.getStatus());
-      statement.setString(5, serialize(user.getRoles()));
+      statement.setString(5, user.getRoles().toString());
       statement.setString(6, user.getLogin());
 
       statement.execute();
