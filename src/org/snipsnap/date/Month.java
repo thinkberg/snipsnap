@@ -24,11 +24,12 @@
  */
 package org.snipsnap.date;
 
+import org.radeox.util.i18n.ResourceManager;
 import org.snipsnap.app.Application;
+import org.snipsnap.config.Configuration;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpaceFactory;
-import org.radeox.util.i18n.ResourceManager;
 
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
@@ -44,7 +45,7 @@ import java.util.Set;
  *
  * @author Stephan J. Schmidt
  * @version $Id$
- **/
+ */
 public class Month {
 
 
@@ -54,7 +55,7 @@ public class Month {
 //    "September", "Oktober", "November", "Dezember"
 //  };
   private String[] monthsValue = {
-    "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"
+  "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"
   };
 
   // @TODO Use locale
@@ -63,11 +64,13 @@ public class Month {
   private String[] weekDaysLong;
   private Locale locale;
 
-  /** The days in each month. */
+  /**
+   * The days in each month.
+   */
   public final static int dom[] = {
-    31, 28, 31, 30, /* jan feb mar apr */
-    31, 30, 31, 31, /* may jun jul aug */
-    30, 31, 30, 31	/* sep oct nov dec */
+  31, 28, 31, 30, /* jan feb mar apr */
+  31, 30, 31, 31, /* may jun jul aug */
+  30, 31, 30, 31	/* sep oct nov dec */
   };
 
   public Month() {
@@ -91,23 +94,18 @@ public class Month {
   /**
    * Returns a set of days (String) in yyyy-mm-dd format with
    * posts in this weblog
-   *
    */
-  public Set getDays(int month, int year) {
+  public Set getDays(String namespace, int month, int year) {
     String start = toKey(year, month, 1);
     String end = toKey(year, month, 31);
-    // FIX THIS FOR MULTY WEBLOGS
-    List snips = SnipSpaceFactory.getInstance().getByDate(Application.get().getConfiguration().getStartSnip(), start, end);
+    List snips = SnipSpaceFactory.getInstance().getByDate(namespace, start, end);
     Iterator iterator = snips.iterator();
 
     Set days = new HashSet();
 
     while (iterator.hasNext()) {
       Snip snip = (Snip) iterator.next();
-      // test for "2002-03-26" format
-      if (snip.getName().length() == 10) {
-        days.add(snip.getName());
-      }
+      days.add(snip.getName());
     }
     return days;
   }
@@ -119,8 +117,6 @@ public class Month {
   }
 
   public String getView(int month, int year, boolean navigation) {
-
-    Set days = getDays(month, year);
 
     int nextYear = year;
     int nextMonth = month + 1;
@@ -135,6 +131,11 @@ public class Month {
       prevMonth = 12;
     }
 
+    Application app = Application.get();
+    Configuration config = app.getConfiguration();
+    Snip viewedSnip = (Snip) app.getParameters().get("viewed");
+    String viewed = viewedSnip.isWeblog() ? viewedSnip.getName() : config.getStartSnip();
+
     StringBuffer view = new StringBuffer();
     view.append("<div class=\"calendar\">");
     view.append("<table summary=\"");
@@ -142,7 +143,10 @@ public class Month {
     view.append("\">");
     view.append("<caption>");
     if (navigation) {
-      view.append("<a href=\"?calmonth=");
+      view.append("<a href=\"");
+      view.append(SnipLink.getSpaceRoot()).append("/");
+      view.append(viewed);
+      view.append("?calmonth=");
       view.append(prevMonth);
       view.append("&amp;calyear=");
       view.append(prevYear);
@@ -151,12 +155,21 @@ public class Month {
     view.append(months[month - 1]);
     view.append(" ");
     view.append(year);
+    view.append(" ");
     if (navigation) {
-      view.append(" <a href=\"?calmonth=");
+      view.append("<a href=\"");
+      view.append(SnipLink.getSpaceRoot()).append("/");
+      view.append(viewed);
+      view.append("?calmonth=");
       view.append(nextMonth);
       view.append("&amp;calyear=");
       view.append(nextYear);
       view.append("\">&gt;</a>");
+    }
+    if (!viewed.equals(config.getStartSnip())) {
+      view.append(" (");
+      view.append(SnipLink.cutLength(viewedSnip.getTitle(), 20));
+      view.append(")");
     }
     view.append("</caption>");
 
@@ -194,12 +207,18 @@ public class Month {
     }
 
     // Fill in numbers for the day of month.
+    Set days = getDays(viewed, month, year);
 
     for (int i = 1; i <= daysInMonth; i++) {
       String day = "" + i;
 
-      if (days.contains(toKey(year, month, i))) {
-        day = SnipLink.createLink(toKey(year, month, i), day);
+      String calBlogOld = toKey(year, month, i);
+      String calBlogNew = viewed + "/" + calBlogOld + "/1";
+
+      if (days.contains(calBlogNew)) {
+        day = SnipLink.createLink(calBlogNew, day);
+      } else if (days.contains(calBlogOld)) {
+        day = SnipLink.createLink(calBlogOld, day);
       }
 
       if (i == todayNumber && month == today.get(Calendar.MONTH) + 1 && year == today.get(Calendar.YEAR)) {
