@@ -1,5 +1,7 @@
 0.3.1
 
+- Added feature: Plugin architecture for source code formatters
+
 0.3
 
 - Added feature: Sky and Oranges themes
