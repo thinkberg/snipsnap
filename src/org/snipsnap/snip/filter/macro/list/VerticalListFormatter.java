@@ -74,7 +74,8 @@ public class VerticalListFormatter implements ListFormatter {
             // String count = name.substring(lastIndex+1);
             realName = name.substring(name.indexOf("-") + 1, lastIndex);
             SnipLink.appendImage(writer, "comment-icon", "", "png");
-            SnipLink.appendLink(writer, name, realName);
+            SnipLink.appendLinkWithRoot(writer, "../comments", SnipLink.encode(realName) + "#" + name, realName);
+            //SnipLink.appendLink(writer, name, realName);
             writer.write(" (");
             SnipLink.appendLink(writer, snip.getCUser());
             writer.write(")");

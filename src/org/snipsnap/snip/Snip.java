@@ -131,6 +131,10 @@ public interface Snip extends Ownable, Nameable, Appendable {
 
   public Comments getComments();
 
+  public List getChildrenDateOrder();
+
+  public List getChildrenModifiedOrder();
+
   /**
    * Add a child snip. Sets the parent of
    * the child to this snip and <b>stores</b> the

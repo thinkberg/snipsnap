@@ -222,6 +222,9 @@ ol.HEBREW { list-style-type: hebrew; }
   font-size:11px;
 }
 
+.calendar th {
+  font-size: 0.8em;
+}
 .calendar td {
   text-align: right;
 }

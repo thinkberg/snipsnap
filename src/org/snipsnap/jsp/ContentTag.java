@@ -56,12 +56,17 @@ public class ContentTag extends TagSupport {
         content = filter.filter(content, null);
         if (extract) {
           if (content.length() > 40) {
-            content = content.substring(0, 40) + " ...";
+            content = content.substring(0, 40);
+            int ampIndex = content.lastIndexOf("&");
+            int colonIndex = content.lastIndexOf(";");
+            // did we cut a entity like &x1212; ?
+            if (ampIndex > colonIndex) {
+              content = content.substring(0, ampIndex-1);
+            }
+            content = content + " ...";
           }
         }
       }
-
-
       try {
         JspWriter out = pageContext.getOut();
         out.print(content);

@@ -15,6 +15,7 @@
   <c:forEach items="${snip.comments.comments}" var="comment" >
    <%-- title/header of a comment --%>
    <div class="comment-title">
+    <a name="<c:out value='${comment.name}'/>"/>
     <h2 class="comment-name"><s:image name="comment"/> <c:out value="${comment.modified.short}" escapeXml="false" /></h2>
     <s:check roles="Owner" permission="Edit" snip="${comment}">
       <div class="comment-buttons">[<a href="../exec/edit?name=<c:out value='${comment.name}'/>">edit</a>]</div>

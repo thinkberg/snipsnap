@@ -243,6 +243,20 @@ public class SnipImpl implements Snip {
   }
 
   /**
+   * Get a list of child snips, ordered by date with
+   * the newest one first
+   *
+   * @return List of child snips
+   */
+  public List getChildrenDateOrder() {
+    return SnipSpace.getInstance().getChildrenDateOrder((Snip) Aspects.getThis(), 10);
+  }
+
+  public List getChildrenModifiedOrder() {
+    return SnipSpace.getInstance().getChildrenModifiedOrder((Snip) Aspects.getThis(), 10);
+  }
+
+  /**
    * Add a child snip. Sets the parent of
    * the child to this snip and <b>stores</b> the
    * child because of the new parent.
