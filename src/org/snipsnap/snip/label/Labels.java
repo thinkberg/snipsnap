@@ -119,7 +119,7 @@ public class Labels {
 
   private void deserialize(Snip snip, String labelString) {
     labels = new HashMap();
-    if ("".equals(labelString)) { return; }
+    if (null == labelString || "".equals(labelString)) { return; }
 
     StringTokenizer tokenizer = new StringTokenizer(labelString, "|");
     while (tokenizer.hasMoreTokens()) {

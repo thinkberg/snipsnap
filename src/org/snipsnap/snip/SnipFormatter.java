@@ -25,22 +25,25 @@
 package org.snipsnap.snip;
 
 
+import org.picocontainer.PicoContainer;
+import org.radeox.api.engine.RenderEngine;
+import org.radeox.api.engine.context.RenderContext;
 import org.snipsnap.app.Application;
 import org.snipsnap.container.Components;
 import org.snipsnap.render.context.SnipRenderContext;
-import org.radeox.api.engine.RenderEngine;
-import org.radeox.api.engine.context.RenderContext;
 
-import org.picocontainer.PicoContainer;
+import java.util.Collection;
 
 /**
  * SnipFormatter supplies some methods for handling Snip Content.
  *
  * @author stephan
  * @version $Id$
- **/
-public class SnipFormatter {
-  public static String toXML(Snip snip, String content) {
+ */
+public class SnipFormatter
+{
+	public static String toXML(Snip snip, String content)
+	{
     //@FIXME: This duplicates SnipImpl.toXML()
     PicoContainer container = Components.getContainer();
     RenderEngine engine = (RenderEngine) container.getComponentInstance(Components.DEFAULT_ENGINE);

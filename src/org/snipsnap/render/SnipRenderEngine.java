@@ -31,17 +31,14 @@ import org.radeox.api.engine.WikiRenderEngine;
 import org.radeox.api.engine.context.RenderContext;
 import org.radeox.engine.BaseRenderEngine;
 import org.radeox.filter.context.FilterContext;
-import org.radeox.macro.MacroRepository;
 import org.radeox.util.Encoder;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.render.context.SnipRenderContext;
 import org.snipsnap.render.filter.context.SnipFilterContext;
-import org.snipsnap.render.macro.loader.GroovyMacroLoader;
 import org.snipsnap.serialization.StringBufferWriter;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.AuthenticationService;
 

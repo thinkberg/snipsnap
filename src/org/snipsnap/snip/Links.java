@@ -27,8 +27,6 @@ package org.snipsnap.snip;
 
 import org.radeox.util.logging.Logger;
 
-import java.io.UTFDataFormatException;
-import java.io.UnsupportedEncodingException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -134,11 +132,11 @@ public class Links {
   }
 
   public Map deserialize(String links) {
-    if ("".equals(links)) {
-      return newLinkMap();
+    Map linkcounts = newLinkMap();
+    if (links == null || "".equals(links)) {
+      return linkcounts;
     }
 
-    Map linkcounts = newLinkMap();
     boolean errors = false;
     StringTokenizer tokenizer = new StringTokenizer(links, "|");
     while (tokenizer.hasMoreTokens()) {
@@ -157,7 +155,7 @@ public class Links {
         linkcounts.put(url, count);
       } catch (Exception e) {
         errors = true;
-        Logger.warn("ignoring '"+urlString+"' while deserializing, format errors");
+        Logger.warn("ignoring '" + urlString + "' while deserializing, format errors");
         break;
       }
     }

@@ -49,6 +49,10 @@ import java.io.IOException;
  * @version $Id$
  */
 public class SnipStoreServlet extends HttpServlet {
+  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    response.sendRedirect(Application.get().getConfiguration().getUrl());
+  }
+
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     Configuration config = Application.get().getConfiguration();

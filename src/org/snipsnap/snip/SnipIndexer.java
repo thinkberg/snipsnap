@@ -133,7 +133,7 @@ public class SnipIndexer {
         create = true;
       }
 
-      if (exists) {
+      if (exists && f.exists()) {
         removeIndex(snip);
       }
 

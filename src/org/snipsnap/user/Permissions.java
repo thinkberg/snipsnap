@@ -133,9 +133,8 @@ public class Permissions {
   }
 
   public Map deserialize(String permissions) {
-    if ("".equals(permissions)) { return new HashMap(); }
-
     Map perms = new HashMap();
+    if (permissions == null || "".equals(permissions)) { return perms; }
 
     StringTokenizer tokenizer = new StringTokenizer(permissions, "|");
     while (tokenizer.hasMoreTokens()) {
