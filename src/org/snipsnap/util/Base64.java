@@ -19,7 +19,7 @@ public class Base64 {
 	
 	/* line break characters for use in encoding output */
 	private static char[] lbcs = {'\r','\n'};
-	
+
 	/**
 	 * Encode string to Base64 formatted char array.
 	 * @param text This argument must contain the text or binary data that shall be

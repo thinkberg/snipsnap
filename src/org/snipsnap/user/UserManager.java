@@ -25,20 +25,23 @@
 package org.snipsnap.user;
 
 import org.snipsnap.util.ConnectionManager;
-import org.mortbay.util.UnixCrypt;
-import org.apache.xmlrpc.Base64;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * User manager handles all register, creation and authentication of users.
@@ -64,36 +67,88 @@ public class UserManager {
   private final static String ATT_USER = "user";
   private final static int SECONDS_PER_YEAR = 60 * 60 * 24 * 365;
 
+  public MessageDigest md5;
+  public Map authHash = new HashMap();
+
+
+  protected UserManager() {
+    try {
+      md5 =  MessageDigest.getInstance("MD5");
+    } catch (NoSuchAlgorithmException e) {
+      System.err.println("UserManager: unable to load MD5 algorithm: "+e);
+      md5 = null;
+    }
+  }
+
+  StringBuffer md5hex = new StringBuffer();
+
+  // create a string representation of the MD5 hash of current user
+  private String getMD5Hash(User user) {
+    if (md5 != null) {
+      String tmp = user.getLogin() + user.getPasswd() + user.getLastLogin().toString();
+      // System.out.println("encoding: "+tmp);
+      byte buf[] = md5.digest(tmp.getBytes());
+      md5hex.setLength(0);
+      for (int i = 0; i < buf.length; i++) {
+        md5hex.append(Integer.toHexString(buf[i]).toUpperCase());
+      }
+    }
+    // System.out.println("md5hash: "+md5hex.toString());
+    return md5hex.toString();
+  }
+
+  private void updateAuthHash() {
+    authHash.clear();
+    Iterator users = getAll().iterator();
+    while (users.hasNext()) {
+      User user = (User) users.next();
+      authHash.put(getMD5Hash(user), user);
+    }
+  }
+
   /**
    * Get user from session or cookie.
    */
   public User getUser(HttpServletRequest request, HttpServletResponse response) {
     HttpSession session = request.getSession(true);
     User user = (User) session.getAttribute(ATT_USER);
-    if (user == null) {
+    if (null == user) {
       Cookie cookie = getCookie(request, COOKIE_NAME);
       if (cookie != null) {
-        String value = new String(Base64.decode(cookie.getValue().getBytes()));
-        int delIdx = value.indexOf('\0');
-        String userName = value.substring(0, delIdx);
-        String userPass = value.substring(delIdx+1);
-        user = authenticate(userName, userPass);
+        String auth = cookie.getValue();
+        if (!authHash.containsKey(auth)) {
+          updateAuthHash();
+        }
+
+        user = (User) authHash.get(auth);
+        if (user != null) {
+          // System.err.println("UserManager: valid hash: "+auth);
+          user = authenticate(user.getLogin(), user.getPasswd());
+          setCookie(request, response, user);
+        } else {
+          System.err.println("UserManager: invalid hash: "+auth);
+        }
       }
-      if (user == null) {
+
+      if (null == user) {
         user = new User("Guest", "Guest", "");
-      } else {
-        setCookie(request, response, user);
+        removeCookie(request, response);
       }
       session.setAttribute(ATT_USER, user);
     }
     return user;
   }
 
-  public void setCookie(HttpServletRequest request, HttpServletResponse response, User user) {
-    String value = user.getLogin()+"\0"+user.getPasswd();
-    value = new String(Base64.encode(value.getBytes()));
 
-    Cookie cookie = new Cookie(COOKIE_NAME, value);
+  /**
+   * Set cookie with has of encoded user/pass and last login time.
+   */
+  public void setCookie(HttpServletRequest request, HttpServletResponse response, User user) {
+    String auth = getMD5Hash(user);
+    // @TODO find better solution by removing by value
+    updateAuthHash();
+    authHash.put(auth, user);
+    Cookie cookie = new Cookie(COOKIE_NAME, auth);
     cookie.setMaxAge(SECONDS_PER_YEAR);
     cookie.setPath("/");
     cookie.setComment("SnipSnap User");
@@ -102,10 +157,12 @@ public class UserManager {
 
   public void removeCookie(HttpServletRequest request, HttpServletResponse response) {
     Cookie cookie = getCookie(request, COOKIE_NAME);
-    cookie.setMaxAge(0);
-    cookie.setPath("/");
-    cookie.setComment("SnipSnap User");
-    response.addCookie(cookie);
+    if (cookie != null) {
+      cookie.setMaxAge(0);
+      cookie.setPath("/");
+      cookie.setComment("SnipSnap User");
+      response.addCookie(cookie);
+    }
   }
 
   /**

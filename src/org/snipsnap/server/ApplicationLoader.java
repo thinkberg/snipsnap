@@ -24,21 +24,18 @@
  */
 package org.snipsnap.server;
 
-import org.mortbay.http.SocketListener;
-import org.mortbay.http.HttpServer;
 import org.mortbay.http.HttpListener;
+import org.mortbay.http.HttpServer;
+import org.mortbay.http.SocketListener;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.WebApplicationContext;
 import org.mortbay.util.InetAddrPort;
-import org.mortbay.util.Resource;
 import org.snipsnap.config.AppConfiguration;
-import org.snipsnap.config.Configuration;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Iterator;
-import java.net.URLClassLoader;
+import java.util.Map;
 
 /**
  *
@@ -67,7 +64,8 @@ public class ApplicationLoader {
                 AppConfiguration config = new AppConfiguration(configFile);
                 WebApplicationContext context = loadApplication(config);
                 applications.put(files[i], context);
-                System.out.println("Started application '" + files[i].getName() + "'");
+                System.out.println("Started application '" + files[i].getName() + "' " +
+                                   config.getUrl());
               } catch (Exception e) {
                 errors++;
                 e.printStackTrace();
@@ -95,7 +93,7 @@ public class ApplicationLoader {
     File root = config.getFile().getParentFile();
 
     String host = config.getHost();
-    if(host == null || host.length() == 0) {
+    if (host == null || host.length() == 0) {
       host = InetAddrPort.__0_0_0_0;
     }
     int port = config.getPort();
@@ -104,29 +102,29 @@ public class ApplicationLoader {
     HttpListener listener = null;
 
     Iterator it = Server.getHttpServers().iterator();
-    while(listener == null && it.hasNext()) {
-      HttpServer server = (HttpServer)it.next();
+    while (listener == null && it.hasNext()) {
+      HttpServer server = (HttpServer) it.next();
       HttpListener listeners[] = server.getListeners();
-      for(int i = 0; i < listeners.length; i++) {
-        if(server instanceof Server && listeners[i].getHost().equals(host) && listeners[i].getPort() == port) {
-          System.err.println("ApplicationLoader: found existing server: "+server);
-          installServer = (Server)server;
+      for (int i = 0; i < listeners.length; i++) {
+        if (server instanceof Server && listeners[i].getHost().equals(host) && listeners[i].getPort() == port) {
+          System.err.println("ApplicationLoader: found existing server: " + server);
+          installServer = (Server) server;
           listener = listeners[i];
           break;
         }
       }
     }
 
-    if(null == listener) {
+    if (null == listener) {
       installServer = new Server();
       listener = new SocketListener(new InetAddrPort(config.getHost(), config.getPort()));
       installServer.addListener(listener);
       installServer.start();
     }
 
-    if(listener instanceof SocketListener) {
+    if (listener instanceof SocketListener) {
       System.err.println("ApplicationLoader: limiting threads per server to 30");
-      ((SocketListener)listener).setMaxThreads(30);
+      ((SocketListener) listener).setMaxThreads(30);
     }
 
     // start web application context
