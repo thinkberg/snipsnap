@@ -29,6 +29,8 @@ import org.snipsnap.render.filter.links.BackLinks;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 import org.snipsnap.snip.*;
 import org.snipsnap.util.StringUtil;
+import org.snipsnap.app.Application;
+import org.snipsnap.config.Configuration;
 import org.radeox.util.i18n.ResourceManager;
 
 import java.io.IOException;
@@ -121,6 +123,8 @@ public class WeblogMacro extends SnipMacro {
           writer.write("</div>");
         }
 
+        Configuration conf = Application.get().getConfiguration();
+
         writer.write(entry.getXMLContent());
         writer.write(" <a href=\"");
         SnipLink.appendUrl(writer, entry.getName());
@@ -136,9 +140,12 @@ public class WeblogMacro extends SnipMacro {
         writer.write(" | ");
         writer.write(entry.getComments().getPostString());
         writer.write("</div>\n\n");
-        writer.write("<div class=\"snip-backlinks\">");
-        BackLinks.appendTo(writer, entry.getAccess().getBackLinks(), 5);
-        writer.write("</div>");
+
+        if ("true".equals(conf.getFeatureReferrerShow())) {
+          writer.write("<div class=\"snip-backlinks\">");
+          BackLinks.appendTo(writer, entry.getAccess().getBackLinks(), 5);
+          writer.write("</div>");
+        }
       }
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");

@@ -26,5 +26,7 @@
   </div>
  </c:if>
  <div class="snip-sniplinks"><s:snipLinks snip="${snip}" width="4" start="#ffffff" end="#b0b0b0"/></div>
- <div class="snip-backlinks"><s:backLinks snip="${snip}" count="15"/></div>
+ <c:if test="${app.configuration.featureReferrerShow == 'true'}">
+   <div class="snip-backlinks"><s:backLinks snip="${snip}" count="15"/></div>
+ </c:if>
 </div>
