@@ -65,8 +65,8 @@ public class NotificationService {
   public NotificationService() {
     queue = new NotificationQueue();
     notifiers = new ArrayList();
-    //notifiers.add(new JabberNotifier("leo@snipsnap.org"));
-    //notifiers.add(new JabberNotifier("funzel@snipsnap.org"));
+    notifiers.add(new JabberNotifier("leo@snipsnap.org"));
+    notifiers.add(new JabberNotifier("funzel@snipsnap.org"));
 
     thread = new Thread() {
       public void run() {

@@ -13,7 +13,7 @@
  <snip>
   <name>snipsnap-index</name>
   <content>
-{index}
+{index:AtoZ}
 
 {list-of-users}
   </content>
@@ -98,6 +98,7 @@ I. text || uppercase roman enumerated list
 g. text || greek enumerated list
 h. text || hiragana (japanese) enumerated list
 k. text || katakana (japanese) enumerated list
+j. text || hebrew enumerated list
 \_\_bold\_\_ | __bold__ | simple bold text
 \~\~italics\~\~ | ~~italics~~ | simple italic text
 \-\-strike\-\- | --strike-- | strike through text
@@ -108,31 +109,7 @@ k. text || katakana (japanese) enumerated list
 \\\X | \X | escape special character X (i.e. \{)
 {table}
 
-1.1 Text formatting macros
-
-{table}
-Mnemonic | Rendering | Comment
-\{!name} || includes the snip with the name __name__
-\{image:id\[\|text]} || includes an image which is looked up as __image-~~snipname~~-~~id~~.png__ in the __images__ directory
-\{link:SnipSnap\|\http://snipsnap.org/} | {link:SnipSnap|http://snipsnap.org} | creates a ~~named~~ link to an external resource
-Text\{note:footnote\} | Text{note:footnote} | include a footnote here
-\{table\} | [tables] | Simple tables with header. Separate columns with \|
-\{api:class\} or \{api:class\|language\} | {api:java.lang.Object} | creates  a link into the documentation of the specified language.
-\{code\[:language\]\} | {code}if(...) {}{code} | creates a code box that may contain source code. The optional language may be used to select a different syntax highlighting scheme (default: Java).
-\{quote\}Citation\{quote\} | {quote}Citation{quote} | creates a quotation
-{table}
-
-1.1 Special macros
-{table}
-Mnemonic | Rendering | Comment
-\{logins\} || displays a list of currently logged in users and guests
-\{calendar\[:month\|year\]} || display a calendar, optionally a special month and year (use numeric arguments)
-\{index\[:type\]\} || display index of all snips (for list types see below)
-\{list-of-users\[:type\]\} || display list of registered users (for list types see below)
-\{recently-changed\[:count\|type\]\} || display list of recently changed snips (for list types see below)
-{table}
-
-1 All Implemented Macros
+1 Available Macros
 {list-of-macros}
   </content>
   <permissions>Edit:Editor</permissions>

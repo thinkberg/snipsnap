@@ -3,6 +3,7 @@ base=`pwd`
 app=$base/applications/$1
 theme=$2
 if [ "$1" = "" -o ! -d $app ]; then
+  echo "Create links to jsp and theme into your application."
   echo "usage: $0 AppName [theme]"
   exit
 fi
