@@ -29,10 +29,15 @@ import org.radeox.util.Encoder;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.snip.Links;
 import org.snipsnap.snip.SnipLink;
+import org.snipsnap.util.URLEncoderDecoder;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
+import java.net.URL;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * Renders backlinks
@@ -43,6 +48,15 @@ import java.util.Iterator;
 
 public class BackLinks {
   private static UrlFormatter formatter = new CutLengthFormatter();
+  private static InetAddress googleHost;
+
+  static {
+    try {
+      googleHost = InetAddress.getByName("www.google.com");
+    } catch (UnknownHostException e) {
+      Logger.warn("unable to resolve google.com: ", e);
+    }
+  }
 
   public static void appendTo(Writer writer, Links backLinks, int count) {
     Iterator iterator = backLinks.iterator();
@@ -60,8 +74,7 @@ public class BackLinks {
           writer.write(" <span class=\"content\"><a href=\"");
           writer.write(Encoder.escape(url));
           writer.write("\">");
-          writer.write(Encoder.toEntity(url.charAt(0)));
-          writer.write(Encoder.escape(SnipLink.cutLength(url.substring(1), 90)));
+          renderView(writer, url);
           writer.write("</a></span></li>\n");
         }
         writer.write("</ul>");
@@ -70,5 +83,37 @@ public class BackLinks {
       Logger.warn("unable write to writer", e);
     }
 
+  }
+
+  private static void renderView(Writer writer, String url) throws IOException {
+    URL urlInfo = new URL(url);
+    String info = null;
+    if(googleHost != null && googleHost.equals(InetAddress.getByName(urlInfo.getHost()))) {
+      info = getQuery(urlInfo.getQuery(), "q");
+      if(info != null) {
+        info = urlInfo.getHost() + ": " + info;
+      }
+    }
+
+    if(null == info) {
+      info = url;
+    }
+
+    writer.write(Encoder.toEntity(info.charAt(0)));
+    writer.write(Encoder.escape(SnipLink.cutLength(info.substring(1), 90)));
+  }
+
+  private static String getQuery(String query, String id) {
+    String vars[] = query.split("&");
+    for(int v = 0; v < vars.length; v++) {
+      if(vars[v].startsWith(id+"=")) {
+        try {
+          return URLEncoderDecoder.decode(vars[v].substring(id.length()+1), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+          return null;
+        }
+      }
+    }
+    return null;
   }
 }
