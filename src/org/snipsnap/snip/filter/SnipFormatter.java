@@ -1,6 +1,7 @@
 package com.neotis.snip.filter;
 
 import com.neotis.snip.filter.macro.MacroFilter;
+import com.neotis.snip.SnipSpace;
 
 /**
  * SnipFormatter supplies some methods for handling Snip Content.
@@ -21,11 +22,7 @@ public class SnipFormatter {
     fp.addFilter(new LineFilter());
     fp.addFilter(new BoldFilter());
     fp.addFilter(new ItalicFilter());
-    fp.addFilter(new LinkTestFilter(new LinkTester() {
-      public boolean exists(String link) {
-        return false;
-      }
-    }));
+    fp.addFilter(new LinkTestFilter(SnipSpace.getInstance());
     fp.addFilter(new MarkFilter());
     fp.addFilter(new UrlFilter());
     fp.addFilter(new KeyFilter());

@@ -1,11 +1,12 @@
 package com.neotis.snip;
 
 import com.neotis.util.ConnectionManager;
+import com.neotis.snip.filter.LinkTester;
 
 import java.sql.*;
 import java.util.Map;
 
-public class SnipSpace {
+public class SnipSpace implements LinkTester {
   private Connection connection;
   private Map cache;
 
