@@ -27,6 +27,8 @@ package org.snipsnap.interceptor;
 
 import dynaop.Pointcuts;
 import dynaop.ProxyFactory;
+import dynaop.ProxyAware;
+import dynaop.Proxy;
 import org.snipsnap.interceptor.custom.ACLInterceptor;
 import org.snipsnap.interceptor.custom.BlogACLInterceptor;
 import org.snipsnap.snip.BlogImpl;
@@ -55,7 +57,11 @@ public class Aspects {
 
       proxyFactory = ProxyFactory.getInstance(aspects);
     }
-    return proxyFactory.wrap(object);
+    Proxy proxy = (Proxy) proxyFactory.wrap(object);
+    if (object instanceof ProxyAware) {
+      ((ProxyAware) object).setProxy(proxy);
+    }
+    return proxy;
   }
 
 }
