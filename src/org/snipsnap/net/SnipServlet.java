@@ -20,7 +20,7 @@ public class SnipServlet extends HttpServlet {
 
     out.println("<html><body>");
     Snip snip = SnipSpace.getInstance().load("about");
-    out.println(SnipFormatter.toXML(snip.getContent()));
+    out.println(snip.toXML());
     out.println("</body></html>");
 
     out.close();

@@ -1,4 +1,4 @@
-package com.neotis.test;
+package com.neotis.test.snip;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

@@ -2,6 +2,7 @@ package com.neotis.snip.filter;
 
 import com.neotis.snip.filter.macro.MacroFilter;
 import com.neotis.snip.SnipSpace;
+import com.neotis.snip.Snip;
 
 /**
  * SnipFormatter supplies some methods for handling Snip Content.
@@ -11,7 +12,7 @@ import com.neotis.snip.SnipSpace;
  **/
 public class SnipFormatter {
 
-  public static String toXML(String content) {
+  public static String toXML(Snip snip, String content) {
     FilterPipe fp = new FilterPipe();
     fp.addFilter(new EscapeFilter());
     fp.addFilter(new MacroFilter());

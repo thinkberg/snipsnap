@@ -27,7 +27,7 @@ public class AppServer {
         jettyServer = new Server("./conf/server.conf");
 
         ServletHttpContext context = (ServletHttpContext) jettyServer.getContext(null, "/");
-        context.addServlet("SnipServlet", "/", "com.neotis.net.SnipServlet");
+        context.addServlet("SnipServlet", "/space/*", "com.neotis.net.SnipServlet");
 
         jettyServer.start();
       } catch (MultiException e) {
@@ -38,7 +38,6 @@ public class AppServer {
       } catch (Exception e) {
         System.err.println("AppServer: unable to load servlet class: " + e);
       }
-
     }
   }
 }

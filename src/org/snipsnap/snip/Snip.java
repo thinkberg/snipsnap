@@ -1,5 +1,7 @@
 package com.neotis.snip;
 
+import com.neotis.snip.filter.SnipFormatter;
+
 
 public class Snip {
   private String name;
@@ -24,5 +26,9 @@ public class Snip {
 
   public void setContent(String content) {
     this.content = content;
+  }
+
+  public String toXML() {
+    SnipFormatter.toXML(this, getContent());
   }
 }
