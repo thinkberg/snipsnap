@@ -12,32 +12,36 @@
  <div class="snip-title"><h1 class="snip-name"><fmt:message key="snip.create"/></h1></div>
   <form class="form" name="f" method="post" action="exec/store" enctype="multipart/form-data">
    <s:check roles="Authenticated">
-    <div class="snip-title">
-       <fmt:message key="snip.name"/><br/><input name="name" value="<c:out value="${name}"/>" type="text"/>
-       <c:if test="${error == 'snip.name.empty'}"><span class="error"><fmt:message key="snip.name.empty"/></span></c:if>
-    </div>
-    <fmt:message key="snip.parent"/>
-    <input name="parentBefore" value="<c:out value="${parentBefore}"/>" type="hidden"/>
-    <s:pathSelector parentName="${parentBefore}"/><br/>
-    <fmt:message key="snip.template"/>
-    <select name="template" size="1">
-      <c:forEach items="${templates}" var="template" >
-        <option><c:out value="${template}"/>
-      </c:forEach>
-    </select>
-    <input value="<fmt:message key="dialog.copy.template"/>" name="copy.template" type="submit"/>
-
     <c:if test="${not empty preview}">
      <div class="preview"><div class="snip-content"><c:out value="${preview}" escapeXml="false"/></div></div>
     </c:if>
+
+    <div class="snip-title">
+      <fmt:message key="snip.parent"/><br/>
+      <input name="parentBefore" value="<c:out value="${parentBefore}"/>" type="hidden"/>
+      <s:pathSelector parentName="${parentBefore}"/><br/>
+      <fmt:message key="snip.name"/><br/><input name="name" value="<c:out value="${name}"/>" type="text"/>
+      <c:if test="${error == 'snip.name.empty'}"><span class="error"><fmt:message key="snip.name.empty"/></span></c:if>
+    </div>
+
     <div class="snip-content">
      <div class="snip-input">
        <table>
         <tr><td><textarea name="content" type="text" cols="80" rows="20"><c:out value="${content}" escapeXml="true"/></textarea></td></tr>
         <tr><td class="form-buttons">
-         <input value="<fmt:message key="dialog.preview"/>" name="preview" type="submit"/>
-         <input value="<fmt:message key="dialog.save"/>" name="save" type="submit"/>
-         <input value="<fmt:message key="dialog.cancel"/>" name="cancel" type="submit"/>
+          <c:if test="${not empty templates}">
+            <fmt:message key="snip.template"/>
+            <select name="template" size="1">
+              <c:forEach items="${templates}" var="template" >
+                <option><c:out value="${template}"/>
+              </c:forEach>
+            </select>
+            <input value="<fmt:message key="dialog.copy.template"/>" name="copy.template" type="submit"/>
+            <br/>
+          </c:if>
+          <input value="<fmt:message key="dialog.preview"/>" name="preview" type="submit"/>
+          <input value="<fmt:message key="dialog.save"/>" name="save" type="submit"/>
+          <input value="<fmt:message key="dialog.cancel"/>" name="cancel" type="submit"/>
         </td></tr>
        </table>
        <input name="referer" type="hidden" value="<%= request.getHeader("REFERER") %>"/>

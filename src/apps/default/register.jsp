@@ -1,4 +1,5 @@
-<%--
+<%@ page import="org.radeox.util.Encoder"%>
+ <%--
   ** Registration page template.
   ** @author Matthias L. Jugel
   ** @version $Id$
@@ -29,7 +30,7 @@
      <input value="<fmt:message key="dialog.cancel"/>" name="cancel" type="submit"/>
     </td></tr>
    </table>
-   <input name="referer" type="hidden" value="<%= request.getHeader("REFERER") %>"/>
+   <input name="referer" type="hidden" value="<%= Encoder.escape(request.getHeader("REFERER")) %>"/>
   </form>
  </div>
 </div>

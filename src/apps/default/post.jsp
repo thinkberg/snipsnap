@@ -1,4 +1,5 @@
-<%--
+<%@ page import="org.radeox.util.Encoder"%>
+ <%--
   ** weblog post template.
   ** @author Matthias L. Jugel
   ** @version $Id$
@@ -17,7 +18,7 @@
   </c:if>
    <form class="form" method="post" action="exec/storepost" enctype="multipart/form-data">
     <table>
-     <tr><td>Title<br/><input name="title" value="<c:out value="${title}" escapeXml="false"/>"/></td></tr>
+     <tr><td><fmt:message key="weblog.post.entry.title"/><br/><input name="title" value="<c:out value="${title}" escapeXml="false"/>"/></td></tr>
      <tr><td><textarea name="content" type="text" cols="80" rows="20"><c:out value="${content}" escapeXml="true"/></textarea></td></tr>
      <tr><td class="form-buttons">
       <input value="<fmt:message key="dialog.preview"/>" name="preview" type="submit"/>
@@ -27,7 +28,7 @@
     </table>
     <input name="name" type="hidden" value="<c:out value='${param.name}'/>"/>
     <input name="post" type="hidden" value="weblog"/>
-    <input name="referer" type="hidden" value="<%= request.getHeader("REFERER") %>"/>
+    <input name="referer" type="hidden" value="<%= Encoder.escape(request.getHeader("REFERER")) %>"/>
    </form>
   </s:check>
   <s:check roles="Owner:Editor" invert="true">

@@ -1,4 +1,5 @@
-<%--
+<%@ page import="org.radeox.util.Encoder"%>
+ <%--
   ** Template for editing Snips.
   ** @author Matthias L. Jugel
   ** @version $Id$
@@ -28,7 +29,7 @@
         </td></tr>
        </table>
        <input name="name" type="hidden" value="<c:out value="${snip_name}"/>"/>
-       <input name="referer" type="hidden" value="<%= request.getHeader("REFERER") %>"/>
+       <input name="referer" type="hidden" value="<%= Encoder.escape(request.getHeader("REFERER")) %>"/>
       </form>
      </div>
    </s:check>
