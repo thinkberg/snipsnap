@@ -19,7 +19,7 @@
 
   <!-- the overall class path -->
   <path id="app.classpath">
-    <pathelement location="${jar}/jakarta.jar"/>
+    <pathelement location="${jar}/jakarta-oro.jar"/>
     <pathelement location="${jar}/xmlrpc-1.1.jar"/>
     <pathelement location="${jar}/lucene-1.2.jar"/>
     <pathelement location="${jar}/jython.jar"/>
@@ -185,7 +185,7 @@
       <fileset dir="${src}/apps/default" includes="**"/>
       <fileset dir="${src}/theme/blue" includes="**"/>
       <zipfileset dir="${jar}" prefix="WEB-INF/lib">
-        <include name="jakarta.jar"/>
+        <include name="jakarta-oro.jar"/>
         <include name="lucene-1.2.jar"/>
         <include name="xmlrpc-1.1.jar"/>
         <include name="muse-jabber-0.8a1.jar"/>

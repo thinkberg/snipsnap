@@ -88,7 +88,11 @@ public class Table implements Appendable {
       int colSize = outputCols.length;
       for (int j=0; j<colSize; j++) {
         writer.write(i == 0 ? "<th>" : "<td>");
-        writer.write(outputCols[j]);
+        if(outputCols[j] == null || outputCols[j].trim().length() == 0) {
+          writer.write("&#160;");
+        } else {
+          writer.write(outputCols[j]);
+        }
         writer.write(i == 0 ? "</th>" : "</td>");
       }
       writer.write("</tr>");

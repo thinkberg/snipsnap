@@ -51,6 +51,16 @@ public class MckoiEmbeddedJDBCDriver implements Driver {
 
   static {
     register();
+    Runtime.getRuntime().addShutdownHook(new Thread() {
+      public void run() {
+        try {
+          deregister();
+        } catch (SQLException e) {
+          System.err.println("MckoiEmbeddedJDBCDriver: unable to deregister driver: "+e);
+          e.printStackTrace();
+        }
+      }
+    });
   }
 
   public static void register() {

@@ -14,7 +14,7 @@ if [ -d $app ]; then
   ln -sf $base/src/apps/default/WEB-INF/web.xml $app/WEB-INF/
   ln -sf $base/src/apps/default/WEB-INF/lib/*.jar $app/WEB-INF/lib
   ln -sf $base/lib/aspectjrt.jar $app/WEB-INF/lib
-  ln -sf $base/lib/jakarta.jar $app/WEB-INF/lib
+  ln -sf $base/lib/jakarta-oro.jar $app/WEB-INF/lib
   ln -sf $base/lib/jdom-b8.jar $app/WEB-INF/lib
   ln -sf $base/lib/jython.jar $app/WEB-INF/lib
   ln -sf $base/lib/lucene-1.2.jar $app/WEB-INF/lib
