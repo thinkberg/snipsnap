@@ -177,7 +177,7 @@ public class FileUploadServlet extends HttpServlet {
   }
 
   // make file name pure without the path
-  public String getCanonicalFileName(String fileName) throws IOException {
+  public static String getCanonicalFileName(String fileName) throws IOException {
     int slashIndex = fileName.lastIndexOf('\\');
     if (slashIndex >= 0) {
       Logger.log(Logger.WARN, "Windows path detected, cutting off: " + fileName);

@@ -31,7 +31,6 @@ import org.snipsnap.app.Application;
 import org.snipsnap.container.Components;
 import org.snipsnap.net.FileUploadServlet;
 import org.snipsnap.semanticweb.rss.BlogFeeder;
-import org.snipsnap.semanticweb.rss.Feeder;
 import org.snipsnap.snip.Blog;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
@@ -49,6 +48,7 @@ import java.io.OutputStream;
 import java.util.*;
 import org.snipsnap.snip.BlogKit;
 import org.snipsnap.snip.attachment.Attachments;
+import org.snipsnap.feeder.Feeder;
 
 /**
  * Handles XML-RPC calls for the MetaWeblog API
