@@ -12,7 +12,7 @@
 	<key>ColumnSpacing</key>
 	<real>36</real>
 	<key>GraphDocumentVersion</key>
-	<integer>3</integer>
+	<integer>4</integer>
 	<key>GraphicsList</key>
 	<array>
 		<dict>
@@ -22,6 +22,8 @@
 			<string>ShapedGraphic</string>
 			<key>FitText</key>
 			<string>YES</string>
+			<key>Flow</key>
+			<string>Resize</string>
 			<key>ID</key>
 			<integer>32</integer>
 			<key>Shape</key>
@@ -59,6 +61,8 @@
 \f0\fs24 \cf0 SnipFilter\
 Context}</string>
 			</dict>
+			<key>Wrap</key>
+			<string>NO</string>
 		</dict>
 		<dict>
 			<key>Class</key>
@@ -98,6 +102,8 @@ Context}</string>
 			<string>ShapedGraphic</string>
 			<key>FitText</key>
 			<string>YES</string>
+			<key>Flow</key>
+			<string>Resize</string>
 			<key>ID</key>
 			<integer>30</integer>
 			<key>Shape</key>
@@ -134,6 +140,8 @@ Context}</string>
 
 \f0\b\fs36 \cf0 SnipSnap}</string>
 			</dict>
+			<key>Wrap</key>
+			<string>NO</string>
 		</dict>
 		<dict>
 			<key>Bounds</key>
@@ -151,11 +159,11 @@ Context}</string>
 					<key>Color</key>
 					<dict>
 						<key>b</key>
-						<string>1</string>
+						<string>0.901961</string>
 						<key>g</key>
-						<string>0.826303</string>
+						<string>0.901961</string>
 						<key>r</key>
-						<string>0.706739</string>
+						<string>0.901961</string>
 					</dict>
 					<key>FillType</key>
 					<integer>3</integer>
@@ -164,11 +172,11 @@ Context}</string>
 					<key>GradientColor</key>
 					<dict>
 						<key>b</key>
-						<string>1</string>
+						<string>0.8</string>
 						<key>g</key>
-						<string>0.6</string>
+						<string>0.8</string>
 						<key>r</key>
-						<string>0.00392157</string>
+						<string>0.8</string>
 					</dict>
 				</dict>
 			</dict>
@@ -186,17 +194,6 @@ Context}</string>
 			<dict>
 				<key>fill</key>
 				<dict>
-					<key>Color</key>
-					<dict>
-						<key>b</key>
-						<string>0.678387</string>
-						<key>g</key>
-						<string>0.989251</string>
-						<key>r</key>
-						<string>1</string>
-					</dict>
-					<key>FillType</key>
-					<integer>3</integer>
 					<key>GradientCenter</key>
 					<string>{0.205882, 0.220588}</string>
 					<key>GradientColor</key>
@@ -249,6 +246,8 @@ Context}</string>
 			<string>ShapedGraphic</string>
 			<key>FitText</key>
 			<string>YES</string>
+			<key>Flow</key>
+			<string>Resize</string>
 			<key>ID</key>
 			<integer>26</integer>
 			<key>Shape</key>
@@ -285,6 +284,8 @@ Context}</string>
 
 \f0\b\fs36 \cf0 Radeox}</string>
 			</dict>
+			<key>Wrap</key>
+			<string>NO</string>
 		</dict>
 		<dict>
 			<key>Bounds</key>
@@ -293,6 +294,8 @@ Context}</string>
 			<string>ShapedGraphic</string>
 			<key>FitText</key>
 			<string>YES</string>
+			<key>Flow</key>
+			<string>Resize</string>
 			<key>ID</key>
 			<integer>25</integer>
 			<key>Shape</key>
@@ -329,6 +332,8 @@ Context}</string>
 
 \f0\fs24 \cf0 MacroParameter}</string>
 			</dict>
+			<key>Wrap</key>
+			<string>NO</string>
 		</dict>
 		<dict>
 			<key>Bounds</key>
@@ -337,6 +342,8 @@ Context}</string>
 			<string>ShapedGraphic</string>
 			<key>FitText</key>
 			<string>YES</string>
+			<key>Flow</key>
+			<string>Resize</string>
 			<key>ID</key>
 			<integer>24</integer>
 			<key>Shape</key>
@@ -373,6 +380,8 @@ Context}</string>
 
 \f0\fs24 \cf0 FilterContext}</string>
 			</dict>
+			<key>Wrap</key>
+			<string>NO</string>
 		</dict>
 		<dict>
 			<key>Bounds</key>
@@ -381,6 +390,8 @@ Context}</string>
 			<string>ShapedGraphic</string>
 			<key>FitText</key>
 			<string>YES</string>
+			<key>Flow</key>
+			<string>Resize</string>
 			<key>ID</key>
 			<integer>23</integer>
 			<key>Shape</key>
@@ -417,6 +428,8 @@ Context}</string>
 
 \f0\fs24 \cf0 Macros}</string>
 			</dict>
+			<key>Wrap</key>
+			<string>NO</string>
 		</dict>
 		<dict>
 			<key>Bounds</key>
@@ -425,6 +438,8 @@ Context}</string>
 			<string>ShapedGraphic</string>
 			<key>FitText</key>
 			<string>YES</string>
+			<key>Flow</key>
+			<string>Resize</string>
 			<key>ID</key>
 			<integer>22</integer>
 			<key>Shape</key>
@@ -462,6 +477,8 @@ Context}</string>
 \f0\fs24 \cf0 Filter\
 Pipe}</string>
 			</dict>
+			<key>Wrap</key>
+			<string>NO</string>
 		</dict>
 		<dict>
 			<key>Class</key>
@@ -585,8 +602,7 @@ Pipe}</string>
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
 
-\f0\fs24 \cf0 Snip\
-Snap}</string>
+\f0\fs24 \cf0 SnipSnap}</string>
 			</dict>
 		</dict>
 		<dict>
@@ -882,17 +898,6 @@ Engine}</string>
 			<dict>
 				<key>fill</key>
 				<dict>
-					<key>Color</key>
-					<dict>
-						<key>b</key>
-						<string>0.678387</string>
-						<key>g</key>
-						<string>0.989251</string>
-						<key>r</key>
-						<string>1</string>
-					</dict>
-					<key>FillType</key>
-					<integer>3</integer>
 					<key>GradientCenter</key>
 					<string>{0.205882, 0.220588}</string>
 					<key>GradientColor</key>
@@ -930,17 +935,6 @@ Engine}</string>
 			<dict>
 				<key>fill</key>
 				<dict>
-					<key>Color</key>
-					<dict>
-						<key>b</key>
-						<string>0.678387</string>
-						<key>g</key>
-						<string>0.989251</string>
-						<key>r</key>
-						<string>1</string>
-					</dict>
-					<key>FillType</key>
-					<integer>3</integer>
 					<key>GradientCenter</key>
 					<string>{0.205882, 0.220588}</string>
 					<key>GradientColor</key>
@@ -981,11 +975,11 @@ Engine}</string>
 					<key>Color</key>
 					<dict>
 						<key>b</key>
-						<string>1</string>
+						<string>0.901961</string>
 						<key>g</key>
-						<string>0.826303</string>
+						<string>0.901961</string>
 						<key>r</key>
-						<string>0.706739</string>
+						<string>0.901961</string>
 					</dict>
 					<key>FillType</key>
 					<integer>3</integer>
@@ -994,11 +988,11 @@ Engine}</string>
 					<key>GradientColor</key>
 					<dict>
 						<key>b</key>
-						<string>1</string>
+						<string>0.8</string>
 						<key>g</key>
-						<string>0.6</string>
+						<string>0.8</string>
 						<key>r</key>
-						<string>0.00392157</string>
+						<string>0.8</string>
 					</dict>
 				</dict>
 			</dict>
@@ -1026,17 +1020,6 @@ Engine}</string>
 			<dict>
 				<key>fill</key>
 				<dict>
-					<key>Color</key>
-					<dict>
-						<key>b</key>
-						<string>0.678387</string>
-						<key>g</key>
-						<string>0.989251</string>
-						<key>r</key>
-						<string>1</string>
-					</dict>
-					<key>FillType</key>
-					<integer>3</integer>
 					<key>GradientCenter</key>
 					<string>{0.205882, 0.220588}</string>
 					<key>GradientColor</key>
@@ -1077,11 +1060,11 @@ Engine}</string>
 					<key>Color</key>
 					<dict>
 						<key>b</key>
-						<string>1</string>
+						<string>0.901961</string>
 						<key>g</key>
-						<string>0.826303</string>
+						<string>0.901961</string>
 						<key>r</key>
-						<string>0.706739</string>
+						<string>0.901961</string>
 					</dict>
 					<key>FillType</key>
 					<integer>3</integer>
@@ -1090,11 +1073,11 @@ Engine}</string>
 					<key>GradientColor</key>
 					<dict>
 						<key>b</key>
-						<string>1</string>
+						<string>0.8</string>
 						<key>g</key>
-						<string>0.6</string>
+						<string>0.8</string>
 						<key>r</key>
-						<string>0.00392157</string>
+						<string>0.8</string>
 					</dict>
 				</dict>
 			</dict>
@@ -1122,17 +1105,6 @@ Engine}</string>
 			<dict>
 				<key>fill</key>
 				<dict>
-					<key>Color</key>
-					<dict>
-						<key>b</key>
-						<string>0.678387</string>
-						<key>g</key>
-						<string>0.989251</string>
-						<key>r</key>
-						<string>1</string>
-					</dict>
-					<key>FillType</key>
-					<integer>3</integer>
 					<key>GradientCenter</key>
 					<string>{0.205882, 0.220588}</string>
 					<key>GradientColor</key>
@@ -1170,17 +1142,6 @@ Engine}</string>
 			<dict>
 				<key>fill</key>
 				<dict>
-					<key>Color</key>
-					<dict>
-						<key>b</key>
-						<string>0.678387</string>
-						<key>g</key>
-						<string>0.989251</string>
-						<key>r</key>
-						<string>1</string>
-					</dict>
-					<key>FillType</key>
-					<integer>3</integer>
 					<key>GradientCenter</key>
 					<string>{0.205882, 0.220588}</string>
 					<key>GradientColor</key>
@@ -1221,11 +1182,11 @@ Engine}</string>
 					<key>Color</key>
 					<dict>
 						<key>b</key>
-						<string>1</string>
+						<string>0.901961</string>
 						<key>g</key>
-						<string>0.826303</string>
+						<string>0.901961</string>
 						<key>r</key>
-						<string>0.706739</string>
+						<string>0.901961</string>
 					</dict>
 					<key>FillType</key>
 					<integer>3</integer>
@@ -1234,11 +1195,11 @@ Engine}</string>
 					<key>GradientColor</key>
 					<dict>
 						<key>b</key>
-						<string>1</string>
+						<string>0.8</string>
 						<key>g</key>
-						<string>0.6</string>
+						<string>0.8</string>
 						<key>r</key>
-						<string>0.00392157</string>
+						<string>0.8</string>
 					</dict>
 				</dict>
 			</dict>
@@ -1289,6 +1250,8 @@ Engine}</string>
 		<key>SnapsToGrid</key>
 		<string>YES</string>
 	</dict>
+	<key>GuidesLocked</key>
+	<string>NO</string>
 	<key>GuidesVisible</key>
 	<string>YES</string>
 	<key>HPages</key>
@@ -1312,10 +1275,8 @@ Engine}</string>
 	</array>
 	<key>LayoutInfo</key>
 	<dict>
-		<key>AutoAdjust</key>
-		<string>YES</string>
-		<key>MagneticFieldCenter</key>
-		<string>{0, 0}</string>
+		<key>ChildOrdering</key>
+		<integer>0</integer>
 	</dict>
 	<key>LinksVisible</key>
 	<string>NO</string>
@@ -1419,8 +1380,8 @@ Engine}</string>
 	LjMyMDAwNzMyNDIxODc1PC9yZWFsPgoJCQkJCTwvYXJyYXk+CgkJCQkJPGtleT5jb20u
 	YXBwbGUucHJpbnQudGlja2V0LmNsaWVudDwva2V5PgoJCQkJCTxzdHJpbmc+Y29tLmFw
 	cGxlLnByaW50aW5nbWFuYWdlcjwvc3RyaW5nPgoJCQkJCTxrZXk+Y29tLmFwcGxlLnBy
-	aW50LnRpY2tldC5tb2REYXRlPC9rZXk+CgkJCQkJPGRhdGU+MjAwNC0wMi0wNlQxMDo1
-	NzozNlo8L2RhdGU+CgkJCQkJPGtleT5jb20uYXBwbGUucHJpbnQudGlja2V0LnN0YXRl
+	aW50LnRpY2tldC5tb2REYXRlPC9rZXk+CgkJCQkJPGRhdGU+MjAwNC0wMy0wOFQxMzox
+	ODo1Mlo8L2RhdGU+CgkJCQkJPGtleT5jb20uYXBwbGUucHJpbnQudGlja2V0LnN0YXRl
 	RmxhZzwva2V5PgoJCQkJCTxpbnRlZ2VyPjA8L2ludGVnZXI+CgkJCQk8L2RpY3Q+CgkJ
 	CTwvYXJyYXk+CgkJPC9kaWN0PgoJCTxrZXk+Y29tLmFwcGxlLnByaW50LlBhZ2VGb3Jt
 	YXQuUE1BZGp1c3RlZFBhcGVyUmVjdDwva2V5PgoJCTxkaWN0PgoJCQk8a2V5PmNvbS5h
@@ -1434,7 +1395,7 @@ Engine}</string>
 	NTg1OTM3NTwvcmVhbD4KCQkJCQk8L2FycmF5PgoJCQkJCTxrZXk+Y29tLmFwcGxlLnBy
 	aW50LnRpY2tldC5jbGllbnQ8L2tleT4KCQkJCQk8c3RyaW5nPmNvbS5hcHBsZS5wcmlu
 	dGluZ21hbmFnZXI8L3N0cmluZz4KCQkJCQk8a2V5PmNvbS5hcHBsZS5wcmludC50aWNr
-	ZXQubW9kRGF0ZTwva2V5PgoJCQkJCTxkYXRlPjIwMDQtMDItMDZUMTA6NTc6MzZaPC9k
+	ZXQubW9kRGF0ZTwva2V5PgoJCQkJCTxkYXRlPjIwMDQtMDMtMDhUMTM6MTg6NTJaPC9k
 	YXRlPgoJCQkJCTxrZXk+Y29tLmFwcGxlLnByaW50LnRpY2tldC5zdGF0ZUZsYWc8L2tl
 	eT4KCQkJCQk8aW50ZWdlcj4wPC9pbnRlZ2VyPgoJCQkJPC9kaWN0PgoJCQk8L2FycmF5
 	PgoJCTwvZGljdD4KCQk8a2V5PmNvbS5hcHBsZS5wcmludC5QYXBlckluZm8uUE1QYXBl
@@ -1528,7 +1489,7 @@ Engine}</string>
 		<key>CurrentSheet</key>
 		<string>0</string>
 		<key>Frame</key>
-		<string>{{681, 47}, {697, 843}}</string>
+		<string>{{337, 23}, {697, 843}}</string>
 		<key>ShowRuler</key>
 		<false/>
 		<key>ShowStatusBar</key>

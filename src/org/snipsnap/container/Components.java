@@ -45,6 +45,8 @@ import org.snipsnap.render.PlainTextRenderEngine;
 import org.snipsnap.render.SnipRenderEngine;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipSpaceImpl;
+import org.snipsnap.snip.attachment.storage.FileAttachmentStorage;
+import org.snipsnap.snip.attachment.storage.AttachmentStorage;
 import org.snipsnap.snip.label.LabelManager;
 import org.snipsnap.snip.storage.*;
 import org.snipsnap.user.*;
@@ -90,6 +92,7 @@ public class Components {
           nc.registerComponentImplementation(VersionStorage.class, JDBCVersionStorage.class);
           nc.registerComponentImplementation(ApplicationStorage.class, JDBCApplicationStorage.class);
         }
+        nc.registerComponentImplementation(AttachmentStorage.class, FileAttachmentStorage.class);
         nc.registerComponentImplementation(PermissionManager.class, DefaultPermissionManager.class);
         nc.registerComponentImplementation(UserManager.class, DefaultUserManager.class);
         nc.registerComponentImplementation(AuthenticationService.class, DefaultAuthenticationService.class);

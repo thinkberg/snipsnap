@@ -33,11 +33,13 @@ import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.snip.attachment.Attachment;
 import org.snipsnap.snip.attachment.Attachments;
+import org.snipsnap.snip.attachment.storage.AttachmentStorage;
 import org.snipsnap.snip.storage.XMLFileSnipStorage;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.Security;
 import org.snipsnap.user.User;
+import org.snipsnap.container.Components;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -45,10 +47,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.util.Date;
 
 /**
  * Servlet to store attachments to snips.
@@ -99,13 +99,13 @@ public class FileUploadServlet extends HttpServlet {
       return;
     }
 
+    AttachmentStorage attachmentStorage = (AttachmentStorage) Components.getComponent(AttachmentStorage.class);
+
     User user = Application.get().getUser();
     if (Security.checkPermission(Permissions.ATTACH_TO_SNIP, user, snip)) {
-      File filePath = config.getFilePath();
-
       if (request.getParameter("upload") != null) {
         try {
-          uploadFile(request, snip, filePath);
+          uploadFile(request, snip);
         } catch (IOException e) {
           request.setAttribute("error", "I/O Error while uploading.");
           e.printStackTrace();
@@ -118,10 +118,8 @@ public class FileUploadServlet extends HttpServlet {
           for (int fileNo = 0; fileNo < files.length; fileNo++) {
             Attachment attachment = attachments.getAttachment(files[fileNo]);
             if (null != attachment) {
-              File file = new File(filePath, attachment.getLocation());
-              if(file.delete()) {
-                attachments.removeAttachment(attachment);
-              }
+              attachmentStorage.delete(attachment);
+              attachments.removeAttachment(attachment);
             }
           }
           // make sure to store the changed snip
@@ -140,7 +138,9 @@ public class FileUploadServlet extends HttpServlet {
     dispatcher.forward(request, response);
   }
 
-  public String uploadFile(HttpServletRequest request, Snip snip, File filePath) throws IOException {
+  public String uploadFile(HttpServletRequest request, Snip snip) throws IOException {
+    AttachmentStorage attachmentStorage = (AttachmentStorage) Components.getComponent(AttachmentStorage.class);
+
     MultipartWrapper wrapper = (MultipartWrapper) request;
     String fileName = wrapper.getParameter("filename");
     String contentType = wrapper.getParameter("mimetype");
@@ -155,18 +155,21 @@ public class FileUploadServlet extends HttpServlet {
     }
 
     InputStream fileInputStream = wrapper.getFileInputStream("file");
-    if (fileInputStream != null && fileName != null && fileName.length() > 0 && contentType != null) {
-      File relativeFileLocation = new File(snip.getName(), fileName);
-      File file = new File(filePath, relativeFileLocation.getPath());
 
-      // check and create the directory, where to store the snip attachments
-      if (!file.getParentFile().isDirectory()) {
-        file.getParentFile().mkdirs();
-      }
-      Logger.log(Logger.DEBUG, "Uploading '" + relativeFileLocation.getName() + "' to '" + file.getCanonicalPath() + "'");
-      int size = storeAttachment(file, fileInputStream);
-      snip.getAttachments().addAttachment(relativeFileLocation.getName(),
-                                          contentType, size, relativeFileLocation.getPath());
+    if (fileInputStream != null && fileName != null && fileName.length() > 0 && contentType != null) {
+
+      // Logger.log(Logger.DEBUG, "Uploading '" + relativeFileLocation.getName() + "' to '" + file.getCanonicalPath() + "'");
+
+      File relativeFileLocation = new File(snip.getName(), fileName);
+      Attachment attachment = new Attachment(relativeFileLocation.getName(), contentType, 0,  new Date(), relativeFileLocation.getPath());
+      OutputStream out = attachmentStorage.getOutputStream(attachment);
+      int size = storeAttachment(out, fileInputStream);
+      attachment.setSize(size);
+      out.close();
+      fileInputStream.close();
+
+      snip.getAttachments().addAttachment(attachment);
+
       SnipSpaceFactory.getInstance().store(snip);
       return fileName;
     }
@@ -195,16 +198,13 @@ public class FileUploadServlet extends HttpServlet {
   }
 
   // store file from input stream into a file
-  public int storeAttachment(File file, InputStream in) throws IOException {
-    FileOutputStream out = new FileOutputStream(file);
+  public int storeAttachment(OutputStream out, InputStream in) throws IOException {
     byte[] buf = new byte[4096];
     int length = 0, size = 0;
     while ((length = in.read(buf)) != -1) {
       out.write(buf, 0, length);
       size += length;
     }
-    out.close();
-    in.close();
     return size;
   }
 }

@@ -84,10 +84,14 @@ public class Attachments {
 
   private Map attachments = null;
 
-  public Attachment addAttachment(String name, String contentType, long size, String location) {
+  public Attachment addAttachment(Attachment attachment) {
     deserialize();
+    attachments.put(attachment.getName(), attachment);
+    return attachment;
+  }
+  public Attachment addAttachment(String name, String contentType, long size, String location) {
     Attachment attachment = new Attachment(name, contentType, size, new Date(), location);
-    attachments.put(name, attachment);
+    addAttachment(attachment);
     return attachment;
   }
 

@@ -51,9 +51,9 @@ public class MessageSendMacro extends SnipMacro {
     throws IllegalArgumentException, IOException {
 
     SnipRenderContext context = params.getSnipRenderContext();
-    Snip snip = (Snip) context.getAttribute("snip");
+    Snip snip = (Snip) context.getAttribute(SnipRenderContext.SNIP);
     PicoContainer container = (PicoContainer)
-      context.getAttribute("container");
+      context.getAttribute(SnipRenderContext.CONTAINER);
 
     MessageService service = (MessageService)
       container.getComponentInstance(MessageService.class);

@@ -80,10 +80,15 @@ in Java.
 
 \section{SnipSnap rendering}
 
+SnipSnap uses the Radeox\cite{Radeox} render engine for rendering the text markup to HTML.
+Radeox knows macros and filters to do the rendering job. Some macros and filters, like the BoldFilter
+are part of Radeox. Others, which are specific to SnipSnap, are part of SnipSnap (Picture \ref{Architecture}).
+
 \begin{figure}[ht]
   \centering
-%    \includegraphics[keepaspectratio,width=8cm]{images/Architecture}
+    \includegraphics[keepaspectratio,width=8cm]{images/SnipRadeox}
      \caption{\small\textsf Radeox Render Architecture}
+     \label{Architecture}
 \end{figure}
 
 \subsection{Writing Macros}
@@ -259,21 +264,209 @@ storage date and a physical location.
 
 \subsection{Reading Attachments}
 
-If you need to read an attachment from  the storage for example to display it or store it 
-in another place, you need physical I/O access to the attachment.
+If you need to read an attachment from  the storage for example to display it or store it in another place, you need physical I/O access to the attachment. The attachment I/O is done by the AttachmentStorage component.
+
+%!SRC|examples/AttachmentTest.java|start-1|end-1|
+\begin{Verbatim}[gobble=6,frame=single,numbers=left,fontsize=\small]
+      Attachments attachments = snip.getAttachments();
+      Attachment attachment =
+          attachments.getAttachment("MyAttachment.txt");
+      AttachmentStorage attachmentStorage = (AttachmentStorage)
+          Components.getComponent(AttachmentStorage.class);
+      InputStream in = attachmentStorage.getInputStream(attachment);
+\end{Verbatim}
+%!END
+
+\subsection{Writing Attachments}
+
+Writing Attachments is the same as reading attachment. You first create an attachment object,
+then get the OutputStream from the AttachmentStorage and write your attachment data to the
+backend.
+
+%!SRC|examples/AttachmentTest.java|start-2|end-2|
+\begin{Verbatim}[gobble=6,frame=single,numbers=left,fontsize=\small]
+      AttachmentStorage attachmentStorage = (AttachmentStorage)
+          Components.getComponent(AttachmentStorage.class);
+      OutputStream out =
+          attachmentStorage.getOutputStream(attachment);
+\end{Verbatim}
+%!END
 
 \subsection{Writing an AttachmentStorage}
 
-%\section{Writing components}
+To change the storage backend for attachment to something you need, e.g. JDBC, WebDAV, CVS or Subversion
+you have to implement the AttachmentStorage interface. The I/O methods all throw IOExceptions.
+
+\begin{verbatim}
+public interface AttachmentStorage {
+  public boolean exists(Attachment attachment);
+  public OutputStream getOutputStream(Attachment attachment);
+  public InputStream getInputStream(Attachment attachment);
+  public void delete(Attachment attachment);
+}
+\end{verbatim}
+
+For an example we write a MapAttachmentStorage which stores the attachment in memory in a Map object.
+
+%!SRC|examples/MapAttachmentStorage.java|start-1|end-1|
+\begin{Verbatim}[gobble=0,frame=single,numbers=left,fontsize=\small]
+public class MapAttachmentStorage
+    implements AttachmentStorage {
+
+  private Map storage;
+
+  public MapAttachmentStorage() {
+    storage = new HashMap();
+  }
+
+  public boolean exists(Attachment attachment)
+      throws IOException {
+    return storage.containsKey(attachment.getLocation());
+  }
+
+  public OutputStream getOutputStream(Attachment attachment)
+      throws IOException {
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    storage.put(attachment.getLocation(), out);
+    return out;
+  }
+
+  public InputStream getInputStream(Attachment attachment)
+      throws IOException {
+    ByteArrayOutputStream out = (ByteArrayOutputStream)
+        storage.get(attachment.getLocation());
+    byte[] data = out.toByteArray();
+    return new ByteArrayInputStream(data);
+  }
+
+  public void delete(Attachment attachment) throws IOException {
+    storage.remove(attachment.getLocation());
+
+  }
+\end{Verbatim}
+%!END
+
+\section{Storage Architecture and SnipSpace}
+
+SnipSpace is a facade component to access all snips.
+
+SnipSpace provides
+\begin{itemize}
+\item fulltext search capabilites
+\item persistence for snips
+\item a frontend to blogs
+\end{itemize}
+
+\begin{figure}[ht]
+  \centering
+    \includegraphics[keepaspectratio,width=8cm]{images/Backend}
+     \caption{\small\textsf SnipSnap storage options}
+     \label{Backend}
+\end{figure}
+
+SnipSpace also handles delayed storage and some statistic information about the 
+snips of the space.
+
+\section{Writing a Snip storage backend}
+
+Snips can be stored in different locations. All storage functionality
+is encapsulated in SnipStorage components. The SnipStorage component is used
+by the SnipSpace component to persist snips. The basic SnipSnap distribution
+includes a JDBCSnipStorage, a PropertyFileSnipStorage and a XMLFileSnipStorage.
+The JDBC storage stores snips in a JDBC source, the property storage and the XML storage
+store snips in the file system. While property storage uses one property file for metadata and
+a text file for the snip content, the XML storage persists snips in XML files.
+
+\subsection{FileSnipStorage}
+
+FileSnipStorage is a base class for storing snips in a file system.
+You can extend FileSnipStorage but it's recommended to implement
+the bases classes for FileSnipStorage in SnipSnap. There are also two bases 
+classes for FileStorage
+
+\begin{description}
+\item[OneFileSnipStorage]Stores snip in one file
+\item[TwoFileSnipStorage]Stores snip in two files
+\end{description}
+
+They both handle creation and deletion of files and directories as necessary.
+You only need to implement the serialization and deserialization from and to
+streams. Both storages also implement the VersionStorage for versioning
+information, which usually is stored in sub directories and uses your
+persisting methods.
+
+\subsubsection{OneFileSnipStorage}
+
+To write your own file storage with one file, you extend
+OneFileStorage and implement the abstract methods:
+
+\begin{Verbatim}[gobble=0,frame=single,numbers=left,fontsize=\small]
+protected abstract Map loadSnip(InputStream in)
+  throws IOException;
+protected abstract String getFileName();
+protected abstract void storeSnip(Snip snip, OutputStream out);
+\end{Verbatim}
+
+The loadSnip method gets an input stream, reads the snip data from the stream
+and creates a new snip. getFileName returns the file name, which could be based
+on the snip name. storeSnip gets a snip and an output stream and persists the
+snip into that stream. Which format to serialize or deserialize a snip is up to you.
+XMLFileSnipStorage is an example of OneFileStorage which stores snip data 
+in XML.
+ 
+\subsubsection{TwoFileSnopStorage}
+
+TwoFileSnipStorage is the same as OneFileSnipStorage. The only difference
+is that the two file version assumes you want to store the metadata and the
+content of a snip in two different files. So each method of OneFileSnipStorage
+is duplicated, one for the metadata and one for the content.
+
+\begin{Verbatim}[gobble=0,frame=single,numbers=left,fontsize=\small]
+protected abstract Map loadMetadata(InputStream in) 
+  throws IOException;
+protected abstract String loadContent(InputStream in)
+  throws IOException;
+protected abstract String getMetadataFileName();
+protected abstract String getContentFileName();
+protected abstract void storeContent(Snip snip, 
+                                     OutputStream out);
+protected abstract void storeMetadata(Snip snip, 
+                                      OutputStream out);
+\end{Verbatim}
+
+\subsubsection{Writing other snip storages}
+
+Writing your own backend for e.g. LDAP storage, you have
+to implement the SnipStorage interface. This supplies methods
+for storing, loading and querying the storage for snips.
+
+\subsection{Version backend}
+
+Versioning of snips is encapsulated in the VersionStorage component.
+The basic SnipSnap distribution can store versioning information
+both in files and a JDBC source. JDBC versioning is done in JDBCVersionStorage
+while the FileStorages already implement the VersionStorage interface.
+
+\begin{Verbatim}[gobble=0,frame=single,numbers=left,fontsize=\small]
+public interface VersionStorage {
+  public List getVersionHistory(Snip snip);
+  public Snip loadVersion(Snip snip, int version);
+  public void storeVersion(Snip snip);
+}
+\end{Verbatim}
+
+getVersionHistory returns a List of VersionInfo objects for the snip. loadVersion loads the given
+version from the backend, while storeVersion stores the newest version.
 
 %\section{Writing a UserManager}
 
-%\section{Adding a storage backend}
+%\section{Writing components}
 
 %\section{Customizing JSP code}
 
 \begin{thebibliography}{}
-\bibitem{RadeoxDeveloper} Radeox Developer Guide, http://www.radeox.org
+\bibitem{Radeox} Radeox,  http://radeox.org
+\bibitem{RadeoxDeveloper} Radeox Developer Guide, http://radeox.org/space/Developer
 \bibitem{CVS} CVS Revision Control System
 \bibitem{Groovy} Groovy programming language, http://groovy.codehaus.org
 \bibitem{PicoContainer} Component container, http://www.picocontainer.org/

@@ -29,6 +29,8 @@ import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.attachment.Attachment;
+import org.snipsnap.snip.attachment.storage.AttachmentStorage;
+import org.snipsnap.container.Components;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -55,7 +57,7 @@ public class FileDownloadServlet extends HttpServlet {
     if (snip != null) {
       Attachment attachment = snip.getAttachments().getAttachment(fileName);
       // make sure the attachment exists
-      if (attachment != null)  {
+      if (attachment != null) {
         return attachment.getDate().getTime();
       }
     }
@@ -73,6 +75,8 @@ public class FileDownloadServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
+    AttachmentStorage attachmentStorage = (AttachmentStorage) Components.getComponent(AttachmentStorage.class);
+
     Snip snip = (Snip) request.getAttribute(SNIP);
     String fileName = (String) request.getAttribute(FILENAME);
 
@@ -81,28 +85,20 @@ public class FileDownloadServlet extends HttpServlet {
 
       // make sure the attachment exists
       if (attachment != null) {
-        Configuration config = Application.get().getConfiguration();
-        File fileStore = config.getFilePath();
-        File file = new File(fileStore, attachment.getLocation());
-
-        if (file.exists()) {
-          response.setContentType(attachment.getContentType());
-          response.setContentLength((int)attachment.getSize());
-          response.setDateHeader("Last-Modified", attachment.getDate().getTime());
-          BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
-          BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
-          byte buf[] = new byte[4096];
-          int length = -1;
-          while ((length = in.read(buf)) != -1) {
-            out.write(buf, 0, length);
-          }
-          out.flush();
-          in.close();
-          out.close();
-          return;
-        } else {
-          Logger.warn("File '"+file+"' does not exist.");
+        response.setContentType(attachment.getContentType());
+        response.setContentLength((int) attachment.getSize());
+        response.setDateHeader("Last-Modified", attachment.getDate().getTime());
+        BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
+        BufferedInputStream in = new BufferedInputStream(attachmentStorage.getInputStream(attachment));
+        byte buf[] = new byte[4096];
+        int length = -1;
+        while ((length = in.read(buf)) != -1) {
+          out.write(buf, 0, length);
         }
+        out.flush();
+        in.close();
+        out.close();
+        return;
       } else {
         // legacy: found a default image download
         Logger.log(Logger.DEBUG, "old style image: " + fileName);

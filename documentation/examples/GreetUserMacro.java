@@ -47,7 +47,7 @@ public class GreetUserMacro extends SnipMacro {
     throws IllegalArgumentException, IOException {
 
     SnipRenderContext context = params.getSnipRenderContext();
-    User user = (User) context.getAttribute("user");
+    User user = (User) context.getAttribute(SnipRenderContext.USER);
     // Users which are not logged in are guests
     if (user.isGuest()) {
       writer.write("Hello, unknown friend.");

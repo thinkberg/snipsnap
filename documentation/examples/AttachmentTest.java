@@ -35,10 +35,16 @@ import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipImpl;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.attachment.Attachments;
+import org.snipsnap.snip.attachment.Attachment;
+import org.snipsnap.snip.attachment.storage.AttachmentStorage;
 import org.snipsnap.test.mock.MockSnipSpace;
+import org.snipsnap.container.Components;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * Test for the attachment examples
@@ -61,6 +67,44 @@ public class AttachmentTest extends TestCase {
 
   public static Test suite() {
     return new TestSuite(AttachmentTest.class);
+  }
+
+  public void testWriteAttachment() {
+    Snip snip = new SnipImpl("HelloSnip","HelloSnip");
+
+    Attachment attachment = null;
+
+    try {
+// cut:start-2
+      AttachmentStorage attachmentStorage = (AttachmentStorage)
+          Components.getComponent(AttachmentStorage.class);
+      OutputStream out =
+          attachmentStorage.getOutputStream(attachment);
+// cut:end-2
+      assertNotNull("OutputStream not null.", out);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+  }
+
+  public void testReadAttachment() {
+
+    Snip snip = new SnipImpl("HelloSnip","HelloSnip");
+
+    try {
+// cut:start-1
+      Attachments attachments = snip.getAttachments();
+      Attachment attachment =
+          attachments.getAttachment("MyAttachment.txt");
+      AttachmentStorage attachmentStorage = (AttachmentStorage)
+          Components.getComponent(AttachmentStorage.class);
+      InputStream in = attachmentStorage.getInputStream(attachment);
+// cut:end-1
+      assertNotNull("InputStream not null.", in);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   public void testShowAttachments() {
