@@ -44,6 +44,13 @@
   margin-top: 10px;
 }
 
+.snip-attachments {
+  float: right;
+  border: 1px solid #eeeeee;
+  padding: 3px;
+  width: auto;
+}
+
 .snip-post-comments {
   margin-top: 20px;
   margin-bottom: 20px;
