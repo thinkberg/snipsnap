@@ -25,9 +25,9 @@
 package com.neotis.config;
 
 import com.neotis.app.Application;
-import com.neotis.snip.SnipSpace;
 import com.neotis.snip.HomePage;
 import com.neotis.snip.Snip;
+import com.neotis.snip.SnipSpace;
 import com.neotis.user.User;
 import com.neotis.user.UserManager;
 
@@ -104,7 +104,7 @@ public class CreateDB {
         "       mTime     TIMESTAMP, " +
         "       cUser     VARCHAR(55), " +
         "       mUser     VARCHAR(55), " +
-        "       parentSnip VARCHAR(100), "+
+        "       parentSnip VARCHAR(100), " +
         "       commentSnip VARCHAR(100) ) ");
 
       statement.executeQuery(
@@ -120,7 +120,7 @@ public class CreateDB {
       statement.close();
       connection.close();
 
-      User admin = UserManager.getInstance().create(username, password,email);
+      User admin = UserManager.getInstance().create(username, password, email);
 
       Application app = new Application();
       app.setUser(admin);
@@ -132,7 +132,7 @@ public class CreateDB {
       Snip snip = null;
       System.out.print("Creating about...");
       snip = space.create("about", "[SnipSnap] is a [Weblog] and [Wiki] tool by [funzel] und [arte]", app);
-      if (snip!=null) {
+      if (snip != null) {
         System.out.println("ok.");
       } else {
         System.out.println("failed.");
@@ -140,7 +140,7 @@ public class CreateDB {
 
       snip = space.create("start", "{weblog}", app);
 
-     String rolling = "__Blogrolling:__\\\\ \n" +
+      String rolling = "__Blogrolling:__\\\\ \n" +
         "{link:Langreiter|http://www.langreiter.com}\\\\ \n" +
         "{link:Earl|http://earl.strain.at}\\\\ \n" +
         "{link:henso|http://www.henso.com}\\\\ \n" +
