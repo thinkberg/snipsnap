@@ -26,9 +26,9 @@
 package org.snipsnap.xmlrpc;
 
 import org.apache.xmlrpc.XmlRpcClient;
-import org.snipsnap.app.Application;
 import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.snip.Snip;
+import org.snipsnap.app.Application;
 
 import java.util.Vector;
 
@@ -39,10 +39,18 @@ import java.util.Vector;
  * @version $Id$
  */
 
-public class WeblogsPing {
-  public static void ping(Snip weblog) {
+public class WeblogsPing extends Thread {
+  AppConfiguration config;
+  Snip weblog;
+
+  public WeblogsPing(AppConfiguration configuration, Snip weblog) {
+    this.config = configuration;
+    this.weblog = weblog;
+    start();
+  }
+
+  public void run() {
     try {
-      AppConfiguration config = Application.get().getConfiguration();
       if (config.allow(AppConfiguration.PERM_WEBLOGS_PING)) {
         XmlRpcClient xmlrpc = new XmlRpcClient("http://rpc.weblogs.com/RPC2");
         Vector params = new Vector();
@@ -50,11 +58,14 @@ public class WeblogsPing {
         params.addElement(config.getName());
         params.addElement(config.getSnipUrl(weblog.getName()));
         Object result = xmlrpc.execute("weblogUpdates.ping", params);
-        System.err.println("weblogs.ping received: "+result);
+        System.err.println("weblogs.ping received: " + result);
       }
     } catch (Exception e) {
       System.err.println("Unable to ping weblogs.com");
     }
   }
 
+  public static void ping(Snip weblog) {
+    new WeblogsPing(Application.get().getConfiguration(), weblog).start();
+  }
 }
