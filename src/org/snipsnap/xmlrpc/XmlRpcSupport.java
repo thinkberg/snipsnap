@@ -1,0 +1,61 @@
+/*
+ * This file is part of "SnipSnap Wiki/Weblog".
+ *
+ * Copyright (c) 2002 Stephan J. Schmidt, Matthias L. Jugel
+ * All Rights Reserved.
+ *
+ * Please visit http://snipsnap.org/ for updates and contact.
+ *
+ * --LICENSE NOTICE--
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * --LICENSE NOTICE--
+ */
+
+
+package org.snipsnap.xmlrpc;
+
+import org.snipsnap.user.User;
+import org.snipsnap.user.UserManager;
+import org.snipsnap.app.Application;
+import org.apache.xmlrpc.XmlRpcException;
+import org.radeox.util.logging.Logger;
+
+/**
+ * Utility base class for XML-RPC handlers.
+ *
+ * @author Stephan J. Schmidt
+ * @version $Id$
+ */
+public class XmlRpcSupport  {
+  /**
+   *  Utility method for XML-RPC handlers. Method authenticates
+   *  an user, sets this user as the current user of
+   *  the Application thread  and throws an XmlRpcException if
+   *  user couldn't be authenticated
+   *
+   *  @param username Login name of the user received from XML-RPC call
+   *  @param password Password credential received from XML-RPC call
+   */
+  protected User authenticate(String username, String password) throws XmlRpcException {
+    UserManager um = UserManager.getInstance();
+    User user = um.authenticate(username, password);
+    if (user != null) {
+      Application.get().setUser(user);
+      return user;
+    }
+    Logger.warn("XML-RPC authenticate: invalid login for "+username);
+    throw new XmlRpcException(-1, "Invalid login: " + username);
+  }
+}
