@@ -29,21 +29,21 @@ public class UserSnipMacro extends Macro {
       List snips = space.getByUser(params[0]);
       buffer.append(snips.size());
       buffer.append(") </b><br/>");
-      if (snips.size()>0) {
-      buffer.append("<blockquote>");
-      Iterator snipsIterator = snips.iterator();
-      while (snipsIterator.hasNext()) {
-        Snip snip = (Snip) snipsIterator.next();
-        buffer.append("<a href=\"/space/");
-        buffer.append(snip.getName());
-        buffer.append("\">");
-        buffer.append(snip.getName());
-        buffer.append("</a>");
-        if (snipsIterator.hasNext()) {
-          buffer.append(", ");
+      if (snips.size() > 0) {
+        buffer.append("<blockquote>");
+        Iterator snipsIterator = snips.iterator();
+        while (snipsIterator.hasNext()) {
+          Snip snip = (Snip) snipsIterator.next();
+          buffer.append("<a href=\"/space/");
+          buffer.append(snip.getName());
+          buffer.append("\">");
+          buffer.append(snip.getName());
+          buffer.append("</a>");
+          if (snipsIterator.hasNext()) {
+            buffer.append(", ");
+          }
         }
-      }
-      buffer.append("</blockquote>");
+        buffer.append("</blockquote>");
       } else {
         buffer.append("none written yet.");
       }
