@@ -55,7 +55,7 @@ import java.util.jar.JarFile;
 public class Installer extends HttpServlet {
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
+          throws ServletException, IOException {
 
     // get or create session and application object
     HttpSession session = request.getSession(false);
@@ -210,12 +210,12 @@ public class Installer extends HttpServlet {
     }
 
     String theme = request.getParameter("theme");
-    if(theme == null || theme.length() == 0) {
+    if (theme == null || theme.length() == 0) {
       errors.put("theme", "Please select a theme to install.");
       sendError(session, errors, request, response);
     }
     if (theme != null && theme.length() != 0) {
-      config.setProperty(AppConfiguration.APP_THEME, "/"+theme);
+      config.setProperty(AppConfiguration.APP_THEME, "/" + theme);
       writeMessage(out, "Extracting theme ...");
       try {
         JarFile themeJar = new JarFile("lib/snipsnap-theme-" + theme + ".jar", true);
@@ -249,63 +249,71 @@ public class Installer extends HttpServlet {
     writeMessage(out, "Saving local configuration ...");
     config.setFile(new File(webInf.getAbsoluteFile(), "application.conf"));
 
-    writeMessage(out, "Creating database ...");
-    boolean useMcKoi = request.getParameter("usemckoi") != null ? true : false;
-    String jdbcURL = request.getParameter("jdbc");
-    String jdbcDrv = request.getParameter("driver");
-    if (useMcKoi || jdbcURL == null || jdbcURL.length() == 0) {
-      File dbConfFile = new File(webInf, "db.conf");
-      jdbcURL = MckoiEmbeddedJDBCDriver.MCKOI_PREFIX + dbConfFile.getPath();
-      jdbcDrv = "org.snipsnap.util.MckoiEmbeddedJDBCDriver";
-
-      config.setJDBCURL(jdbcURL + "?create=true");
-      config.setJDBCDriver(jdbcDrv);
-
-      try {
-        Properties dbConf = new Properties();
-        dbConf.load(new FileInputStream("conf/db.conf"));
-        dbConf.store(new FileOutputStream(dbConfFile), "SnipSnap Database configuration: " + config.getName());
-
-        CreateDB.createDB(config);
-      } catch (IOException e) {
-        System.err.println("Installer: error creating database: " + e);
-        errors.put("fatal", "Unable to create database!");
-        sendError(session, errors, request, response);
-        return;
-      }
-      config.setJDBCURL(jdbcURL);
-    } else {
-      config.setJDBCURL(jdbcURL);
-      config.setJDBCDriver(jdbcDrv);
-      CreateDB.createDB(config);
-    }
-
-    writeMessage(out, "Inserting inital data into database ...");
-    CreateDB.createAdmin(config);
-    CreateDB.insertData(config, new FileInputStream("conf/snipsnap.snip"));
-    CreateDB.postFirst(config);
-    File themeSnip = new File(webInf, theme + ".snip");
-    if (themeSnip.exists()) {
-      writeMessage(out, "Adding additional data from theme " + theme);
-      CreateDB.insertData(config, new FileInputStream(themeSnip));
-    }
-
-    config.store();
-
-    writeMessage(out, "Starting application ...");
     // for starting the application make sure we do not use the class loader
     // of the installer, we remember our current class loader and replace it later
     Thread thread = Thread.currentThread();
     ClassLoader currentClassLoader = thread.getContextClassLoader();
     try {
       thread.setContextClassLoader(currentClassLoader.getParent());
-      ApplicationLoader.loadApplication(config);
+
+      writeMessage(out, "Creating database ...");
+      boolean useMcKoi = request.getParameter("usemckoi") != null ? true : false;
+      String jdbcURL = request.getParameter("jdbc");
+      String jdbcDrv = request.getParameter("driver");
+      if (useMcKoi || jdbcURL == null || jdbcURL.length() == 0) {
+        File dbConfFile = new File(webInf, "db.conf");
+        jdbcURL = MckoiEmbeddedJDBCDriver.MCKOI_PREFIX + dbConfFile.getPath();
+        jdbcDrv = "org.snipsnap.util.MckoiEmbeddedJDBCDriver";
+
+        config.setJDBCURL(jdbcURL + "?create=true");
+        config.setJDBCDriver(jdbcDrv);
+
+        try {
+          Properties dbConf = new Properties();
+          dbConf.load(new FileInputStream("conf/db.conf"));
+          dbConf.store(new FileOutputStream(dbConfFile), "SnipSnap Database configuration: " + config.getName());
+
+          CreateDB.createDB(config);
+        } catch (IOException e) {
+          System.err.println("Installer: error creating database: " + e);
+          errors.put("fatal", "Unable to create database!");
+          sendError(session, errors, request, response);
+          return;
+        }
+        config.setJDBCURL(jdbcURL);
+      } else {
+        config.setJDBCURL(jdbcURL);
+        config.setJDBCDriver(jdbcDrv);
+        CreateDB.createDB(config);
+      }
+
+      writeMessage(out, "Inserting inital data into database ...");
+      CreateDB.createAdmin(config);
+      CreateDB.insertData(config, new FileInputStream("conf/snipsnap.snip"));
+      CreateDB.postFirst(config);
+      File themeSnip = new File(webInf, theme + ".snip");
+      if (themeSnip.exists()) {
+        writeMessage(out, "Adding additional data from theme " + theme);
+        CreateDB.insertData(config, new FileInputStream(themeSnip));
+      }
+
+      config.store();
+      writeMessage(out, "Starting application ...");
+      try {
+        ApplicationLoader.loadApplication(config);
+      } catch (Exception e) {
+        System.err.println("Installer: unable to start application: " + e);
+        e.printStackTrace();
+        errors.put("fatal", "Cannot start application: " + e);
+        sendError(session, errors, request, response);
+        return;
+      }
+
     } catch (Exception e) {
-      System.err.println("Installer: unable to start application: " + e);
+      System.err.println("Installer: security problem: " + e);
       e.printStackTrace();
-      errors.put("fatal", "Cannot start application: " + e);
+      errors.put("fatal", "A security exception prevents the installation of SnipSnap.");
       sendError(session, errors, request, response);
-      return;
     } finally {
       // reset back to the default classloader
       thread.setContextClassLoader(currentClassLoader);
@@ -328,7 +336,7 @@ public class Installer extends HttpServlet {
   }
 
   private void sendError(HttpSession session, Map errors, HttpServletRequest request, HttpServletResponse response)
-      throws IOException {
+          throws IOException {
     session.setAttribute("errors", errors);
     response.sendRedirect(SnipLink.absoluteLink(request, "/exec/install.jsp"));
   }
