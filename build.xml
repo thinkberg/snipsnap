@@ -57,8 +57,8 @@
         <include name="${jar}/org.mortbay.jetty.jar"/>
         <include name="${jar}/lucene-1.2.jar"/>
         <include name="${jar}/xmlrpc-1.1.jar"/>
-        <include name="${jar}/${appname}-admin.war"/>
         <include name="${jar}/${appname}-template.war"/>
+        <include name="${jar}/${appname}-installer.war"/>
         <include name="conf/server.conf"/>
         <include name="conf/db.conf"/>
         <include name="conf/jetty.conf"/>
