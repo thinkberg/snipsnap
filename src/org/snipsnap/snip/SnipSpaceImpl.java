@@ -83,7 +83,7 @@ public class SnipSpaceImpl implements SnipSpace {
 
   private ApplicationAwareMap blogs;
 
-  public SnipSpaceImpl(SnipStorage  storage,
+  public SnipSpaceImpl(SnipStorage storage,
                        ApplicationManager manager,
                        VersionManager versionManager
                        ) {
@@ -91,7 +91,7 @@ public class SnipSpaceImpl implements SnipSpace {
     this.versionManager = versionManager;
 
     changed = new ApplicationAwareMap(HashMap.class, Queue.class);
-    blogs = new  ApplicationAwareMap(HashMap.class, HashMap.class);
+    blogs = new ApplicationAwareMap(HashMap.class, HashMap.class);
 
     // @TODO resolve this with components from PicoContainer
     // Fully fill the cache with all Snips
@@ -117,7 +117,7 @@ public class SnipSpaceImpl implements SnipSpace {
 
     //This should also fill the cache
     // This should be moved somewhere down, SnipSpace need not know about
-   // different applications
+    // different applications
     Iterator iterator = manager.getApplications().iterator();
 //    System.out.println("apps = "+manager.getApplications());
     while (iterator.hasNext()) {
@@ -134,17 +134,21 @@ public class SnipSpaceImpl implements SnipSpace {
     timer = new Timer();
     timer.schedule(new TimerTask() {
       public void run() {
-        synchronized (delayed) {
-          ListIterator iterator = delayed.listIterator();
-          while (iterator.hasNext()) {
-            Snip snip = (Snip) iterator.next();
-            // make sure the OID is set to the corresponding snips SnipSpace
-            Application.get().storeObject(Application.OID, snip.getApplication());
-            systemStore(snip);
-            iterator.remove();
-          }
-        }
+        List toStoreList = delayed;
+        // To be atomic we first create the list and
+        // then assign the list to delayed
+        // With help from french_c aka Jens
+        List temp = new ArrayList();
+        delayed = temp;
 
+        ListIterator iterator = toStoreList.listIterator();
+        while (iterator.hasNext()) {
+          Snip snip = (Snip) iterator.next();
+          // make sure the OID is set to the corresponding snips SnipSpace
+          Application.get().storeObject(Application.OID, snip.getApplication());
+          systemStore(snip);
+          iterator.remove();
+        }
       }
       // execute after 5 minutes and then
       // every 5 minutes
@@ -295,8 +299,8 @@ public class SnipSpaceImpl implements SnipSpace {
     changed(snip);
     snip.setMUser(app.getUser());
     snip.setMTime(new Timestamp(new java.util.Date().getTime()));
-    synchronized(snip) {
-      snip.setVersion(snip.getVersion()+1);
+    synchronized (snip) {
+      snip.setVersion(snip.getVersion() + 1);
     }
     versionManager.storeVersion(snip);
     systemStore(snip);
@@ -351,14 +355,14 @@ public class SnipSpaceImpl implements SnipSpace {
     changed(snip);
     indexer.index(snip);
     MessageService service = (MessageService) Components.getComponent(MessageService.class);
-    if (null!=service) {
+    if (null != service) {
       service.send(new Message(Message.SNIP_CREATE, snip));
     }
     return snip;
   }
 
   public void remove(Snip snip) {
-    synchronized(delayed) {
+    synchronized (delayed) {
       delayed.remove(snip);
     }
     changed.getQueue().remove(snip);

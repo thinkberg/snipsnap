@@ -26,11 +26,11 @@
 package org.snipsnap.render.macro;
 
 import org.radeox.util.Service;
-import org.radeox.util.Linkable;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 import org.snipsnap.render.macro.list.ListFormatter;
 import org.snipsnap.render.macro.list.SimpleList;
+import org.snipsnap.render.macro.list.Linkable;
 
 import java.io.IOException;
 import java.io.Writer;

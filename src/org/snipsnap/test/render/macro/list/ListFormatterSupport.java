@@ -27,8 +27,9 @@
 package org.snipsnap.test.render.macro.list;
 
 import junit.framework.TestCase;
-import org.radeox.util.Linkable;
+
 import org.snipsnap.render.macro.list.ListFormatter;
+import org.snipsnap.render.macro.list.Linkable;
 
 import java.io.Writer;
 import java.io.StringWriter;

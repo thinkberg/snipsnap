@@ -23,9 +23,7 @@
  * --LICENSE NOTICE--
  */
 
-package org.radeox.util;
-
-
+package org.snipsnap.render.macro.list;
 
 /**
  * Tells the object to create a link to itself.

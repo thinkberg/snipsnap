@@ -23,7 +23,7 @@
  * --LICENSE NOTICE--
  */
 
-package org.radeox.util;
+package org.snipsnap.render.macro.list;
 
 /**
  * Objects with a name

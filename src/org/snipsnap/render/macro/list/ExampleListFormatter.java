@@ -24,9 +24,6 @@
  */
 package org.snipsnap.render.macro.list;
 
-import org.radeox.util.Linkable;
-import org.radeox.util.Nameable;
-
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;

@@ -27,9 +27,9 @@ package org.snipsnap.test.render.macro.list;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.radeox.util.Linkable;
-import org.radeox.util.Nameable;
 import org.snipsnap.render.macro.list.SimpleList;
+import org.snipsnap.render.macro.list.Nameable;
+import org.snipsnap.render.macro.list.Linkable;
 
 import java.io.IOException;
 import java.util.Arrays;
