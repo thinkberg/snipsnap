@@ -51,9 +51,9 @@
         <exclude name="dbimport.sh"/>
         <exclude name="dbrepair.sh"/>
         <exclude name="exportall.sh"/>
-        <exclude name="src/theme/drrockit"/>
-        <exclude name="src/theme/javangelist"/>
-        <exclude name="src/theme/sib"/>
+        <exclude name="src/theme/drrockit/"/>
+        <exclude name="src/theme/javangelist/"/>
+        <exclude name="src/theme/sib/"/>
       </tarfileset>
     </tar>
   </target>
