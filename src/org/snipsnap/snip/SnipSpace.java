@@ -47,7 +47,6 @@ import java.util.Map;
  * @version $Id$
  */
 public class SnipSpace implements LinkTester {
-  private Connection connection;
   private Map cache;
   private Map missing;
   private Queue changed;
@@ -65,7 +64,6 @@ public class SnipSpace implements LinkTester {
     missing = new HashMap();
     changed = new Queue(10);
     cache = new HashMap();
-    connection = ConnectionManager.getConnection();
     changed.fill(storageByRecent(10));
   }
 
@@ -194,6 +192,7 @@ public class SnipSpace implements LinkTester {
   private Snip cacheLoad(ResultSet result) throws SQLException {
     Snip snip = null;
     String name = result.getString("name");
+
     if (cache.containsKey(name)) {
       snip = (Snip) cache.get(name);
     } else {
@@ -217,7 +216,6 @@ public class SnipSpace implements LinkTester {
     } catch (SQLException e) {
       e.printStackTrace();
     } finally {
-      ConnectionManager.close(statement);
       ConnectionManager.close(result);
     }
     return snips;
@@ -226,6 +224,7 @@ public class SnipSpace implements LinkTester {
   private List storageByRecent(int size) {
     PreparedStatement statement = null;
     ResultSet result = null;
+    Connection connection = ConnectionManager.getConnection();
     List snips = new ArrayList();
 
     try {
@@ -240,8 +239,9 @@ public class SnipSpace implements LinkTester {
     } catch (SQLException e) {
       e.printStackTrace();
     } finally {
-      ConnectionManager.close(statement);
       ConnectionManager.close(result);
+      ConnectionManager.close(statement);
+      ConnectionManager.close(connection);
     }
     return snips;
   }
@@ -249,7 +249,9 @@ public class SnipSpace implements LinkTester {
 
   private List storageByUser(String login) {
     PreparedStatement statement = null;
+    Connection connection = ConnectionManager.getConnection();
     List snips = null;
+
     try {
       statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip FROM Snip WHERE cUser=?");
       statement.setString(1, login);
@@ -259,6 +261,7 @@ public class SnipSpace implements LinkTester {
       e.printStackTrace();
     } finally {
       ConnectionManager.close(statement);
+      ConnectionManager.close(connection);
     }
     return snips;
   }
@@ -266,6 +269,7 @@ public class SnipSpace implements LinkTester {
 
   private List storageByComments(Snip parent) {
     PreparedStatement statement = null;
+    Connection connection = ConnectionManager.getConnection();
     List comments = null;
 
     try {
@@ -277,12 +281,14 @@ public class SnipSpace implements LinkTester {
       e.printStackTrace();
     } finally {
       ConnectionManager.close(statement);
+      ConnectionManager.close(connection);
     }
     return comments;
   }
 
   private List storageByParent(Snip parent) {
     PreparedStatement statement = null;
+    Connection connection = ConnectionManager.getConnection();
     List children = null;
 
     try {
@@ -294,12 +300,14 @@ public class SnipSpace implements LinkTester {
       e.printStackTrace();
     } finally {
       ConnectionManager.close(statement);
+      ConnectionManager.close(connection);
     }
     return children;
   }
 
   private List storageByDateInName(String start, String end) {
     PreparedStatement statement = null;
+    Connection connection = ConnectionManager.getConnection();
     List children = null;
 
     try {
@@ -313,6 +321,7 @@ public class SnipSpace implements LinkTester {
       e.printStackTrace();
     } finally {
       ConnectionManager.close(statement);
+      ConnectionManager.close(connection);
     }
     return children;
   }
@@ -321,6 +330,7 @@ public class SnipSpace implements LinkTester {
     Snip snip = null;
     PreparedStatement statement = null;
     ResultSet result = null;
+    Connection connection = ConnectionManager.getConnection();
 
     try {
       statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip FROM Snip WHERE name=?");
@@ -335,12 +345,14 @@ public class SnipSpace implements LinkTester {
     } finally {
       ConnectionManager.close(result);
       ConnectionManager.close(statement);
+      ConnectionManager.close(connection);
     }
     return snip;
   }
 
   private void storageStore(Snip snip) {
     PreparedStatement statement = null;
+    Connection connection = ConnectionManager.getConnection();
 
     try {
       statement = connection.prepareStatement("UPDATE Snip " +
@@ -370,6 +382,7 @@ public class SnipSpace implements LinkTester {
       e.printStackTrace();
     } finally {
       ConnectionManager.close(statement);
+      ConnectionManager.close(connection);
     }
     return;
   }
@@ -377,6 +390,7 @@ public class SnipSpace implements LinkTester {
   private Snip storageCreate(String name, String content, Application app) {
     PreparedStatement statement = null;
     ResultSet result = null;
+    Connection connection = ConnectionManager.getConnection();
 
     String login = app.getUser().getLogin();
     Snip snip = new Snip(name, content);
@@ -414,6 +428,7 @@ public class SnipSpace implements LinkTester {
     } finally {
       ConnectionManager.close(result);
       ConnectionManager.close(statement);
+      ConnectionManager.close(connection);
     }
 
     return snip;
@@ -422,6 +437,7 @@ public class SnipSpace implements LinkTester {
 
   private void storageRemove(Snip snip) {
     PreparedStatement statement = null;
+    Connection connection = ConnectionManager.getConnection();
 
     try {
       statement = connection.prepareStatement("DELETE FROM Snip WHERE name=?");
@@ -432,8 +448,8 @@ public class SnipSpace implements LinkTester {
       e.printStackTrace();
     } finally {
       ConnectionManager.close(statement);
+      ConnectionManager.close(connection);
     }
     return;
   }
-
 }

@@ -49,10 +49,7 @@ public class UserManager {
     return instance;
   }
 
-  private Connection connection;
-
   private UserManager() {
-    connection = ConnectionManager.getConnection();
   }
 
   public User getUser(HttpServletRequest request) {
@@ -132,6 +129,7 @@ public class UserManager {
 
   private void storageStore(User user) {
     PreparedStatement statement = null;
+    Connection connection = ConnectionManager.getConnection();
 
     try {
       statement = connection.prepareStatement("UPDATE User SET login=?, passwd=?, email=?, status=?");
@@ -145,6 +143,7 @@ public class UserManager {
       e.printStackTrace();
     } finally {
       ConnectionManager.close(statement);
+      ConnectionManager.close(connection);
     }
     return;
   }
@@ -152,6 +151,7 @@ public class UserManager {
   private User storageCreate(String login, String passwd, String email) {
     PreparedStatement statement = null;
     ResultSet result = null;
+    Connection connection = ConnectionManager.getConnection();
 
     User user = new User(login, passwd, email);
 
@@ -168,6 +168,7 @@ public class UserManager {
     } finally {
       ConnectionManager.close(result);
       ConnectionManager.close(statement);
+      ConnectionManager.close(connection);
     }
 
     return user;
@@ -176,6 +177,7 @@ public class UserManager {
 
   private void storageRemove(User user) {
     PreparedStatement statement = null;
+    Connection connection = ConnectionManager.getConnection();
 
     try {
       statement = connection.prepareStatement("DELETE FROM User WHERE login=?");
@@ -185,6 +187,7 @@ public class UserManager {
       e.printStackTrace();
     } finally {
       ConnectionManager.close(statement);
+      ConnectionManager.close(connection);
     }
     return;
   }
@@ -193,6 +196,7 @@ public class UserManager {
     User user = null;
     PreparedStatement statement = null;
     ResultSet result = null;
+    Connection connection = ConnectionManager.getConnection();
 
     try {
       statement = connection.prepareStatement("SELECT login, passwd, email, status FROM User WHERE login=?");
@@ -207,6 +211,7 @@ public class UserManager {
     } finally {
       ConnectionManager.close(result);
       ConnectionManager.close(statement);
+      ConnectionManager.close(connection);
     }
     return user;
   }

@@ -8,6 +8,7 @@
   <property file="conf/build.properties"/>
 
   <path id="classpath">
+    <pathelement location="${jar}/jdbcpool.jar"/>
     <pathelement location="${jar}/jakarta.jar"/>
     <pathelement location="${jar}/mckoidb.jar"/>
     <pathelement location="${jar}/javax.servlet.jar"/>

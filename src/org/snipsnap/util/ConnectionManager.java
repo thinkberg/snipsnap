@@ -24,6 +24,8 @@
  */
 package com.neotis.util;
 
+import com.bitmechanic.sql.ConnectionPoolManager;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -37,7 +39,23 @@ import java.sql.Statement;
  * @version $Id$
  */
 public class ConnectionManager {
-  public static Connection getConnection() {
+  private static ConnectionManager instance;
+
+  public static ConnectionManager getInstance() {
+    if (null == instance) {
+      instance = new ConnectionManager();
+    }
+    return instance;
+  }
+
+  public ConnectionManager() {
+    ConnectionPoolManager mgr = null;
+    try {
+      mgr = new ConnectionPoolManager(300);
+    } catch (SQLException e) {
+      System.out.println("Unable to create ConnectionPool");
+    }
+
     // Register the Mckoi JDBC Driver
     try {
       Class.forName("com.mckoi.JDBCDriver").newInstance();
@@ -47,7 +65,7 @@ public class ConnectionManager {
         "Make sure the classpath is correct.\n" +
         "For example on Win32;  java -cp ../../mckoidb.jar;. SimpleApplicationDemo\n" +
         "On Unix;  java -cp ../../mckoidb.jar:. SimpleApplicationDemo");
-      return null;
+      return;
     }
 
     // This URL specifies we are connecting with a local database.  The
@@ -59,24 +77,56 @@ public class ConnectionManager {
     String username = "funzel";
     String password = "funzel";
 
-    // Make a connection with the database.
-    Connection connection;
+    String name = "snipsnap";
+
     try {
-      connection = DriverManager.getConnection(url, username, password);
-    } catch (SQLException e) {
-      System.out.println(
-        "Unable to make a connection to the database.\n" +
-        "The reason: " + e.getMessage());
-      return null;
+      mgr.addAlias(name, "com.mckoi.JDBCDriver",
+                   url,
+                   username, password,
+                   10, // max connections to open
+                   300, // seconds a connection can be idle before it is closed
+                   120, // seconds a connection can be checked out by a thread
+                   // before it is returned back to the pool
+                   30, // number of times a connection can be re-used before
+                   // connection to database is closed and re-opened
+                   // (optional parameter)
+                   false); // specifies whether to cache statements
+    } catch (Exception e) {
+      System.out.println("Unable to add connection alias.");
+      e.printStackTrace();
     }
-    return connection;
   }
 
+
+  public Connection connection() {
+    try {
+      return DriverManager.getConnection(ConnectionPoolManager.URL_PREFIX +
+              "snipsnap", null, null);
+    } catch (SQLException e) {
+      System.out.println("Unable to get connection.");
+      return null;
+    }
+  }
+
+  public static Connection getConnection() {
+     return getInstance().connection();
+  }
+
+  public static void close(Connection conn) {
+    if (null != conn) {
+      try {
+        conn.close();
+      } catch (SQLException e) {
+        // We can't do anything
+      }
+    }
+  }
   public static void close(Statement statement) {
     if (null != statement) {
       try {
         statement.close();
       } catch (SQLException e) {
+        // We can't do anything
       }
     }
   }
@@ -86,6 +136,7 @@ public class ConnectionManager {
       try {
         result.close();
       } catch (SQLException e) {
+        // We can't do anything
       }
     }
   }
