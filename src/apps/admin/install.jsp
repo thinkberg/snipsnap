@@ -46,14 +46,17 @@
         <tr>
           <td>Host Name:</td>
           <td><input name="host" type="text" value="<c:out value='${config.host}' default=''/>"></td>
+          <td>(optional)</td>
         <tr>
         <tr>
           <td>Port Number:</td>
           <td><input name="port" type="text" value="<c:out value='${config.port}' default='80'/>"></td>
+          <td>(optional)</td>
         <tr>
         <tr>
           <td>Path on Server:</td>
           <td><input name="context" type="text" value="<c:out value='${config.contextPath}' default='/'/>"></td>
+          <td>(optional)</td>
         <tr>
         <tr>
           <td colspan="2">
