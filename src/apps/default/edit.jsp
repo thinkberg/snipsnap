@@ -26,6 +26,7 @@
        <input value="Cancel" name="cancel" type="submit"/>
       </td></tr>
      </table>
+     <!-- <input name="file" type="file" maxlength="65535" accept="*"/>-->
      <input name="name" type="hidden" value="<c:out value="${snip_name}"/>"/>
      <input name="referer" type="hidden" value="<%= request.getHeader("REFERER") %>"/>
     </form>

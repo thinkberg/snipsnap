@@ -1,7 +1,9 @@
 0.3.2
 
+- Added feature: password reset by mailing a key
 - Added feature: file-path macro displays a filepath
 - Fixed bug: RSD <settings> was at the wrong place
+- Fixed bug: detection of encrypted passwords on import
 
 0.3.1
 

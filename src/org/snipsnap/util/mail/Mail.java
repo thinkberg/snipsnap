@@ -114,7 +114,7 @@ public class Mail {
         sender = "this-is-a-bug.org";
       }
     }
-    sendMail(sender, recipientList, subject, content);
+    sendMail("do-not-reply@"+sender, recipientList, subject, content);
   }
 
   public void sendMail(String sender, Collection recipientList, String subject, String content) {
