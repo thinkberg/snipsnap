@@ -44,12 +44,13 @@ import org.radeox.util.Service;
 import javax.sql.DataSource;
 
 public class PicoContainer implements Container {
-
-
     private static org.picocontainer.MutablePicoContainer container;
 
     public PicoContainer() {
-                 Aspects aspects = new Aspects();
+    }
+
+    public void init() {
+      Aspects aspects = new Aspects();
       aspects.interceptor(Pointcuts.instancesOf(SnipSpace.class),
                           Pointcuts.ALL_METHODS, new MissingInterceptor());
       aspects.interceptor(Pointcuts.instancesOf(SnipSpace.class),
@@ -57,7 +58,7 @@ public class PicoContainer implements Container {
 
       DynaopComponentAdapterFactory factory = new DynaopComponentAdapterFactory(
           new DefaultComponentAdapterFactory(), aspects);
-      MutablePicoContainer nc = new DefaultPicoContainer(factory);
+      MutablePicoContainer container = new DefaultPicoContainer(factory);
 
 
       Globals globals = ConfigurationProxy.getInstance();
@@ -69,7 +70,7 @@ public class PicoContainer implements Container {
           addComponent(VersionStorage.class, PropertyFileSnipStorage.class);
           addComponent(ApplicationStorage.class, PropertyFileApplicationStorage.class);
         } else {
-          nc.registerComponentInstance(DataSource.class, new LazyDataSource());
+          addComponent(DataSource.class, new LazyDataSource());
           addComponent(SnipStorage.class, JDBCSnipStorage.class);
           addComponent(UserStorage.class, JDBCUserStorage.class);
           addComponent(VersionStorage.class, JDBCVersionStorage.class);
@@ -116,10 +117,9 @@ public class PicoContainer implements Container {
           addComponent(component);
         }
 
-        nc.start();
+        container.start();
 //        Component component = (MessageLogService) nc.getComponentInstance(MessageLogService.class);
 //       System.out.println("keys="+nc.getComponentKeys());
-        container = nc;
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -158,6 +158,10 @@ public class PicoContainer implements Container {
 
     public void addComponent(Class i, Class c) {
         container.registerComponentImplementation(i, c);
+    }
+
+    public void addComponent(Class c, Object o) {
+        container.registerComponentInstance(c, o);
     }
 
     public Object getComponent(String id) {

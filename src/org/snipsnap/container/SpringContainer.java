@@ -1,9 +1,10 @@
+package org.snipsnap.container;
+
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
-import org.snipsnap.container.Container;
 
 import java.util.Collection;
 
@@ -11,6 +12,9 @@ public class SpringContainer implements Container {
     private DefaultListableBeanFactory factory;
 
     public SpringContainer() {
+    }
+
+    public void init() {
         ClassPathResource res = new ClassPathResource("conf/beans.xml");
         factory = new XmlBeanFactory(res);
     }

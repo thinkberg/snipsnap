@@ -8,4 +8,5 @@ public interface Container {
     public Collection findComponents(Class c);
     public boolean containsComponent(Class c);
     public void addComponent(Class c);
+    public void init();
 }

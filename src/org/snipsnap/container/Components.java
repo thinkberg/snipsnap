@@ -28,12 +28,14 @@ package org.snipsnap.container;
 import java.util.Collection;
 
 public class Components {
-    private static Container container;
     public final static String DEFAULT_ENGINE = "defaultRenderEngine";
 
-    public static synchronized Container getContainer() {
+    private static Container container;
+
+    private static synchronized Container getContainer() {
         if (null == container) {
             container = new PicoContainer();
+            container.init();
         }
 
         return container;
