@@ -44,7 +44,8 @@
    </td></tr>
    <tr><td colspan="2">
    <p align="center">
-    <a href="http://www.snipsnap.org">www.snipsnap.org</a> | Copyright 2000-2002 Matthias L. Jugel, Stephan J.Schmidt
+   <a href="http://www.snipsnap.org">www.snipsnap.org</a> | Copyright 2000-2002 Matthias L. Jugel, Stephan J.Schmidt<br/>
+   <a href="http:/www.snipsnap.org"><img src="../images/logo_small.png" border="0"/></a>
    </p>
    </td></tr>
    </table>

@@ -74,7 +74,8 @@
 
 /* special formatting of a wiki table */
 .snip-table {
-  border: 1px solid #aaaaaa;
+  border: 1px solid black;
+  border-width: 0px 1px 1px 1px;
 }
 
 .snip-table td {

@@ -38,6 +38,6 @@ public class UrlFilter extends RegexReplaceFilter {
 
   public UrlFilter() {
     super("([^\"]|^)((http|ftp)s?://(%[[:digit:]A-Fa-f][[:digit:]A-Fa-f]|[-_.!~*';/?:@&=+$,[:alnum:]])+)",
-             "$1<img border=\"0\" alt=\">>\" src=\"/images/arrow.right.gif\"><a href=\"$2\">$2</a>");
+             "$1<img border=\"0\" alt=\">>\" src=\"../images/arrow.right.gif\"><a href=\"$2\">$2</a>");
   };
 }
