@@ -29,12 +29,17 @@ import org.snipsnap.snip.Snip;
 import org.radeox.filter.Filter;
 import org.radeox.filter.HtmlRemoveFilter;
 import org.radeox.util.logging.Logger;
+import org.jdom.Element;
+import org.jdom.Text;
+import org.jdom.output.XMLOutputter;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.jstl.core.ConditionalTagSupport;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.io.IOException;
+
+import junit.framework.Test;
 
 /*
  * Tag that displays the content of a snip. Can remove HTML from the content
@@ -69,7 +74,8 @@ public class ContentTag extends TagSupport {
           }
         }
       } else if (encodeHtml) {
-        // content;
+        XMLOutputter out = new XMLOutputter();
+        content = out.outputString(content);
       }
       try {
         JspWriter out = pageContext.getOut();

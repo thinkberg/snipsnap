@@ -26,9 +26,9 @@
     <s:dublinCore snip="${snip}" format="xml"/>
     <!-- <blogChannel:changes>http://www.weblogs.com/rssUpdates/changes.xml</changes> -->
     <admin:generatorAgent rdf:resource="http://www.snipsnap.org/space/version-<c:out value='${config.version}'/>"/>
-    <c:forEach items="${snip.childrenModifiedOrder}" var="child">
+    <c:forEach items="${rsssnips}" var="child">
        <item>
-        <title><c:out value="${child.name}"/> <s:content snip="${child}" removeHtml="true" extract="true"/></title>
+        <title><c:out value="${child.name}"/></title>
         <link><c:out value="${url}/${child.nameEncoded}"/></link>
         <description><s:content snip="${child}" removeHtml="true"/></description>
         <guid isPermaLink="true"><c:out value="${url}/${child.nameEncoded}"/></guid>

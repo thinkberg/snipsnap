@@ -27,6 +27,7 @@ package org.snipsnap.net;
 import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.semanticweb.rss.Rssify;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -35,6 +36,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
 
 
 /**
@@ -63,6 +65,7 @@ public class RssServlet extends HttpServlet {
       Snip snip = SnipSpace.getInstance().load(name);
 
       request.setAttribute("snip", snip);
+      request.setAttribute("rsssnips", Rssify.rssify(snip));
       request.setAttribute("space", SnipSpace.getInstance());
       request.setAttribute("config", config);
 
