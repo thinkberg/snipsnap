@@ -28,7 +28,7 @@
   margin-top: 4px;
   margin-bottom: 4px;
   padding: 5px 5px 5px 5px;
-  background-color: #fffced;
+  background-color: #F0F0F0;
   border: 1px dashed black;
   font-family: courier, courier new, monospace;
   font-size: 12px;
@@ -84,11 +84,11 @@
 
 .snip-table-header {
   font-weight: bold;
-  background: #ffce9c;
+  background: #d9e4f9;
 }
 
 .snip-table-odd {
-  background: #fffced;
+  background: #F8F8F8;
 }
 
 .snip-table-even {
