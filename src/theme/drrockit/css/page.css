@@ -1,0 +1,84 @@
+/**
+ * General Stylesheet definitions.
+ * @author Matthias L. Jugel
+ * @version $Id$
+ */
+
+body {
+  background-color: #000000;
+  color: rgb(200,200,200);
+  width: 800px;
+  font-size: 70%;
+  font-family: "Lucida Grande", "Trebuchet MS", Verdana, Geneva, Lucida, Helvetica, sans-serif;
+  margin: 20px;
+  padding: 0px;
+}
+
+#page-logo {
+  float: right;
+  padding-right: 90px;
+}
+
+#page-title {
+  display: block;
+  float: right;
+  width: 100%;
+  margin-top: 40px;
+  margin-bottom: 20px;
+	line-height: 11px;
+	color: inherit;
+	font-size: 14px;
+	voice-family: inherit;
+	height: 14px; /* the correct height */
+}
+
+#page-tagline {
+  display: inline;
+  font-size: 100%;
+  padding-right: 10px;
+}
+
+#page-buttons {
+  display: inline;
+  padding-right: 5px;
+}
+
+#page-wrapper {
+
+}
+
+#page-content {
+  float: left;
+  margin-top: 10px;
+  width: 100%;
+  height: auto;
+  width: 590px;
+  max-width: 590px;
+}
+
+#page-portlet-1 {
+  float: right;
+  width: 190px;
+	border: 1px dashed #999999;
+	line-height: 14px;
+  padding: 5px;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+#page-portlet-2 {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 150px;
+}
+
+
+/* the actual content */
+#page-bottom {
+  float: left;
+  text-align: center;
+  width: 100%;
+  font-size: 100%;
+}
+

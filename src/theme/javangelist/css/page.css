@@ -1,0 +1,78 @@
+/**
+ * Javangelist Layout
+ */
+
+body {
+  background-color: #ffffff;
+  color: #4c4c4c;
+  width: 800px;
+  font-size: 70%;
+  font-family: "Lucida Grande", "Trebuchet MS", Verdana, Geneva, Lucida, Helvetica, sans-serif;
+}
+
+#page-logo {
+  display: block;
+  float: left;
+  width: 200px;
+  top: 10px;
+  left: 10px;
+}
+
+#page-title {
+  display: block;
+  float: right;
+  width: 560px;
+  top: 10px;
+  left: 235px;
+
+	padding:10px;
+	color: inherit;
+	background-color: #fffced;
+	font-size: inherit;
+	height: 14px;
+}
+
+#page-tagline {
+  display: inline;
+  font-size: 120%;
+  padding-right: 10px;
+}
+
+#page-buttons {
+  display: inline;
+  padding-right: 0px;
+}
+
+#page-wrapper {
+
+}
+
+#page-content {
+  float: right;
+  width: 580px;
+  max-width: 580px;
+  padding-top: 10px;
+  height: auto;
+}
+
+#page-portlet-1 {
+  float: left;
+  width: 200px;
+	line-height: 14px;
+  padding: 10px;
+  margin-bottom: 5px;
+}
+
+#page-portlet-2 {
+  display: none; /* hide */
+}
+
+
+/* the actual content */
+#page-bottom {
+  float: left;
+  margin-top: 10px;
+  text-align: center;
+  width: 100%;
+  font-size: 100%;
+}

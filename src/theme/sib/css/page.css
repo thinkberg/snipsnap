@@ -1,0 +1,81 @@
+/**
+ * Stephan In Berlin Layout.
+ * @author Matthias L. Jugel
+ * @version $Id$
+ */
+
+body {
+  background-color: #ffffff;
+  color: #4c4c4c;
+  font-size: 70%;
+  font-family: "Lucida Grande", "Trebuchet MS", Verdana, Geneva, Lucida, Helvetica, sans-serif;
+  margin: 15px;
+  width: 1000px;
+}
+
+#page-logo {
+  display: block;
+}
+
+#page-title {
+  display: block;
+  width: 966px;
+
+  padding:17px 17px 17px 17px;
+	line-height:11px;
+	background-color: #e2deca;
+	font-size: 14px;
+	font-weight: 50;
+	text-align: right;
+	height:14px;
+}
+
+#page-tagline {
+  display: inline;
+  font-size: 100%;
+  padding-right: 10px;
+}
+
+#page-buttons {
+  display: inline;
+  padding-right: 5px;
+}
+
+#page-wrapper {
+
+}
+
+#page-content {
+  float: left;
+  width: 100%;
+  height: auto;
+  width: 750px;
+  max-width: 750px;
+  padding-left: 10px;
+  margin-top: 40px;
+}
+
+#page-portlet-1 {
+  float: right;
+  width: 190px;
+	border: 1px dashed #999999;
+	line-height: 14px;
+  padding: 5px;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+#page-portlet-2 {
+  position: absolute;
+  top: 175px;
+  left: 15px;
+}
+
+/* the actual content */
+#page-bottom {
+  float: left;
+  margin-top: 10px;
+  text-align: center;
+  width: 100%;
+  font-size: 100%;
+}

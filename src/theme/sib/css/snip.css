@@ -1,0 +1,151 @@
+/**
+ * Snip block display stylesheet definitions.
+ * @author Matthias L. Jugel
+ * @version $Id$
+ */
+
+#snip-wrapper {
+}
+
+#snip-title {
+  text-align: left;
+}
+
+.snip-name {
+  display: inline;
+  font-weight: bold;
+  font-size: 15px;
+  color: black;
+  background-color: inherit;
+  clear: left;
+}
+
+.snip-commented-snip {
+}
+
+#snip-buttons {
+  float: right;
+  margin-top: 5px;
+}
+
+#snip-info {
+  color: #999999;
+  background-color: inherit;
+  margin-top: 5px;
+}
+
+#snip-content {
+  width: 100%;
+  margin-top: 10px;
+}
+
+#snip-post-comments {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+#snip-sniplinks {
+  margin-top: 20px;
+}
+
+#snip-sniplinks table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+#snip-sniplinks caption {
+  text-align: left;
+  color: #999999;
+  background-color: inherit;
+}
+
+#snip-sniplinks td, th {
+  padding: 4px;
+}
+
+#snip-backlinks {
+  margin-top: 20px;
+}
+
+#snip-backlinks .list {
+  list-style-type: none;
+  margin-top: 0;
+  padding-left: 0;
+  margin-left: 0;
+}
+
+#snip-backlinks .caption {
+  text-align: left;
+  color: #999999;
+  background-color: inherit;
+}
+
+span.content {
+}
+
+span.count {
+}
+
+span.count:before {
+  content: "";
+}
+
+span.count:after {
+  content: ": ";
+}
+
+/**************************************************/
+/* snip edit part                                 */
+
+#snip-input {
+  margin-top: 20px;
+}
+
+#form {
+}
+
+#form .form-buttons {
+  text-align: right;
+}
+
+#form input[type=submit] {
+  vertical-align: text-bottom;
+}
+
+/**************************************************/
+/* snip with comments part                        */
+
+#snip-comments {
+}
+
+#comment-title {
+  margin-top: 20px;
+}
+
+#comment-title h2.comment-name {
+  display: inline;
+  font-weight: normal;
+  font-size: 100%;
+}
+
+#comment-buttons {
+  display: inline;
+}
+
+#comment-content {
+  margin-top: 5px;
+  margin-left: 20px;
+}
+
+#comment-input {
+  margin-top: 20px;
+}
+
+/**************************************************/
+/* preview formatting                             */
+
+
+#preview {
+  background-color: #eeeeee;
+  color: inherit;
+}

@@ -1,0 +1,117 @@
+/**
+ * General Stylesheet definitions.
+ * @author Matthias L. Jugel
+ * @version $Id$
+ */
+
+body {
+  font-family: verdana, arial, sans-serif;
+  color: #666;
+  font-size:11px;
+  font-weight:normal;
+  line-height:16px;
+
+  margin: 20px 20px 20px 20px;
+	background: #EEE;
+}
+
+#page-logo {
+  font-family: georgia, times new roman, times, serif;
+  color:#FFF;
+  font-size: 24px;
+  font-weight: normal;
+  border-left:1px solid #FFF;
+  border-right:1px solid #FFF;
+  border-top:1px solid #FFF;
+  background:#003366;
+  padding-top: 15px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+#page-logo * {
+  font-family: georgia, times new roman, times, serif;
+  font-size: 24px;
+  font-weight:normal;
+  color: #ffffff;
+}
+
+#page-title {
+  font-family:verdana, arial, sans-serif;
+  font-size: 10px;
+}
+
+#page-tagline {
+  font-family:verdana, arial, sans-serif;
+  color:#FFF;
+  font-size:11px;
+  font-weight:bold;
+  border-left:1px solid #FFF;
+  border-right:1px solid #FFF;
+  background:#003366;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 15px;
+}
+
+#page-buttons {
+  padding:15px;
+	background:#FFF;
+	text-align:center;
+}
+
+#page-wrapper {
+  width: 100%;
+  display: table-row;
+  table-layout: fixed;
+	background:#FFF;
+}
+
+#page-content {
+  display: table-cell;
+  float: left;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 15px;
+  margin-bottom:15px;
+	background:#FFF;
+  width: 60%;
+  voice-family: "\"}\""; /* IE hack */
+  voice-family:inherit;
+}
+
+html>body #page-content {
+  width:100%;
+}
+
+
+#page-portlet-1 {
+  display: table-cell;
+  float: right;
+  top: 0px;
+  width: 30%;
+  padding-left:15px;
+  margin-bottom:15px;
+	background:#FFF;
+  border-left: 1px solid #003366;
+
+  font-family: verdana, arial, sans-serif;
+  color: #666;
+  font-size:11px;
+  font-weight:normal;
+  line-height:16px;
+}
+
+#page-portlet-2 {
+  display: none; /* hide */
+}
+
+
+/* the actual content */
+#page-bottom {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  width: 100%;
+	background:#FFF;
+  text-align: center;
+}
