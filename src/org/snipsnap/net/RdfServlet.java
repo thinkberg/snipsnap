@@ -74,7 +74,7 @@ public class RdfServlet extends HttpServlet {
         }
 
         // set output
-        response.setContentType("text/xml");
+        response.setContentType("text/xml; charset=UTF-8");
         Writer writer = response.getWriter();
 
         // serialize snip
