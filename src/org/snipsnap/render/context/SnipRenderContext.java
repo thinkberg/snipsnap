@@ -25,16 +25,16 @@
 
 package org.snipsnap.render.context;
 
-import org.radeox.engine.context.BaseRenderContext;
 import org.radeox.api.engine.context.RenderContext;
+import org.radeox.engine.context.BaseRenderContext;
+import org.snipsnap.app.Application;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.app.Application;
 
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * SnipRenderContext implements RenderContext and is used to
@@ -79,12 +79,31 @@ public class SnipRenderContext extends BaseRenderContext {
     this.space = space;
   }
 
+   private void initAttributes() {
+    attributes = new HashMap();
+    attributes.put("snip", snip);
+    attributes.put("user", Application.get().getUser());
+  }
+
+  public void setAttribute(Object key, Object value) {
+    if (null == attributes) {
+      initAttributes();
+    }
+    attributes.put(key,value);
+  }
+
+  public Object getAttribute(Object key) {
+    if (null == attributes) {
+      initAttributes();
+    }
+    return attributes.get(key);
+  }
+
   public Map getAttributes() {
     if (null == attributes) {
-      attributes = new HashMap();
-      attributes.put("snip", snip);
-      attributes.put("user", Application.get().getUser());
+      initAttributes();
     }
     return attributes;
   }
+
 }

@@ -31,9 +31,11 @@ import org.radeox.api.engine.IncludeRenderEngine;
 import org.radeox.api.engine.WikiRenderEngine;
 import org.radeox.api.engine.context.RenderContext;
 import org.radeox.filter.context.FilterContext;
+import org.radeox.macro.MacroRepository;
 import org.snipsnap.app.Application;
 import org.snipsnap.render.context.SnipRenderContext;
 import org.snipsnap.render.filter.context.SnipFilterContext;
+import org.snipsnap.render.macro.loader.GroovyMacroLoader;
 import org.snipsnap.serialization.StringBufferWriter;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
@@ -60,6 +62,7 @@ public class SnipRenderEngine extends BaseRenderEngine
 
   public SnipRenderEngine(AuthenticationService authService) {
     this.authService = authService;
+    MacroRepository.getInstance().addLoader(new GroovyMacroLoader());
     // DOES NOT WORK BECAUSE OF ASPECTS
 //    this.space = space;
   }
