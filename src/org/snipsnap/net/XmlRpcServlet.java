@@ -27,7 +27,7 @@ package org.snipsnap.net;
 import org.apache.xmlrpc.XmlRpcServer;
 import org.snipsnap.xmlrpc.*;
 import org.snipsnap.container.Components;
-import org.snipsnap.user.AuthenticationService;
+import org.picocontainer.PicoContainer;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -36,9 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * XmlRpc handler servlet
@@ -49,28 +47,18 @@ import java.util.List;
 
 public class XmlRpcServlet extends HttpServlet {
   private XmlRpcServer xmlrpc;
-  private List handlers;
 
   public void init(ServletConfig servletConfig) throws ServletException {
     xmlrpc = new XmlRpcServer();
 
-    handlers = new ArrayList();
-
-    // Read from Pico
-    handlers.add(Components.getComponent(MetaWeblogAPI.class));
-    handlers.add(Components.getComponent(BloggerAPI.class));
-
-    // Read via services plugin
-    handlers.add(new SnipSnapHandler((AuthenticationService)
-      Components.getComponent(AuthenticationService.class)));
-    handlers.add(new WeblogsPingHandler());
-    handlers.add(new GeneratorHandler());
-    handlers.add(new WeblogHandler());
-
-    Iterator iterator = handlers.iterator();
+    PicoContainer container = Components.getContainer();
+    Iterator iterator = container.getComponentInstances().iterator();
     while (iterator.hasNext()) {
-      XmlRpcHandler handler = (XmlRpcHandler) iterator.next();
-      xmlrpc.addHandler(handler.getName(), handler);
+      Object o = iterator.next();
+      if (o instanceof XmlRpcHandler) {
+        XmlRpcHandler handler = (XmlRpcHandler) o;
+        xmlrpc.addHandler(handler.getName(), handler);
+      }
     }
   }
 

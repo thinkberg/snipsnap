@@ -25,14 +25,18 @@ package org.snipsnap.container;
  * --LICENSE NOTICE--
  */
 
-import org.codehaus.nanning.config.AspectSystem;
 import org.snipsnap.interceptor.custom.MissingSnipAspect;
 import org.snipsnap.interceptor.custom.SnipSpaceACLAspect;
+import org.snipsnap.xmlrpc.WeblogsPingHandler;
+import org.snipsnap.xmlrpc.GeneratorHandler;
+import org.snipsnap.xmlrpc.WeblogHandler;
+import org.snipsnap.xmlrpc.SnipSnapHandler;
 import org.picocontainer.PicoContainer;
-import org.picocontainer.RegistrationPicoContainer;
-import org.picocontainer.defaults.DefaultComponentFactory;
-import org.picocontainer.hierarchical.HierarchicalPicoContainer;
-import org.nanocontainer.nanning.NanningNanoContainer;
+import org.picocontainer.defaults.DefaultPicoContainer;
+import org.picocontainer.defaults.DefaultComponentAdapterFactory;
+
+import org.nanocontainer.nanning.NanningComponentAdapterFactory;
+import org.codehaus.nanning.config.AspectSystem;
 
 public class Components {
   public final static String DEFAULT_ENGINE = "defaultRenderEngine";
@@ -41,33 +45,40 @@ public class Components {
 
   public static synchronized PicoContainer getContainer() {
     if (null == container) {
-      AspectSystem as = new AspectSystem();
-      as.addAspect(new MissingSnipAspect());
-      as.addAspect(new SnipSpaceACLAspect());
-
       //System.out.println("Creating PicoContainer ...");
-      RegistrationPicoContainer c =  new HierarchicalPicoContainer.Default();
+      DefaultPicoContainer nc = new DefaultPicoContainer(
+            new NanningComponentAdapterFactory(
+            new AspectSystem(),
+            new DefaultComponentAdapterFactory()));
+
+      nc.registerComponentImplementation(MissingSnipAspect.class);
+      nc.registerComponentImplementation(SnipSpaceACLAspect.class);
+      nc.getComponentInstances();
 
 //     StringRegistrationNanoContainer c =
 //          new StringRegistrationNanoContainerImpl(pc, Components.class.getClassLoader(), new StringToObjectConverter());
 
       try {
-        NanningNanoContainer nc = new NanningNanoContainer(new DefaultComponentFactory(), c, as);
         //c.registerComponent("org.snipsnap.notification.NotificationService");
-        nc.registerComponentByClass(org.snipsnap.snip.storage.JDBCUserStorage.class);
-        nc.registerComponent(org.snipsnap.user.UserManager.class, org.snipsnap.user.DefaultUserManager.class);
-        nc.registerComponent(org.snipsnap.user.AuthenticationService.class, org.snipsnap.user.DefaultAuthenticationService.class);
-        nc.registerComponentByClass(org.snipsnap.user.PasswordService.class);
-        nc.registerComponent(org.snipsnap.container.SessionService.class, org.snipsnap.container.DefaultSessionService.class);
-        nc.registerComponent(DEFAULT_ENGINE, org.snipsnap.render.SnipRenderEngine.class);
-        nc.registerComponentByClass(org.snipsnap.render.PlainTextRenderEngine.class);
-        nc.registerComponentByClass(org.snipsnap.snip.storage.JDBCSnipStorage.class);
+        nc.registerComponentImplementation(org.snipsnap.snip.storage.JDBCUserStorage.class);
+        nc.registerComponentImplementation(org.snipsnap.user.UserManager.class, org.snipsnap.user.DefaultUserManager.class);
+        nc.registerComponentImplementation(org.snipsnap.user.AuthenticationService.class, org.snipsnap.user.DefaultAuthenticationService.class);
+        nc.registerComponentImplementation(org.snipsnap.user.PasswordService.class);
+        nc.registerComponentImplementation(org.snipsnap.container.SessionService.class, org.snipsnap.container.DefaultSessionService.class);
+        nc.registerComponentImplementation(DEFAULT_ENGINE, org.snipsnap.render.SnipRenderEngine.class);
+        nc.registerComponentImplementation(org.snipsnap.render.PlainTextRenderEngine.class);
+        nc.registerComponentImplementation(org.snipsnap.snip.storage.JDBCSnipStorage.class);
         //nc.registerComponentByClass(org.snipsnap.snip.storage.FileSnipStorage.class);
-        nc.registerComponent(org.snipsnap.snip.SnipSpace.class, org.snipsnap.snip.SnipSpaceImpl.class);
+        nc.registerComponentImplementation(org.snipsnap.snip.SnipSpace.class, org.snipsnap.snip.SnipSpaceImpl.class);
 
-        nc.registerComponent(org.snipsnap.xmlrpc.BloggerAPI.class, org.snipsnap.xmlrpc.BloggerHandler.class);
-        nc.registerComponent(org.snipsnap.xmlrpc.MetaWeblogAPI.class, org.snipsnap.xmlrpc.MetaWeblogHandler.class);
-        nc.instantiateComponents();
+        // XML-RPC Handlers
+        nc.registerComponentImplementation(org.snipsnap.xmlrpc.BloggerAPI.class, org.snipsnap.xmlrpc.BloggerHandler.class);
+        nc.registerComponentImplementation(org.snipsnap.xmlrpc.MetaWeblogAPI.class, org.snipsnap.xmlrpc.MetaWeblogHandler.class);
+
+        nc.registerComponentImplementation(WeblogsPingHandler.class);
+        nc.registerComponentImplementation(GeneratorHandler.class);
+        nc.registerComponentImplementation(WeblogHandler.class);
+        nc.registerComponentImplementation(SnipSnapHandler.class);
 
         container = nc;
       } catch (Exception e) {
@@ -80,7 +91,7 @@ public class Components {
   }
 
   public static Object getComponent(Class c) {
-    return getContainer().getComponent(c);
+    return getContainer().getComponentInstance(c);
   }
 
 }

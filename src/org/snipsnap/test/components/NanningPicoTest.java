@@ -30,13 +30,12 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.codehaus.nanning.Aspects;
 import org.codehaus.nanning.config.AspectSystem;
+import org.nanocontainer.nanning.NanningComponentAdapterFactory;
+import org.picocontainer.defaults.DefaultComponentAdapterFactory;
+import org.picocontainer.defaults.DefaultPicoContainer;
 import org.snipsnap.interceptor.custom.MissingSnipAspect;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.test.mock.MockSnipSpace;
-import org.nanocontainer.nanning.NanningNanoContainer;
-import org.picocontainer.RegistrationPicoContainer;
-import org.picocontainer.defaults.DefaultComponentFactory;
-import org.picocontainer.hierarchical.HierarchicalPicoContainer;
 
 public class NanningPicoTest extends TestCase {
   public NanningPicoTest(String name) {
@@ -51,22 +50,21 @@ public class NanningPicoTest extends TestCase {
   }
 
   public void testSnipSpaceIsAdviced() {
-    AspectSystem as = new AspectSystem();
-    as.addAspect(new MissingSnipAspect());
+   DefaultPicoContainer nc = new DefaultPicoContainer(
+            new NanningComponentAdapterFactory(
+            new AspectSystem(),
+            new DefaultComponentAdapterFactory()));
 
-    NanningNanoContainer nc = null;
     try {
-      RegistrationPicoContainer c = new HierarchicalPicoContainer.Default();
 
-      nc = new NanningNanoContainer(new DefaultComponentFactory(), c, as);
-      nc.registerComponent(SnipSpace.class, MockSnipSpace.class);
+      nc.registerComponentImplementation(SnipSpace.class, MockSnipSpace.class);
+      nc.registerComponentInstance(new MissingSnipAspect());
 
-      nc.instantiateComponents();
     } catch (Exception e) {
       e.printStackTrace();  //To change body of catch statement use Options | File Templates.
     }
 
-    SnipSpace space = (SnipSpace) nc.getComponent(SnipSpace.class);
+    SnipSpace space = (SnipSpace) nc.getComponentInstance(SnipSpace.class);
 
     assertNotNull("SnipSpace is not null from Components", space);
     assertTrue("SnipSpace is aspected", Aspects.isAspectObject(space));

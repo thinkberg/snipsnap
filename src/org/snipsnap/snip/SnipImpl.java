@@ -430,7 +430,7 @@ public class SnipImpl implements Snip {
     RenderEngine engine = null;
     if (reLabel != null) {
       try {
-        engine = (RenderEngine) container.getComponent(Class.forName(reLabel.getValue()));
+        engine = (RenderEngine) container.getComponentInstance(Class.forName(reLabel.getValue()));
       } catch (ClassNotFoundException e) {
         e.printStackTrace();
       }
@@ -438,13 +438,13 @@ public class SnipImpl implements Snip {
 
     // make sure we get a render engine
     if (null == engine) {
-      engine = (RenderEngine) container.getComponent(Components.DEFAULT_ENGINE);
+      engine = (RenderEngine) container.getComponentInstance(Components.DEFAULT_ENGINE);
     }
 
 
     RenderContext context = new SnipRenderContext(
       (Snip) Aspects.getThis(),
-      (SnipSpace) container.getComponent(SnipSpace.class));
+      (SnipSpace) container.getComponentInstance(SnipSpace.class));
     context.setParameters(Application.get().getParameters());
 
     String xml = "";
