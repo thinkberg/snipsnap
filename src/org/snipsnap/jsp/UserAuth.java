@@ -48,7 +48,6 @@ public class UserAuth extends ConditionalTagSupport {
   public void setSnip(String snip) {
     try {
       this.snip = (Snip)ExpressionEvaluatorManager.evaluate("snip", snip, Snip.class, this, pageContext);
-      System.err.println("Check: " + this.snip.getName());
     } catch (JspException e) {
       System.err.println("unable to evaluate expression: "+e);
     }
