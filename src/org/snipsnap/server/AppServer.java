@@ -45,6 +45,13 @@ public class AppServer {
   private static Server jettyServer;
 
   public static void main(String args[]) {
+    Runtime.getRuntime().addShutdownHook(new Thread() {
+      public void run() {
+        System.out.println("Shutting down server ...");
+        Shutdown.shutdown();
+      }
+    });
+
     try {
       adminConfig = new Configuration("conf/server.conf");
     } catch (IOException e) {

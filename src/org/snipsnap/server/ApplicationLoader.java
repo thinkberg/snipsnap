@@ -111,10 +111,10 @@ public class ApplicationLoader {
           System.err.println("ApplicationLoader: found existing server: "+server);
           installServer = (Server)server;
           listener = listeners[i];
+          break;
         }
       }
     }
-
 
     if(null == listener) {
       installServer = new Server();
@@ -133,7 +133,6 @@ public class ApplicationLoader {
     context.setAttribute(AppConfiguration.INIT_PARAM, config.getFile().getAbsolutePath());
     context.start();
 
-    installServer.start();
     return context;
   }
 }

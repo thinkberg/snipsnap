@@ -45,6 +45,7 @@
         <include name="run.sh"/>
         <include name="db.sh"/>
         <include name="import.sh"/>
+        <include name="export.sh"/>
       </tarfileset>
       <tarfileset dir="." prefix="${appname}-${server.version}" mode="655">
         <include name="${jar}/${appname}.jar"/>
@@ -73,21 +74,28 @@
   <!-- delete compiled class files and created jar/war archives -->
   <target description="clean up compiled code" name="clean">
     <delete dir="${target}/server"/>
-    <delete dir="${target}/admin"/>
+    <delete dir="${target}/util"/>
     <delete dir="${target}/installer"/>
     <delete dir="${target}/default"/>
     <delete>
       <fileset dir="${jar}" includes="${appname}.jar"/>
-      <fileset dir="${jar}" includes="${appname}-admin.war"/>
-      <fileset dir="${jar}" includes="${appname}-w2installer.war"/>
+      <fileset dir="${jar}" includes="${appname}-util.jar"/>
+      <fileset dir="${jar}" includes="${appname}-installer.war"/>
       <fileset dir="${jar}" includes="${appname}-template.war"/>
     </delete>
   </target>
 
   <!-- create a jar containing the server code and compile all supporting applications  -->
-  <target depends="build-server,template-war,admin-war,installer-war" description="build executable jar" name="jar">
+  <target depends="build-server,util-jar,template-war,installer-war" description="build executable jar" name="jar">
     <jar destfile="${jar}/${appname}.jar" excludes="**/CVS" manifest="conf/manifest">
       <fileset dir="${target}/server" includes="**"/>
+    </jar>
+  </target>
+
+  <!-- create a jar archive of the utility classes -->
+  <target depends="build-util" description="build util war" name="util-jar">
+    <jar destfile="${jar}/${appname}-utils.jar" excludes="**/CVS">
+      <fileset dir="${target}/util" includes="**"/>
     </jar>
   </target>
 
@@ -102,19 +110,8 @@
     </jar>
   </target>
 
-  <!-- create web archive of the administrative web application -->
-  <target depends="build-admin-app" description="build admin war" name="admin-war">
-    <mkdir dir="${src}/apps/admin/WEB-INF/lib"/>
-    <jar destfile="${src}/apps/admin/WEB-INF/lib/servlets.jar" excludes="**/CVS">
-      <fileset dir="${target}/admin/WEB-INF/classes" includes="**"/>
-    </jar>
-    <jar destfile="${jar}/${appname}-admin.war" excludes="**/CVS">
-      <fileset dir="${src}/apps/admin" includes="**"/>
-      <fileset dir="${src}/apps/default/" includes="WEB-INF/lib/jstl.jar, WEB-INF/lib/standard.jar"/>
-    </jar>
-  </target>
 
-  <!-- create web archive of the administrative web application -->
+  <!-- create web archive of the installer web application -->
   <target depends="build-installer-app" description="build installer war" name="installer-war">
     <mkdir dir="${src}/apps/installer/WEB-INF/lib"/>
     <jar destfile="${src}/apps/installer/WEB-INF/lib/servlets.jar" excludes="**/CVS">
@@ -137,7 +134,7 @@
   </target>
 
   <!-- a simple help target to build all applications and server code -->
-  <target depends="build-server, build-template-app, build-admin-app, build-installer-app"
+  <target depends="build-server, build-util, build-template-app, build-installer-app"
     description="build all code" name="build"/>
 
   <target description="compile server code" name="build-server">
@@ -146,7 +143,16 @@
       srcdir="${src}"
       classpathref="classpath"
       destdir="${target}/server"
-      includes="org/snipsnap/server/**, org/snipsnap/util/*Util*, org/snipsnap/util/DBImport.java, org/snipsnap/util/MckoiEmbeddedJDBCDriver.java"/>
+      includes="org/snipsnap/server/**"/>
+  </target>
+
+  <target description="compile util code" name="build-util">
+    <mkdir dir="${target}/util"/>
+    <javac deprecation="${deprecation}" debug="${debug}"
+      srcdir="${src}"
+      classpathref="classpath"
+      destdir="${target}/util"
+      includes="org/snipsnap/util/*Util*, org/snipsnap/util/DB*port.java"/>
   </target>
 
   <target description="compile template application code" name="build-template-app">
@@ -157,16 +163,6 @@
       destdir="${target}/default/WEB-INF/classes"
       includes="org/snipsnap/**"
       excludes="org/snipsnap/test/**,org/snipsnap/admin/**, org/snipsnap/server/**"/>
-  </target>
-
-  <target description="compile admin application code" name="build-admin-app">
-    <mkdir dir="${target}/admin/WEB-INF/classes"/>
-    <javac deprecation="${deprecation}" debug="${debug}"
-      srcdir="${src}"
-      classpathref="classpath"
-      destdir="${target}/admin/WEB-INF/classes"
-      includes="org/snipsnap/admin/**"
-      excludes="org/snipsnap/admin/install/**"/>
   </target>
 
   <target description="compile installer application code" name="build-installer-app">

@@ -12,11 +12,12 @@
   <span class="error"><c:out value="${error.value}"/></span><br>
 </c:forEach>
 <br>
+
 <c:if test="${admin == null}">
-  <span class="error">
+  <b>
     <i>Attention:</i> The user name and password you use here will be used for securing the installer. Next time
     you use it you must authenticate using the information entered here.
-  </span>
+  </b>
 </c:if>
 
 <br>
@@ -62,7 +63,7 @@
     </tr>
     <tr <c:if test="${errors['port'] != null}">class="error-position"</c:if>>
       <td valign="top">Port Number:</td>
-      <td valign="top"><input name="port" type="text" value="<c:out value='${config.port}' default='8778'/>"></td>
+      <td valign="top"><input name="port" type="text" value="<c:out value='${config.port}' default='8668'/>"></td>
       <td valign="top">(optional)</td>
     </tr>
     <tr>
