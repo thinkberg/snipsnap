@@ -12,7 +12,7 @@
  <head>
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
   <title>SnipSnap :: <c:out value="${snip.name}" default=""/></title>
-  <link type="text/css" href="<c:url value='/default.css'/>" rel="STYLESHEET"/>
+  <link type="text/css" href="<c:url value='/default.css'/>" rel="STYLESHEET">
   <script type="javascript">
   <!--
     // auto focus special forms

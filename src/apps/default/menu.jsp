@@ -49,5 +49,5 @@
  </td></tr>
  <tr><td>
    <a href="http://validator.w3.org/check/referer"><s:image name="valid-html401"/></a> <s:image name="vcss"/>
- </tr></tr>
+ </td></tr>
 </table>
