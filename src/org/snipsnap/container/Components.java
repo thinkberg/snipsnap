@@ -139,6 +139,7 @@ public class Components {
           nc.registerComponentImplementation(component);
         }
 
+        nc.start();
 //        Component component = (MessageLogService) nc.getComponentInstance(MessageLogService.class);
 //       System.out.println("keys="+nc.getComponentKeys());
         container = nc;

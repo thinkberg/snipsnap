@@ -37,7 +37,7 @@
     <pathelement location="${jar}/commons-pool-1.1.jar"/>
     <pathelement location="${jar}/commons-collections.jar"/>
     <pathelement location="${jar}/xmlrpc-1.2-b1.jar"/>
-    <pathelement location="${jar}/lucene-1.2.jar"/>
+    <pathelement location="${jar}/lucene-1.4.1.jar"/>
     <pathelement location="${jar}/jython.jar"/>
     <pathelement location="${jar}/smack.jar"/>
     <pathelement location="${jar}/aspectjrt.jar"/>
@@ -431,7 +431,7 @@
         <include name="commons-dbcp-1.1.jar"/>
         <include name="commons-pool-1.1.jar"/>
         <include name="commons-collections.jar"/>
-        <include name="lucene-1.2.jar"/>
+        <include name="lucene-1.4.1.jar"/>
         <include name="xmlrpc-1.2-b1.jar"/>
         <include name="dom4j.jar"/>
         <include name="smack.jar"/>

@@ -25,9 +25,17 @@
 
 package org.snipsnap.notification.jmdns;
 
+import org.picocontainer.Startable;
+import org.snipsnap.app.Application;
+
 import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceInfo;
+import javax.jmdns.ServiceTypeListener;
+import javax.jmdns.ServiceListener;
 import java.io.IOException;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Announce SnipSnaps with JmDns (like Apple Rendezvous)
@@ -36,15 +44,51 @@ import java.io.IOException;
  * @version $Id$
  */
 
-public class JmDnsService {
+public class JmDnsService implements Startable, ServiceListener {
+
+  private JmDNS jmdns;
+
   public JmDnsService() {
     try {
-      JmDNS jmdns = new JmDNS();
+      jmdns = new JmDNS();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+  }
+
+  public void stop() {
+    jmdns.unregisterAllServices();
+  }
+
+  public void start() {
+    try {
+      Hashtable props = new Hashtable();
+      props.put("url","index.html");
       jmdns.registerService(
-          new ServiceInfo("_http._tcp.local.", "snipsnap._http._tcp.local.", 8668, 0, 0, "path=index.html")
-      );
+          new ServiceInfo("_snipsnap._tcp.local.",
+              Application.get().getConfiguration().getName()+"._snipsnap._tcp.local.",
+              8668,
+              0,
+              0,
+              props));
+      jmdns.addServiceListener("_snipsnap._tcp.local.", this);
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
+
+  public List getServices() {
+    return new ArrayList();
+  }
+
+  public void addService(JmDNS jmDNS, String type, String name) {
+  }
+
+  public void removeService(JmDNS jmDNS, String type, String name) {
+  }
+
+  public void resolveService(JmDNS jmDNS, String type, String name, ServiceInfo serviceInfo) {
+  }
+
 }
