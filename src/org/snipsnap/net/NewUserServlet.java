@@ -54,17 +54,20 @@ public class NewUserServlet extends HttpServlet {
     String password = request.getParameter("password");
     String password2 = request.getParameter("password2");
 
+    login = login != null ? login : "";
+    email = email != null ? email : "";
+
     if (request.getParameter("cancel") == null) {
       UserManager um = UserManager.getInstance();
       User user = um.load(login);
       // check whether user exists or not
       if (user != null) {
-        response.sendRedirect("/exec/register?login=" + login + "&email=" + email + "&message=" + ERR_EXISTS);
+        response.sendRedirect("/exec/register.jsp?login=" + login + "&email=" + email + "&message=" + ERR_EXISTS);
         return;
       }
       // check whether the password is correctly typed
       if (!password.equals(password2)) {
-        response.sendRedirect("/exec/register?login=" + login + "&email=" + email + "&message=" + ERR_PASSWORD);
+        response.sendRedirect("/exec/register.jsp?login=" + login + "&email=" + email + "&message=" + ERR_PASSWORD);
         return;
       }
       user = um.create(login, password, email);
