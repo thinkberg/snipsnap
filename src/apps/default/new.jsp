@@ -12,11 +12,11 @@
  <div class="snip-title"><h1 class="snip-name"><fmt:message key="snip.create"/></h1></div>
  <form class="form" name="f" method="post" action="exec/store" enctype="multipart/form-data">
   <div class="snip-title">
-     <fmt:message key="snip.name"/><br><input name="name" value="<c:out value="${name}"/>" type="text"/>
+     <fmt:message key="snip.name"/><br/><input name="name" value="<c:out value="${name}"/>" type="text"/>
   </div>
   <fmt:message key="snip.parent"/>
   <input name="parentBefore" value="<c:out value="${parentBefore}"/>" type="hidden"/>
-  <s:pathSelector parentName="${parentBefore}"/><br>
+  <s:pathSelector parentName="${parentBefore}"/><br/>
   <fmt:message key="snip.template"/>
   <select name="template" size="1">
     <c:forEach items="${templates}" var="template" >

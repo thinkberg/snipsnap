@@ -302,18 +302,9 @@ public class InitFilter implements Filter {
                                              (pathInfo != null ? pathInfo : "")));
       }
       paramMap.put("RSS", appConfig.getUrl("/exec/rss"));
+      paramMap.put("request", request);
       app.setParameters(paramMap);
     }
-
-//    // If this is not a multipart/form-data request continue
-//    String type = request.getHeader("Content-Type");
-//    if (type != null && type.startsWith("multipart/form-data")) {
-//      try {
-//        request = new MultipartWrapper(request, globals.getEncoding() != null ? globals.getEncoding() : "UTF-8");
-//      } catch (IllegalArgumentException e) {
-//        Logger.warn("InitFilter: multipart/form-data wrapper:" + e.getMessage());
-//      }
-//    }
 
     // apply the chain
     chain.doFilter(request, response);

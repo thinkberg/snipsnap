@@ -23,15 +23,15 @@
        <table>
         <tr>
           <td>
-            <fmt:message key="snip.copy.name"/><br>
-            <input name="name" value="<c:out value="${name}" escapeXml="true" />" type="text"/>
+            <label for="new"><fmt:message key="snip.copy.name"/></label><br/>
+            <input name="name" value="<c:out value="${name}" escapeXml="true" />" type="text" size="40" tabindex="0"/>
           </td>
         </tr>
         <c:if test="${not empty subsnips}">
           <tr>
             <td>
-              <fmt:message key="snip.copy.subsnips"/><br/>
-              <select multiple="multiple" name="subsnips" size="10">
+              <label for="subsnips"><fmt:message key="snip.copy.subsnips"/></label><br/>
+              <select multiple="multiple" name="subsnips" size="10" tabindex="1">
                 <c:forEach items="${subsnips}" var="snip">
                   <option selected="selected" value="<c:out value='${snip.name}' escapeXml='true'/>"><c:out value="${snip.name}" escapeXml="true"/></option>
                 </c:forEach>
@@ -40,8 +40,8 @@
           </tr>
         </c:if>
         <tr><td class="form-buttons">
-         <input value="<fmt:message key="dialog.copy"/>" name="copy" type="submit"/>
-         <input value="<fmt:message key="dialog.cancel"/>" name="cancel" type="submit"/>
+         <input value="<fmt:message key="dialog.copy.snip"/>" name="copy" type="submit" tabindex="2"/>
+         <input value="<fmt:message key="dialog.cancel"/>" name="cancel" type="submit" tabindex="3"/>
         </td></tr>
        </table>
        <input name="snip" type="hidden" value="<c:out value='${snip.name}' escapeXml='true'/>"/>
@@ -50,7 +50,7 @@
    </s:check>
    <s:check roles="Authenticated" invert="true">
      <fmt:message key="login.please">
-       <fmt:param><fmt:message key="snip.copy.template"/></fmt:param>
+       <fmt:param><fmt:message key="dialog.copy.snip"/></fmt:param>
      </fmt:message>
    </s:check>
   </div>
