@@ -46,7 +46,7 @@ public class FileAttachmentStorage implements AttachmentStorage {
     return  new File(filePath, attachment.getLocation());
   }
 
-  public boolean exists(Attachment attachment) throws IOException {
+  public boolean exists(Attachment attachment) {
     return getFile(attachment).exists();
   }
 
@@ -65,7 +65,22 @@ public class FileAttachmentStorage implements AttachmentStorage {
     return new FileInputStream(getFile(attachment));
   }
 
-  public void delete(Attachment attachment) throws IOException {
+  public void delete(Attachment attachment) {
     getFile(attachment).delete();
- }
+  }
+
+  public boolean verify(Attachment attachment) throws IOException {
+    if(exists(attachment)) {
+      boolean modified = false;
+      File file = getFile(attachment);
+      if(file.length() != attachment.getSize()) {
+        attachment.setSize(file.length());
+        modified = true;
+      }
+      return !modified;
+    }
+
+    // throw file not found exception if it does not exist
+    throw new FileNotFoundException(getFile(attachment).getCanonicalPath());
+  }
 }
