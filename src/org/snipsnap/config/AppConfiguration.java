@@ -41,7 +41,6 @@ public class AppConfiguration extends Configuration {
   public final static String APP_ADMIN_PASSWORD = "admin.password";
   public final static String APP_ADMIN_LOGIN = "admin.login";
   public final static String APP_ADMIN_EMAIL = "admin.email";
-
   public final static String APP_CACHE = "app.cache";
   public final static String APP_WEBLOG_DATE_FORMAT = "app.weblogDateFormat";
   public final static String APP_TIMEZONE = "app.timezone";
