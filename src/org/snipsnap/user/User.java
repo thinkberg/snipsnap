@@ -79,6 +79,7 @@ public class User implements Linkable {
       Set principals = new HashSet();
       // SECURITY PROBLEM, what if user CALLS himself "EDITOR"?
       // So add "user::"
+      // Also probably add a "Developer" role for debugging
       principals.add(new Principal("user::"+this.login));
       Iterator iterator = getRoles().iterator();
       while (iterator.hasNext()) {
