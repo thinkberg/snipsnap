@@ -26,20 +26,11 @@
 package org.snipsnap.test.snip.name;
 
 import junit.framework.Test;
-import junit.framework.TestSuite;
 import junit.framework.TestCase;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipImpl;
+import junit.framework.TestSuite;
 import org.snipsnap.snip.name.NameFormatter;
-import org.snipsnap.snip.name.NoneFormatter;
-import org.snipsnap.snip.name.CapitalizeFormatter;
 import org.snipsnap.snip.name.PathRemoveFormatter;
-import org.snipsnap.test.mock.MockSnipSpace;
-import org.snipsnap.test.snip.SnipTestSupport;
-import org.snipsnap.test.snip.SnipPathTest;
 
-import java.io.StringWriter;
-import java.io.IOException;
 
 public class PathRemoveNameFormatterTest extends TestCase {
   private NameFormatter formatter;

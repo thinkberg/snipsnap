@@ -25,9 +25,9 @@ package org.snipsnap.container;
  * --LICENSE NOTICE--
  */
 
-import org.codehaus.nanning.config.AspectSystem;
-import org.nanocontainer.nanning.NanningComponentAdapterFactory;
+import org.nanocontainer.dynaop.DynaopComponentAdapterFactory;
 import org.picocontainer.PicoContainer;
+import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.defaults.DefaultComponentAdapterFactory;
 import org.picocontainer.defaults.DefaultPicoContainer;
 import org.radeox.util.Service;
@@ -37,8 +37,8 @@ import org.snipsnap.app.JDBCApplicationStorage;
 import org.snipsnap.app.PropertyFileApplicationStorage;
 import org.snipsnap.config.ConfigurationProxy;
 import org.snipsnap.config.Globals;
-import org.snipsnap.interceptor.custom.MissingSnipAspect;
-import org.snipsnap.interceptor.custom.SnipSpaceACLAspect;
+import org.snipsnap.interceptor.custom.MissingInterceptor;
+import org.snipsnap.interceptor.custom.SnipSpaceACLInterceptor;
 import org.snipsnap.jdbc.LazyDataSource;
 import org.snipsnap.notification.MessageService;
 import org.snipsnap.render.PlainTextRenderEngine;
@@ -55,9 +55,14 @@ import org.snipsnap.versioning.cookbook.CookbookDifferenceService;
 import org.snipsnap.xmlrpc.*;
 import org.snipsnap.feeder.FeederRepository;
 import org.snipsnap.feeder.BasicFeederRepository;
+import org.snipsnap.security.AccessController;
+import org.snipsnap.security.DefaultAccessController;
 
 import javax.sql.DataSource;
 import java.util.Iterator;
+
+import dynaop.Aspects;
+import dynaop.Pointcuts;
 
 public class Components {
   public final static String DEFAULT_ENGINE = "defaultRenderEngine";
@@ -66,18 +71,16 @@ public class Components {
 
   public static synchronized PicoContainer getContainer() {
     if (null == container) {
-      //System.out.println("Creating PicoContainer ...");
-      DefaultPicoContainer nc = new DefaultPicoContainer(
-        new NanningComponentAdapterFactory(
-          new AspectSystem(),
-          new DefaultComponentAdapterFactory()));
+      Aspects aspects = new Aspects();
+      aspects.interceptor(Pointcuts.instancesOf(SnipSpace.class),
+                          Pointcuts.ALL_METHODS, new MissingInterceptor());
+      aspects.interceptor(Pointcuts.instancesOf(SnipSpace.class),
+                          Pointcuts.ALL_METHODS, new SnipSpaceACLInterceptor());
 
-      nc.registerComponentImplementation(MissingSnipAspect.class);
-      nc.registerComponentImplementation(SnipSpaceACLAspect.class);
-      nc.getComponentInstances();
+      DynaopComponentAdapterFactory factory = new DynaopComponentAdapterFactory(
+          new DefaultComponentAdapterFactory(), aspects);
+      MutablePicoContainer nc = new DefaultPicoContainer(factory);
 
-//     StringRegistrationNanoContainer c =
-//          new StringRegistrationNanoContainerImpl(pc, Components.class.getClassLoader(), new StringToObjectConverter());
 
       Globals globals = ConfigurationProxy.getInstance();
       String database = globals.getDatabase();
@@ -96,6 +99,7 @@ public class Components {
         }
         nc.registerComponentImplementation(AttachmentStorage.class, FileAttachmentStorage.class);
         nc.registerComponentImplementation(PermissionManager.class, DefaultPermissionManager.class);
+        nc.registerComponentImplementation(AccessController.class, DefaultAccessController.class);
         nc.registerComponentImplementation(UserManager.class, DefaultUserManager.class);
         nc.registerComponentImplementation(AuthenticationService.class, DefaultAuthenticationService.class);
         nc.registerComponentImplementation(PasswordService.class);

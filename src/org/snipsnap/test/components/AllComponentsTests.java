@@ -35,7 +35,6 @@ public class AllComponentsTests extends TestCase {
 
   public static Test suite() {
     TestSuite s = new TestSuite();
-    s.addTestSuite(NanningPicoTest.class);
     return s;
   }
 }

@@ -54,6 +54,9 @@ import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.List;
 
+import dynaop.ProxyAware;
+import dynaop.Proxy;
+
 /**
  * Central class for snips.
  * <p/>
@@ -62,7 +65,9 @@ import java.util.List;
  * @author Stephan J. Schmidt
  * @version $Id$
  */
-public class SnipImpl implements Snip {
+public class SnipImpl implements Snip, ProxyAware {
+  private Snip proxy;
+
   private NameFormatter nameFormatter;
   private String applicationOid;
 
@@ -86,9 +91,13 @@ public class SnipImpl implements Snip {
   private String commentedName;
   private String parentName;
 
+  public void setProxy(Proxy proxy) {
+    this.proxy = (Snip) proxy;
+  }
+
   private void init() {
     if (null == children) {
-      children = SnipSpaceFactory.getInstance().getChildren((Snip) Aspects.getThis());
+      children = SnipSpaceFactory.getInstance().getChildren(proxy);
     }
   }
 
@@ -101,7 +110,7 @@ public class SnipImpl implements Snip {
 
   public void handle(HttpServletRequest request) {
     access.handle(name, request);
-    SnipSpaceFactory.getInstance().delayedStore((Snip) Aspects.getThis());
+    SnipSpaceFactory.getInstance().delayedStore(proxy);
   }
 
   public int getVersion() {
@@ -286,7 +295,7 @@ public class SnipImpl implements Snip {
 
   public Comments getComments() {
     if (null == comments) {
-      comments = new Comments((Snip) Aspects.getThis());
+      comments = new Comments(proxy);
     }
     return comments;
   }
@@ -298,11 +307,11 @@ public class SnipImpl implements Snip {
    * @return List of child snips
    */
   public List getChildrenDateOrder() {
-    return SnipSpaceFactory.getInstance().getChildrenDateOrder((Snip) Aspects.getThis(), 10);
+    return SnipSpaceFactory.getInstance().getChildrenDateOrder(proxy, 10);
   }
 
   public List getChildrenModifiedOrder() {
-    return SnipSpaceFactory.getInstance().getChildrenModifiedOrder((Snip) Aspects.getThis(), 10);
+    return SnipSpaceFactory.getInstance().getChildrenModifiedOrder(proxy, 10);
   }
 
   /**
@@ -315,7 +324,7 @@ public class SnipImpl implements Snip {
   public void addSnip(Snip snip) {
     init();
     if (!children.contains(snip)) {
-      snip.setParent((Snip) Aspects.getThis());
+      snip.setParent(proxy);
       children.add(snip);
       SnipSpaceFactory.getInstance().systemStore(snip);
     }
@@ -375,10 +384,10 @@ public class SnipImpl implements Snip {
     }
 
     if (null != this.parent) {
-      this.parent.removeSnip((Snip) Aspects.getThis());
+      this.parent.removeSnip(proxy);
     }
     this.parent = parentSnip;
-    parentSnip.addSnip((Snip) Aspects.getThis());
+    parentSnip.addSnip(proxy);
   }
 
   public String getName() {
@@ -474,8 +483,9 @@ public class SnipImpl implements Snip {
     }
 
 
-    RenderContext context = new SnipRenderContext((Snip) Aspects.getThis(),
-                                                  (SnipSpace) container.getComponentInstance(SnipSpace.class));
+    RenderContext context = new SnipRenderContext(
+      proxy,
+      (SnipSpace) container.getComponentInstance(SnipSpace.class));
     context.setParameters(Application.get().getParameters());
 
     String xml = "";

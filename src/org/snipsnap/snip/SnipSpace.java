@@ -94,6 +94,8 @@ public interface SnipSpace  {
 
   public Snip load(String name);
 
+  public void systemStore(List snips);
+
   public void store(Snip snip);
 
   /**

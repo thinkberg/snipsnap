@@ -25,17 +25,17 @@
 
 package org.snipsnap.interceptor.custom;
 
+import dynaop.DispatchInterceptor;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
-import org.snipsnap.interceptor.InterceptorSupport;
-import org.snipsnap.interceptor.Invocation;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.Security;
 import org.snipsnap.user.User;
+import org.snipsnap.snip.Snip;
 
 import java.security.GeneralSecurityException;
 
-public class SnipSpaceACLInterceptor extends InterceptorSupport {
+public class SnipSpaceACLInterceptor extends DispatchInterceptor {
   private Roles roles;
 
   public SnipSpaceACLInterceptor() {
@@ -45,16 +45,13 @@ public class SnipSpaceACLInterceptor extends InterceptorSupport {
     roles.add("Admin");
   }
 
-  public Object invoke(Invocation invocation) throws Throwable {
-    String method = invocation.getMethod().getName();
-    if(method.equals("remove")) {
-      User user = Application.get().getUser();
-      if (!Security.hasRoles(user, null, roles)) {
-        Logger.debug("SECURITY EXCEPTION");
-        throw new GeneralSecurityException("Not allowed to remove.");
-      }
-
+  public void remove(Snip snip) throws Throwable {
+    User user = Application.get().getUser();
+    if (!Security.hasRoles(user, null, roles)) {
+      Logger.debug("SECURITY EXCEPTION");
+      throw new GeneralSecurityException("Not allowed to remove.");
     }
-    return invocation.next();
+   proceed();
+    return;
   }
 }

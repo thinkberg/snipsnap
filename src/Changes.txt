@@ -1,5 +1,8 @@
 0.5.2 
 
+- Improvement: Dropped mocking classes for jMock
+- Created new sub project Gabriel for security with ACLs and interceptors
+- Removed last traces of our AOP solution, replaced with Dynaop
 - Added feature: internationalization
 - Many other bugfixes, see http://bugs.snipsnap.org/
 - Added Stream based import/export

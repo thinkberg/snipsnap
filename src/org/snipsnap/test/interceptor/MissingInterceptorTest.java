@@ -28,18 +28,8 @@ package org.snipsnap.test.interceptor;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import org.snipsnap.interceptor.Aspects;
-import org.snipsnap.interceptor.custom.MissingInterceptor;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.test.mock.MockObject;
-import org.snipsnap.test.mock.MockSnipSpace;
-
-import java.lang.reflect.Proxy;
 
 public class MissingInterceptorTest extends TestCase {
-  private MockObject mock;
-  private SnipSpace space;
-  private MissingInterceptor interceptor;
 
   public MissingInterceptorTest(String name) {
     super(name);
@@ -47,36 +37,10 @@ public class MissingInterceptorTest extends TestCase {
 
   protected void setUp() throws Exception {
     super.setUp();
-    mock = new MockSnipSpace();
-    Aspects aspect = new Aspects(mock);
-    space = (SnipSpace) Proxy.newProxyInstance(MockSnipSpace.class.getClassLoader(),
-        new Class[]{SnipSpace.class}, aspect);
-
-    interceptor = new MissingInterceptor();
-    aspect.addInterceptor(interceptor);
   }
 
   public static Test suite() {
     return new TestSuite(MissingInterceptorTest.class);
-  }
-
-  public void testExistsUsesCache() {
-    space.exists("TestSnip"); // put in missing cache
-    assertEquals("Exists() called once", 1, mock.getCount("exists"));
-    space.exists("TestSnip"); // should read from cache
-    assertEquals("Exists() not called when in cache", 1, mock.getCount("exists"));
-  }
-
-  public void testMissingExists() {
-    assertTrue("Snip does not exist", !space.exists("TestSnip"));
-    assertTrue("Snip is in missing set", interceptor.getMissing().contains("TESTSNIP"));
-  }
-
-  public void testMissingCreate() {
-    space.exists("TestSnip");
-    space.create("TestSnip", "TestContent");
-    assertTrue("Snip is not missing set", !interceptor.getMissing().contains("TestSnip"));
-    assertEquals("MissingInterceptor calls create()", 1, mock.getCount("create"));
   }
 
 }

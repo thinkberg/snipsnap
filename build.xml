@@ -23,7 +23,10 @@
 
   <!-- the overall class path -->
   <path id="app.classpath">
+    <pathelement location="${jar}/gabriel.jar"/>
     <pathelement location="${jar}/asm-1.4.1.jar"/>
+    <pathelement location="${jar}/dynaop-1.0-beta.jar"/>
+    <pathelement location="${jar}/cglib-asm-1.0.jar"/>
     <pathelement location="${jar}/groovy-1.0-rc1-snapshot.jar"/>
     <pathelement location="${jar}/graph-snipsnap.jar"/>
     <pathelement location="${jar}/radeox.jar"/>
@@ -47,12 +50,17 @@
     <pathelement location="${jar}/junit.jar"/>
     <pathelement location="${jar}/picocontainer-1.0.jar"/>
     <pathelement location="${jar}/nanocontainer-1.0.jar"/>
-    <pathelement location="${jar}/nanning.jar"/>
+    <pathelement location="${jar}/nanocontainer-dynaop-1.0-beta-1-SNAPSHOT.jar"/>
+    <pathelement location="${jar}/jmock-1.0.0.jar"/>
   </path>
 
   <path id="all.classpath">
     <path refid="server.classpath"/>
     <path refid="app.classpath"/>
+  </path>
+
+  <path id="test.classpath">
+     <path refid="all.classpath"/>
   </path>
 
   <!-- build distribution -->
@@ -107,6 +115,12 @@
         <!--        <include name="lib/${appname}-theme-*.jar"/>-->
         <include name="lib/${appname}-installer.war"/>
         <include name="lib/${appname}-utils.jar"/>
+        <include name="lib/gabriel.jar"/>
+        <include name="lib/asm-1.4.1.jar"/>
+        <include name="lib/dynaop-1.0-beta.jar"/>
+        <include name="lib/cglib-asm-1.0.jar"/>
+        <include name="lib/asm-util-1.4.1.jar"/>
+        <include name="lib/groovy-1.0-rc1-snapshot.jar"/>
         <include name="lib/org.apache.jasper.jar"/>
         <include name="lib/org.apache.crimson.jar"/>
         <include name="lib/org.mortbay.jetty.jar"/>
@@ -268,7 +282,7 @@
     <mkdir dir="${target}/test"/>
     <javac deprecation="${deprecation}" debug="${debug}"
       srcdir="${src}"
-      classpathref="all.classpath"
+      classpathref="test.classpath"
       destdir="${target}/test"
       includes="org/snipsnap/test/**"/>
   </target>
@@ -401,6 +415,9 @@
     <copy todir="${target}/webapp/WEB-INF/lib">
       <fileset dir="${jar}">
         <include name="asm-1.4.1.jar"/>
+        <include name="gabriel.jar"/>
+        <include name="dynaop-1.0-beta.jar"/>
+        <include name="cglib-asm-1.0.jar"/>
         <include name="asm-util-1.4.1.jar"/>
         <include name="groovy-1.0-rc1-snapshot.jar"/>
         <include name="graph-snipsnap.jar"/>
@@ -421,7 +438,7 @@
         <include name="j2h.jar"/>
         <include name="picocontainer-1.0.jar"/>
         <include name="nanocontainer-1.0.jar"/>
-        <include name="nanning.jar"/>
+        <include name="nanocontainer-dynaop-1.0-beta-1-SNAPSHOT.jar"/>
       </fileset>
     </copy>
 

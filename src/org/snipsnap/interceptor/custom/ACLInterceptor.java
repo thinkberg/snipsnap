@@ -26,8 +26,7 @@
 package org.snipsnap.interceptor.custom;
 
 import org.snipsnap.app.Application;
-import org.snipsnap.interceptor.InterceptorSupport;
-import org.snipsnap.interceptor.Invocation;
+
 import org.snipsnap.snip.Snip;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.Security;
@@ -35,13 +34,16 @@ import org.snipsnap.user.User;
 
 import java.security.GeneralSecurityException;
 
+import dynaop.Interceptor;
+import dynaop.Invocation;
+
 /**
  * Access Control Interceptor for checking permissions of set operations on objects.
  *
  * @author Stephan J. Schmidt
  * @version $Id$
  */
-public class ACLInterceptor extends InterceptorSupport {
+public class ACLInterceptor implements Interceptor {
   private Roles roles;
 
   public ACLInterceptor() {
@@ -50,11 +52,11 @@ public class ACLInterceptor extends InterceptorSupport {
     roles.add("Editor");
   }
 
-  public Object invoke(Invocation invocation) throws Throwable {
+  public Object intercept(Invocation invocation) throws Throwable {
     // hack should a.) also check other methods b.) declare security for every method
     String name = invocation.getMethod().getName();
     User user = Application.get().getUser();
-    Snip snip = (Snip) invocation.getTarget();
+    Snip snip = (Snip) invocation.getProxy().getProxyContext().unwrap();
     if (invocation.getMethod().getName().startsWith("set")) {
       //Logger.debug("ACLInterceptor: Method="+invocation.getMethod().getName());
       //Logger.debug("ACLInterceptor: User = "+user);
@@ -72,6 +74,6 @@ public class ACLInterceptor extends InterceptorSupport {
         return "content protected";
       }
     }
-    return invocation.next();
+    return invocation.proceed();
   }
 }

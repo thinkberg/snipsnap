@@ -25,12 +25,13 @@
 
 package org.snipsnap.test.snip;
 
-import junit.framework.TestCase;
+import org.jmock.core.MockObjectSupportTestCase;
+import org.jmock.MockObjectTestCase;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.config.ConfigurationProxy;
 
-public class SnipTestSupport extends TestCase {
+public class SnipTestSupport extends MockObjectTestCase {
   public final static String TEST_CONTENT = "Test Content";
 
   public SnipTestSupport(String s) {

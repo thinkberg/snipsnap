@@ -26,6 +26,7 @@
 package org.snipsnap.versioning;
 
 import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipFactory;
 
 import java.util.List;
 
@@ -51,7 +52,7 @@ public class DefaultVersionManager implements VersionManager {
   };
 
   public Snip loadVersion(Snip snip, int version) {
-    return storage.loadVersion(snip, version);
+    return SnipFactory.wrap(storage.loadVersion(snip, version));
   };
 
   public List diff(Snip snip, int version1, int version2) {

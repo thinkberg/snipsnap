@@ -26,31 +26,36 @@
 package org.snipsnap.interceptor.custom;
 
 import org.snipsnap.app.Application;
-import org.snipsnap.interceptor.InterceptorSupport;
-import org.snipsnap.interceptor.Invocation;
+
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.Security;
 import org.snipsnap.user.User;
+import org.snipsnap.container.Components;
+import org.snipsnap.security.AccessController;
 
 import java.security.GeneralSecurityException;
 
-public class BlogACLInterceptor extends InterceptorSupport {
+import dynaop.Interceptor;
+import dynaop.Invocation;
+
+public class BlogACLInterceptor implements Interceptor {
   private Roles roles;
+  private AccessController access;
 
   public BlogACLInterceptor() {
     super();
-    roles = new Roles();
-    roles.add("Editor");
+    access = (AccessController) Components.getComponent(AccessController.class);
   }
 
-  public Object invoke(Invocation invocation) throws Throwable {
+  public Object intercept(Invocation invocation) throws Throwable {
     if (invocation.getMethod().getName().startsWith("post")) {
+      System.err.println("Call to post()");
       User user = Application.get().getUser();
       if (!Security.hasRoles(user, null, roles)) {
         //Logger.debug("SECURITY EXCEPTION");
         throw new GeneralSecurityException("Not allowed to post.");
       }
     }
-    return invocation.next();
+    return invocation.proceed();
   }
 }

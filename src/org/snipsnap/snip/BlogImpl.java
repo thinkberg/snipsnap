@@ -35,6 +35,9 @@ import org.snipsnap.xmlrpc.WeblogsPing;
 import java.sql.Date;
 import java.util.*;
 
+import dynaop.ProxyAware;
+import dynaop.Proxy;
+
 /**
  * BlogImpl for Blog.
  *
@@ -42,7 +45,8 @@ import java.util.*;
  * @version $Id$
  */
 
-public class BlogImpl implements Blog {
+public class BlogImpl implements Blog, ProxyAware {
+  private Blog proxy;
   private String startName;
   private String name;
   private Snip blog;
@@ -57,6 +61,10 @@ public class BlogImpl implements Blog {
     }
     this.name = blogName;
     this.blog = space.load(name);
+  }
+
+  public void setProxy(Proxy proxy) {
+    this.proxy = (Blog) proxy;
   }
 
   public String getName() {

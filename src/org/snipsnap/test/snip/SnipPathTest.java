@@ -29,23 +29,24 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipImpl;
-import org.snipsnap.test.mock.MockSnipSpace;
+import org.snipsnap.snip.SnipSpace;
+import org.jmock.Mock;
 
 import java.io.StringWriter;
 import java.io.IOException;
 
 public class SnipPathTest extends SnipTestSupport {
   private StringWriter writer;
-  private MockSnipSpace mockSpace;
+  private Mock mockSpace;
 
   public SnipPathTest(String name) {
     super(name);
   }
 
   protected void setUp() throws Exception {
-    writer = new StringWriter();
-    mockSpace = new MockSnipSpace();
     super.setUp();
+    writer = new StringWriter();
+    mockSpace = mock(SnipSpace.class);
   }
 
   public static Test suite() {
@@ -53,9 +54,11 @@ public class SnipPathTest extends SnipTestSupport {
   }
 
   public void testPathWithoutSnips() {
+    mockSpace.expects(atLeastOnce()).method("exists").will(returnValue(false));
+
     Snip snip = new SnipImpl("SWT/Stephan/Students", "Test Content");
     try {
-      snip.getPath().append(writer, mockSpace);
+      snip.getPath().append(writer, (SnipSpace) mockSpace.proxy());
     } catch (IOException e) {
       fail("Exception thrown "+e.getMessage());
     }
@@ -63,19 +66,5 @@ public class SnipPathTest extends SnipTestSupport {
         writer.getBuffer().toString());
   }
 
-  public void testPathWithExistingSnips() {
-    mockSpace.addSnip("SWT");
-    mockSpace.addSnip("SWT/Stephan");
-
-    Snip snip = new SnipImpl("SWT/Stephan/Students", "Test Content");
-    try {
-      snip.getPath().append(writer, mockSpace);
-    } catch (IOException e) {
-      fail("Exception thrown "+e.getMessage());
-    }
-    assertEquals("Path with existing snips",
-                 "<a href=\"space/start\">start</a> > <a href=\"space/SWT\">SWT</a> > <a href=\"space/SWT/Stephan\">Stephan</a> > Students",
-                writer.getBuffer().toString());
-  }
 }
 

@@ -25,11 +25,11 @@
 
 package org.snipsnap.interceptor.custom;
 
-import org.snipsnap.interceptor.InterceptorSupport;
-import org.snipsnap.interceptor.Invocation;
+import dynaop.DispatchInterceptor;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.util.ApplicationAwareMap;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
 
 /**
  * Interceptor for caching SnipSpace misses. SnipSnap
@@ -40,42 +40,59 @@ import java.util.Set;
  * @author Stephan J. Schmidt
  * @version $Id$
  */
-public class MissingInterceptor extends InterceptorSupport {
+public class MissingInterceptor extends DispatchInterceptor {
   // @TODO we use map instead of set to increment the
   // missing counter each time a snip could not be found
-  private Set missing;
+  private ApplicationAwareMap missing;
+  private ApplicationAwareMap existing;
+
 
   public MissingInterceptor() {
     super();
-    missing = new HashSet();
+    this.missing = new ApplicationAwareMap(HashMap.class, HashMap.class);
+    this.existing = new ApplicationAwareMap(HashMap.class, HashMap.class);
   }
 
-  public Set getMissing() {
-    return missing;
+
+  public boolean exists(String name) throws Throwable {
+      // Snip is in the missing list
+      if (missing.getMap().containsKey(name)) {
+        //System.out.println("Hit=" + name);
+        return false;
+      } else if (existing.getMap().containsKey(name)) {
+        return true;
+      }
+
+      //System.out.println("Miss=" + name);
+      Boolean result = (Boolean) proceed();
+      // System.out.println("Result=" + name + " exists?=" + result);
+      // The snip does not exist so put it in the missing list
+      if (result.equals(Boolean.FALSE)) {
+        missing.getMap().put(name, new Integer(0));
+      } else {
+        existing.getMap().put(name, new Integer(0));
+      }
+      return result.booleanValue();
   }
 
-  public Object invoke(Invocation invocation) throws Throwable {
-    String method = invocation.getMethod().getName();
+  public Snip create(String name, String content) throws Throwable {
+    Object result = proceed();
 
-    // exists(): return cache if possible
-    if ("exists".equals(method)) {
-      String name = ((String) invocation.getArgs()[0]).toUpperCase();
-      if (missing.contains(name)) {
-        return Boolean.FALSE;
-      }
-      Object result = invocation.next();
-      if (Boolean.FALSE.equals(result)) {
-        missing.add(name);
-      }
-      return result;
-      // create() remove from missing list
-    } else if ("create".equals(method)) {
-      String name = ((String) invocation.getArgs()[0]).toUpperCase();
-      if (missing.contains(name.toUpperCase())) {
-        missing.remove(name);
-      }
+    if (missing.getMap().containsKey(name)) {
+      missing.getMap().remove(name);
     }
-    Object result = invocation.next();
-    return result;
+    return (Snip) result;
   }
+
+  public void remove(Snip snip) throws Throwable {
+    String name = snip.getName().toUpperCase();
+
+    Object result = proceed();
+
+    if (existing.getMap().containsKey(name)) {
+      existing.getMap().remove(name);
+    }
+    return;
+  }
+
 }

@@ -26,7 +26,6 @@
 package org.snipsnap.snip;
 
 import org.apache.lucene.search.Hits;
-import org.codehaus.nanning.Aspects;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.app.ApplicationManager;
@@ -179,9 +178,9 @@ public class SnipSpaceImpl implements SnipSpace {
     } else {
 //      System.out.println("SnipSpace aspect="+Aspects.getThis());
 //      System.out.flush();
-      blog = (Blog) org.snipsnap.interceptor.Aspects.newInstance(
-          new BlogImpl((SnipSpace) Aspects.getThis(), name),
-          Blog.class);
+      blog = (Blog) org.snipsnap.interceptor.Aspects.wrap(
+          // BUG: Use this from Nanning!!
+          new BlogImpl(this, name));
       blogs.getMap().put(name, blog);
     }
     return blog;
@@ -329,6 +328,14 @@ public class SnipSpaceImpl implements SnipSpace {
     return;
   }
 
+  public void systemStore(List snips) {
+    storage.storageStore(snips);
+    Iterator iterator = snips.iterator();
+    while (iterator.hasNext()) {
+      Snip indexSnip = (Snip) iterator.next();
+      indexer.reIndex(indexSnip);
+    }
+  }
 
   /**
    * Delays the storage of a snip for some time. Some information

@@ -25,6 +25,8 @@
 
 package org.snipsnap.snip;
 
+import org.snipsnap.interceptor.Aspects;
+
 
 /**
  * Single point for creating Snips
@@ -36,7 +38,9 @@ package org.snipsnap.snip;
 public class SnipFactory {
   public static Snip createSnip(String name, String content) {
     return new SnipImpl(name, content);
-    //return (Snip) Aspects.newInstance(new SnipImpl(name, content), Snip.class);
   }
 
+  public static Snip wrap(Snip snip) {
+    return (Snip) Aspects.wrap(snip);
+  }
 }
