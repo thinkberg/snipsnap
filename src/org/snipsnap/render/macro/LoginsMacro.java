@@ -26,10 +26,12 @@ package org.snipsnap.render.macro;
 
 import org.snipsnap.app.Application;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
+import org.snipsnap.render.context.SnipRenderContext;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
+import java.util.ResourceBundle;
 
 /*
  * Macro that displays a list of currently logged on users.
@@ -56,6 +58,9 @@ public class LoginsMacro extends ListOutputMacro {
 
   public void execute(Writer writer, SnipMacroParameter params)
       throws IllegalArgumentException, IOException {
+
+    ResourceBundle bundle = (ResourceBundle) params.getContext().get(SnipRenderContext.LANGUAGE_BUNDLE);
+
     String type = "Vertical";
     boolean showSize = true;
     if (params.getLength() > 0) {
@@ -65,7 +70,7 @@ public class LoginsMacro extends ListOutputMacro {
       List users = Application.getCurrentUsers();
       users.addAll(Application.getCurrentNonUsers());
 
-      output(writer, "Users:", users, "", type, showSize);
+      output(writer, bundle.getString("Macro.Logins.Users"), users, "", type, showSize);
       int guests = Application.getGuestCount();
       if (guests > 0) {
         writer.write("... and ");

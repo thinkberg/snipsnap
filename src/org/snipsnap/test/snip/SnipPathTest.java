@@ -29,7 +29,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipImpl;
-import org.snipsnap.test.interceptor.mock.MockSnipSpace;
+import org.snipsnap.test.mock.MockSnipSpace;
 
 import java.io.StringWriter;
 import java.io.IOException;

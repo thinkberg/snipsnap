@@ -195,7 +195,7 @@ public class Month {
       // wrap if end of line.
       if ((leadGap + i) % 7 == 0) {
         view.append("<tr>");
-        view.append(week);
+        view.append(week.toString());
         week.setLength(0);
         view.append("</tr>");
       }

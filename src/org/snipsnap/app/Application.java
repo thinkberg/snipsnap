@@ -76,7 +76,8 @@ public class Application {
     //Logger.debug("Application - notify() "+type);
     if (notification == null &&
         config != null && config.allow(Configuration.APP_PERM_NOTIFICATION)) {
-      notification = NotificationService.getInstance();
+      //notification = (NotificationService) Components.getComponent(NotificationService.class);
+      notification = new NotificationService();
     }
     if (notification != null) {
       notification.notify(type, snip);

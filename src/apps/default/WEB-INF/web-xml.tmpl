@@ -95,6 +95,11 @@
   </servlet>
 
   <servlet>
+    <servlet-name>org.snipsnap.net.RdfServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.RdfServlet</servlet-class>
+  </servlet>
+
+  <servlet>
     <servlet-name>org.snipsnap.net.SnipRawServlet</servlet-name>
     <servlet-class>org.snipsnap.net.SnipRawServlet</servlet-class>
   </servlet>
@@ -228,6 +233,11 @@
   <servlet-mapping>
     <servlet-name>org.snipsnap.net.SnipViewServlet</servlet-name>
     <url-pattern>/space/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>org.snipsnap.net.RdfServlet</servlet-name>
+    <url-pattern>/rdf/*</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>

@@ -45,19 +45,10 @@ import java.util.List;
  */
 
 public class NotificationService {
-  private static NotificationService instance;
-
   private NotificationQueue queue;
   private Thread thread;
 
   private List notifiers;
-
-  public synchronized static NotificationService getInstance() {
-    if (null == instance) {
-      instance = new NotificationService();
-    }
-    return instance;
-  }
 
   public NotificationService() {
     queue = new NotificationQueue();

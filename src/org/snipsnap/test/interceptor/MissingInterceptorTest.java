@@ -31,8 +31,8 @@ import junit.framework.TestSuite;
 import org.snipsnap.interceptor.Aspects;
 import org.snipsnap.interceptor.custom.MissingInterceptor;
 import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.test.interceptor.mock.MockObject;
-import org.snipsnap.test.interceptor.mock.MockSnipSpace;
+import org.snipsnap.test.mock.MockObject;
+import org.snipsnap.test.mock.MockSnipSpace;
 
 import java.lang.reflect.Proxy;
 

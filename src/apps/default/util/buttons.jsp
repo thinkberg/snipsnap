@@ -17,3 +17,4 @@
 <s:check roles="Authenticated" permission="Edit" snip="${snip}">[<a href="<c:out value='${app.configuration.path}'/>/exec/edit?name=<c:out value='${snip.nameEncoded}'/>"><fmt:message key="menu.edit"/></a>]</s:check>
 <s:check roles="Authenticated" permission="Edit" snip="${snip}" invert="true"><span class="inactive">[<fmt:message key="menu.edit"/>]</span></s:check>
 <s:check roles="Editor"><div class="permissions"><c:out value="${snip.permissions}"/></div></s:check>
+[ <a href="/rdf/<c:out value='${snip.nameEncoded}'/>">rdf</a> ]

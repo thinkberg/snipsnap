@@ -28,6 +28,7 @@ import org.snipsnap.app.Application;
 import org.snipsnap.snip.HomePage;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.snip.XMLSnipImport;
+import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.storage.JDBCSnipStorage;
 import org.snipsnap.snip.storage.JDBCUserStorage;
 import org.snipsnap.user.Roles;
@@ -116,7 +117,7 @@ public class CreateDB {
     config.set(Configuration.APP_PERM_WEBLOGSPING, "deny");
     config.set(Configuration.APP_PERM_NOTIFICATION, "deny");
 
-    SnipSpaceFactory.getInstance().getBlog().post("Welcome to [SnipSnap]." +
+    ((SnipSpace) Components.getComponent(SnipSpace.class)).getBlog().post("Welcome to [SnipSnap]." +
                                                   " You can now login and add/edit your first post. There is a __post blog__ link in the menu bar. For help with formatting your post" +
                                                   " take a look at [snipsnap-help]. To create a link to a page on your site surround a word with \\[ and \\]." +
                                                   " Putting \\_\\_ around a phrase makes it __bold__ and putting \\~\\~ around it makes the" +

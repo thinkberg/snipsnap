@@ -32,6 +32,7 @@ import org.snipsnap.test.admin.AllAdminTests;
 import org.snipsnap.test.commons.AllCommonsTests;
 import org.snipsnap.test.interceptor.AllInterceptorTests;
 import org.snipsnap.test.snip.AllSnipTests;
+import org.snipsnap.test.components.AllComponentsTests;
 
 public class AllTests extends TestCase {
   public AllTests(String name) {
@@ -43,6 +44,7 @@ public class AllTests extends TestCase {
     s.addTest(AllSnipTests.suite());
     s.addTest(AllAdminTests.suite());
     s.addTest(AllCommonsTests.suite());
+    s.addTest(AllComponentsTests.suite());
     s.addTest(AllInterceptorTests.suite());
     return s;
   }

@@ -36,7 +36,7 @@ import org.snipsnap.snip.attachment.Attachments;
 import org.snipsnap.snip.label.Labels;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.User;
-import picocontainer.PicoContainer;
+import org.picocontainer.PicoContainer;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;

@@ -27,15 +27,16 @@ package org.snipsnap.snip;
 import org.apache.lucene.search.Hits;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
-import org.snipsnap.interceptor.Aspects;
 import org.snipsnap.notification.Notification;
 import org.snipsnap.snip.storage.*;
 import org.snipsnap.user.Digest;
 import org.snipsnap.util.Queue;
 import org.snipsnap.util.mail.PostDaemon;
+import org.codehaus.nanning.Aspects;
 
 import java.sql.Timestamp;
 import java.util.*;
+
 
 /**
  * SnipSpace implementation handles all the operations with snips like
@@ -61,12 +62,10 @@ public class SnipSpaceImpl implements SnipSpace {
 
   private Map blogs;
 
-  public SnipSpaceImpl() {
-  }
+  public SnipSpaceImpl(SnipStorage storage) {
+    this.storage = storage;
 
-  public void init() {
     changed = new Queue(100);
-    storage = new JDBCSnipStorage();
     blogs = new HashMap();
 
     // @TODO resolve this with components from PicoContainer
@@ -117,6 +116,9 @@ public class SnipSpaceImpl implements SnipSpace {
     PostDaemon.getInstance();
   }
 
+  public void init() {
+  }
+
   public String getETag() {
     return "\"" + eTag + "\"";
   }
@@ -131,7 +133,9 @@ public class SnipSpaceImpl implements SnipSpace {
     if (blogs.containsKey(name)) {
       blog = (Blog) blogs.get(name);
     } else {
-      blog = (Blog) Aspects.newInstance(
+      System.out.println("SnipSpace aspect="+Aspects.getThis());
+      System.out.flush();
+      blog = (Blog) org.snipsnap.interceptor.Aspects.newInstance(
           new BlogImpl((SnipSpace) Aspects.getThis(), name),
           Blog.class);
       blogs.put(name, blog);

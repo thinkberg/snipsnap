@@ -26,8 +26,13 @@
 package org.snipsnap.render.context;
 
 import org.radeox.engine.context.BaseRenderContext;
+import org.radeox.engine.context.RenderContext;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.app.Application;
+
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * SnipRenderContext implements RenderContext and is used to
@@ -39,12 +44,19 @@ import org.snipsnap.snip.SnipSpace;
  */
 
 public class SnipRenderContext extends BaseRenderContext {
+  public static final String LANGUAGE_BUNDLE = "SnipRenderContext.language_bundle";
+
   private Snip snip;
   private SnipSpace space;
 
   public SnipRenderContext(Snip snip, SnipSpace space) {
+    super();
     this.space = space;
     this.snip = snip;
+    Locale locale = Application.get().getConfiguration().getLocale();
+    //@TODO: optimize lookups perhaps with factory
+    set(SnipRenderContext.LANGUAGE_BUNDLE, ResourceBundle.getBundle("messages", locale));
+    set(RenderContext.LANGUAGE_LOCALE, locale);
   }
 
   /**
