@@ -58,14 +58,21 @@ public class Permissions {
     return serialize();
   }
 
-  private boolean containsAny(Set s1, Set s2) {
+  public boolean containsAny(Set s1, Set s2) {
     // Optimize to use the smaller set
     Iterator iterator = s1.iterator();
     while (iterator.hasNext()) {
       String s = (String) iterator.next();
-      if (s2.contains(s1)) return true;
+      if (s2.contains(s)) return true;
     }
     return false;
+  }
+
+  public void add(String permission) {
+    init();
+    if (! permissions.containsKey(permission)) {
+      permissions.put(permission,  new HashSet());
+    }
   }
 
   public void add(String permission, String role) {
@@ -88,7 +95,7 @@ public class Permissions {
 
   public boolean check(String permission, Set roles) {
     // Policy: If no permission is set, everything is allowed
-    if (! permissions.containsKey(permission)) return true;
+    if (null == permissions || ! permissions.containsKey(permission)) return true;
     // Copy !
     Set permRoles = (Set) permissions.get(permission);
     return containsAny(roles, permRoles);
@@ -143,6 +150,10 @@ public class Permissions {
     return string.substring(0, string.indexOf(delimiter));
   }
 
+  private String getPermission(String rolesString) {
+    return before(rolesString, ":");
+  }
+
   private Set getRoles(String rolesString) {
     Set roles = new HashSet();
     StringTokenizer tokenizer = new StringTokenizer(after(rolesString,":"), ",");
@@ -153,7 +164,4 @@ public class Permissions {
     return roles;
   }
 
-  private String getPermission(String rolesString) {
-    return before(rolesString, ":");
-  }
 }

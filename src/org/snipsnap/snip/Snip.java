@@ -80,6 +80,10 @@ public class Snip implements Ownable {
     return modified;
   }
 
+  public boolean isWeblog() {
+    return "start".equals(name);
+  }
+
   public String getOwner() {
     return getMUser();
   }
