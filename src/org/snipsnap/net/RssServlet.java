@@ -105,8 +105,28 @@ public class RssServlet extends HttpServlet {
       Snip snip = feeder.getContextSnip();
 
       SyndFeedI feed = new SyndFeed();
-      // 1.0 0.92 plain else=2.0
-      feed.setFeedType("rss_0.92");
+      // old snipsnaps supported 1.0 0.92 plain else=2.0
+      // rome supports
+      // rss_0.90, rss_0.91, rss_0.92, rss_0.93, rss_0.94, rss_1.0 rss_2.0 or atom_0.3
+      if ("rss_0.90".equals(version)) {
+        feed.setFeedType("rss_0.90");
+      } else if ("rss_0.91".equals(version)) {
+        feed.setFeedType("rss_0.91");
+      } else if ("0.92".equals(version) || "rss_0.92".equals(version)) {
+        feed.setFeedType("rss_0.92");
+      } else if ("rss_0.93".equals(version)) {
+        feed.setFeedType("rss_0.93");
+      } else if ("rss_0.94".equals(version)) {
+        feed.setFeedType("rss_0.94");
+      } else if ("1.0".equals(version) || "rss_1.0".equals(version)) {
+        feed.setFeedType("rss_1.0");
+      } else if ("rss_2.0".equals(version)) {
+        feed.setFeedType("rss_2.0");
+      } else if ("atom_0.3".equals(version)) {
+        feed.setFeedType("atom_0.3");
+      } else {
+        feed.setFeedType("atom_0.3");
+      }
 
       // feed.setEtag(SnipSpaceFactory.getInstance().getETag());
       String url = config.getUrl("/space");
