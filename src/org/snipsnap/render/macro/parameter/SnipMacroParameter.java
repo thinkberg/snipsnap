@@ -30,6 +30,7 @@ import org.snipsnap.snip.Snip;
 import org.radeox.util.logging.Logger;
 import org.radeox.macro.parameter.BaseMacroParameter;
 import org.radeox.macro.parameter.MacroParameter;
+import org.radeox.filter.context.FilterContext;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -48,9 +49,13 @@ import java.util.StringTokenizer;
 public class SnipMacroParameter extends BaseMacroParameter implements MacroParameter {
   private Snip snip;
 
+  public SnipMacroParameter(FilterContext context) {
+    super(context);
+  }
 
-  public SnipMacroParameter(Snip snip) {
+  public SnipMacroParameter(Snip snip, FilterContext context) {
     params = new HashMap();
+    this.context = context;
     this.snip = snip;
   }
 

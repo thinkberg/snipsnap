@@ -25,10 +25,12 @@
 
 package org.snipsnap.render;
 
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipLink;
+import org.radeox.ImageRenderEngine;
+import org.radeox.IncludeRenderEngine;
 import org.radeox.RenderEngine;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.SnipSpace;
 
 
 /**
@@ -39,10 +41,20 @@ import org.radeox.RenderEngine;
  * @version $Id$
  */
 
-public class SnipRenderEngine extends RenderEngine {
-   public String include(String name) {
+public class SnipRenderEngine extends RenderEngine implements IncludeRenderEngine, ImageRenderEngine {
+
+  public String getName() {
+    return "snipsnap";
+  }
+
+  // Register this RenderEngine with the RenderEngine manager
+  static {
+    org.radeox.RenderEngine.registerEngine(new SnipRenderEngine());
+  }
+
+  public String include(String name) {
     Snip includeSnip = SnipSpace.getInstance().load(name);
-    if (null !=includeSnip) {
+    if (null != includeSnip) {
       return includeSnip.getContent();
     } else {
       return null;

@@ -37,6 +37,6 @@ import org.snipsnap.render.filter.context.SnipFilterContext;
 public class SnipFormatter {
   public static String toXML(Snip snip, String content) {
     FilterContext context = new SnipFilterContext(snip);
-    return RenderEngine.getInstance().render(content, context);
+    return RenderEngine.getInstance("snipsnap").render(content, context);
   }
 }

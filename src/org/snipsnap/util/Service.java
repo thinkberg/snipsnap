@@ -1,5 +1,7 @@
 package org.snipsnap.util;
 
+import org.radeox.util.logging.Logger;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -59,6 +61,7 @@ public class Service {
               // load class if a line was left
               if (line.length() > 0) {
                 // Try and load the class
+                //Logger.debug(line);
                 Object obj = classLoader.loadClass(line).newInstance();
                 // stick it into our vector...
                 providers.add(obj);
