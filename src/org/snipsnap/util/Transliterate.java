@@ -124,7 +124,9 @@ public class Transliterate {
     while(tok.hasMoreTokens()) {
       list.add(tok.nextToken());
     }
-    return (String[])list.toArray();
+    String tmp[] = new String[list.size()];
+    tmp = (String[])list.toArray(tmp);
+    return tmp;
   }
 
   public static void main(String args[]) {
