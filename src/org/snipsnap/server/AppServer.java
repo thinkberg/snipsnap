@@ -166,6 +166,7 @@ public class AppServer {
             if (!AdminServer.execute(Integer.parseInt(adminConfig.getProperty(Configuration.SERVER_ADMIN_PORT).trim()), args[1])) {
               System.exit(-1);
             }
+            System.exit(0);
           } catch (NumberFormatException e) {
             System.out.println("ERROR: admin port '" + adminConfig.getProperty(Configuration.SERVER_ADMIN_PORT) + "' is not a number, aborting");
             System.exit(-1);
