@@ -1,5 +1,6 @@
 0.3.5
 
+- Fixed bug: URLs in [...] made the LinkFilter not process any [...]
 - Fixed bug: Sometimes comments were in wrong order
 - Fixed bug: Some urls (search) missed a '/'
 - Fixed bug: Under some circumstances SnipSnap escaped HTML
