@@ -58,14 +58,10 @@ public class Installer extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
 
-    // change this to response.getWriter() to enable display on webpage
-    PrintWriter out = new PrintWriter(System.out);
-    writeMessage(out, "Installing SnipSnap ...");
-
     // get or create session and application object
     HttpSession session = request.getSession(false);
     if (null == session) {
-      response.sendRedirect(SnipLink.absoluteLink(request, "/"));
+      response.sendRedirect(SnipLink.absoluteLink(request, "/admin"));
       return;
     }
     Map errors = new HashMap();
@@ -73,10 +69,14 @@ public class Installer extends HttpServlet {
 
     // get config from session
     Configuration config = (Configuration) session.getAttribute("config");
-    if (null == config) {
-      sendError(session, null, request, response);
+    if (null == config || config.isConfigured()) {
+      response.sendRedirect(SnipLink.absoluteLink(request, "/admin");
       return;
     }
+
+    // change this to response.getWriter() to enable display on webpage
+    PrintWriter out = new PrintWriter(System.out);
+    writeMessage(out, "Installing SnipSnap ...");
 
     writeMessage(out, "Checking user name and password ...");
     // set user name and email, check that information
