@@ -1,0 +1,3 @@
+org.snipsnap.render.filter.CalendarFilter
+org.snipsnap.render.filter.LinkTestFilter
+org.snipsnap.render.filter.LateMacroFilter
