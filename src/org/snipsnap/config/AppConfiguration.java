@@ -190,7 +190,7 @@ public class AppConfiguration extends Configuration {
   }
 
   public String getLogoImage() {
-    String image - getProperty(APP_TAGLINE);
+    String image = getProperty(APP_TAGLINE);
     return image != null ? image : "snip";
   }
 
