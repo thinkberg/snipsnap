@@ -31,6 +31,7 @@ import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipLink;
 
 import java.util.Vector;
 

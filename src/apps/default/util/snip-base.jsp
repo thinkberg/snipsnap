@@ -43,7 +43,7 @@
 </c:choose>
 <%-- Snip content --%>
 <div class="snip-content">
-<c:if test="${snip.notWeblog}">
+  <c:if test="${snip.notWeblog}">
    <div class="snip-meta">
      <div class="snip-label">
        <div>
@@ -64,6 +64,6 @@
        <c:out value="${snip.attachmentString}" escapeXml="false" />
      </div>
    </div>
- </c:if>
- <c:out value="${snip.XMLContent}" escapeXml="false" />
+  </c:if>
+  <div><c:out value="${snip.XMLContent}" escapeXml="false" /></div>
 </div>

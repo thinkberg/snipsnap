@@ -46,6 +46,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Pings weblogs.com
@@ -58,10 +59,13 @@ public class WeblogsPing extends Thread implements Consumer {
   private final static String WEBLOGSPING = "SnipSnap/config/weblogsping";
 
   private Configuration config;
+  private Map appParams;
+
   private Snip weblog;
   private static List handlers;
 
   public WeblogsPing(Configuration configuration, Snip weblog) {
+    this.appParams = Application.get().getParameters();
     this.config = configuration;
     this.weblog = weblog;
 
@@ -79,6 +83,9 @@ public class WeblogsPing extends Thread implements Consumer {
   }
 
   public void run() {
+    // ensure the right configuration is set
+    Application.get().setConfiguration(config);
+    Application.get().setParameters(appParams);
     if (config.allow(Configuration.APP_PERM_WEBLOGSPING)) {
       if (handlers.size() > 0) {
         Iterator iterator = handlers.iterator();

@@ -39,6 +39,7 @@ public class TypeLabel extends BaseLabel {
 
   /**
    * Get known types and their handlers (potentially no handlers)
+   * The syntaxt of the file is "<type> <viewhandler>:<edithandler>"
    *
    * @return a map of the structure type:{viewhandler,edithandler}
    */
@@ -50,7 +51,7 @@ public class TypeLabel extends BaseLabel {
       while (iter.hasNext()) {
         String typeInfo = ((String) iter.next()).trim();
         if (!"".equals(typeInfo) && !typeInfo.startsWith("#")) {
-          String[] entry = typeInfo.split("\\p{Space}+|:");
+          String[] entry = typeInfo.split("\\p{Space}+|\\{Space}*:\\{Space}*");
           String[] handlers = new String[2];
           switch (entry.length) {
             case 3:
@@ -67,10 +68,19 @@ public class TypeLabel extends BaseLabel {
     return types;
   }
 
+  /**
+   * Get known types.
+   * @return a set of type names
+   */
   public static Set getTypes() {
     return getTypeMap().keySet();
   }
 
+  /**
+   * Get a view handler for the provided type name.
+   * @param type the type name
+   * @return a view handler or null
+   */
   public static String getViewHandler(String type) {
     String[] handlers = (String[]) getTypeMap().get(type);
     if(null != handlers) {
@@ -79,6 +89,11 @@ public class TypeLabel extends BaseLabel {
     return null;
   }
 
+  /**
+   * Get an edit handler for the provided type name.
+   * @param type the type name
+   * @return an edit handler or null
+   */
   public static String getEditHandler(String type) {
     String[] handlers = (String[]) getTypeMap().get(type);
     if (null != handlers) {
