@@ -23,7 +23,7 @@
     <link><c:out value="${url}/${snip.nameEncoded}"/></link>
     <description><c:out value="${config.tagLine}"/></description>
     <s:dublinCore snip="${snip}" format="xml"/>
-    <blogChannel:changes>http://www.weblogs.com/rssUpdates/changes.xml</changes>
+    <!-- <blogChannel:changes>http://www.weblogs.com/rssUpdates/changes.xml</changes> -->
     <admin:generatorAgent rdf:resource="http://www.snipsnap.org/space/version-<c:out value='${config.version}'/>"/>
     <c:forEach items="${snip.childrenModifiedOrder}" var="child">
        <item>

@@ -93,22 +93,28 @@ public class BookServices {
 
   public Writer isbn(Writer writer, String isbn)
       throws IOException {
-    SnipLink.appendImage(writer, "external-link", "&gt;&gt;");
-    writer.write("(");
-    Iterator iterator = services.entrySet().iterator();
-    while (iterator.hasNext()) {
-      Map.Entry entry = (Map.Entry) iterator.next();
-      writer.write("<a href=\"");
-      writer.write((String) entry.getValue());
+    if (services.size() == 0) {
+      writer.write("isbn:");
       writer.write(isbn);
-      writer.write("\">");
-      writer.write((String) entry.getKey());
-      writer.write("</a>");
-      if (iterator.hasNext()) {
-        writer.write(" | ");
+    } else {
+
+      SnipLink.appendImage(writer, "external-link", "&gt;&gt;");
+      writer.write("(");
+      Iterator iterator = services.entrySet().iterator();
+      while (iterator.hasNext()) {
+        Map.Entry entry = (Map.Entry) iterator.next();
+        writer.write("<a href=\"");
+        writer.write((String) entry.getValue());
+        writer.write(isbn);
+        writer.write("\">");
+        writer.write((String) entry.getKey());
+        writer.write("</a>");
+        if (iterator.hasNext()) {
+          writer.write(" | ");
+        }
       }
+      writer.write(")");
     }
-    writer.write(")");
     return writer;
   }
 }

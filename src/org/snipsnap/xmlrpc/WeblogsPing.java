@@ -29,8 +29,15 @@ import org.apache.xmlrpc.XmlRpcClient;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.snip.Snip;
+import org.snipsnap.xmlrpc.ping.PingHandler;
+import org.snipsnap.xmlrpc.ping.SimplePingHandler;
+import org.snipsnap.xmlrpc.ping.RssPingHandler;
+import org.snipsnap.xmlrpc.ping.ExtendedPingHandler;
 
 import java.util.Vector;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Pings weblogs.com
@@ -40,72 +47,26 @@ import java.util.Vector;
  */
 
 public class WeblogsPing extends Thread {
-  AppConfiguration config;
-  Snip weblog;
+  private AppConfiguration config;
+  private Snip weblog;
+  private List handlers;
 
   public WeblogsPing(AppConfiguration configuration, Snip weblog) {
     this.config = configuration;
     this.weblog = weblog;
+    handlers = new ArrayList();
+    handlers.add(new SimplePingHandler("http://rpc.weblogs.com/RPC2"));
+    handlers.add(new SimplePingHandler("http://www.snipsnap.org/RPC2"));
+    handlers.add(new RssPingHandler("http://rssrpc.weblogs.com/RPC2"));
+    handlers.add(new ExtendedPingHandler("http://ping.blo.gs/"));
   }
 
   public void run() {
-    if (config.allow(AppConfiguration.PERM_WEBLOGS_PING)) {
-      Vector params = new Vector();
-      //@TODO refactor to handler list PingList[PingHandler].pingAll()
-      try {
-        // Ping weblogs.com
-        XmlRpcClient weblogs_com = new XmlRpcClient("http://rpc.weblogs.com/RPC2");
-        params.clear();
-        // Name of the weblog
-        params.addElement(config.getName());
-        // Url/CheckUrl of the weblog
-        params.addElement(config.getSnipUrl(weblog.getName()));
-        Object result = weblogs_com.execute("weblogUpdates.ping", params);
-        //System.err.println("weblogs.ping received: " + result);
-      } catch (Exception e) {
-        System.err.println("Unable to ping weblogs.com " + e);
-      }
-      try {
-        // Ping RSS weblogs.com
-        XmlRpcClient weblogs_com = new XmlRpcClient("http://rpc.weblogs.com/RPC2");
-        params.clear();
-        // Name of the weblog
-        params.addElement(config.getName());
-        // Url/CheckUrl of the weblog
-        params.addElement(config.getUrl() + "/exec/rss");
-        Object result = weblogs_com.execute("rssUpdate.ping", params);
-        //System.err.println("weblogs.ping received: " + result);
-      } catch (Exception e) {
-        System.err.println("Unable to ping RSS weblogs.com " + e);
-      }
-      try {
-        // Ping blog.gs
-        XmlRpcClient blo_gs = new XmlRpcClient("http://ping.blo.gs/");
-        params.clear();
-        // Name of the weblog
-        params.addElement(config.getName());
-        // Url of the weblog
-        params.addElement(config.getUrl());
-        // Url to check for news
-        params.addElement(config.getSnipUrl(weblog.getName()));
-        // RSS feed
-        params.addElement(config.getUrl() + "/exec/rss");
-        Object result = blo_gs.execute("weblogUpdates.extendedPing", params);
-        //System.err.println("weblogs.ping received: " + result);
-      } catch (Exception e) {
-        System.err.println("Unable to ping blo.gs " + e);
-      }
-      try {
-        XmlRpcClient home = new XmlRpcClient("http://www.snipsnap.org/RPC2");
-        params.clear();
-        // Name of the weblog
-        params.addElement(config.getName());
-        // Url/CheckUrl of the weblog
-        params.addElement(config.getSnipUrl(weblog.getName()));
-        Object result = home.execute("weblogUpdates.ping", params);
-        //System.err.println("xmlrpc result="+result);
-      } catch (Exception e) {
-        System.err.println("Unable to ping snipsnap.org " + e);
+    if (config.allow(AppConfiguration.PERM_WEBLOGS_PING) && handlers.size()>0) {
+      Iterator iterator = handlers.iterator();
+      while (iterator.hasNext()) {
+        PingHandler handler = (PingHandler) iterator.next();
+        handler.ping(weblog);
       }
     }
   }
