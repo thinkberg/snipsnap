@@ -13,6 +13,11 @@ span.nobr img {
 
 /************************************************/
 /* image positioning                            */
+img {
+  margin-top: 1px;
+  margin-bottom: 1px;
+}
+
 img.left {
   display: block;
   left: 0px;
@@ -215,6 +220,9 @@ ol.HEBREW { list-style-type: hebrew; }
 /* calendar display                             */
 .calendar {
   border-spacing: 0px;
+}
+
+.calendar td {
   text-align: right;
 }
 
@@ -224,69 +232,6 @@ ol.HEBREW { list-style-type: hebrew; }
 }
 
 .calendar .today {
-  border: 1px solid black;
+  border: 3px solid #ce6a22;
 }
 
-
-/************************************************/
-/* vcard display                                */
-
-.vcard {
-  padding: 2px;
-  display: table;
-  width: 300px;
-  border: 1px solid #003366;
-  color: inherit;
-  background-color: #eeeeee;
-}
-
-.vcard-group-1 {
-  display: block;
-  width: 100%;
-  font-weight: bold;
-  font-size: 120%;
-}
-
-.vcard-surname {
-  padding-left: 0.5em;
-  display: inline;
-  font-weight: bold;
-}
-
-.vcard-givenname {
-  display: inline;
-  font-weight: bold;
-}
-
-.vcard-description {
-  display: block;
-  font-style: italic;
-}
-
-.vcard-group-2 {
-  display: block;
-  padding-top: 1em;
-}
-
-.vcard-group-3 {
-  display: table-cell;
-  width: 100%;
-}
-
-.vcard-street {
-}
-
-.vcard-zip {
-  display: inline;
-}
-
-.vcard-city {
-  display: inline;
-  padding-left: 0.5em;
-}
-
-.vcard-group-4 {
-  display: table-cell;
-  padding-left: 1em;
-  text-align: right;
-}

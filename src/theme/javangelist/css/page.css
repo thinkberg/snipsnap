@@ -20,10 +20,10 @@ body {
 
 #page-title {
   display: block;
-  float: right;
+  position: relative;
   width: 560px;
   top: 10px;
-  left: 235px;
+  left: 220px;
 
 	padding:10px;
 	color: inherit;
@@ -48,7 +48,9 @@ body {
 }
 
 #page-content {
-  float: right;
+  position: relative;
+  top: 30px;
+  left: 220px;
   width: 580px;
   max-width: 580px;
   padding-top: 10px;
@@ -56,9 +58,9 @@ body {
 }
 
 #page-portlet-1 {
-  position: relative;
+  position: absolute;
   float: left;
-  top: 200px;
+  top: 240px;
   width: 200px;
 	line-height: 14px;
   padding-left: 10px;
@@ -72,9 +74,11 @@ body {
 
 /* the actual content */
 #page-bottom {
-  float: right;
+  position: relative;
+  top: 30px;
   margin-top: 10px;
   text-align: center;
   width: 580px;
+  left: 235px;
   font-size: 100%;
 }

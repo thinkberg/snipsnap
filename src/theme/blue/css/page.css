@@ -12,7 +12,7 @@ body {
   line-height:16px;
 
   margin: 20px 20px 20px 20px;
-	background: #EEE;
+  background: #EEE;
 }
 
 #page-logo {
@@ -51,48 +51,42 @@ body {
   background:#003366;
   padding-left: 15px;
   padding-right: 15px;
+  padding-top: 5px;
   padding-bottom: 15px;
 }
 
 #page-buttons {
   padding:15px;
-	background:#FFF;
-	text-align:center;
+  background:#FFF;
+  text-align:center;
 }
 
 #page-wrapper {
   width: 100%;
   display: table-row;
   table-layout: fixed;
-	background:#FFF;
+  background:#FFF;
 }
 
 #page-content {
-  display: table-cell;
   float: left;
+  display: table-cell;
   padding-left: 15px;
   padding-right: 15px;
   padding-bottom: 15px;
   margin-bottom:15px;
-	background:#FFF;
-  width: 60%;
-  voice-family: "\"}\""; /* IE hack */
-  voice-family:inherit;
+  background:#FFF;
+  width: 65%;
 }
-
-html>body #page-content {
-  width:100%;
-}
-
 
 #page-portlet-1 {
-  display: table-cell;
   float: right;
+  display: table-cell;
   top: 0px;
-  width: 30%;
+  width: 29%;
   padding-left:15px;
   margin-bottom:15px;
-	background:#FFF;
+  background:#FFF;
   border-left: 1px solid #003366;
 
   font-family: verdana, arial, sans-serif;
@@ -112,6 +106,6 @@ html>body #page-content {
   padding-top: 10px;
   padding-bottom: 10px;
   width: 100%;
-	background:#FFF;
+  background:#FFF;
   text-align: center;
 }

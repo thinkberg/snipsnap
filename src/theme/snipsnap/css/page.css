@@ -14,13 +14,14 @@ body {
   padding: 0px;}
 
 #page-logo {
+  width: 800px;
   display: block;
   width: 100%;
 }
 
 #page-title {
   display: block;
-  width: 100%;
+  width: 800px;
   margin-top: 10px;
 
 	padding: 17px 0px 7px 0px;
@@ -48,14 +49,12 @@ body {
 }
 
 #page-wrapper {
-/*  display: table-row;
-  table-layout: fixed;
-*/}
+  width: 800px;
+}
 
 #page-content {
   float: left;
   margin-top: 10px;
-  width: 100%;
   height: auto;
   width: 590px;
   max-width: 590px;

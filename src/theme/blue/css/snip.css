@@ -11,15 +11,14 @@
   width: 100%;
   text-align: left;
   padding: 0px;
-  margin-bottom: 1em;
 }
 
 .snip-name {
   width: 100%;
   font-family: georgia, times new roman, times, serif;
-	font-size: 15px;
-	color: #000000;
-	text-transform: none;
+  font-size: 15px;
+  color: #000000;
+  text-transform: none;
   border-bottom: 1px solid #003366;
 }
 

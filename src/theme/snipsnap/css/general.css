@@ -36,9 +36,9 @@ a:hover {
 /* table tag                                    */
 table {
 	empty-cells: show;
+	font-size: 100%;
+	border-collapse: separate;
 }
-
-
 
 /************************************************/
 /* input tag                                    */

@@ -219,7 +219,7 @@ ol.HEBREW { list-style-type: hebrew; }
 }
 
 .calendar td {
-  text-align: center;
+  text-align: right;
 }
 
 .calendar caption {

@@ -25,14 +25,19 @@
 }
 
 .snip-buttons {
+  border: 0;
+  display: table-cell;
+  width: 49%;
   float: right;
-  margin-top: 5px;
+  text-align: right;
 }
 
 .snip-info {
-  color: #999999;
+  border: 0;
+  display: table-cell;
+  width: 49%;
+  float: left;
   background-color: inherit;
-  margin-top: 5px;
 }
 
 .snip-content {
