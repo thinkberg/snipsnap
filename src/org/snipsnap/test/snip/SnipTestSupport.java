@@ -31,6 +31,8 @@ import org.snipsnap.config.Configuration;
 import org.snipsnap.config.ConfigurationProxy;
 
 public class SnipTestSupport extends TestCase {
+  public final static String TEST_CONTENT = "Test Content";
+
   public SnipTestSupport(String s) {
     super(s);
   }

@@ -39,6 +39,7 @@ public class AllSnipTests extends TestCase {
     s.addTestSuite(PermalinkTest.class);
     s.addTestSuite(ImageTest.class);
     s.addTestSuite(EncoderTest.class);
+    s.addTestSuite(SnipPathTest.class);
     return s;
   }
 }

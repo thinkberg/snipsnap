@@ -214,6 +214,10 @@ public class MockSnip implements Snip {
     return null;
   }
 
+  public SnipPath getPath() throws IOException {
+    return null;
+  }
+
   public String getXMLContent() {
     return null;
   }

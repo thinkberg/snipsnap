@@ -36,6 +36,7 @@ import org.snipsnap.user.User;
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
 import java.util.List;
+import java.io.IOException;
 
 /**
  * Interface for snips
@@ -186,4 +187,6 @@ public interface Snip extends Linkable, Ownable, Nameable, Appendable {
   public String toXML();
 
   public String getXMLContent();
+
+  public SnipPath getPath() throws IOException;
 }

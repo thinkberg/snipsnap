@@ -484,7 +484,7 @@
   </target>
 
 
-  <target name="test" depends="compile-servlets, compile-util, compile-test">
+  <target name="test" depends="compile-server, compile-servlets, compile-util, compile-test">
     <junit printsummary="true">
        <formatter usefile="false" type="plain"/>
        <test name="org.snipsnap.test.AllTests"/>

@@ -7,10 +7,15 @@ import org.snipsnap.snip.SnipSpace;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 public class MockSnipSpace extends MockObject implements SnipSpace {
+  private Map snips;
+
   public MockSnipSpace() {
     super();
+    snips = new HashMap();
   }
 
   // A snip is changed by the user (created, stored)
@@ -87,8 +92,9 @@ public class MockSnipSpace extends MockObject implements SnipSpace {
   }
 
   public boolean exists(String name) {
+    //System.out.println("exists=>"+name+"<");
     inc("exists");
-    return false;
+    return snips.containsKey(name);
   }
 
   public Snip load(String name) {
@@ -118,5 +124,9 @@ public class MockSnipSpace extends MockObject implements SnipSpace {
 
   public String getETag() {
     return null;
+  }
+
+  public void addSnip(String name) {
+    snips.put(name, name);
   }
 }

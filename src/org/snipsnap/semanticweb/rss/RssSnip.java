@@ -77,6 +77,10 @@ public class RssSnip implements Snip {
     this.url = "#" + url.replace(' ', '_');
   }
 
+  public SnipPath getPath() throws IOException {
+    return snip.getPath();
+  }
+
   public String getName() {
     return title;
   }

@@ -83,7 +83,7 @@ public class SnipTreeMacro extends Macro {
       for (int i = 0; i < snips.length; i++) {
         Snip snip = snips[i];
         writer.write("<li>");
-        writer.write(snip.getName());
+        SnipLink.appendLink(writer, snip.getName());
         writer.write("</li>");
       }
       writer.write("</ul>");

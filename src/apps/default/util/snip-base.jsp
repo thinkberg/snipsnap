@@ -7,6 +7,7 @@
 
 <%-- Snip header, displayed only when snip is not a weblog --%>
 <c:if test="${snip.notWeblog}">
+ <s:path snip="${snip}"/>
  <div class="snip-title">
   <h1 class="snip-name"><c:out value="${snip.name}"/>
 

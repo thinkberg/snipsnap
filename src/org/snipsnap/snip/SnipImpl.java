@@ -422,6 +422,10 @@ public class SnipImpl implements Snip {
     return s;
   }
 
+  public SnipPath getPath() {
+    return new SnipPath(this);
+  }
+
   public int hashCode() {
     return name.hashCode();
   }

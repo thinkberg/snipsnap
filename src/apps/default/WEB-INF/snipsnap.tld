@@ -33,6 +33,16 @@
    </tag>
 
   <tag>
+    <name>path</name>
+    <tag-class>org.snipsnap.jsp.PathTag</tag-class>
+    <attribute>
+      <name>snip</name>
+      <type>org.snipsnap.snip.Snip</type>
+      <description>snip to get path for</description>
+    </attribute>
+   </tag>
+
+  <tag>
     <name>content</name>
     <tag-class>org.snipsnap.jsp.ContentTag</tag-class>
     <attribute>
