@@ -45,7 +45,7 @@ public class SnipFormatter {
         fp.addFilter("org.snipsnap.snip.filter.EscapeFilter");
         fp.addFilter("org.snipsnap.snip.filter.ParamFilter");
         fp.addFilter("org.snipsnap.snip.filter.MacroFilter");
-        fp.addFilter(MacroFilter.getInstance());
+        fp.addFilter("org.snipsnap.snip.filter.MacroFilter");
         fp.addFilter("org.snipsnap.snip.filter.CalendarFilter");
         fp.addFilter("org.snipsnap.snip.filter.HeadingFilter");
         fp.addFilter("org.snipsnap.snip.filter.StrikeThroughFilter");
@@ -60,6 +60,7 @@ public class SnipFormatter {
         fp.addFilter("org.snipsnap.snip.filter.MarkFilter");
         fp.addFilter("org.snipsnap.snip.filter.KeyFilter");
         fp.addFilter("org.snipsnap.snip.filter.LateMacroFilter");
+        fp.addFilter("org.snipsnap.snip.filter.TypographyFilter");
       }
     }
     return fp.filter(content, snip);
