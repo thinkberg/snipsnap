@@ -14,4 +14,4 @@ if [ "$1" = "-admin" ]; then
   $JAVA -jar lib/snipsnap-utils.jar $*
   exit
 fi
-$JAVA -Xmx512m -server $DBG -jar lib/snipsnap.jar $*
+$JAVA -Djava.awt.headless=true -Xmx512m -server $DBG -jar lib/snipsnap.jar $*
