@@ -14,5 +14,5 @@ for app in $APPS
 do 
   echo Repairing $app
   java -cp lib/mckoidb.jar com.mckoi.tools.DBConglomerateRepairTool \
-	-path applications/$app/WEB-INF/db/data
+	-path applications/$app/WEB-INF/db/data 
 done
