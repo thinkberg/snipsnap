@@ -1,5 +1,6 @@
 0.5
 
+- Developer: JSP precompilation switch (build.properties)
 - Added feature: Label support (Carsten Pfeiffer, Marco Mosconi)
 - Added feature: Support for nested lists (Davar)
 - Fixed bug: commenting order beyond 10 was wrong
