@@ -33,6 +33,10 @@
 package org.snipsnap.snip.filter.macro;
 
 import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.filter.macro.api.ApiConverter;
+import org.snipsnap.snip.filter.macro.api.JavaApiConverter;
+import org.snipsnap.snip.filter.macro.api.RubyApiConverter;
+import org.snipsnap.snip.filter.macro.api.ApiDoc;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -53,8 +57,14 @@ public class ApiMacro extends Macro {
     String klass;
 
     if (params.getLength() == 1) {
-      mode = "java";
       klass = params.get("0");
+      int index = klass.indexOf("@");
+      if (index >0) {
+        mode = klass.substring(index+1);
+        klass = klass.substring(0,index);
+      } else {
+        mode = "java";
+      }
     } else if (params.getLength() == 2) {
       mode = params.get("1").toLowerCase();
       klass = params.get("0");
@@ -62,25 +72,7 @@ public class ApiMacro extends Macro {
       throw new IllegalArgumentException("api macro needs one or two paramaters");
     }
 
-    StringBuffer url = new StringBuffer();
-
-    if ("java".equals(mode)) {
-      // Transform java.lang.StringBuffer to
-      // http://java.sun.com/j2se/1.4/docs/api/java/lang/StringBuffer.html
-      url.append("http://java.sun.com/j2se/1.4/docs/api/");
-      url.append(klass.replace('.', '/'));
-      url.append(".html");
-
-    } else if ("ruby".equals(mode)) {
-      url.append("http://www.rubycentral.com/book/ref_c_");
-      url.append(klass.toLowerCase());
-      url.append(".html");
-    }
-    writer.write("<a href=\"");
-    writer.write(url.toString());
-    writer.write("\">");
-    writer.write(klass);
-    writer.write("</a>");
+    ApiDoc.getInstance().expand(writer, klass, mode);
     return;
   }
 }

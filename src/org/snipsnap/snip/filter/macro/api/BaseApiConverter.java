@@ -23,40 +23,21 @@
  * --LICENSE NOTICE--
  */
 
-package org.snipsnap.util.log;
+package org.snipsnap.snip.filter.macro.api;
 
 /**
- *  Logger for logging events. Logger uses al LoggerImplementation for
- *  logging concrete logging, e.g. SystemOutLogger
+ * Base class for API converters, stores a base URL
  *
- * @author stephan
+ * @author Stephan J. Schmidt
  * @version $Id$
  */
 
-public class Logger {
-  // private static LogHandler handler = new ApplicationLogger();
-  private static LogHandler handler = new NullLogger();
+public abstract class BaseApiConverter implements ApiConverter {
+  protected String baseUrl;
 
-  public final static int PERF = 0;
-  public final static int DEBUG = 1;
-  public final static int WARN = 2;
-  public final static int FATAL = 3;
-  public final static String[] levels = {"PERF  ", "DEBUG ", "WARN  ", "FATAL "};
+  public abstract String convert(String className);
 
-  public static void log(String output) {
-    log(Logger.DEBUG, output);
-  }
-
-  public static void log(String output, Exception e) {
-    log(Logger.DEBUG, output);
-    e.printStackTrace();
-  }
-
-  public static void log(int level, String output) {
-    handler.log(levels[level]+" - "+output);
-  }
-
-  public static void setHandler(LogHandler handler) {
-    Logger.handler = handler;
+  public void setBaseUrl(String baseUrl) {
+    this.baseUrl = baseUrl;
   }
 }
