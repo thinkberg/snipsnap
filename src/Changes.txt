@@ -2,6 +2,8 @@
 
 - Fixed bug: Correct date format in Dublin core dc:date
 - Security: Fixed posting and editing by unauthorized users
+- Introduced a Launcher to start SnipSnap directly from JAR
+- Changed Attachments file store concept (WEB-INF/files/SnipName/file.ext)
 
 0.3.4 - 2003-02-21
 

@@ -26,16 +26,17 @@ package org.snipsnap.net;
 
 import org.snipsnap.app.Application;
 import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipSpaceFactory;
+import org.snipsnap.snip.attachment.Attachment;
+import org.snipsnap.snip.attachment.Attachments;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServlet;
 import java.io.IOException;
 
 /**
@@ -46,7 +47,7 @@ import java.io.IOException;
 public class SnipViewServlet extends HttpServlet {
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws IOException, ServletException {
+          throws IOException, ServletException {
 
     UserManager um = UserManager.getInstance();
     User user = Application.get().getUser();
@@ -54,23 +55,53 @@ public class SnipViewServlet extends HttpServlet {
       user.lastAccess();
     }
 
+    // handle the snip name
     String name = request.getPathInfo();
     if (null == name || "/".equals(name)) {
       name = "start";
     } else {
       name = name.substring(1);
     }
-
     name = name.replace('+', ' ');
+    System.err.println("snip: " + name);
+
+    // handle sub snips and attachments (TODO: handle more than one level)
+    String subname = null;
+    int slashIndex = name.indexOf('/');
+    if (slashIndex != -1) {
+      subname = name.substring(slashIndex + 1);
+      name = name.substring(0, slashIndex);
+      System.err.println("attachment: " + subname);
+    }
+
+    // TODO: make load from snipspace work with name spaces
+    // load snip and set attributes for request
     Snip snip = SnipSpaceFactory.getInstance().load(name);
+    request.setAttribute("snip", snip);
+    request.setAttribute("URI", request.getRequestURL().toString());
+
+    if (subname != null && subname.length() > 0) {
+      // TODO work with sub snips as well, not just attachments
+      Attachments attachments = snip.getAttachments();
+      Attachment attachment = attachments.getAttachment(subname);
+      if (attachment != null) {
+        request.setAttribute("attachment", attachment);
+        RequestDispatcher dispatcher =
+                getServletContext().getNamedDispatcher("org.snipsnap.net.FileDownloadServlet");
+        dispatcher.forward(request, response);
+        return;
+      } else {
+        // jump to the not found page
+        snip = null;
+      }
+    }
 
     // Snip does not exist
     if (null == snip) {
       snip = SnipSpaceFactory.getInstance().load("snipsnap-notfound");
     }
+
     snip.handle(request);
-    request.setAttribute("snip", snip);
-    request.setAttribute("URI", request.getServletPath() + request.getPathInfo());
     RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/snip.jsp");
     dispatcher.forward(request, response);
   }

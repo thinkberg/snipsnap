@@ -32,14 +32,18 @@ import org.snipsnap.interceptor.Aspects;
 import org.snipsnap.render.context.SnipRenderContext;
 import org.snipsnap.snip.attachment.Attachments;
 import org.snipsnap.snip.label.Labels;
+import org.snipsnap.snip.attachment.Attachments;
+import org.snipsnap.snip.attachment.Attachment;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.User;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.Writer;
+import java.io.File;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Iterator;
 
 /**
  * Central class for snips.
@@ -359,6 +363,28 @@ public class SnipImpl implements Snip {
 
   public String getLink() {
     return SnipLink.createLink(this.name);
+  }
+
+  public String getAttachmentString() {
+    StringBuffer tmp = new StringBuffer();
+    Iterator it = attachments.iterator();
+    String fileStorePath = Application.get().getConfiguration().getFileStorePath();
+    while (it.hasNext()) {
+      Attachment att = (Attachment) it.next();
+      tmp.append(SnipLink.createLink("../space/" + SnipLink.encode(name), att.getName(), att.getName()));
+      tmp.append(" (");
+      tmp.append(att.getSize());
+      File file = new File(fileStorePath, att.getLocation());
+      if(!file.exists()) {
+        Logger.log(Logger.WARN, file.getAbsolutePath() + " is missing");
+        tmp.append(", missing");
+      }
+      tmp.append(")");
+      if (it.hasNext()) {
+        tmp.append("<br/> ");
+      }
+    }
+    return tmp.toString();
   }
 
   public String toXML() {

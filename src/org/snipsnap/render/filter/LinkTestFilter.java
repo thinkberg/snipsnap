@@ -124,7 +124,7 @@ public class LinkTestFilter extends Filter {
               }
               context.getRenderContext().setCacheable(true);
             } else if (UserManager.getInstance().isAuthenticated(app.getUser())) {
-              SnipLink.createCreateLink(buffer, targetSnip);
+              SnipLink.appendCreateLink(buffer, targetSnip);
             } else {
               // cannot edit/create snip, so just display the text
               buffer.append(targetSnip);

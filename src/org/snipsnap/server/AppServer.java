@@ -24,11 +24,11 @@
  */
 package org.snipsnap.server;
 
-import org.mortbay.http.HttpListener;
-import org.mortbay.jetty.Server;
-import org.mortbay.util.InetAddrPort;
-import org.mortbay.util.MultiException;
 import org.snipsnap.config.Configuration;
+import org.mortbay.jetty.Server;
+import org.mortbay.util.MultiException;
+import org.mortbay.util.InetAddrPort;
+import org.mortbay.http.HttpListener;
 
 import java.io.File;
 import java.io.IOException;

@@ -62,7 +62,7 @@ public class AnchorMacro extends SnipMacro {
     return paramDescription;
   }
 
-  public void execute(Writer writer,SnipMacroParameter params)
+  public void execute(Writer writer, SnipMacroParameter params)
       throws IllegalArgumentException, IOException {
 
     if (params.getLength() == 1) {
@@ -73,9 +73,9 @@ public class AnchorMacro extends SnipMacro {
       writer.write("<a href=\"");
       Snip snip = params.getSnip();
       if (null != snip) {
-        SnipLink.appendUrl(writer, snip.getName() + "#" + anchor);
+        SnipLink.appendUrl(writer, snip.getName(), anchor);
       } else {
-        SnipLink.appendUrl(writer, "#" + anchor);
+        SnipLink.appendUrl(writer, "", anchor);
       }
       writer.write("\" title=\"Permalink to ");
       writer.write(anchor);

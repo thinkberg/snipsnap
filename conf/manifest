@@ -1,1 +1,4 @@
-Main-Class: org.snipsnap.server.AppServer
+Manifest-Version: 1.0
+Created-By: SnipSnap Project (http://snipsnap.org)
+Main-Class: org.snipsnap.server.SnipSnapLauncher
+Class-Path: org.mortbay.jetty.jar javax.servlet.jar org.apache.jasper.jar jdbcpool.jar mckoidb.jar org.apache.crimson.jar

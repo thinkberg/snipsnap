@@ -43,9 +43,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.StringTokenizer;
 
 /**
- * Servlet to store snips into the database after they have been edited.
+ * Servlet to store attachments to snips.
  * @author Matthias L. Jugel
  * @version $Id$
  */
@@ -59,31 +60,30 @@ public class FileUploadServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
 
-    String name = request.getParameter("name");
+    String snipName = request.getParameter("name");
     SnipSpace space = SnipSpaceFactory.getInstance();
-    Snip snip = space.load(name);
+    Snip snip = space.load(snipName);
 
     if (request.getParameter("upload") != null) {
       MultipartWrapper wrapper = (MultipartWrapper) request;
-      BodyPart part = wrapper.getBodyPart("file");
       String contentType = wrapper.getFileContentType("file");
       try {
-        if (part != null && contentType != null && part.getFileName() != null) {
+        String fileName = wrapper.getFileName("file");
+        InputStream fileInputStream = wrapper.getFileInputStream("file");
+        if (fileInputStream != null && fileName != null && contentType != null) {
           AppConfiguration config = Application.get().getConfiguration();
-          File imageDir = new File(config.getFile().getParentFile().getParentFile(), "images");
-          File file = new File(imageDir, "att-" + name + "-" + part.getFileName());
-          System.err.println("Uploading '" + part.getFileName() + "' to '" + file.getAbsolutePath() + "'");
-          FileOutputStream out = new FileOutputStream(file);
-          InputStream in = part.getInputStream();
-          byte[] buf = new byte[4096];
-          int length = 0, size = 0;
-          while ((length = in.read(buf)) != -1) {
-            out.write(buf, 0, length);
-            size += length;
+
+          File fileStore = new File(config.getFileStorePath());
+          File relativeFileLocation = new File(snip.getName(), fileName);
+          File file = new File(fileStore, relativeFileLocation.getPath());
+          // check and create the directory, where to store the snip attachments
+          if(!file.getParentFile().isDirectory()) {
+            file.getParentFile().mkdirs();
           }
-          out.close();
-          in.close();
-          snip.getAttachments().addAttachment(part.getFileName(), contentType, size, file);
+          System.err.println("Uploading '" + relativeFileLocation.getName() + "' to '" + file.getCanonicalPath() + "'");
+          int size = storeAttachment(file, fileInputStream);
+          snip.getAttachments().addAttachment(relativeFileLocation.getName(),
+                                              contentType, size, relativeFileLocation.getPath());
           SnipSpaceFactory.getInstance().store(snip);
         } else {
           request.setAttribute("error", "Please provide a file for upload.");
@@ -91,15 +91,42 @@ public class FileUploadServlet extends HttpServlet {
       } catch (IOException e) {
         request.setAttribute("error", "I/O Error while uploading.");
         e.printStackTrace();
-      } catch (MessagingException e) {
-        request.setAttribute("error", "Uploaded filew may be corrupted.");
       }
       response.sendRedirect(SnipLink.absoluteLink(request, "/space/" + snip.getNameEncoded()));
     } else {
       request.setAttribute("snip", snip);
-      request.setAttribute("snip_name", name);
+      request.setAttribute("snip_name", snipName);
       RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/upload.jsp");
       dispatcher.forward(request, response);
     }
   }
+
+  private String getCanonicalFileName(String fileName) {
+    int slashIndex = fileName.indexOf('\\');
+    if(slashIndex != -1) {
+      fileName = fileName.substring(slashIndex);
+    }
+
+    slashIndex = fileName.indexOf('/');
+    if(slashIndex != -1) {
+      fileName = fileName.substring(slashIndex);
+    }
+    return fileName;
+  }
+
+  // store file from input stream into a file
+  private int storeAttachment(File file, InputStream in) throws IOException {
+    FileOutputStream out = new FileOutputStream(file);
+    byte[] buf = new byte[4096];
+    int length = 0, size = 0;
+    while ((length = in.read(buf)) != -1) {
+      out.write(buf, 0, length);
+      size += length;
+    }
+    out.close();
+    in.close();
+    return size;
+  }
+
+
 }

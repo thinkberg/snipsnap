@@ -116,7 +116,7 @@ public class SearchMacro extends Macro {
         writer.write("<p>There is no snip with <b>");
         writer.write(searchString);
         writer.write("</b> , would you like to ");
-        SnipLink.createCreateLink(writer, searchString);
+        SnipLink.appendCreateLink(writer, searchString);
         writer.write("?</p>");
       }
 

@@ -76,8 +76,7 @@ public class Configuration {
    */
   public Configuration(File file) throws IOException {
     this();
-    this.file = file;
-    properties.load(new FileInputStream(file));
+    load(file);
   }
 
 
@@ -95,6 +94,26 @@ public class Configuration {
 
   public File getFile() {
     return file;
+  }
+
+  public void load() throws IOException {
+    if(file != null) {
+      load(file);
+    } else {
+      throw new IOException("no configuration file known, use load(File file)");
+    }
+  }
+
+  public void load(File configFile) throws IOException {
+    setFile(configFile);
+    FileInputStream in = new FileInputStream(file);
+    load(in);
+    in.close();
+  }
+
+  public void load(FileInputStream in) throws IOException {
+    properties.clear();
+    properties.load(in);
   }
 
   /**

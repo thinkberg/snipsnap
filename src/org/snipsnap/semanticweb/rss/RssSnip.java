@@ -304,4 +304,7 @@ public class RssSnip implements Snip {
     return;
   }
 
+  public String getAttachmentString() {
+    return snip.getAttachmentString();
+  }
 }

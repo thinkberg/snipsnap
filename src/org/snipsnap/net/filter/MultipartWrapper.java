@@ -35,6 +35,8 @@ import javax.mail.internet.MimeMultipart;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -49,9 +51,10 @@ import java.util.Map;
  */
 public class MultipartWrapper extends HttpServletRequestWrapper {
 
-  MimeMultipart multipart = null;
-  Hashtable params = null;
-  Map files = new HashMap();
+  private String encoding = "UTF-8";
+  private MimeMultipart multipart = null;
+  private Hashtable params = null;
+  private Map files = new HashMap();
 
   public MultipartWrapper(HttpServletRequest request) throws IOException, IllegalArgumentException {
     super(request);
@@ -60,6 +63,7 @@ public class MultipartWrapper extends HttpServletRequestWrapper {
     try {
       multipart = new MimeMultipart(ds);
       params = new Hashtable(request.getParameterMap());
+      encoding = request.getCharacterEncoding();
 
       int count = multipart.getCount();
       for (int i = 0; i < count; i++) {
@@ -67,7 +71,7 @@ public class MultipartWrapper extends HttpServletRequestWrapper {
         ContentDisposition disp = new ContentDisposition(body.getHeader("content-disposition", null));
         String name = disp.getParameter("name");
         if (body.getContentType().startsWith("text")) {
-          String value = new String(((String) body.getContent()).getBytes("iso-8859-1"), request.getCharacterEncoding());
+          String value = new String(((String) body.getContent()).getBytes("iso-8859-1"), encoding);
           String[] values = (String[]) params.get(name);
           if (null == values) {
             params.put(name, new String[]{value});
@@ -120,13 +124,25 @@ public class MultipartWrapper extends HttpServletRequestWrapper {
     return (BodyPart) files.get(name);
   }
 
+  public String getFileName(String name) throws IOException {
+    BodyPart part = getBodyPart(name);
+    String fileName = null;
+    try {
+      fileName = new String(part.getFileName().getBytes("iso-8859-1"), encoding);
+    } catch (Exception e) {
+      throw new IOException(e.getMessage());
+    }
+    System.out.println("file name: '"+fileName+"'");
+    return fileName;
+  }
+
   /**
    * Get the content type of a file parameter from the request.
    * @param name the name of the input field
    * @return the content type
    */
   public String getFileContentType(String name) {
-    BodyPart part = (BodyPart) files.get(name);
+    BodyPart part = getBodyPart(name);
     if (part != null) {
       try {
         return part.getContentType();
@@ -136,5 +152,15 @@ public class MultipartWrapper extends HttpServletRequestWrapper {
     }
     return null;
   }
+
+  public InputStream getFileInputStream(String name) throws IOException {
+    BodyPart part = getBodyPart(name);
+    try {
+      return part.getInputStream();
+    } catch (MessagingException e) {
+      throw new IOException(e.getMessage());
+    }
+  }
+
 }
 

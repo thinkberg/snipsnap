@@ -32,6 +32,6 @@
  </script>
  <a href="#" onClick="showHide('files'); return false;">Show Attached Files</a><p/>
  <div id="files" class="snip-attachments" style="display: none">
-  <c:out value="snip.attachments.
+
  </div>
 </s:check>

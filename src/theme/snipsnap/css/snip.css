@@ -45,6 +45,14 @@
   margin-top: 10px;
 }
 
+.snip-attachments {
+  float: right;
+  border: 1px dashed #eeeeee;
+  background-color: #eeeeee;
+  padding: 3px;
+  width: auto;
+}
+
 .snip-post-comments {
   margin-top: 20px;
   margin-bottom: 20px;
@@ -90,6 +98,7 @@ span.content {
 }
 
 span.count {
+  margin-right: 4px;
 }
 
 span.count:before {
@@ -159,3 +168,4 @@ span.count:after {
   background-color: #eeeeee;
   color: inherit;
 }
+

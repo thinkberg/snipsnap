@@ -183,6 +183,8 @@ public interface Snip extends Linkable, Ownable, Nameable, Appendable {
 
   public void setContent(String content);
 
+  public String getAttachmentString();
+
   public String toXML();
 
   public String getXMLContent();

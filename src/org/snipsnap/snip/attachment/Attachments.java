@@ -32,6 +32,7 @@ import org.jdom.output.XMLOutputter;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.serialization.Appendable;
+import org.snipsnap.snip.SnipLink;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,7 +53,7 @@ import java.util.Map;
  * @version $Id$
  */
 
-public class Attachments implements Appendable {
+public class Attachments {
 
   private String cache = null;
 
@@ -69,11 +70,11 @@ public class Attachments implements Appendable {
 
   private Map attachments = null;
 
-  public Attachment addAttachment(String name, String contentType, long size, File location) {
+  public Attachment addAttachment(String name, String contentType, int size, String location) {
     if (null == attachments) deserialize();
-    Attachment attachement = new Attachment(name, contentType, size, new Date(), location);
-    attachments.put(name, attachement);
-    return attachement;
+    Attachment attachment = new Attachment(name, contentType, size, new Date(), location);
+    attachments.put(name, attachment);
+    return attachment;
   }
 
   public Attachment getAttachment(String name) {
@@ -84,15 +85,12 @@ public class Attachments implements Appendable {
   public void removeAttachment(String name, boolean destroy) {
     if (null == attachments) deserialize();
     Attachment attachment = (Attachment) attachments.get(name);
-    if (destroy) {
-      attachment.destroy();
-    }
     attachments.remove(name);
   }
 
   public Iterator iterator() {
     if (null == attachments) deserialize();
-    return attachments.keySet().iterator();
+    return attachments.values().iterator();
   }
 
   public boolean empty() {
@@ -113,10 +111,6 @@ public class Attachments implements Appendable {
   private void deserialize() {
     attachments = new HashMap();
 
-    AppConfiguration config = Application.get().getConfiguration();
-    // todo make this a configuration setting
-    File fileStore = new File(config.getFile().getParentFile().getParentFile(), "images");
-
     Document attXml = new Document();
     try {
       attXml = saxBuilder.build(new StringReader("<" + ATTACHMENTS + ">" + cache + "</" + ATTACHMENTS + ">"));
@@ -126,14 +120,10 @@ public class Attachments implements Appendable {
         Element attElement = (Element) it.next();
         String name = attElement.getChildText(NAME);
         String contentType = attElement.getChildText(CONTENTTYPE);
-        long size = Long.parseLong(attElement.getChildTextTrim(SIZE));
+        int size = Integer.parseInt(attElement.getChildTextTrim(SIZE));
         Date date = new Date(Long.parseLong(attElement.getChildTextTrim(DATE)));
         String location = attElement.getChildTextTrim(LOCATION);
-        File file = new File(fileStore, location);
-        if (!file.exists()) {
-          System.err.println("Attachments: missing attached file '" + file + "'");
-        }
-        attachments.put(name, new Attachment(name, contentType, size, new Date(), new File(fileStore, location)));
+        attachments.put(name, new Attachment(name, contentType, size, new Date(), location));
       }
     } catch (Exception e) {
       System.err.println("Attachments: unable to deserialize: " + cache);
@@ -154,7 +144,7 @@ public class Attachments implements Appendable {
       attElement.addContent(new Element(CONTENTTYPE).addContent(attachment.getContentType()));
       attElement.addContent(new Element(SIZE).addContent("" + attachment.getSize()));
       attElement.addContent(new Element(DATE).addContent("" + attachment.getDate().getTime()));
-      attElement.addContent(new Element(LOCATION).addContent(attachment.getFile().getName()));
+      attElement.addContent(new Element(LOCATION).addContent(attachment.getLocation()));
       root.add(attElement);
     }
     return cache = xmlOutputter.outputString(root);
@@ -162,32 +152,5 @@ public class Attachments implements Appendable {
 
   public String toString() {
     return serialize();
-  }
-
-  public String getListString() {
-    if (null == attachments) deserialize();
-    if (attachments.size() > 0) {
-      StringBuffer tmp = new StringBuffer();
-      tmp.append("<div class=\"attachments\">");
-      Iterator it = attachments.values().iterator();
-      while (it.hasNext()) {
-        Attachment att = (Attachment) it.next();
-        tmp.append(att.getName());
-        tmp.append(" (");
-        tmp.append(att.getSize());
-        tmp.append(")");
-        if (it.hasNext()) {
-          tmp.append(", ");
-        }
-      }
-      tmp.append("</div>");
-      return tmp.toString();
-    }
-    return "";
-  }
-
-  public Writer appendTo(Writer s) throws IOException {
-    s.write(getListString());
-    return s;
   }
 }

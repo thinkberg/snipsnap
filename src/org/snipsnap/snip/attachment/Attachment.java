@@ -44,24 +44,16 @@ public class Attachment {
 
   private String name;
   private String contentType;
-  private long size;
+  private int size;
   private Date date;
-  private File file;
+  private String location;
 
-  /**
-   * Create an attachment and check whether it's a local file or URL.
-   */
-  public Attachment(String name, String contentType, Date date, long size, String location) {
-    this(name, contentType, size, date, new File(location));
-  }
-
-
-  public Attachment(String name, String contentType, long size,  Date date, File file) {
+  public Attachment(String name, String contentType, int size,  Date date, String location) {
     setName(name);
     setContentType(contentType);
     setSize(size);
     setDate(date);
-    setFile(file);
+    setLocation(location);
   }
 
   public void setName(String name) {
@@ -80,11 +72,11 @@ public class Attachment {
     return contentType;
   }
 
-  public void setSize(long size) {
+  public void setSize(int size) {
     this.size = size;
   }
 
-  public long getSize() {
+  public int getSize() {
     return size;
   }
 
@@ -96,19 +88,11 @@ public class Attachment {
     return date;
   }
 
-  public void setFile(File file) {
-    this.file = file;
+  public void setLocation(String location) {
+    this.location = location;
   }
 
-  public File getFile() {
-    return file;
-  }
-
-  public InputStream getInputStream() throws IOException {
-    return new FileInputStream(file);
-  }
-
-  public void destroy() {
-    file.delete();
+  public String getLocation() {
+    return location;
   }
 }

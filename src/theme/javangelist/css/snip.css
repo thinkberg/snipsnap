@@ -89,6 +89,7 @@ span.content {
 }
 
 span.count {
+  margin-right: 4px;
 }
 
 span.count:before {

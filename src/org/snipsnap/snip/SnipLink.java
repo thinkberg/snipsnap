@@ -38,6 +38,7 @@ import java.io.Writer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.net.URL;
 
 /**
  *  Generates links for snips
@@ -48,35 +49,52 @@ import java.util.StringTokenizer;
 
 public class SnipLink {
 
-  public static void appendUrl(Writer writer, String name) throws IOException {
-    writer.write(getSpaceRoot());
-    writer.write("/");
-    writer.write(name);
-    return;
+  /**
+   * Append a URL String that contains a base a name-to-be-encoded and an optional anchor target.
+   * @param writer the writer to append to
+   * @param base the url base
+   * @param name the name (to be encoded)
+   * @param target the anchor target
+   */
+  public static Writer appendUrlWithBase(Writer writer, String base, String name, String target)
+    throws IOException {
+    writer.write(base);
+    writer.write(SnipLink.encode(name));
+    if(target != null) {
+      writer.write("#");
+      writer.write(target);
+    }
+    return writer;
   }
 
-  public static void appendUrl(StringBuffer buffer, String name) {
-    buffer.append(getSpaceRoot());
-    buffer.append("/");
-    buffer.append(name);
-    return;
+  public static Writer appendUrl(Writer writer, String name, String target) throws IOException {
+    return appendUrlWithBase(writer, getSpaceRoot(), name, target);
   }
 
-  public static void createCreateLink(Writer writer, String name) throws IOException {
+  public static Writer appendUrl(Writer writer, String name) throws IOException {
+    return appendUrlWithBase(writer, getSpaceRoot(), name, null);
+  }
+
+  /**
+   * Append a create link for the specified name.
+   */
+  public static Writer appendCreateLink(Writer writer, String name) throws IOException {
     writer.write("&#92;create <a href=\"../exec/edit?name=");
     writer.write(SnipLink.encode(name));
     writer.write("\">");
     writer.write(name);
+    writer.write("</a>");
     writer.write("</a>&#93;");
-    return;
+    return writer;
   }
 
-  public static void createCreateLink(StringBuffer buffer, String name) {
+  public static StringBuffer appendCreateLink(StringBuffer buffer, String name) {
     buffer.append("&#92;create <a href=\"../exec/edit?name=");
     buffer.append(SnipLink.encode(name));
     buffer.append("\">").append(name).append("</a>&#93;");
-    return;
+    return buffer;
   }
+
 
   public static String createLink(String name) {
     StringBuffer buffer = new StringBuffer();
@@ -90,7 +108,7 @@ public class SnipLink {
 
   public static String createLink(String root, String name, String view) {
     StringBuffer buffer = new StringBuffer();
-    return appendLinkWithRoot(buffer, root, name, view).toString();
+    return appendLinkWithRoot(buffer, root, encode(name), view).toString();
   }
 
   public static Writer appendLink(Writer writer, Snip snip) throws IOException {

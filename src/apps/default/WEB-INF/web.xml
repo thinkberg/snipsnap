@@ -52,6 +52,11 @@
   </servlet>
 
   <servlet>
+    <servlet-name>org.snipsnap.net.FileDownloadServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.FileDownloadServlet</servlet-class>
+  </servlet>
+
+  <servlet>
     <servlet-name>org.snipsnap.net.StoreLabelServlet</servlet-name>
     <servlet-class>org.snipsnap.net.StoreLabelServlet</servlet-class>
   </servlet>
