@@ -9,13 +9,20 @@
 
 <h1 class="header">Update (<c:out value="${context}"/>)</h1>
 
+<div style="background-color: #ffaaaa; color: #000000; padding: 2px;">
+<h3>WARNING!</h3>
+This update procedure has been tested in our development environment. It seems to work as far as <i>comparison
+and updating the web application</i> is concerned. However, you may experience <i>errors when the updater restarts</i> the
+application.<br>In case of an error <b>restart your server manually</b>.
+</div>
+
 <c:forEach items="${errors}" var="error">
   <div class="error"><c:out value="${error.value}"/></div>
 </c:forEach>
 
 <% Set available = (Set)pageContext.findAttribute("available"); %>
 <% if(available != null && !available.isEmpty()) { %>
-  <div style="border: 1px solid red; margin: 2px 2px 2px 2px;">
+  <div style="border: 1px solid red; padding: 2px;">
     <form method="POST" action="../app/update">
       <input type="hidden" name="server" value="<c:out value='${server}'/>">
       <input type="hidden" name="context" value="<c:out value='${context}'/>">

@@ -29,6 +29,7 @@ import org.snipsnap.snip.SnipLink;
 import org.snipsnap.util.Checksum;
 import org.snipsnap.util.FileUtil;
 import org.snipsnap.util.JarUtil;
+import org.mortbay.jetty.Server;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;

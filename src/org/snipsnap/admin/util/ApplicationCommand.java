@@ -52,7 +52,7 @@ public class ApplicationCommand {
         if (CMD_APPLICATION_ADD.equals(command)) {
           try {
             ((Server) server).addWebApplication(ctx, "./app" + ctx);
-          } catch (IOException e) {
+          } catch (Exception e) {
             System.err.println("Application: unable to add context: " + srv + ":" + ctx);
           }
           return;
@@ -68,6 +68,7 @@ public class ApplicationCommand {
                   context.stop();
                 } else if (CMD_APPLICATION_REMOVE.equals(command)) {
                   server.removeContext(context);
+                  context.destroy();
                 } else {
                   System.err.println("Application: unknown or illegal command: " + command);
                 }
@@ -77,7 +78,6 @@ public class ApplicationCommand {
               return;
             }
           }
-
         }
       }
     }
