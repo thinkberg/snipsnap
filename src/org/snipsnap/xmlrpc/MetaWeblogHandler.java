@@ -23,14 +23,25 @@
  * --LICENSE NOTICE--
  */
 
-
 package org.snipsnap.xmlrpc;
+
+import org.snipsnap.user.User;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipSpaceFactory;
+import org.snipsnap.snip.SnipSpace;
+import org.apache.xmlrpc.XmlRpcException;
+import org.radeox.util.logging.Logger;
+
+import java.util.Hashtable;
+import java.util.Vector;
+import java.util.List;
+import java.util.Iterator;
 
 /**
  * Handles XML-RPC calls for the MetaWeblog API
  * http://www.xmlrpc.com/metaWeblogApi
  *
- * Some design ideas taken from Blojsom
+ * Some design ideas taken from Blojsom, thanks.
  *
  * @author Stephan J. Schmidt
  * @version $Id$
@@ -43,12 +54,67 @@ public class MetaWeblogHandler extends XmlRpcSupport {
     return API_PREFIX;
   }
 
+  public Vector getRecentPosts(String blogid,
+                               String username,
+                               String password,
+                               int numberOfPosts) throws XmlRpcException {
+    Logger.debug("XML-RPC call to getRecentPosts()");
+
+    User user = authenticate(username, password);
+    Snip snip = SnipSpaceFactory.getInstance().load("start");
+
+    List children =
+        SnipSpaceFactory.getInstance().getChildrenDateOrder(snip, numberOfPosts);
+
+    Vector posts = new Vector(children.size());
+    for (Iterator i = children.iterator(); i.hasNext();) {
+      Snip each = (Snip) i.next();
+      Hashtable data = new Hashtable();
+      data.put("userid", each.getOUser() == null ? "" : each.getOUser());
+      data.put("dateCreated", each.getCTime());
+      data.put("content", each.getContent());
+      data.put("postid", each.getName());
+      posts.add(data);
+    }
+    return posts;
+  }
+
   /**
    metaWeblog.newPost (blogid, username, password, struct, publish) returns string
    metaWeblog.editPost (postid, username, password, struct, publish) returns true
    metaWeblog.getPost (postid, username, password) returns struct
    */
-  public String newPost(String blogid, String username, String password, String struct, String publish) {
-    return "";
+
+  public String newPost(String blogid, String username, String password, Hashtable struct, boolean publish) throws Exception {
+    User user = authenticate(username, password);
+
+    SnipSpace space = SnipSpaceFactory.getInstance();
+
+    Hashtable postcontent = struct;
+
+    String title = (String) postcontent.get("title");
+    String content = (String) postcontent.get("description");
+
+    Snip snip = null;
+    if (null == title) {
+       snip = space.post(content);
+    } else {
+      snip = space.post(content, title);
+    }
+
+    return snip.getName();
+  }
+
+  public Hashtable getPost(String postId,
+                           String username,
+                           String password) throws XmlRpcException {
+    User user = authenticate(username, password);
+    Snip snip = SnipSpaceFactory.getInstance().load(postId);
+    Hashtable post = new Hashtable();
+    post.put("content", snip.getXMLContent());
+    post.put("userid", snip.getOUser());
+    post.put("postid", snip.getName());
+    post.put("dateCreated", snip.getCTime());
+    return post;
   }
 }

@@ -110,14 +110,17 @@ public class WeblogsPing extends Thread {
   }
 
   public void run() {
-    if (config.allow(AppConfiguration.PERM_WEBLOGS_PING) && handlers.size() > 0) {
+    Logger.debug("Config="+config);
+    if (config.allow(AppConfiguration.PERM_WEBLOGS_PING)) {
       if (null == handlers) {
         init();
       }
-      Iterator iterator = handlers.iterator();
-      while (iterator.hasNext()) {
-        PingHandler handler = (PingHandler) iterator.next();
-        handler.ping(weblog);
+      if (handlers.size() > 0) {
+        Iterator iterator = handlers.iterator();
+        while (iterator.hasNext()) {
+          PingHandler handler = (PingHandler) iterator.next();
+          handler.ping(weblog);
+        }
       }
     }
   }

@@ -71,7 +71,7 @@ public class Aspects implements InvocationHandler {
     interceptors = new ArrayList();
     // either read from class
     // or configuration file or use nanning
-    Logger.debug("Aspects: class = "+target.getClass());
+    //Logger.debug("Aspects: class = "+target.getClass());
     if (target.getClass().equals(SnipImpl.class)) {
       interceptors.add(new ACLInterceptor());
     } else if (target.getClass().equals(SnipSpaceImpl.class)) {

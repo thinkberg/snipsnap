@@ -50,12 +50,13 @@ public class XmlRpcServlet extends HttpServlet {
   private List handlers;
 
   public void init(ServletConfig servletConfig) throws ServletException {
-    XmlRpcServer xmlrpc = new XmlRpcServer();
+    xmlrpc = new XmlRpcServer();
 
     handlers = new ArrayList();
 
     // Read via services plugin
     handlers.add(new SnipSnapHandler());
+    handlers.add(new MetaWeblogHandler());
     handlers.add(new BloggerHandler());
     handlers.add(new WeblogsPingHandler());
     handlers.add(new GeneratorHandler());
