@@ -119,10 +119,13 @@ public class FileUploadServlet extends HttpServlet {
             Attachment attachment = attachments.getAttachment(files[fileNo]);
             if (null != attachment) {
               File file = new File(filePath, attachment.getLocation());
-              file.delete();
-              attachments.removeAttachment(attachment);
+              if(file.delete()) {
+                attachments.removeAttachment(attachment);
+              }
             }
           }
+          // make sure to store the changed snip
+          SnipSpaceFactory.getInstance().store(snip);
         } else {
           request.setAttribute("error", "Please select files to delete.");
         }

@@ -207,7 +207,7 @@ public class XMLSnipRepair {
 
         if (snipData == data) {
           String name = idElement.getText();
-          if (name.startsWith("comment-")) {
+          if (name.startsWith("comment-") && name.lastIndexOf("-") != -1) {
             String commentSnip = name.substring("comment-".length(), name.lastIndexOf("-"));
             Element commentEl = element.element("commentSnip");
             if (commentEl == null) {

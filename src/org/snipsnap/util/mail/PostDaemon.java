@@ -26,10 +26,14 @@
 package org.snipsnap.util.mail;
 
 import org.radeox.util.logging.Logger;
+import org.snipsnap.container.Components;
 import org.snipsnap.app.Application;
+import org.snipsnap.app.ApplicationManager;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.snip.BlogKit;
+import org.snipsnap.snip.Blog;
 import org.snipsnap.snip.SnipSpaceFactory;
+import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.user.UserManagerFactory;
 
@@ -68,7 +72,7 @@ public class PostDaemon {
       minutes = Integer.parseInt(conf.getMailPop3Interval());
     } catch (NumberFormatException e) {
       minutes = 15;
-      Logger.warn("PostDaemon: interval config not correct, using default "+minutes+" minutes.");
+      Logger.warn("PostDaemon: interval config not correct, using default " + minutes + " minutes.");
     }
     host = conf.getMailPop3Host();
     username = conf.getMailPop3User();
@@ -79,9 +83,10 @@ public class PostDaemon {
       Logger.warn("PostDaemon: not started");
     } else {
       active = true;
-      Logger.warn("PostDaemon: started, getting mail every "+minutes+" minutes.");
+      Logger.warn("PostDaemon: started, getting mail every " + minutes + " minutes.");
       pop3Timer = new Timer();
       pop3Timer.schedule(new TimerTask() {
+        
         public void run() {
           process();
         }
@@ -95,10 +100,10 @@ public class PostDaemon {
         // Create empty properties
         Properties props = new Properties();
 
-// Get session
+        // Get session
         Session session = Session.getDefaultInstance(props, null);
 
-// Get the store
+        // Get the store
         Store store = session.getStore("pop3");
         store.connect(host, username, password);
 
@@ -115,7 +120,7 @@ public class PostDaemon {
           StringWriter writer = new StringWriter();
 
           Logger.debug(i + ": " + message[i].getFrom()[0]
-              + "\t" + message[i].getSubject());
+                       + "\t" + message[i].getSubject());
           Logger.debug(message[i].getContentType());
 
           Address sender = message[i].getFrom()[0];
@@ -137,9 +142,19 @@ public class PostDaemon {
               }
 
               // BUG
-              String user = Application.get().getConfiguration().getAdminLogin();
-              Application.get().setUser(UserManagerFactory.getInstance().load(user));
-              SnipSpaceFactory.getInstance().getBlog().post(writer.getBuffer().toString(), title);
+              Application app = Application.get();
+              ApplicationManager appManager = (ApplicationManager) Components.getComponent(ApplicationManager.class);
+              String appOid = appManager.getApplication("/");
+              app.storeObject(Application.OID, appOid);
+              String user = app.getConfiguration().getAdminLogin();
+              Logger.debug(user);
+              Logger.debug((String) app.getObject(Application.OID));
+              User admin = UserManagerFactory.getInstance().load(user);
+              Logger.debug(admin.toString());
+              app.setUser(admin);
+              Blog blog = SnipSpaceFactory.getInstance().getBlog();
+              blog.post(writer.getBuffer().toString(), title);
+
             } catch (Exception e) {
               Logger.warn("PostDaemon Error:", e);
             } finally {
@@ -170,11 +185,11 @@ public class PostDaemon {
   public void processMultipart(Writer writer, Multipart mp, String name) throws MessagingException {
     for (int j = 0; j < mp.getCount(); j++) {
       try {
-      Part part = mp.getBodyPart(j);
-      Logger.debug("Disposition=" + part.getDisposition());
-      String contentType = part.getContentType();
-      Logger.debug("content-type=" + contentType);
-      Logger.debug("Object=" + part);
+        Part part = mp.getBodyPart(j);
+        Logger.debug("Disposition=" + part.getDisposition());
+        String contentType = part.getContentType();
+        Logger.debug("content-type=" + contentType);
+        Logger.debug("Object=" + part);
         if (contentType.startsWith("text/plain")) {
           writer.write((String) part.getContent());
         } else if (contentType.startsWith("image/")) {
@@ -190,7 +205,7 @@ public class PostDaemon {
 
   public void storeImage(Part part, String name) {
     try {
-      if (part != null  && part.getFileName() != null) {
+      if (part != null && part.getFileName() != null) {
         Configuration config = Application.get().getConfiguration();
         File imageDir = new File(config.getWebInfDir().getParentFile(), "images");
         File file = new File(imageDir, "image-" + name + "-" + part.getFileName());
