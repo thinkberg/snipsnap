@@ -25,19 +25,19 @@
 package org.snipsnap.net;
 
 import org.snipsnap.app.Application;
+import org.snipsnap.config.Configuration;
+import org.snipsnap.container.Components;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.user.User;
 import org.snipsnap.user.AuthenticationService;
-import org.snipsnap.container.Components;
-import org.snipsnap.config.Configuration;
+import org.snipsnap.user.User;
 
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * Output the raw content of a snip
@@ -70,8 +70,8 @@ public class SnipRawServlet extends HttpServlet {
     }
     Snip snip = SnipSpaceFactory.getInstance().load(name);
 
-    ServletOutputStream out = response.getOutputStream();
     response.setContentType("text/plain; charset="+Application.get().getConfiguration().getEncoding());
+    PrintWriter out = response.getWriter();
     // Snip does not exist
     if (null != snip) {
       snip.handle(request);
