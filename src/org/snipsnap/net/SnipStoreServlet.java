@@ -25,28 +25,21 @@
 package org.snipsnap.net;
 
 import org.snipsnap.app.Application;
-import org.snipsnap.config.AppConfiguration;
-import org.snipsnap.net.filter.MultipartWrapper;
 import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipFormatter;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.SnipFormatter;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 
-import javax.mail.BodyPart;
-import javax.mail.MessagingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpServlet;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Servlet to store snips into the database after they have been edited.

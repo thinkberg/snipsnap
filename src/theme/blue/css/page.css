@@ -90,19 +90,6 @@ body {
   background-color: #FFF;
 }
 
-/* Remove the comments around the section below to move the menu to the left side */
-/* START OF LEFT SIDE MENU
-#page-content {
-  padding-left: 31%;
-}
-
-#page-portlet-1 {
-  left: 0px;
-  border-left: 0;
-  border-right: 1px solid #003366;
-}
-  END OF LEFT SIDE MENU */
-
 #page-portlet-2 {
   display: none; /* hide */
 }
@@ -118,3 +105,22 @@ body {
   background:#FFF;
   text-align: center;
 }
+
+/* Remove the comments around the section below to move the menu to the left side */
+/* START OF LEFT SIDE MENU
+#page-content {
+  padding-left: 31%;
+}
+
+#page-portlet-1 {
+  left: 0px;
+  border-left: 0;
+  border-right: 1px solid #003366;
+}
+
+#page-bottom {
+  padding-right: 0px;
+  padding-left: 33%;
+}
+ END OF LEFT SIDE MENU */
+
