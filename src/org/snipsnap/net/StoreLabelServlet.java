@@ -92,7 +92,9 @@ public class StoreLabelServlet extends HttpServlet {
       }
 
       if(null != label) {
+        snip.getLabels().removeLabel(label.getName(), label.getValue());
         handleLabel(label, request);
+        snip.getLabels().addLabel(label);
         SnipSpaceFactory.getInstance().store(snip);
       } else if(null != labelType) {
         LabelManager manager = (LabelManager)Components.getComponent(LabelManager.class);

@@ -26,14 +26,9 @@ package org.snipsnap.snip.label;
 
 import org.radeox.util.i18n.ResourceManager;
 import org.snipsnap.app.Application;
-import org.snipsnap.container.Components;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.net.ServletPluginLoader;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 public class MIMETypeLabel extends BaseLabel {
@@ -66,8 +61,8 @@ public class MIMETypeLabel extends BaseLabel {
 
   public String getValue() {
     return
-      isNull(type) ? "" : type +
-      (isNull(viewHandler) ? "" : "," + viewHandler) +
+      (isNull(type) ? "" : type) +
+      (isNull(viewHandler) ? (isNull(editHandler) ? "" : ",") : "," + viewHandler) +
       (isNull(editHandler) ? "" : "," + editHandler);
   }
 
@@ -105,13 +100,13 @@ public class MIMETypeLabel extends BaseLabel {
       buffer.append("</td>");
       buffer.append("<td>");
 
-      List handlers = getHandlerList();
+      Map handlers = ServletPluginLoader.getPlugins();
       // add view handlers
       buffer.append("<select name=\"label.viewhandler\" size=\"1\">");
       buffer.append("<option value=\"\">");
       buffer.append(ResourceManager.getString("i18n.messages", "label.mimetype.nohandler"));
       buffer.append("</option>");
-      Iterator it = handlers.iterator();
+      Iterator it = handlers.keySet().iterator();
       while (it.hasNext()) {
         String handlername = (String) it.next();
         buffer.append("<option");
@@ -137,7 +132,7 @@ public class MIMETypeLabel extends BaseLabel {
       buffer.append("<option value=\"\">");
       buffer.append(ResourceManager.getString("i18n.messages", "label.mimetype.nohandler"));
       buffer.append("</option>");
-      it = handlers.iterator();
+      it = handlers.keySet().iterator();
       while (it.hasNext()) {
         String handlername = (String) it.next();
         buffer.append("<option");
@@ -165,32 +160,6 @@ public class MIMETypeLabel extends BaseLabel {
     buffer.append(type);
     buffer.append("</td>");
     return buffer.toString();
-  }
-
-  private List getHandlerList() {
-    List handlerList = new ArrayList();
-    SnipSpace snipspace = (SnipSpace) Components.getComponent(SnipSpace.class);
-    Iterator iterator = snipspace.getAll().iterator();
-    while (iterator.hasNext()) {
-      Snip snip = (Snip) iterator.next();
-      Labels labels = snip.getLabels();
-      boolean noLabelsAll = labels.getAll().isEmpty();
-
-      if (!noLabelsAll) {
-        Collection LabelsCat;
-        // Search for all mime-type labels
-        Label label = labels.getLabel("mime-type");
-        if (null != label && label instanceof MIMETypeLabel) {
-          // only add labels that have the type text/gsp
-          String type = ((MIMETypeLabel)label).getMIMEType();
-          if ("text/gsp".equalsIgnoreCase(type) || "text/groovy".equalsIgnoreCase(type)) {
-            String handler = snip.getName();
-            handlerList.add(handler);
-          }
-        }
-      }
-    }
-    return handlerList;
   }
 
   public void handleInput(Map input) {

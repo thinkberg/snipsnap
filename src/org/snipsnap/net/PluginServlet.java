@@ -26,16 +26,15 @@ package org.snipsnap.net;
 
 import groovy.text.SimpleTemplateEngine;
 import groovy.text.Template;
-import org.radeox.util.Service;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.container.Components;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.label.MIMETypeLabel;
-import org.snipsnap.user.Security;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
+import org.snipsnap.user.Security;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -53,7 +52,6 @@ import java.util.Map;
 
 public class PluginServlet extends HttpServlet {
   private Map extTypeMap = new HashMap();
-  private Map pluginServlets = new HashMap();
   private Map servletCache = new HashMap();
 
   private final static Roles EXEC_ROLES = new Roles(Roles.ADMIN);
@@ -66,19 +64,6 @@ public class PluginServlet extends HttpServlet {
     // currently supported script types (with extensions)
     extTypeMap.put(".gsp", "text/gsp");
     extTypeMap.put(".groovy", "text/groovy");
-
-    // load plugins from services api
-    Iterator pluginServletNames = Service.providerNames(ServletPlugin.class);
-    while (pluginServletNames.hasNext()) {
-      String pluginLine = (String) pluginServletNames.next();
-      String[] pluginInfo = pluginLine.split("\\p{Space}");
-      if (pluginInfo.length > 0) {
-        pluginServlets.put(pluginInfo[0], pluginInfo.length > 1 ?  pluginInfo[1] : null);
-        Logger.log("found plugin: "+pluginInfo[0]);
-      } else {
-        Logger.warn("ignoring servlet plugin '" + pluginLine + "': missing type or servlet");
-      }
-    }
   }
 
   protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -93,7 +78,7 @@ public class PluginServlet extends HttpServlet {
     }
 
     BufferedWriter writer = new BufferedWriter(response.getWriter());
-    String handlerMIMEType = (String) pluginServlets.get(pluginName);
+    String handlerMIMEType = (String) ServletPluginLoader.getPlugins().get(pluginName);
     if (null == handlerMIMEType) {
       SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
       if (space.exists(pluginName)) {
@@ -190,7 +175,7 @@ public class PluginServlet extends HttpServlet {
    * @throws IOException
    */
   private String getTemplateSource(String name) throws IOException {
-    InputStream resource = getClass().getResourceAsStream(name);
+    InputStream resource = getClass().getResourceAsStream("/" + name);
     if (null != resource) {
       // if there is no snip to load, try jar/classpath based file read
       BufferedReader reader = new BufferedReader(new InputStreamReader(resource));
