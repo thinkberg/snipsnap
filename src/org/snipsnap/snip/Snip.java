@@ -82,6 +82,10 @@ public class Snip implements Ownable, Nameable {
     }
   }
 
+  public Access getAccess() {
+    return access;
+  }
+
   public Modified getModified() {
     return modified;
   }

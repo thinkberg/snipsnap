@@ -24,22 +24,17 @@
  */
 package org.snipsnap.net;
 
-import org.snipsnap.app.Application;
-import org.snipsnap.user.UserManager;
-import org.snipsnap.user.User;
+import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.config.Configuration;
-import org.snipsnap.config.AppConfiguration;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpSession;
+import javax.servlet.ServletException;
+import javax.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.net.URLDecoder;
+
 
 /**
  * Load a snip to view.
@@ -60,7 +55,9 @@ public class SnipViewServlet extends HttpServlet {
     // TODO 1.4 name = URLDecoder.decode(name, "iso-8859-1");
     name = URLDecoder.decode(name);
 
-    request.setAttribute("snip", SnipSpace.getInstance().load(name));
+    Snip snip = SnipSpace.getInstance().load(name);
+    snip.getAccess().handle(request);
+    request.setAttribute("snip", snip);
     RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/snip.jsp");
     dispatcher.forward(request, response);
   }

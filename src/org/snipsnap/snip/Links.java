@@ -25,10 +25,7 @@
 
 package org.snipsnap.snip;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.*;
 
 /**
  * Manages links to and from snips. Links can be external to internal
@@ -41,31 +38,85 @@ import java.util.StringTokenizer;
 public class Links {
   private Map linkMap;
   private String cache = null;
+  private SortedSet links;
 
   public Links() {
-    linkMap = new HashMap();
+    cache = "";
   }
 
   public Links(String links) {
-   cache = links;
-   linkMap = deserialize(links);
+    cache = links;
+  }
+
+  public int getSize() {
+    if (null == linkMap) linkMap = deserialize(cache);
+    return linkMap.size();
   }
 
   public void addLink(String url) {
+    if (null == linkMap) linkMap = deserialize(cache);
     cache = null;
+
     if (linkMap.containsKey(url)) {
-      int currentCount = ((Integer) linkMap.get(url)).intValue();
+      int currentCount = 0;
+      Integer tmp = ((Integer) linkMap.get(url));
+      if (tmp != null) {
+        currentCount = tmp.intValue();
+      }
       currentCount++;
       linkMap.put(url, new Integer(currentCount));
     } else {
-      linkMap.put(url, new Integer(0));
+      linkMap.put(url, new Integer(1));
+    }
+
+    // If there is a sorted cached key set, then add url
+    if (null != links) {
+        // remove url first to force resorting
+        if (links.contains(url)) {
+          links.remove(url);
+        }
+        links.add(url);
     }
   }
 
-  public Map deserialize(String links) {
-    if ("".equals(links)) return new HashMap();
+  /**
+   * Return an iterator to Links. The iterator is sorted
+   * by the count in the linkMap map. The sorted keyset is
+   * only generated on demand.
+   *
+   * @return Iterator over the urls of Links
+   */
+  public Iterator iterator() {
+    if (null == linkMap) linkMap = deserialize(cache);
+    List keys = new LinkedList(linkMap.keySet());
+    Collections.sort(keys, new Comparator() {
+      public int compare(Object o1, Object o2) {
+        // use "-" because we want decreasing order
+        return -((Integer) linkMap.get(o1)).compareTo(((Integer) linkMap.get(o2)));
+      }
+    });
+    return keys.iterator();
+  }
 
-    Map linkcounts = new HashMap();
+  public int getIntCount(String url) {
+    if (null == linkMap) linkMap = deserialize(cache);
+    int currentCount = 0;
+    if (linkMap.containsKey(url)) {
+      currentCount = ((Integer) linkMap.get(url)).intValue();
+    } else {
+      currentCount = -1;
+    }
+    return currentCount;
+  }
+
+  public Map newLinkMap() {
+    return new HashMap();
+  }
+
+  public Map deserialize(String links) {
+    if ("".equals(links)) return newLinkMap();
+
+    Map linkcounts = newLinkMap();
 
     StringTokenizer tokenizer = new StringTokenizer(links, "|");
     while (tokenizer.hasMoreTokens()) {
@@ -74,7 +125,7 @@ public class Links {
       String url = getUrl(urlString);
       linkcounts.put(url, count);
     }
-   return linkcounts;
+    return linkcounts;
   }
 
   private String serialize() {
@@ -96,11 +147,13 @@ public class Links {
   }
 
   private String after(String string, String delimiter) {
-    return string.substring(string.indexOf(delimiter) + 1);
+    // Split at the last delimiter, e.g. "I:want:some:coke:3"
+    // splits "I:want:some:coke" and "3"
+    return string.substring(string.lastIndexOf(delimiter) + 1);
   }
 
   private String before(String string, String delimiter) {
-    return string.substring(0, string.indexOf(delimiter));
+    return string.substring(0, string.lastIndexOf(delimiter));
   }
 
   private String getUrl(String rolesString) {
@@ -108,11 +161,15 @@ public class Links {
   }
 
   private Integer getCount(String urlString) {
-    return Integer.getInteger(after(urlString, ":"));
+    try {
+      return new Integer(after(urlString, ":"));
+    } catch (NumberFormatException e) {
+      return new Integer(1);
+    }
   }
 
   public String toString() {
-    if (null == cache ) {
+    if (null == cache) {
       cache = serialize();
     }
     return cache;

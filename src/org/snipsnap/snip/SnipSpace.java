@@ -182,6 +182,18 @@ public class SnipSpace implements LinkTester, Loader {
     return;
   }
 
+  /**
+   * Method with with wich the system can store snips.
+   * This methode does not change the mTime, the mUser,
+   * reindex the snip or add the snip to the modified list
+   *
+   * @param snip The snip to store
+   */
+  public void systemStore(Snip snip) {
+    storageStore(snip);
+    return;
+  }
+
   public Snip create(String name, String content) {
     Snip snip = storageCreate(name, content);
     cache.put(name, snip);

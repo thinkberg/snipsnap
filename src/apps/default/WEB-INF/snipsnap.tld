@@ -9,6 +9,39 @@
   <uri>http://snipsnap.com/snipsnap.tld</uri>
 
   <tag>
+    <name>backLinks</name>
+    <tag-class>org.snipsnap.jsp.BackLinkTag</tag-class>
+    <attribute>
+      <name>snip</name>
+      <type>org.snipsnap.snip.Snip</type>
+      <description>snip to check roles against</description>
+    </attribute>
+   </tag>
+
+
+  <tag>
+    <name>snipLinks</name>
+    <tag-class>org.snipsnap.jsp.SnipLinkTag</tag-class>
+    <attribute>
+      <name>snip</name>
+      <type>org.snipsnap.snip.Snip</type>
+      <description>snip to check roles against</description>
+    </attribute>
+    <attribute>
+       <name>start</name>
+       <description>start color</description>
+    </attribute>
+     <attribute>
+       <name>end</name>
+       <description>end color</description>
+    </attribute>
+     <attribute>
+       <name>width</name>
+       <description>width of result table with SnipLinks</description>
+    </attribute>
+  </tag>
+
+  <tag>
     <name>checkRoles</name>
     <tag-class>org.snipsnap.jsp.UserAuth</tag-class>
     <attribute>

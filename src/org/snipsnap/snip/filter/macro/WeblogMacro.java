@@ -48,8 +48,15 @@ public class WeblogMacro extends Macro {
   }
 
   public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
-    if (params.length == 0) {
-      List snips = SnipSpace.getInstance().getChildrenDateOrder(snip, 10);
+    if (params.length < 2) {
+      int count = 0;
+      if (params.length == 1) {
+        count = Integer.parseInt(params[0]);
+      } else {
+        count = 10;
+      }
+
+      List snips = SnipSpace.getInstance().getChildrenDateOrder(snip, count);
       Iterator iterator = snips.iterator();
       while (iterator.hasNext()) {
         Snip entry = (Snip) iterator.next();

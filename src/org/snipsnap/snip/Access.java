@@ -25,8 +25,7 @@
 
 package org.snipsnap.snip;
 
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.Links;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Stores Access information for a snip like viewCount, backLinks, ...
@@ -50,6 +49,29 @@ public class Access {
     this.backLinks = backLinks;
     this.snipLinks = snipLinks;
     this.viewCount = viewCount;
+  }
+
+  public void handle(HttpServletRequest request) {
+    incViewCount();
+    String referrer = request.getHeader("REFERER");
+    if (null != referrer) {
+      int index = referrer.indexOf("/space/");
+      if (index != -1) {
+        String url = referrer.substring(index + "/space/".length());
+        index = url.indexOf("?");
+        if (index != -1) {
+          url = url.substring(0, index);
+        }
+        snipLinks.addLink(url);
+      } else {
+        backLinks.addLink(referrer);
+      }
+    }
+    store();
+  }
+
+  public void store() {
+   SnipSpace.getInstance().systemStore(snip);
   }
 
   public boolean isModified() {

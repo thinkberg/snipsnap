@@ -44,6 +44,11 @@ public class SnipLink {
     return;
   }
 
+  public static String createLink(String name) {
+    StringBuffer buffer = new StringBuffer();
+    return appendLink(buffer, name, name).toString();
+  }
+
   public static String createLink(String name, String view) {
     StringBuffer buffer = new StringBuffer();
     return appendLink(buffer, name, view).toString();
