@@ -114,7 +114,7 @@ public class WeblogMacro extends SnipMacro {
 
         String[] entryName = StringUtil.split(entry.getName(), "/");
         // New Day?
-        System.err.println("entryName="+Arrays.asList(entryName));
+        //System.err.println("entryName="+Arrays.asList(entryName));
         if (! lastDay.equals(entryName[DAY_INDEX])) {
           writer.write("<div class=\"blog-date\">");
           writer.write(SnipUtil.toDate(entryName[DAY_INDEX]));
@@ -122,6 +122,7 @@ public class WeblogMacro extends SnipMacro {
           writer.write("</div>");
         }
 
+        writer.write(entry.getXMLContent());
         writer.write(" <a href=\"");
         SnipLink.appendUrl(writer, entry.getName());
         writer.write("\" title=\"Permalink to ");
@@ -129,7 +130,6 @@ public class WeblogMacro extends SnipMacro {
         writer.write("\">");
         SnipLink.appendImage(writer, "permalink", "PermaLink");
         writer.write("</a>");
-        writer.write(entry.getXMLContent());
 
         writer.write("<div class=\"snip-post-comments\">");
         writer.write(entry.getComments().getCommentString());

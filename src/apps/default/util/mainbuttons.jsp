@@ -12,7 +12,7 @@
   <fmt:message key="menu.or"/> <a href="<c:out value='${app.configuration.path}'/>/exec/register.jsp"><fmt:message key="menu.register"/></a>
 </c:if>
 </s:check>
-<c:if test="${not snip.notWeblog}">
+<c:if test="${snip.weblog}">
   <s:check snip="${requestScope.snip}" roles="Owner:Editor"> | <a href="<c:out value='${app.configuration.path}'/>/exec/post.jsp?name=<c:out value='${requestScope.snip}'/>"><fmt:message key="menu.post"/></a></s:check>
 </c:if>
 <c:if test="${app.user.admin}"> | <a href="<c:out value='${app.configuration.path}'/>/manager/"><fmt:message key="menu.manager"/></a></c:if> ]
