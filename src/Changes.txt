@@ -1,5 +1,6 @@
 0.3.2
 
+- Fixed bug: Weblog dates use app.locale (e.g. app.locale=de, default is "en")
 - Fixed bug: XML feeds (RSD, RSS) should no be legal UTF-8
 - Developer: Refactored Snip to use interface and introduced interceptors (AOP)
 - Fixed bug: RSD <api> was not closed

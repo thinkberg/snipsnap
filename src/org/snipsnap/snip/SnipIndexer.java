@@ -122,9 +122,9 @@ public class SnipIndexer {
 
     // When there is only one term, then add '*' to
     // end of the query to get more matches
-    if (-1 == queryString.indexOf(' ')) {
-      queryString = queryString + "*";
-    }
+    //if (-1 == queryString.indexOf(' ')) {
+    //  queryString = queryString + "*";
+    //}
 
     // parse the query String.
     Query query = null;
