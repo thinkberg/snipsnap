@@ -33,19 +33,13 @@
  */
 package org.snipsnap.snip.filter;
 
-import org.apache.oro.text.regex.MalformedPatternException;
-import org.apache.oro.text.regex.MatchResult;
-import org.apache.oro.text.regex.Pattern;
-import org.apache.oro.text.regex.PatternCompiler;
-import org.apache.oro.text.regex.PatternMatcher;
-import org.apache.oro.text.regex.PatternMatcherInput;
-import org.apache.oro.text.regex.Perl5Compiler;
-import org.apache.oro.text.regex.Perl5Matcher;
-import org.apache.oro.text.regex.Perl5Substitution;
-import org.apache.oro.text.regex.Util;
+import org.apache.oro.text.regex.*;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.util.Transliterate;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LinkTestFilter extends Filter {
 
@@ -57,6 +51,7 @@ public class LinkTestFilter extends Filter {
   PatternCompiler compiler = new Perl5Compiler();
   String _substitute;
   Transliterate trans;
+  Map wikiSpaces = new HashMap();
 
   public LinkTestFilter(LinkTester linkTester) {
     this.linkTester = linkTester;
@@ -67,6 +62,13 @@ public class LinkTestFilter extends Filter {
     } catch (MalformedPatternException e) {
       System.err.println("error compiling pattern: " + e);
     }
+
+    // @TODO read from config
+    wikiSpaces.put("LCOM", "http://www.langreiter.com/space/");
+    wikiSpaces.put("ESA", "http://earl.strain.at/space/");
+    wikiSpaces.put("C2", "http://www.c2.com/cgi/wiki?");
+    wikiSpaces.put("WeblogKitchen", "http://www.weblogkitchen.com/wiki.cgi?");
+    wikiSpaces.put("meatball", "http://www.usemod.com/cgi-bin/mb.pl?");
 
     // super("\\[(.*?)\\]", "<link href=\"$1\"/>");
   }
@@ -84,38 +86,52 @@ public class LinkTestFilter extends Filter {
       // Since we're still in the loop, fetch match that was found.
       result = matcher.getMatch();
       buffer.append(input.substring(lastmatch, result.beginOffset(0)));
-      String key = result.group(1);
-      if (key.startsWith("&#")) {
-        key = trans.nativeToAscii(key);
+      String targetSnip = result.group(1);
+      if (targetSnip.startsWith("&#")) {
+        targetSnip = trans.nativeToAscii(targetSnip);
       }
 
-      if (key != null) {
-        int colonIndex = key.indexOf(':');
+      if (targetSnip != null) {
+        int colonIndex = targetSnip.indexOf(':');
+        int atIndex = targetSnip.indexOf('@');
+        // typed link ?
         if (-1 != colonIndex) {
-          String extSpace = key.substring(0, colonIndex);
-          key = key.substring(colonIndex + 1);
-          buffer.append("<a href=\"http://www.langreiter.com/space/");
-          try {
-            buffer.append(SnipLink.encode(key));
-          } catch (Exception e) {
-            buffer.append(key);
+          // for now throw away the type information
+          targetSnip = targetSnip.substring(colonIndex + 1);
+        }
+        // external link ?
+        if (-1 != atIndex) {
+          String extSpace = targetSnip.substring(atIndex + 1);
+          // known extarnal space ?
+          if (wikiSpaces.containsKey(extSpace)) {
+            targetSnip = targetSnip.substring(0, atIndex);
+            buffer.append("<a href=\"");
+            buffer.append(wikiSpaces.get(extSpace));
+            try {
+              buffer.append(SnipLink.encode(targetSnip));
+            } catch (Exception e) {
+              buffer.append(targetSnip);
+            }
+            buffer.append("\">");
+            buffer.append(targetSnip);
+            buffer.append("@");
+            buffer.append(extSpace);
+            buffer.append("</a>");
+          } else {
+            buffer.append(result.group(1)).append("*link error*");
           }
-          buffer.append("\">");
-          buffer.append(key);
-          buffer.append("@");
-          buffer.append(extSpace);
-          buffer.append("</a>");
+          // internal link
         } else {
-          if (linkTester.exists(key)) {
-            SnipLink.appendLink(buffer, key, result.group(1));
+          if (linkTester.exists(targetSnip)) {
+            SnipLink.appendLink(buffer, targetSnip, result.group(1));
           } else {
             buffer.append(EscapeFilter.escape('['));
             buffer.append("create <a href=\"" +
                           "../exec/edit?name=");
             try {
-              buffer.append(SnipLink.encode(key));
+              buffer.append(SnipLink.encode(targetSnip));
             } catch (Exception e) {
-              buffer.append(key);
+              buffer.append(targetSnip);
             }
             buffer.append("\">").append(result.group(1)).append("</a>");
             buffer.append(EscapeFilter.escape(']'));

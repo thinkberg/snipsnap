@@ -33,6 +33,7 @@
 package org.snipsnap.snip.filter.macro;
 
 import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.filter.macro.table.Table;
 
 import java.util.StringTokenizer;
 
@@ -43,46 +44,22 @@ public class TableMacro extends Macro {
   }
 
   public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
-    buffer.append("<table class=\"snip-table\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
+    Table table = new Table();
+
     content = content.trim()+"\n";
 
     StringTokenizer tokenizer = new StringTokenizer(content, "|\n", true);
-    StringBuffer cell = new StringBuffer();
-    StringBuffer row = new StringBuffer();
-    boolean firstLine = true;
-    boolean odd = true;
     while (tokenizer.hasMoreTokens()) {
       String token = tokenizer.nextToken();
       if ("|".equals(token)) {
-        cell.insert(0, "<td>").append("</td>");
-        row.append(cell);
-        cell = new StringBuffer();
+        // nothing
       } else if ("\n".equals(token)) {
-        // add rest of cell
-        cell.insert(0, "<td>").append("</td>");
-        row.append(cell);
-        cell = new StringBuffer();
-
-        // add row
-        buffer.append("<tr valign=\"top\"");
-        if (firstLine) {
-          buffer.append(" class=\"snip-table-header\">");
-          firstLine = false;
-        } else if (odd) {
-          buffer.append(" class=\"snip-table-odd\">");
-          odd = false;
-        } else {
-          buffer.append(" class=\"snip-table-even\">");
-          odd = true;
-        }
-        buffer.append(row).append("</tr>\n");
-        row = new StringBuffer();
+        table.newRow();
       } else {
-        cell.append(token);
+        table.addCell(token);
       }
     }
-    buffer.append("</table>");
+    table.appendTo(buffer);
     return;
   }
-
 }

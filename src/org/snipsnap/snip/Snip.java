@@ -90,10 +90,22 @@ public class Snip implements Ownable, Nameable {
     return modified;
   }
 
+  /**
+   * Returns true, when the snip is a weblog.
+   * Currently only test against "start".
+   * Should be extendet to test a "weblog"-label
+   *
+   * @return true, if the snip is a weblog
+   */
   public boolean isWeblog() {
     return "start".equals(name);
   }
 
+  /**
+   * Conveniance function for JSP
+   *
+   * @return true, if snip is not a weblog
+   */
   public boolean isNotWeblog() {
     return !isWeblog();
   }

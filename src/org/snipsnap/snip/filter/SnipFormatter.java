@@ -48,9 +48,9 @@ public class SnipFormatter {
     fp.addFilter(new LineFilter());
     fp.addFilter(new BoldFilter());
     fp.addFilter(new ItalicFilter());
+    fp.addFilter(new UrlFilter());
     fp.addFilter(new LinkTestFilter(SnipSpace.getInstance()));
     fp.addFilter(new MarkFilter());
-    fp.addFilter(new UrlFilter());
     fp.addFilter(new KeyFilter());
 
     return fp.filter(content, snip);

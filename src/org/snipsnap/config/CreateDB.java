@@ -177,6 +177,11 @@ public class CreateDB {
     snip.addPermission(Permissions.EDIT, Roles.EDITOR);
     space.store(snip);
 
+    String notfound = "__We're sorry, the file that you requested does not exist or has moved.__\n\n__You can use [snipsnap-search] to find a page or find it on the [snipsnap-index].__";
+    snip = space.create("snipsnap-notfound", notfound);
+    snip.addPermission(Permissions.EDIT, Roles.EDITOR);
+    space.store(snip);
+
     System.out.println("Creating first blog entry.");
     space.post("Welcome to [SnipSnap]. You can now login and add/edit your first post");
     System.out.println("CreateDB: Complete");
