@@ -25,10 +25,8 @@
 
 package org.snipsnap.snip;
 
-import org.snipsnap.util.log.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.user.User;
-import org.snipsnap.user.UserManager;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -57,43 +55,46 @@ public class Access {
   }
 
   public void handle(HttpServletRequest request) {
-    incViewCount();
-    String referrer = request.getHeader("REFERER");
-    if (null != referrer) {
-      // Decode URL to remove jsessionid for example
-      // referrer =
-      String domain = Application.get().getConfiguration().getDomain();
-      if (referrer.startsWith(domain)) {
-        int index = referrer.indexOf("/space/");
-        // Does the referrer point to a snip ?
-        // Forget otherwise (e.g. "/exec/login.jsp")
-        if (index != -1) {
-          String url = referrer.substring(index + "/space/".length());
-          index = url.indexOf("?");
+    User user = Application.get().getUser();
+    if (!user.isNonUser()) {
+      incViewCount();
+      String referrer = request.getHeader("REFERER");
+      if (null != referrer) {
+        // Decode URL to remove jsessionid for example
+        // referrer =
+        String domain = Application.get().getConfiguration().getDomain();
+        if (referrer.startsWith(domain)) {
+          int index = referrer.indexOf("/space/");
+          // Does the referrer point to a snip ?
+          // Forget otherwise (e.g. "/exec/login.jsp")
           if (index != -1) {
-            url = url.substring(0, index);
-          }
-          index = url.indexOf("#");
-          if(index != -1) {
-            url = url.substring(0, index);
-          }
-          // Hack to remove possible jsessionid
-          index = url.indexOf(";jsessionid");
-          if (index != -1) {
-            url = url.substring(0, index);
-          }
+            String url = referrer.substring(index + "/space/".length());
+            index = url.indexOf("?");
+            if (index != -1) {
+              url = url.substring(0, index);
+            }
+            index = url.indexOf("#");
+            if (index != -1) {
+              url = url.substring(0, index);
+            }
+            // Hack to remove possible jsessionid
+            index = url.indexOf(";jsessionid");
+            if (index != -1) {
+              url = url.substring(0, index);
+            }
 
-          String name = SnipLink.decode(url);
-          if (! "start".equals(name) && ! snip.getName().equals(name)) {
-            snipLinks.addLink(SnipLink.decode(url));
+            String name = SnipLink.decode(url);
+            if (!"start".equals(name) && !snip.getName().equals(name)) {
+              snipLinks.addLink(SnipLink.decode(url));
+            }
           }
+        } else {
+          // Referrer was external link
+          backLinks.addLink(SnipLink.decode(referrer));
         }
-      } else {
-        // Referrer was external link
-        backLinks.addLink(SnipLink.decode(referrer));
       }
+      store();
     }
-    store();
   }
 
   public void store() {
