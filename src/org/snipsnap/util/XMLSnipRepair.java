@@ -166,7 +166,7 @@ public class XMLSnipRepair {
       }
 
       if (null != data && null != idElement) {
-        String id = element.getName() + "[" + idElement.getText() + "]";
+        String id = element.getName() + "[" + idElement.getText().toUpperCase() + "]";
         long mtime = Long.parseLong(element.element("mTime").getTextTrim());
 
         Element existingElement = (Element) data.get(id);
