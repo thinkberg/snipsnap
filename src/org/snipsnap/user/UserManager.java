@@ -232,7 +232,6 @@ public class UserManager implements Loader {
   public void removeCookie(HttpServletRequest request, HttpServletResponse response) {
     Cookie cookie = getCookie(request, COOKIE_NAME);
     if (cookie != null) {
-      System.out.println(cookie);
       cookie.setPath(getCookiePath());
       cookie.setMaxAge(0);
       response.addCookie(cookie);
