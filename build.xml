@@ -91,6 +91,7 @@
 
   <!-- create web archive of the administrative web application -->
   <target depends="build" description="build admin war" name="admin-war">
+    <mkdir dir="${src}/apps/admin/WEB-INF/lib"/>
     <jar destfile="${src}/apps/admin/WEB-INF/lib/servlets.jar"
       excludes="**/CVS">
       <fileset dir="${target}/admin/WEB-INF/classes" includes="**"/>
