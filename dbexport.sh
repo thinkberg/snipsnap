@@ -16,4 +16,4 @@ fi
 # put classpath together
 CLASSPATH=$base/lib/jdbcpool.jar:$base/lib/mckoidb.jar:$base/lib/snipsnap-utils.jar
 
-$JAVA_HOME/bin/java -cp $CLASSPATH JWhich org.snipsnap.util.DBDump $*
+$JAVA_HOME/bin/java -cp $CLASSPATH org.snipsnap.util.DBDump $*

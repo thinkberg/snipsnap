@@ -12,8 +12,8 @@ body {
 
 #page-logo {
   display: block;
-  float: left;
-  width: 200px;
+  position: absolute;
+  width: 210px;
   top: 10px;
   left: 10px;
 }
@@ -56,10 +56,12 @@ body {
 }
 
 #page-portlet-1 {
+  position: relative;
   float: left;
+  top: 200px;
   width: 200px;
 	line-height: 14px;
-  padding: 10px;
+  padding-left: 10px;
   margin-bottom: 5px;
 }
 
@@ -70,9 +72,9 @@ body {
 
 /* the actual content */
 #page-bottom {
-  float: left;
+  float: right;
   margin-top: 10px;
   text-align: center;
-  width: 100%;
+  width: 580px;
   font-size: 100%;
 }

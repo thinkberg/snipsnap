@@ -81,7 +81,7 @@ public class Applications extends HttpServlet {
   }
 
   private AppConfiguration loadApp(File dir) throws IOException {
-    File configFile = new File(dir, "application.conf");
+    File configFile = new File(dir, "WEB-INF/application.conf");
     if(configFile.exists() && !configFile.isDirectory()) {
       return new AppConfiguration(configFile);
     } else {

@@ -196,6 +196,7 @@ public class ApplicationLoader {
       context.destroy();
     } catch (Exception e) {
       System.out.println("Unable to stop '"+config.getName()+"': "+e);
+      e.printStackTrace();
     }
     System.out.println("Stopped application '" + config.getName() +"'");
   }
