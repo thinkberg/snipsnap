@@ -15,14 +15,14 @@
     <title><c:out value="${config.name}"/></title>
     <description><c:out value="${config.tagLine}"/></description>
     <%-- usually points to "start" --%>
-    <link><c:out value="${url}/${snip.name}"/></link>
+    <link><c:out value="${url}/${snip.nameEncoded}"/></link>
 
     <c:forEach items="${snip.childrenDateOrder}" var="child">
        <item>
         <!-- get from Snip -->
         <title><c:out value="${child.name}"/></title>
         <!-- get from Snip, external Link needed -->
-        <link><c:out value="${url}/${child.name}"/></link>
+        <link><c:out value="${url}/${child.nameEncoded}"/></link>
       </item>
     </c:forEach>
   </channel>

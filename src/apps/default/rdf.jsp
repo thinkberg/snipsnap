@@ -19,7 +19,7 @@
     <title><c:out value="${config.name}"/></title>
     <!-- config needs a tagline -->
     <description><c:out value="${config.name}"/></description>
-    <link>http://www.snipsnap.org</link>
+    <link><c:out value="${url}"/></link>
 
     <items>
      <rdf:Seq>
@@ -29,11 +29,11 @@
   </channel>
 
   <c:forEach items="${snip.childrenDateOrder}" var="child">
-     <item rdf:about='http://www.snipsnap.org/space/<c:out value="${child.name}"/>'>
+     <item rdf:about='<c:out value="${url}"/>/<c:out value="${child.name}"/>'>
       <!-- get from Snip -->
       <title><c:out value="${child.name}"/></title>
       <!-- get from Snip, external Link needed -->
-      <link>http://www.snipsnap.org/space/<c:out value="${child.name}"/></link>
+      <link><c:out value="${url}"/><c:out value="${child.name}"/></link>
     </item>
   </c:forEach>
 

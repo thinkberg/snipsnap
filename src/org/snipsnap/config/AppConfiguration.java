@@ -158,6 +158,7 @@ public class AppConfiguration extends Configuration {
     return getUrl() + target;
   }
 
+
   /**
    * Returns an external URL of a snip
    *

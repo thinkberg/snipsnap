@@ -61,7 +61,7 @@ public class RssServlet extends HttpServlet {
     request.setAttribute("space", SnipSpace.getInstance());
     request.setAttribute("config", config);
 
-    request.setAttribute("url", config.getSnipUrl(snip.getName()));
+    request.setAttribute("url", config.getUrl("/space"));
 
     RequestDispatcher dispatcher;
     if ("1.0".equals(version)) {
