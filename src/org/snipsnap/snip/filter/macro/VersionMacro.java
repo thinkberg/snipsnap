@@ -48,7 +48,7 @@ public class VersionMacro extends Macro {
   }
 
   public String getDescription() {
-    "Displays the SnipSnap version.";
+    return "Displays the SnipSnap version.";
   }
 
   public String getName() {
