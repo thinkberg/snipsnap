@@ -5,6 +5,7 @@ import com.neotis.snip.filter.LinkTester;
 
 import java.sql.*;
 import java.util.Map;
+import java.util.HashMap;
 
 public class SnipSpace implements LinkTester {
   private Connection connection;
@@ -20,6 +21,7 @@ public class SnipSpace implements LinkTester {
   }
 
   private SnipSpace() {
+    cache = new HashMap();
     connection = ConnectionManager.getConnection();
   }
 

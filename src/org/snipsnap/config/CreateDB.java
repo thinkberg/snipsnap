@@ -70,7 +70,7 @@ public class CreateDB {
 
       statement.executeQuery(
       "    INSERT INTO Snip ( name, content, parentSnip ) VALUES " +
-      "      ( 'about', 'This software is QPL', null ) ");
+      "      ( 'about', 'This software is __QPL__. Von [funzel]', null ) ");
 
       System.out.println("--- Complete ---");
 
