@@ -21,7 +21,7 @@
  <tr><td>
   <!-- replace this with a JSTL tag ala <s:checkUser role="anonymous"/> -->
   <% if(user.isAuthenticated()) { %>
-    logged in as <%= user.getLogin() %> | <a href="/exec/authenticate?logoff=true">logoff</a>
+    logged in as <a href="/space/<%= user.getLogin() %>"><%= user.getLogin() %></a> | <a href="/exec/authenticate?logoff=true">logoff</a>
     <br>
     <a href="/exec/post">post comment</a>
   <% } else { %>

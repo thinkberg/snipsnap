@@ -87,7 +87,7 @@ public class Finder {
     try {
       result = statement.executeQuery();
       Snip snip = null;
-      while (result.next() && --count > 0) {
+      while (result.next() && count-- > 0) {
         String name = result.getString("name");
         snip = cache.get(name);
         if (null == snip ) {
