@@ -91,7 +91,7 @@ public class Comments {
     String name = "comment-" + snip.getName() + "-" + (getCount() + 1);
     Snip comment = space.create(name, content, app);
     System.err.println(comment);
-    comment.setComment(this.snip);
+    comment.setCommentedSnip(this.snip);
     comment.addPermission(Permissions.EDIT, Security.OWNER);
     space.store(comment);
     comments.add(comment);

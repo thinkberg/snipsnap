@@ -191,7 +191,7 @@ public class SnipSpace implements LinkTester, Loader {
     snip.setMUser(result.getString("mUser"));
     String commentString = result.getString("commentSnip");
     if (!result.wasNull()) {
-      snip.setComment(load(commentString));
+      snip.setCommentedSnip(load(commentString));
     }
     String parentString = result.getString("parentSnip");
     if (!result.wasNull()) {
@@ -306,7 +306,7 @@ public class SnipSpace implements LinkTester, Loader {
       } else {
         statement.setString(7, parent.getName());
       }
-      Snip comment = snip.getComment();
+      Snip comment = snip.getCommentedSnip();
       if (null == comment) {
         statement.setNull(8, Types.VARCHAR);
       } else {
@@ -355,7 +355,7 @@ public class SnipSpace implements LinkTester, Loader {
       } else {
         statement.setString(7, parent.getName());
       }
-      Snip comment = snip.getComment();
+      Snip comment = snip.getCommentedSnip();
       if (null == comment) {
         statement.setNull(8, Types.VARCHAR);
       } else {

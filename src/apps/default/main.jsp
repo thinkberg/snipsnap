@@ -29,7 +29,7 @@
  <body onLoad="setFocus();">
    <table width="800" border="0" cellpadding="0" cellspacing="0"><tr><td valign="top">
    <table border="0" cellpadding="4" cellspacing="1">
-    <tr><td colspan="2"><s:image name="snip"/></td></tr>
+    <tr><td colspan="2"><a href="http://www.snipsnap.org"><s:image name="snip"/></a></td></tr>
     <tr><td colspan="2">
      <div id="Header">Bigger. Better. Faster. More.
       <font size="2">[ <a href="../space/start">start</a> | <a href="../space/snipsnap-index">index</a> |

@@ -154,12 +154,16 @@ public class Snip implements Ownable {
     return children;
   }
 
-  public void setComment(Snip comment) {
+  public void setCommentedSnip(Snip comment) {
     this.comment = comment;
   }
 
-  public Snip getComment() {
+  public Snip getCommentedSnip() {
     return comment;
+  }
+
+  public boolean isComment() {
+    return ! (null == comment);
   }
 
   public Comments getComments() {

@@ -11,7 +11,11 @@
  <!-- do not display header on weblogs -->
  <c:if test="${snip.notWeblog}">
   <tr>
-   <td><span class="snip-name"><c:out value="${snip.name}"/></span></td>
+   <td><span class="snip-name"><c:out value="${snip.name}"/></span>
+     <c:if test="${snip.comment}">
+       <s:image name="arrow"/> <a href="../space/<c:out value='${snip.commentedSnip.nameEncoded}'/>"><c:out value='${snip.commentedSnip.nameEncoded}'/></a>
+     </c:if>
+   </td>
    <td align="right">
      <c:import url="util/buttons.jsp"/>
    </td>
