@@ -330,14 +330,8 @@ public class SnipSpaceImpl implements SnipSpace {
   public Snip create(String name, String content) {
     name = name.trim();
     Snip snip = storage.storageCreate(name, content);
-<<<<<<< SnipSpaceImpl.java
     if (missing.containsKey(name.toUpperCase())) {
       missing.remove(name.toUpperCase());
-=======
-    cache.put(Snip.class, name, snip);
-    if (missing.containsKey(name.toUpperCase())) {
-      missing.remove(name.toUpperCase());
->>>>>>> 1.2
     }
     changed(snip);
     indexer.index(snip);
