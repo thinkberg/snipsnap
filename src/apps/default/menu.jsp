@@ -47,7 +47,7 @@
    <c:out value="${blogrolling.XMLContent}" escapeXml="false"/>
  </td></tr>
  <tr><td>
-   <a href="http://validator.w3.org/check/referer"><s:image name="valid-html401"/></a> <s:image name="vcss"/>
+   <a href="http://validator.w3.org/check/referer"><s:image name="valid-xhtml10"/></a> <s:image name="vcss"/>
  </td></tr>
  <tr><td>
    <a href="/exec/rss"><s:image name="xml-rss"/></a>

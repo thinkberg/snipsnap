@@ -24,20 +24,11 @@
  */
 package org.snipsnap.net;
 
-import org.snipsnap.app.Application;
-import org.snipsnap.user.UserManager;
-import org.snipsnap.user.User;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.*;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 import java.io.IOException;
 
 /**
@@ -49,20 +40,25 @@ import java.io.IOException;
  */
 public class SnipEditServlet extends HttpServlet {
 
-  public void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws IOException, ServletException {
-
-    String name = request.getParameter("name");
-    if(null == name) {
-      response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));
-      return;
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
+        doGet(request, response);
     }
 
-    Snip snip = SnipSpace.getInstance().load(name);
-    request.setAttribute("snip", snip);
-    request.setAttribute("snip_name", name);
-    RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/edit.jsp");
-    dispatcher.forward(request, response);
-  }
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
+
+        String name = request.getParameter("name");
+        if (null == name) {
+            response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));
+            return;
+        }
+
+        Snip snip = SnipSpace.getInstance().load(name);
+        request.setAttribute("snip", snip);
+        request.setAttribute("snip_name", name);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/edit.jsp");
+        dispatcher.forward(request, response);
+    }
 
 }

@@ -60,6 +60,10 @@ public class Table {
     indexCol=0;
   }
 
+  public int calc() {
+      return 0;
+  }
+
   public void appendTo(StringBuffer buffer) {
     buffer.append("<table class=\"snip-table\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
     List[] outputRows = (List[]) rows.toArray(new List[0]);

@@ -126,7 +126,8 @@ public class AppConfiguration extends Configuration {
 
   public String getTagLine() {
     // @TODO make this real
-    return "Bigger. Better. Faster. More.";
+    // return "Bigger. Better. Faster. More.";
+    return "The easy Weblog and Wiki Software.";
   }
 
   public void setJDBCURL(String url) {

@@ -29,6 +29,7 @@ import org.snipsnap.user.UserManager;
 import org.snipsnap.user.User;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.Snip;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -60,7 +61,15 @@ public class CommentViewServlet extends HttpServlet {
     // TODO 1.4 name = URLDecoder.decode(name, "iso-8859-1");
     name = SnipLink.decode(name);
 
-    request.setAttribute("snip", SnipSpace.getInstance().load(name));
+        Snip snip = SnipSpace.getInstance().load(name);
+    // Snip does not exist
+    if (null == snip) {
+      System.err.println("Snip does not exist: name="+name);
+      snip = SnipSpace.getInstance().load("snipsnap-notfound");
+    }
+
+    request.setAttribute("snip", snip);
+
     RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/comment.jsp");
     dispatcher.forward(request, response);
   }

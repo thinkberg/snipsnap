@@ -39,24 +39,25 @@ import java.util.StringTokenizer;
 
 public class TableMacro extends Macro {
 
-  public String getName() {
-    return "table";
-  }
-
-  public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
-    content = content.trim()+"\n";
-
-    Table table = new Table();
-    StringTokenizer tokenizer = new StringTokenizer(content, "|\n", true);
-    while (tokenizer.hasMoreTokens()) {
-      String token = tokenizer.nextToken();
-      if ("\n".equals(token)) {
-        table.newRow();
-      } else if (! "|".equals(token)) {
-        table.addCell(token);
-      }
+    public String getName() {
+        return "table";
     }
-    table.appendTo(buffer);
-    return;
-  }
+
+    public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
+        content = content.trim() + "\n";
+
+        Table table = new Table();
+        StringTokenizer tokenizer = new StringTokenizer(content, "|\n", true);
+        while (tokenizer.hasMoreTokens()) {
+            String token = tokenizer.nextToken();
+            if ("\n".equals(token)) {
+                table.newRow();
+            } else if (!"|".equals(token)) {
+                table.addCell(token);
+            }
+        }
+        table.calc();
+        table.appendTo(buffer);
+        return;
+    }
 }

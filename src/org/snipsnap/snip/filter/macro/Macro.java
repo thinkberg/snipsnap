@@ -38,7 +38,7 @@ public abstract class Macro {
      return "";
    }
 
-   public abstract String getName();
+  public abstract String getName();
 
   public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
       buffer.append(execute(params, content, snip));

@@ -50,7 +50,11 @@ public class SearchMacro extends Macro {
   }
 
   public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
-    if (params.length == 1) {
+    if (params.length == 1 || params.length == 2) {
+      int maxHits = 10;
+      if (params.length == 2) {
+          maxHits = Integer.parseInt(params[1]);
+      }
       buffer.append("<b>snips with ");
       buffer.append(params[0]);
       buffer.append(": (");
@@ -61,8 +65,7 @@ public class SearchMacro extends Macro {
 
       if (hits.length() > 0) {
         int start = 0;
-        final int MAX_HITS = 10;
-        int end = Math.min(MAX_HITS, hits.length());
+        int end = Math.min(maxHits, hits.length());
         buffer.append("<blockquote>");
         try {
           for (int i = start; i < end; i++) {

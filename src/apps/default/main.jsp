@@ -7,7 +7,7 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %>
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> -->
 <html>
  <head>
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -26,7 +26,7 @@
   -->
   </script>
  </head>
- <body onLoad="setFocus();">
+ <body onload="setFocus();">
    <table width="800" border="0" cellpadding="0" cellspacing="0"><tr><td valign="top">
    <table border="0" cellpadding="4" cellspacing="1">
     <tr><td colspan="2">
@@ -36,7 +36,7 @@
      </c:choose>
     </td></tr>
     <tr><td colspan="2">
-     <div id="Header">Bigger. Better. Faster. More.
+     <div id="Header"><c:out value="${app.configuration.tagLine}"/>
       <c:import url="util/mainbuttons.jsp"/>
      </div>
      </td>
