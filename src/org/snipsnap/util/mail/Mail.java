@@ -143,8 +143,9 @@ public class Mail {
       Transport.send(mesg);
 
     } catch (MessagingException ex) {
-      while ((ex = (MessagingException) ex.getNextException()) != null) {
-        Logger.warn(ex.getMessage(), ex);
+      Exception e;
+      while ((e = ex.getNextException()) != null) {
+        Logger.warn(ex.getMessage(), e);
       }
     }
     return;
