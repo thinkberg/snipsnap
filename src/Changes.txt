@@ -1,5 +1,8 @@
 0.3.4
 
+- Fixed bug: Images in RSS feeds
+- Added feature: RSS posts are now determined by headers (post titles) not by day
+- Fixed bug: HTML encoding and & encoding in RSS feeds
 - Added feature: {table} understands SUM, AVG, MAX, MIN, e.g. =SUM(A1:A3)
 - Fixed bug: Mail-To-Weblog didn't work because user "stephan" was used, now admin is used
 - Added feature: Configurable weblogs ping. Configuration is read from conf/weblogsping.txt

@@ -34,17 +34,16 @@
 package org.snipsnap.render.filter;
 
 import org.apache.oro.text.regex.*;
-import org.snipsnap.app.Application;
-import org.radeox.util.StringBufferWriter;
-import org.radeox.util.logging.Logger;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.render.filter.interwiki.InterWiki;
-import org.snipsnap.user.UserManager;
 import org.radeox.filter.Filter;
 import org.radeox.filter.LinkTester;
 import org.radeox.filter.context.FilterContext;
+import org.radeox.util.StringBufferWriter;
+import org.radeox.util.logging.Logger;
+import org.snipsnap.app.Application;
+import org.snipsnap.render.filter.interwiki.InterWiki;
+import org.snipsnap.snip.SnipLink;
+import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.user.UserManager;
 
 import java.io.IOException;
 import java.io.Writer;
