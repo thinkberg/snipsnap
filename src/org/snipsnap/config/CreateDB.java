@@ -161,7 +161,7 @@ public class CreateDB {
       "{link:Lambda|http://lambda.weblogs.com}\\\\ \n" +
       "{link:e7l3|http://www.e7l3.com}\\\\ \n";
     snip = space.create("snipsnap-blogrolling", rolling, app);
-    snip.addPermission(Permissions.EDIT, Roles.OWNER);
+    snip.addPermission(Permissions.EDIT, Roles.EDITOR);
     space.store(snip);
 
     space.post("Welcome to [SnipSnap]. You can now login and add/edit your first post", app);
