@@ -26,7 +26,6 @@
 
 package org.snipsnap.render.macro;
 
-import org.radeox.macro.Macro;
 import org.radeox.macro.BaseMacro;
 import org.radeox.macro.parameter.MacroParameter;
 import org.radeox.util.i18n.ResourceManager;
@@ -37,7 +36,10 @@ import org.snipsnap.snip.SnipSpaceFactory;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /*
  * Macro for fulltext searches in SnipSnap. The macro
@@ -123,7 +125,7 @@ public class SnipTreeMacro extends BaseMacro {
   }
 
   public void execute(Writer writer, MacroParameter params)
-      throws IllegalArgumentException, IOException {
+          throws IllegalArgumentException, IOException {
 
     // Names from the namespace look like
     // [0] = foo/
@@ -131,8 +133,16 @@ public class SnipTreeMacro extends BaseMacro {
     // [2] = foo/barbar
     // [3] = foo/barbar/boing
 
-    if (params.getLength() == 1) {
+    if (params.getLength() < 3) {
       Snip[] snips = space.match(params.get("0"));
+      int maxDepth = -1;
+      if (params.getLength() == 2) {
+        try {
+          maxDepth = Integer.parseInt(params.get("1"));
+        } catch (NumberFormatException e) {
+          // silently ignore wrong number
+        }
+      }
 
       Node root = new Node("root", false);
 
@@ -159,16 +169,16 @@ public class SnipTreeMacro extends BaseMacro {
       }
 
       writer.write("<div class=\"snip-tree\">");
-      writeTree(writer, root);
+      writeTree(writer, root, 1, maxDepth);
       writer.write("</div>");
-    } else if (params.getLength() == 2) {
+    } else if (params.getLength() == 3) {
       writer.write("<img src=\"/exec/namespace?name=" + params.get(0) + "\"/>");
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }
   }
 
-  public void writeTree(Writer writer, Node node) throws IOException {
+  public void writeTree(Writer writer, Node node, int currentDepth, int maxDepth) throws IOException {
     Iterator children = node.getChildren().iterator();
     writer.write("<ul>");
     while (children.hasNext()) {
@@ -180,8 +190,8 @@ public class SnipTreeMacro extends BaseMacro {
         writer.write(child.getName());
       }
       writer.write("</li>");
-      if (child.hasChildren()) {
-        writeTree(writer, child);
+      if (child.hasChildren() && (maxDepth == -1 || currentDepth < maxDepth)) {
+        writeTree(writer, child, currentDepth + 1, maxDepth);
       }
     }
     writer.write("</ul>");

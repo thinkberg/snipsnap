@@ -245,7 +245,7 @@ public class ApplicationLoader {
       }
       //System.out.print("(port " + port + ")");
     } else {
-      if (getContext(httpServer, path) != null) {
+      if (getContext(httpServer, host, path) != null) {
         throw new IOException("Conflicting HTTP Server configuration found: '" + host + ":" + port + path + "/'");
       }
     }
@@ -285,14 +285,19 @@ public class ApplicationLoader {
     return null;
   }
 
-  private static HttpContext getContext(HttpServer httpServer, String path) {
+  private static HttpContext getContext(HttpServer httpServer, String host, String path) {
     HttpContext contexts[] = httpServer.getContexts();
     for (int i = 0; i < contexts.length; i++) {
       HttpContext context = contexts[i];
       String contextPath = context.getContextPath();
       //System.out.print("{" + contextPath + "}");
       if (contextPath.equals(path) || contextPath.equals(path + "/*")) {
-        return context;
+        String[] vhosts = context.getVirtualHosts();
+        for (int j = 0; j < vhosts.length; j++) {
+          if (vhosts[j].equals(host)) {
+            return context;
+          }
+        }
       }
     }
     return null;
