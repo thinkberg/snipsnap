@@ -1,5 +1,6 @@
 0.4
 
+- fixed css bugs
 - Removed URL detection that brakes absolute URLs behind a proxy
 - File Upload changed to store files relative to snips
 - Fixed bug: zero bytes when decoding %xx encoded urls

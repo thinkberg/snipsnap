@@ -8,11 +8,11 @@
 }
 
 .snip-title {
+  display: table;
   text-align: left;
 }
 
 .snip-name {
-  display: inline;
   font-weight: bold;
   font-size: 150%;
   color: black;
@@ -26,7 +26,6 @@
 
 .snip-buttons {
   border: 0;
-  display: table-cell;
   width: 49%;
   float: right;
   text-align: right;
@@ -34,7 +33,6 @@
 
 .snip-info {
   border: 0;
-  display: table-cell;
   width: 49%;
   float: left;
   background-color: inherit;

@@ -12,6 +12,7 @@
   text-align: left;
   padding: 0px;
   margin-bottom: 2em;
+  display: table;
 }
 
 .snip-name {
@@ -29,7 +30,6 @@
 
 .snip-buttons {
   border: 0;
-  display: table-cell;
   width: 49%;
   float: right;
   font-family: verdana, arial, sans-serif;
@@ -40,7 +40,6 @@
 
 .snip-info {
   border: 0;
-  display: table-cell;
   width: 49%;
   float: left;
   font-family: verdana, arial, sans-serif;
