@@ -18,7 +18,7 @@ public class ConnectionManager {
 
 // This URL specifies we are connecting with a local database.  The
 // configuration file for the database is found at './ExampleDB.conf'
-    String url = "jdbc:mckoi:local://ExampleDB.conf";
+    String url = "jdbc:mckoi:local://conf/db.conf";
 
 // The username/password for the database.  This is set when the database
 // is created (see SimpleDatabaseCreateDemo).

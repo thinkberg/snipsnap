@@ -29,7 +29,7 @@ public class CreateDB {
     // configuration file for the database is found at './ExampleDB.conf'
     // The 'create=true' argument means we want to create the database.  If
     // the database already exists, it can not be created.
-    String url = "jdbc:mckoi:local://ExampleDB.conf?create=true";
+    String url = "jdbc:mckoi:local://conf/db.conf?create=true";
 
     // The username/password for the database.  This will be the username/
     // password for the user that has full control over the database.

@@ -16,11 +16,11 @@
   </path>
 
   <target depends="clean,jar" description="build binary package" name="bin-tar">
-    <tar destfile="${appname}-${version}.tgz">
-      <tarfileset dir="." prefix="${appname}-${version}" mode="544">
+    <tar destfile="${appname}-${version}.tgz" compression="gzip">
+      <tarfileset dir="." prefix="${appname}-${version}" mode="566">
         <include name="run.sh"/>
       </tarfileset>
-      <tarfileset dir="." prefix="${appname}-${version}" mode="444">
+      <tarfileset dir="." prefix="${appname}-${version}" mode="666">
 	<include name="${jar}/${appname}.jar"/>
         <include name="${jar}/jakarta.jar"/>
         <include name="${jar}/mckoidb.jar"/>
@@ -28,6 +28,7 @@
         <include name="${jar}/org.apache.jasper.jar"/>
         <include name="${jar}/org.mortbay.jetty.jar"/>
         <include name="conf/server.conf"/>
+        <include name="conf/db.conf"/>
         <include name="db"/>
 	<include name="app/**"/>
 	<exclude name="**/CVS"/>
@@ -60,7 +61,7 @@
 	   classpathref="classpath"
            destdir="${target}" 
 	   includes="com/neotis/**"
-	   excludes="com/neotis/config/**,com/neotis/test/**"/>
+	   excludes="com/neotis/test/**"/>
   </target>
 
 </project>
