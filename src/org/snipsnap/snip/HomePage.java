@@ -46,8 +46,7 @@ public class HomePage {
     SnipSpace space = SnipSpace.getInstance();
     if (space.exists(login)) {
       snip = space.load(login);
-      snip.setContent(snip.getContent() +
-        hp );
+      snip.setContent(snip.getContent() + hp );
       space.store(snip);
     } else {
       snip = space.create(login, hp);

@@ -48,28 +48,24 @@ body {
 }
 
 #page-wrapper {
-  position: relative;
+  float: left;
   margin-top: 10px;
   width: 100%;
   height: auto;
-}
-
-#page-content {
-  position: absolute;
-  float: right;
-  left: 0px;
   width: 590px;
   max-width: 590px;
 }
 
+#page-content {
+}
+
 #page-portlet-1 {
-  position: absolute;
-  top: 0px;
-  left: 600px;
+  float: right;
   width: 190px;
 	border: 1px dashed #999999;
 	line-height: 14px;
   padding: 5px;
+  margin-top: 10px;
   margin-bottom: 5px;
 }
 
@@ -80,8 +76,7 @@ body {
 
 /* the actual content */
 #page-bottom {
-  position: relative;
-  bottom: 0px;
+  float: left;
   margin-top: 10px;
   text-align: center;
   width: 100%;

@@ -100,7 +100,7 @@ img.float-right {
 }
 
 /* weblog formatting */
-.blog-date {
+#blog-date {
   display: block;
   background-color: #f8f8f8;
   color: black;
@@ -110,15 +110,6 @@ img.float-right {
   margin-bottom: 10px;
   width: 100%;
 }
-
-.comment {
-  color: black;
-  background-color: inherit;
-  font-family: verdana, sans-serif;
-  margin-top: 10px;
-  margin-bottom: 25px;
-}
-
 
 /* special formatting of a wiki table */
 #wiki-table {
@@ -138,13 +129,13 @@ img.float-right {
   text-align: left;
   color: inherit;
   font-weight: bold;
-  /* background: #DDEEFF; */
-  background: #d9e4f9;
+  /* background-color: #DDEEFF; */
+  background-color: #d9e4f9;
 }
 
 #wiki-table .table-odd {
   color: inherit;
-  background: #F8F8F8;
+  background-color: #F8F8F8;
 }
 
 #wiki-table .table-even {
@@ -202,7 +193,7 @@ ol.KATAKANA { list-style-type: katakana-iroha; }
   text-align: left;
   color: inherit;
   font-weight: bold;
-  background: #d9e4f9;
+  background-color: #d9e4f9;
 }
 
 /************************************************/

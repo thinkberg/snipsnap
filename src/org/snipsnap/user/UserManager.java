@@ -59,6 +59,10 @@ public class UserManager implements Loader {
     return instance;
   }
 
+  public static synchronized void removeInstance() {
+    instance = null;
+  }
+
   public List getAll() {
     return storageAll();
   }

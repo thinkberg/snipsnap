@@ -11,22 +11,20 @@ body {
   font-size: 70%;
   font-family: "Lucida Grande", "Trebuchet MS", Verdana, Geneva, Lucida, Helvetica, sans-serif;
   margin: 20px;
-  padding: 0px;}
+  padding: 0px;
+}
 
 #page-logo {
-  display: block;
-  position: absolute;
-  left: 150px;
-  top: 20px;
-  width: 100%;
+  float: right;
+  padding-right: 90px;
 }
 
 #page-title {
   display: block;
-  position: absolute;
-  top: 160px;
+  float: right;
   width: 100%;
-  margin: 0px;
+  margin-top: 40px;
+  margin-bottom: 20px;
 	line-height: 11px;
 	color: inherit;
 	font-size: 14px;
@@ -46,29 +44,24 @@ body {
 }
 
 #page-wrapper {
-  position: absolute;
-  top: 10px;
-  margin-top: 0px;
+  float: left;
+  margin-top: 10px;
   width: 100%;
   height: auto;
-}
-
-#page-content {
-  position: absolute;
-  top: 200px;
-  left: 0px;
   width: 590px;
   max-width: 590px;
 }
 
+#page-content {
+}
+
 #page-portlet-1 {
-  position: absolute;
-  top: 200px;
-  left: 600px;
+  float: right;
   width: 190px;
 	border: 1px dashed #999999;
 	line-height: 14px;
   padding: 5px;
+  margin-top: 10px;
   margin-bottom: 5px;
 }
 
@@ -76,14 +69,13 @@ body {
   display: absolute;
   top: 20px;
   left: 10px;
+  width: 150px;
 }
 
 
 /* the actual content */
 #page-bottom {
-  position: relative;
-  bottom: 0px;
-  margin-top: 10px;
+  float: left;
   text-align: center;
   width: 100%;
   font-size: 100%;

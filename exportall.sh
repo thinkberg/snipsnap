@@ -1,5 +1,4 @@
 #! /bin/sh
-export JAVA_HOME=/usr/lib/j2sdk1.4.0
 base=`dirname $0`
 for appdir in $base/applications/*
 do

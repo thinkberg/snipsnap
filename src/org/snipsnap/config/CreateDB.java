@@ -126,6 +126,7 @@ public class CreateDB {
   public static void insertData(AppConfiguration config) {
     System.out.println("CreateDB: Inserting Data");
     SnipSpace.removeInstance();
+    UserManager.removeInstance();
 
     User admin = UserManager.getInstance().create(config.getAdminLogin(), config.getAdminPassword(), config.getAdminEmail());
     admin.getRoles().add(Roles.EDITOR);

@@ -14,6 +14,6 @@ if [ ! -f $base/$jar/snipsnap.jar ]; then
 fi
 
 # put classpath together
-CLASSPATH=$base/lib/mckoidb.jar:$base/lib/snipsnap-utils.jar
+CLASSPATH=$base/lib/jdbcpool.jar:$base/lib/mckoidb.jar:$base/lib/snipsnap-utils.jar
 
 $JAVA_HOME/bin/java -cp $CLASSPATH org.snipsnap.util.DBDump $*

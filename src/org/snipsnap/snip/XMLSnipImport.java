@@ -39,8 +39,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
@@ -66,9 +66,9 @@ public class XMLSnipImport {
       DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
       documentBuilder = documentBuilderFactory.newDocumentBuilder();
     } catch (FactoryConfigurationError error) {
-      System.err.println("Unable to create document builder factory: "+error);
+      System.err.println("Unable to create document builder factory: " + error);
     } catch (ParserConfigurationException e) {
-      System.err.println("Unable to create document builder: "+e);
+      System.err.println("Unable to create document builder: " + e);
     }
 
     Document document = null;
@@ -77,7 +77,7 @@ public class XMLSnipImport {
       load(document, overwrite);
     } catch (SAXException e) {
       e.printStackTrace();
-      throw new IOException("Error parsing document: "+e);
+      throw new IOException("Error parsing document: " + e);
     }
   }
 
@@ -244,18 +244,26 @@ public class XMLSnipImport {
 
       // creation user
       User cUser = null;
-      if ((tmp = (String) elements.get("cUser")) != null) {
+      if ((tmp = (String) elements.get("cUser")) != null && um.load(tmp) != null) {
         snip.setCUser(um.load(tmp));
       } else if (snip.getCUser() == null) {
-        cUser = Application.get().getUser();
+        snip.setCUser(Application.get().getUser());
       }
 
       // owner user
       User oUser = null;
-      if ((tmp = (String) elements.get("oUser")) != null) {
+      if ((tmp = (String) elements.get("oUser")) != null && um.load(tmp) != null) {
         snip.setOUser(um.load(tmp));
       } else if (snip.getOUser() == null) {
         snip.setOUser(Application.get().getUser());
+      }
+
+      // store modification user
+      User mUser = null;
+      if ((tmp = (String) elements.get("mUser")) != null && um.load(tmp) != null) {
+        snip.setMUser(um.load(tmp));
+      } else if (snip.getMUser() == null) {
+        snip.setMUser(Application.get().getUser());
       }
 
       // store last modification time
@@ -263,14 +271,6 @@ public class XMLSnipImport {
         snip.setMTime(getTimestamp(tmp));
       } else {
         snip.setMTime(new Timestamp(new java.util.Date().getTime()));
-      }
-
-      // store modification user
-      User mUser = null;
-      if ((tmp = (String) elements.get("mUser")) != null) {
-        snip.setMUser(um.load(tmp));
-      } else if (snip.getMUser() == null) {
-        mUser = Application.get().getUser();
       }
 
       if ((tmp = (String) elements.get("parentSnip")) != null) {

@@ -134,6 +134,9 @@ public class Installer extends HttpServlet {
     }
     String context = request.getParameter("context");
     if(context != null) {
+      if(context.length() > 1 && !context.startsWith("/")) {
+        context = "/" + context;
+      }
       if(context.endsWith("/")) {
         context = context.substring(0, context.length()-2);
       }
@@ -254,7 +257,7 @@ public class Installer extends HttpServlet {
     }
 
     String tagline = request.getParameter("tagline");
-    config.setTagLine(tagline != null ? tagline : "The easy Weblog and Wiki Software.");
+    config.setTagLine(tagline != null && tagline.length() > 0 ? tagline : "The easy Weblog and Wiki Software.");
 
     config.setLogger("org.snipsnap.util.log.NullLogger");
     config.store();

@@ -11,16 +11,16 @@ body {
 }
 
 #page-logo {
-  position: absolute;
   display: block;
+  float: left;
   width: 200px;
   top: 10px;
   left: 10px;
 }
 
 #page-title {
-  position: absolute;
   display: block;
+  float: right;
   width: 560px;
   top: 10px;
   left: 235px;
@@ -44,29 +44,21 @@ body {
 }
 
 #page-wrapper {
-  position: absolute;
-  top: 40px;
-  left: 10px;
+  float: right;
+  width: 580px;
+  max-width: 580px;
   padding-top: 10px;
-  width: 580px;;
   height: auto;
 }
 
 #page-content {
-  position: absolute;
-  float: right;
-  left: 225px;
-  width: 580px;
-  max-width: 580px;
 }
 
 #page-portlet-1 {
-  position: absolute;
-  top: 200px;
-  left: 0px;
+  float: left;
   width: 200px;
 	line-height: 14px;
-  padding: 5px;
+  padding: 10px;
   margin-bottom: 5px;
 }
 
@@ -77,14 +69,9 @@ body {
 
 /* the actual content */
 #page-bottom {
-  position: relative;
-  bottom: 0px;
+  float: left;
   margin-top: 10px;
   text-align: center;
   width: 100%;
   font-size: 100%;
-}
-
-#copyright:before {
-  content: "Copyright 2000-2002 Matthias L. Jugel, Stephan J. Schmidt";
 }

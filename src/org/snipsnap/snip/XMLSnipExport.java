@@ -74,7 +74,6 @@ public class XMLSnipExport {
       System.err.println("error writing output");
       e.printStackTrace();
     }
-    System.err.println("ATTENTION: Check the encoding of the file!");
   }
 
   /**

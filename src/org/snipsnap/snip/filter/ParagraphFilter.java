@@ -38,6 +38,6 @@ public class ParagraphFilter extends RegexReplaceFilter {
 
   public ParagraphFilter() {
     // match anything between two empty lines (normalize sequential empty lines to one)
-    super("([ \t\r]*[\n]){2,}", "<p></p>$1", RegexReplaceFilter.SINGLELINE);
+    super("(?:[ \t\r]*[\n]){2,}", "<p class=\"paragraph\"/>", RegexReplaceFilter.SINGLELINE);
   };
 }

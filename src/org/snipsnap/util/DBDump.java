@@ -70,5 +70,6 @@ public class DBDump {
       System.err.println("DBDump: unable to dump database: "+e);
       e.printStackTrace();
     }
+    System.exit(0);
   }
 }

@@ -36,15 +36,14 @@
   <div id="page-wrapper">
    <div id="page-content">
     <c:import url="${page}"/>
-    <div id="page-bottom"><s:snip name="snipsnap-copyright"/></div>
-    <s:debug/>
    </div>
-   <% for(int i = 1; SnipSpace.getInstance().exists("snipsnap-portlet-"+i); i++) { %>
-    <% pageContext.setAttribute("snip", SnipSpace.getInstance().load("snipsnap-portlet-"+i)); %>
-    <div id="page-portlet-<%=i%>"><s:snip snip="${snip}"/></div>
-   <% } %>
-   </c:if>
+   <s:debug/>
   </div>
+  <% for(int i = 1; SnipSpace.getInstance().exists("snipsnap-portlet-"+i); i++) { %>
+   <% pageContext.setAttribute("snip", SnipSpace.getInstance().load("snipsnap-portlet-"+i)); %>
+   <div id="page-portlet-<%=i%>"><s:snip snip="${snip}"/></div>
+  <% } %>
+  <div id="page-bottom"><s:snip name="snipsnap-copyright"/></div>
  </body>
 </html>
 

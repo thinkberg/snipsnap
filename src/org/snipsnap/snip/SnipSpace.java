@@ -75,6 +75,7 @@ public class SnipSpace implements LinkTester, Loader {
   public static synchronized void removeInstance() {
     if (instance != null) {
       instance = null;
+      Cache.removeInstance();
     }
   }
 

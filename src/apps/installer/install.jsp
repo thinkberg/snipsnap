@@ -30,6 +30,15 @@
       <td>Name:</td>
       <td><input name="appname" type="text" value="<c:out value='${config.name}' default=''/>"></td>
     </tr>
+    <tr <c:if test="${errors['tagline'] != null}">class="error-position"</c:if>>
+      <td><span class="nobr">Website Tagline:</span></td>
+      <td><input name="tagline" type="text" value=""></td>
+    </tr>
+    <tr <c:if test="${errors['logoimage'] != null}">class="error-position"</c:if>>
+      <td><span class="nobr">Logo Image Name:</span></td>
+      <td><input name="logoimage" type="text" value=""></td>
+      <td valign="top">Put the logo image into the images directory.</td>
+    </tr>
     <tr>
       <td colspan="2" class="table-header">Administrator</td>
     </tr>

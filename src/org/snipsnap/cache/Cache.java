@@ -55,6 +55,14 @@ public class Cache {
     return instance;
   }
 
+  public static void removeInstance() {
+    synchronized (monitor) {
+      if(null != instance) {
+        instance = null;
+      }
+    }
+  }
+
   private Cache() {
     caches = new HashMap();
     loaders = new HashMap();
