@@ -1,5 +1,7 @@
 0.5
 
+- Developer: Macro, Servlet and ContentRenderer for rendering inline content (PNG, ...)
+- Added Feature: Rendering MindMaps and Organigrams
 - New Installer (first time run installs a basic SnipSnap applicaton)
 - Fixed Bug: cyclic dependency temp. fixed for component loading
 - Added Feature: Snips can be displayed as RDF

@@ -24,17 +24,13 @@
  */
 package org.snipsnap.net;
 
-import org.snipsnap.config.Configuration;
-import org.snipsnap.config.ConfigurationProxy;
-import org.snipsnap.snip.Blog;
+import org.snipsnap.graph.ContentRenderer;
+import org.snipsnap.graph.MindMapContentRenderer;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.graph.*;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -75,13 +71,9 @@ public class RenderServlet extends HttpServlet {
       end = content.length();
     }
 
-    response.setContentType("image/png");
+    content = content.substring(start, end);
+    ContentRenderer renderer = new MindMapContentRenderer();
+    renderer.render(request, response, content);
 
-    ServletOutputStream out = response.getOutputStream();
-
-    TreeBuilder builder = new StringTreeBuilder(snip.getContent().substring(start, end));
-    Renderer renderer = new MindMapRenderer();
-    DrawTree drawTree = new DrawTree();
-    drawTree.draw(builder.build(), renderer, out);
   }
 }
