@@ -41,4 +41,8 @@ public abstract class Macro {
 
   public abstract void execute(Writer writer, String[] params, String content, Snip snip)
       throws IllegalArgumentException, IOException;
+
+  public String toString() {
+    return getName();
+  }
 }

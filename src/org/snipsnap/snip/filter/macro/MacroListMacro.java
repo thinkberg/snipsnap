@@ -35,6 +35,7 @@ import org.snipsnap.app.Application;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.io.IOException;
 import java.io.Writer;
 
@@ -56,7 +57,7 @@ public class MacroListMacro extends ListoutputMacro {
     boolean showSize = true;
     if(params != null) {
       if(params.length > 0) {
-      type = params[0];
+        type = params[0];
       }
     }
 

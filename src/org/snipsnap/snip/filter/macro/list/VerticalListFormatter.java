@@ -58,9 +58,12 @@ public class VerticalListFormatter implements ListoutputMacro.ListFormatter {
       Iterator nameIterator = c.iterator();
       while (nameIterator.hasNext()) {
         Object object = nameIterator.next();
-        String name = object instanceof Nameable ? ((Nameable) object).getName() : object.toString();
         writer.write("<li>");
-        SnipLink.appendLink(writer, name);
+        if(object instanceof Nameable) {
+          SnipLink.appendLink(writer, ((Nameable)object).getName());
+        } else {
+          writer.write(object.toString());
+        }
         writer.write("</li>");
       }
       writer.write("</ul>");

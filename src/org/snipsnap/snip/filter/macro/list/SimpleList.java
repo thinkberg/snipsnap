@@ -58,9 +58,12 @@ public class SimpleList implements ListoutputMacro.ListFormatter {
       Iterator nameIterator = c.iterator();
       while (nameIterator.hasNext()) {
         Object object = nameIterator.next();
-        String name = object instanceof Nameable ? ((Nameable)object).getName() : object.toString();
+        if(object instanceof Nameable) {
+          SnipLink.appendLink(writer, ((Nameable)object).getName());
+        } else {
+          writer.write(object.toString());
+        }
 
-        SnipLink.appendLink(writer, name);
         if (nameIterator.hasNext()) {
           writer.write(", ");
         }

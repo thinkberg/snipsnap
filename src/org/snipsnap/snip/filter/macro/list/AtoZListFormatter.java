@@ -56,8 +56,15 @@ public class AtoZListFormatter implements ListoutputMacro.ListFormatter {
       List otherRestList = new ArrayList();
       while (it.hasNext()) {
         Object object = it.next();
-        String name = object instanceof Nameable ? ((Nameable)object).getName() : object.toString();
-        String indexChar = name.substring(0, 1).toUpperCase();
+        String name, indexChar;
+        if(object instanceof Nameable) {
+          name = ((Nameable)object).getName();
+          indexChar = name.substring(0, 1).toUpperCase();
+          name = SnipLink.createLink(name);
+        } else {
+          name = object.toString();
+          indexChar = name.substring(0, 1).toUpperCase();
+        }
 
         if (indexChar.charAt(0) >= 'A' && indexChar.charAt(0) <= 'Z') {
           if (!atozMap.containsKey(indexChar)) {
@@ -153,11 +160,11 @@ public class AtoZListFormatter implements ListoutputMacro.ListFormatter {
   private void insertRow(Writer writer, String left, String right, boolean odd) throws IOException {
     writer.write("<tr><td>");
     if (left != null) {
-      SnipLink.appendLink(writer, left);
+      writer.write(left);
     }
     writer.write("</td><td> </td><td>");
     if (right != null) {
-      SnipLink.appendLink(writer, right);
+      writer.write(right);
     }
     writer.write("</td></tr>");
   }
