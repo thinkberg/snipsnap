@@ -25,25 +25,18 @@
  */
 package org.snipsnap.snip.storage;
 
-import org.dom4j.Document;
-import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
 import org.radeox.util.logging.Logger;
 import org.snipsnap.snip.Links;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.attachment.Attachments;
 import org.snipsnap.snip.label.Labels;
 import org.snipsnap.user.Permissions;
-import org.snipsnap.versioning.VersionManager;
-import org.snipsnap.container.Components;
 
-import java.io.StringReader;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.List;
 
 /**
  * A snip serializer that can store and load snips in XML format.
@@ -51,29 +44,7 @@ import java.util.List;
  * @author Matthias L. Jugel
  * @version $Id$
  */
-public class SnipSerializer extends SerializerSupport {
-  public final static String SNIP = "snip";
-
-  public final static String SNIP_NAME = "name";
-  public final static String SNIP_CONTENT = "content";
-  public final static String SNIP_OUSER = "oUser";
-  public final static String SNIP_CUSER = "cUser";
-  public final static String SNIP_MUSER = "mUser";
-  public final static String SNIP_CTIME = "cTime";
-  public final static String SNIP_MTIME = "mTime";
-  public final static String SNIP_PERMISSIONS = "permissions";
-  public final static String SNIP_BACKLINKS = "backLinks";
-  public final static String SNIP_SNIPLINKS = "snipLinks";
-  public final static String SNIP_LABELS = "labels";
-  public final static String SNIP_ATTACHMENTS = "attachments";
-  public final static String SNIP_VIEWCOUNT = "viewCount";
-  public final static String SNIP_VERSION = "version";
-  public final static String SNIP_APPLICATION = "application";
-
-  // TODO deprecated
-  public final static String SNIP_COMMENTED = "commentSnip";
-  public final static String SNIP_PARENT = "parentSnip";
-
+public class SnipSerializer extends SnipDataSerializer {
   private static SnipSerializer serializer = null;
 
   /**
@@ -97,55 +68,7 @@ public class SnipSerializer extends SerializerSupport {
    * @return the serialized snip as XML
    */
   public Element serialize(Snip snip) {
-//    System.out.println("SnipSerializer.serialize("+snip.getName()+")");
-    Element snipElement = DocumentHelper.createElement(SNIP);
-    snipElement.addElement(SNIP_NAME).addText(snip.getName());
-    snipElement.addElement(SNIP_OUSER).addText(notNull(snip.getOUser()));
-    snipElement.addElement(SNIP_CUSER).addText(notNull(snip.getCUser()));
-    snipElement.addElement(SNIP_MUSER).addText(notNull(snip.getMUser()));
-    snipElement.addElement(SNIP_CTIME).addText(getStringTimestamp(snip.getCTime()));
-    snipElement.addElement(SNIP_MTIME).addText(getStringTimestamp(snip.getMTime()));
-    snipElement.addElement(SNIP_PERMISSIONS).addText(notNull(snip.getPermissions()));
-    snipElement.add(addCDATAContent(SNIP_BACKLINKS, notNull(snip.getBackLinks())));
-    snipElement.add(addCDATAContent(SNIP_SNIPLINKS, notNull(snip.getSnipLinks())));
-    snipElement.add(addCDATAContent(SNIP_LABELS, notNull(snip.getLabels())));
-    snipElement.add(addXMLContent(SNIP_ATTACHMENTS, notNull(snip.getAttachments())));
-    snipElement.addElement(SNIP_VIEWCOUNT).addText("" + snip.getViewCount());
-    snipElement.add(addCDATAContent(SNIP_CONTENT, snip.getContent()));
-    snipElement.addElement(SNIP_VERSION).addText("" + snip.getVersion());
-    snipElement.addElement(SNIP_APPLICATION).addText(notNull(snip.getApplication()));
-
-    // TODO deprecated
-    Snip parentSnip = snip.getParent();
-    snipElement.addElement(SNIP_PARENT).addText(parentSnip != null ? parentSnip.getName() : "");
-    Snip commentedSnip = snip.getCommentedSnip();
-    snipElement.addElement(SNIP_COMMENTED).addText(commentedSnip != null ? commentedSnip.getName() : "");
-
-    return snipElement;
-  }
-
-  private Element addCDATAContent(String elementName, String content) {
-    Element element = DocumentHelper.createElement(elementName);
-    if(null == content || "".equals(content)) {
-      return element;
-    }
-    element.addCDATA(content);
-    return element;
-  }
-
-  private Element addXMLContent(String elementName, String content) {
-    if (null != content && !"".equals(content)) {
-      try {
-        StringReader stringReader = new StringReader(content);
-        SAXReader saxReader = new SAXReader();
-        Document doc = saxReader.read(stringReader);
-        return doc.getRootElement();
-      } catch (Exception e) {
-        Logger.warn("SnipSerializer: unable to add xml content: " + e);
-        e.printStackTrace();
-      }
-    }
-    return DocumentHelper.createElement(elementName);
+    return serialize(createSnipMap(snip));
   }
 
   /**
@@ -227,20 +150,21 @@ public class SnipSerializer extends SerializerSupport {
   public Map createSnipMap(Snip snip) {
     Map snipMap = new HashMap();
     snipMap.put(SNIP_NAME, notNull(snip.getName()));
-    snipMap.put(SNIP_VERSION, "" + snip.getVersion());
-    snipMap.put(SNIP_CTIME, getStringTimestamp(snip.getCTime()));
-    snipMap.put(SNIP_MTIME, getStringTimestamp(snip.getMTime()));
+    snipMap.put(SNIP_OUSER, notNull(snip.getOUser()));
     snipMap.put(SNIP_CUSER, notNull(snip.getCUser()));
     snipMap.put(SNIP_MUSER, notNull(snip.getMUser()));
+    snipMap.put(SNIP_CTIME, getStringTimestamp(snip.getCTime()));
+    snipMap.put(SNIP_MTIME, getStringTimestamp(snip.getMTime()));
     snipMap.put(SNIP_PERMISSIONS, snip.getPermissions().toString());
-    snipMap.put(SNIP_OUSER, notNull(snip.getOUser()));
     snipMap.put(SNIP_BACKLINKS, snip.getBackLinks().toString());
     snipMap.put(SNIP_SNIPLINKS, snip.getSnipLinks().toString());
     snipMap.put(SNIP_LABELS, snip.getLabels().toString());
     snipMap.put(SNIP_ATTACHMENTS, snip.getAttachments().toString());
     snipMap.put(SNIP_VIEWCOUNT, "" + snip.getViewCount());
+    snipMap.put(SNIP_CONTENT, notNull(snip.getContent()));
+    snipMap.put(SNIP_VERSION, "" + snip.getVersion());
     snipMap.put(SNIP_APPLICATION, notNull(snip.getApplication()));
-    
+
     // TODO deprecated
     Snip parent = snip.getParent();
     snipMap.put(SNIP_PARENT, null == parent ? "" : parent.getName());

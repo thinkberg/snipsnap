@@ -228,7 +228,6 @@
       classpathref="server.classpath">
 
       <include name="org/snipsnap/server/**"/>
-      <include name="org/snipsnap/util/*JDBC*"/>
       <exclude name="org/snipsnap/server/Admin*"/>
     </javac>
   </target>

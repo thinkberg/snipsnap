@@ -27,6 +27,7 @@ package org.snipsnap.server;
 import org.snipsnap.config.ServerConfiguration;
 import org.snipsnap.util.XMLSnipRepair;
 import org.snipsnap.util.LocaleComparator;
+import org.snipsnap.util.JDBCDatabaseExport;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -128,6 +129,24 @@ public class AdminClient {
             }
           });
           checkLocaleFiles(localefiles, locale, show);
+          break;
+      }
+    } else if("dump".equals(commands.get(0))) {
+      switch(commands.size()) {
+        case 3:
+          Properties appConfig = new Properties();
+          try {
+            appConfig.load(new FileInputStream((String)commands.get(1)));
+            JDBCDatabaseExport.export(appConfig,
+                                      (String)commands.get(2),
+                                      new File((String) commands.get(1)).getParent());
+          } catch (IOException e) {
+            System.err.println("Error exporting data base: "+e.getMessage());
+          }
+          break;
+        default:
+          System.err.println("dump needs at two arguments: <application.conf> <application oid>");
+          System.exit(0);
           break;
       }
     } else {

@@ -24,16 +24,21 @@
  */
 package org.snipsnap.snip.storage;
 
-import org.radeox.util.logging.Logger;
 import org.dom4j.Element;
+import org.radeox.util.logging.Logger;
 
 import java.sql.Timestamp;
-import java.util.Map;
-import java.util.Iterator;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class SerializerSupport {
 
+  /**
+   * Produce a map with all elements and its values found below the top element.
+   * @param el the root element
+   * @return the map with names and values
+   */
   public Map getElementMap(Element el) {
     Map elements = new HashMap();
     Iterator childIterator = el.elementIterator();
@@ -48,17 +53,27 @@ public class SerializerSupport {
     return elements;
   }
 
+  /**
+   * Create a timestamp out of a string value.
+   * @param value the string value
+   * @return the timestamp
+   */
   protected Timestamp getTimestamp(String value) {
     if(null != value && !"".equals(value)) {
       try {
         return new Timestamp(Long.parseLong(value));
       } catch (NumberFormatException e) {
-        Logger.warn("UserSerializer: timestamp value invalid: "+value);
+        Logger.warn("SerializerSupport: timestamp value invalid: "+value);
       }
     }
     return null;
   }
 
+  /**
+   * Create a string representation of a timestamp.
+   * @param ts the timestamp
+   * @return the string representation
+   */
   protected String getStringTimestamp(Timestamp ts) {
     if(null != ts) {
       return "" + ts.getTime();
@@ -75,6 +90,12 @@ public class SerializerSupport {
     return str == null ? "" : str;
   }
 
+  /**
+   * Make sure the object is not null but rather an empty string or
+   * convert the object to string.
+   * @param obj the object
+   * @return the string value or ""
+   */
   protected String notNull(Object obj) {
     return obj == null ? "" : obj.toString();
   }
