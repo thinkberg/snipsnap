@@ -46,7 +46,7 @@ public class UserMacro extends ListOutputMacro {
   }
 
   public String getDescription() {
-    return ResourceManager.getString("i18n.messages", "macro.users.params");
+    return ResourceManager.getString("i18n.messages", "macro.users.description");
   }
 
   public String[] getParamDescription() {

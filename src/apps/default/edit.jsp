@@ -23,6 +23,7 @@
        <table>
         <tr><td><textarea name="content" type="text" cols="80" rows="20"><c:out value="${content}" escapeXml="true"/></textarea></td></tr>
         <tr><td class="form-buttons">
+         <input value="<fmt:message key="snip.edit.help"/>" onClick="showHide('help'); return false;" type="submit">
          <input value="<fmt:message key='dialog.preview'/>" name="preview" type="submit"/>
          <input value="<fmt:message key='dialog.save'/>" name="save" type="submit"/>
          <input value="<fmt:message key='dialog.cancel'/>" name="cancel" type="submit"/>
@@ -31,6 +32,25 @@
        <input name="name" type="hidden" value="<c:out value="${snip_name}"/>"/>
        <input name="referer" type="hidden" value="<%= Encoder.escape(request.getHeader("REFERER")) %>"/>
       </form>
+     </div>
+     <script language="Javascript" type="text/javascript">
+     <!--
+      function showHide(obj) {
+        if (document.layers) {
+          current = (document.layers[obj].display == 'none') ? 'block' : 'none';
+          document.layers[obj].display = current;
+        } else if (document.all) {
+          current = (document.all[obj].style.display == 'none') ? 'block' : 'none';
+          document.all[obj].style.display = current;
+        } else if (document.getElementById) {
+          vista = (document.getElementById(obj).style.display == 'none') ? 'block' : 'none';
+          document.getElementById(obj).style.display = vista;
+        }
+      }
+     // -->
+     </script>
+     <div id="help" class="snip-help" style="display: none">
+       <s:snip name="snipsnap-help"/>
      </div>
    </s:check>
    <s:check roles="Authenticated" permission="Edit" invert="true" >

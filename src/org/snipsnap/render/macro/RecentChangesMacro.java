@@ -46,7 +46,7 @@ public class RecentChangesMacro extends ListOutputMacro {
   }
 
   public String getDescription() {
-    return ResourceManager.getString("i18n.messages", "macro.recentchanges.params");
+    return ResourceManager.getString("i18n.messages", "macro.recentchanges.description");
   }
 
   public String[] getParamDescription() {

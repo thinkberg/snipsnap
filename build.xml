@@ -346,6 +346,8 @@
       </fileset>
 <!--      <fileset dir="${src}/theme/blue" includes="**" excludes="**/CVS"/>-->
     </copy>
+    <copy tofile="${target}/webapp/WEB-INF/classes/i18n/messages.properties"
+      file="${src}/apps/default/WEB-INF/classes/i18n/messages_en.properties"/> 
 
 <!--    <mkdir dir="${target}/webapp/WEB-INF/themes"/>-->
 <!--    <copy todir="${target}/webapp/WEB-INF/themes">-->

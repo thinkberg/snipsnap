@@ -51,7 +51,7 @@ public class OnlineTimeMacro extends BaseMacro {
   }
 
   public String getDescription() {
-    return ResourceManager.getString("i18n.messages", "macro.online.description");
+    return ResourceManager.getString("i18n.messages", "macro.onlinetime.description");
   }
 
   public void execute(Writer writer, MacroParameter params)
