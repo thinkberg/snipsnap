@@ -166,22 +166,23 @@ public class AppConfiguration extends Configuration {
       url = getProperty(AppConfiguration.APP_DOMAIN);
       if (url != null) {
         System.out.println("Please edit application.conf and change app.domain to app.url!");
-      } else {
-        StringBuffer tmp = new StringBuffer();
-        tmp.append("http://");
-        try {
-          tmp.append(getHost() == null ? InetAddress.getLocalHost().getHostName() : getHost());
-        } catch (UnknownHostException e) {
-          tmp.append(System.getProperty("host", "localhost"));
-        }
-        int port = getPort();
-        if (port != 80) {
-          tmp.append(":");
-          tmp.append(port);
-        }
-        tmp.append(getContextPath());
-        url = tmp.toString();
       }
+    }
+    if (null == url || url.length() == 0) {
+      StringBuffer tmp = new StringBuffer();
+      tmp.append("http://");
+      try {
+        tmp.append(getHost() == null ? InetAddress.getLocalHost().getHostName() : getHost());
+      } catch (UnknownHostException e) {
+        tmp.append(System.getProperty("host", "localhost"));
+      }
+      int port = getPort();
+      if (port != 80) {
+        tmp.append(":");
+        tmp.append(port);
+      }
+      tmp.append(getContextPath());
+      url = tmp.toString();
     }
     return url;
   }
