@@ -1,5 +1,7 @@
 0.3
 
+- Added feature: UserCountMacro displays number of registered users
+- Added feature: SnipCountMacro displays number of snips (all)
 - Added feature: TypographyFilter will replace "..." with ellepsis entity
 - Required JAR libararies are now included in snipsnap-template.war
 - Added feature: {api} now reads from conf/apidocs.txt so {api}
