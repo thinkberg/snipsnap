@@ -132,7 +132,7 @@ public class NewUserServlet extends HttpServlet {
         return;
       }
 
-      String referer = request.getParameter("referer");
+      String referer = sanitize(request.getParameter("referer"));
       response.sendRedirect(referer != null ? referer : config.getUrl("/space/" + config.getStartSnip()));
     } else {
       errors.put("Fatal", ERR_NOT_ALLOWED);
@@ -145,5 +145,9 @@ public class NewUserServlet extends HttpServlet {
     session.setAttribute("errors", errors);
     RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/register.jsp");
     dispatcher.forward(request, response);
+  }
+
+  private String sanitize(String parameter) {
+    return parameter.split("[\r\n]")[0];
   }
 }

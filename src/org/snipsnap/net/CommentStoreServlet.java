@@ -92,10 +92,14 @@ public class CommentStoreServlet extends HttpServlet {
       }
     } else if (snip == null) {
       // return to referrer if the snip cannot be found
-      response.sendRedirect(request.getParameter("REFERER"));
+      response.sendRedirect(sanitize(request.getParameter("referer")));
       return;
     }
 
     response.sendRedirect(config.getUrl("/comments/" + SnipLink.encode(name)));
+  }
+
+  private String sanitize(String parameter) {
+    return parameter.split("[\r\n]")[0];
   }
 }
