@@ -37,6 +37,6 @@ import org.snipsnap.snip.filter.regex.RegexReplaceFilter;
 public class StrikeThroughFilter extends RegexReplaceFilter {
 
   public StrikeThroughFilter() {
-    super("--(.*?)--", "<strike>$1</strike>");
+    super("--([^-]+)--", "<strike>$1</strike>");
   };
 }
