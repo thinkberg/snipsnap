@@ -58,7 +58,8 @@ public class Installer extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
 
-    PrintWriter out = response.getWriter();
+    // change this to response.getWriter() to enable display on webpage
+    PrintWriter out = new PrintWriter(System.out);
     writeMessage(out, "Installing SnipSnap ...");
 
     // get or create session and application object
@@ -81,6 +82,7 @@ public class Installer extends HttpServlet {
     // set user name and email, check that information
     config.setUserName(request.getParameter("username"));
     if (null == config.getUserName() || config.getUserName().length() == 0) {
+      System.err.println("Installer: empty user name");
       errors.put("username", "You must enter a user name!");
     }
     config.setEmail(request.getParameter("email"));
@@ -88,6 +90,7 @@ public class Installer extends HttpServlet {
     String password = request.getParameter("password");
     String password2 = request.getParameter("password2");
     if (null == password || password.length() == 0 || !password.equals(password2)) {
+      System.err.println("Installer: passwords do not match");
       errors.put("password", "Passwords do not match!");
     } else {
       config.setPassword(password);
@@ -99,6 +102,7 @@ public class Installer extends HttpServlet {
     try {
       config.setPort(Integer.parseInt(request.getParameter("port")));
     } catch (NumberFormatException e) {
+      System.err.println("Installer: port '"+request.getParameter("port")+"' is not a valid number");
       errors.put("port", "The port '" + request.getParameter("port") + "' is not a valid number!");
     }
     config.setContextPath(request.getParameter("context"));
@@ -118,6 +122,7 @@ public class Installer extends HttpServlet {
       }
       addrPort.setPort(config.getPort());
     } catch (UnknownHostException e) {
+      System.err.println("Installer: error binding host name: "+e);
       errors.put("host", "The host you entered is unknown, leave blank to bind server to the default host name.");
       sendError(session, errors, request, response);
       return;
@@ -144,6 +149,7 @@ public class Installer extends HttpServlet {
     try {
       JarExtractor.extract(new JarFile("./lib/SnipSnap-template.war", true), new File("./app/"+config.getContextPath()), out);
     } catch (IOException e) {
+      System.err.println("Installer: error while extracting default template: "+e);
       errors.put("fatal", "Unable to extract default application, please see server.log for details!");
       sendError(session, errors, request, response);
       return;
@@ -191,6 +197,6 @@ public class Installer extends HttpServlet {
 
   private void writeMessage(PrintWriter out, String message) {
     out.println(message);
-    // out.flush();
+    out.flush();
   }
 }

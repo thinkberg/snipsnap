@@ -58,7 +58,7 @@ public class UserManager {
     User user = (User) session.getAttribute("user");
     if (user == null) {
       Cookie cookie = getCookie(request, "userName");
-      if (cookie != null) {
+      if (cookie != null && cookie.getMaxAge() > 0) {
         user = load(cookie.getValue());
       }
       if (user == null) {
@@ -75,7 +75,7 @@ public class UserManager {
    * @param name
    * @return
    */
-  private Cookie getCookie(HttpServletRequest request, String name) {
+  public Cookie getCookie(HttpServletRequest request, String name) {
     Cookie cookies[] = request.getCookies();
     for (int i = 0; cookies != null && i < cookies.length; i++) {
       if (cookies[i].getName().equals(name)) {

@@ -9,13 +9,16 @@
 
 <s:check roles="Authenticated">
   <h1 class="header"><c:out value="${snip_name}"/></h1>
-  <form method="POST" action="../exec/store">
+  <form name="f" method="POST" action="../exec/store">
+    <table border="0" cellpadding="0" cellspacing="2">
+      <tr><td><textarea name="content" type="text" cols="80" rows="20"><c:out value="${snip.content}"/></textarea></td></tr>
+      <tr><td align="right">
+        <input value="Cancel" name="cancel" type="submit">
+        <input value="Save" name="save" type="submit">
+      </td></tr>
+    </table>
     <input name="name" type="hidden" value="<c:out value="${snip_name}"/>">
     <input name="referer" type="hidden" value="<%= request.getHeader("REFERER") %>">
-    <br>
-    <textarea name="content" type="text" cols="80" rows="20"><c:out value="${snip.content}"/></textarea><br>
-    <input value="Cancel" name="cancel" type="submit">
-    <input value="Save" name="save" type="submit">
   </form>
 </s:check>
 

@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Calendar;
 
 /**
  * Layouter and main handler for web sites.
@@ -62,7 +63,14 @@ public class Layouter extends HttpServlet {
     }
 
     // store user name and app in cookie and session
-    response.addCookie(new Cookie("userName", user.getLogin()));
+    Cookie cookie = UserManager.getInstance().getCookie(request, "userName");
+    if(null == cookie) {
+      cookie = new Cookie("userName", user.getLogin());
+      cookie.setMaxAge(Integer.MAX_VALUE);
+    }
+    System.err.println("Cookie age: "+cookie.getMaxAge());
+    cookie.setPath(request.getContextPath());
+    response.addCookie(cookie);
     app.setUser(user);
     session.setAttribute("app", app);
     session.setAttribute("space", SnipSpace.getInstance());

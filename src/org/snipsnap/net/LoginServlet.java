@@ -52,6 +52,7 @@ public class LoginServlet extends HttpServlet {
     String password = request.getParameter("password");
     String referer = request.getParameter("referer");
 
+    System.err.println("Params: "+request.getParameter("cancel"));
     if (request.getParameter("cancel") == null) {
       UserManager um = UserManager.getInstance();
       User user = um.authenticate(login, password);
@@ -65,12 +66,15 @@ public class LoginServlet extends HttpServlet {
         app = new Application();
       }
       app.setUser(user);
+      Cookie cookie = new Cookie("userName", user.getLogin());
+      cookie.setMaxAge(Integer.MAX_VALUE);
+      cookie.setPath(request.getContextPath());
       // store user name and app in cookie and session
-      response.addCookie(new Cookie("userName", user.getLogin()));
+      response.addCookie(cookie);
       session.setAttribute("app", app);
     }
 
-    response.sendRedirect(referer != null ? referer : SnipLink.absoluteLink(request, "/space/start"));
+    response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));
   }
 
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -78,14 +82,19 @@ public class LoginServlet extends HttpServlet {
     String referer = request.getHeader("REFERER");
 
     if("true".equals(request.getParameter("logoff"))) {
-      System.out.println("LoginServlet: Logging user off");
       HttpSession session = request.getSession(true);
-      response.addCookie(new Cookie("userName", "Guest"));
-      response.sendRedirect(referer != null ? referer : SnipLink.absoluteLink(request, "/space/start"));
+      Cookie cookie = UserManager.getInstance().getCookie(request, "userName");
+      System.err.println("User: "+cookie);
+      if(cookie != null) {
+        cookie.setMaxAge(0);
+        cookie.setMaxAge(Integer.MAX_VALUE);
+        response.addCookie(cookie);
+      }
+      response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));
       session.invalidate();
       return;
     }
 
-    response.sendRedirect(referer != null ? referer : SnipLink.absoluteLink(request, "/space/start"));
+    response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));
   }
 }

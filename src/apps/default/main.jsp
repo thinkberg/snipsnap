@@ -13,8 +13,13 @@
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
   <title>Weblog/Wiki</title>
   <link type="text/css" href="../default.css" rel="STYLESHEET"/>
+  <script>
+  <!--
+    function setFocus() { document.f.elements[0].focus(); }
+  -->
+  </script>
  </head>
- <body>
+ <body onLoad="setFocus();">
    <table width="800" border="0" cellpadding="0" cellspacing="0"><tr><td valign="top">
    <table border="0" cellpadding="4" cellspacing="1">
     <tr><td colspan="2"><img src="../images/snip.png"/></td></tr>

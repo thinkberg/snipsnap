@@ -38,9 +38,25 @@
       </c:forEach>
     </table>
   </td></tr>
-  <tr>
-  <!-- <td>Referrer: <%=request.getHeader("REFERER")%></td> -->
- </tr>
+  <s:check roles="Authenticated">
+    <tr>
+      <td>
+        <a name="entry">
+          <form name="f" method="POST" action="../exec/storecomment">
+            <table border="0" cellpadding="0" cellspacing="2">
+              <tr><td><textarea name="content" type="text" cols="80" rows="20" tabindex="0"></textarea></td></tr>
+              <tr><td align="right">
+                <input value="Comment" name="save" type="submit">
+                <input value="Cancel" name="cancel" type="submit">
+              </td></tr>
+            </table>
+            <input name="comment" type="hidden" value="<c:out value="${snip.name}"/>">
+            <input name="referer" type="hidden" value="<%= request.getHeader("REFERER") %>">
+          </form>
+        </a>
+      </td>
+    </tr>
+  </s:check>
 </table>
 
 

@@ -102,7 +102,6 @@ public class Configuration {
     try {
       return Integer.parseInt(properties.getProperty("port"));
     } catch (NumberFormatException e) {
-      System.err.println("Configuration: illegal port");
       return 8668;
     }
   }

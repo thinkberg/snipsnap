@@ -23,14 +23,14 @@
  <br>
 <% } %>
 
-<form method="POST" action="../exec/authenticate">
- <input name="referer" type="hidden" value="<%= request.getHeader("REFERER") %>">
+<form name="f" method="POST" action="../exec/authenticate">
  <table border="0" cellspacing="2" cellpadding="2">
-  <tr><td>User name: </td><td><input name="login" type="text" size="20" value="<%= login != null ? login : "" %>"></td></tr>
-  <tr><td>Password: </td><td><input name="password" type="password" size="20" value=""></td></tr>
-  <tr><td colspan="2">
-   <input value="Cancel" name="cancel" type="submit">
-   <input value="Login" name="ok" type="submit">
+  <tr><td>User name: </td><td><input name="login" type="text" size="20" value="<%= login != null ? login : "" %>" tabindex="0"></td></tr>
+  <tr><td>Password: </td><td><input name="password" type="password" size="20" value="" tabindex="0"></td></tr>
+  <tr><td colspan="2" align="right">
+   <input value="Login" name="ok" type="submit" tabindex="0">
+   <input value="Cancel" name="cancel" type="submit" tabindex="0">
   </td></tr>
  </table>
+ <input name="referer" type="hidden" value="<%= request.getHeader("REFERER") %>">
 </form>

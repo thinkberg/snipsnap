@@ -116,9 +116,7 @@ public class Comments {
       buffer.append(") | ");
     }
 
-    buffer.append("<a href=\"../exec/editcomment.jsp?name=");
-    buffer.append(snip.getName());
-    buffer.append("\">post comment</a>");
+    SnipLink.appendLink(buffer, "../comments", snip.getName()+"#entry", "post comment");
     return buffer.toString();
   }
 

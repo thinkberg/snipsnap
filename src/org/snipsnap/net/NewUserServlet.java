@@ -91,7 +91,10 @@ public class NewUserServlet extends HttpServlet {
       app.setUser(user);
       HomePage.create(login, app);
       // store user name and app in cookie and session
-      response.addCookie(new Cookie("userName", user.getLogin()));
+      Cookie cookie = new Cookie("userName", user.getLogin());
+      cookie.setMaxAge(Integer.MAX_VALUE);
+      cookie.setPath(request.getContextPath());
+      response.addCookie(cookie);
       session.setAttribute("app", app);
       response.sendRedirect(SnipLink.absoluteLink(request, "/space/" + login));
       return;

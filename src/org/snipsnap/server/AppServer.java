@@ -46,7 +46,7 @@ public class AppServer {
   private static Properties config;
 
   public static void main(String args[]) {
-    System.out.println("SnipSnap $Revision$");
+    System.out.println("SnipSnap v0.1-alpha");
     System.out.println("Copyright (c) 2002 Stephan J. Schmidt, Matthias L. Jugel. "
                        + "All Rights Reserved.");
     System.out.println("See License Agreement for terms and conditions of use.");
