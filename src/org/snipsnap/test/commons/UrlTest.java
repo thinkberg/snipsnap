@@ -48,6 +48,6 @@ public class UrlTest extends SnipTestSupport {
   }
 
   public void testLocalhost() {
-    assertTrue("Host is local", Access.isLocalhost("http://localhost"));
+    assertTrue("Host is local", Access.isValidReferrer("http://localhost"));
   }
 }

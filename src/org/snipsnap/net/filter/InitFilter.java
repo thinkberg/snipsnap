@@ -79,6 +79,7 @@ import java.net.URL;
 public class InitFilter implements Filter {
   // private final static String
   private Globals globals = null;
+  private boolean startUpDone = false;
 
   public void init(FilterConfig filterConfig) throws ServletException {
     ServletContext context = filterConfig.getServletContext();
@@ -149,6 +150,7 @@ public class InitFilter implements Filter {
     } else {
       loadApplicationContexts();
     }
+    startUpDone = true;
   }
 
   private void loadApplicationContexts() {
@@ -201,6 +203,12 @@ public class InitFilter implements Filter {
   public void doFilter(ServletRequest req, ServletResponse response, FilterChain chain) throws IOException, ServletException {
     // make sure it's an http servlet request
     HttpServletRequest request = (HttpServletRequest) req;
+
+    if(!startUpDone) {
+      ((HttpServletResponse) response).sendError(HttpServletResponse.SC_PRECONDITION_FAILED,
+                                                 "Startup in progress, please wait ...");
+      return;
+    }
 
     String path = request.getServletPath();
 

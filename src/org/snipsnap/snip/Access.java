@@ -27,10 +27,24 @@ package org.snipsnap.snip;
 
 import org.snipsnap.app.Application;
 import org.snipsnap.user.User;
+import org.snipsnap.container.Components;
+import org.snipsnap.xmlrpc.ping.PingHandler;
+import org.snipsnap.util.ApplicationAwareMap;
+import org.radeox.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
+import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.sql.Timestamp;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 /**
  * Stores Access information for a snip like viewCount, backLinks, ...
@@ -40,6 +54,51 @@ import java.net.URL;
  */
 
 public class Access {
+
+  private final static String BLACKLIST = "SnipSnap/blacklist/referrer";
+
+  // cache of the blacklist
+  private static ApplicationAwareMap blackListCache = new ApplicationAwareMap(HashMap.class, ArrayList.class);
+  private static Map lastModified = new HashMap();
+
+  /**
+   * Get a list of blacklisted referrers as a list of patterns.
+   * @return the blacklist patterns
+   */
+  public static List getReferrerBlackList() {
+    List cachedBlackList = (List) blackListCache.getObject();
+
+    SnipSpace space = (SnipSpace)Components.getComponent(SnipSpace.class);
+    if(space.exists(BLACKLIST)) {
+      Snip blackListSnip = space.load(BLACKLIST);
+      Timestamp mTime = blackListSnip.getMTime();
+      String appOid = (String) Application.get().getObject(Application.OID);
+      Timestamp cachedMTime = (Timestamp)lastModified.get(appOid);
+
+      // update blacklist from snip if it does not exist or is new
+      if(null == cachedMTime || cachedMTime.getTime() < mTime.getTime()) {
+        cachedBlackList.clear();
+        lastModified.put(appOid, mTime);
+
+        String content = blackListSnip.getContent();
+        BufferedReader reader =
+          new BufferedReader(new InputStreamReader(new ByteArrayInputStream(content.getBytes())));
+        String line;
+        try {
+          while ((line = reader.readLine()) != null) {
+            if (!line.startsWith("#")) {
+              cachedBlackList.add(line.trim());
+            }
+          }
+        } catch (IOException e) {
+          Logger.warn("Referrer Blacklist Error: "+e.getLocalizedMessage());
+          e.printStackTrace();
+        }
+      }
+    }
+    return cachedBlackList;
+  }
+
   private Links backLinks, snipLinks;
   private int viewCount = 0;
   private boolean isModified;
@@ -99,11 +158,13 @@ public class Access {
             }
           }
         } else {
-          // do not count localhosts, single hosts. Will
+          // do not count localhosts, single hosts and ignored urls. Will
           // not find local network IPs and MacOS X
           // hosts like megid.local
-          if (! isLocalhost(referrer)) {
+          if (isValidReferrer(referrer)) {
             backLinks.addLink(referrer);
+          } else {
+            Logger.warn("ignoring referrer: '"+referrer+"'");
           }
         }
       }
@@ -151,17 +212,34 @@ public class Access {
     return ++this.viewCount;
   }
 
-  public static boolean isLocalhost(String url) {
-    boolean isLocalhost = true;
+  public static boolean isValidReferrer(String url) {
     try {
       URL refURL = new URL(url);
-      if (refURL.getHost().indexOf(".") > -1) {
-        isLocalhost = false;
+      if (refURL.getHost().indexOf(".") == -1) {
+        return false;
+      }
+      List blackList = Access.getReferrerBlackList();
+      if(null != blackList && !blackList.isEmpty()) {
+        Iterator blackListIt = blackList.iterator();
+        while(blackListIt.hasNext()) {
+          String entry = ((String)blackListIt.next()).toLowerCase();
+          if(entry.startsWith("pattern:")) {
+            String pattern = entry.substring("pattern:".length()).trim();
+            if (url.matches(pattern)) {
+              return false;
+            }
+          } else {
+            String host = new URL(url).getHost().toLowerCase();
+            if (host.endsWith(entry)) {
+              return false;
+            }
+          }
+        }
       }
     } catch (MalformedURLException e) {
-      // not an URL, so allways drop
+      return false;
     }
-    return isLocalhost;
+    return true;
   }
 
 }

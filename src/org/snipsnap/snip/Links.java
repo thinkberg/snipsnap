@@ -36,6 +36,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.StringTokenizer;
+import java.net.URL;
+import java.net.MalformedURLException;
 
 /**
  * Manages links to and from snips. Links can be external to internal
@@ -91,6 +93,54 @@ public class Links {
       }
       links.add(url);
     }
+  }
+
+  /**
+   * Remove a link using the given regular expression. The regular expression
+   * must match the link fully as defined in String.matches()
+   * @param pattern the regular expression
+   * @return the amount of removed links
+   */
+  public synchronized int removeLinkByPattern(String pattern) {
+    if (null == linkMap) {
+      linkMap = deserialize(cache);
+    }
+    cache = null;
+    int removedLinks = 0;
+    Iterator linkIt = linkMap.keySet().iterator();
+    while(linkIt.hasNext()) {
+      String url = (String) linkIt.next();
+      if(url.matches(pattern)) {
+        linkIt.remove();
+        removedLinks++;
+      }
+    }
+    return removedLinks;
+  }
+
+  public synchronized int removeLink(String domain) {
+    if (null == linkMap) {
+      linkMap = deserialize(cache);
+    }
+    cache = null;
+    int removedLinks = 0;
+    domain = domain.toLowerCase();
+    Iterator linkIt = linkMap.keySet().iterator();
+    while (linkIt.hasNext()) {
+      String url = (String) linkIt.next();
+      try {
+        String host = new URL(url).getHost().toLowerCase();
+        if(host.endsWith(domain)) {
+          linkIt.remove();
+          removedLinks++;
+        }
+      } catch (MalformedURLException e) {
+        Logger.warn("illegal referrer url found: "+e.getLocalizedMessage());
+        linkIt.remove();
+        removedLinks++;
+      }
+    }
+    return removedLinks;
   }
 
   /**

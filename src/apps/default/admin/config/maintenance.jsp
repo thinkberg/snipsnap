@@ -77,6 +77,16 @@
           </td>
         </tr>
       </c:if>
+      <c:if test="${spamedSnips > 0}">
+        <tr>
+          <td><fmt:message key="config.maint.spam"/></td>
+          <td>
+            <fmt:message key="config.maint.spam.count">
+              <fmt:param value="${spamedSnips}"/>
+            </fmt:message>
+          </td>
+        </tr>
+      </c:if>
       <tr>
         <td><fmt:message key="config.maint.info"/></td>
         <td>
@@ -85,7 +95,7 @@
             <c:if test="${not empty status}">disabled="disabled"</c:if>
           />
           <input type="submit" name="dorepair" value="<fmt:message key="config.maint.fix"/>"
-            <c:if test="${empty fixComments && empty fixParents}">disabled="disabled"</c:if>
+            <c:if test="${empty fixComments && empty fixParents && (empty spamedSnips || spamedSnips == 0)}">disabled="disabled"</c:if>
           />
         </td>
       </tr>

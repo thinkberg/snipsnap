@@ -31,6 +31,8 @@ import org.snipsnap.config.Configuration;
 import org.snipsnap.container.Components;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.Access;
+import org.snipsnap.snip.Links;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -74,17 +76,19 @@ public class Maintenance implements SetupHandler {
       repairThread.setParentsToFix(workerThread.getParentsToFix());
       repairThread.setCommentsToFix(workerThread.getCommentsToFix());
       repairThread.setDuplicates(workerThread.getDuplicates());
+      repairThread.setSpamList(workerThread.getSpamList());
       repairThread.start();
       workerThreads.put(appOid, repairThread);
 
       setRunning(repairThread, request.getSession());
-    } else {
+    }  else {
       request.getSession().removeAttribute("running");
       if(workerThread != null && !workerThread.isAlive()) {
         request.setAttribute("fixComments", workerThread.getCommentsToFix());
         request.setAttribute("fixParents", workerThread.getParentsToFix());
         request.setAttribute("duplicates", workerThread.getDuplicates());
         request.setAttribute("notFixable", workerThread.getNonFixable());
+        request.setAttribute("spamedSnips", new Integer(workerThread.getSpamList().size()));
       }
     }
 
@@ -112,6 +116,7 @@ public class Maintenance implements SetupHandler {
     private List fixComments = new ArrayList();
     private List fixParents = new ArrayList();
     private List noFix = new ArrayList();
+    private List fixSpam = new ArrayList();
 
     private boolean repair = false;
 
@@ -138,16 +143,18 @@ public class Maintenance implements SetupHandler {
         Iterator snipIt = allSnips.iterator();
         snipCount = allSnips.size();
         Logger.debug("Need to check " + snipCount + " snips.");
+        List blackList = Access.getReferrerBlackList();
         while (snipIt.hasNext()) {
           Snip snip = (Snip) snipIt.next();
-          check(snip, space);
+          check(snip, space, blackList);
           if(!uniqeSnipNames.add(snip.getName())) {
             fixDuplicates.add(snip);
           }
           currentCount++;
         }
       } else {
-        snipCount = fixParents.size() + fixComments.size() + fixDuplicates.size();
+        snipCount = fixParents.size() +
+          fixComments.size() + fixDuplicates.size() + fixSpam.size();
         currentCount = 0;
         Iterator parentIt = fixParents.iterator();
         while (parentIt.hasNext()) {
@@ -164,6 +171,28 @@ public class Maintenance implements SetupHandler {
           space.systemStore(snip);
           currentCount++;
           commentIt.remove();
+        }
+        List blackList = Access.getReferrerBlackList();
+        Iterator spamIt = fixSpam.iterator();
+        while(spamIt.hasNext()) {
+          Snip snip = (Snip) spamIt.next();
+          Links backLinks = snip.getBackLinks();
+
+          Iterator blackListIt = blackList.iterator();
+          int removed = 0;
+          while(blackListIt.hasNext()) {
+            String entry = ((String)blackListIt.next()).toLowerCase();
+            if(entry.startsWith("pattern:")) {
+              backLinks.removeLinkByPattern(entry.substring("pattern:".length()));
+            } else {
+              backLinks.removeLink(entry);
+            }
+          }
+          if(removed > 0) {
+            space.systemStore(snip);
+          }
+          spamIt.remove();
+          currentCount++;
         }
       }
     }
@@ -196,7 +225,15 @@ public class Maintenance implements SetupHandler {
       return noFix;
     }
 
-    private void check(Snip snip, SnipSpace space) {
+    public void setSpamList(List snips) {
+      fixSpam =  snips;
+    }
+
+    public List getSpamList() {
+      return fixSpam;
+    }
+
+    private void check(Snip snip, SnipSpace space, List blackList) {
       String snipName = snip.getName();
       if (snipName.startsWith("comment-")) {
         if (null == snip.getCommentedSnip() && (null == snip.getCommentedName() || "".equals(snip.getCommentedName()))) {
@@ -215,6 +252,15 @@ public class Maintenance implements SetupHandler {
         if (null == snip.getParent() && (null == snip.getParentName() || "".equals(snip.getParentName()))) {
           Logger.warn("snip '" + snipName + "' is missing its parent snip");
           fixParents.add(snip);
+        }
+      }
+
+      Iterator backLinksIt =snip.getBackLinks().iterator();
+      while(backLinksIt.hasNext()) {
+        String url = (String) backLinksIt.next();
+        if(! Access.isValidReferrer(url)) {
+          fixSpam.add(snip);
+          break;
         }
       }
     }
