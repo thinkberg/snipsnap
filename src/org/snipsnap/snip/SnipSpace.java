@@ -225,6 +225,7 @@ public class SnipSpace implements LinkTester, Loader {
     Application app = Application.get();
     long start = app.start();
     storageStore(snip);
+    indexer.reIndex(snip);
     app.stop(start, "systemStore - " + snip.getName());
     return;
   }

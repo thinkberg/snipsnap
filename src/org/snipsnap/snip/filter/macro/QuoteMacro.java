@@ -23,22 +23,43 @@
  * --LICENSE NOTICE--
  */
 /*
- * UrlFilter finds [text] in its input and transforms this
- * to <url name="text">
+ * Macro that replaces external links
  *
  * @author stephan
  * @team sonicteam
  * @version $Id$
  */
-package org.snipsnap.snip.filter;
 
-import org.snipsnap.snip.filter.regex.RegexReplaceFilter;
-import org.snipsnap.snip.SnipLink;
+package org.snipsnap.snip.filter.macro;
 
-public class UrlFilter extends RegexReplaceFilter {
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.filter.Filter;
+import org.snipsnap.snip.filter.JavaCodeFilter;
+import org.snipsnap.snip.filter.SqlCodeFilter;
+import org.snipsnap.snip.filter.XmlCodeFilter;
 
-  public UrlFilter() {
-    super("([^\"]|^)((http|ftp)s?://(%[[:digit:]A-Fa-f][[:digit:]A-Fa-f]|[-_.!~*';/?:@#&=+$,[:alnum:]])+)",
-             "$1<span class=\"nobr\">"+SnipLink.createImage("arrow.right", ">>", "gif")+"<a href=\"$2\">$2</a></span>");
-  };
+import java.util.HashMap;
+import java.util.Map;
+
+public class QuoteMacro extends Preserved {
+  private Map filters;
+
+  public QuoteMacro() {
+  }
+
+  public String getName() {
+    return "quote";
+  }
+
+  public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
+
+    buffer.append("<div class=\"quote\"><blockquote>");
+    buffer.append(content);
+    buffer.append("</blockquote>");
+    if (null!=params && params.length==1) {
+      buffer.append(params[0]);
+    }
+    buffer.append("</div>");
+    return;
+  }
 }

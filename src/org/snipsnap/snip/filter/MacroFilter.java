@@ -73,6 +73,7 @@ public class MacroFilter extends RegexTokenFilter {
     add(new SinceLastVisitMacro());
     add(new LastVisitMacro());
     add(new HotSnipMacro());
+    add(new QuoteMacro());
   }
 
   public static Filter getInstance() {

@@ -16,20 +16,8 @@
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
   <title>SnipSnap :: <c:out value="${snip.name}" default=""/></title>
   <link type="text/css" href="<c:url value='/default.css'/>" rel="STYLESHEET"/>
-  <script type="javascript">
-  <!--
-    // auto focus special forms
-    function setFocus() {
-      if(document.f) {
-        if(document.f.elements[0]) {
-          document.f.elements[0].focus();
-        }
-      }
-    }
-  -->
-  </script>
  </head>
- <body onload="setFocus();">
+ <body>
    <table width="800" border="0" cellpadding="0" cellspacing="0"><tr><td valign="top">
    <table border="0" cellpadding="4" cellspacing="1">
     <tr><td colspan="2">
