@@ -40,7 +40,7 @@ public class ApplicationLogger implements LogHandler {
     Application.get().log(output);
   }
 
-  public void log(String output, Exception e) {
+  public void log(String output, Throwable e) {
     Application.get().log(output+": "+e.getMessage());
   }
 }
