@@ -1,6 +1,6 @@
 0.3.4
 
-- Developer: Refactored the rendering engine to form sub-project
+- Developer: Refactored the rendering engine to form sub-project Radeox
 - Added Service class for plugin loading (instead of undocumented sun class)
 - Removed Transliterate in favour of UTF-8
 - Developer: Added getParamDescription() to MacroParameter

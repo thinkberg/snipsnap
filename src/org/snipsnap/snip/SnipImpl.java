@@ -33,6 +33,7 @@ import org.snipsnap.user.Permissions;
 import org.snipsnap.user.User;
 import org.snipsnap.interceptor.Aspects;
 import org.snipsnap.render.filter.context.SnipFilterContext;
+import org.snipsnap.render.SnipRenderEngine;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
