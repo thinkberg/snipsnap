@@ -26,12 +26,16 @@ package org.snipsnap.snip.filter;
 
 import org.snipsnap.snip.filter.regex.RegexTokenFilter;
 import org.snipsnap.snip.Snip;
+import org.snipsnap.util.log.Logger;
+import org.snipsnap.util.log.SystemOutLogger;
 import org.apache.oro.text.regex.MatchResult;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.FileReader;
+import java.io.FileNotFoundException;
 import java.util.StringTokenizer;
 import java.util.Map;
 import java.util.HashMap;
@@ -50,7 +54,7 @@ public class ListFilter extends RegexTokenFilter {
   private final static Map closeList = new HashMap();
 
   public ListFilter() {
-    super("^([ :space:]*)([-*]|[iIaA1ghHkK]\\.)[ :space:]+(\r?\n[ :space:]*(?:[-*]|[iIaA1ghHkK]\\.)|.)*$", MULTILINE);
+    super("^[[:space:]]*([-*]|[iIaA1ghHkK]\\.)[[:space:]]+(\r?\n[[:space:]]*(?:[-*]|[iIaA1ghHkK]\\.)|.)*$", MULTILINE);
     openList.put("-", "<ul class=\"minus\">");
     openList.put("*", "<ul class=\"star\">");
     openList.put("i", "<ol class=\"roman\">");
@@ -95,11 +99,11 @@ public class ListFilter extends RegexTokenFilter {
       line = line.trim();
       String bullet = line.substring(0,1);
 
-//      System.err.println("'"+line+"'");
-//      System.err.println("found bullet: ('"+lastBullet+"') '"+bullet+"'");
+      Logger.log("'"+line+"'");
+      Logger.log("found bullet: ('"+lastBullet+"') '"+bullet+"'");
       // check whether we find a new list
       if(!bullet.equals(lastBullet)) {
-//        System.err.println("new list detected ...");
+        Logger.log("new list detected ...");
         if(lastBullet != null) {
           buffer.append(closeList.get(lastBullet)).append("\n");
         }
@@ -113,9 +117,15 @@ public class ListFilter extends RegexTokenFilter {
     buffer.append(closeList.get(lastBullet));
   }
 
-/*
   public static void main(String args[]) {
-    BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+    Logger.setHandler(new SystemOutLogger());
+    BufferedReader reader = null;
+    try {
+      reader = new BufferedReader(new FileReader(args[0]));
+    } catch (FileNotFoundException e) {
+      System.err.println("can't read file: "+args[0]);
+      System.exit(-1);
+    }
     String buf = "", line = null;
     try {
       while(null != (line = reader.readLine())) {
@@ -130,6 +140,5 @@ public class ListFilter extends RegexTokenFilter {
     System.out.println(filter.filter(buf, null));
 
   }
-*/
 
 }
