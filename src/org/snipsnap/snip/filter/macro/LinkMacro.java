@@ -36,12 +36,15 @@ import com.neotis.snip.Snip;
 
 public class LinkMacro extends Macro {
   public String execute(String[] params, String content, Snip snip) throws IllegalArgumentException {
+    StringBuffer buffer = new StringBuffer();
+    buffer.append("<img border=\"0\" alt=\">>\" src=\"../images/arrow.right.gif\">");
     if (params.length == 2) {
-      return "<a href=\"" + params[1] + "\">" + params[0] + "</a>";
+      buffer.append("<a href=\"").append(params[1]).append("\">");
     } else if(params.length == 1) {
-      return "<a href=\"" + params[0] + "\">" + params[0] + "</a>";
+      buffer.append("<a href=\"").append(params[0]).append("\">");
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }
+    return (buffer.append(params[0]).append("</a>")).toString();
   }
 }
