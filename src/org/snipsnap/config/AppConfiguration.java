@@ -164,7 +164,7 @@ public class AppConfiguration extends Configuration {
    * @snipName Name of the snip
    */
   public String getSnipUrl(String snipName) {
-    return getUrl("space/" + snipName);
+    return getUrl("/space/" + snipName);
   }
 
   public void setTagLine(String tagline) {

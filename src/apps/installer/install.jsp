@@ -81,7 +81,7 @@
       <td valign="top"><input name="domain" type="text" value="<c:out value='${config.domain}' default=''/>"></td>
       <td valign="top">(optional)<br/>
         If SnipSnap is running behind a proxy or dyndns set the real world accessible URL to this instance
-        of snipsnap, e.g. 'http://snipsnap.org/'
+        of snipsnap, e.g. 'http://snipsnap.org'
       </td>
     </tr>
 
