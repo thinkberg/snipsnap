@@ -41,8 +41,8 @@
        <div class="error"><c:out value="${error}"/></div>
        <p/>
       </c:if>
-      Upload Image: <input name="image" type="file" maxlength="1000000" accept="image/*"/>
-      <input value="Upload" name="upload" type="submit"/>
+      <input name="image" type="file" maxlength="1000000" accept="image/*"/>
+      <input value="Upload Image" name="upload" type="submit"/>
      </div>
     </form>
    </div>
