@@ -135,6 +135,7 @@ public class UserManager implements Loader {
 
       if (null == user) {
         String agent = request.getHeader("User-Agent");
+        System.err.println("User agent of unknown user: '"+agent+"'");
         if(agent != null && agent.toLowerCase().indexOf("googlebot") != -1) {
           user = (User)robots.get("GoogleBot");
           if(null == user) {

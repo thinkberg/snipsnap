@@ -81,6 +81,9 @@ public class LoginServlet extends HttpServlet {
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
     String referer = request.getHeader("REFERER");
+    if(referer == null || referer.length() == 0) {
+      referer = Application.get().getConfiguration().getSnipUrl("start");
+    }
 
     if("true".equals(request.getParameter("logoff"))) {
       HttpSession session = request.getSession(true);
