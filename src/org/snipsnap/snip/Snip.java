@@ -139,6 +139,10 @@ public class Snip implements Ownable, Nameable {
     return oUser;
   }
 
+  public void setOUser(User oUser) {
+    this.oUser = oUser.getName();
+  }
+
   public void setOUser(String oUser) {
     this.oUser = oUser;
   }
