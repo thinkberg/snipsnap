@@ -33,11 +33,13 @@ import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.label.Label;
 import org.snipsnap.snip.label.Labels;
 import org.snipsnap.snip.label.TypeLabel;
+import org.snipsnap.xmlrpc.XmlRpcHandler;
 import org.picocontainer.PicoContainer;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Collection;
 
 public class ServletPluginLoader {
   // TODO make selectable via application OID
@@ -92,17 +94,13 @@ public class ServletPluginLoader {
     if (null == pluginServlets) {
       pluginServlets = new HashMap();
 
-      PicoContainer container = Components.getContainer();
-      Iterator iterator = container.getComponentInstances().iterator();
-      while (iterator.hasNext()) {
-        Object o = iterator.next();
-        if (o instanceof ServletPlugin) {
-          ServletPlugin plugin = (ServletPlugin) o;
-          // Should probably use again Pico because of
-          // life cyvle dependency management start() stop() ...
-          pluginServlets.put(plugin.getPath(), plugin);
-        }
-      }
-    }
+        Collection components = Components.findComponents(ServletPlugin.class);
+
+         Iterator iterator = components.iterator();
+         while (iterator.hasNext()) {
+             ServletPlugin plugin = (ServletPlugin) iterator.next();
+             pluginServlets.put(plugin.getPath(), plugin);
+         }
+     }
   }
 }

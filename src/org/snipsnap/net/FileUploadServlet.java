@@ -164,7 +164,9 @@ public class FileUploadServlet extends HttpServlet {
     if (fileInputStream != null && fileName != null && fileName.length() > 0 && contentType != null) {
 
       // Logger.log(Logger.DEBUG, "Uploading '" + relativeFileLocation.getName() + "' to '" + file.getCanonicalPath() + "'");
-      Attachment attachment = new Attachment(fileName, contentType, 0,  new Date(), snip.getName());
+      File relativeFileLocation = new File(snip.getName(), fileName);
+      Attachment attachment = new Attachment(relativeFileLocation.getName(), contentType, 0,  new Date(), relativeFileLocation.getPath());
+
       OutputStream out = attachmentStorage.getOutputStream(attachment);
       int size = storeAttachment(out, fileInputStream);
       attachment.setSize(size);

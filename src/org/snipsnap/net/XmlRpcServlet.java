@@ -53,6 +53,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.ByteArrayInputStream;
 import java.util.Iterator;
+import java.util.Collection;
 
 /**
  * XmlRpc handler servlet
@@ -70,14 +71,12 @@ public class XmlRpcServlet extends HttpServlet {
   }
 
   private void initialize() {
-    PicoContainer container = Components.getContainer();
-    Iterator iterator = container.getComponentInstances().iterator();
+    Collection components = Components.findComponents(XmlRpcHandler.class);
+
+    Iterator iterator = components.iterator();
     while (iterator.hasNext()) {
-      Object o = iterator.next();
-      if (o instanceof XmlRpcHandler) {
-        XmlRpcHandler handler = (XmlRpcHandler) o;
+        XmlRpcHandler handler = (XmlRpcHandler) iterator.next();
         xmlrpc.addHandler(handler.getName(), handler);
-      }
     }
     initalized = true;
   }
