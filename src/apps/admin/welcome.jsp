@@ -15,14 +15,21 @@
   <c:forEach items="${servers}" var="server">
     <tr bgcolor="#aaaaaa"><td colspan="9"><c:out value="${server}"/></td></tr>
     <tr class="table-header">
-      <td bgcolor="#aaaaaa"></td><td>Application</td><td>Hosts</td><td colspan="4">Action</td>
+      <td bgcolor="#aaaaaa"></td><td>Application</td><td>Hosts</td><td colspan="5">Action</td>
     </tr>
     <c:forEach items="${server.contexts}" var="context" varStatus="idx" >
       <tr class="table-<c:out value='${idx.count mod 2}'/>">
         <td bgcolor="#aaaaaa"></td>
         <td width="100%"><c:out value="${context.contextPath}"/></td>
         <td>
-          <c:out value="${context.virtualHosts}" default="any"/>
+          <c:choose>
+            <c:when test="${empty context.virtualHosts}">ANY</c:when>
+            <c:otherwise>
+              <c:forEach items="${context.virtualHosts}" var="host" varStatus="hostsIdx">
+                <c:out value="${host}" default="?"/><c:if test="${!hostsIdx.last}">, </c:if>
+              </c:forEach>
+            </c:otherwise>
+          </c:choose>
         </td>
         <td>
           <c:if test="${context.started && context.contextPath != '/admin' && usermanagers[context.contextPath] != null}">

@@ -41,9 +41,9 @@ public class FileUtil {
   public static Checksum checksumDirectory(File file) throws IOException {
     Checksum checksum = new Checksum(file.getAbsolutePath());
     if (file.isDirectory()) {
-      checksumFiles(file, file.getPath(), checksum);
+      checksumFiles(file, file.getAbsolutePath(), checksum);
     } else {
-      checksumFile(file, file.getPath(), checksum);
+      checksumFile(file, file.getAbsolutePath(), checksum);
     }
     return checksum;
   }
@@ -55,12 +55,13 @@ public class FileUtil {
       if (files[i].isDirectory()) {
         checksumFiles(files[i], root, checksum);
       } else {
-        checksumFile(file, root, checksum);
+        checksumFile(files[i], root, checksum);
       }
     }
   }
 
   private static void checksumFile(File file, String root, Checksum checksum) throws IOException {
+
     CheckedInputStream fin = new CheckedInputStream(new BufferedInputStream(new FileInputStream(file)),
                                                     new Adler32());
     byte buffer[] = new byte[8192];
@@ -68,7 +69,18 @@ public class FileUtil {
       /* ignore ... */
     }
     Long checkSum = new Long(fin.getChecksum().getValue());
-    checksum.add(file.getAbsolutePath(), checkSum);
+    checksum.add(file.getAbsolutePath().substring(root.length()+1), checkSum);
     fin.close();
   }
+
+  public static void main(String args[]) {
+    try {
+      Checksum checksum = checksumDirectory(new File(args[0]));
+      checksum.store(new File("./CHECKSUMS"));
+    } catch (IOException e) {
+      e.printStackTrace();
+      System.err.println("JarUtil: usage: FileUtil jarfile");
+    }
+  }
+
 }

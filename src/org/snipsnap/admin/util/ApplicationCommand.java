@@ -36,9 +36,9 @@ import java.util.Iterator;
  * @version $Id$
  */
 public class ApplicationCommand {
-  private final static String CMD_APPLICATION_START = "start";
-  private final static String CMD_APPLICATION_STOP = "stop";
-  private final static String CMD_APPLICATION_REMOVE = "remove";
+  public final static String CMD_APPLICATION_START = "start";
+  public final static String CMD_APPLICATION_STOP = "stop";
+  public final static String CMD_APPLICATION_REMOVE = "remove";
 
   public static void execute(String srv, String ctx, String command) {
     System.err.println("srv=" + srv + " ctx=" + ctx);

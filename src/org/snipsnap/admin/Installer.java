@@ -27,8 +27,8 @@ package com.neotis.admin;
 import com.neotis.config.Configuration;
 import com.neotis.config.CreateDB;
 import com.neotis.snip.SnipLink;
-import com.neotis.util.JarUtil;
 import com.neotis.util.Checksum;
+import com.neotis.util.JarUtil;
 import org.mortbay.http.SocketListener;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.WebApplicationContext;
@@ -47,7 +47,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Properties;
 import java.util.jar.JarFile;
 
 /**
@@ -149,8 +148,8 @@ public class Installer extends HttpServlet {
 
     writeMessage(out, "Extracting templates ...");
     try {
-      Checksum checksum = JarUtil.extract(new JarFile("./lib/snipsnap-template.war", true), new File("./app/" + config.getContextPath()), out);
-      checksum.store(new File("./app/" + config.getContextPath()+"/WEB-INF/CHECKSUMS"));
+      Checksum checksum = JarUtil.extract(new JarFile("./lib/snipsnap-template.war", true), new File("./app/" + config.getContextPath()));
+      checksum.store(new File("./app/" + config.getContextPath() + "/WEB-INF/CHECKSUMS"));
     } catch (IOException e) {
       System.err.println("Installer: error while extracting default template: " + e);
       errors.put("fatal", "Unable to extract default application, please see server.log for details!");
