@@ -56,7 +56,7 @@ public class ImageMacro extends Macro {
     StringBuffer buffer = new StringBuffer();
     Snip snip = params.getSnip();
     if(params.getLength() > 0) {
-      if (params.get("-").startsWith("http://")) {
+      if (params.get("0").startsWith("http://")) {
         if (config.allowExternalImages()) {
           SnipLink.appendExternalImage(buffer, params.get("0"), params.getLength() > 1 ? params.get("1") : null);
         }
