@@ -14,7 +14,7 @@
   <title>SnipSnap :: <c:out value="${snip.name}" default=""/></title>
   <link type="text/css" href="../default.css" rel="STYLESHEET"/>
   <script>
-  <%--
+  <!--
     // auto focus special forms
     function setFocus() {
       if(document.f) {
@@ -23,7 +23,7 @@
         }
       }
     }
-  --%>
+  -->
   </script>
  </head>
  <body onLoad="setFocus();">
