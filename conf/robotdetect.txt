@@ -1,18 +1,27 @@
 # This file contains User-Agent mappings for robots
+#
+# WWW Search Engines
 Googlebot http://www.googlebot.com/bot.html
 FAST-WebCrawler http://fast.no/support/crawler.asp
 Slurp http://www.inktomi.com/slurp.html
 Teoma http://www.teoma.com/
+#
+# Syndication Crawler
 Syndic8 http://www.syndic8.com
+organica http://organica.us 
+Popdexter http://www.popdex.com
+#
+# Robots and crawler to be ignored
+#
 ZyBorg http://www.WISEnutbot.com IGNORE
-Scooter ??? IGNORE
 larbon liston@cc.gatech.edu IGNORE
 Baiduspider http://www.baidu.com/search/spider.htm IGNORE
 Infoseek http://www.infoseek.com/ IGNORE
-BlogBot ??? IGNORE
 TurnitinBot http://www.turnitin.com/robot/crawlerinfo.html IGNORE
-Mercator ??? IGNORE
-EvilBot ??? IGNORE
 NIF http://www.newsisfree.com/robot.php IGNORE
 NPBot http://www.nameprotect.com/botinfo.html IGNORE
 Robot ??? IGNORE
+Scooter ??? IGNORE
+Mercator ??? IGNORE
+EvilBot ??? IGNORE
+BlogBot ??? IGNORE
