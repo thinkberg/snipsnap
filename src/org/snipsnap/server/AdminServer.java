@@ -73,8 +73,8 @@ public class AdminServer implements Runnable {
       writer.close();
       s.close();
     } catch (IOException e) {
-      e.printStackTrace();
-      System.err.println("AdminServer: cannot send administrative command");
+      System.out.println("AdminServer: cannot execute administrative command");
+      e.printStackTrace(System.out);
       return false;
     }
     return true;
@@ -139,6 +139,8 @@ public class AdminServer implements Runnable {
               e.printStackTrace(new PrintWriter(writer));
               writer.newLine();
             }
+          } else {
+            writer.write("Unknown command '"+command+"', aborting ...");
           }
         } else {
           writer.write("I cut you out, don't try that again! Snip Snap!");
