@@ -45,7 +45,7 @@ public class Components {
       as.addAspect(new MissingSnipAspect());
       as.addAspect(new SnipSpaceACLAspect());
 
-      System.out.println("Creating PicoContainer ...");
+      //System.out.println("Creating PicoContainer ...");
       RegistrationPicoContainer c =  new HierarchicalPicoContainer.Default();
 
 //     StringRegistrationNanoContainer c =
@@ -72,7 +72,7 @@ public class Components {
       } catch (Exception e) {
         e.printStackTrace();
       }
-      System.out.println(" PicoContainer ok.");
+      //System.out.println(" PicoContainer ok.");
     }
 
     return container;

@@ -92,9 +92,7 @@ public class InitServlet extends GenericServlet {
       }
 
       if (!config.isInstalled()) {
-        System.out.println("Unconfigured SnipSnap. Please visit the following web site");
-        System.out.println("and finish the installation procedure.");
-        System.out.println(">> " + config.getUrl());
+        System.out.println("|--SnipSnap not configured: "+config.getUrl());
       } else {
         SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
         if (space.exists(Configuration.SNIPSNAP_CONFIG)) {
@@ -102,18 +100,17 @@ public class InitServlet extends GenericServlet {
           String configContent = configSnip.getContent();
           config.load(new ByteArrayInputStream(configContent.getBytes()));
         }
+        if (config.allow(Configuration.APP_PERM_WEBLOGSPING)) {
+          System.out.println("|--WARNING: " + config.getName() + ": Weblogs ping for "+config.getUrl() + " is enabled.\n" +
+                             "|  This means that SnipSnap sends notifications to hosts on the internet\n" +
+                             "|  when your weblog changes. To turn this off take a look at the FAQ at\n" +
+                             "|  >> http://snipsnap.org/space/faq");
+        }
       }
       try {
         Logger.setHandler((LogHandler) Class.forName(config.getLogger()).newInstance());
       } catch (Exception e) {
         System.err.println("InitServlet: LogHandler not found: " + config.getLogger());
-      }
-
-      if (config.allow(Configuration.APP_PERM_WEBLOGSPING)) {
-        System.out.println("WARNING: " + config.getName() + ": Weblogs ping is enabled.\n" +
-                           "This means that SnipSnap sends notifications to hosts on the internet\n" +
-                           "when your weblog changes. To turn this off take a look at the FAQ at\n" +
-                           ">> http://snipsnap.org/space/faq <<\n");
       }
     } catch (IOException e) {
       e.printStackTrace();

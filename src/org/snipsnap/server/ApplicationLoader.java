@@ -74,11 +74,11 @@ public class ApplicationLoader {
           } catch (Exception e) {
             errors++;
             e.printStackTrace();
-            System.out.println("WARNING: unable to load application '" + files[i].getName() + "': " + e.getMessage());
+            System.out.println("|--WARNING: unable to load application '" + files[i].getName() + "': " + e.getMessage());
           } catch (Error err) {
             errors++;
             err.printStackTrace();
-            System.out.println("FATAL: unable to load application: '" + files[i].getName() + "': " + err.getMessage());
+            System.out.println("|--FATAL: unable to load application: '" + files[i].getName() + "': " + err.getMessage());
           }
         }
       }
@@ -157,6 +157,7 @@ public class ApplicationLoader {
         throw new Exception("ApplicationLoader: '" + appName + "' already started");
       }
     }
+    System.out.println("Starting '" + config.getName() + "' " + config.getUrl());
 
     String host = config.getHost() == null ? "" : config.getHost();
     String port = config.getPort() == null ? "8668" : config.getPort();
@@ -185,7 +186,7 @@ public class ApplicationLoader {
     context.start();
 
     applications.put(appName, context);
-    System.out.println("Started application '" + config.getName() + "' " + config.getUrl());
+    System.out.println("+-- Success.");
 
     return context;
   }

@@ -28,6 +28,7 @@ import org.apache.xmlrpc.AuthenticatedXmlRpcHandler;
 import org.apache.xmlrpc.XmlRpcException;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Vector;
 
 /**
@@ -70,6 +71,10 @@ public abstract class AuthXmlRpcHandler implements AuthenticatedXmlRpcHandler {
       }
     }
     Method method = target.getClass().getMethod(methodName, argClasses);
-    return method.invoke(target, (args.size() > 0 ? args.toArray() : null));
+    try {
+      return method.invoke(target, (args.size() > 0 ? args.toArray() : null));
+    } catch (InvocationTargetException e) {
+      throw (Exception)e.getTargetException();
+    }
   }
 }

@@ -59,6 +59,7 @@ public class AdminInitFilter implements Filter {
   protected final static String ATT_CONFIG = "config";
   protected final static String ATT_STEP = "step";
   protected final static String ATT_ERRORS = "errors";
+  protected final static String ATT_APPS = "applications";
 
 
   protected final static String PARAM_INSTALL = "install";
@@ -70,7 +71,7 @@ public class AdminInitFilter implements Filter {
     try {
       serverConfig.load(new FileInputStream("conf/server.conf"));
     } catch (IOException e) {
-      System.err.println("AdminInitFilter: unable to load server config: "+e);
+      System.err.println("AdminInitFilter: unable to load server config: " + e);
     }
     try {
       adminClient = new AdminXmlRpcClient(serverConfig.getProperty(ServerConfiguration.ADMIN_HOST, "localhost"),
@@ -95,7 +96,7 @@ public class AdminInitFilter implements Filter {
       request.setCharacterEncoding(DEFAULT_ENCODING);
       request = new EncRequestWrapper(request, request.getCharacterEncoding());
     } catch (UnsupportedEncodingException e) {
-      System.err.println("AdminInitFilter: unsupported encoding: "+e);
+      System.err.println("AdminInitFilter: unsupported encoding: " + e);
     }
 
     // get or create session and application object
@@ -104,14 +105,14 @@ public class AdminInitFilter implements Filter {
     Map errors = new HashMap();
 
     String path = request.getServletPath();
-    if(null == path || "".equals(path)) {
-      System.out.println("Redirecting '"+path+"' -> "+ request.getContextPath() + "/");
-      ((HttpServletResponse)response).sendRedirect(request.getContextPath()+"/");
+    if (null == path || "".equals(path)) {
+      System.out.println("Redirecting '" + path + "' -> " + request.getContextPath() + "/");
+      ((HttpServletResponse) response).sendRedirect(request.getContextPath() + "/");
       return;
     }
 
     // except css files and images everything is protected
-    if(!(path.startsWith("/images") || path.endsWith(".css"))) {
+    if (!(path.startsWith("/images") || path.endsWith(".css"))) {
       RequestDispatcher dispatcher = request.getRequestDispatcher("main.jsp");
       String step = null;
 
@@ -119,7 +120,7 @@ public class AdminInitFilter implements Filter {
       if (!"true".equals(session.getAttribute(ATT_AUTHENTICATED))) {
         String serverPass = serverConfig.getProperty(ServerConfiguration.ADMIN_PASS);
         String installPass = path;
-        if(installPass == null || "".equals(installPass) || "/".equals(installPass)) {
+        if (installPass == null || "".equals(installPass) || "/".equals(installPass)) {
           installPass = "/" + request.getParameter("password");
         }
 
@@ -130,8 +131,8 @@ public class AdminInitFilter implements Filter {
         }
       }
 
-
-      if(null == step) {
+      Map applications = null;
+      if (null == step) {
         config = (Properties) session.getAttribute(ATT_CONFIG);
         if (null == config) {
           config = new Properties();
@@ -142,47 +143,53 @@ public class AdminInitFilter implements Filter {
         String port = request.getParameter(Configuration.APP_PORT);
         String contextPath = request.getParameter(Configuration.APP_PATH);
 
-        if(null != host && !"".equals(host)) {
+        if (null != host && !"".equals(host)) {
           config.setProperty(Configuration.APP_HOST, host);
         }
-        if(null != port && !"".equals(port)) {
+        if (null != port && !"".equals(port)) {
           config.setProperty(Configuration.APP_PORT, port);
         }
-        if(null != contextPath && !"".equals(contextPath)) {
+        if (null != contextPath && !"".equals(contextPath)) {
           config.setProperty(Configuration.APP_PATH, contextPath);
         }
 
-        Map applications = null;
         try {
           applications = adminClient.getApplications();
+          request.setAttribute(ATT_APPS, new Integer(applications.size()));
         } catch (XmlRpcException e) {
-          System.err.println("AdminInitFilter: error retrieving existing applications: "+e);
+          System.err.println("AdminInitFilter: error retrieving existing applications: " + e);
           e.printStackTrace();
         } catch (IOException e) {
-          System.err.println("AdminInitFilter: unable to contact server: "+e);
+          System.err.println("AdminInitFilter: unable to contact server: " + e);
           e.printStackTrace();
         }
 
-        if(null == request.getParameter(PARAM_INSTALL) && (applications != null && applications.size() > 0)) {
+        if (null == request.getParameter(PARAM_INSTALL) && (applications != null && applications.size() > 0)) {
           step = "install";
         } else {
-          URL url = install(config.getProperty(Configuration.APP_HOST),
-                            config.getProperty(Configuration.APP_PORT),
-                            config.getProperty(Configuration.APP_PATH));
-          if(url != null) {
-            ((HttpServletResponse)response).sendRedirect(url.toString());
-            return;
-          } else {
-            errors.put("fatal", "unknown");
-            step = "install";
+          URL url = null;
+          try {
+            url = install(config.getProperty(Configuration.APP_HOST),
+                          config.getProperty(Configuration.APP_PORT),
+                          config.getProperty(Configuration.APP_PATH));
+            if (url != null) {
+              ((HttpServletResponse) response).sendRedirect(url.toString());
+              session.removeAttribute(ATT_CONFIG);
+              return;
+            }
+          } catch (Exception e) {
+            System.out.println(e);
+            System.out.println(e.getCause());
+            errors.put(e.getMessage(), "unknown");
           }
+          step = "install";
         }
       }
 
-      request.setAttribute(ATT_STEP, step);
       session.setAttribute(ATT_SERVERCONFIG, serverConfig);
       session.setAttribute(ATT_CONFIG, config);
       request.setAttribute(ATT_ERRORS, errors);
+      request.setAttribute(ATT_STEP, step);
       dispatcher.forward(request, response);
       return;
     }
@@ -191,14 +198,11 @@ public class AdminInitFilter implements Filter {
     chain.doFilter(request, response);
   }
 
-  protected URL install(String host, String port, String path) {
+  protected URL install(String host, String port, String path) throws Exception {
     try {
-      return adminClient.install(host+"_"+port+"_"+path.replace('/', '_'), host, port, path);
+      return adminClient.install(host + "_" + port + "_" + path.replace('/', '_'), host, port, path);
     } catch (XmlRpcException e) {
-      System.err.println("exception: "+e);
-    } catch (IOException e) {
-      e.printStackTrace();
+      throw e;
     }
-    return null;
   }
 }

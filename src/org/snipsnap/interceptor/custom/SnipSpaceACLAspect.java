@@ -57,7 +57,7 @@ public class SnipSpaceACLAspect implements Aspect {
 
   public void advise(AspectInstance instance) {
     Class klass = instance.getClassIdentifier();
-    System.out.println("class=" + klass);
+    //System.out.println("class=" + klass);
     if (klass != null && klass.equals(SnipSpace.class)) {
       removePc.advise(instance, new MethodInterceptor() {
         public Object invoke(Invocation invocation) throws Throwable {

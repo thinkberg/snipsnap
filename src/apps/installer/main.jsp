@@ -18,6 +18,11 @@
   </head>
   <body>
     <div class="header">
+      <c:if test="${not empty authenticated}">
+        <div class="info">
+          <ul><li><c:out value="${applications}"/> installed</li></ul>
+        </div>
+      </c:if>
       <img src="images/snipsnap-logo.png"/>
     </div>
     <form class="form" method="post" action="<c:url value='/'/>">
@@ -32,6 +37,7 @@
             <div class="step-info"><fmt:message key="install.guide.${step}"/></div>
           </td>
           <td class="edit">
+            <div class="step"><fmt:message key="install.step.${step}"/></div>
             <c:if test="${not empty errors}">
               <div class="errors">
                 <fmt:message key="install.errors"/>
@@ -39,15 +45,23 @@
                 <c:forEach items="${errors}" var="error">
                   <li>
                    <fmt:message key="install.error.${error.value}">
-                     <fmt:param><c:out value="${config.properties[error.key]}"/></fmt:param>
+                     <fmt:param>
+                       <c:choose>
+                         <c:when test="${empty config.properties[error.key]}">
+                           <c:out value="${error.key}"/>
+                         </c:when>
+                         <c:otherwise>
+                          <c:out value="${config.properties[error.key]}"/>
+                         </c:otherwise>
+                       </c:choose>
+                     </fmt:param>
                    </fmt:message>
                   </li>
                 </c:forEach>
                 </ul>
               </div>
             </c:if>
-            <div class="step"><fmt:message key="install.step.${step}"/></div>
-              <c:import url="${step}.jsp"/>
+            <c:import url="${step}.jsp"/>
           </td>
         </tr>
         <tr>

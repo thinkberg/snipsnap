@@ -38,7 +38,7 @@ import java.util.BitSet;
  */
 public class URLEncoderDecoder {
 
-  static BitSet dontNeedEncoding;
+  private static BitSet dontNeedEncoding;
 
   static {
     dontNeedEncoding = new BitSet(256);
