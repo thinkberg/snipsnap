@@ -9,6 +9,7 @@
 <c:if test="${snip.notWeblog}">
  <div class="snip-title">
   <h1 class="snip-name"><c:out value="${snip.name}"/>
+
   <c:if test="${snip.comment}">
    <span class="snip-commented-snip"><s:image name="commented"/> <a href="../comments/<c:out value='${snip.commentedSnip.nameEncoded}'/>"><c:out value='${snip.commentedSnip.name}'/></a></span>
   </c:if>
@@ -16,10 +17,17 @@
   <div class="snip-info"><c:out value="${snip.modified}" escapeXml="false"/> Viewed <c:out value="${snip.access.viewCount}"/> times.</div>
   <div class="snip-buttons"><c:import url="util/buttons.jsp"/></div>
  </div>
+
 </c:if>
 <%-- Snip content --%>
 <div id="snip-content" class="snip-content">
+ <div class="snip-label">
+    <table>
+      <c:forEach items="${snip.labels.all}" var="label">
+        <tr><c:out value="${label.listProxy}" escapeXml="false"/></tr>
+      </c:forEach>
+    </table>
+ </div>
  <div class="snip-attachments"><c:out value="${snip.attachmentString}" escapeXml="false" /></div>
- <%-- <div class="snip-label">[[<c:forEach items="${snip.labels.ids}" var="label"><c:out value="label"/></c:forEach>]]</div> --%>
  <c:out value="${snip.XMLContent}" escapeXml="false" />
 </div>

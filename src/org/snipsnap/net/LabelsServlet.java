@@ -69,9 +69,7 @@ public class LabelsServlet extends HttpServlet {
         Snip snip = SnipSpaceFactory.getInstance().load(snipName);
         request.setAttribute("snip", snip);
 
-        LabelManager manager = LabelManager.getInstance();
-
-        // display all labels of current Snip:
+         // display all labels of current Snip:
         StringBuffer labelsProxy = new StringBuffer();
         labelsProxy.append("<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">");
         labelsProxy.append("<tr><th> Name </th><th> Type </th><th> Value </th></tr>");
@@ -99,6 +97,8 @@ public class LabelsServlet extends HttpServlet {
 		// selection of label type for adding a new label:
         StringBuffer typesProxy = new StringBuffer();
         typesProxy.append("Choose label type:<br/><select name=\"labeltype\">");
+
+        LabelManager manager = LabelManager.getInstance();
         Iterator typesIt = manager.getTypes().iterator();
         while (typesIt.hasNext()) {
             String labelType = (String)typesIt.next();

@@ -68,9 +68,13 @@ public class Labels {
     return (Label) labels.get(name);
   }
 
+  public Collection getAll() {
+    return labels.values();
+  }
+
   public void removeLabel(String name) {
     cache = null;
-	labels.remove(name);
+	  labels.remove(name);
   }
 
   public Set getIds() {
@@ -82,7 +86,7 @@ public class Labels {
     Label label = LabelManager.getInstance().getDefaultLabel();
     label.setName( name );
     label.setValue( value );
-    return label; 
+    return label;
   }
 
   private void deserialize(String labelString) {
@@ -102,13 +106,15 @@ public class Labels {
     if (null == labels || labels.isEmpty()) return "";
 
     StringBuffer linkBuffer = new StringBuffer();
-    Iterator iterator = labels.keySet().iterator();
+    Iterator iterator = labels.entrySet().iterator();
     while (iterator.hasNext()) {
-      String name = (String) iterator.next();
+      Map.Entry entry = (Map.Entry) iterator.next();
+      String name = (String) entry.getKey();
+      Label label = (Label) entry.getValue();
+      String type = label.getType();
+      String value = label.getValue();
       linkBuffer.append(name);
       linkBuffer.append(":");
-      Label label = (Label) labels.get( name );
-      String value = label.getValue();
       linkBuffer.append(value);
       if (iterator.hasNext()) {
         linkBuffer.append("|");

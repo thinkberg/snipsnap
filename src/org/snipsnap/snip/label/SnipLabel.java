@@ -25,6 +25,11 @@
 
 package org.snipsnap.snip.label;
 
+import org.snipsnap.snip.SnipSpaceFactory;
+import org.snipsnap.snip.SnipLink;
+import org.snipsnap.user.UserManager;
+import org.snipsnap.app.Application;
+
 /**
  * SnipLabel connects a Snip to another Snip (should it be possible to reference more than one Snip?)
  * @author Stephan J. Schmidt
@@ -47,7 +52,7 @@ public class SnipLabel extends BaseLabel {
         StringBuffer buffer = new StringBuffer();
         buffer.append("<table border=\"0\" cellpadding=\"0\" cellspacing=\"2\">");
         buffer.append("<tr>");
-        buffer.append("<td>Link label: </td>");
+        buffer.append("<td>Name: </td>");
         buffer.append("<td><input type=\"text\" value=\"");
         buffer.append(name);
         buffer.append("\" name=\"label.name\"/></td>");
@@ -70,4 +75,25 @@ public class SnipLabel extends BaseLabel {
         return new String[] { value };
     }
 
+  public String getListProxy() {
+    StringBuffer buffer = new StringBuffer();
+    buffer.append("<td>");
+    buffer.append(name);
+    buffer.append("</td><td>");
+    getSnipLink(buffer, value);
+    buffer.append("</td>");
+    return buffer.toString();
+  }
+
+  private StringBuffer getSnipLink(StringBuffer buffer, String name) {
+    // @TODO: move this to SnipLink or Snip
+    if (SnipSpaceFactory.getInstance().exists(name)) {
+      SnipLink.appendLink(buffer, name, name);
+    } else if (!UserManager.getInstance().isAuthenticated(Application.get().getUser())) {
+      buffer.append(name);
+    } else {
+      SnipLink.appendCreateLink(buffer, name);
+    }
+    return buffer;
+  }
 }
