@@ -21,9 +21,9 @@
      <a href="raw/<c:out value='${comment.name}'/>"><s:image name="Icon-Comment"/></a> <c:out value="${comment.modified.short}" escapeXml="false" />
      <a href="comments/<c:out value='${snip.nameEncoded}'/>#<c:out value='${comment.name}'/>"><s:image name="Icon-Permalink"/></a>
     </h2>
-    <s:check roles="Owner" permission="Edit" snip="${comment}">
+    <s:check permission="EDIT_COMMENT" context="${comment}">
       <div class="comment-buttons">[<a href="exec/edit?name=<c:out value='${comment.nameEncoded}'/>"><fmt:message key="menu.edit"/></a>]
-      <s:check roles="Admin">
+      <s:check permission="REMOVE_COMMENT" context="${comment}">
          [<a href="exec/remove?name=<c:out value='${comment.nameEncoded}'/>" onClick="return confirm('<fmt:message key="dialog.deleteSnipSure"/>');"><fmt:message key="menu.delete"/></a>]
       </s:check>
       </div>
@@ -33,7 +33,7 @@
    <div class="comment-content"><c:out value="${comment.XMLContent}" escapeXml="false" /></div>
   </c:forEach>
   <%-- input field --%>
-  <s:check roles="Authenticated">
+  <s:check permission="POST_COMMENT" context="${snip}">
    <div class="comment-input">
     <a name="post"></a>
     <div class="preview"><div class="comment-content"><c:out value="${preview}" escapeXml="false"/></div></div>
@@ -51,7 +51,7 @@
     </form>
    </div>
   </s:check>
-  <s:check roles="Authenticated" invert="true" >
+  <s:check permission="POST_COMMENT" context="${snip}" invert="true" >
     <fmt:message key="login.please">
       <fmt:param><fmt:message key="post.comment"/></fmt:param>
     </fmt:message>

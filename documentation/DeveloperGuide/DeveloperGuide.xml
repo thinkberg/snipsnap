@@ -666,20 +666,20 @@ version from the backend, while storeVersion stores the newest version.
 </section>
 
 <bibliography>
-\bibitem{JSTL} JavaServer Pages Standard Tag Library JSTL, http://java.sun.com/products/jsp/jstl/
-\bibitem{Ant} Ant Java build tool, http://ant.apache.org/
-\bibitem{JUnit} JUnit testing framework, http://www.junit.org
-\bibitem{JakartaDBCP} Jakarta DBCP database connection pooling, http://jakarta.apache.org/commons/dbcp/
-\bibitem{Dom4j} Dom4j XML framework, http://dom4j.org/
-\bibitem{ApacheXmlRpc}Apache XML-RPC library, http://ws.apache.org/xmlrpc
-\bibitem{Lucene}Lucene fulltext search engine, http://jakarta.apache.org/lucene/
-\bibitem{Jetty}Jetty servlet container, http://jetty.mortbay.org
-\bibitem{Smack} Smack Jabber API, http://www.jivesoftware.com/xmpp/smack/
-\bibitem{Radeox} Radeox,  http://radeox.org
-\bibitem{RadeoxDeveloper} Radeox Developer Guide, http://radeox.org/space/Developer
-\bibitem{CVS} CVS Revision Control System, http://www.cvshome.org/
-\bibitem{Groovy} Groovy programming language, http://groovy.codehaus.org
-\bibitem{PicoContainer} Component container, http://www.picocontainer.org/
-\bibitem{Friedl} Jeffrey E. F. Friedl, Mastering Regular Expressions, ISBN: 0596002890
+<bibitem ref="JSTL"> JavaServer Pages Standard Tag Library JSTL, http://java.sun.com/products/jsp/jstl/</bibitem>
+<bibitem ref="Ant"> Ant Java build tool, http://ant.apache.org/</bibitem>
+<bibitem ref="JUnit"> JUnit testing framework, http://www.junit.org</bibitem>
+<bibitem ref="JakartaDBCP"> Jakarta DBCP database connection pooling, http://jakarta.apache.org/commons/dbcp/</bibitem>
+<bibitem ref="Dom4j"> Dom4j XML framework, http://dom4j.org/</bibitem>
+<bibitem ref="ApacheXmlRpc">Apache XML-RPC library, http://ws.apache.org/xmlrpc</bibitem>
+<bibitem ref="Lucene">Lucene fulltext search engine, http://jakarta.apache.org/lucene/</bibitem>
+<bibitem ref="Jetty">Jetty servlet container, http://jetty.mortbay.org</bibitem>
+<bibitem ref="Smack"> Smack Jabber API, http://www.jivesoftware.com/xmpp/smack/</bibitem>
+<bibitem ref="Radeox"> Radeox,  http://radeox.org</bibitem>
+<bibitem ref="RadeoxDeveloper"> Radeox Developer Guide, http://radeox.org/space/Developer</bibitem>
+<bibitem ref="CVS"> CVS Revision Control System, http://www.cvshome.org/</bibitem>
+<bibitem ref="Groovy"> Groovy programming language, http://groovy.codehaus.org</bibitem>
+<bibitem ref="PicoContainer"> Component container, http://www.picocontainer.org/</bibitem>
+<bibitem ref="Friedl"> Jeffrey E. F. Friedl, Mastering Regular Expressions, ISBN: 0596002890</bibitem>
 </bibliography>
 </document>

@@ -33,6 +33,7 @@ import gabriel.components.context.AccessContext;
 import gabriel.components.io.FileAclStore;
 import gabriel.components.parser.AclParser;
 import org.snipsnap.user.User;
+import org.snipsnap.snip.Snip;
 
 /**
  * Check for access to resources and operations
@@ -43,4 +44,5 @@ import org.snipsnap.user.User;
 
 public interface AccessController {
   boolean checkPermission(User user, Permission permission, AccessContext context);
+  boolean checkPermission(User user, String permission, Snip snip);
 }

@@ -41,6 +41,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Iterator;
+import java.text.SimpleDateFormat;
+
+import com.sun.syndication.feed.synd.*;
+import com.sun.syndication.io.SyndFeedOutput;
+import com.sun.syndication.io.FeedException;
 
 
 /**
@@ -50,8 +60,12 @@ import java.io.IOException;
  * @version $Id$
  */
 public class RssServlet extends HttpServlet {
+  // For date and time see http://www.w3.org/TR/NOTE-datetime
+  private static SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+  private static SimpleDateFormat year = new SimpleDateFormat("yyyy");
+
   public void doGet(HttpServletRequest request, HttpServletResponse response)
-          throws IOException, ServletException {
+      throws IOException, ServletException {
 
     SnipSpace space = SnipSpaceFactory.getInstance();
     Configuration config = Application.get().getConfiguration();
@@ -90,25 +104,57 @@ public class RssServlet extends HttpServlet {
 
       Snip snip = feeder.getContextSnip();
 
-      request.setAttribute("snip", snip);
-      request.setAttribute("rsssnips", feeder.getFeed());
-      request.setAttribute("space", space);
-      request.setAttribute("config", config);
+      SyndFeedI feed = new SyndFeed();
+      // 1.0 0.92 plain else=2.0
+      feed.setFeedType("rss_0.92");
 
-      request.setAttribute("url", config.getUrl("/space"));
+      // feed.setEtag(SnipSpaceFactory.getInstance().getETag());
+      String url = config.getUrl("/space");
+      feed.setTitle(config.getName());
+      feed.setLink(url+snip.getNameEncoded());
+      feed.setDescription(config.getTagline());
+      feed.setCopyright("Copyright "+year.format(snip.getModified().getmTime()));
+      feed.setLanguage(config.getLocale().getLanguage());
 
-      RequestDispatcher dispatcher;
-      if ("1.0".equals(version)) {
-        dispatcher = request.getRequestDispatcher("/rdf.jsp");
-      } else if ("0.92".equals(version)) {
-        dispatcher = request.getRequestDispatcher("/rss.jsp");
-      } else if ("plain".equals(version)) {
-        dispatcher = request.getRequestDispatcher("/plain.jsp");
-      } else {
-        dispatcher = request.getRequestDispatcher("/rss2.jsp");
+      List entries = new ArrayList();
+      SyndEntryI entry;
+      SyndContentI description;
+
+      List rssSnips = feeder.getFeed();
+      Iterator iterator = rssSnips.iterator();
+      while (iterator.hasNext()) {
+        Snip rssSnip = (Snip) iterator.next();
+
+        entry = new SyndEntry();
+        entry.setTitle(rssSnip.getName());
+        entry.setLink(url + rssSnip.getNameEncoded());
+        // entry.setPublishedDate();
+        description = new SyndContent();
+        description.setType("text/html");
+        description.setValue(rssSnip.getXMLContent());
+        entry.setDescription(description);
+        entry.setAuthor(rssSnip.getCUser());
+        entry.setPublishedDate(rssSnip.getModified().getmTime());
+        entries.add(entry);
+
+//         <item>
+//        <title><c:out value="${child.name}" escapeXml="true"/></title>
+//        <link><c:out value="${url}/${child.nameEncoded}"/></link>
+//        <description><s:content snip="${child}" removeHtml="true" encode="true"/></description>
+//        <guid isPermaLink="true"><c:out value="${url}/${child.nameEncoded}"/></guid>
+//        <content:encoded><s:content snip="${child}" encode="true"/></content:encoded>
+//        <s:dublinCore snip="${child}" format="xml"/>
+//        <comments><c:out value="${child.comments.postUrl}"/></comments>
+//      </item>
       }
+      feed.setEntries(entries);
 
-      dispatcher.forward(request, response);
+      SyndFeedOutput output = new SyndFeedOutput();
+      try {
+        output.output(feed, new OutputStreamWriter(response.getOutputStream()));
+      } catch (FeedException e) {
+        e.printStackTrace();
+      }
     }
   }
 }

@@ -10,7 +10,7 @@
  <!-- special textual elements -->
  <xsl:template match="company" name="company">Fraunhofer FIRST</xsl:template>
  <xsl:template match="companylong" name="companylong">Fraunhofer FIRST</xsl:template>
- <xsl:template match="product">\textsf{\textit{SnipSnap}}</xsl:template>
+ <xsl:template match="product">\textsf{Snip\textbf{Snap}}</xsl:template>
  <xsl:template match="eur">\EUR\/</xsl:template>
  <xsl:template match="bs">\textbackslash</xsl:template>
  <xsl:template match="dot">\ding{109}</xsl:template>
@@ -20,7 +20,12 @@
 
  <!-- text rendering -->
  <xsl:template match="cite">\cite{<xsl:value-of select="."/>}</xsl:template>
- <xsl:template match="bibliography"></xsl:template>
+ <xsl:template match="bibliography">
+ \begin{thebibliography}{99}
+   <xsl:apply-templates/>
+ \end{thebibliography}</xsl:template>
+ <xsl:template match="bibitem">\bibitem{<xsl:value-of select="@ref"/>} <xsl:value-of select="."/>
+ \ </xsl:template>
  <xsl:template match="shell">\begin{verbatim}<xsl:value-of select="."/>\end{verbatim}</xsl:template>
  <xsl:template match="source">
 \begin{Verbatim}[gobble=<xsl:value-of select="@gobble"/>,frame=single,numbers=left,fontsize=\small]

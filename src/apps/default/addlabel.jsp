@@ -10,7 +10,7 @@
 <%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
 
 <div class="snip-wrapper">
-  <s:check roles="Authenticated" permission="Edit" snip="${snip}">
+  <s:check permission="EDIT_SNIP" context="${snip}">
     <div class="snip-title">
      <h1 class="snip-name">
       <c:choose>
@@ -60,7 +60,7 @@
       </div>
     </div>
   </s:check>
-  <s:check roles="Authenticated" permission="Edit" snip="${snip}" invert="true">
+  <s:check permission="EDIT_SNIP" context="${snip}" invert="true">
     <fmt:message key="login.please">
      <fmt:param><fmt:message key="snip.labels.login"/></fmt:param>
     </fmt:message>

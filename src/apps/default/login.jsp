@@ -11,7 +11,6 @@
 <div class="snip-wrapper">
  <div class="snip-title"><h1 class="snip-name"><fmt:message key="login.title"/></h1></div>
  <div class="snip-content">
-  <s:check roles="Authenticated" invert="true">
    <%-- display error message --%>
    <c:if test="${error != null}">
     <div class="error"><fmt:message key="login.error"/></div>
@@ -33,10 +32,5 @@
     </table>
     <input name="referer" type="hidden" value="<c:out value='${referer}' default='${header["REFERER"]}'/>"/>
    </form>
-  </s:check>
-
-  <s:check roles="Authenticated">
-    <fmt:message key="login.want.to.logoff"/>
-  </s:check>
  </div>
 </div>

@@ -12,7 +12,7 @@
 <div class="snip-wrapper">
  <div class="snip-title"><h1 class="snip-name"><fmt:message key="snip.create"/></h1></div>
   <form class="form" name="f" method="post" action="exec/store" enctype="multipart/form-data">
-   <s:check roles="Authenticated">
+   <s:check permission="CREATE_SNIP">
     <c:if test="${not empty preview}">
      <div class="preview"><div class="snip-content"><c:out value="${preview}" escapeXml="false"/></div></div>
     </c:if>
@@ -71,7 +71,7 @@
        <s:snip name="snipsnap-help"/>
      </div>
    </s:check>
-   <s:check roles="Authenticated" invert="true" >
+   <s:check permsiison="CREATE_SNIP" invert="true" >
      <fmt:message key="login.please">
        <fmt:param><fmt:message key="snip.create"/></fmt:param>
      </fmt:message>

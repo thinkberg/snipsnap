@@ -13,7 +13,7 @@
 <%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
 
 <div class="snip-wrapper">
- <s:check roles="Authenticated" permission="Edit" snip="${snip}">
+ <s:check permission="EDIT_SNIP" context="${snip}">
   <div class="snip-title">
    <h1 class="snip-name">
     <fmt:message key="snip.attachments.title">
@@ -43,7 +43,7 @@
      <input name="referer" type="hidden" value="<%= Encoder.escape(request.getHeader("REFERER")) %>"/>
      <table class="wiki-table" border="0" cellpaddin="0" cellspacing="0">
       <tr>
-       <s:check roles="Authenticated"><th><input id="all" type="checkbox" name="allChecked" onClick="return checkAll(this);"/></th></s:check>
+       <s:check permission="ADD_ATTACHMENT" context="${snip}"><th><input id="all" type="checkbox" name="allChecked" onClick="return checkAll(this);"/></th></s:check>
        <th><fmt:message key="snip.attachments.file.name"/></th>
        <th><fmt:message key="snip.attachments.file.size"/></th>
        <th><fmt:message key="snip.attachments.file.date"/></th>
@@ -51,7 +51,7 @@
       </tr>
       <c:forEach items="${snip.attachments.all}" var="attachment" varStatus="status" >
        <tr>
-        <s:check roles="Authenticated"><td><input id="file<c:out value='${status.index}'/>" type="checkbox" name="attfile" value="<c:out value='${attachment.name}' escapeXml="true"/>"/></td></s:check>
+        <s:check permission="ADD_ATTACHMENT" context="${snip}"><td><input id="file<c:out value='${status.index}'/>" type="checkbox" name="attfile" value="<c:out value='${attachment.name}' escapeXml="true"/>"/></td></s:check>
         <td><a href="space/<c:out value='${snip.nameEncoded}/${attachment.nameEncoded}'/>"><c:out value="${attachment.name}" escapeXml="true"/></a></td>
         <td><c:out value="${attachment.size}"/></td>
         <td><fmt:formatDate value="${attachment.date}"/></td>
@@ -63,7 +63,7 @@
       </c:if>
       <tr>
        <td colspan="5" class="form-buttons">
-        <s:check roles="Authenticated" permission="Attach" snip="${snip}">
+        <s:check permission="ADD_ATTACHMENT" context="${snip}"">
           <input name="file" type="file" maxlength="1000000" accept="*/*"/>
           <br/>
           <fmt:message key="snip.attachments.file.name"/>
@@ -82,7 +82,7 @@
    </form>
   </div>
  </s:check>
- <s:check roles="Authenticated" permission="Edit" snip="${snip}" invert="true">
+ <s:check permission="ADD_ATTACHMENT" context="${snip}">
   <fmt:message key="login.please">
    <fmt:param><fmt:message key="snip.attachments.login"/></fmt:param>
  </fmt:message>

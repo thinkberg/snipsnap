@@ -12,7 +12,7 @@
 <div class="snip-wrapper">
  <div class="snip-title"><h1 class="snip-name"><fmt:message key="weblog.post.title"/> <c:out value="${snip.name}"/></h1></div>
  <div class="snip-content">
-  <s:check name="${param.snip}" roles="Owner:Editor">
+  <s:check name="${param.snip}" permission="POST_BLOG">
   <c:if test="${not empty preview}">
    <div class="preview"><div class="snip-content"><c:out value="${preview}" escapeXml="false"/></div></div>
   </c:if>
@@ -31,7 +31,7 @@
     <input name="referer" type="hidden" value="<%= Encoder.escape(request.getHeader("REFERER")) %>"/>
    </form>
   </s:check>
-  <s:check roles="Owner:Editor" invert="true">
+  <s:check permission="POST_BLOG" invert="true">
    <fmt:message key="login.please">
      <fmt:param><fmt:message key="weblog.post.as.editor"/></fmt:param>
    </fmt:message>

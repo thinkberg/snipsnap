@@ -36,7 +36,7 @@
   </c:when>
   <c:otherwise>
   <%-- TODO this is an ugly hack to let owners edit their buttons (see util/buttons.jsp) --%>
-    <s:check permission="Edit" roles="Owner:Editor" snip="${snip}">
+    <s:check permission="EDIT_SNIP" context="${snip}">
       <div class="snip-buttons">[<a href="exec/edit?name=<c:out value='${snip.nameEncoded}'/>"><fmt:message key="menu.edit"/></a>]</div>
     </s:check>
  </c:otherwise>
@@ -47,8 +47,7 @@
    <div class="snip-meta">
      <div class="snip-label">
        <div>
-         <s:check roles="Authenticated" permission="Edit" snip="${snip}">[<a href="exec/labels?snipname=<c:out value='${snip.nameEncoded}'/>"><fmt:message key="menu.labels.add"/></a>]</s:check>
-         <s:check roles="Authenticated" permission="Edit" snip="${snip}" invert="true"><span class="inactive"><fmt:message key="menu.labels"/></span></s:check>
+         <s:check permission="EDIT_SNIP" context="${snip}">[<a href="exec/labels?snipname=<c:out value='${snip.nameEncoded}'/>"><fmt:message key="menu.labels.add"/></a>]</s:check>
        </div>
        <table>
          <c:forEach items="${snip.labels.all}" var="label">
@@ -58,8 +57,7 @@
      </div>
      <div class="snip-attachments">
        <div>
-         <s:check roles="Authenticated" permission="Edit" snip="${snip}">[<a href="exec/upload?name=<c:out value='${snip.nameEncoded}'/>"><fmt:message key="menu.attachments.add"/></a>]</s:check>
-         <s:check roles="Authenticated" permission="Edit" snip="${snip}" invert="true"><span class="inactive"><fmt:message key="menu.attachments"/></span></s:check>
+         <s:check permission="EDIT_SNIP" context="${snip}">[<a href="exec/upload?name=<c:out value='${snip.nameEncoded}'/>"><fmt:message key="menu.attachments.add"/></a>]</s:check>
        </div>
        <c:out value="${snip.attachmentString}" escapeXml="false" />
      </div>

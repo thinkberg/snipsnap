@@ -10,7 +10,7 @@
 <%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
 
 <div class="snip-wrapper">
-  <s:check roles="Authenticated" permission="Edit" snip="${snip}">
+  <s:check permission="EDIT_SNIP" context="${snip}"">
     <div class="snip-title">
      <h1 class="snip-name">
       <fmt:message key="snip.labels.title">
@@ -40,7 +40,7 @@
           <input name="referer" type="hidden" value="<%= Encoder.escape(request.getHeader("REFERER")) %>"/>
           <table class="wiki-table" border="0" cellpaddin="0" cellspacing="0">
             <tr>
-             <s:check roles="Authenticated"><th><input id="all" type="checkbox" name="allChecked" onClick="return checkAll(this);"/></th></s:check>
+             <s:check permission="EDIT_SNIP" context="${snip}"><th><input id="all" type="checkbox" name="allChecked" onClick="return checkAll(this);"/></th></s:check>
              <th><fmt:message key="snip.labels.name"/></th>
              <th><fmt:message key="snip.labels.type"/></th>
              <th><fmt:message key="snip.labels.value"/></th>
@@ -48,7 +48,7 @@
             </tr>
             <c:forEach items="${snip.labels.all}" var="label" varStatus="status">
              <tr>
-               <s:check roles="Authenticated"><td><input id="label<c:out value='${status.index}'/>" type="checkbox" name="label" value="<c:out value='${label.name}' escapeXml="true"/>|<c:out value='${label.value}' escapeXml="true"/>"/></td></s:check>
+               <s:check permission="EDIT_SNIP" context="${snip}"><td><input id="label<c:out value='${status.index}'/>" type="checkbox" name="label" value="<c:out value='${label.name}' escapeXml="true"/>|<c:out value='${label.value}' escapeXml="true"/>"/></td></s:check>
                <td><c:out value="${label.name}" escapeXml="true" /></td>
                <td><c:out value="${label.type}" escapeXml="true" /></td>
                <td><c:out value="${label.value}" escapeXml="true" /></td>
@@ -60,7 +60,7 @@
             </c:if>
             <tr>
               <td colspan="5" class="form-buttons">
-                <s:check roles="Authenticated" permission="Edit" snip="${snip}">
+                <s:check permission="EDIT_SNIP" context="${snip}">
                   <select name="labeltype">
                     <c:forEach items="${labelmanager.types}" var="type" varStatus="status">
                       <option><c:out value="${type}"/></option>
@@ -78,7 +78,7 @@
       </div>
     </div>
   </s:check>
-  <s:check roles="Authenticated" permission="Edit" snip="${snip}" invert="true">
+  <s:check permission="EDIT_SNIP" context="${snip}" invert="true">
     <fmt:message key="login.please">
      <fmt:param><fmt:message key="snip.labels.login"/></fmt:param>
     </fmt:message>

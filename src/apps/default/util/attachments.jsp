@@ -7,7 +7,7 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %>
 
-<s:check roles="Owner,Editor">
+<s:check permission="VIEW_ATTACHMENTS" context="${snip}">
  <script language="Javascript" type="text/javascript">
  <!--
   function showHide(obj)

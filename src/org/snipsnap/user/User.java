@@ -52,6 +52,7 @@ public class User implements Linkable {
   private String email;
   private String status;
   private Roles roles;
+
   // @TODO: composite object
   private Timestamp lastLogin, lastAccess, lastLogout;
   // @TODO: -> Modified composite object
@@ -71,18 +72,20 @@ public class User implements Linkable {
   }
 
   public Subject getSubject() {
-    subject = new Subject(this.login);
-    Set principals = new HashSet();
-    principals.add(new Principal(this.login));
-    Iterator iterator = roles.getAllRoles().iterator();
-    while (iterator.hasNext()) {
-      String role = (String) iterator.next();
-      principals.add(new Principal(role));
+    if (null == subject) {
+      subject = new Subject(this.login);
+      Set principals = new HashSet();
+      principals.add(new Principal(this.login));
+      Iterator iterator = roles.getAllRoles().iterator();
+      while (iterator.hasNext()) {
+        String role = (String) iterator.next();
+        principals.add(new Principal(role));
+      }
+      subject.setPrincipals(principals);
     }
-    subject.setPrincipals(principals);
     return subject;
   }
-                   
+
   public void setApplication(String applicationOid) {
     this.applicationOid = applicationOid;
   }
@@ -185,6 +188,7 @@ public class User implements Linkable {
 
   /**
    * WARNING: DO NOT USE THIS METHOD UNLESS YOU KNOW WHAT YOU DO.
+   *
    * @param login
    */
   public void setLogin(String login) {
@@ -212,7 +216,7 @@ public class User implements Linkable {
     Application app = Application.get();
     Configuration config = app.getConfiguration();
     return (config.getAdminLogin() != null && config.getAdminLogin().equals(login))
-      || getRoles().contains(Roles.ADMIN);
+        || getRoles().contains(Roles.ADMIN);
   }
 
   public void setGuest(boolean guest) {

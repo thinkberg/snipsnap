@@ -30,7 +30,7 @@
 
   <%-- display edit part --%>
   <div class="snip-content">
-   <s:check roles="Authenticated" permission="Edit" >
+   <s:check permission="EDIT_SNIP" context="{snip}">
      <div class="snip-input">
       <form class="form" name="f" method="post" action="exec/store" enctype="multipart/form-data">
         <%-- display parent selector and an editable snip name in case --%>
@@ -122,7 +122,7 @@
        <s:snip name="snipsnap-help"/>
      </div>
    </s:check>
-   <s:check roles="Authenticated" permission="Edit" invert="true" >
+   <s:check permission="EDIT_SNIP" context="${snip}" invert="true" >
      <fmt:message key="login.please">
        <fmt:param><fmt:message key="edit.snip"/></fmt:param>
      </fmt:message>

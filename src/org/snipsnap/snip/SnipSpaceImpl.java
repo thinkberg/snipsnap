@@ -303,6 +303,7 @@ public class SnipSpaceImpl implements SnipSpace {
       snip.setVersion(snip.getVersion() + 1);
     }
     versionManager.storeVersion(snip);
+    indexer.reIndex(snip);
     systemStore(snip);
     MessageService service = (MessageService) Components.getComponent(MessageService.class);
     if (null != service) {
@@ -320,21 +321,21 @@ public class SnipSpaceImpl implements SnipSpace {
    */
   public void systemStore(Snip snip) {
     //Logger.debug("systemStore - "+snip.getName());
-    Application app = Application.get();
-    long start = app.start();
     storage.storageStore(snip);
-    indexer.reIndex(snip);
-    app.stop(start, "systemStore - " + snip.getName());
+    // indexer.reIndex(snip);
     return;
   }
 
-  public void systemStore(List snips) {
-    storage.storageStore(snips);
+  private void reIndex(List snips) {
     Iterator iterator = snips.iterator();
     while (iterator.hasNext()) {
       Snip indexSnip = (Snip) iterator.next();
       indexer.reIndex(indexSnip);
     }
+  }
+
+  public void systemStore(List snips) {
+    storage.storageStore(snips);
   }
 
   /**

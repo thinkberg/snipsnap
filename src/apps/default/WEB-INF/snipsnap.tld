@@ -141,18 +141,13 @@
 
   <tag>
     <name>check</name>
-    <tag-class>org.snipsnap.jsp.CheckPermission</tag-class>
+    <tag-class>org.snipsnap.jsp.NewCheckPermission</tag-class>
     <attribute>
       <name>permission</name>
       <description>permission to check</description>
     </attribute>
     <attribute>
-      <name>roles</name>
-      <required>true</required>
-      <description>roles to check user against</description>
-    </attribute>
-    <attribute>
-      <name>snip</name>
+      <name>context</name>
       <type>org.snipsnap.snip.Snip</type>
       <description>snip to check roles against</description>
     </attribute>

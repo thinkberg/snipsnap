@@ -18,7 +18,7 @@
  </div>
  <form class="form" name="f" method="post" action="exec/copy" enctype="multipart/form-data">
   <div class="snip-content">
-   <s:check roles="Editor">
+   <s:check permission="COPY_SNIP" context="${snip}">
      <div class="snip-input">
        <table>
         <tr>
@@ -48,7 +48,7 @@
        <input name="referer" type="hidden" value="<%= request.getHeader("REFERER") %>"/>
      </div>
    </s:check>
-   <s:check roles="Authenticated" invert="true">
+   <s:check permission="COPY_SNIP" context="${snip}" invert="true">
      <fmt:message key="login.please">
        <fmt:param><fmt:message key="dialog.copy.snip"/></fmt:param>
      </fmt:message>

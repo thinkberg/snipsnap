@@ -40,6 +40,7 @@ import org.snipsnap.user.Roles;
 import org.snipsnap.user.Security;
 import org.snipsnap.user.User;
 import org.snipsnap.container.Components;
+import org.snipsnap.security.AccessController;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -49,6 +50,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.Date;
+
+import gabriel.components.context.OwnerAccessContext;
+import gabriel.Permission;
 
 /**
  * Servlet to store attachments to snips.
@@ -100,9 +104,10 @@ public class FileUploadServlet extends HttpServlet {
     }
 
     AttachmentStorage attachmentStorage = (AttachmentStorage) Components.getComponent(AttachmentStorage.class);
+    AccessController controller = (AccessController) Components.getComponent(AccessController.class);
 
     User user = Application.get().getUser();
-    if (Security.checkPermission(Permissions.ATTACH_TO_SNIP, user, snip)) {
+    if (controller.checkPermission(user, "ADD_ATTACHMENT", snip)) {
       if (request.getParameter("upload") != null) {
         try {
           uploadFile(request, snip);
