@@ -32,6 +32,7 @@ public class MacroFilter extends RegexTokenFilter {
     macros.put("isbn", new IsbnMacro());
     macros.put("api", new ApiMacro());
     macros.put("table", new TableMacro());
+    macros.put("snips-by-user", new UserSnipMacro());
   }
 
 

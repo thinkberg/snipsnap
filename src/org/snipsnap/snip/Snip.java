@@ -1,6 +1,7 @@
 package com.neotis.snip;
 
 import com.neotis.snip.filter.SnipFormatter;
+import com.neotis.user.User;
 
 import java.sql.Timestamp;
 import java.sql.Date;
@@ -75,12 +76,20 @@ public class Snip {
     return cUser;
   }
 
+  public void setCUser(User cUser) {
+    this.cUser = cUser.getLogin();
+  }
+
   public void setCUser(String cUser) {
     this.cUser = cUser;
   }
 
   public String getMUser() {
     return mUser;
+  }
+
+  public void setMUser(User mUser) {
+    this.mUser = mUser.getLogin();
   }
 
   public void setMUser(String mUser) {

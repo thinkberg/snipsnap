@@ -1,5 +1,9 @@
 package com.neotis.config;
 
+import com.neotis.snip.SnipSpace;
+import com.neotis.user.User;
+import com.neotis.user.UserManager;
+import com.neotis.app.Application;
 
 import java.sql.*;
 
@@ -70,17 +74,28 @@ public class CreateDB {
       "       mUser     CHAR(55), " +
       "       parentSnip VARCHAR(100) ) " );
 
+      statement.executeQuery(
+      "    CREATE TABLE User ( " +
+      "       login    VARCHAR(100) NOT NULL, " +
+      "       passwd   CHAR(20) )");
+
       System.out.println("-- Inserting Data --");
 
-      statement.executeQuery(
-      "    INSERT INTO Snip ( name, content, parentSnip ) VALUES " +
-      "      ( 'about', 'This software is __QPL__. Von [funzel]', null ) ");
-
-      System.out.println("--- Complete ---");
+     statement.executeQuery(
+      "    INSERT INTO User ( login, passwd ) VALUES " +
+      "      ( '"+username+"', '"+password+"')");
 
       // Close the statement and the connection.
       statement.close();
       connection.close();
+
+		  Application app  = new Application();
+			User user = UserManager.getInstance().load("funzel");
+			app.setUser(user);
+			
+		  SnipSpace.getInstance().create("about","[SnipSnap] is a [Weblog] and [Wiki] tool", app);
+
+      System.out.println("--- Complete ---");
 
     }
     catch (SQLException e) {
