@@ -27,6 +27,11 @@
   </servlet>
 
   <servlet>
+    <servlet-name>com.neotis.net.SnipLockServlet</servlet-name>
+    <servlet-class>com.neotis.net.SnipLockServlet</servlet-class>
+  </servlet>
+
+  <servlet>
     <servlet-name>com.neotis.net.SnipStoreServlet</servlet-name>
     <servlet-class>com.neotis.net.SnipStoreServlet</servlet-class>
   </servlet>
@@ -79,6 +84,11 @@
   <servlet-mapping>
     <servlet-name>com.neotis.net.Layouter</servlet-name>
     <url-pattern>/exec/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>com.neotis.net.SnipLockServlet</servlet-name>
+    <url-pattern>/exec/lock</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>

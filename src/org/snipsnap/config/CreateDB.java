@@ -134,6 +134,7 @@ public class CreateDB {
 
     User admin = UserManager.getInstance().create(username, password, email);
     admin.getRoles().add(Roles.EDITOR);
+    UserManager.getInstance().store(admin);
 
     Application app = new Application();
     app.setUser(admin);

@@ -25,7 +25,10 @@
 
 package com.neotis.user;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 /**
  * Permissions holds a ACL list with permissions and
@@ -48,6 +51,7 @@ public class Permissions {
   }
 
   public Permissions(String permissions) {
+    //@TODO late desirialization
     this.permissions = deserialize(permissions);
   }
 
@@ -56,21 +60,37 @@ public class Permissions {
       permissions = new HashMap();
     }
   }
+
   public String toString() {
     return serialize();
   }
 
+  public void remove(String permission, String role) {
+    init();
+    if (permissions.containsKey(permission)) {
+      Roles roles = (Roles) permissions.get(permission);
+      roles.remove(role);
+      // remove permission if there are no more roles
+      if (roles.isEmpty()) {
+        System.err.println("Empty.");
+        permissions.remove(permission);
+      } else {
+        System.err.println("not Empty." + permissions.toString());
+      }
+    }
+  }
+
   public void add(String permission) {
     init();
-    if (! permissions.containsKey(permission)) {
-      permissions.put(permission,  new Roles());
+    if (!permissions.containsKey(permission)) {
+      permissions.put(permission, new Roles());
     }
   }
 
   public void add(String permission, String role) {
     init();
-    if (! permissions.containsKey(permission)) {
-      permissions.put(permission,  new Roles());
+    if (!permissions.containsKey(permission)) {
+      permissions.put(permission, new Roles());
     }
     ((Roles) permissions.get(permission)).add(role);
     return;
@@ -78,8 +98,8 @@ public class Permissions {
 
   public void add(String permission, Roles roles) {
     init();
-    if (! permissions.containsKey(permission)) {
-      permissions.put(permission,  new Roles());
+    if (!permissions.containsKey(permission)) {
+      permissions.put(permission, new Roles());
     }
     ((Roles) permissions.get(permission)).addAll(roles);
     return;
@@ -87,22 +107,27 @@ public class Permissions {
 
   public boolean exists(String permission, Roles roles) {
     // if no permission is set, then return false
-    if (null == permissions || ! permissions.containsKey(permission)) return false;
+    if (null == permissions || !permissions.containsKey(permission)) return false;
     Roles permRoles = (Roles) permissions.get(permission);
     return permRoles.containsAny(roles);
   }
 
   public boolean check(String permission, Roles roles) {
     // Policy: If no permission is set, everything is allowed
-    if (null == permissions || ! permissions.containsKey(permission)) return true;
+    if (null == permissions || !permissions.containsKey(permission)) return true;
     Roles permRoles = (Roles) permissions.get(permission);
+//    System.err.println("--check");
+//    System.err.println("permission="+ permission);
+//    System.err.println("roles="+roles);
+//    System.err.println("object roles="+permRoles);
+//    System.err.println("result=" + permRoles.containsAny(roles));
     return permRoles.containsAny(roles);
   }
 
   public Map deserialize(String permissions) {
     if ("".equals(permissions)) return new HashMap();
 
-    Map perms  = new HashMap();
+    Map perms = new HashMap();
 
     StringTokenizer tokenizer = new StringTokenizer(permissions, "|");
     while (tokenizer.hasMoreTokens()) {
@@ -116,7 +141,7 @@ public class Permissions {
   }
 
   private String serialize() {
-    if (null==permissions || permissions.isEmpty()) return "";
+    if (null == permissions || permissions.isEmpty()) return "";
 
     StringBuffer permBuffer = new StringBuffer();
     Iterator iterator = permissions.keySet().iterator();
@@ -141,7 +166,7 @@ public class Permissions {
   }
 
   private String after(String string, String delimiter) {
-    return string.substring(string.indexOf(delimiter)+1);
+    return string.substring(string.indexOf(delimiter) + 1);
   }
 
   private String before(String string, String delimiter) {
@@ -154,7 +179,7 @@ public class Permissions {
 
   private Roles getRoles(String rolesString) {
     Roles roles = new Roles();
-    StringTokenizer tokenizer = new StringTokenizer(after(rolesString,":"), ",");
+    StringTokenizer tokenizer = new StringTokenizer(after(rolesString, ":"), ",");
     while (tokenizer.hasMoreTokens()) {
       String role = tokenizer.nextToken();
       roles.add(role);

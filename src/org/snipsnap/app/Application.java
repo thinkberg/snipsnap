@@ -26,6 +26,8 @@ package com.neotis.app;
 
 import com.neotis.user.User;
 
+import javax.servlet.http.HttpSession;
+
 /**
  * The application object contains information about current users and other
  * session specific information.
@@ -37,6 +39,13 @@ public class Application {
 
   public User getUser() {
     return user;
+  }
+
+  public static Application getInstance(HttpSession session) {
+    if (session != null) {
+      return (Application) session.getAttribute("app");
+    }
+    return null;
   }
 
   public void setUser(User user) {

@@ -43,7 +43,7 @@ public class Security {
    * @return List of roles
    */
   public static Roles getRoles(User user) {
-    Roles userRoles = user.getRoles();
+    Roles userRoles = new Roles(user.getRoles());
     if (UserManager.getInstance().isAuthenticated(user)) {
       userRoles.add(Roles.AUTHENTICATED);
     }

@@ -32,11 +32,7 @@
 package com.neotis.snip.filter.macro;
 
 import com.neotis.snip.Snip;
-import com.neotis.snip.SnipSpace;
-import com.neotis.snip.SnipLink;
 
-import java.util.Iterator;
-import java.util.List;
 import java.util.Collection;
 
 public class UserSnipMacro extends ListoutputMacro {
@@ -46,7 +42,7 @@ public class UserSnipMacro extends ListoutputMacro {
 
   public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
     if (params.length == 1) {
-      Collection c =  space.getByUser(params[0]);
+      Collection c = space.getByUser(params[0]);
       output(buffer, "this user's snips", c, "none written yet.");
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");

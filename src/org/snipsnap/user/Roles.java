@@ -33,14 +33,14 @@ import java.util.StringTokenizer;
 import java.util.TreeSet;
 
 /**
- * User roles
+ * User roleSet
  *
  * @author stephan
  * @version $Id$
  */
 
 public class Roles {
-  private Set roles;
+  private Set roleSet;
 
   public final static String AUTHENTICATED = "Authenticated";
   public final static String OWNER = "Owner";
@@ -57,32 +57,46 @@ public class Roles {
     return ROLES;
   }
 
+  public Roles(Roles roles) {
+    roleSet = new HashSet(roles.roleSet);
+  }
+
   public Roles(String roleString) {
-    this.roles = deserialize(roleString);
+    this.roleSet = deserialize(roleString);
   }
 
   public Roles() {
-    roles = new HashSet();
+    roleSet = new HashSet();
   }
 
   public Roles(Set roleSet) {
-    this.roles = new HashSet(roleSet);
+    this.roleSet = new HashSet(roleSet);
+  }
+
+  public boolean isEmpty() {
+    return roleSet.isEmpty();
+  }
+
+  public void remove(String role) {
+    if (roleSet.contains(role)) {
+      roleSet.remove(role);
+    }
   }
 
   public void add(String role) {
-    roles.add(role);
+    roleSet.add(role);
   }
 
   public void addAll(Roles roles) {
-    this.roles.addAll(roles.getRoleSet());
+    this.roleSet.addAll(roles.getRoleSet());
   }
 
   public Iterator iterator() {
-    return roles.iterator();
+    return roleSet.iterator();
   }
 
   public boolean contains(String role) {
-    return roles.contains(role);
+    return roleSet.contains(role);
   }
 
   public boolean containsAny(Roles r1) {
@@ -97,11 +111,11 @@ public class Roles {
   }
 
   public Set getRoleSet() {
-    return Collections.unmodifiableSet(roles);
+    return Collections.unmodifiableSet(roleSet);
   }
 
   public String toString() {
-    return serialize(roles);
+    return serialize(roleSet);
   }
 
   private String serialize(Set roles) {
