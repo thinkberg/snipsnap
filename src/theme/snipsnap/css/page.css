@@ -68,6 +68,7 @@ body {
   padding: 5px;
   margin-top: 10px;
   margin-bottom: 5px;
+  overflow: hidden;
 }
 
 #page-portlet-2 {

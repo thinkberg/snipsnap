@@ -213,6 +213,7 @@ ol.HEBREW { list-style-type: hebrew; }
 /* calendar display                             */
 .calendar {
   border-spacing: 0px;
+  font-size: 11px;
 }
 
 .calendar td {
