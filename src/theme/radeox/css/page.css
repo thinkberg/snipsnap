@@ -79,7 +79,7 @@ body {
 
 #page-wrapper {
   width: 100%;
-  display: table-row;
+  /*display: table-row;*/
   table-layout: fixed;
 }
 
