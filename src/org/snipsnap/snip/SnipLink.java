@@ -179,7 +179,7 @@ public class SnipLink {
       buffer.append(alt);
       buffer.append("\"");
     }
-    buffer.append(" border=\"0\">");
+    buffer.append(" border=\"0\"/>");
     return buffer;
   }
 

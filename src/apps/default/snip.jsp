@@ -20,7 +20,7 @@
      <c:import url="util/buttons.jsp"/>
    </td>
   </tr>
-  <tr width="100%">
+  <tr>
    <td colspan="2">
     <span class="snip-modified"><c:out value="${snip.modified}"
           escapeXml="false"/>
@@ -35,7 +35,6 @@
   </td>
  </tr>
  <tr><td colspan="2"></td></tr>
- </tr>
  <tr><td colspan="2">
   <%-- do not display comments on start page, only on posted
         entries --%>

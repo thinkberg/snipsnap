@@ -46,7 +46,7 @@ public class DebugTag extends TagSupport {
       Iterator iterator = debug.iterator();
       try {
         out.println("<table cellspacing=\"0\" cellpadding=\"0\" class=\"debug\">");
-        out.println("<tr><th>Debug Log:</th></th>");
+        out.println("<tr><th>Debug Log:</th></tr>");
         while (iterator.hasNext()) {
           String s = (String) iterator.next();
           out.print("<tr><td><pre>");

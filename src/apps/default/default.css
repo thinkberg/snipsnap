@@ -6,16 +6,17 @@
 
 /************************************************/
 
-.error { color: #ff0000; font-weight: bold; }
-.error-position { background-color: #ffaaaa; }
+.error { color: #ff0000; font-weight: bold;	background-color: inherit;}
+.error-position { background-color: #ffaaaa; color: inherit;}
 
-.inactive { color: #aaaaaa; }
+.inactive { color: #aaaaaa; 	background-color: inherit;}
 .bold { font-weight: bold; }
 .italic { font-style: italic; }
 
 .Menu {
-    //Cudos to www.lazyatom.com
+    /* Cudos to www.lazyatom.com */
 	color:#eee;
+    background-color: inherit;
 	border:1px dashed #999;
 	line-height:14px;
 }
@@ -42,6 +43,7 @@
   margin-top: 4px;
   margin-bottom: 4px;
   padding: 5px 5px 5px 5px;
+  color: inherit;
   background-color: #F0F0F0;
   border: 1px dashed black;
   font-family: courier, courier new, monospace;
@@ -54,14 +56,17 @@
 .java-keyword {
   font-weight: bold;
   color: #0000aa;
+  background-color: inherit;
 }
 
 .java-object {
   color: #000088;
+  background-color: inherit;
 }
 
 .java-quote {
   color: #00aa00;
+  background-color: inherit;
 }
 
 .xml-keyword {
@@ -70,6 +75,7 @@
 
 .xml-tag {
   color: #0000aa;
+  background-color: inherit;
 }
 
 /* weblog formatting */
@@ -79,12 +85,22 @@
   font-family: verdana, sans-serif;
   font-size: 16px;
   font-weight: bold;
+  margin-bottom: 10px;
 }
 
-.snip-name { font-weight: bold; font-size: 15px; color: black}
+.comment {
+  color: black;
+  background-color: inherit;
+  font-family: verdana, sans-serif;
+  margin-top: 10px;
+  margin-bottom: 25px;
+}
+
+.snip-name { font-weight: bold; font-size: 15px; color: black; background-color: inherit;}
 
 .snip-modified {
   color: #999999;
+  background-color: inherit;
 }
 
 /* special formatting of a wiki table */
@@ -99,16 +115,19 @@
 }
 
 .snip-table-header {
+  color: inherit;
   font-weight: bold;
   /* background: #DDEEFF; */
   background: #d9e4f9;
 }
 
 .snip-table-odd {
+  color: inherit;
   background: #F8F8F8;
 }
 
 .snip-table-1 {
+  color: inherit;
   background: #F8F8F8;
 }
 
@@ -125,13 +144,14 @@
 
 a {
 	color:#09c;
+	background-color: inherit;
 	text-decoration:none;
 	font-weight:400;
 	font-family:verdana, arial, helvetica, sans-serif;
 }
-a:link {color:#09c;}
-a:visited {color:#07a;}
-a:hover {background-color:#eee;}
+a:link {color:#09c; background-color: inherit;}
+a:visited {color:#07a; background-color: inherit;}
+a:hover {background-color:#eee; color: inherit;}
 
 #Header {
 	margin:10px 0px 10px 0px;
@@ -140,15 +160,19 @@ a:hover {background-color:#eee;}
 	border-color:black;
 	border-width:1px 0px;
 	line-height:11px;
+	color: inherit;
 	background-color:#eee;
 	font-size: 20px;
-	font-weight: 50;
 	height:14px;
 	}
 
+pre.nobr {
+	font-family: verdana, sans-serif;
+}
 
 body {
 	font-family: verdana, sans-serif;
+	color: black;
 	background-color: #ffffff;
 	margin: 10px;
 }
@@ -156,6 +180,7 @@ body {
 td, p {
 	font-size: 11px;
 	color: rgb(76,76,76);
+    background-color: inherit;
 	line-height: 15px;
 }
 
@@ -164,11 +189,13 @@ table {
 }
 
 table.debug {
+    color: inherit;
     background-color: #ffff99;
 	empty-cells: show;
 }
 
 input[type=submit] {
+    color: inherit;
     background: #eeeeee;
     border: 1px ridge #aaaaaa;
 	font-family: verdana, sans-serif;

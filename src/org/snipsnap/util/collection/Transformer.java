@@ -22,23 +22,23 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-/*
- * UrlFilter finds [text] in its input and transforms this
- * to <url name="text">
+
+package org.snipsnap.util.collection;
+
+/**
+ * Transforms a object to another. Used by Collections.transform().
+ * Original author <a href="mailto:mgrosze@web.de">Michael Gro&szlig;e</a>
  *
- * @author stephan
- * @team sonicteam
- * @version $Id$
+ * @author    stephan
+ * @version   $Id$
  */
-package org.snipsnap.snip.filter;
+public interface Transformer {
 
-import org.snipsnap.snip.filter.regex.RegexReplaceFilter;
-import org.snipsnap.snip.SnipLink;
-
-public class UrlFilter extends RegexReplaceFilter {
-
-  public UrlFilter() {
-    super("([^\"]|^)((http|ftp)s?://(%[[:digit:]A-Fa-f][[:digit:]A-Fa-f]|[-_.!~*';/?:@&=+$,[:alnum:]])+)",
-             "$1<span class=\"nobr\">"+SnipLink.createImage("arrow.right", ">>", "gif")+"<a href=\"$2\">$2</a></span>");
-  };
+    /**
+     * Transforms an object to another
+     *
+     * @param obj  object to transform
+     * @return     transformed object
+     */
+    public Object transform(Object obj);
 }

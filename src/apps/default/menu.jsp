@@ -16,8 +16,8 @@
    <form method="get" action="../space/snipsnap-search">
      <input type="text" size="18" name="query" style="border: 1px solid #aaaaaa"> <input type="submit" name="search" value="search">
    </form>
- </tr></td>
- <tr><td></td></tr>
+ </td></tr>
+ <tr><td><a href="http://validator.w3.org/check/referer">validate</a></td></tr>
  <tr><td>
    <s:snip load="snipsnap-intro" id="intro"/>
    <c:out value="${intro.XMLContent}" escapeXml="false"/>
@@ -39,15 +39,15 @@
   </c:forEach>
  </td></tr>
  <tr><td>
-  <p>
   <%-- replace this with a JSTL tag ala  s:calendar/> --%>
   <% Month m = new Month(); %>
   <%= m.getView() %>
-  </p>
-
-  <p>
+  </td></tr>
+  <tr><td>
    <s:snip load="snipsnap-blogrolling" id="blogrolling"/>
    <c:out value="${blogrolling.XMLContent}" escapeXml="false"/>
-  </p>
  </td></tr>
+ <tr><td>
+   <a href="http://validator.w3.org/check/referer"><s:image name="valid-html401"/></a> <s:image name="vcss"/>
+ </tr></tr>
 </table>

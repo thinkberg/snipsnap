@@ -44,11 +44,11 @@ public class LinkMacro extends Macro {
 
   public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
     if (params.length == 2) {
-      buffer.append("<nobr>");
+      buffer.append("<span class=\"nobr\">");
       buffer.append(img);
       buffer.append("<a href=\"").append(params[1]).append("\">");
       buffer.append(params[0]).append("</a>");
-      buffer.append("</nobr>");
+      buffer.append("</span>");
     } else if (params.length == 1) {
       // will be catched by UrlFilter
       buffer.append(params[0]);

@@ -95,11 +95,11 @@ public class Month {
 
     StringBuffer view = new StringBuffer();
     view.append("<table>");
-    view.append("<tr colspan=\"7\"><b>");
+    view.append("<tr><td colspan=\"7\"><b>");
     view.append(months[month]);
     view.append(" ");
     view.append(year);
-    view.append("</b></tr>");
+    view.append("</b></td></tr>");
 
     int leadGap = 0;  // for German Style Monday starting weeks
 

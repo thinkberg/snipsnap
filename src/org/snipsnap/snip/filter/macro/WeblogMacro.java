@@ -60,17 +60,17 @@ public class WeblogMacro extends Macro {
       Iterator iterator = snips.iterator();
       while (iterator.hasNext()) {
         Snip entry = (Snip) iterator.next();
-        buffer.append("<p><span class=\"blog-date\">");
+        buffer.append("<div class=\"blog-date\">");
         buffer.append(Snip.toDate(entry.getName()));
-        buffer.append("</span><p>");
+        buffer.append("</div>");
         buffer.append(entry.getXMLContent());
-        buffer.append("</p>");
+        buffer.append("<div class=\"comment\"");
         SnipLink.appendLink(buffer, entry.getName(), "Link me");
         buffer.append(" | ");
         buffer.append(entry.getComments().getCommentString());
         buffer.append(" | ");
         buffer.append(entry.getComments().getPostString());
-        buffer.append("</p><pre>\n\n</pre>");
+        buffer.append("</div>\n\n");
       }
 
       return;

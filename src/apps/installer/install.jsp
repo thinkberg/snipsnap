@@ -45,7 +45,7 @@
       <td><input name="password" type="password" value=""></td>
     </tr>
     <tr <c:if test="${errors['password'] != null}">class="error-position"</c:if>>
-      <td><nobr>Password (verification):</nobr></td>
+      <td><span class="nobr">Password (verification):</span></td>
       <td><input name="password2" type="password" value=""></td>
     </tr>
     <tr>

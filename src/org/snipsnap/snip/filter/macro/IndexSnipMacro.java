@@ -34,6 +34,8 @@ package org.snipsnap.snip.filter.macro;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipLink;
+import org.snipsnap.util.collection.Collections;
+import org.snipsnap.util.collection.Filterator;
 
 import java.util.Iterator;
 import java.util.List;
@@ -46,7 +48,18 @@ public class IndexSnipMacro extends ListoutputMacro {
 
   public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
     if (params.length == 0) {
-      output(buffer, "all snips", space.getAll(), "none written yet.");
+      output(buffer, "all snips",
+             Collections.filter(space.getAll(),
+                                new Filterator() {
+                                  public boolean filter(Object obj) {
+                                    String name = ((Snip) obj).getName();
+                                    if (name.startsWith("comment-")) {
+                                      return true;
+                                    }
+                                    return false;
+                                  }
+                                }
+      ), "none written yet.");
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

@@ -21,8 +21,8 @@
           <a href="mailto:<c:out value="${user.email}"/>"><c:out value="${user.email}"/></a>
         </c:if>
       </td>
-      <td><nobr><c:out value="${user.roles}"/></nobr></td>
-      <td><nobr><c:out value="${user.status}"/></nobr></td>
+      <td><span class="nobr"><c:out value="${user.roles}"/></span></td>
+      <td><span class="nobr"><c:out value="${user.status}"/></span></td>
       <td>
         <form method="POST" action="<c:url value='/exec/admin/user'/>">
           <input type="hidden" name="command" value="edit">
