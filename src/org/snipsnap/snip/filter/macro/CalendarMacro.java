@@ -27,6 +27,9 @@ package org.snipsnap.snip.filter.macro;
 import org.snipsnap.date.Month;
 import org.snipsnap.snip.Snip;
 
+import java.io.IOException;
+import java.io.Writer;
+
 /*
  * Macro that displays a list of currently logged on users.
  *
@@ -39,7 +42,8 @@ public class CalendarMacro extends Macro {
     return "calendar";
   }
 
-  public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
+  public void execute(Writer writer, String[] params, String content, Snip snip)
+      throws IllegalArgumentException, IOException {
     int year = -1;
     int month = -1;
     if (params != null && params.length == 2) {
@@ -59,9 +63,9 @@ public class CalendarMacro extends Macro {
 
     Month m = new Month();
     if (-1 == year || -1 == month) {
-      buffer.append(m.getView());
+      writer.write(m.getView());
     } else {
-      buffer.append(m.getView(month, year));
+      writer.write(m.getView(month, year));
     }
   }
 }

@@ -33,6 +33,8 @@ import org.snipsnap.app.Application;
 
 import java.util.Iterator;
 import java.util.List;
+import java.io.IOException;
+import java.io.Writer;
 
 /*
  * Macro that displays a list of currently logged on users.
@@ -45,7 +47,9 @@ public class RecentChangesMacro extends ListoutputMacro {
     return "recent-changes";
   }
 
-  public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
+  public void execute(Writer writer, String[] params, String content, Snip snip)
+      throws IllegalArgumentException, IOException {
+
     String type = "Vertical";
     int length = 10;
     if(params != null) {
@@ -63,7 +67,7 @@ public class RecentChangesMacro extends ListoutputMacro {
 
     if (params == null || params.length <= 1) {
       List changed = SnipSpace.getInstance().getChanged(length);
-      output(buffer, "Recently Changed:", changed, "No changes yet.", type);
+      output(writer, "Recently Changed:", changed, "No changes yet.", type);
     } else {
       throw new IllegalArgumentException("Number of arguments does not match");
     }

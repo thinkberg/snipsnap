@@ -30,6 +30,8 @@ import org.snipsnap.util.Nameable;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.io.Writer;
+import java.io.IOException;
 
 /**
  * Simple list formatter.
@@ -41,26 +43,26 @@ public class VerticalListFormatter implements ListoutputMacro.ListFormatter {
   /**
    * Display a simple vertical list.
    */
-  public void format(StringBuffer buffer, String listComment, Collection c, String emptyText) {
-    buffer.append("<div id=\"list\"><div class=\"list-title\">");
-    buffer.append(listComment);
-    buffer.append(" (");
-    buffer.append(c.size());
-    buffer.append(")</div>");
+  public void format(Writer writer, String listComment, Collection c, String emptyText) throws IOException {
+    writer.write("<div id=\"list\"><div class=\"list-title\">");
+    writer.write(listComment);
+    writer.write(" (");
+    writer.write(c.size());
+    writer.write(")</div>");
     if (c.size() > 0) {
-      buffer.append("<ul id=\"vertical\">");
+      writer.write("<ul id=\"vertical\">");
       Iterator nameIterator = c.iterator();
       while (nameIterator.hasNext()) {
         Nameable nameable = (Nameable) nameIterator.next();
-        buffer.append("<li>");
-        SnipLink.appendLink(buffer, nameable.getName());
-        buffer.append("</li>");
+        writer.write("<li>");
+        SnipLink.appendLink(writer, nameable.getName());
+        writer.write("</li>");
       }
-      buffer.append("</ul>");
+      writer.write("</ul>");
     } else {
-      buffer.append(emptyText);
+      writer.write(emptyText);
     }
-    buffer.append("</div>");
+    writer.write("</div>");
     return;
   }
 }

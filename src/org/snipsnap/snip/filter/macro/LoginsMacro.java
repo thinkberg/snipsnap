@@ -33,6 +33,8 @@ import org.snipsnap.app.Application;
 
 import java.util.Iterator;
 import java.util.List;
+import java.io.IOException;
+import java.io.Writer;
 
 /*
  * Macro that displays a list of currently logged on users.
@@ -45,7 +47,9 @@ public class LoginsMacro extends ListoutputMacro {
     return "logins";
   }
 
-  public void execute(StringBuffer buffer, String[] params, String content, Snip snip) throws IllegalArgumentException {
+  public void execute(Writer writer, String[] params, String content, Snip snip)
+      throws IllegalArgumentException, IOException
+  {
     String type = "Vertical";
     if(params != null && params.length > 0) {
       type = params[0];
@@ -54,14 +58,14 @@ public class LoginsMacro extends ListoutputMacro {
       List users = Application.getCurrentUsers();
       users.addAll(Application.getCurrentNonUsers());
 
-      output(buffer, "Users:", users, "", type);
+      output(writer, "Users:", users, "", type);
       int guests = Application.getGuestCount();
       if(guests > 0) {
-        buffer.append("... and ");
-        buffer.append(guests);
-        buffer.append(" Guest");
+        writer.write("... and ");
+        writer.write(guests);
+        writer.write(" Guest");
         if(guests > 1) {
-          buffer.append("s");
+          writer.write("s");
         }
       }
     } else {
