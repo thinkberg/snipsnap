@@ -43,7 +43,7 @@ public class FieldMacro extends Macro {
   }
 
   public String getDescription() {
-    return "Display a form inout field and submit button.";
+    return "Display a form input field and submit button.";
   }
 
   /**

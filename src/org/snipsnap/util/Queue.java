@@ -55,7 +55,6 @@ public class Queue {
     Iterator iterator = queue.iterator();
     while (iterator.hasNext()) {
       Snip snip1 = (Snip) iterator.next();
-      System.err.println("content="+snip1);
     }
     // Queue already contains object, so remove it
     if (queue.contains(snip)) {

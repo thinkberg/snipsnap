@@ -234,6 +234,11 @@ public class SnipSpace implements LinkTester {
     return post(start, content, date);
   }
 
+  public String getPostName() {
+    Date date = new Date(new java.util.Date().getTime());
+    return SnipUtil.toName(date);
+  }
+
   public Snip post(Snip weblog, String content, Date date) {
     String name = SnipUtil.toName(date);
     Snip snip = null;

@@ -31,9 +31,7 @@ import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.user.UserManager;
 
 import javax.mail.*;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.io.IOException;
+import java.io.*;
 import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -101,6 +99,8 @@ public class PostDaemon {
 // Get directory
         Message message[] = folder.getMessages();
 
+        String name = SnipSpace.getInstance().getPostName();
+
         for (int i = 0, n = message.length; i < n; i++) {
           StringWriter writer = new StringWriter();
 
@@ -120,10 +120,10 @@ public class PostDaemon {
               if (contentType.startsWith("text/plain")) {
                 writer.write((String) message[i].getContent());
               } else if (contentType.startsWith("image/")) {
-                processImage(writer, message[i]);
+                processImage(writer, message[i], name);
               } else if (contentType.startsWith("multipart/")) {
                 // process multipart message
-                processMultipart(writer, (Multipart) message[i].getContent());
+                processMultipart(writer, (Multipart) message[i].getContent(), name);
               }
 
               Application.get().setUser(UserManager.getInstance().load("stephan"));
@@ -136,6 +136,8 @@ public class PostDaemon {
               // process it
               message[i].setFlag(Flags.Flag.DELETED, true);
             }
+          } else {
+            System.err.println("PostDaemon: Wrong password.");
           }
         }
 // Close connection
@@ -148,13 +150,14 @@ public class PostDaemon {
     }
   }
 
-  public void processImage(Writer writer, Part part) throws MessagingException, IOException {
+  public void processImage(Writer writer, Part part, String name) throws MessagingException, IOException {
     writer.write("{image:");
     writer.write(part.getFileName());
+    storeImage(part, name);
     writer.write("}");
   }
 
-  public void processMultipart(Writer writer, Multipart mp) throws MessagingException {
+  public void processMultipart(Writer writer, Multipart mp, String name) throws MessagingException {
     for (int j = 0; j < mp.getCount(); j++) {
       try {
       Part part = mp.getBodyPart(j);
@@ -165,14 +168,43 @@ public class PostDaemon {
         if (contentType.startsWith("text/plain")) {
           writer.write((String) part.getContent());
         } else if (contentType.startsWith("image/")) {
-          processImage(writer, part);
+          processImage(writer, part, name);
         } else if (contentType.startsWith("multipart/")) {
-          processMultipart(writer, (Multipart) part.getContent());
+          processMultipart(writer, (Multipart) part.getContent(), name);
         }
       } catch (Exception e) {
         System.err.println("PostDaemon: Error reading message: " + e.getMessage());
         e.printStackTrace();
       }
     }
+  }
+
+  public void storeImage(Part part, String name) {
+    try {
+      if (part != null  && part.getFileName() != null) {
+        AppConfiguration config = Application.get().getConfiguration();
+        File imageDir = new File(config.getFile().getParentFile().getParentFile(), "images");
+        File file = new File(imageDir, "image-" + name + "-" + part.getFileName());
+        System.err.println("Uploading '" + part.getFileName() + "' to '" + file.getAbsolutePath() + "'");
+        FileOutputStream out = new FileOutputStream(file);
+        InputStream in = part.getInputStream();
+        byte[] buf = new byte[4096];
+        int length = 0;
+        while ((length = in.read(buf)) != -1) {
+          out.write(buf, 0, length);
+        }
+        out.close();
+        in.close();
+      } else {
+        System.err.println("PostDaemon: Error processing mail.");
+      }
+    } catch (IOException e) {
+      System.err.println("PostDaemon: Error processing mail.");
+      e.printStackTrace();
+    } catch (MessagingException e) {
+      System.err.println("PostDaemon: Error processing mail.");
+      e.printStackTrace();
+    }
+
   }
 }
