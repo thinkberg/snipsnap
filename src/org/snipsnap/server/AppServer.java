@@ -33,6 +33,7 @@ import org.snipsnap.config.Configuration;
 import java.io.IOException;
 import java.io.File;
 import java.util.Iterator;
+import java.util.Locale;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -80,6 +81,15 @@ public class AppServer {
         System.exit(-1);
       }
     }
+
+    String enc = serverConfig.getProperty(Configuration.SERVER_ENCODING);
+    if(enc != null && enc.length() > 0) {
+      System.setProperty("file.encoding", enc);
+    } else {
+      System.setProperty("file.encoding", "iso-8859-1");
+    }
+
+    System.out.println("Internal encoding: "+System.getProperty("file.encoding"));
 
     // start jetty server and install web application
     try {

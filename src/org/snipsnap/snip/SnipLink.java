@@ -26,12 +26,11 @@
 package org.snipsnap.snip;
 
 import org.snipsnap.snip.filter.EscapeFilter;
+import org.snipsnap.util.URLEncoderDecoder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.List;
-import java.net.URLEncoder;
-import java.net.URLDecoder;
 
 /**
  *  Generates links for snips
@@ -48,12 +47,12 @@ public class SnipLink {
   }
 
   public static void createCreateLink(StringBuffer buffer, String name) {
-      buffer.append(EscapeFilter.escape('['));
-      buffer.append("create <a href=\"../exec/edit?name=");
-      buffer.append(SnipLink.encode(name));
-      buffer.append("\">").append(name).append("</a>");
-      buffer.append(EscapeFilter.escape(']'));
-      return;
+    buffer.append(EscapeFilter.escape('['));
+    buffer.append("create <a href=\"../exec/edit?name=");
+    buffer.append(SnipLink.encode(name));
+    buffer.append("\">").append(name).append("</a>");
+    buffer.append(EscapeFilter.escape(']'));
+    return;
   }
 
   public static String createLink(String name) {
@@ -211,8 +210,7 @@ public class SnipLink {
         return s;
       }
     */
-
-    return URLEncoder.encode(s);
+    return URLEncoderDecoder.encode(s);
   }
 
   public static String decode(String s) {
@@ -225,11 +223,11 @@ public class SnipLink {
       }
     */
 
-    return URLDecoder.decode(s);
+    return URLEncoderDecoder.decode(s);
   }
 
   public static String cutLength(String url, int len) {
-    if(url != null && len > 3 && url.length() > len) {
+    if (url != null && len > 3 && url.length() > len) {
       return url.substring(0, len - 3) + "...";
     }
     return url;

@@ -45,6 +45,8 @@ public class Configuration {
   public final static String SERVER_VERSION = "server.version";
   public final static String SERVER_WEBAPP_ROOT = "server.webapp.root";
   public final static String SERVER_ADMIN_PORT = "server.admin.port";
+  public final static String SERVER_ENCODING = "server.encoding";
+
 
   public final static String ADMIN_LOGIN = "admin.login";
   public final static String ADMIN_PASSWORD = "admin.password";

@@ -8,7 +8,7 @@
 <%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %>
 
 <s:check roles="Authenticated" permission="Edit" snip="${snip}">
-  <h1 class="header"><c:out value="${snip_name}"/></h1>
+  <h1 class="header"><c:out value="${snip_name}" escapeXml="false"/></h1>
   <c:if test="${not empty preview}">
     <div class="preview">
       <c:out value="${preview}" escapeXml="false"/>
