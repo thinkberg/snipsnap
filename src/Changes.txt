@@ -1,5 +1,6 @@
 0.3.3
 
+- Fixed bug: always find Java under MacOS X (no need for JAVA_HOME setting)
 - Added feature: Increase and decrease the shown month in the calendar view
 - Added feature: Calendar no displays correct day names with the correct locale
 
