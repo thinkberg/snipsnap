@@ -52,7 +52,7 @@ public class QuerySnipStorage implements SnipStorage {
 
   // Count comparators, make the comparator by default
   // with most usages. Make this dynamic
-  private Comparator nameComparator, nameComparatorDesc, mTimeComparatorDesc;
+  private Comparator nameComparator, nameComparatorDesc, mTimeComparatorDesc, cTimeComparator;
 
   public QuerySnipStorage(SnipStorage storage) {
     this.storage = storage;
@@ -66,6 +66,12 @@ public class QuerySnipStorage implements SnipStorage {
     this.nameComparatorDesc = new SnipComparator() {
       public int compare(Snip s1, Snip s2) {
         return s2.getName().compareTo(s1.getName());
+      }
+    };
+
+    this.cTimeComparator = new SnipComparator() {
+      public int compare(Snip s1, Snip s2) {
+        return s2.getCTime().compareTo(s1.getCTime());
       }
     };
 
@@ -140,7 +146,7 @@ public class QuerySnipStorage implements SnipStorage {
       public boolean fit(Snip snip) {
         return (parent == snip.getCommentedSnip());
       }
-    }, nameComparator);
+    }, cTimeComparator);
   }
 
   public List storageByParent(final Snip parent) {
