@@ -485,8 +485,8 @@ public class SnipImpl implements Snip {
 
     String xml = "";
     // should the engine be set by the engine to the context?
-    System.out.println("RENDERING: " + getName());
-    System.out.flush();
+//    System.out.println("RENDERING: " + getName());
+//    System.out.flush();
 
     xml = engine.render(content, context);
     //Logger.debug(getName() + " is cacheable: " + context.isCacheable());

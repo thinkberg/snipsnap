@@ -12,6 +12,8 @@
 <% response.setContentType("text/html; charset=UTF-8"); %>
 <% PrintWriter writer = new PrintWriter(out); %>
 
+<% if(null == exception) { response.sendError(HttpServletResponse.SC_FORBIDDEN); %>
+
 <fmt:setBundle basename="i18n.messages" scope="page" />
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
