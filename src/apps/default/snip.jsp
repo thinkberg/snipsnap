@@ -5,25 +5,23 @@
   -->
 
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %>
 
 <jsp:useBean id="snip" scope="request" class="com.neotis.jsp.SnipBean" >
   <jsp:setProperty name="snip" property="*"/>
 </jsp:useBean>
-<jsp:useBean id="user" scope="request" class="com.neotis.jsp.UserBean" >
-  <jsp:setProperty name="user" property="session" value="<%= session %>"/>
-</jsp:useBean>
 
 <table width="100%" border="0" cellspacing="2" cellpadding="1">
- <% if (! "start".equals(snip.getName())) { %>
    <tr><td><span class="snip-name"><jsp:getProperty name="snip" property="name" /></span></td></tr>
-   <% if(user.isAuthenticated()) { %>
+   <s:checkRoles roles="Authenticated">
      <tr><td>[<a href="/exec/edit?name=<%= snip.getName() %>">edit</a>]</td></tr>
-   <% } else { %>
+   </s:checkRoles>
+   <s:checkRoles roles="Authenticated" invert="true">
      <tr><td><span class="inactive">[edit]</span></td></tr>
-   <% } %>
+   </s:checkRoles>
+ <% if (! "start".equals(snip.getName())) { %>
    <tr width="100%"><td><span class="snip-modified"><%= snip.getModified() %></span></td></tr>
  <% } %>
-
  <tr>
   <td width="100%">
    <jsp:getProperty name="snip" property="XMLContent" />

@@ -8,13 +8,17 @@
   -->
 
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+<%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %>
 
 <table class="menu" width="100%" border="0" cellpadding="4" cellspacing="1">
  <tr><td class="menuitem">Start<td></tr>
  <tr><td class="menuitem">Index<td></tr>
  <tr><td class="menuitem">Search<td></tr>
  <tr><td>
-  <!-- replace this with a JSTL tag ala <s:checkUser role="anonymous"/> -->
+  <!-- replace this with a JSTL tag ala s:checkUser role="anonymous" -->
+
+  <s:checkRoles roles="Authenticated">
+  </s:checkRoles>
 
   <c:choose>
     <c:when test="${app.user.login != 'Guest'}">
@@ -40,21 +44,21 @@
   </c:choose>
  <tr><td>
   <b>Recent Changes:</b><br>
-  <!-- replace this with a JSTL tag ala <s:recent/> -->
+  <!-- replace this with a JSTL tag ala  s:recent/> -->
   <c:forEach var="snip" items="${space.changed}">
    <a href="/space/<c:out value='${snip.name}'/>"><c:out value="${snip.name}"/></a><br/>
   </c:forEach>
  </td></tr>
  <tr><td>
   <p>
-  <!-- replace this with a JSTL tag ala <s:calendar/> -->
+  <!-- replace this with a JSTL tag ala  s:calendar/> -->
   <% Month m = new Month(); %>
   <%= m.getView() %>
   </p>
 
   <p>
-  <!-- replace this with a JSTL tag ala <s:blogrolling/> -->
-  <!-- or <s:snip name="snipsnap-blogrolling"> -->
+  <!-- replace this with a JSTL tag ala  s:blogrolling/> -->
+  <!-- or  s:snip name="snipsnap-blogrolling"> -->
 
    <% SnipSpace space = SnipSpace.getInstance(); %>
    <% Snip rolling = space.load("snipsnap-blogrolling"); %>

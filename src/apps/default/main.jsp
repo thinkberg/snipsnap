@@ -4,6 +4,8 @@
   ** @version $Id$
   -->
 
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
  <head>
@@ -20,7 +22,7 @@
       <jsp:include page="/menu.jsp" flush="true"/>
      </td>
      <td valign="top" width="100%">
-      <jsp:include page="<%=request.getAttribute(\"page\")%>" flush="true"/>
+      <c:import url="${page}"/>
      </td>
     </tr>
    </table>

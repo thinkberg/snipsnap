@@ -61,8 +61,11 @@ public class Security {
 
   public static boolean hasRoles(User user, List roles) {
     Set userRoles = getRoles(user);
-    userRoles.retainAll(roles);
-    return !userRoles.isEmpty();
+    if (userRoles != null) {
+      userRoles.retainAll(roles);
+      return !userRoles.isEmpty();
+    }
+    return false;
   }
 
   public static boolean hasRoles(User user, Snip object, List roles) {

@@ -14,6 +14,8 @@
     <pathelement location="${jar}/javax.servlet.jar"/>
     <pathelement location="${jar}/org.apache.jasper.jar"/>
     <pathelement location="${jar}/org.mortbay.jetty.jar"/>
+    <pathelement location="${src}/apps/default/WEB-INF/lib/jstl.jar"/>
+    <pathelement location="${src}/apps/default/WEB-INF/lib/standard.jar"/>
   </path>
 
   <target depends="clean,jar" description="build binary package" name="bin-tar">
@@ -22,7 +24,7 @@
         <include name="run.sh"/>
       </tarfileset>
       <tarfileset dir="." prefix="${appname}-${version}" mode="666">
-	<include name="${jar}/${appname}.jar"/>
+        <include name="${jar}/${appname}.jar"/>
         <include name="${jar}/jakarta.jar"/>
         <include name="${jar}/mckoidb.jar"/>
         <include name="${jar}/javax.servlet.jar"/>
@@ -31,8 +33,8 @@
         <include name="conf/server.conf"/>
         <include name="conf/db.conf"/>
         <include name="db"/>
-	<include name="app/**"/>
-	<exclude name="**/CVS"/>
+        <include name="app/**"/>
+        <exclude name="**/CVS"/>
       </tarfileset>
     </tar>
   </target>
@@ -46,43 +48,70 @@
     </delete>
   </target>
 
-  <target depends="build,admin-war" description="build executable jar" name="jar">
+  <target depends="build,template-war,admin-war" description="build executable jar" name="jar">
     <jar destfile="${jar}/${appname}.jar"
-	 excludes="**/CVS" 
-	 manifest="conf/manifest">
-      <fileset dir="${target}/server" includes="com/**"/>
+      excludes="**/CVS"
+      manifest="conf/manifest">
+      <fileset dir="${target}/server" includes="**"/>
     </jar>
   </target>
 
   <target depends="build" description="build admin war" name="admin-war">
     <jar destfile="${jar}/${appname}-admin.war"
-	 excludes="**/CVS">
+      excludes="**/CVS">
       <fileset dir="${src}/apps/admin" includes="**"/>
       <fileset dir="${target}/admin" includes="**"/>
     </jar>
   </target>
 
+  <target depends="build" description="build template war" name="template-war">
+    <!-- TODO: Hack to allow running without a war -->
+    <jar destfile="${src}/apps/default/WEB-INF/lib/servlets.jar"
+      excludes="**/CVS">
+      <fileset dir="${target}/default/WEB-INF/classes" includes="**"/>
+    </jar>
+    <jar destfile="${jar}/${appname}-template.war"
+      excludes="**/CVS">
+      <fileset dir="${src}/apps/default" includes="**"/>
+    </jar>
+  </target>
+
   <target depends="jar" description="run application server" name="run">
-    <java classname="com.neotis.net.AppServer" fork="true"
-          classpathref="classpath">
+    <java classname="com.neotis.server.AppServer" fork="true"
+      classpathref="classpath">
       <classpath path="${jar}/${appname}.jar"/>
     </java>
   </target>
 
-  <target description="compile server code" name="build">
+  <target depends="build-server, build-default-app, build-admin-app"
+    description="build all code" name="build"/>
+
+  <target description="compile server code" name="build-server">
     <mkdir dir="${target}/server"/>
-    <mkdir dir="${target}/admin/WEB-INF/classes"/>
-    <javac deprecation="${deprecation}" debug="${debug}" 
-	   srcdir="${src}"
-	   classpathref="classpath"
-           destdir="${target}/server" 
-	   includes="com/neotis/**"
-	   excludes="com/neotis/test/**,com/neotis/admin/**"/>
     <javac deprecation="${deprecation}" debug="${debug}"
-           srcdir="${src}"
-	   classpathref="classpath"
-	   destdir="${target}/admin/WEB-INF/classes"
-	   includes="com/neotis/admin/**"/>
+      srcdir="${src}"
+      classpathref="classpath"
+      destdir="${target}/server"
+      includes="com/neotis/server/**"/>
+  </target>
+
+  <target description="compile default application code" name="build-default-app">
+    <mkdir dir="${target}/default/WEB-INF/classes"/>
+    <javac deprecation="${deprecation}" debug="${debug}"
+      srcdir="${src}"
+      classpathref="classpath"
+      destdir="${target}/default/WEB-INF/classes"
+      includes="com/neotis/**"
+      excludes="com/neotis/test/**,com/neotis/admin/**, com/neotis/server/**"/>
+  </target>
+
+  <target description="compile admin application code" name="build-admin-app">
+    <mkdir dir="${target}/admin/WEB-INF/classes"/>
+    <javac deprecation="${deprecation}" debug="${debug}"
+      srcdir="${src}"
+      classpathref="classpath"
+      destdir="${target}/admin/WEB-INF/classes"
+      includes="com/neotis/admin/**"/>
   </target>
 
 </project>

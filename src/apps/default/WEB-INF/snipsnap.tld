@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+  "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+
+<taglib>
+  <tlib-version>1.0</tlib-version>
+  <jsp-version>1.2</jsp-version>
+  <short-name>SnipSnap</short-name>
+  <uri>http://snipsnap.com/snipsnap.tld</uri>
+
+  <tag>
+    <name>checkRoles</name>
+    <tag-class>com.neotis.jsp.UserAuth</tag-class>
+    <attribute>
+      <name>roles</name>
+      <required>true</required>
+      <description>roles to check user against</description>
+    </attribute>
+    <attribute>
+      <name>snip</name>
+      <type>com.neotis.snip.Snip</type>
+      <description>snip to check roles against</description>
+    </attribute>
+    <attribute>
+      <name>invert</name>
+      <type>java.lang.Boolean</type>
+      <description>invert the check</description>
+    </attribute>
+  </tag>
+</taglib>
+

@@ -22,7 +22,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-package com.neotis.net;
+package com.neotis.server;
 
 import org.mortbay.http.HttpListener;
 import org.mortbay.jetty.Server;

@@ -36,4 +36,4 @@ if [ ! -x $base/db/data ]; then
 fi
 
 # execute application server
-$JAVA_HOME/bin/java -cp $CLASSPATH:lib/SnipSnap.jar com.neotis.net.AppServer 2> server.log
+$JAVA_HOME/bin/java -cp $CLASSPATH:lib/SnipSnap.jar com.neotis.server.AppServer 2> server.log

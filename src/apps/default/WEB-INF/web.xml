@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
 <!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
- "http://java.sun.com/j2ee/dtds/web-app_2_3.dtd">
+ "http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <!--
   ** Web application configuration.
@@ -10,6 +10,7 @@
   -->
 <web-app>
   <display-name>SnipSnap</display-name>
+
 
   <servlet>
     <servlet-name>com.neotis.net.Layouter</servlet-name>
@@ -76,27 +77,15 @@
     <url-pattern>/exec/authenticate</url-pattern>
   </servlet-mapping>
 
-  <!--
-  <security-constraint>
-    <web-resource-collection>
-      <web-resource-name>auth</web-resource-name>
-      <url-pattern>/exec/edit</url-pattern>
-    </web-resource-collection>
-    <auth-constraint>
-      <role-name>user</role-name>
-    </auth-constraint>
-  </security-constraint>
+  <!-- TAGLIBS -->
+  <taglib>
+    <taglib-uri>http://java.sun.com/jstl/core</taglib-uri>
+    <taglib-location>/WEB-INF/c.tld</taglib-location>
+  </taglib>
 
-  <login-config>
-    <auth-method>FORM</auth-method>
-    <form-login-config>
-      <form-login-page>/exec/login</form-login-page>
-      <form-error-page>/exec/login</form-error-page>
-    </form-login-config>
-  </login-config>
+  <taglib>
+    <taglib-uri>http://snipsnap.com/snipsnap</taglib-uri>
+    <taglib-location>/WEB-INF/snipsnap.tld</taglib-location>
+  </taglib>
 
-  <security-role>
-    <role-name>user</role-name>
-  </security-role>
-  -->
 </web-app>

@@ -4,7 +4,7 @@
   ** @version $Id$
   -->
 
-<%@ page import="com.neotis.net.AppServer,
+<%@ page import="com.neotis.server.AppServer,
                  org.mortbay.jetty.Server,
                  org.mortbay.http.HttpContext"%>
 <%
