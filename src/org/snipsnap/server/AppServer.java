@@ -33,6 +33,8 @@ import org.mortbay.util.InetAddrPort;
 
 import java.io.IOException;
 import java.util.Properties;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * Application Server
@@ -94,6 +96,13 @@ public class AppServer {
       String host = listener.getHost();
       if (InetAddrPort.__0_0_0_0.equals(host)) {
         host = "localhost";
+        try {
+          InetAddress addr[] = InetAddress.getAllByName(host);
+          for(int i = 0; i < addr.length; i++)
+          System.out.println(addr[i].toString());
+        } catch (UnknownHostException e) {
+          System.err.println("AppServer: unknown host: "+e);
+        }
       }
       System.out.println("INFO: http://" + host + ":" + listener.getPort() + "/admin");
     }

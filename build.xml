@@ -15,6 +15,7 @@
     <pathelement location="${jar}/javax.servlet.jar"/>
     <pathelement location="${jar}/org.apache.jasper.jar"/>
     <pathelement location="${jar}/org.mortbay.jetty.jar"/>
+    <pathelement location="${jar}/xmlrpc-1.1.jar"/>
     <pathelement location="${src}/apps/default/WEB-INF/lib/jstl.jar"/>
     <pathelement location="${src}/apps/default/WEB-INF/lib/standard.jar"/>
   </path>
