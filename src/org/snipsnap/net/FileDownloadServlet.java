@@ -35,7 +35,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 /**
  * Servlet for downloading attachments.
@@ -43,6 +47,20 @@ import java.io.*;
  * @version $Id$
  */
 public class FileDownloadServlet extends HttpServlet {
+
+  protected long getLastModified(HttpServletRequest request) {
+    Snip snip = (Snip) request.getAttribute(SNIP);
+    String fileName = (String) request.getAttribute(FILENAME);
+
+    if (snip != null) {
+      Attachment attachment = snip.getAttachments().getAttachment(fileName);
+      // make sure the attachment exists
+      if (attachment != null)  {
+        return attachment.getDate().getTime();
+      }
+    }
+    return super.getLastModified(request);
+  }
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {

@@ -47,6 +47,10 @@ import java.io.IOException;
  * @version $Id$
  */
 public class SnipViewServlet extends HttpServlet {
+  protected void doHead(HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException {
+    doGet(request, response);
+  }
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
     throws IOException, ServletException {
@@ -104,6 +108,12 @@ public class SnipViewServlet extends HttpServlet {
         name = name + "/" + subname;
         snip = null;
       }
+    }
+
+    // stop special processing for HEAD requests
+    if("HEAD".equals(request.getMethod())) {
+      super.doHead(request, response);
+      return;
     }
 
     // Snip does not exist
