@@ -74,7 +74,7 @@ public class SnipViewServlet extends HttpServlet {
     String subname = null;
     if (null == snip) {
       // handle attachments
-      int slashIndex = name.indexOf('/');
+      int slashIndex = name.lastIndexOf('/');
       if (slashIndex != -1) {
         subname = name.substring(slashIndex + 1);
         name = name.substring(0, slashIndex);
