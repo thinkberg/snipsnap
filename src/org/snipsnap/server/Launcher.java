@@ -46,7 +46,7 @@ public class Launcher {
   private static boolean debug = false;
 
   public static void invokeMain(String mainClassName, String args[])
-    throws IOException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+    throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
     // init class path
     initClassPath(System.getProperty(CLASSPATH));
 
@@ -83,7 +83,7 @@ public class Launcher {
       JarInputStream jarInputStream = new JarInputStream(location.openStream());
       Manifest manifest = jarInputStream.getManifest();
       Attributes mainAttributes = manifest.getMainAttributes();
-      String manifestClassPath = (String)mainAttributes.getValue("Class-Path");
+      String manifestClassPath = mainAttributes.getValue("Class-Path");
 
       // append extra class path to manifest class path (after replacing separatorchar)
       if(extraClassPath != null && extraClassPath.length() > 0) {
