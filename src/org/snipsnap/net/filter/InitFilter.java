@@ -89,7 +89,7 @@ public class InitFilter implements Filter {
         config.setUrl("http://" + serverName + (serverPort == 80 ? "" : ":" + serverPort) + request.getContextPath());
       }
     }
-    System.out.println("url: " + config.getUrl());
+    // System.out.println("url: " + config.getUrl());
 
     // make sure the request has a correct character encoding
     // the enc-wrapper ensures some methods return correct strings too
