@@ -34,7 +34,7 @@ import java.util.Map;
  * @version $Id$
  */
 
-public class BaseLabel implements Label {
+public abstract class BaseLabel implements Label {
   protected String name;
   protected String value;
 
