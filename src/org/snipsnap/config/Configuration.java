@@ -158,9 +158,9 @@ public class Configuration {
   }
 
   public String getVersion() {
-    String version = getProperty(SERVER_VERSION);
+    String version = System.getProperty("snipsnap." + SERVER_VERSION);
     if (null == version) {
-      version = System.getProperty("snipsnap." + SERVER_VERSION);
+      version = getProperty(SERVER_VERSION);
     }
     return version;
   }
