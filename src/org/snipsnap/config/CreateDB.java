@@ -123,8 +123,8 @@ public class CreateDB {
 
   }
 
-  public static void insertData(AppConfiguration config, InputStream data) {
-    System.out.println("CreateDB: Inserting Data");
+  public static void createAdmin(AppConfiguration config) {
+    System.out.println("CreateDB: Creating Admin Home Page");
     SnipSpace.removeInstance();
     UserManager.removeInstance();
 
@@ -137,6 +137,19 @@ public class CreateDB {
 
     System.out.println("Creating admin homepage.");
     HomePage.create(config.getAdminLogin());
+  }
+
+  public static void insertData(AppConfiguration config, InputStream data) {
+    System.out.println("CreateDB: Inserting Data");
+    SnipSpace.removeInstance();
+    UserManager.removeInstance();
+
+    User admin = UserManager.getInstance().create(config.getAdminLogin(), config.getAdminPassword(), config.getAdminEmail());
+    admin.getRoles().add(Roles.EDITOR);
+    UserManager.getInstance().store(admin);
+
+    Application app = Application.get();
+    app.setUser(admin);
 
     System.out.println("Importing default snips.");
     SnipSpace space = SnipSpace.getInstance();
