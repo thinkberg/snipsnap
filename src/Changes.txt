@@ -1,5 +1,6 @@
 0.2.8
 
+- Fixed bug: escape '-' and '*' within code macro
 - Fixed bug: first start on a different port than 8668
 - Added feature: Introduced Skins for SnipSnap
 - Added feature: Interwiki (e.g. [Wiki@MoinMoin]) reads from a standard
