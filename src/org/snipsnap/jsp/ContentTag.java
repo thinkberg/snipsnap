@@ -39,7 +39,6 @@ import javax.servlet.jsp.jstl.core.ConditionalTagSupport;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.io.IOException;
 
-import junit.framework.Test;
 
 /*
  * Tag that displays the content of a snip. Can remove HTML from the content
@@ -68,7 +67,7 @@ public class ContentTag extends TagSupport {
             int colonIndex = content.lastIndexOf(";");
             // did we cut a entity like &x1212; ?
             if (ampIndex > colonIndex) {
-              content = content.substring(0, ampIndex-1);
+              content = content.substring(0, ampIndex - 1);
             }
             content = content + " ...";
           }
