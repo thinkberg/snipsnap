@@ -24,13 +24,15 @@
  */
 package org.snipsnap.user;
 
+import org.snipsnap.util.Nameable;
+
 /**
  * User class.
  *
  * @author Stephan J. Schmidt
  * @version $Id$
  */
-public class User {
+public class User implements Nameable {
 
   private String login;
   private String passwd;
@@ -70,6 +72,10 @@ public class User {
 
   public String getPasswd() {
     return passwd;
+  }
+
+  public String getName() {
+    return getLogin();
   }
 
   public String getLogin() {

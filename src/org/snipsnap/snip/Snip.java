@@ -27,6 +27,7 @@ package org.snipsnap.snip;
 import org.snipsnap.snip.filter.SnipFormatter;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.User;
+import org.snipsnap.util.Nameable;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -40,7 +41,7 @@ import java.net.URLEncoder;
  * @author Stephan J. Schmidt
  * @version $Id$
  */
-public class Snip implements Ownable {
+public class Snip implements Ownable, Nameable {
   //@TODO think about that
   public Snip parent;
   private List children;

@@ -28,6 +28,7 @@ package org.snipsnap.snip.filter.macro;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.util.Nameable;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -54,11 +55,11 @@ public abstract class ListoutputMacro extends Macro {
     buffer.append(") </b><br/>");
     if (c.size() > 0) {
       buffer.append("<blockquote>");
-      Iterator snipsIterator = c.iterator();
-      while (snipsIterator.hasNext()) {
-        Snip aSnip = (Snip) snipsIterator.next();
-        SnipLink.appendLink(buffer, aSnip.getName());
-        if (snipsIterator.hasNext()) {
+      Iterator nameIterator = c.iterator();
+      while (nameIterator.hasNext()) {
+        Nameable nameable = (Nameable) nameIterator.next();
+        SnipLink.appendLink(buffer, nameable.getName());
+        if (nameIterator.hasNext()) {
           buffer.append(", ");
         }
       }
