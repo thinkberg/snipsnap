@@ -60,7 +60,7 @@ public class ApplicationLoader {
         File files[] = rootDir.listFiles();
         for (int i = 0; i < files.length; i++) {
           if (files[i].isDirectory()) {
-            File configFile = new File(files[i], "application.conf");
+            File configFile = new File(files[i], "WEB-INF/application.conf");
             if (configFile.exists()) {
               try {
                 loadApplication(new AppConfiguration(configFile));
@@ -85,7 +85,7 @@ public class ApplicationLoader {
       if (rootDir.isDirectory()) {
         File appDir = new File(rootDir, normalize(name));
         if(appDir.isDirectory()) {
-          return new File(appDir, "application.conf");
+          return new File(appDir, "WEB-INF/application.conf");
         }
       }
     }
@@ -133,8 +133,7 @@ public class ApplicationLoader {
       }
     }
 
-    File root = config.getFile().getParentFile();
-
+    File webInf = config.getFile().getParentFile();
     String host = config.getHost();
     if (host == null || host.length() == 0) {
       host = InetAddrPort.__0_0_0_0;
@@ -173,7 +172,7 @@ public class ApplicationLoader {
 
 
     // start web application context
-    File appRoot = new File(root.getAbsoluteFile(), "app");
+    File appRoot = webInf.getParentFile().getAbsoluteFile();
     String contextPath = config.getContextPath();
     if(contextPath == null || contextPath.length() == 0) {
       contextPath = "/";

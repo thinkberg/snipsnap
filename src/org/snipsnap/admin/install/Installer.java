@@ -169,23 +169,6 @@ public class Installer extends HttpServlet {
       config.setDomain(domain);
     }
 
-/*    Collection servers = Server.getHttpServers();
-    Iterator it = servers.iterator();
-    Server server = null;
-    if (it.hasNext()) {
-      server = (Server) it.next();
-
-      try {
-        server.addListener(new SocketListener(addrPort));
-      } catch (Exception e) {
-        System.err.println("Installer: error configuring socket listener: " + e);
-        errors.put("host", "Unable to configure web server. Either you cannot run the web server on port "
-                           + config.getPort() + " or there is something wrong with your host name.");
-        sendError(session, errors, request, response);
-        return;
-      }
-    }*/
-
     // create application root directory
     File webAppRoot = new File(serverConfig.getProperty(Configuration.SERVER_WEBAPP_ROOT) + "/" + normalize(config.getName()));
     writeMessage(out, "Creating web application directories ...");
@@ -196,17 +179,17 @@ public class Installer extends HttpServlet {
       return;
     }
 
-    File appDir = new File(webAppRoot, "app");
-    appDir.mkdir();
-    File dbDir = new File(webAppRoot, "db");
+    File webInf = new File(webAppRoot, "WEB-INF");
+    webInf.mkdir();
+    File dbDir = new File(webInf, "db");
     dbDir.mkdir();
-    File logDir = new File(webAppRoot, "log");
+    File logDir = new File(webInf, "log");
     logDir.mkdir();
 
     writeMessage(out, "Extracting application template ...");
     try {
-      Checksum checksum = JarUtil.extract(new JarFile("lib/snipsnap-template.war", true), appDir);
-      checksum.store(new File(webAppRoot, "CHECKSUMS"));
+      Checksum checksum = JarUtil.extract(new JarFile("lib/snipsnap-template.war", true), webAppRoot);
+      checksum.store(new File(webInf, "CHECKSUMS"));
     } catch (IOException e) {
       System.err.println("Installer: error while extracting default template: " + e);
       errors.put("fatal", "Unable to extract default application, please see server.log for details!");
@@ -218,8 +201,8 @@ public class Installer extends HttpServlet {
     if(theme != null && theme.length() != 0) {
       writeMessage(out, "Extracting theme ...");
       try {
-        Checksum checksum = JarUtil.extract(new JarFile("lib/snipsnap-theme-"+theme+".jar", true), appDir);
-        checksum.store(new File(webAppRoot, "CHECKSUMS.theme"));
+        Checksum checksum = JarUtil.extract(new JarFile("lib/snipsnap-theme-"+theme+".jar", true), webAppRoot);
+        checksum.store(new File(webInf, "CHECKSUMS.theme"));
       } catch (IOException e) {
         System.err.println("Installer: error while extracting theme: " + e);
         errors.put("fatal", "Unable to extract selected theme, please see server.log for details!");
@@ -234,14 +217,14 @@ public class Installer extends HttpServlet {
     app.setConfiguration(config);
 
     writeMessage(out, "Saving local configuration ...");
-    config.setFile(new File(webAppRoot.getAbsoluteFile(), "application.conf"));
+    config.setFile(new File(webInf.getAbsoluteFile(), "application.conf"));
 
     writeMessage(out, "Creating database ...");
     boolean useMcKoi = request.getParameter("usemckoi") != null ? true : false;
     String jdbcURL = request.getParameter("jdbc");
     String jdbcDrv = request.getParameter("driver");
     if (useMcKoi || jdbcURL == null || jdbcURL.length() == 0) {
-      File dbConfFile = new File(webAppRoot, "db.conf");
+      File dbConfFile = new File(webInf, "db.conf");
       jdbcURL = MckoiEmbeddedJDBCDriver.MCKOI_PREFIX + dbConfFile.getPath();
       jdbcDrv = "org.snipsnap.util.MckoiEmbeddedJDBCDriver";
 

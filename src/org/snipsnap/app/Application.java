@@ -38,6 +38,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.sql.Timestamp;
+import java.io.InputStream;
 
 /**
  * The application object contains information about current users and other

@@ -150,7 +150,8 @@ public class MacroFilter extends RegexTokenFilter {
           if (null != includeSnip) {
             String included = includeSnip.getContent();
             // Filter paramFilter = new ParamFilter(mParams);
-            // buffer.append(paramFilter.filter(included, null));
+            // included = paramFilter.filter(included, null);
+            buffer.append(included);
           } else {
             buffer.append(command.substring(1) + " not found.");
           }

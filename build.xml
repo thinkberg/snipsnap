@@ -145,6 +145,7 @@
     <!-- TODO: Hack to allow running without a war -->
     <jar destfile="${src}/apps/default/WEB-INF/lib/servlets.jar" excludes="**/CVS">
       <fileset dir="${target}/default/WEB-INF/classes" includes="**"/>
+      <fileset dir="${src}" includes="**/*.map"/>
     </jar>
     <jar destfile="${jar}/${appname}-template.war" excludes="**/CVS">
       <fileset dir="${src}/apps/default" includes="**">

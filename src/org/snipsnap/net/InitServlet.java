@@ -45,7 +45,7 @@ public class InitServlet extends GenericServlet {
   public void init(ServletConfig servletConfig) throws ServletException {
     String configFile = (String) servletConfig.getServletContext().getAttribute(Configuration.INIT_PARAM);
     if (null == configFile) {
-      configFile = servletConfig.getServletContext().getRealPath("../application.conf");
+      configFile = servletConfig.getServletContext().getRealPath("WEB-INF/application.conf");
     }
     try {
       AppConfiguration config = AppConfiguration.getInstance(configFile);

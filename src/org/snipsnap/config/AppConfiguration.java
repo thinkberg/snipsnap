@@ -38,17 +38,19 @@ import java.net.UnknownHostException;
  */
 public class AppConfiguration extends Configuration {
 
-  private final static String APP_NAME = "app.name";
-  private final static String APP_HOST = "app.host";
-  private final static String APP_PORT = "app.port";
-  private final static String APP_PATH = "app.path";
+  public final static String APP_NAME = "app.name";
+  public final static String APP_HOST = "app.host";
+  public final static String APP_PORT = "app.port";
+  public final static String APP_PATH = "app.path";
   public final static String APP_PERM = "app.perm";
-  private final static String APP_DOMAIN = "app.domain";
-  private final static String APP_TAGLINE = "app.tagline";
-  private final static String APP_LOGO = "app.logo";
-  private final static String APP_LOGGER = "app.logger";
-  private final static String APP_JDBC_URL = "app.jdbc.url";
-  private final static String APP_JDBC_DRIVER = "app.jdbc.driver";
+  public final static String APP_DOMAIN = "app.domain";
+  public final static String APP_TAGLINE = "app.tagline";
+  public final static String APP_LOGO = "app.logo";
+  public final static String APP_LOGGER = "app.logger";
+  public final static String APP_JDBC_URL = "app.jdbc.url";
+  public final static String APP_JDBC_DRIVER = "app.jdbc.driver";
+
+
   public final static String PERM_NOTIFICATION = "notification";
   public final static String PERM_WEBLOGS_PING = "weblogsPing";
   public final static String PERM_EXTERNAL_IMAGES = "externalImages";
