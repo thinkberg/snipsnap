@@ -26,6 +26,7 @@
 package org.snipsnap.snip;
 
 import org.snipsnap.cache.Cache;
+import org.snipsnap.interceptor.Aspects;
 import org.radeox.util.logging.Logger;
 
 
@@ -42,7 +43,7 @@ public class SnipSpaceFactory {
   public static synchronized SnipSpace getInstance() {
     if (null == instance) {
       Logger.debug("SnipSpaceFactory: Getting new instance.");
-      instance = new SnipSpaceImpl();
+      instance = (SnipSpace) Aspects.newInstance(new SnipSpaceImpl(), SnipSpace.class);
       instance.init();
       //Logger.debug("Initialized instance="+instance);
     }
