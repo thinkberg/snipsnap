@@ -59,7 +59,7 @@ public class WeblogMacro extends Macro {
         buffer.append("</p>");
         SnipLink.appendLink(buffer, entry.getName(), "Link me");
         buffer.append(" | ");
-        buffer.append(snip.getComments().getCommentString());
+        buffer.append(entry.getComments().getCommentString());
         buffer.append("</p><pre>\n\n</pre>");
       }
 

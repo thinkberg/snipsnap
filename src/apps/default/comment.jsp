@@ -8,8 +8,10 @@
 <%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %>
 
 <table width="100%" border="0" cellspacing="2" cellpadding="1">
-  <tr><td><span class="snip-name"><c:out value="${snip.name}"/></span></td></tr>
-  <tr width="100%"><td><span class="snip-modified"><c:out value="${snip.modified}" escapeXml="false"/></span></td></tr>
+  <c:if test="${snip.notWeblog}">
+    <tr><td><span class="snip-name"><c:out value="${snip.name}"/></span></td></tr>
+    <tr width="100%"><td><span class="snip-modified"><c:out value="${snip.modified}" escapeXml="false"/></span></td></tr>
+  </c:if>
   <tr><td width="100%">
     <c:out value="${snip.XMLContent}" escapeXml="false" />
   </td></tr>
@@ -18,7 +20,7 @@
     <table width="100%" border="0" cellspacing="2" cellpadding="1">
       <c:forEach items="${snip.comments.comments}" var="comment" >
         <tr>
-          <td>##</td>
+          <td><img src="/images/comment.png"/></td>
           <td>
             <span class="comment-author"><c:out value="${comment.modified.short}" escapeXml="false" /></span>
             <s:check roles="Owner" permission="Edit" snip="${comment}">
@@ -39,7 +41,7 @@
     </table>
   </td></tr>
   <tr>
-  <td>Referrer: <%=request.getHeader("REFERER")%></td>
+  <!-- <td>Referrer: <%=request.getHeader("REFERER")%></td> -->
  </tr>
 </table>
 

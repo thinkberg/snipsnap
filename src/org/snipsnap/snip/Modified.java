@@ -106,7 +106,9 @@ public class Modified {
    */
   public String getShort() {
     StringBuffer buffer = new StringBuffer();
+    buffer.append("<span class=\"snip-name\">");
     SnipLink.appendLink(buffer, cUser);
+    buffer.append("</span>");
     buffer.append(", ");
     buffer.append(getNiceTime(mTime));
     return buffer.toString();
