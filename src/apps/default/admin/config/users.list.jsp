@@ -67,7 +67,7 @@
         </c:if>
       </td>
       <td><span class="nobr"><c:out value="${user.roles}"/></span></td>
-      <td><fmt:formatDate pattern="yy-MM-dd hh:mm" value="${user.lastLogin}"/></td>
+      <td><fmt:formatDate pattern="yyyyMMdd hh:mm" value="${user.lastLogin}"/></td>
       <td>
         <input type="hidden" name="edit_login" value="<c:out value='${user.login}'/>"/>
         <input type="submit" name="edit" value="<fmt:message key="config.users.edit"/>"/>
