@@ -70,9 +70,7 @@ public class GraphMacro extends SnipMacro {
     writer.write(handler);
 
     String content = Encoder.unescape(params.getContent());
-    String id = "" + content.hashCode();
-    RenderServlet.addContent(id, content);
-    writer.write("&amp;id=" + id);
+    writer.write("&amp;id=" + RenderServlet.addContent(content));
     writer.write("\"/>");
   }
 }

@@ -32,33 +32,59 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import java.util.Collections;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.WeakHashMap;
+import java.io.IOException;
 
 /**
- * Get some data from a snip and render the content
+ * Render special content added to a temporary store. This is used for the
+ * graph macro. The main use is to add content to the page that is retrieved
+ * by img tags or similar.
  *
- * @author Stephan J. Schmidt
+ * @author Matthias L. Jugel
  * @version $Id$
  */
 public class RenderServlet extends HttpServlet {
-  private static Map contentMap = new WeakHashMap();
+  private static Map contentMap = Collections.synchronizedMap(new HashMap());
   private Map handlers = new HashMap();
   private final static ContentRenderer DEFAULT_HANDLER = new HorizontalContentRenderer();
 
-  public static void addContent(String id, String content) {
-    contentMap.put(id, content);
+  /**
+   * Add content to the temporary store and return an id that can be used to select
+   * the content later. The graph macro uses this to store the graph description
+   * here which is then handed over to the rendering handler to translate to an image.
+   * <p/>
+   * Example:
+   * &lt;img src="/exec/render?id=XXXX&handler=YYYY"/&gt;
+   *
+   * @param content the textual content to be rendered
+   * @return an it to add to the url for retrieving the rendered content
+   */
+  public static String addContent(String content) {
+    String key = null;
+    synchronized (contentMap) {
+      int add = 0;
+      int hashCode = content.hashCode();
+      do {
+        key = String.valueOf(hashCode + add++);
+      } while (contentMap.containsKey(key));
+      contentMap.put(key, content);
+    }
+    return key;
   }
 
+  /**
+   * Initialize the render servlet by loading the content handlers.
+   *
+   * @throws ServletException
+   */
   public void init() throws ServletException {
     Iterator contentRenderer =
             Service.providers(org.snipsnap.graph.ContentRenderer.class);
     while (contentRenderer.hasNext()) {
       ContentRenderer renderer = (ContentRenderer) contentRenderer.next();
-//System.out.println("adding content renderer: "+renderer.getName());
       handlers.put(renderer.getName(), renderer);
     }
   }
@@ -69,6 +95,7 @@ public class RenderServlet extends HttpServlet {
     String handler = request.getParameter("handler");
     String id = request.getParameter("id");
     String content = (String) contentMap.get(id);
+    contentMap.remove(id);
 
     ContentRenderer renderer = (ContentRenderer) handlers.get(handler);
     if (null == renderer) {

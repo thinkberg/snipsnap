@@ -39,25 +39,32 @@ import java.io.IOException;
 
 /**
  * Servlet to remove snips from the database.
+ *
  * @author Matthias L. Jugel
  * @version $Id$
  */
 public class SnipRemoveServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
+          throws ServletException, IOException {
     Application app = Application.get();
     User user = app.getUser();
     Configuration config = app.getConfiguration();
 
     String name = request.getParameter("name");
     // TODO include check for current snip (see Access)
-    if(user != null && user.isAdmin()) {
-      SnipSpace space = (SnipSpace)Components.getComponent(SnipSpace.class);
+    if (user != null && user.isAdmin()) {
+      SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
       Snip snip = space.load(name);
+
+      // check for comment and remove from comment list
+      if (snip.getCommentedSnip() != null) {
+        snip.getCommentedSnip().getComments().getComments().remove(snip);
+      }
+
       space.remove(snip);
-      response.sendRedirect(config.getUrl("/space/"+config.getStartSnip()));
+      response.sendRedirect(config.getUrl("/space/" + config.getStartSnip()));
       return;
     }
-    response.sendRedirect(config.getUrl("/space/"+name));
+    response.sendRedirect(config.getUrl("/space/" + name));
   }
 }

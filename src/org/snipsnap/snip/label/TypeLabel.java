@@ -127,8 +127,8 @@ public class TypeLabel extends BaseLabel {
     if (null != value && !"".equals(value)) {
       String values[] = value.split(",");
       type = (values.length > 0 ? values[0] : "");
-      editHandler = (values.length > 1 ? values[1] : "");
-      viewHandler = (values.length > 2 ? values[2] : "");
+      viewHandler = (values.length > 1 ? values[1] : "");
+      editHandler = (values.length > 2 ? values[2] : "");
     }
     super.setValue(value);
   }
