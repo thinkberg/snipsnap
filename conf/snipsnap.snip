@@ -78,7 +78,14 @@ Mnemonic | Rendering | Comment
 1.1 Title || a style 1.1 heading (minor heading)
 - text || a list item (with -), several lines create a single list
 * text || a list item (with *)
-1. test || an enumerated list
+1. text || an enumerated list
+a. text || alphabetical enumerated list
+A. text || uppercase alphabetical enumerated list
+i. text || roman enumerated list
+I. text || uppercase roman enumerated list
+g. text || greek enumerated list
+h. text || hiragana (japanese) enumerated list
+k. text || katakana (japanese) enumerated list
 \_\_bold\_\_ | __bold__ | simple bold text
 \~\~italics\~\~ | ~~italics~~ | simple italic text
 \-\-strike\-\- | --strike-- | strike through text
@@ -101,6 +108,10 @@ Text\{note:footnote\} | Text{note:footnote} | include a footnote here
 \{api:class\} or \{api:class\|language\} | {api:java.lang.Object} | creates  a link into the documentation of the specified language.
 \{code\[:language\]\} | {code}if(...) {}{code} | creates a code box that may contain source code. The optional language may be used to select a different syntax highlighting scheme (default: Java).
 \{quote\}Citation\{quote\} | {quote}Citation{quote} | creates a quotation
+{code}
+
+1.1 Special macros
+{table}
 \{logins\} || displays a list of currently logged in users and guests
 \{calendar\[:month\|year\]} || display a calendar, optionally a special month and year (use numeric arguments)
 \{index\[:type\]\} || display index of all snips (for list types see below)
