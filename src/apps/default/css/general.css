@@ -34,6 +34,24 @@
 
 
 /************************************************/
+/* list formatting                              */
+
+#list {
+}
+
+#list .list-title {
+  font-weight: bold;
+}
+
+#list ul {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 0px;
+  padding-left: 0px;
+  list-style-type: none;
+}
+
+/************************************************/
 /* ANCHOR tag                                   */
 a {
 	color:#09c;

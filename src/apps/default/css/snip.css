@@ -7,38 +7,39 @@
 #snip-wrapper {
 }
 
-#snip-header {
-}
-
 #snip-title {
   text-align: left;
 }
 
-h1.snip-name {
+.snip-name {
+  display: inline;
   font-weight: bold;
   font-size: 150%;
   color: black;
   background-color: inherit;
+  clear: left;
 }
 
-.snip-comment {
+.snip-commented-snip {
 }
 
 #snip-buttons {
   float: right;
-  vertical-align: top;
+  margin-top: 5px;
 }
 
 #snip-info {
   color: #999999;
   background-color: inherit;
+  margin-top: 5px;
 }
 
 #snip-content {
   width: 100%;
+  margin-top: 10px;
 }
 
-#snip-comments {
+#snip-post-comments {
   margin-top: 20px;
 }
 
@@ -91,5 +92,58 @@ h1.snip-name {
   content: ": ";
 }
 
+/**************************************************/
+/* snip edit part                                 */
+
+#snip-input {
+  margin-top: 20px;
+}
+
+#form {
+}
+
+#form .form-buttons {
+  text-align: right;
+}
+
+#form input[type=submit] {
+  vertical-align: text-bottom;
+}
+
+/**************************************************/
+/* snip with comments part                        */
+
+#snip-comments {
+}
+
+#comment-title {
+  margin-top: 20px;
+}
+
+#comment-title h2.comment-name {
+  display: inline;
+  font-weight: normal;
+  font-size: 100%;
+}
+
+#comment-buttons {
+  display: inline;
+}
+
+#comment-content {
+  margin-top: 5px;
+  margin-left: 20px;
+}
+
+#comment-input {
+  margin-top: 20px;
+}
+
+/**************************************************/
+/* preview formatting                             */
 
 
+#preview {
+  background-color: #eeeeee;
+  color: inherit;
+}

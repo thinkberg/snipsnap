@@ -33,19 +33,22 @@ import org.snipsnap.user.Permissions;
 import org.snipsnap.user.User;
 import org.snipsnap.util.Nameable;
 import org.snipsnap.app.Application;
+import org.snipsnap.serialization.Appendable;
 
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.io.Writer;
+import java.io.IOException;
 
 /**
  * Central class for snips.
  * @author Stephan J. Schmidt
  * @version $Id$
  */
-public class Snip implements Ownable, Nameable {
+public class Snip implements Ownable, Nameable, Appendable {
   //@TODO think about that
   public Snip parent;
   private List children;
@@ -368,5 +371,10 @@ public class Snip implements Ownable, Nameable {
       e.printStackTrace();
       return "<span class=\"error\">" + e + "</span>";
     }
+  }
+
+  public Writer appendTo(Writer s) throws IOException {
+    s.write(getXMLContent());
+    return s;
   }
 }

@@ -154,12 +154,12 @@
     <name>snip</name>
     <tag-class>org.snipsnap.jsp.SnipTag</tag-class>
     <attribute>
-      <name>load</name>
-      <required>true</required>
+      <name>name</name>
     </attribute>
     <attribute>
-      <name>id</name>
-      <required>true</required>
+      <name>snip</name>
+      <type>org.snipsnap.snip.Snip</type>
+      <description>snip for output</description>
     </attribute>
   </tag>
 

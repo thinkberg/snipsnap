@@ -76,6 +76,9 @@ public class MacroFilter extends RegexTokenFilter {
     add(new HotSnipMacro());
     add(new QuoteMacro());
     add(new VersionMacro());
+    add(new LoginsMacro());
+    add(new RecentChangesMacro());
+    add(new CalendarMacro());
   }
 
   public static Filter getInstance() {
@@ -178,7 +181,7 @@ public class MacroFilter extends RegexTokenFilter {
       } catch (Exception e) {
         System.err.println("unable to format macro: " + result.group(1));
         e.printStackTrace();
-        buffer.append("?" + command + (result.length() > 1 ? ":" + result.group(2) : "") + "?");
+        buffer.append("<div class=\"error\">?" + command + (result.length() > 1 ? ":" + result.group(2) : "") + "?</div>");
         return;
 
       }

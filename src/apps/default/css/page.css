@@ -62,7 +62,7 @@ body {
   /* border: 1px solid red; */
 }
 
-#page-menu {
+#page-portlet-1 {
   position: absolute;
   left: 600px;
   width: 200px;
@@ -70,6 +70,7 @@ body {
   background-color: inherit;
 	border: 1px dashed #999999;
 	line-height: 14px;
+  padding: 5px;
 }
 
 

@@ -30,7 +30,6 @@ import org.snipsnap.snip.Snip;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.jstl.core.ConditionalTagSupport;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.io.IOException;
 import java.util.Iterator;
@@ -41,9 +40,9 @@ public class DublinCoreTag extends TagSupport {
   String format = null;
 
   private String capitalize(String s) {
- 	char chars[] = s.toCharArray();
- 	chars[0] = Character.toUpperCase(chars[0]);
- 	return new String(chars);
+    char chars[] = s.toCharArray();
+    chars[0] = Character.toUpperCase(chars[0]);
+    return new String(chars);
   }
 
   public int doStartTag() throws JspException {

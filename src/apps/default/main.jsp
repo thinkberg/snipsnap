@@ -1,4 +1,5 @@
-<%--
+<%@ page import="org.snipsnap.snip.SnipSpace"%>
+ <%--
   ** Main layout template.
   ** @author Matthias L. Jugel
   ** @version $Id$
@@ -40,7 +41,10 @@
      <a href="http://snipsnap.org/"><s:image name="logo_small"/></a>
     </div>
    </div>
-   <div id="page-menu"><c:import url="menu.jsp"/></div>
+   <% for(int i = 1; SnipSpace.getInstance().exists("snipsnap-portlet-"+i); i++) { %>
+    <% pageContext.setAttribute("snip", SnipSpace.getInstance().load("snipsnap-portlet-"+i)); %>
+    <div id="page-portlet-<%=i%>"><s:snip snip="${snip}"/></div>
+   <% } %>
   </div>
   <s:debug/>
  </body>

@@ -1,5 +1,10 @@
 0.2.8
 
+- Added Feature: VerticalListFormatter introduced
+- Added Feature: {logins} macro
+- Added Feature: {calendar} macro
+- Changed <s:snip> JSTL tag
+- Switched to DIV from TABLE layout
 - Worked on Accessibility
 
 0.2.7
