@@ -142,6 +142,10 @@ public class ConfigurationProxy implements InvocationHandler {
     return newProxyInstance(new ConfigurationMap());
   }
 
+  public static Configuration newInstance(Configuration config) {
+    return newProxyInstance(new ConfigurationMap(config));
+  }
+
   private static Configuration newProxyInstance(ConfigurationMap config) {
     proxy = (Configuration) Proxy.newProxyInstance(config.getClass().getClassLoader(),
                                                    new Class[]{Configuration.class},

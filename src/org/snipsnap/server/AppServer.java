@@ -29,14 +29,22 @@ import org.mortbay.jetty.Server;
 import org.mortbay.util.InetAddrPort;
 import org.mortbay.util.MultiException;
 import org.snipsnap.config.ServerConfiguration;
+import org.snipsnap.user.Digest;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.Iterator;
 import java.util.Properties;
+import java.util.Random;
+import java.util.Date;
 
 /**
  * Application Server
@@ -46,19 +54,12 @@ import java.util.Properties;
 public class AppServer {
   protected static Properties serverInfo = new Properties();
 
-
   protected static Server jettyServer;
 
   /**
    * Start application server.
    */
   public static void main(String args[]) {
-    Runtime.getRuntime().addShutdownHook(new Thread() {
-      public void run() {
-        Shutdown.shutdown();
-      }
-    });
-
     // load server defaults configuration
     try {
       serverInfo.load(AppServer.class.getResourceAsStream("/conf/snipsnap.conf"));
@@ -67,24 +68,27 @@ public class AppServer {
     }
     System.setProperty(ServerConfiguration.VERSION, serverInfo.getProperty(ServerConfiguration.VERSION));
 
-    // output version and copyright information
-    BufferedReader copyrightReader = new BufferedReader(new InputStreamReader(AppServer.class.getResourceAsStream("/conf/copyright.txt")));
-    String line = null;
-    try {
-      while ((line = copyrightReader.readLine()) != null) {
-        System.out.println(line);
-      }
-    } catch (IOException e) {
-      // ignore io exception here ...
-    }
+    printCopyright();
 
     // load additional local configuration
     try {
       serverInfo.load(new FileInputStream("conf/server.conf"));
     } catch (IOException e) {
-      // ignore local server configuration not found
+      serverInfo.setProperty(ServerConfiguration.ADMIN_PASS,
+                             Digest.getDigest("" + new Date()).substring(0, 5).toLowerCase());
+      try {
+        serverInfo.store(new FileOutputStream("conf/server.conf"), " SnipSnap Server Configuration");
+      } catch (IOException e1) {
+        System.err.println("WARNING: unable to store local server configuration: " + e);
+      }
     }
     serverInfo = parseArguments(args, serverInfo);
+
+    Runtime.getRuntime().addShutdownHook(new Thread() {
+      public void run() {
+        Shutdown.shutdown();
+      }
+    });
 
     // set encoding of the JVM
     String enc = serverInfo.getProperty(ServerConfiguration.ENCODING, "UTF-8");
@@ -93,7 +97,7 @@ public class AppServer {
     // start jetty server and install web application
     try {
       File appDir = new File(serverInfo.getProperty(ServerConfiguration.WEBAPP_ROOT));
-      if(!appDir.exists()) {
+      if (!appDir.exists()) {
         appDir.mkdir();
       }
       jettyServer = new Server(getResource("/conf/jetty.conf", "./conf/jetty.conf"));
@@ -125,9 +129,22 @@ public class AppServer {
           host = System.getProperty("host", "localhost");
         }
       }
-      System.out.println("ATTENTION: http://" + host + ":" + listener.getPort() + "/install");
+      System.out.println("ATTENTION: http://" + host + ":" + listener.getPort() + "/install/"+ serverInfo.getProperty(ServerConfiguration.ADMIN_PASS));
     } else {
       System.out.println(ApplicationLoader.getApplicationCount() + " applications loaded and running (" + errors + " errors).");
+    }
+  }
+
+  private static void printCopyright() {
+    // output version and copyright information
+    BufferedReader copyrightReader = new BufferedReader(new InputStreamReader(AppServer.class.getResourceAsStream("/conf/copyright.txt")));
+    String line = null;
+    try {
+      while ((line = copyrightReader.readLine()) != null) {
+        System.out.println(line);
+      }
+    } catch (IOException e) {
+      // ignore io exception here ...
     }
   }
 

@@ -24,8 +24,6 @@
  */
 package org.snipsnap.user;
 
-import org.radeox.util.logging.Logger;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -41,7 +39,7 @@ public class Digest {
     try {
       digest = MessageDigest.getInstance("SHA1");
     } catch (NoSuchAlgorithmException e) {
-      Logger.warn("UserManager: unable to load digest algorithm", e);
+      System.err.println("UserManager: unable to load digest algorithm: " + e);
       digest = null;
     }
   }
@@ -51,14 +49,6 @@ public class Digest {
       return digestToHexString(digest.digest(s.getBytes()));
     }
     return "";
-  }
-
-  /**
-   * Get a hexadecimal cookie digest from a user.
-   */
-  public static String getCookieDigest(User user) {
-    String tmp = user.getLogin() + user.getPasswd() + user.getLastLogin().toString();
-    return getDigest(tmp);
   }
 
   /**

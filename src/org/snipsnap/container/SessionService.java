@@ -1,29 +1,26 @@
 package org.snipsnap.container;
 
-import org.snipsnap.user.User;
+import org.radeox.util.logging.Logger;
+import org.snipsnap.app.Application;
+import org.snipsnap.config.Configuration;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.storage.UserStorage;
 import org.snipsnap.user.AuthenticationService;
 import org.snipsnap.user.Digest;
-import org.snipsnap.app.Application;
-import org.snipsnap.snip.storage.UserStorage;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.config.Configuration;
-import org.radeox.util.logging.Logger;
+import org.snipsnap.user.User;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.Cookie;
+import java.io.BufferedReader;
+import java.io.StringReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.HashMap;
-import java.net.URL;
-import java.net.MalformedURLException;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.StringReader;
 
 
 /*
@@ -102,9 +99,18 @@ public class SessionService {
     Iterator users = storage.storageAll().iterator();
     while (users.hasNext()) {
       User user = (User) users.next();
-      authHash.put(Digest.getCookieDigest(user), user);
+      authHash.put(getCookieDigest(user), user);
     }
   }
+
+  /**
+   * Get a hexadecimal cookie digest from a user.
+   */
+  public static String getCookieDigest(User user) {
+    String tmp = user.getLogin() + user.getPasswd() + user.getLastLogin().toString();
+    return Digest.getDigest(tmp);
+  }
+
 
   /**
    * Get user from session or cookie.
@@ -163,7 +169,7 @@ public class SessionService {
    * Set cookie with has of encoded user/pass and last login time.
    */
   public void setCookie(HttpServletRequest request, HttpServletResponse response, User user) {
-    String auth = Digest.getCookieDigest(user);
+    String auth = getCookieDigest(user);
     // @TODO find better solution by removing by value
     updateAuthHash();
 

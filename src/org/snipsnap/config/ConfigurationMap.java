@@ -59,24 +59,36 @@ public class ConfigurationMap {
     Configuration.APP_INSTALLED,
   });
 
-  private Properties properties = null;
-  private Properties defaults = null;
+  protected Properties properties = null;
+  protected Properties defaults = null;
 
   private File webInfDir = null;
 
   // internal transposition map for old property file versions
   private Properties transposeMap = null;
 
+  public ConfigurationMap(Configuration init) {
+    initDefaults();
+    webInfDir = init.getWebInfDir();
+    initialize((Properties) init.getProperties().clone());
+  }
+
   public ConfigurationMap() {
+    initDefaults();
+    // instantiate properties with defaults
+    initialize(new Properties(defaults));
+  }
+
+  private void initDefaults() {
     defaults = new Properties();
     try {
       defaults.load(Configuration.class.getResourceAsStream(DEFAULTS_CONF));
     } catch (Exception e) {
       System.err.println("Configuration: unable to load defaults: " + e.getMessage());
     }
-
-    // instantiate properties with defaults
-    properties = new Properties(defaults);
+  }
+  private void initialize(Properties initProperties) {
+    properties = initProperties;
 
     try {
       transposeMap = new Properties();
@@ -85,7 +97,6 @@ public class ConfigurationMap {
       System.err.println("Configuration: unable to load transposition map: " + e.getMessage());
     }
   }
-
 
   public void setWebInfDir(File dir) {
     webInfDir = dir;
