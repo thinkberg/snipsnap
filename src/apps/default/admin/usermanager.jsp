@@ -6,13 +6,15 @@
 
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 
-<table width="100%" border="0" cellpadding="3" cellspacing="0">
-  <tr class="table-header">
+<c:import url="/admin/menu.jsp"/>
+
+<table class="snip-table" width="100%" border="0" cellpadding="3" cellspacing="0">
+  <tr class="snip-table-header">
     <td width="100%">User name</td><td>Email</td><td>Roles</td><td>Status</td><td colspan="2">Action</td>
   </tr>
   <c:forEach items="${usermanager.all}" var="user" varStatus="idx">
-    <tr class="table-<c:out value='${idx.count mod 2}'/>">
-      <td><b><i><c:out value="${user.login}"/></i></b></td>
+    <tr class="snip-table-<c:out value='${idx.count mod 2}'/>">
+      <td><b><i><a href="<c:url value='/space/${user.login}'/>"><c:out value="${user.login}"/></a></i></b></td>
       <td>
         <c:if test="${user.email != null}">
           <a href="mailto:<c:out value="${user.email}"/>"><c:out value="${user.email}"/></a>

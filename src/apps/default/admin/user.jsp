@@ -7,26 +7,32 @@
 
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 
+<c:import url="/admin/menu.jsp"/>
+
 <c:forEach items="${errors}" var="error">
   <div class="error"><c:out value="${error.value}"/></div>
 </c:forEach>
 
 <form method="POST" action="<c:url value='/exec/admin/user'/>">
  <input type="hidden" name="command" value="update">
- <table border="0" cellspacing="2" cellpadding="2">
-  <tr><td class="table-header" colspan="2">User Information</td></tr>
+ <table class="snip-table" border="0" cellspacing="0" cellpadding="2">
+  <tr><td class="snip-table-header" colspan="2">User Information</td></tr>
   <tr>
-    <td>User Name: </td><td><input readonly name="login" type="text" size="20" value="<c:out value='${user.login}'/>" tabindex="1"></td>
+    <td>User Name: </td><td><input name="login" type="hidden" size="20" value="<c:out value='${user.login}'/>"><c:out value="${user.login}"/></td>
   </tr>
   <tr>
     <td>Email: </td><td><input name="email" type="text" size="20" value="<c:out value='${user.email}'/>" tabindex="0"></td>
   </tr>
-  <tr class="table-header"><td colspan="2">Change Password</td></tr>
+  <tr class="snip-table-header"><td colspan="2">Change Password<br>
+    <c:if test="${user.admin}">
+        <i>Attention:</i> Changing the admin password does not change the database password!
+    </c:if>
+  </td></tr>
   <tr <c:if test="${errors['password'] != null}">class="error-position"</c:if>>
     <td>New Password: </td><td><input name="password.new" type="password" size="20" value="" tabindex="0"></td></tr>
   <tr <c:if test="${errors['password'] != null}">class="error-position"</c:if>>
     <td>New Password (verification): </td><td><input name="password2.new" type="password" size="20" value="" tabindex="0"></td></tr>
-  <tr class="table-header"><td colspan="2">Roles and Status</td></tr>
+  <tr class="snip-table-header"><td colspan="2">Roles and Status</td></tr>
   <tr>
     <td>Status: </td><td><input name="status" type="text" size="20" value="<c:out value='${user.status}'/>" tabindex="0"></td>
   </tr>

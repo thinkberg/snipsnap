@@ -60,16 +60,17 @@ public class AdminServlet extends HttpServlet {
       user = UserManager.getInstance().getUser(request);
     }
 
-    if (um.isAuthenticated(user) && user.isAdmin()) {
-      session.setAttribute(ATT_USERMANAGER, um);
-      session.setAttribute(ATT_CONFIG, app.getConfiguration());
-      session.setAttribute(ATT_ADMIN, user);
+    if (um.isAuthenticated(user) && user.isAdmin() && request.getPathInfo() != null) {
+      request.setAttribute(ATT_USERMANAGER, um);
+      request.setAttribute(ATT_CONFIG, app.getConfiguration());
+      request.setAttribute(ATT_ADMIN, user);
 
-      String command = request.getPathInfo();
-      if(null == command || "/".equals(command)) {
-        command = "/application.jsp";
+      String layout = request.getPathInfo();
+      if(null == layout || "/".equals(layout)) {
+        layout = "/application.jsp";
       }
-      RequestDispatcher dispatcher = request.getRequestDispatcher("/admin"+command);
+      request.setAttribute(Layouter.ATT_PAGE, "/admin"+layout);
+      RequestDispatcher dispatcher = getServletContext().getNamedDispatcher("org.snipsnap.net.Layouter");
       dispatcher.forward(request, response);
       return;
     }

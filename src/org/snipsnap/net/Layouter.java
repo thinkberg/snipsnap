@@ -52,6 +52,8 @@ import java.util.Map;
  */
 public class Layouter extends HttpServlet {
 
+  public final static String ATT_PAGE = "page";
+
   public void doGet(HttpServletRequest request, HttpServletResponse response)
     throws IOException, ServletException {
 
@@ -86,14 +88,18 @@ public class Layouter extends HttpServlet {
     }
     app.setParameters(paramMap);
 
-    //TODO 1.4 String layout = URLDecoder.decode(request.getPathInfo(), "iso-8869-1");
-    String layout = SnipLink.decode(request.getPathInfo());
+    // page attribute overrides pathinfo
+    String layout = (String)request.getAttribute(ATT_PAGE);
+    if(null == layout) {
+      layout = SnipLink.decode(request.getPathInfo());
+    }
+
     if (null == layout || "/".equals(layout)) {
       response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));
       return;
     }
 
-    request.setAttribute("page", layout);
+    request.setAttribute(ATT_PAGE, layout);
     RequestDispatcher dispatcher = null;
     if (layout.endsWith(".jsp")) {
       dispatcher = request.getRequestDispatcher("/main.jsp");

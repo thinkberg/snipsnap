@@ -6,38 +6,39 @@
 
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 
+<span class="snip-name">Administrative Interface (<c:out value="${config.name}"/>)</span>
+<p>
 <c:url var="base" value="/exec/admin/"/>
-<table class="menu" border="0" cellpadding="5" cellspacing="0">
+<table width="100%" class="snip-table" border="0" cellpadding="5" cellspacing="0">
   <tr>
     <!-- overview -->
     <c:choose>
-      <c:when test="${page != '/application.jsp'}">
-        <td align="right" class="menuitem-inactive">
-          <a href="<c:out value='${base}'/>">Overview</a>
+      <c:when test="${page != '/admin/application.jsp'}">
+        <td width="50%" align="middle" class="snip-table-even">
+          <b><a href="<c:out value='${base}'/>">Overview</a></b>
         </td>
       </c:when>
       <c:otherwise>
-        <td align="right" class="menuitem-active">
-          Overview
+        <td width="50%" align="middle" class="snip-table-odd">
+          <b>Overview</b>
         </td>
       </c:otherwise>
     </c:choose>
-  </tr>
-  <tr>
     <!-- user management -->
     <c:choose>
-      <c:when test="${page != '/usermanager.jsp' && page != '/user.jsp'}">
-        <td align="right" width="25%" class="menuitem-inactive">
-          <a href="<c:out value='${base}'/>user">User Management</a>
+      <c:when test="${page != '/admin/usermanager.jsp' && page != '/admin/user.jsp'}">
+        <td width="50%" align="middle" class="snip-table-even">
+          <b><a href="<c:out value='${base}'/>usermanager.jsp">User Management</a></b>
         </td>
       </c:when>
       <c:otherwise>
-        <td align="right" width="25%" class="menuitem-active">
-          User Management
+        <td width="50%" align="middle" class="snip-table-odd">
+          <b>User Management</b>
         </td>
       </c:otherwise>
     </c:choose>
   </tr>
 </table>
+<br>
 
 
