@@ -27,24 +27,18 @@ package org.snipsnap.xmlrpc;
 
 import org.apache.xmlrpc.XmlRpcException;
 import org.snipsnap.app.Application;
-import org.snipsnap.user.User;
 import org.snipsnap.snip.XMLSnipExport;
-import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.container.Components;
+import org.snipsnap.user.User;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.OutputKeys;
-import javax.xml.transform.TransformerException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXTransformerFactory;
+import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ByteArrayInputStream;
-import java.beans.XMLEncoder;
 
 /**
  * Handles XML-RPC calls for the SnipSnap API

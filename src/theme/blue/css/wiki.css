@@ -112,6 +112,11 @@ img.float-right {
   background-color: inherit;
 }
 
+.xml-quote {
+  color: #00aa00;
+  background-color: inherit;
+}
+
 /* weblog formatting */
 .blog-date {
   font-family: georgia, new roman, times, serif;

@@ -25,11 +25,19 @@
 
 package org.snipsnap.semanticweb.rss;
 
-import org.radeox.EngineManager;
+import org.radeox.engine.RenderEngine;
 import org.radeox.engine.context.RenderContext;
 import org.snipsnap.app.Application;
+import org.snipsnap.container.Components;
 import org.snipsnap.render.context.SnipRenderContext;
-import org.snipsnap.snip.*;
+import org.snipsnap.snip.Access;
+import org.snipsnap.snip.Comments;
+import org.snipsnap.snip.Links;
+import org.snipsnap.snip.Modified;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipPath;
+import org.snipsnap.snip.SnipSpace;
+import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.snip.attachment.Attachments;
 import org.snipsnap.snip.label.Labels;
 import org.snipsnap.user.Permissions;
@@ -108,9 +116,10 @@ public class RssSnip implements Snip {
   }
 
   public String getXMLContent() {
+    RenderEngine engine = (RenderEngine) Components.getComponent(RenderEngine.class);
     RenderContext context = new SnipRenderContext(snip, SnipSpaceFactory.getInstance());
     context.setParameters(Application.get().getParameters());
-    return EngineManager.getInstance("snipsnap").render(content, context);
+    return engine.render(content, context);
   }
 
   // Only pass through the other methods

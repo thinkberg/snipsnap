@@ -24,9 +24,10 @@
  */
 package org.snipsnap.snip;
 
-import org.radeox.EngineManager;
+import org.radeox.engine.RenderEngine;
 import org.radeox.engine.context.RenderContext;
 import org.snipsnap.app.Application;
+import org.snipsnap.container.Components;
 import org.snipsnap.render.context.SnipRenderContext;
 
 /**
@@ -37,8 +38,9 @@ import org.snipsnap.render.context.SnipRenderContext;
  **/
 public class SnipFormatter {
   public static String toXML(Snip snip, String content) {
+    RenderEngine engine = (RenderEngine) Components.getComponent(RenderEngine.class);
     RenderContext context = new SnipRenderContext(snip, SnipSpaceFactory.getInstance());
     context.setParameters(Application.get().getParameters());
-    return EngineManager.getInstance("snipsnap").render(content, context);
+    return engine.render(content, context);
   }
 }
