@@ -34,6 +34,10 @@ import org.radeox.util.logging.Logger;
 import org.snipsnap.snip.storage.SnipSerializer;
 import org.snipsnap.snip.storage.UserSerializer;
 import org.snipsnap.user.User;
+import org.snipsnap.versioning.VersionManager;
+import org.snipsnap.versioning.VersionInfo;
+import org.snipsnap.container.Components;
+import org.snipsnap.app.Application;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -43,6 +47,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.List;
+import java.util.HashMap;
 
 /**
  * Helper class for exporting Snips and users as XML document.
@@ -50,16 +55,19 @@ import java.util.List;
  * @version $Id$
  */
 public class XMLSnipExport {
+
+  private static ThreadLocal instance = new ThreadLocal() {
+    protected synchronized Object initialValue() {
+      return new HashMap();
+    }
+  };
+
   private static void store(OutputStream out, Document exportDocument) {
     try {
       OutputFormat outputFormat = new OutputFormat();
       outputFormat.setEncoding("UTF-8");
       outputFormat.setNewlines(true);
-      XMLWriter xmlWriter = new XMLWriter(out, outputFormat) {
-        protected String escapeElementEntities(String s) {
-          return super.escapeElementEntities(s);
-        }
-      };
+      XMLWriter xmlWriter = new XMLWriter(out, outputFormat);
       xmlWriter.write(exportDocument);
       xmlWriter.flush();
     } catch (Exception e) {
@@ -129,6 +137,7 @@ public class XMLSnipExport {
   private static void storeSnips(Element root, List snips, String filter, List ignoreElements, File fileStore) {
     if (snips != null && snips.size() > 0) {
       SnipSerializer snipSerializer = SnipSerializer.getInstance();
+
       Iterator snipListIterator = snips.iterator();
       while (snipListIterator.hasNext()) {
         Snip snip = (Snip) snipListIterator.next();
@@ -144,9 +153,27 @@ public class XMLSnipExport {
             }
           }
           storeAttachments(snipEl, fileStore);
+          storeVersions(snipEl, snip);
           root.add(snipEl);
         }
       }
+    }
+  }
+
+  private static void storeVersions(Element snipEl, Snip snip) {
+    SnipSerializer serializer = SnipSerializer.getInstance();
+
+    VersionManager versionManager = (VersionManager) Components.getComponent(VersionManager.class);
+    List snipVersions = versionManager.getHistory(snip);
+
+    Element versionsElement = snipEl.addElement("versions");
+    Iterator versionsIt = snipVersions.iterator();
+    while (versionsIt.hasNext()) {
+      VersionInfo versionInfo = (VersionInfo) versionsIt.next();
+      Snip versionSnip = versionManager.loadVersion(snip, versionInfo.getVersion());
+      Element versionSnipEl = serializer.serialize(versionSnip);
+//      versionSnipEl.addAttribute("version", "" + versionInfo.getVersion());
+      versionsElement.add(versionSnipEl);
     }
   }
 

@@ -37,6 +37,7 @@ import org.snipsnap.snip.storage.SnipSerializer;
 import org.snipsnap.snip.storage.UserSerializer;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
+import org.snipsnap.versioning.VersionManager;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -45,6 +46,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.List;
 
 /**
  * Helper class for importing serialized database backups.
@@ -152,6 +154,7 @@ public class XMLSnipImport {
 
         snip = snipSerializer.deserialize(snipMap, snip);
         restoreAttachments(snipElement);
+        restoreVersions(snipElement, snip, (flags & OVERWRITE) == 1);
         snip.getBackLinks().getSize();
         space.systemStore(snip);
       }
@@ -181,6 +184,32 @@ public class XMLSnipImport {
             e.printStackTrace();
           }
         }
+      }
+    }
+  }
+
+  private static void restoreVersions(Element snipEl, Snip snip, boolean overwrite) {
+    VersionManager versionManager = (VersionManager)Components.getComponent(VersionManager.class);
+    List currentVersions = versionManager.getHistory(snip);
+    if(currentVersions.size() > 0 && overwrite) {
+      // TODO missing in version manager
+      // versionManager.removeHistory();
+    }
+
+    currentVersions = versionManager.getHistory(snip);
+    int versionNo = currentVersions.size();
+
+    SnipSerializer serializer = SnipSerializer.getInstance();
+    Element versionsEl = snipEl.element("versions");
+    if(versionsEl != null) {
+      Iterator versionsElIt = versionsEl.elementIterator("snip");
+      while (versionsElIt.hasNext()) {
+        Element versionSnipEl = (Element) versionsElIt.next();
+        Snip versionSnip = serializer.deserialize(versionSnipEl, SnipFactory.createSnip("", ""));
+        if(versionNo > 0) {
+          versionSnip.setVersion(versionNo++);
+        }
+        versionManager.storeVersion(versionSnip);
       }
     }
   }

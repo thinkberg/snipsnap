@@ -35,12 +35,15 @@ import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.attachment.Attachments;
 import org.snipsnap.snip.label.Labels;
 import org.snipsnap.user.Permissions;
+import org.snipsnap.versioning.VersionManager;
+import org.snipsnap.container.Components;
 
 import java.io.StringReader;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.List;
 
 /**
  * A snip serializer that can store and load snips in XML format.
@@ -102,15 +105,18 @@ public class SnipSerializer extends SerializerSupport {
     snipElement.addElement(SNIP_MUSER).addText(notNull(snip.getMUser()));
     snipElement.addElement(SNIP_CTIME).addText(getStringTimestamp(snip.getCTime()));
     snipElement.addElement(SNIP_MTIME).addText(getStringTimestamp(snip.getMTime()));
-    snipElement.addElement(SNIP_PERMISSIONS).addText(snip.getPermissions().toString());
-    snipElement.addElement(SNIP_BACKLINKS).addText(snip.getBackLinks().toString());
-    snipElement.addElement(SNIP_SNIPLINKS).addText(snip.getSnipLinks().toString());
-    snipElement.addElement(SNIP_LABELS).addText(snip.getLabels().toString());
-    snipElement.add(addXMLContent(snip.getAttachments().toString(), SNIP_ATTACHMENTS));
+    snipElement.addElement(SNIP_PERMISSIONS).addText(notNull(snip.getPermissions()));
+    snipElement.addElement(SNIP_BACKLINKS).addCDATA(notNull(snip.getBackLinks()));
+    snipElement.addElement(SNIP_SNIPLINKS).addCDATA(notNull(snip.getSnipLinks()));
+    snipElement.addElement(SNIP_LABELS).addCDATA(notNull(snip.getLabels()));
+    snipElement.add(addXMLContent(notNull(snip.getAttachments()), SNIP_ATTACHMENTS));
     snipElement.addElement(SNIP_VIEWCOUNT).addText("" + snip.getViewCount());
-    snipElement.addElement(SNIP_CONTENT).addText(snip.getContent());
+    snipElement.addElement(SNIP_CONTENT).addCDATA(snip.getContent());
     snipElement.addElement(SNIP_VERSION).addText("" + snip.getVersion());
     snipElement.addElement(SNIP_APPLICATION).addText(notNull(snip.getApplication()));
+
+    VersionManager versionManager = (VersionManager)Components.getComponent(VersionManager.class);
+    List snipHistory = versionManager.getHistory(snip);
 
     // TODO deprecated
     Snip parentSnip = snip.getParent();

@@ -75,4 +75,8 @@ public class SerializerSupport {
     return str == null ? "" : str;
   }
 
+  protected String notNull(Object obj) {
+    return obj == null ? "" : obj.toString();
+  }
+
 }
