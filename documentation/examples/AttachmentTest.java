@@ -38,7 +38,6 @@ import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.attachment.Attachments;
 import org.snipsnap.snip.attachment.Attachment;
 import org.snipsnap.snip.attachment.storage.AttachmentStorage;
-import org.snipsnap.test.mock.MockSnipSpace;
 import org.snipsnap.container.Components;
 
 import java.io.IOException;

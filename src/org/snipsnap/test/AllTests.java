@@ -34,6 +34,7 @@ import org.snipsnap.test.snip.AllSnipTests;
 import org.snipsnap.test.user.AllUserTests;
 import org.snipsnap.test.render.AllRenderTests;
 import org.snipsnap.test.label.AllLabelTests;
+import org.snipsnap.test.dynaop.AllDynaopTests;
 
 public class AllTests extends TestCase {
   public AllTests(String name) {
@@ -48,6 +49,7 @@ public class AllTests extends TestCase {
     s.addTest(AllComponentsTests.suite());
     s.addTest(AllRenderTests.suite());
     s.addTest(AllLabelTests.suite());
+    s.addTest(AllDynaopTests.suite());
     return s;
   }
 

@@ -25,16 +25,14 @@
 
 package org.snipsnap.security;
 
-import org.snipsnap.user.User;
-
-import java.util.Set;
-import java.util.Iterator;
-
-import gabriel.acl.Acl;
-import gabriel.acl.AclEntry;
-import gabriel.Principal;
-import gabriel.Group;
 import gabriel.Permission;
+import gabriel.Subject;
+import gabriel.components.AccessManager;
+import gabriel.components.AccessManagerImpl;
+import gabriel.components.context.AccessContext;
+import gabriel.components.io.FileAclStore;
+import gabriel.components.parser.AclParser;
+import org.snipsnap.user.User;
 
 /**
  * Check for access to resources and operations
@@ -43,37 +41,17 @@ import gabriel.Permission;
  * @version $Id$
  */
 
-public class DefaultAccessController implements AccessController {
-  private Acl acl;
-  private AclManager aclManager;
-  private Principal owner;
+public class DefaultAccessController implements AccessController  {
+  private AccessManager manager;
 
   public DefaultAccessController() {
-    this.aclManager = aclManager;
-
-    owner = new Principal("AclOwner");
-    acl = new Acl(owner, "SnipSnap");
-
-    Group editors = new Group("Editor");
-
-    AclEntry entry = new AclEntry(editors);
-    Permission post = new Permission("POST_BLOG");
-    entry.addPermission(post);
-    acl.addEntry(owner, entry);
+    manager = new AccessManagerImpl(new FileAclStore(new AclParser()));
   }
 
   public boolean checkPermission(User user, Permission permission, AccessContext context) {
-    // generate principal from user
-    // probably take context into account
-    // check if he has the permission to do things
-    Set roles = user.getRoles().getRoleSet();
+    Subject subject = user.getSubject();
 
-    Iterator iterator = roles.iterator();
-    boolean hasPermission = false;
-    while (iterator.hasNext()) {
-      String role = (String) iterator.next();
-      hasPermission = hasPermission || acl.checkPermission(new Principal(role), permission);
-    }
+    boolean hasPermission = manager.checkPermission(subject.getPrincipals(), permission);
     return hasPermission;
   }
 }

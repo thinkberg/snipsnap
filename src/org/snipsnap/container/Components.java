@@ -55,8 +55,8 @@ import org.snipsnap.versioning.cookbook.CookbookDifferenceService;
 import org.snipsnap.xmlrpc.*;
 import org.snipsnap.feeder.FeederRepository;
 import org.snipsnap.feeder.BasicFeederRepository;
-import org.snipsnap.security.AccessController;
 import org.snipsnap.security.DefaultAccessController;
+import org.snipsnap.security.AccessController;
 
 import javax.sql.DataSource;
 import java.util.Iterator;

@@ -30,6 +30,12 @@ import org.snipsnap.snip.SnipLink;
 import org.snipsnap.render.macro.list.Linkable;
 
 import java.sql.Timestamp;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.HashSet;
+
+import gabriel.Subject;
+import gabriel.Principal;
 
 /**
  * User class.
@@ -38,6 +44,8 @@ import java.sql.Timestamp;
  * @version $Id$
  */
 public class User implements Linkable {
+  private Subject subject;
+
   private String applicationOid;
   private String login;
   private String passwd;
@@ -55,11 +63,15 @@ public class User implements Linkable {
   public User() {
     this("", "", "");
   }
-  
+
   public User(String login, String passwd, String email) {
     this.login = login;
     setPasswd(passwd);
     setEmail(email);
+  }
+
+  public Subject getSubject() {
+    return this.subject;
   }
 
   public void setApplication(String applicationOid) {
@@ -176,12 +188,22 @@ public class User implements Linkable {
 
   public void setRoles(Roles roles) {
     this.roles = roles;
+    subject = new Subject(this.login);
+    Set principals = new HashSet();
+    principals.add(new Principal(this.login));
+    Iterator iterator = roles.getAllRoles().iterator();
+    while (iterator.hasNext()) {
+      String role = (String) iterator.next();
+      principals.add(new Principal(role));
+    }
+    subject.setPrincipals(principals);
     return;
   }
 
   public Roles getRoles() {
     if (null == roles) {
       roles = new Roles();
+      subject = new Subject(this.login);
     }
     return roles;
   }
