@@ -31,6 +31,7 @@ import com.neotis.util.StringUtil;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -52,6 +53,16 @@ public class Snip {
   public static String toName(Date date) {
     SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
     return sf.format(date);
+  }
+
+  public static String toDate(String dateString) {
+    SimpleDateFormat in = new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat out = new SimpleDateFormat("EEEE, dd. MMMM yyyy");
+    try {
+      return out.format(in.parse(dateString));
+    } catch (ParseException e) {
+      return dateString;
+    }
   }
 
   public static String createLink(String name, String view) {

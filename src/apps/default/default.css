@@ -9,7 +9,6 @@
 .error { color: #ff0000; font-weight: bold; }
 .inactive { color: #aaaaaa; }
 .bold { font-weight: bold }
-.snip-name { font-weight: bold; font-size: 15px; }
 
 .menu {
 
@@ -55,6 +54,17 @@
   color: #0000aa;
 }
 
+/* weblog formatting */
+.blog-date {
+  font-family: verdana, sans-serif;
+  font-size: 16px;
+}
+
+.snip-name { font-weight: bold; font-size: 15px; }
+
+.snip-modified {
+  color: #999999;
+}
 
 /* special formatting of a wiki table */
 .snip-table {

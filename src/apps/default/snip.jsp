@@ -13,14 +13,14 @@
 
 
 <table width="100%" border="0" cellspacing="2" cellpadding="1">
- <tr><td><span class="snip-name"><jsp:getProperty name="snip" property="name" /></span></td></tr>
+ <!-- <tr><td><span class="snip-name"><jsp:getProperty name="snip" property="name" /></span></td></tr> -->
  <% if (! "start".equals(snip.getName())) { %>
    <% if(user.isAuthenticated()) { %>
      <tr><td>[<a href="/exec/edit?name=<%= snip.getName() %>">edit</a>]</td></tr>
    <% } else { %>
      <tr><td><span class="inactive">[edit]</span></td></tr>
    <% } %>
-   <tr width="100%"><td><%= snip.getModified() %></td></tr>
+   <tr width="100%"><td><span class="snip-modified"><%= snip.getModified() %></span></td></tr>
  <% } %>
 
  <tr>
