@@ -22,13 +22,13 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
+
 /*
  * Macro that displays all Snips by user
  *
  * @author stephan
  * @version $Id$
  */
-
 package com.neotis.snip.filter.macro;
 
 import com.neotis.snip.Snip;
@@ -58,6 +58,8 @@ public class WeblogMacro extends Macro {
         buffer.append("</span><p>");
         buffer.append(entry.getContent());
         buffer.append("</p>");
+        Snip.appendLink(buffer, entry.getName(), "Link me");
+        buffer.append(" | ");
         buffer.append(snip.getComments().getCommentString());
         buffer.append("<pre>\n</pre><hr size=\"1\"/><pre>\n</pre>");
       }
