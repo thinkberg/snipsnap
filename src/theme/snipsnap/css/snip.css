@@ -8,11 +8,13 @@
 }
 
 .snip-title {
+  width: 100%;
   display: table;
   text-align: left;
 }
 
 .snip-name {
+  width: 100%;
   font-weight: bold;
   font-size: 150%;
   color: black;
