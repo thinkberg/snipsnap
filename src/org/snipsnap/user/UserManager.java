@@ -69,6 +69,7 @@ public class UserManager implements Loader {
 
   private Map authHash = new HashMap();
   private Map robots = new HashMap();
+  private Map robotIds = new HashMap();
   private List delayed;
   private Cache cache;
   private FinderFactory finders;
@@ -98,6 +99,9 @@ public class UserManager implements Loader {
       // execute after 5 minutes and then
       // every 5 minutes
     }, 5 * 60 * 1000, 5 * 60 * 1000);
+
+    robotIds.put("Googlebot", "http://www.googlebot.com/bot.html");
+    robotIds.put("FAST-WebCrawler", "http://fast.no/support/crawler.asp");
   }
 
   // update the auth hash by removing all entries and updating from the database
@@ -136,14 +140,20 @@ public class UserManager implements Loader {
       if (null == user) {
         String agent = request.getHeader("User-Agent");
         System.err.println("User agent of unknown user: '"+agent+"'");
-        if(agent != null && agent.toLowerCase().indexOf("googlebot") != -1) {
-          user = (User)robots.get("GoogleBot");
-          if(null == user) {
-            user = new User("GoogleBot", "GoogleBot", "http://www.googlebot.com/bot.html");
-            user.setNonUser(true);
-            robots.put(user.getLogin(), user);
+        Iterator it = robots.keySet().iterator();
+        while(agent != null && user == null && it.hasNext()) {
+          String key = (String)it.next();
+          if(agent.toLowerCase().indexOf(key.toLowerCase()) != -1) {
+            user = (User)robots.get(key);
+            if(null == user) {
+              user = new User(key, key, (String)robotIds.get(key));
+              user.setNonUser(true);
+              robots.put(key, user);
+            }
           }
-        } else {
+        }
+
+        if(null == user) {
           user = new User("Guest", "Guest", "");
           user.setGuest(true);
         }
