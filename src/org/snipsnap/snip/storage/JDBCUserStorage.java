@@ -56,7 +56,7 @@ public class JDBCUserStorage implements UserStorage {
     Connection connection = ConnectionManager.getConnection();
     try {
       Statement statement = connection.createStatement();
-      System.out.println("CreateDB: Creating User Tables");
+      System.out.println("JDBCUserStorage: creating user SQL tables");
       statement.executeQuery(
           "    CREATE TABLE SnipUser ( " +
           "       cTime      TIMESTAMP, " +

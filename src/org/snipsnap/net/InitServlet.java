@@ -92,7 +92,7 @@ public class InitServlet extends GenericServlet {
       }
 
       if (!config.isInstalled()) {
-        System.out.println("|--SnipSnap not configured: "+config.getUrl());
+        System.out.println(">> SnipSnap is not configured, visit "+config.getUrl());
       } else {
         SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
         if (space.exists(Configuration.SNIPSNAP_CONFIG)) {
@@ -101,10 +101,10 @@ public class InitServlet extends GenericServlet {
           config.load(new ByteArrayInputStream(configContent.getBytes()));
         }
         if (config.allow(Configuration.APP_PERM_WEBLOGSPING)) {
-          System.out.println("|--WARNING: " + config.getName() + ": Weblogs ping for "+config.getUrl() + " is enabled.\n" +
-                             "|  This means that SnipSnap sends notifications to hosts on the internet\n" +
-                             "|  when your weblog changes. To turn this off take a look at the FAQ at\n" +
-                             "|  >> http://snipsnap.org/space/faq");
+          System.out.println(">> WARNING: " + config.getName() + ": Weblogs ping for "+config.getUrl() + " is enabled.\n" +
+                             ">> This means that SnipSnap sends notifications to hosts on the internet\n" +
+                             ">> when your weblog changes. To turn this off take a look at the FAQ at\n" +
+                             ">> http://snipsnap.org/space/faq");
         }
       }
       try {

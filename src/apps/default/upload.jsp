@@ -41,7 +41,7 @@
          <input name="file" type="file" maxlength="1000000" accept="*/*"/>
          <input value="Upload Document" name="upload" type="submit"/><br/>
         </s:check>
-        <input value="Back/Cancel" name="cancel" type="submit"/>
+        <input value="Back to <c:out value='${snip_name}' escapeXml="false" />" name="cancel" type="submit"/>
         <%--<s:check roles="Admin"><input value="Delete File(s)" name="delete" type="submit"/><s:/check>--%>
        </td>
       </tr>

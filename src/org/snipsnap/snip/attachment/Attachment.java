@@ -38,11 +38,11 @@ public class Attachment {
 
   private String name;
   private String contentType;
-  private int size;
+  private long size;
   private Date date;
   private String location;
 
-  public Attachment(String name, String contentType, int size,  Date date, String location) {
+  public Attachment(String name, String contentType, long size,  Date date, String location) {
     setName(name);
     setContentType(contentType);
     setSize(size);
@@ -66,11 +66,11 @@ public class Attachment {
     return contentType;
   }
 
-  public void setSize(int size) {
+  public void setSize(long size) {
     this.size = size;
   }
 
-  public int getSize() {
+  public long getSize() {
     return size;
   }
 

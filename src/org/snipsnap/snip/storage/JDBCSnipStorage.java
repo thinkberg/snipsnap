@@ -62,7 +62,7 @@ public class JDBCSnipStorage implements SnipStorage, CacheableStorage {
     try {
       // Create a Statement object to execute the queries on,
       Statement statement = connection.createStatement();
-      System.out.println("CreateDB: Creating Tables");
+      System.err.println("JDBCSnipStorage: creating SQL tables");
 
       // Create a Person table,
       statement.executeQuery(

@@ -113,7 +113,7 @@ public class InitFilter implements Filter {
     if (!config.isInstalled()) {
       if (path == null || !(path.startsWith("/admin") || path.startsWith("/images"))) {
         String name = config.getName();
-        System.out.println((name == null ? "SnipSnap" : name) + " is not (fully) configured, redirecting to configuration");
+        // System.out.println((name == null ? "SnipSnap" : name) + " is not (fully) configured, redirecting to configuration");
         ((HttpServletResponse) response).sendRedirect(request.getContextPath() + "/admin/configure");
         return;
       }

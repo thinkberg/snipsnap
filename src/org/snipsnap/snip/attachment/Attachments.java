@@ -57,7 +57,7 @@ public class Attachments {
 
   private Map attachments = null;
 
-  public Attachment addAttachment(String name, String contentType, int size, String location) {
+  public Attachment addAttachment(String name, String contentType, long size, String location) {
     if (null == attachments) { deserialize(); }
     Attachment attachment = new Attachment(name, contentType, size, new Date(), location);
     attachments.put(name, attachment);

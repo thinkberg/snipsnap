@@ -27,19 +27,19 @@ package org.snipsnap.config;
 import org.snipsnap.app.Application;
 import org.snipsnap.container.Components;
 import org.snipsnap.snip.HomePage;
+import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.XMLSnipImport;
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.label.RenderLabel;
+import org.snipsnap.snip.attachment.Attachments;
 import org.snipsnap.snip.label.RenderEngineLabel;
 import org.snipsnap.snip.storage.JDBCSnipStorage;
 import org.snipsnap.snip.storage.JDBCUserStorage;
+import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.user.UserManagerFactory;
 import org.snipsnap.util.ConnectionManager;
-import org.snipsnap.render.PlainTextRenderEngine;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -53,6 +53,11 @@ import java.io.Writer;
 import java.sql.SQLException;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.Enumeration;
+import java.util.jar.JarFile;
+import java.util.jar.JarEntry;
+
+import com.mckoi.store.FileStore;
 
 public class InitializeDatabase {
 
@@ -105,26 +110,113 @@ public class InitializeDatabase {
 
     message("loading defaults into configuration space");
     // load other configurations
-    createSnip(Configuration.SNIPSNAP_CONFIG_API, "/defaults/apidocs.txt", space);
-    createSnip(Configuration.SNIPSNAP_CONFIG_ASIN, "/defaults/asinservices.txt", space);
-    createSnip(Configuration.SNIPSNAP_CONFIG_BOOK, "/defaults/bookservices.txt", space);
-    createSnip(Configuration.SNIPSNAP_CONFIG_PING, "/defaults/weblogsping.txt", space);
-    createSnip(Configuration.SNIPSNAP_CONFIG_ROBOTS, "/defaults/robotdetect.txt", space);
-    createSnip(Configuration.SNIPSNAP_CONFIG_ROBOTS_TXT, "/defaults/robots.txt", space);
-    createSnip(Configuration.SNIPSNAP_CONFIG_WIKI, "/defaults/intermap.txt", space);
+    createConfigSnipFromFile(Configuration.SNIPSNAP_CONFIG_API, "/defaults/apidocs.txt", space);
+    createConfigSnipFromFile(Configuration.SNIPSNAP_CONFIG_ASIN, "/defaults/asinservices.txt", space);
+    createConfigSnipFromFile(Configuration.SNIPSNAP_CONFIG_BOOK, "/defaults/bookservices.txt", space);
+    createConfigSnipFromFile(Configuration.SNIPSNAP_CONFIG_PING, "/defaults/weblogsping.txt", space);
+    createConfigSnipFromFile(Configuration.SNIPSNAP_CONFIG_ROBOTS, "/defaults/robotdetect.txt", space);
+    createConfigSnipFromFile(Configuration.SNIPSNAP_CONFIG_ROBOTS_TXT, "/defaults/robots.txt", space);
+    createConfigSnipFromFile(Configuration.SNIPSNAP_CONFIG_WIKI, "/defaults/intermap.txt", space);
+
+    importTheme("blue", new JarFile(new File("lib/snipsnap-theme-blue.jar")), space);
 
     // last, but not least store to file and configuration snip
     storeConfiguration(config, space);
-
   }
 
-  private static void createSnip(String name, String file, SnipSpace space) throws IOException {
+  public static void importTheme(String name, JarFile pkg, SnipSpace space) {
+    String nameSpace = Configuration.SNIPSNAP_THEMES + "/" + name;
+    JarEntry info = pkg.getJarEntry("about.txt");
+    String infoContent = pkg.getName();
+    if (info != null) {
+      try {
+        infoContent = getResourceAsString(pkg.getInputStream(info));
+      } catch (IOException e) {
+        System.err.println("InitializeDatabase: " + pkg.getName() + " has broken about.txt: " + e.getMessage());
+      }
+    }
+    Snip themeSnip = createConfigSnip(nameSpace, infoContent, space);
+
+    String defaultCSS = "@import url(css/wiki.css);\n"
+      + "@import url(css/snip.css);\n"
+      + "@import url(css/general.css);\n"
+      + "@import url(css/page.css);\n"
+      + "@import url(css/debug.css);\n"
+      + "@import url(css/admin.css);\n";
+
+    JarEntry defaultCSSEntry = pkg.getJarEntry("default.css");
+    if (defaultCSSEntry != null) {
+      try {
+        defaultCSS = getResourceAsString(pkg.getInputStream(defaultCSSEntry));
+      } catch (IOException e) {
+        System.err.println("InitializeDatabase: "+ pkg.getName() + " has not default.css");
+      }
+    }
+    createConfigSnip(nameSpace + "/css", defaultCSS, space);
+
+    Configuration config = Application.get().getConfiguration();
+    File fileStore = new File(config.getFilePath());
+
+    for (Enumeration entries = pkg.entries(); entries.hasMoreElements();) {
+      JarEntry entry = (JarEntry) entries.nextElement();
+      if (entry.getName().startsWith("css") && !entry.isDirectory()) {
+        try {
+          message("creating theme entry: " + entry.getName());
+          createConfigSnip(nameSpace + "/" + entry.getName(),
+                           getResourceAsString(pkg.getInputStream(entry)),
+                           space);
+        } catch (IOException e) {
+          System.err.println("InitializeDatabase: " + pkg.getName() + ": " + entry.getName() + " corrupted");
+        }
+      } else if (entry.getName().startsWith("images") && !entry.isDirectory()) {
+        File imageDir = new File(fileStore, nameSpace);
+        if (!imageDir.exists()) {
+          imageDir.mkdirs();
+        }
+        String imageName = new File(entry.getName()).getName();
+        File imageFile = new File(imageDir, imageName);
+        message("storing " + nameSpace + "/" + imageName);
+
+        try {
+          FileOutputStream imageStream = new FileOutputStream(imageFile);
+          InputStream jarImageStream = pkg.getInputStream(entry);
+          byte[] buffer = new byte[4096];
+          int length = 0;
+          while ((length = jarImageStream.read(buffer)) != -1) {
+            imageStream.write(buffer, 0, length);
+          }
+          imageStream.close();
+          jarImageStream.close();
+
+          Attachments atts = themeSnip.getAttachments();
+          int dotIndex = imageName.lastIndexOf('.');
+          String type = "";
+          if (dotIndex != -1) {
+            type = "/" + imageName.substring(dotIndex + 1).toLowerCase();
+          }
+          atts.addAttachment(imageName, "image" + type, entry.getSize(), nameSpace + "/" + imageName);
+        } catch (IOException e) {
+          System.err.println("InitializeDatabase: " + pkg.getName() + ": unable to store " + imageName);
+        }
+
+      }
+    }
+    space.store(themeSnip);
+  }
+
+  public static void createConfigSnipFromFile(String name, String file, SnipSpace space) throws IOException {
     String content = getResourceAsString(InitializeDatabase.class.getResourceAsStream(file));
+    createConfigSnip(name, content, space);
+  }
+
+  public static Snip createConfigSnip(String name, String content, SnipSpace space) {
     Snip snip = space.create(name, content);
+    snip.getPermissions().add(Permissions.EDIT, Roles.ADMIN);
+    snip.getPermissions().add(Permissions.ATTACH, Roles.ADMIN);
     snip.getLabels().addLabel(new RenderEngineLabel("RenderEngine", "org.snipsnap.render.PlainTextRenderEngine"));
     space.store(snip);
+    return snip;
   }
-
 
   private static void postFirstBlog(Configuration config, SnipSpace space) throws IOException {
     message("posting initial weblog entry");
@@ -249,7 +341,7 @@ public class InitializeDatabase {
     } else if ((is = getResource(base, language, null, null, ext)) != null) {
       return is;
     }
-    return is;
+    return getResource(base, "en", null, null, ext);
   }
 
   /**
@@ -260,19 +352,11 @@ public class InitializeDatabase {
    * @return an input stream of the resource or null
    */
   private static InputStream getResource(String base, String language, String country, String variant, String ext) {
-    String file = "/"+base.replace('.', '/') +
+    String file = "/" + base.replace('.', '/') +
       (language != null ? "_" + language : "") +
       (country != null ? "_" + country : "") +
       (variant != null ? "_" + variant : "") +
       "." + ext;
-    InputStream is = null;
-    try {
-      is = InitializeDatabase.class.getResourceAsStream(file);
-    } catch (Exception e) {
-      System.err.println("InitializeDatabase: attention, no default localized file for: '"+base+"."+ext+"'");
-      is = InitializeDatabase.class.getResourceAsStream(base+"_en."+ext);
-    }
-    //System.out.println("InitializeDatabase: find: "+file+": "+(is != null));
-    return is;
+    return InitializeDatabase.class.getResourceAsStream(file);
   }
 }

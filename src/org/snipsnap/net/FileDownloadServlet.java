@@ -69,7 +69,7 @@ public class FileDownloadServlet extends HttpServlet {
 
         if (file.exists()) {
           response.setContentType(attachment.getContentType());
-          response.setContentLength(attachment.getSize());
+          response.setContentLength((int)attachment.getSize());
           BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream());
           BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
           byte buf[] = new byte[4096];

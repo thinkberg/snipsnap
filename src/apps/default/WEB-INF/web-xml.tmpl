@@ -60,6 +60,11 @@
   </servlet>
 
   <servlet>
+    <servlet-name>org.snipsnap.net.CssHandlerServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.CssHandlerServlet</servlet-class>
+  </servlet>
+
+  <servlet>
     <servlet-name>org.snipsnap.net.FileUploadServlet</servlet-name>
     <servlet-class>org.snipsnap.net.FileUploadServlet</servlet-class>
   </servlet>
@@ -253,6 +258,11 @@
   <servlet-mapping>
     <servlet-name>org.snipsnap.net.Layouter</servlet-name>
     <url-pattern>/exec/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>org.snipsnap.net.CssHandlerServlet</servlet-name>
+    <url-pattern>*.css</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
