@@ -34,20 +34,38 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Properties;
 
+/**
+ * Implementation of a configuration map which is used as storage for configuration parameters.
+ * @see Configuration
+ */
 public class ConfigurationMap {
-  Properties properties = null;
-  File configFile = null;
+
+  private final static String DEFAULTS_CONF = "/org/snipsnap/config/defaults.conf";
+  private final static String TRANSPOSE_MAP = "/org/snipsnap/config/transpose.map";
+
+  private Properties properties = null;
+  private File configFile = null;
+
+  // internal transposition map for old property file versions
+  private Properties transposeMap = null;
 
   public ConfigurationMap() {
     Properties defaults = new Properties();
     try {
-      defaults.load(Configuration.class.getResourceAsStream("/org/snipsnap/config/defaults.conf"));
+      defaults.load(Configuration.class.getResourceAsStream(DEFAULTS_CONF));
     } catch (Exception e) {
       System.err.println("Configuration: unable to load defaults: " + e.getMessage());
     }
 
     // instantiate properties with defaults
     properties = new Properties(defaults);
+
+    try {
+      transposeMap = new Properties();
+      transposeMap.load(Configuration.class.getResourceAsStream(TRANSPOSE_MAP));
+    } catch (Exception e) {
+      System.err.println("Configuration: unable to load transposition map: " + e.getMessage());
+    }
   }
 
   public ConfigurationMap(File file) throws IOException {
@@ -59,8 +77,13 @@ public class ConfigurationMap {
     this(new File(filePath));
   }
 
+  /**
+   * Returns the configuration directory which is identical to the parent directory of the
+   * configuration file or null.
+   * @return the configuration directory
+   */
   public File getConfDir() {
-    if(configFile != null) {
+    if (configFile != null) {
       return configFile.getParentFile();
     }
     return null;
@@ -74,46 +97,107 @@ public class ConfigurationMap {
     configFile = file;
   }
 
+  /**
+   * The currently set file where the configuration was loaded or will be stored.
+   * @return the configuration file
+   */
   public File getFile() {
     return configFile;
   }
 
+  /**
+   * Loads the configuration from a specific file overriding any previously set file.
+   * @param file the file to load from
+   * @throws IOException
+   */
   public void load(File file) throws IOException {
     setFile(file);
     load();
   }
 
+  /**
+   * Loads the configuration from a previously set file.
+   * @throws IOException
+   */
   public void load() throws IOException {
-    if(configFile != null) {
+    if (configFile != null) {
       properties.load(new FileInputStream(configFile));
+      if (transposeOldProperties()) {
+        System.err.println("Configuration: storing converted configuration file to " + getFile());
+        store();
+      }
     }
   }
 
+  private boolean transposeOldProperties() {
+    boolean hasChanged = false;
+    Iterator propIt = transposeMap.keySet().iterator();
+    while (propIt.hasNext()) {
+      String oldProperty = (String) propIt.next();
+      String newProperty = transposeMap.getProperty(oldProperty);
+      String value = properties.getProperty(oldProperty);
+      if (value != null) {
+        if (newProperty != null) {
+          if (newProperty.startsWith("@DEPRECATED")) {
+            System.out.println("INFO: Configuration option '" + oldProperty + "' is deprecated:");
+            System.out.println("INFO: "+newProperty.substring("@DEPRECATED".length()));
+            System.out.println("INFO: Please edit configuration file manually.");
+          } else {
+            System.out.println("INFO: converting '" + oldProperty + "' to '" + newProperty + "'");
+            properties.remove(oldProperty);
+            properties.setProperty(newProperty, value);
+            hasChanged = true;
+          }
+        }
+      }
+    }
+    return hasChanged;
+  }
+
+  /**
+   * Stores the configuration in a properties file if a file has been set with setFile() or
+   * if the configuration has been loaded from a file. An existing file is overwritten.
+   * @throws IOException
+   */
   public void store() throws IOException {
-    if(configFile != null) {
+    if (configFile != null) {
       properties.store(new FileOutputStream(configFile), "SnipSnap configuration $Revision$");
     }
   }
 
+  /**
+   * Set configuration parameter.
+   * @param name the configuration parameter name as in Configuration interface
+   * @see Configuration
+   * @param value the new value
+   */
   public void set(String name, String value) {
     properties.setProperty(name, value);
   }
 
+  /**
+   * Get configuration parameter. This method ensures that a parameter that is empty
+   * (null or null sized string) is returned as NULL.
+   * @param name the configuration parameter name as in Configuration interface
+   * @see Configuration
+   * @return the value of the configuration parameter
+   */
   public String get(String name) {
     String value = replaceTokens(properties.getProperty(name));
     return "".equals(value) ? null : value;
   }
 
+  // TODO replace with generic replacement method
   private String replaceTokens(String value) {
     int idx = value.indexOf("${CONFDIR}");
-    if(idx != -1) {
+    if (idx != -1) {
       StringBuffer replaced = new StringBuffer();
-      if(idx > 0) {
+      if (idx > 0) {
         replaced.append(value.substring(0, idx));
       }
       replaced.append(getConfDir().getPath());
       int endIdx = idx + "${CONFDIR}".length();
-      if(endIdx < value.length()) {
+      if (endIdx < value.length()) {
         replaced.append(value.substring(idx + endIdx));
       }
       return replaced.toString();
@@ -123,7 +207,7 @@ public class ConfigurationMap {
 
   public String get(String name, String defaultValue) {
     String value = get(name);
-    if(value == null) {
+    if (value == null) {
       return defaultValue;
     }
     return value;
@@ -214,9 +298,9 @@ public class ConfigurationMap {
     StringBuffer result = new StringBuffer();
     Iterator it = properties.keySet().iterator();
     result.append("{");
-    while(it.hasNext()) {
-      String key = (String)it.next();
-      result.append(key).append("="+properties.get(key)).append(",");
+    while (it.hasNext()) {
+      String key = (String) it.next();
+      result.append(key).append("=" + properties.get(key)).append(",");
     }
     result.append("}");
     return result.toString();
