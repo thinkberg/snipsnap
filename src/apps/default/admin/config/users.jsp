@@ -12,6 +12,8 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
 
+<fmt:setBundle basename="i18n.setup" scope="page" />
+
 <c:choose>
   <c:when test="${not empty edit}">
     <c:import url="config/users.edit.jsp"/>

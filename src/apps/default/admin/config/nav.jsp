@@ -7,6 +7,8 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
 
+<fmt:setBundle basename="i18n.setup" scope="page" />
+
 <input type="hidden" name="step" value="<c:out value='${step}'/>"/>
 <input type="hidden" name="prefix" value="<c:out value="${prefix}"/>"/>
 <c:choose>

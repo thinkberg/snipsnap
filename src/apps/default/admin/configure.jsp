@@ -9,6 +9,8 @@
 <%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
 <% response.setContentType("text/html; charset=UTF-8"); %>
 
+<fmt:setBundle basename="i18n.setup" scope="page" />
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>

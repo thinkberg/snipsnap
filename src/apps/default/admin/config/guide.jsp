@@ -9,6 +9,8 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
 
+<fmt:setBundle basename="i18n.setup" scope="page" />
+
 <div class="guide-menu">
   <div class="guide-title">
     <c:choose>

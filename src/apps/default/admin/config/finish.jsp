@@ -9,6 +9,8 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
 
+<fmt:setBundle basename="i18n.setup" scope="page" />
+
 <div class="finish">
   <div><fmt:message key="config.finish"/></div>
   <div class="start"><center><input type="submit" name="finish" value="<fmt:message key="config.nav.finish"/>"></center></div>

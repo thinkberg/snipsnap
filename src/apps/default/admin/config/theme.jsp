@@ -21,6 +21,8 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
 
+<fmt:setBundle basename="i18n.setup" scope="page" />
+
 <%
   Configuration conf = (Configuration) session.getAttribute("newconfig");
   Map themes = new HashMap();

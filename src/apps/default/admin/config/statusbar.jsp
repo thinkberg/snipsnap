@@ -7,6 +7,8 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
 
+<fmt:setBundle basename="i18n.setup" scope="page" />
+
 <c:set var="percentage" value="${param.statusCurrent * 100 / param.statusMax}" scope="request"/>
 <fmt:message key="${param.statusMessage}">
   <fmt:param><fmt:formatNumber maxFractionDigits="0" value="${percentage}"/></fmt:param>
