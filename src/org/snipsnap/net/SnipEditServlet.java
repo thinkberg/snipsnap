@@ -36,6 +36,7 @@ import org.snipsnap.snip.label.TypeLabel;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.Security;
+import org.snipsnap.security.AccessController;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -73,6 +74,8 @@ public class SnipEditServlet extends HttpServlet {
     String editHandler = request.getParameter("handler");
 
     SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
+    AccessController controller = (AccessController) Components.getComponent(AccessController.class);
+
     Snip snip = null;
     if (name != null && space.exists(name)) {
       snip = space.load(name);
@@ -88,8 +91,8 @@ public class SnipEditServlet extends HttpServlet {
           }
           // check that an edit handler is set
           if (null != editHandler && !"".equals(editHandler)) {
-            if (Security.checkPermission(Permissions.EDIT_SNIP, Application.get().getUser(), snip) &&
-              Security.hasRoles(Application.get().getUser(), snip, authRoles)) {
+            if (controller.checkPermission(Application.get().getUser(), AccessController.EDIT_SNIP, snip)
+              && Security.hasRoles(Application.get().getUser(), snip, authRoles)) {
               Logger.log("SnipEditServlet: using edit handler '" + editHandler+"'");
               type = typeLabel.getTypeValue();
             } else {

@@ -38,6 +38,7 @@ import org.snipsnap.user.AuthenticationService;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Security;
 import org.snipsnap.user.User;
+import org.snipsnap.security.AccessController;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -122,8 +123,10 @@ public class SnipStoreServlet extends HttpServlet {
     if (session != null) {
       User user = Application.get().getUser();
       AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
+      AccessController accessController = (AccessController) Components.getComponent(AccessController.class);
       String storeHandler = request.getParameter("store_handler");
-      if (service.isAuthenticated(user) && (null == snip || Security.checkPermission(Permissions.EDIT_SNIP, user, snip))) {
+      if (service.isAuthenticated(user) && (null == snip
+          || accessController.checkPermission(Application.get().getUser(), AccessController.EDIT_SNIP, snip))) {
         if (null != storeHandler) {
           dispatcher = request.getRequestDispatcher("/plugin/" + storeHandler);
           try {

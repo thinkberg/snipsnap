@@ -49,6 +49,7 @@ import java.util.*;
 import org.snipsnap.snip.BlogKit;
 import org.snipsnap.snip.attachment.Attachments;
 import org.snipsnap.feeder.Feeder;
+import org.snipsnap.security.AccessController;
 
 /**
  * Handles XML-RPC calls for the MetaWeblog API
@@ -62,9 +63,13 @@ import org.snipsnap.feeder.Feeder;
 
 public class MetaWeblogHandler extends XmlRpcSupport implements MetaWeblogAPI {
     public String API_PREFIX = "metaWeblog";
+    private AccessController accessController;
+    private AttachmentStorage attachmentStorage;
 
-    public MetaWeblogHandler(AuthenticationService authenticationService) {
-        this.authenticationService = authenticationService;
+    public MetaWeblogHandler(AuthenticationService authenticationService, AccessController accessController, AttachmentStorage attachmentStorage) {
+      this.authenticationService = authenticationService;
+      this.accessController = accessController;
+      this.attachmentStorage = attachmentStorage;
     }
 
     public String getName() {
@@ -258,9 +263,7 @@ public class MetaWeblogHandler extends XmlRpcSupport implements MetaWeblogAPI {
         SnipSpace space = SnipSpaceFactory.getInstance();
         Snip snip = space.load(snipId);
 
-        AttachmentStorage attachmentStorage = (AttachmentStorage) Components.getComponent(AttachmentStorage.class);
-
-        if (!Security.checkPermission(Permissions.ATTACH_TO_SNIP, user, snip)) {
+        if (!accessController.checkPermission(Application.get().getUser(), AccessController.ADD_ATTACHMENT, snip)) {
             throw new XmlRpcException(0, "Do not have write access to this snip");
             //todo: on inspecting the checkPersmissions code I had the fleeting
             //impression that everyone will have permission to attach to snips. verify.
