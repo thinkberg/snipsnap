@@ -86,7 +86,12 @@
           <input value="<fmt:message key='dialog.cancel'/>" name="cancel" type="submit"/>
           <c:choose>
            <c:when test="${error == 'snip.store.handler.error'}">
-            <br/><span class="error"><fmt:message key="${error}"/></span>
+            <br/>
+            <span class="error">
+              <fmt:message key="${error}">
+                <fmt:param value="${error_msg}"/>
+              </fmt:message>
+            </span>
            </c:when>
            <c:when test="${not empty(error)}">
             <br/><span class="error"><c:out value="${error}"/></span>

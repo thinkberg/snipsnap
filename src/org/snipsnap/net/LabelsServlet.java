@@ -113,7 +113,7 @@ public class LabelsServlet extends HttpServlet {
     if(null != request.getParameter("delete")) {
       String[] labels = request.getParameterValues("label");
       for (int i = 0; i < labels.length; i++) {
-        String label[] = labels[i].split("|");
+        String label[] = labels[i].split("\\|");
         snip.getLabels().removeLabel(label[0], label[1]);
       }
     }

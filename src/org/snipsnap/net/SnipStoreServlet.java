@@ -126,6 +126,7 @@ public class SnipStoreServlet extends HttpServlet {
           } catch (Exception e) {
             Logger.warn("error while forwarding to store handler", e);
             request.setAttribute("error", "snip.store.handler.error");
+            request.setAttribute("error_msg", e.getLocalizedMessage());
             dispatcher = request.getRequestDispatcher("/exec/edit");
             dispatcher.forward(request, response);
           }

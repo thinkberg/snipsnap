@@ -7,7 +7,7 @@
 0.5.1 - 2004-01-22 (2004-02-13)
 
 - Fixed bug: SnipGraph didn't work
-- Added feature: HTTP request added to macro parameters
+- Added feature: HTTP request buiadded to macro parameters
 - Fixed bug: Country sorting in Setup fixed
 - Fixed bug: UserManager added again
 - Fixed bug: 0.4.2a themes
