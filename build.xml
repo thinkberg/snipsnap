@@ -75,7 +75,7 @@
         <include name="${jar}/jython.jar"/>
         <include name="${jar}/${appname}-template.war"/>
         <include name="${jar}/${appname}-installer.war"/>
-        <include name="${jar}/${appname}-utils.war"/>
+        <include name="${jar}/${appname}-utils.jar"/>
         <include name="conf/server.conf"/>
         <include name="conf/db.conf"/>
         <include name="conf/jetty.conf"/>
