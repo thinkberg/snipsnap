@@ -25,7 +25,7 @@
     <tar destfile="../${appname}-${version}-${DSTAMP}${TSTAMP}.tgz" compression="gzip">
       <tarfileset dir="." prefix="${appname}-${version}">
         <include name="**"/>
-        <excluden ame="**/CVS"/>
+        <exclude name="**/CVS"/>
       </tarfileset>
     </tar>
   </target>
