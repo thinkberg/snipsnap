@@ -71,7 +71,7 @@ public class QuerySnipStorage implements SnipStorage {
 
     this.cTimeComparator = new SnipComparator() {
       public int compare(Snip s1, Snip s2) {
-        return s2.getCTime().compareTo(s1.getCTime());
+        return s1.getCTime().compareTo(s2.getCTime());
       }
     };
 
