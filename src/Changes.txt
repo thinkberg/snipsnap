@@ -1,13 +1,14 @@
 0.2.8
 
-- Added Feature: Introduced Skins for SnipSnap
-- Added Feature: Interwiki (e.g. [Wiki@MoinMoin]) reads from a standard
+- Fixed bug: first start on a different port than 8668
+- Added feature: Introduced Skins for SnipSnap
+- Added feature: Interwiki (e.g. [Wiki@MoinMoin]) reads from a standard
   intermap file in conf/intermap.txt
 - Added Feature: {isbn} macro now reads books services from conf/bookservices.txt
 - Changed logo/validation images
 - Introduced snipsnap-copyright snip for page bottom
 - Changed semantics of {image} macro, expect images as image-name-id
-- Added Feature: import/export from web interface
+- Added feature: import/export from web interface
 - Fixed bug: list detection
 - Changed macro interface: User Writer instead of StringBuffer and Refactoring
   "Introduce Parameter Object"
@@ -16,13 +17,13 @@
 - Introduced: {list-of-macros}
 - Replaced {snips-by-recent} by {recent-changes} macro
 - Defaults snips are now loaded from conf/snipsnap.snip
-- Added Feature: bullet, square, numerated (numbers, alpha, greek, japanese)
+- Added feature: bullet, square, numerated (numbers, alpha, greek, japanese)
 - Changed feature: Post blog prepends to the post
 - Fixed bug: SnipSnap now uses <dc:title> in RSS and DC.Title in HTML
-- Added Feature: Introduced portlet snip snipsnap-portlet-<number>
-- Added Feature: VerticalListFormatter introduced
-- Added Feature: {logins} macro
-- Added Feature: {calendar} macro
+- Added feature: Introduced portlet snip snipsnap-portlet-<number>
+- Added feature: VerticalListFormatter introduced
+- Added feature: {logins} macro
+- Added feature: {calendar} macro
 - Changed <s:snip> JSTL tag
 - Switched to DIV from TABLE layout
 - Worked on Accessibility

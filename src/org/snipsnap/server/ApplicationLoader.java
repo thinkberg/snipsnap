@@ -150,6 +150,7 @@ public class ApplicationLoader {
       HttpListener listeners[] = server.getListeners();
       for (int i = 0; i < listeners.length; i++) {
         if (server instanceof Server && listeners[i].getHost().equals(host) && listeners[i].getPort() == port) {
+          System.out.println("-> "+listeners[i].getHost()+":"+listeners[i].getPort());
           System.err.println("ApplicationLoader: found existing server: " + server);
           installServer = (Server) server;
           listener = listeners[i];

@@ -169,7 +169,7 @@ public class Installer extends HttpServlet {
       config.setDomain(domain);
     }
 
-    Collection servers = Server.getHttpServers();
+/*    Collection servers = Server.getHttpServers();
     Iterator it = servers.iterator();
     Server server = null;
     if (it.hasNext()) {
@@ -184,7 +184,7 @@ public class Installer extends HttpServlet {
         sendError(session, errors, request, response);
         return;
       }
-    }
+    }*/
 
     // create application root directory
     File webAppRoot = new File(serverConfig.getProperty(Configuration.SERVER_WEBAPP_ROOT) + "/" + normalize(config.getName()));
