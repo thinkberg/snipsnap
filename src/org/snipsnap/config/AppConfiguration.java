@@ -43,6 +43,7 @@ public class AppConfiguration extends Configuration {
   private final static String APP_PORT = "app.port";
   private final static String APP_PATH = "app.path";
   private final static String APP_PERM = "app.perm";
+  private final static String APP_EURL = "app.eurl";
   private final static String APP_TAGLINE = "app.tagline";
   private final static String APP_LOGGER = "app.logger";
   private final static String APP_JDBC_URL = "app.jdbc.url";
