@@ -161,7 +161,7 @@
 
   <servlet-mapping>
     <servlet-name>org.snipsnap.net.UserManagerServlet</servlet-name>
-    <url-pattern>/exec/admin/user/*</url-pattern>
+    <url-pattern>/exec/admin/user</url-pattern>
   </servlet-mapping>
 
   <!-- TAGLIBS -->

@@ -69,9 +69,7 @@ public class AdminServlet extends HttpServlet {
       if(null == command || "/".equals(command)) {
         command = "/application.jsp";
       }
-      request.setAttribute("page", command);
-      RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/main.jsp");
-
+      RequestDispatcher dispatcher = request.getRequestDispatcher("/admin"+command);
       dispatcher.forward(request, response);
       return;
     }

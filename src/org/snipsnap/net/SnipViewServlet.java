@@ -61,5 +61,4 @@ public class SnipViewServlet extends HttpServlet {
     RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/snip.jsp");
     dispatcher.forward(request, response);
   }
-
 }
