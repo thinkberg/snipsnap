@@ -33,6 +33,9 @@ import org.snipsnap.container.Components;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.label.MIMETypeLabel;
+import org.snipsnap.user.Security;
+import org.snipsnap.user.Permissions;
+import org.snipsnap.user.Roles;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -52,6 +55,8 @@ public class PluginServlet extends HttpServlet {
   private Map extTypeMap = new HashMap();
   private Map pluginServlets = new HashMap();
   private Map servletCache = new HashMap();
+
+  private final static Roles EXEC_ROLES = new Roles(Roles.ADMIN);
 
   SimpleTemplateEngine templateEngine = new SimpleTemplateEngine();
 
@@ -93,15 +98,19 @@ public class PluginServlet extends HttpServlet {
       SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
       if (space.exists(pluginName)) {
         Snip snip = space.load(pluginName);
-        String mimeType = getMIMEType(snip);
-        if ("text/gsp".equalsIgnoreCase(mimeType)) {
-          try {
-            writer.write(handleGroovyTemplate(snip.getContent()));
-          } catch (IOException e) {
-            writer.write("<span class=\"error\">" + e.getLocalizedMessage() + "</span>");
+        if(Security.existsPermission(Permissions.EDIT_SNIP, snip, EXEC_ROLES)) {
+          String mimeType = getMIMEType(snip);
+          if ("text/gsp".equalsIgnoreCase(mimeType)) {
+            try {
+              writer.write(handleGroovyTemplate(snip.getContent()));
+            } catch (IOException e) {
+              writer.write("<span class=\"error\">" + e.getLocalizedMessage() + "</span>");
+            }
+            writer.flush();
+            return;
           }
-          writer.flush();
-          return;
+        } else {
+          throw new ServletException("a snip plugin must be locked by admin");
         }
       }
     }

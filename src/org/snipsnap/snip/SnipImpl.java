@@ -36,6 +36,8 @@ import org.snipsnap.snip.attachment.Attachment;
 import org.snipsnap.snip.attachment.Attachments;
 import org.snipsnap.snip.label.Labels;
 import org.snipsnap.snip.label.RenderEngineLabel;
+import org.snipsnap.snip.label.MIMETypeLabel;
+import org.snipsnap.snip.label.Label;
 import org.snipsnap.snip.name.CapitalizeFormatter;
 import org.snipsnap.snip.name.NameFormatter;
 import org.snipsnap.snip.name.PathRemoveFormatter;
@@ -452,6 +454,12 @@ public class SnipImpl implements Snip {
   public String toXML() {
     //long start = Application.get().start();
     PicoContainer container = Components.getContainer();
+
+//    Label mimeTypeLabel = getLabels().getLabel("mime-type");
+//    if(mimeTypeLabel instanceof MIMETypeLabel) {
+//      String viewHandler = ((MIMETypeLabel)mimeTypeLabel).getViewHandler();
+//
+//    }
 
     RenderEngineLabel reLabel =
       (RenderEngineLabel) getLabels().getLabel("RenderEngine");

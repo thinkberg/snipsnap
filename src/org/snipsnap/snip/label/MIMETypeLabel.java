@@ -56,7 +56,7 @@ public class MIMETypeLabel extends BaseLabel {
 
   public void setValue(String value) {
     if (null != value && !"".equals(value)) {
-      String values[] = value.split(":");
+      String values[] = value.split(",");
       type = (values.length > 0 ? values[0] : "");
       editHandler = (values.length > 1 ? values[0] : "");
       viewHandler = (values.length > 2 ? values[1] : "");
@@ -67,8 +67,8 @@ public class MIMETypeLabel extends BaseLabel {
   public String getValue() {
     return
       isNull(type) ? "" : type +
-      (isNull(viewHandler) ? "" : ":" + viewHandler) +
-      (isNull(editHandler) ? "" : ":" + editHandler);
+      (isNull(viewHandler) ? "" : "," + viewHandler) +
+      (isNull(editHandler) ? "" : "," + editHandler);
   }
 
   private boolean isNull(String var) {
@@ -90,14 +90,14 @@ public class MIMETypeLabel extends BaseLabel {
   public String getInputProxy() {
     StringBuffer buffer = new StringBuffer();
     if (Application.get().getUser().isAdmin()) {
-      buffer.append("<input type=\"\" name=\"label.name\" value=\"mime-type\"/>");
+      buffer.append("<input type=\"hidden\" name=\"label.name\" value=\"mime-type\"/>");
       buffer.append("<table border=\"0\" cellpadding=\"0\" cellspacing=\"2\">");
       buffer.append("<tr>");
       buffer.append("<td>");
       buffer.append(ResourceManager.getString("i18n.messages", "label.mimetype.type"));
       buffer.append("</td>");
       buffer.append("<td><input type=\"text\" value=\"");
-      buffer.append(name);
+      buffer.append(type == null ? "" : type);
       buffer.append("\" name=\"label.type\"/></td>");
       buffer.append("</tr><tr>");
       buffer.append("<td>");
@@ -157,6 +157,16 @@ public class MIMETypeLabel extends BaseLabel {
     return buffer.toString();
   }
 
+  public String getListProxy() {
+    StringBuffer buffer = new StringBuffer();
+    buffer.append("<td>");
+    buffer.append(name);
+    buffer.append("</td><td>");
+    buffer.append(type);
+    buffer.append("</td>");
+    return buffer.toString();
+  }
+
   private List getHandlerList() {
     List handlerList = new ArrayList();
     SnipSpace snipspace = (SnipSpace) Components.getComponent(SnipSpace.class);
@@ -170,10 +180,10 @@ public class MIMETypeLabel extends BaseLabel {
         Collection LabelsCat;
         // Search for all mime-type labels
         Label label = labels.getLabel("mime-type");
-        if (null != label) {
+        if (null != label && label instanceof MIMETypeLabel) {
           // only add labels that have the type text/gsp
-          String name = label.getName();
-          if ("text/gsp".equalsIgnoreCase(name) || "text/groovy".equalsIgnoreCase(name)) {
+          String type = ((MIMETypeLabel)label).getMIMEType();
+          if ("text/gsp".equalsIgnoreCase(type) || "text/groovy".equalsIgnoreCase(type)) {
             String handler = snip.getName();
             handlerList.add(handler);
           }

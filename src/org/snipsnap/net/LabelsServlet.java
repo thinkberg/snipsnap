@@ -98,6 +98,7 @@ public class LabelsServlet extends HttpServlet {
     }
 
     if(null != request.getParameter("edit")) {
+      request.setAttribute("edit", "edit");
       String labelName = request.getParameter("labelname");
       Label label = snip.getLabels().getLabel(labelName);
       if(null != label) {

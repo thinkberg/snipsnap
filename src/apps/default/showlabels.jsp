@@ -55,7 +55,7 @@
                <td>[<a href="exec/labels?snipname=<c:out value="${snip.nameEncoded}"/>&amp;labelname=<c:out value="${label.name}"/>&amp;edit=edit"><fmt:message key="snip.labels.edit"/></a>]</td>
              </tr>
             </c:forEach>
-            <c:if test="${empty snip.labels.all}">
+            <c:if test="${empty(snip.labels.all)}">
               <tr><td colspan="5"><fmt:message key="snip.labels.nolabels"/></td></tr>
             </c:if>
             <tr>

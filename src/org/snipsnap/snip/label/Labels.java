@@ -163,9 +163,7 @@ public class Labels {
   }
 
   public String toString() {
-    if (null == cache) {
-      cache = serialize();
-    }
-    return cache;
+    // always force serialization to ensure changed labels are reflected
+    return (cache = serialize());
   }
 }

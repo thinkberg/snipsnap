@@ -43,6 +43,7 @@ import java.io.IOException;
 
 public class PathSelectorTag extends TagSupport {
   String parent = null;
+  String selected = null;
 
   public int doStartTag() throws JspException {
     if (null != parent ) {
@@ -67,7 +68,11 @@ public class PathSelectorTag extends TagSupport {
           }
           path = path + element;
           value = value + element;
-          out.write("<option value=\""+value+"\">");
+          out.write("<option value=\""+value+"\"");
+          if(value.equals(selected)) {
+            out.write(" selected=\"selected\"");
+          }
+          out.write(">");
           out.write(path);
           out.write("</option>");
         }
@@ -82,6 +87,14 @@ public class PathSelectorTag extends TagSupport {
   public void setParentName(String parent) {
     try {
       this.parent = (String) ExpressionEvaluatorManager.evaluate("parent", parent, String.class, this, pageContext);
+    } catch (JspException e) {
+      Logger.warn("unable to evaluate expression", e);
+    }
+  }
+
+  public void setSelected(String selected) {
+    try {
+      this.selected = (String) ExpressionEvaluatorManager.evaluate("selected", selected, String.class, this, pageContext);
     } catch (JspException e) {
       Logger.warn("unable to evaluate expression", e);
     }

@@ -70,6 +70,14 @@ public class SnipStoreServlet extends HttpServlet {
     String parent = request.getParameter("parent");
     String content = request.getParameter("content");
 
+    // if the name is empty show an error
+    if (null == name || "".equals(name)) {
+      RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/edit");
+      request.setAttribute("error", "snip.name.empty");
+      dispatcher.forward(request, response);
+      return;
+    }
+
     if (parent != null && !"".equals(parent)) {
       name = parent + "/" + name;
     }
@@ -84,13 +92,6 @@ public class SnipStoreServlet extends HttpServlet {
       } else {
         response.sendRedirect(config.getUrl("/space/" + SnipLink.encode(name)));
       }
-    }
-
-    // if the name is empty show an error
-    if (null == name || "".equals(name)) {
-      RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/edit");
-      request.setAttribute("error", "snip.name.empty");
-      dispatcher.forward(request, response);
       return;
     }
 

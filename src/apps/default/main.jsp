@@ -64,10 +64,10 @@
        if(null == snip) {
          snip = space.load("SnipSnap/portlet/" + i);
        }
-       pageContext.setAttribute("snip", snip);
+       pageContext.setAttribute("portlet", snip);
    %>
     <div id="page-portlet-<%=i%>-wrapper">
-     <div id="page-portlet-<%=i%>"><s:snip snip="${snip}"/></div>
+     <div id="page-portlet-<%=i%>"><s:snip snip="${portlet}"/></div>
     </div>
    <% } %>
   </div>

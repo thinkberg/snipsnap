@@ -25,19 +25,17 @@
 package org.snipsnap.net;
 
 import org.radeox.util.logging.Logger;
+import org.radeox.util.Encoder;
 import org.snipsnap.app.Application;
-import org.snipsnap.config.Configuration;
+import org.snipsnap.container.Components;
 import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpace;
-import org.snipsnap.snip.label.MIMETypeLabel;
-import org.snipsnap.snip.label.Labels;
 import org.snipsnap.snip.label.Label;
+import org.snipsnap.snip.label.Labels;
+import org.snipsnap.snip.label.MIMETypeLabel;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.Security;
-import org.snipsnap.container.Components;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -45,10 +43,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ArrayList;
 
 /**
  * Load a snip to edit. Loads the snip into the request context. In case
@@ -70,22 +68,14 @@ public class SnipEditServlet extends HttpServlet {
     throws IOException, ServletException {
 
     String name = request.getParameter("name");
-    if (null == name) {
-      Configuration config = Application.get().getConfiguration();
-      response.sendRedirect(config.getUrl("/space/" + config.getStartSnip()));
-      return;
-    }
-
-    // try to load the snip and set the snip_name property in case it is a new
-    // snip, so the target store servlet knows how to name the new snip
-    SnipSpace space = (SnipSpace)Components.getComponent(SnipSpace.class);
-    Snip snip = space.load(name);
-
     String content = request.getParameter("content");
     String mimeType = request.getParameter("mime");
     String editHandler = request.getParameter("handler");
 
-    if (null != snip) {
+    SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
+    Snip snip = null;
+    if (name != null && space.exists(name)) {
+      snip = space.load(name);
       // get all mime types associated with the snip
       Collection mimeTypes = snip.getLabels().getLabels("mime-type");
       if (!mimeTypes.isEmpty()) {
@@ -107,6 +97,7 @@ public class SnipEditServlet extends HttpServlet {
         }
       }
     } else {
+
       // handle new snips (they can get a parent and a template)
       String parent = request.getParameter("parent");
       String parentBefore = request.getParameter("parentBefore");
@@ -142,6 +133,12 @@ public class SnipEditServlet extends HttpServlet {
         request.setAttribute("mime_type", mimeType);
       }
     }
+
+    String referer = request.getParameter("referer");
+    if(null == referer && request.getHeader("REFERER") != null) {
+      referer = Encoder.escape(request.getHeader("REFERER"));
+    }
+    request.setAttribute("referer", referer == null ? "" : referer);
 
     RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/edit.jsp");
     dispatcher.forward(request, response);

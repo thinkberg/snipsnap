@@ -39,6 +39,10 @@
       <name>parentName</name>
       <description>name of snip to split path for</description>
     </attribute>
+    <attribute>
+      <name>selected</name>
+      <description>path that has actually been selected</description>
+    </attribute>
    </tag>
 
   <tag>
