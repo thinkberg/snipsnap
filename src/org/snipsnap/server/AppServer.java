@@ -184,6 +184,12 @@ public class AppServer {
         } else {
           usage("an argument is required for -root");
         }
+      } else if("-port".equals(args[i])) {
+        if (args.length >= i + 1 && !args[i + 1].startsWith("-")) {
+          serverInfo.setProperty(ServerConfiguration.ADMIN_URL, args[i++]);
+        } else {
+          usage("an argument is required for -url");
+        }
       }
     }
     return serverInfo;
@@ -220,6 +226,8 @@ public class AppServer {
     System.out.println(message);
     System.out.println("usage: " + AppServer.class.getName() + " [-root <dir>]");
     System.out.println("  -root   directory, where to find the applications for this server");
+    System.out.println("  -url    URL, admin server URL (http://host:port/)");
+    System.out.println("  -help   this help text");
     System.exit(0);
   }
 }
