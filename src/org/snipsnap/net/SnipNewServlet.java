@@ -52,6 +52,19 @@ public class SnipNewServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
 
+    String parent = request.getParameter("parent");
+    String parentBefore = request.getParameter("parentBefore");
+    if (null == parentBefore) {
+      parentBefore = parent;
+    }
+    String content = request.getParameter("content");
+    String name = request.getParameter("name");
+
+    request.setAttribute("parent", parent);
+    request.setAttribute("parentBefore", parentBefore);
+    request.setAttribute("content", content);
+    request.setAttribute("name", name);
+
     RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/new.jsp");
     dispatcher.forward(request, response);
   }

@@ -98,6 +98,7 @@ public class LabelManager {
       label = (Label) labelClass.newInstance();
       label.create();
     } catch (Exception e) {
+      Logger.warn("LabelManager: label class of type " + type + " could not be instantiated.", e);
     }
     return label;
   }

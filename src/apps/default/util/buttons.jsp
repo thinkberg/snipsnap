@@ -19,7 +19,7 @@
 </s:check>
 <s:check roles="Authenticated" permission="Edit" snip="${snip}">[<a href="raw/<c:out value='${snip.nameEncoded}'/>"><fmt:message key="menu.view"/></a>]</s:check>
 <s:check roles="Authenticated" permission="Edit" snip="${snip}">[<a href="exec/edit?name=<c:out value='${snip.nameEncoded}'/>"><fmt:message key="menu.edit"/></a>]</s:check>
-<s:check roles="Authenticated" permission="Edit" snip="${snip}">[<a href="exec/new"><fmt:message key="menu.new"/></a>]</s:check>
+<s:check roles="Authenticated" permission="Edit" snip="${snip}">[<a href="exec/new?parent=<c:out value='${snip.nameEncoded}'/>"><fmt:message key="menu.new"/></a>]</s:check>
 <s:check roles="Authenticated" permission="Edit" snip="${snip}" invert="true"><span class="inactive">[<fmt:message key="menu.edit"/>]</span></s:check>
 [<a href="rdf/<c:out value='${snip.nameEncoded}'/>">rdf</a>]
 <%-- keep extra --%>

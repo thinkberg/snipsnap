@@ -30,6 +30,8 @@ import org.radeox.util.Encoder;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
 import org.snipsnap.util.URLEncoderDecoder;
+import org.snipsnap.snip.name.NameFormatter;
+import org.snipsnap.snip.name.PathRemoveFormatter;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -45,6 +47,8 @@ import java.util.List;
  */
 
 public class SnipLink {
+
+  public static NameFormatter formatter = new PathRemoveFormatter();
 
   /**
    * Append a URL String that contains a base a name-to-be-encoded and an optional anchor target.
@@ -152,6 +156,7 @@ public class SnipLink {
     writer.write("/");
     writer.write(name);
     writer.write("\">");
+    view = formatter.format(view);
     writer.write(Encoder.escape(view));
     writer.write("</a>");
     return writer;
@@ -166,6 +171,7 @@ public class SnipLink {
     buffer.append("/");
     buffer.append(name);
     buffer.append("\">");
+    view = formatter.format(view);
     buffer.append(Encoder.escape(view));
     buffer.append("</a>");
     return buffer;

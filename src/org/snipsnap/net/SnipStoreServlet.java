@@ -51,13 +51,23 @@ public class SnipStoreServlet extends HttpServlet {
       throws ServletException, IOException {
 
     String name = request.getParameter("name");
+    String parent = request.getParameter("parent");
+    if (parent != null && ! "".equals(parent)) {
+      name = parent + "/" + name;
+    }
     SnipSpace space = SnipSpaceFactory.getInstance();
     Snip snip = space.load(name);
 
     String content = request.getParameter("content");
     if (request.getParameter("preview") != null) {
       request.setAttribute("preview", SnipFormatter.toXML(snip, content));
-      RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/edit");
+      RequestDispatcher dispatcher;
+      if (parent != null) {
+        // We have been called from new
+        dispatcher = request.getRequestDispatcher("/exec/new");
+      } else {
+        dispatcher = request.getRequestDispatcher("/exec/edit");
+      }
       dispatcher.forward(request, response);
       return;
     } else if (request.getParameter("cancel") == null) {

@@ -1,4 +1,9 @@
-0.5
+0.5.1
+
+- Added feature: Choosing the parent snip for the namespace when creating new snips
+- Improvement: Only the last name of a namespace snip is displayed.
+
+0.5 - 2003-12-23
 
 - Fixed bug: Backlinks and SnipLinks are escaped now
 - Fixed bug: RSS feed escapes XML characters now
@@ -13,7 +18,7 @@
 - Developer: Moved aspects into container
 - Developer: Moved the rest of the XML-RPC handlers into container
 - Developer: Upgrade to PicoContainer 1.0-BETA-3
-- Improvement: Added edit button to weblog snips 
+- Improvement: Added edit button to weblog snips
 - Fixed bug: SnipSnap XML-RPC handlers are now authentication protected
 - Added feature: Multiple weblogs
 - Fixed bug: Reimplemented Weblog

@@ -1,6 +1,6 @@
 <%--
-  ** Template for editing Snips.
-  ** @author Matthias L. Jugel
+  ** Template for creating new Snips.
+  ** @author Stephan J. Schmidt
   ** @version $Id$
   --%>
 
@@ -12,8 +12,11 @@
  <div class="snip-title"><h1 class="snip-name"><fmt:message key="snip.create"/></h1></div>
  <form class="form" name="f" method="post" action="exec/store" enctype="multipart/form-data">
   <div class="snip-title">
-     <fmt:message key="snip.name"/><br><input name="name" value="" type="text"/>
+     <fmt:message key="snip.name"/><br><input name="name" value="<c:out value="${name}"/>" type="text"/>
   </div>
+  <fmt:message key="snip.parent"/>
+  <input name="parentBefore" value="<c:out value="${parentBefore}"/>" type="hidden"/>
+  <s:pathSelector parentName="${parentBefore}"/>
   <c:if test="${not empty preview}">
    <div class="preview"><div class="snip-content"><c:out value="${preview}" escapeXml="false"/></div></div>
   </c:if>

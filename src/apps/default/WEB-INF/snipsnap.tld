@@ -33,6 +33,15 @@
    </tag>
 
   <tag>
+    <name>pathSelector</name>
+    <tag-class>org.snipsnap.jsp.PathSelectorTag</tag-class>
+    <attribute>
+      <name>parentName</name>
+      <description>name of snip to split path for</description>
+    </attribute>
+   </tag>
+
+  <tag>
     <name>path</name>
     <tag-class>org.snipsnap.jsp.PathTag</tag-class>
     <attribute>
