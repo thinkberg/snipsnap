@@ -128,13 +128,13 @@ public class Modified {
   public static String getNiceTime(Timestamp time) {
     if (time == null) return "";
     java.util.Date now = new java.util.Date();
-    int secs = (int) (now.getTime() - time.getTime()) / 1000;
-    //int sec = secs % 60;
-    int mins = secs / 60;
-    int min = mins % 60;
-    int hours = mins / 60;
-    int hour = hours % 24;
-    int days = hours / 24;
+    long secs = (now.getTime() - time.getTime()) / 1000;
+    //int sec = (int) secs % 60;
+    long mins = secs / 60;
+    int min = (int) mins % 60;
+    long hours = mins / 60;
+    int hour = (int) hours % 24;
+    int days = (int) hours / 24;
     //int years = days / 365;
 
     StringBuffer nice = new StringBuffer();
