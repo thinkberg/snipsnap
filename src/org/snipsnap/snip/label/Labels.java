@@ -74,6 +74,22 @@ public class Labels {
     return labels.values();
   }
 
+  public Collection getLabels(String type) {
+    ArrayList labels = new ArrayList();
+    if (null == type) {
+      return labels;
+    }
+
+    Iterator iterator = this.labels.values().iterator();
+    while (iterator.hasNext()) {
+      Label label = (Label) iterator.next();
+      if(type.equals(label.getType())) {
+        labels.add(label);
+      }
+    }
+    return labels;
+  }
+
   public void removeLabel(String name) {
     cache = null;
     Label label = (Label) labels.get(name);
