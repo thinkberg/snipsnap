@@ -28,7 +28,6 @@ package com.neotis.snip;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.analysis.StopAnalyzer;
 import org.apache.lucene.search.Searcher;
 import org.apache.lucene.search.Hits;
 import org.apache.lucene.search.IndexSearcher;
@@ -46,20 +45,39 @@ import java.io.File;
  */
 
 public class SnipIndexer {
-  private static  String indexFile = "./index";
+  private static String indexFile = "./db/index";
 
   public void removeIndex(Snip snip) {
+    IndexReader reader = null;
     try {
-      IndexReader reader = IndexReader.open(indexFile);
-      reader.delete(new Term("title", snip.getName()));
+      reader = IndexReader.open(indexFile);
+      System.err.println("Deleted: "+ reader.delete(new Term("id", snip.getName().hashCode() + "")));
     } catch (IOException e) {
       System.err.println("Unable to delete snip " + snip.getName() + " from index.");
+      e.printStackTrace();
+    } finally {
+      close(reader);
     }
     return;
   }
 
+  public void reIndex(Snip snip) {
+    index(snip, true);
+    return;
+  }
+
   public void index(Snip snip) {
+    index(snip, false);
+    return;
+  }
+
+  private void index(Snip snip, boolean exists) {
     IndexWriter writer = null;
+
+    if (exists) {
+      removeIndex(snip);
+    }
+
     try {
       File f;
       boolean create = true;
@@ -69,13 +87,14 @@ public class SnipIndexer {
       } else {
         create = true;
       }
-      writer = new IndexWriter(indexFile, new StopAnalyzer(), create);
+      writer = new IndexWriter(indexFile, new SnipAnalyzer(), create);
 
       writer.mergeFactor = 20;
       writer.addDocument(SnipDocument.Document(snip));
       writer.optimize();
    } catch(IOException e) {
       System.err.println("Unable to index snip.");
+      e.printStackTrace();
    } finally {
      close(writer);
    }
@@ -87,12 +106,13 @@ public class SnipIndexer {
       searcher = new IndexSearcher(indexFile);
     } catch (IOException e) {
       System.out.println("Unable to open index file: " + indexFile);
+      e.printStackTrace();
     }
 
     // parse the query String.
     Query query = null;
     try {
-      query = QueryParser.parse(queryString, "content", new StopAnalyzer());
+      query = QueryParser.parse(queryString, "content", new SnipAnalyzer());
     } catch (org.apache.lucene.queryParser.ParseException e1) {
       close(searcher);
       System.out.println("Unable to parse: " + queryString);
@@ -124,6 +144,15 @@ public class SnipIndexer {
     if(null != searcher) {
       try {
         searcher.close();
+      } catch(Exception e) {
+      }
+    }
+  }
+
+  private static void close(IndexReader reader) {
+    if(null != reader) {
+      try {
+        reader.close();
       } catch(Exception e) {
       }
     }

@@ -38,7 +38,7 @@ import org.apache.lucene.document.Field;
 public class SnipDocument {
   public static Document Document(Snip snip) {
     Document doc = new Document();
-
+    doc.add(Field.Text("id", snip.getName().hashCode() + ""));
     doc.add(Field.Text("content", snip.getContent()));
     doc.add(Field.Text("title", snip.getName()));
     return doc;

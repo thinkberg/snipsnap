@@ -164,7 +164,7 @@ public class SnipSpace implements LinkTester, Loader {
     changed.add(snip);
     snip.setMTime(new Timestamp(new java.util.Date().getTime()));
     storageStore(snip);
-    indexer.index(snip);
+    indexer.reIndex(snip);
     return;
   }
 
