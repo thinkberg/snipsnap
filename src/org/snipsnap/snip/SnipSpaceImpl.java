@@ -35,7 +35,6 @@ import org.snipsnap.notification.Notification;
 import org.snipsnap.snip.storage.JDBCSnipStorage;
 import org.snipsnap.snip.storage.MemorySnipStorage;
 import org.snipsnap.snip.storage.SnipStorage;
-import org.snipsnap.snip.storage.Storage;
 import org.snipsnap.user.Digest;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
@@ -69,7 +68,7 @@ public class SnipSpaceImpl implements SnipSpace {
   private Cache cache;
   private SnipIndexer indexer;
   private FinderFactory finders;
-  private Timer timer, pop3Timer;
+  private Timer timer;
   private String eTag;
   private SnipStorage storage;
 
@@ -77,6 +76,7 @@ public class SnipSpaceImpl implements SnipSpace {
   }
 
   public void init() {
+    // @TODO missing should probably done with an Interceptor
     missing = new HashMap();
     changed = new Queue(100);
     cache = Cache.getInstance();
@@ -84,7 +84,7 @@ public class SnipSpaceImpl implements SnipSpace {
     finders = new FinderFactory("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions, " +
         " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
         " FROM Snip ", cache, Snip.class, "name", (JDBCCreator) storage);
-    cache.setLoader(Snip.class, (Storage) storage);
+    cache.setLoader(Snip.class, storage);
 
     // Fully fill the cache with all Snips
     if ("full".equals(Application.get().getConfiguration().getCache())) {
@@ -93,7 +93,7 @@ public class SnipSpaceImpl implements SnipSpace {
 
       // If we keep all snips in memory we can use queries directly on the snip list
       storage = new MemorySnipStorage(storage, cache);
-      cache.setLoader(Snip.class, (Storage) storage);
+      cache.setLoader(Snip.class, storage);
       Logger.debug("Cache strategy is: keep full, using MemorySnipStorage");
     }
 
@@ -251,12 +251,12 @@ public class SnipSpaceImpl implements SnipSpace {
   }
 
   public boolean exists(String name) {
-    if (missing.containsKey(name)) {
+    if (missing.containsKey(name.toUpperCase())) {
       return false;
     }
 
     if (null == load(name)) {
-      missing.put(name, new Integer(0));
+      missing.put(name.toUpperCase(), new Integer(0));
       return false;
     } else {
       return true;
@@ -320,8 +320,8 @@ public class SnipSpaceImpl implements SnipSpace {
     name = name.trim();
     Snip snip = storage.storageCreate(name, content);
     cache.put(Snip.class, name, snip);
-    if (missing.containsKey(name)) {
-      missing.remove(name);
+    if (missing.containsKey(name.toUpperCase())) {
+      missing.remove(name.toUpperCase());
     }
     changed(snip);
     indexer.index(snip);

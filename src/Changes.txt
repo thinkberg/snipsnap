@@ -1,5 +1,8 @@
 0.4
 
+- Fixed bug: Added more methods to XML-RPC Blogger API
+- Added feature: XML-RPC MetaWeblog API support
+- Fixed bug: Some links did not detect that the snips was created (when someone changed upper/lowercase)
 - fixed css bugs
 - Removed URL detection that brakes absolute URLs behind a proxy
 - File Upload changed to store files relative to snips
