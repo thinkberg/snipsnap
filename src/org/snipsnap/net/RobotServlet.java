@@ -46,9 +46,9 @@ import java.io.IOException;
 public class RobotServlet extends HttpServlet {
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-    System.out.println("RobotServlet.doGet()");
     String host = request.getRemoteHost();
     String name = "Unknown Robot";
+    request.
     if(host.endsWith("googlebot.com")) {
       name = "GoogleBot";
     }
