@@ -11,12 +11,17 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %>
 
+<form id="form" method="get" action="../space/snipsnap-search">
+ <label for="query" style="display:none" accesskey="4">Search for:</label>
+ <input type="text" size="10" name="query" style="border: 1px solid #aaaaaa"/>
+ <input type="submit" name="search" value="search"/>
+</form>
+<s:snip load="snipsnap-intro" id="intro"/>
+<c:out value="${intro.XMLContent}" escapeXml="false"/>
+
+<%--
 <table class="menu" width="100%" border="0" cellpadding="4" cellspacing="1">
  <tr><td>
-   <form method="get" action="../space/snipsnap-search">
-    <label for="query" style="display:none" accesskey="4">Search for:</label>
-    <input type="text" size="18" name="query" style="border: 1px solid #aaaaaa"/> <input type="submit" name="search" value="search"/>
-   </form>
  </td></tr>
  <tr><td>
    <s:snip load="snipsnap-intro" id="intro"/>
@@ -37,13 +42,13 @@
  </td></tr>
  <tr><td>
   <b>Recent Changes:</b><br/>
-  <%-- replace this with a JSTL tag ala  s:recent/> --%>
+  <% -- replace this with a JSTL tag ala  s:recent/> -- %>
   <c:forEach var="snip" items="${space.changed}">
    <a href="<c:url value='/space/${snip.nameEncoded}'/>"><c:out value="${snip.shortName}"/></a><br/>
   </c:forEach>
  </td></tr>
  <tr><td>
-  <%-- replace this with a JSTL tag ala  s:calendar/> --%>
+  <%-- replace this with a JSTL tag ala  s:calendar/> -- %>
   <% Month m = new Month(); %>
   <%= m.getView() %>
   </td></tr>
@@ -58,3 +63,4 @@
    <a href="/exec/rss"><s:image name="xml-rss"/></a>
  </td></tr>
 </table>
+--%>
