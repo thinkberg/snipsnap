@@ -253,7 +253,7 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
         config.setPrefix(prefix);
       }
       appOid = InitializeDatabase.init(config, new OutputStreamWriter(System.out));
-      return configManager.getConfiguration(appOid).getUrl();
+      return configManager.getConfiguration(appOid).getUrl(prefix);
     }
 
     return "a configuration for '"+prefix+"' already exists, aborting.";

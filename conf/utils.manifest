@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
 Created-By: SnipSnap Project (http://snipsnap.org)
 Main-Class: org.snipsnap.server.AdminClient
-Class-Path: xmlrpc-1.1.jar dom4j.jar mckoidb.jar
+Class-Path: xmlrpc-1.2-b1.jar dom4j.jar mckoidb.jar

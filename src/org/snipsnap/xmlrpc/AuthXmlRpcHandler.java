@@ -70,6 +70,10 @@ public abstract class AuthXmlRpcHandler implements AuthenticatedXmlRpcHandler {
         argClasses[argNum] = args.get(argNum).getClass();
       }
     }
+    if(methodName.indexOf('.') != -1) {
+      methodName = methodName.substring(methodName.indexOf(".")+1);
+    }
+
     Method method = target.getClass().getMethod(methodName, argClasses);
     try {
       return method.invoke(target, (args.size() > 0 ? args.toArray() : null));

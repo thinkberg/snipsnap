@@ -60,14 +60,15 @@ public class XmlRpcServerTest extends TestCase {
     super.setUp();
     if (null == xmlRpcServer) {
       URL url = new URL(config.getProperty(ServerConfiguration.ADMIN_URL));
+      config.setProperty(ServerConfiguration.ADMIN_USER, "ADMIN");
+      config.setProperty(ServerConfiguration.ADMIN_PASS, "ADMIN");
       xmlRpcServer = new WebServer(url.getPort());
       xmlRpcServer.addHandler("$default", new AdminXmlRpcHandler(config));
       xmlRpcServer.start();
     }
 
     xmlRpcClient = new AdminXmlRpcClient(config.getProperty(ServerConfiguration.ADMIN_URL),
-                                         config.getProperty(ServerConfiguration.ADMIN_USER),
-                                         config.getProperty(ServerConfiguration.ADMIN_PASS));
+                                         "ADMIN", "ADMIN");
   }
 
   public static Test suite() {
