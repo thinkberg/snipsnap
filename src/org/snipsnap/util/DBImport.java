@@ -257,12 +257,25 @@ public class DBImport {
         snip.setCTime(getTimestamp(tmp));
       }
 
+      // creation user
+      User cUser = null;
       if ((tmp = (String) elements.get("cUser")) != null) {
-        User user = um.load(tmp);
-        if (user != null) {
-          snip.setCUser(user);
-        }
+        cUser = um.load(tmp);
       }
+      if(null == cUser) {
+        cUser = Application.get().getUser();
+      }
+      snip.setCUser(cUser);
+
+      // owner user
+      User oUser = null;
+      if ((tmp = (String) elements.get("oUser")) != null) {
+        oUser = um.load(tmp);
+      }
+      if(null == oUser) {
+        oUser = Application.get().getUser();
+      }
+      snip.setOUser(oUser);
 
       // store last modification time
       if ((tmp = (String) elements.get("mTime")) != null) {
