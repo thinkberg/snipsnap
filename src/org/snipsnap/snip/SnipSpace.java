@@ -104,6 +104,8 @@ public class SnipSpace implements LinkTester {
     Snip snip = new Snip(name, content);
     snip.setCTime(result.getTimestamp("cTime"));
     snip.setMTime(result.getTimestamp("mTime"));
+    snip.setCUser(result.getString("cUser"));
+    snip.setMUser(result.getString("mUser"));
     return snip;
   }
 
@@ -113,7 +115,7 @@ public class SnipSpace implements LinkTester {
     List snips = new ArrayList();
 
     try {
-      statement = connection.prepareStatement("SELECT name, content, cTime, mTime FROM Snip ORDER by mTime DESC");
+      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser FROM Snip ORDER by mTime DESC");
 
       result = statement.executeQuery();
       Snip snip = null;
@@ -142,7 +144,7 @@ public class SnipSpace implements LinkTester {
     Collection children = new ArrayList();
 
     try {
-      statement = connection.prepareStatement("SELECT name, content, cTime, mTime FROM Snip WHERE parentSnip=?");
+      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser FROM Snip WHERE parentSnip=?");
       statement.setString(1, parent.getName());
 
       result = statement.executeQuery();
@@ -237,7 +239,7 @@ public class SnipSpace implements LinkTester {
     ResultSet result = null;
 
     try {
-      statement = connection.prepareStatement("SELECT name, content, cTime, mTime FROM Snip WHERE name=?");
+      statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser FROM Snip WHERE name=?");
       statement.setString(1, name);
 
       result = statement.executeQuery();
