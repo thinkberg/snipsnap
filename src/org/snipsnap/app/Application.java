@@ -170,22 +170,14 @@ public class Application {
       return;
     }
 
-    String appOid = (String) Application.get().getObject(Application.OID);
-    if (null == appOid) {
-      Application app = (Application) session.getAttribute("app");
-      appOid = (String) app.getObject(Application.OID);
-      Application.get().storeObject(Application.OID, appOid);
-    }
-
     Map currentUsersMap = currentUsers.getMap();
+    if(null == currentUsersMap) {
+      currentUsersMap = currentUsers.findMap(session);
+    }
 
     if (null != currentUsersMap && currentUsersMap.containsKey(session)) {
       User user = (User) currentUsersMap.get(session);
       AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
-
-      if (!user.getApplication().equals(appOid)) {
-        Logger.warn("'" + user + "': expected OID '" + appOid + "' instead of '" + user.getApplication() + "'");
-      }
 
       if (service.isAuthenticated(user)) {
         Logger.debug("Removing authenticated user from session: " + user);
@@ -198,7 +190,7 @@ public class Application {
       }
       currentUsersMap.remove(session);
     } else {
-      Logger.warn("Unable to remove current user from session with OID '"+appOid+"'");
+      Logger.warn("Unable to remove current user from session '"+session+"'");
     }
   }
 

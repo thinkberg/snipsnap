@@ -86,4 +86,8 @@ public class ApplicationAwareMap {
     String application = (String) Application.get().getObject(Application.OID);
     return getObject(application);
   }
+
+  public Map findMap(Object object) {
+    return ((Map)map).containsValue(object) ? (Map) map : null;
+  }
 }
