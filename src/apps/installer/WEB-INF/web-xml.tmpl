@@ -9,71 +9,40 @@
   ** @version $Id$
   -->
 <web-app>
-  <display-name>SnipSnap Installer</display-name>
+  <display-name>SnipSnap Boostrap Installer</display-name>
+
+  <context-param>
+    <param-name>javax.servlet.jsp.jstl.fmt.fallbackLocale</param-name>
+    <param-value>en</param-value>
+  </context-param>
+  <context-param>
+    <param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
+    <param-value>i18n.messages_en</param-value>
+  </context-param>
+
+  <filter>
+    <filter-name>org.snipsnap.admin.AdminInitFilter</filter-name>
+    <filter-class>org.snipsnap.admin.AdminInitFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>org.snipsnap.admin.AdminInitFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
 
   <servlet>
-    <servlet-name>org.snipsnap.admin.util.CommandHandler</servlet-name>
-    <servlet-class>org.snipsnap.admin.util.CommandHandler</servlet-class>
-    <init-param>
-      <param-name>config-file</param-name>
-      <param-value>conf/server.conf</param-value>
-    </init-param>
-    <init-param>
-      <param-name>free-files</param-name>
-      <param-value>/login.jsp, /install.jsp</param-value>
-    </init-param>
-    <init-param>
-      <param-name>index-page</param-name>
-      <param-value>/exec/app</param-value>
-    </init-param>
-  </servlet>
-
-  <servlet>
-    <servlet-name>org.snipsnap.admin.install.Authenticate</servlet-name>
-    <servlet-class>org.snipsnap.admin.install.Authenticate</servlet-class>
-  </servlet>
-
-  <servlet>
-    <servlet-name>org.snipsnap.admin.install.Installer</servlet-name>
-    <servlet-class>org.snipsnap.admin.install.Installer</servlet-class>
-  </servlet>
-
-  <servlet>
-    <servlet-name>org.snipsnap.admin.install.Applications</servlet-name>
-    <servlet-class>org.snipsnap.admin.install.Applications</servlet-class>
-  </servlet>
-
-  <servlet>
-    <servlet-name>org.snipsnap.admin.install.Shutdown</servlet-name>
-    <servlet-class>org.snipsnap.admin.install.Shutdown</servlet-class>
+    <servlet-name>org.snipsnap.admin.Installer</servlet-name>
+    <servlet-class>org.snipsnap.admin.Installer</servlet-class>
   </servlet>
 
   <!-- include precompiled jsp servlets -->
   @PRECOMPILED-JSP@
 
-  <servlet-mapping>
-    <servlet-name>org.snipsnap.admin.util.CommandHandler</servlet-name>
-    <url-pattern>/exec/*</url-pattern>
-  </servlet-mapping>
+  <!-- servlet mappings -->
 
   <servlet-mapping>
-    <servlet-name>org.snipsnap.admin.install.Authenticate</servlet-name>
-    <url-pattern>/exec/authenticate</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>org.snipsnap.admin.install.Applications</servlet-name>
-    <url-pattern>/exec/app</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>org.snipsnap.admin.install.Installer</servlet-name>
-    <url-pattern>/exec/install</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>org.snipsnap.admin.install.Shutdown</servlet-name>
-    <url-pattern>/exec/shutdown</url-pattern>
+    <servlet-name>org.snipsnap.admin.Installer</servlet-name>
+    <url-pattern>/setup</url-pattern>
   </servlet-mapping>
 
   <welcome-file-list>
@@ -84,6 +53,11 @@
   <!-- TAGLIBS -->
   <taglib>
     <taglib-uri>http://java.sun.com/jstl/core</taglib-uri>
+    <taglib-location>/WEB-INF/c.tld</taglib-location>
+  </taglib>
+
+  <taglib>
+    <taglib-uri>http://java.sun.com/jstl/fmt</taglib-uri>
     <taglib-location>/WEB-INF/c.tld</taglib-location>
   </taglib>
 

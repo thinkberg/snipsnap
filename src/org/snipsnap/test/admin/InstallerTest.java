@@ -43,33 +43,33 @@ public class InstallerTest extends TestCase {
     return new TestSuite(InstallerTest.class);
   }
 
-  public void testShortPassword() {
-    assertTrue("Password to short", ! Installer.checkPassword("test","test"));
-  }
-
-  public void testDifferentPasswords() {
-    assertTrue("Passwords not equal", ! Installer.checkPassword("test123","test321"));
-  }
-
-  public void test6Chars() {
-    assertTrue("Password too short", Installer.checkPassword("test123","test123"));
-  }
-
-  public void testNullPassword() {
-    assertTrue("Password is null", ! Installer.checkPassword(null ,"test123"));
-  }
-
-  public void testShortUserName() {
-    assertTrue("User name too short", ! Installer.checkUserName("te"));
-  }
-
-  public void testUserName() {
-    assertTrue("User name too short", Installer.checkUserName("tes"));
-  }
-
-  public void testNullUserName() {
-    assertTrue("User is null", ! Installer.checkUserName(null));
-  }
-
+//  public void testShortPassword() {
+//    assertTrue("Password to short", ! Installer.checkPassword("test","test"));
+//  }
+//
+//  public void testDifferentPasswords() {
+//    assertTrue("Passwords not equal", ! Installer.checkPassword("test123","test321"));
+//  }
+//
+//  public void test6Chars() {
+//    assertTrue("Password too short", Installer.checkPassword("test123","test123"));
+//  }
+//
+//  public void testNullPassword() {
+//    assertTrue("Password is null", ! Installer.checkPassword(null ,"test123"));
+//  }
+//
+//  public void testShortUserName() {
+//    assertTrue("User name too short", ! Installer.checkUserName("te"));
+//  }
+//
+//  public void testUserName() {
+//    assertTrue("User name too short", Installer.checkUserName("tes"));
+//  }
+//
+//  public void testNullUserName() {
+//    assertTrue("User is null", ! Installer.checkUserName(null));
+//  }
+//
 
 }

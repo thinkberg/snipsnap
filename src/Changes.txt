@@ -1,5 +1,6 @@
 0.5
 
+- Added Label: RenderEngineLabel allows to set a different engine for a snip
 - Fixed bug: display login warning instead of edit field when snip auto-create is on
 - Fixed bug: attachment download working with deep namespace now
 - Added Feature: RenderEngineLabel to change rendering of content

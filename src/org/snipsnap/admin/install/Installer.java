@@ -25,25 +25,45 @@
 package org.snipsnap.admin.install;
 
 import org.snipsnap.config.ServerConfiguration;
+import org.snipsnap.config.Configuration;
+import org.snipsnap.config.ConfigurationProxy;
+import org.snipsnap.server.AdminServer;
 
 import javax.servlet.ServletException;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.FileInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.Properties;
 
 /**
- * Installer servlet that installs the application.
+ * Installer Servlet handling the initial setup of a new web application.
+ *
  * @author Matthias L. Jugel
  * @version $Id$
  */
 public class Installer extends HttpServlet {
 
+  private final static String COMMAND = "installer.command";
   private final static String AUTHENTICATED = "installer.authenticated";
+  private final static String ERROR = "installer.error";
+  private final static String OVERWRITE = "installer.overwrite";
+
+  private final static String ERROR_EXISTS = "installer.error.exists";
+  private final static String ERROR_LOAD = "installer.error.load";
+
+  private File webAppDir = null;
+  
+  public void init(ServletConfig servletConfig) throws ServletException {
+    super.init(servletConfig);
+    webAppDir = new File(getServletConfig().getInitParameter(ServerConfiguration.WEBAPP_ROOT));
+  }
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
@@ -52,12 +72,12 @@ public class Installer extends HttpServlet {
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+    Properties serverConfig = new Properties();
+    serverConfig.load(new FileInputStream("conf/server.conf"));
 
     // check authentication and verify session
     HttpSession session = request.getSession(false);
     if (null == session || !"true".equals(session.getAttribute(AUTHENTICATED))) {
-      Properties serverConfig = new Properties();
-      serverConfig.load(new FileInputStream("conf/server.conf"));
       String serverPass = serverConfig.getProperty(ServerConfiguration.ADMIN_PASS);
       String installPass = request.getPathInfo();
       if(serverPass == null || !serverPass.equals(installPass)) {
@@ -70,6 +90,38 @@ public class Installer extends HttpServlet {
       }
     }
 
-    
+    String command = request.getParameter(COMMAND);
+    if("install".equals(command)) {
+      String name = request.getParameter(Configuration.APP_NAME);
+      String host = request.getParameter(Configuration.APP_HOST);
+      String port = request.getParameter(Configuration.APP_PORT);
+      String path = request.getParameter(Configuration.APP_PATH);
+      boolean overwrite = "true".equals(request.getParameter(OVERWRITE));
+
+      File webInfDir = new File(webAppDir, name+"/webapp/WEB-INF");
+      File appConf = new File(webInfDir, "application.conf");
+      if(!overwrite && webInfDir.exists() && appConf.exists()) {
+        request.setAttribute(ERROR, ERROR_EXISTS);
+      } else {
+        webInfDir.mkdirs();
+        Configuration config = ConfigurationProxy.newInstance();
+
+        config.set(Configuration.APP_NAME, name);
+        config.set(Configuration.APP_HOST, host);
+        config.set(Configuration.APP_PORT, port);
+        config.set(Configuration.APP_PATH, path);
+        config.store(new FileOutputStream(appConf));
+
+        int adminPort = Integer.parseInt(serverConfig.getProperty(ServerConfiguration.ADMIN_PORT));
+        if(AdminServer.execute(adminPort, "start", name)) {
+          response.sendRedirect(config.getUrl());
+          return;
+        } else {
+          request.setAttribute(ERROR, ERROR_LOAD);
+        }
+      }
+    }
+    RequestDispatcher dispatcher = request.getRequestDispatcher("install.jsp");
+    dispatcher.forward(request, response);
   }
 }

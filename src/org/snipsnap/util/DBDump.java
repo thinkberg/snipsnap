@@ -28,7 +28,9 @@ public class DBDump {
       if (args.length > 1) {
         try {
           config = ConfigurationProxy.newInstance();
-          config.load(new FileInputStream(new File(args[1])));
+          File appConf = new File(args[1]);
+          config.load(new FileInputStream(appConf));
+          config.setWebInfDir(appConf.getParentFile());
         } catch (IOException e) {
           System.err.println("DBDump: unable to read configuration file: " + e);
           System.exit(-1);

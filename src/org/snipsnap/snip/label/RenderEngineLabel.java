@@ -33,7 +33,8 @@ import org.radeox.engine.RenderEngine;
 import java.util.Map;
 
 /**
- * Boolean Label for true/false functionality
+ * Label that changes how a snip is displayed bu changing the default rendering
+ * engine. It is honoured by the Snip implementation.
  *
  * @author Matthias L. Jugel
  * @version $Id$
@@ -64,13 +65,14 @@ public class RenderEngineLabel implements Label {
   }
 
   public String getListProxy() {
-    StringBuffer buffer = new StringBuffer();
-    buffer.append("<td>");
-    buffer.append(name);
-    buffer.append("</td><td>");
-    buffer.append(engine.substring(engine.lastIndexOf(".")));
-    buffer.append("</td>");
-    return buffer.toString();
+//    StringBuffer buffer = new StringBuffer();
+//    buffer.append("<td>");
+//    buffer.append(name);
+//    buffer.append("</td><td>");
+//    buffer.append(engine.substring(engine.lastIndexOf(".")));
+//    buffer.append("</td>");
+//    return buffer.toString();
+    return ""; // this label is not displayed
   }
 
   public void handleInput(Map input) {

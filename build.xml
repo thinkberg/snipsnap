@@ -423,15 +423,8 @@
       srcdir="${src}"
       classpathref="all.classpath"
       destdir="${target}/installer/servlets">
-      <include name="org/snipsnap/admin/CommandHandler.java"/>
-      <include name="org/snipsnap/admin/Authenticate.java"/>
-      <include name="org/snipsnap/snip/storage/JDBCUserStorage.java"/>
-      <include name="org/snipsnap/user/UserManager.java"/>
-      <include name="org/snipsnap/user/AuthenticationService.java"/>
-      <include name="org/snipsnap/user/PasswordService.java"/>
-      <include name="org/snipsnap/container/SessionService.java"/>
-      <include name="org/snipsnap/render/SnipRenderEngine.java"/>
-      <include name="org/snipsnap/admin/install/**"/>
+      <include name="org/snipsnap/admin/AdminInitFilter.java"/>
+      <include name="org/snipsnap/admin/Installer.java"/>
     </javac>
   </target>
 
@@ -483,25 +476,25 @@
       </filterset>
     </copy>
 
-    <copy todir="${target}/installer/webapp/WEB-INF/lib">
-      <fileset dir="${jar}">
-        <include name="radeox.jar"/>
-        <include name="jena.jar"/>
-        <include name="commons-logging.jar"/>
-        <include name="jakarta-oro.jar"/>
-        <include name="lucene-1.2.jar"/>
-        <include name="xmlrpc-1.1.jar"/>
-        <include name="jdom-b8.jar"/>
-        <include name="aspectjrt.jar"/>
-        <include name="jython.jar"/>
-        <include name="mail.jar"/>
-        <include name="activation.jar"/>
-        <include name="j2h.jar"/>
-        <include name="picocontainer-1.0.jar"/>
-        <include name="nanocontainer-1.0.jar"/>
-        <include name="nanning.jar"/>
-      </fileset>
-    </copy>
+<!--    <copy todir="${target}/installer/webapp/WEB-INF/lib">-->
+<!--      <fileset dir="${jar}">-->
+<!--        <include name="radeox.jar"/>-->
+<!--        <include name="jena.jar"/>-->
+<!--        <include name="commons-logging.jar"/>-->
+<!--        <include name="jakarta-oro.jar"/>-->
+<!--        <include name="lucene-1.2.jar"/>-->
+<!--        <include name="xmlrpc-1.1.jar"/>-->
+<!--        <include name="jdom-b8.jar"/>-->
+<!--        <include name="aspectjrt.jar"/>-->
+<!--        <include name="jython.jar"/>-->
+<!--        <include name="mail.jar"/>-->
+<!--        <include name="activation.jar"/>-->
+<!--        <include name="j2h.jar"/>-->
+<!--        <include name="picocontainer-1.0.jar"/>-->
+<!--        <include name="nanocontainer-1.0.jar"/>-->
+<!--        <include name="nanning.jar"/>-->
+<!--      </fileset>-->
+<!--    </copy>-->
 
     <jar destfile="${jar}/${appname}-installer.war">
       <fileset dir="${target}/installer/webapp" includes="**"/>
