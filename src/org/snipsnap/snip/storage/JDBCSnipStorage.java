@@ -215,7 +215,11 @@ public class JDBCSnipStorage implements SnipStorage, CacheableStorage {
   }
 
   public Snip storageLoad(String name) {
-    Logger.debug("LOAD "+name);
+    // Logger.debug("LOAD "+name);
+
+    if (cache.containsKey(name.toUpperCase())) {
+      return (Snip) cache.get(name.toUpperCase());
+    }
 
     Application app = Application.get();
     long start = app.start();
