@@ -196,8 +196,8 @@
   </target>
 
   <target name="compile-jsp" description="compile jsp files">
-    <!-- ignore for now ...
     <mkdir dir="${target}/jsp"/>
+    <!-- ignore for now ...
     <jspc destdir="${target}/jsp" verbose="1" srcdir="${src}/apps/default"
           package="org.snipsnap.jsp.pages" classpathref="all.classpath">
       <include name="**/*.jsp" />
