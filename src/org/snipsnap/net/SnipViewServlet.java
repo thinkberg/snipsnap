@@ -96,6 +96,7 @@ public class SnipViewServlet extends HttpServlet {
         return;
       } catch (ServletException e) {
         // jump to the not found page
+        name = name + "/" + subname;
         snip = null;
       }
     }

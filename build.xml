@@ -414,6 +414,12 @@
       destdir="${target}/installer/servlets">
       <include name="org/snipsnap/admin/CommandHandler.java"/>
       <include name="org/snipsnap/admin/Authenticate.java"/>
+      <include name="org/snipsnap/snip/storage/JDBCUserStorage.java"/>
+      <include name="org/snipsnap/user/UserManager.java"/>
+      <include name="org/snipsnap/user/AuthenticationService.java"/>
+      <include name="org/snipsnap/user/PasswordService.java"/>
+      <include name="org/snipsnap/container/SessionService.java"/>
+      <include name="org/snipsnap/render/SnipRenderEngine.java"/>
       <include name="org/snipsnap/admin/install/**"/>
     </javac>
   </target>

@@ -86,10 +86,13 @@ public class FileDownloadServlet extends HttpServlet {
         // legacy: found a default image download
         Logger.log(Logger.DEBUG, "old style image: " + fileName);
         String oldStyleFile = "/images/image-" + snip.getName() + "-" + fileName;
-        RequestDispatcher dispatcher = request.getRequestDispatcher(oldStyleFile);
-        if (dispatcher != null) {
-          dispatcher.forward(request, response);
-          return;
+        if (getServletContext().getResource(oldStyleFile) != null) {
+          RequestDispatcher dispatcher = request.getRequestDispatcher(oldStyleFile);
+          if (dispatcher != null) {
+            System.out.println("dispatcher: " + dispatcher);
+            dispatcher.forward(request, response);
+            return;
+          }
         }
       }
     }

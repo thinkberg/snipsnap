@@ -25,6 +25,9 @@
 
 package org.snipsnap.snip;
 
+import org.snipsnap.config.Configuration;
+import org.snipsnap.app.Application;
+
 import java.io.IOException;
 import java.io.Writer;
 
@@ -59,7 +62,8 @@ public class SnipPath {
       while (index != -1 && i++ < 10) {
         part = name.substring(lastIndex, index);
         snipName = name.substring(0, index);
-        if (space.exists(snipName)) {
+        if(space.exists(snipName) ||
+           Application.get().getConfiguration().allow(Configuration.APP_PERM_CREATESNIP)) {
           SnipLink.appendLink(writer, snipName, part);
         } else {
           writer.write(part);
