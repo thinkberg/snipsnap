@@ -54,11 +54,10 @@ input[type=submit] {
 input, select, textarea {
   font-size: inherit;
   font-family: courier, courier new, monospaced;
+}
+
+textarea {
   width: 100%;
   overflow: auto;
   wrap: virtual;
 }
-}
-
-
-
