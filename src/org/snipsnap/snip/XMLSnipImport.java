@@ -96,7 +96,11 @@ public class XMLSnipImport {
         public void onEnd(ElementPath elementPath) {
           Element userElement = elementPath.getCurrent();
           if ((flags & IMPORT_USERS) != 0) {
-            XMLSnipImport.loadUser(elementPath.getCurrent(), flags);
+            try {
+              XMLSnipImport.loadUser(elementPath.getCurrent(), flags);
+            } catch (Exception e) {
+              Logger.fatal("XMLSnipImport: error importing user: " + userElement.elementText("name"));
+            }
             getStatus().inc();
           }
           // prune the element to save memory
@@ -112,7 +116,11 @@ public class XMLSnipImport {
         public void onEnd(ElementPath elementPath) {
           Element snipElement = elementPath.getCurrent();
           if ((flags & IMPORT_SNIPS) != 0) {
-            XMLSnipImport.loadSnip(snipElement, flags);
+            try {
+              XMLSnipImport.loadSnip(snipElement, flags);
+            } catch (Exception e) {
+              Logger.fatal("XMLSnipImport: error importing snip: "+snipElement.elementText("name"));
+            }
             getStatus().inc();
           }
           // prune the element to save memory

@@ -178,22 +178,22 @@ public class Maintenance implements SetupHandler {
           Links backLinks = snip.getBackLinks();
 
           Iterator blackListIt = blackList.iterator();
-          int removed = 0;
+          boolean storeModifiedSnip = false;
           while(blackListIt.hasNext()) {
             String entry = ((String)blackListIt.next()).toLowerCase();
             if(entry.startsWith("pattern:")) {
-              removed = backLinks.removeLinkByPattern(entry.substring("pattern:".length()));
-              if(removed > 0) {
+              if(backLinks.removeLinkByPattern(entry.substring("pattern:".length())) > 0) {
+                storeModifiedSnip = true;
                 Logger.debug("removed link by pattern: "+ entry.substring("pattern:".length()));
               }
             } else {
-              removed = backLinks.removeLink(entry);
-              if (removed > 0) {
+              if (backLinks.removeLink(entry) > 0) {
+                storeModifiedSnip = true;
                 Logger.debug("removed link by domain: " + entry);
               }
             }
           }
-          if(removed > 0) {
+          if(storeModifiedSnip) {
             space.systemStore(snip);
           }
           spamIt.remove();
