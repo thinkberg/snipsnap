@@ -91,6 +91,7 @@ public class AppServer {
         context.start();
       } catch (Exception e) {
         System.out.println("WARNING: unable to start your application: " + e);
+        e.printStackTrace(System.err);
       }
     } else {
       System.out.println("INFO: Server is still unconfigured!");
