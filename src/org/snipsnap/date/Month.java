@@ -135,14 +135,11 @@ public class Month {
     Application app = Application.get();
     Configuration config = app.getConfiguration();
     Snip viewedSnip = (Snip) app.getParameters().get("viewed");
-    String weblogName = (String) app.getParameters().get("calsnip");
-    if (weblogName != null) {
-      SnipSpace space = SnipSpaceFactory.getInstance();
-      if (space.exists(weblogName)) {
-        viewedSnip = SnipSpaceFactory.getInstance().load(weblogName);
-      }
+    String weblogName = (String) app.getParameters().get("weblog");
+    String viewed = viewedSnip != null ? viewedSnip.getName() : config.getStartSnip();
+    if(weblogName == null) {
+      weblogName = viewedSnip != null && viewedSnip.isWeblog() ? viewedSnip.getName() : config.getStartSnip();
     }
-    String viewed = viewedSnip != null && viewedSnip.isWeblog() ? viewedSnip.getName() : config.getStartSnip();
 
     StringBuffer view = new StringBuffer();
     view.append("<div class=\"calendar\">");
@@ -156,8 +153,8 @@ public class Month {
       view.append("<a href=\"");
       view.append(SnipLink.getSpaceRoot()).append("/");
       view.append(viewed);
-      view.append("?calsnip=");
-      view.append(SnipLink.encode(viewed));
+      view.append("?weblog=");
+      view.append(SnipLink.encode(weblogName));
       view.append("&calmonth=");
       view.append(prevMonth);
       view.append("&amp;calyear=");
@@ -172,17 +169,18 @@ public class Month {
       view.append("<a href=\"");
       view.append(SnipLink.getSpaceRoot()).append("/");
       view.append(viewed);
-      view.append("?calsnip=");
-      view.append(SnipLink.encode(viewed));
+      view.append("?weblog=");
+      view.append(SnipLink.encode(weblogName));
       view.append("&calmonth=");
       view.append(nextMonth);
       view.append("&amp;calyear=");
       view.append(nextYear);
       view.append("\">&gt;</a>");
     }
-    if (viewedSnip != null && !viewed.equals(config.getStartSnip())) {
+    if (viewedSnip != null && !weblogName.equals(config.getStartSnip())) {
       view.append(" (");
-      view.append(SnipLink.cutLength(viewedSnip.getTitle(), 20));
+      Snip weblogSnip = SnipSpaceFactory.getInstance().load(weblogName);
+      view.append(SnipLink.cutLength(weblogSnip.getTitle(), 20));
       view.append(")");
     }
     view.append("</caption>");
@@ -230,9 +228,9 @@ public class Month {
       String calBlogNew = viewed + "/" + calBlogOld + "/1";
 
       if (days.contains(calBlogNew)) {
-        day = makeLink(SnipLink.encode(calBlogNew) + "?calsnip=" + SnipLink.encode(viewed) + "&calmonth=" + month + "&calyear=" + year, day);
+        day = makeLink(SnipLink.encode(calBlogNew) + "?weblog=" + SnipLink.encode(weblogName) + "&calmonth=" + month + "&calyear=" + year, day);
       } else if (days.contains(calBlogOld)) {
-        day = makeLink(SnipLink.encode(calBlogOld) + "?calsnip=" + SnipLink.encode(viewed) + "&calmonth=" + month + "&calyear=" + year, day);
+        day = makeLink(SnipLink.encode(calBlogOld) + "?weblog=" + SnipLink.encode(weblogName) + "&calmonth=" + month + "&calyear=" + year, day);
       }
 
       if (i == todayNumber && month == today.get(Calendar.MONTH) + 1 && year == today.get(Calendar.YEAR)) {
