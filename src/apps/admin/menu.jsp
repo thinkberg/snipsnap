@@ -6,6 +6,7 @@
 
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 
+<c:url var="base" value="/"/>
 <c:if test="${config.configured && admin != null}">
   <table width="100%" class="menu" border="0" cellpadding="8" cellspacing="0">
     <tr>
@@ -13,7 +14,7 @@
       <c:choose>
         <c:when test="${admin != null && page != '/welcome.jsp'}">
           <td align="center" width="25%" class="menuitem-inactive">
-            <a href="../">Overview</a>
+            <a href="<c:out value='${base}'/>">Overview</a>
           </td>
         </c:when>
         <c:otherwise>
@@ -27,7 +28,7 @@
       <c:choose>
         <c:when test="${admin != null && !(page == '/usermanager.jsp' || page == '/user.jsp')}">
           <td align="center" width="25%" class="menuitem-inactive">
-            <a href="../exec/user">User Management</a>
+            <a href="<c:out value='${base}'/>exec/user">User Management</a>
           </td>
         </c:when>
         <c:otherwise>
@@ -56,7 +57,7 @@
       <c:choose>
         <c:when test="${admin != null && config.configured}">
           <td align="center" width="25%" class="menuitem-inactive">
-            <a href="../exec/authenticate?logoff=true">Logoff</a>
+            <a href="<c:out value='${base}'/>exec/authenticate?logoff=true">Logoff</a>
           </td>
         </c:when>
         <c:otherwise>

@@ -3,7 +3,7 @@ base=`dirname $0`
 jar=lib
 if [ "$JAVA_HOME" = "" ]; then
   echo "Please set JAVA_HOME environment variable!"
-  echo "A Java SDK of at least version 1.4 is required!"
+  echo "A Java SDK of at least version 1.3 is required!"
   exit
 fi
 
@@ -34,6 +34,11 @@ fi
 
 if [ "$1" = "index" ]; then
   $JAVA_HOME/bin/java -cp app/WEB-INF/lib/servlets.jar:$CLASSPATH com.neotis.config.Indexer
+  exit 0
+fi
+
+if [ "$1" = "checksum" ]; then
+  $JAVA_HOME/bin/java -cp $CLASSPATH:lib/snipsnap.jar com.neotis.util.JarUtil $2*
   exit 0
 fi
 

@@ -29,12 +29,14 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
+import java.net.URL;
 
 /**
  *
@@ -47,6 +49,10 @@ public class Checksum {
 
   public Checksum(File file) throws IOException {
     load(file);
+  }
+
+  public Checksum(URL url) throws IOException {
+    load(url);
   }
 
   public Checksum(String id) {
@@ -108,9 +114,17 @@ public class Checksum {
   }
 
   public void load(File file) throws IOException {
+    load(new FileInputStream(file));
+  }
+
+  public void load(URL url) throws IOException {
+    load(url.openStream());
+  }
+
+  private void load(InputStream in) throws IOException {
     checksums = new HashMap();
     Properties load = new Properties();
-    load.load(new FileInputStream(file));
+    load.load(in);
     Iterator it = load.keySet().iterator();
     while (it.hasNext()) {
       String key = (String) it.next();

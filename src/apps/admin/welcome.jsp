@@ -69,11 +69,13 @@
           </td>
         </form>
         <td>
-          <form method="POST" action="../exec/app/update">
-            <input type="hidden" name="server" value="<c:out value='${server}'/>">
-            <input type="hidden" name="context" value="<c:out value='${context.contextPath}'/>">
-            <input type="submit" name="command" value="Update">
-          </form>
+          <c:if test="${context.contextPath != '/admin'}">
+            <form method="POST" action="../exec/app/update">
+              <input type="hidden" name="server" value="<c:out value='${server}'/>">
+              <input type="hidden" name="context" value="<c:out value='${context.contextPath}'/>">
+              <input type="submit" name="command" value="Update">
+            </form>
+          </c:if>
         </td>
       </tr>
     </c:forEach>

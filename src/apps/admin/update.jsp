@@ -1,4 +1,5 @@
-<%--
+<%@ page import="java.util.Set"%>
+ <%--
   ** Update web application.
   ** @author Matthias L. Jugel
   ** @version $Id$
@@ -11,6 +12,19 @@
 <c:forEach items="${errors}" var="error">
   <div class="error"><c:out value="${error.value}"/></div>
 </c:forEach>
+
+<% Set available = (Set)pageContext.findAttribute("available"); %>
+<% if(available != null && !available.isEmpty()) { %>
+  <div style="border: 1px solid red; margin: 2px 2px 2px 2px;">
+    <form method="POST" action="../app/update">
+      <input type="hidden" name="server" value="<c:out value='${server}'/>">
+      <input type="hidden" name="context" value="<c:out value='${context}'/>">
+      There is an update of the web application available on <a href="http://snipsnap.org">SnipSnap</a>.
+      <input type="submit" name="download" value="Click to Download Update">
+      <c:out value="${available}"/>
+    </form>
+  </div>
+<% } %>
 
 <form method="POST" action="../app/update">
   <input type="hidden" name="server" value="<c:out value='${server}'/>">

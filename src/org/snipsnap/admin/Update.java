@@ -36,8 +36,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -70,6 +74,13 @@ public class Update extends HttpServlet {
           update(request.getParameterValues("install"), request.getParameterValues("extract"), ctx, errors);
           ApplicationCommand.execute(srv, ctx, ApplicationCommand.CMD_APPLICATION_ADD);
           ApplicationCommand.execute(srv, ctx, ApplicationCommand.CMD_APPLICATION_START);
+        } else if (request.getParameter("download") != null) {
+          try {
+            downloadUpdate();
+            session.removeAttribute("SRVchecksum");
+          } catch (IOException e) {
+            errors.put("download", "The updated web application archive could not be downloaded!");
+          }
         }
         prepare(ctx, session, errors);
 
@@ -83,6 +94,19 @@ public class Update extends HttpServlet {
 
     }
     response.sendRedirect(SnipLink.absoluteLink(request, "/"));
+  }
+
+  private void downloadUpdate() throws IOException {
+    URL update = new URL("http://snipsnap.org/download/snipsnap-template.war");
+    BufferedInputStream in = new BufferedInputStream(update.openStream());
+    BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream("./lib/snipsnap-template.war"));
+    byte buffer[] = new byte[8192];
+    int n = 0;
+    while ((n = in.read(buffer)) != -1) {
+      out.write(buffer, 0, n);
+    }
+    in.close();
+    out.close();
   }
 
   private void update(String files[], String extract[], String ctx, Map errors) {
@@ -108,6 +132,18 @@ public class Update extends HttpServlet {
     try {
       // get checksum from template
       Checksum csTemplate = JarUtil.checksumJar(new JarFile("./lib/snipsnap-template.war"));
+
+      // get server checksums
+      Checksum server = (Checksum) session.getAttribute("SRVchecksum");
+      if (server == null) {
+        try {
+          server = new Checksum(new URL("http://snipsnap.org/download/CHECKSUMS"));
+          session.setAttribute("SRVchecksum", server);
+          session.setAttribute("available", server.compareChanged(csTemplate));
+        } catch (IOException e) {
+          System.err.println("Updater: unable to check for updates on server: " + e);
+        }
+      }
 
       // get checksum from installation procedure
       Checksum csAppInstall = null;

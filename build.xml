@@ -134,7 +134,7 @@
       srcdir="${src}"
       classpathref="classpath"
       destdir="${target}/server"
-      includes="com/neotis/server/**"/>
+      includes="com/neotis/server/**, com/neotis/util/*Util*"/>
   </target>
 
   <target description="compile default application code" name="build-default-app">
