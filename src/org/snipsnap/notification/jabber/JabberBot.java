@@ -55,8 +55,8 @@ public class JabberBot {
   public JabberBot() {
     try {
       JabberContext context = new JabberContext("snipbot","snipbot", "snipsnap.org");
-      session = jabber.createSession(context);
       jabber = new Jabber();
+      session = jabber.createSession(context);
 
       reconnect();
 
