@@ -15,6 +15,7 @@
 - Added feature: create snip at search, when snip does not exist
 - Added feature: XML-RPC Blogger API newPost()
 - Added feature: automatic re-login via cookie
+- Added feature: configurable list formatter, made {index:AtoZ} for A to Z listing
 
 0.2.5
 

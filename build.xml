@@ -79,6 +79,9 @@
         <include name="${jar}/xmlrpc-1.1.jar"/>
         <include name="${jar}/lucene-1.2.jar"/>
         <include name="${jar}/jython.jar"/>
+        <include name="${jar}/muse-jabber-0.8a1.jar"/>
+        <include name="${jar}/aspectjrt.jar"/>
+        <include name="${jar}/jdom-b8.jar"/>
         <include name="${jar}/${appname}-template.war"/>
         <include name="${jar}/${appname}-installer.war"/>
         <include name="${jar}/${appname}-utils.jar"/>

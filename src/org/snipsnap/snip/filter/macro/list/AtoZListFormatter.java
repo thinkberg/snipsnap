@@ -81,13 +81,13 @@ public class AtoZListFormatter implements ListoutputMacro.ListFormatter {
         }
         idxChar += 5;
         if(idxChar >= 'Z') {
-          buffer.append("<td></td></td></td><td></td><td></td>");
-          buffer.append("<td><b> &nbsp;<a href=\"#idx@\">@</a></b></td>");
-          buffer.append("<td>...</td><td>");
-          buffer.append(numberRestList.size()).append("&nbsp; </td>");
           buffer.append("<td><b> &nbsp;<a href=\"#idx0-9\">0-9</a></b></td>");
           buffer.append("<td>...</td><td>");
+          buffer.append(numberRestList.size()).append("&nbsp; </td>");
+          buffer.append("<td><b> &nbsp;<a href=\"#idx@\">@</a></b></td>");
+          buffer.append("<td>...</td><td>");
           buffer.append(otherRestList.size()).append("&nbsp; </td>");
+          buffer.append("<td></td></td></td><td></td><td></td>");
         }
         buffer.append("</tr>");
 
