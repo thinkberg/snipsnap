@@ -41,10 +41,10 @@ import java.util.Vector;
 
 public class BloggerHandler extends XmlRpcSupport implements BloggerAPI {
   public static final String API_PREFIX = "blogger";
-  MetaWeblogHandler metaHandler;
+  private MetaWeblogHandler metaHandler;
 
-  public BloggerHandler(AuthenticationService authenticationService) {
-     metaHandler = new MetaWeblogHandler(authenticationService);
+  public BloggerHandler(AuthenticationService authenticationService, MetaWeblogHandler metaHandler) {
+     this.metaHandler = metaHandler;
   }
 
   public String getName() {

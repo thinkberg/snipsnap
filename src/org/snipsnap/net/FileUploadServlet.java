@@ -107,7 +107,7 @@ public class FileUploadServlet extends HttpServlet {
     AccessController controller = (AccessController) Components.getComponent(AccessController.class);
 
     User user = Application.get().getUser();
-    if (controller.checkPermission(user, "ADD_ATTACHMENT", snip)) {
+    if (controller.checkPermission(user, AccessController.ADD_ATTACHMENT, snip)) {
       if (request.getParameter("upload") != null) {
         try {
           uploadFile(request, snip);

@@ -54,8 +54,8 @@ public class DefaultAccessController implements AccessController  {
     manager = new AccessManagerImpl(store);
   }
 
-  public boolean checkPermission(User user, String permission, Snip snip) {
-    return checkPermission(user, new Permission(permission), new OwnerAccessContext(snip));
+  public boolean checkPermission(User user, Permission permission, Snip snip) {
+    return checkPermission(user, permission, new OwnerAccessContext(snip));
   }
 
   public boolean checkPermission(User user, Permission permission, AccessContext context) {

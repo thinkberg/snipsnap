@@ -29,17 +29,15 @@ import org.snipsnap.app.Application;
 
 import org.snipsnap.snip.Snip;
 import org.snipsnap.user.Roles;
-import org.snipsnap.user.Security;
 import org.snipsnap.user.User;
 import org.snipsnap.security.AccessController;
+import org.snipsnap.container.Components;
 
 import java.security.GeneralSecurityException;
 
 import dynaop.Interceptor;
 import dynaop.Invocation;
-import gabriel.components.AccessManager;
-import gabriel.components.context.OwnerAccessContext;
-import gabriel.Permission;
+
 
 /**
  * Access Control Interceptor for checking permissions of set operations on objects.
@@ -50,11 +48,13 @@ import gabriel.Permission;
 public class ACLInterceptor implements Interceptor {
   private Roles roles;
   private AccessController controller;
+
   public ACLInterceptor() {
 
     super();
     roles = new Roles();
     roles.add("Editor");
+    controller = (AccessController) Components.getComponent(AccessController.class);
   }
 
   public Object intercept(Invocation invocation) throws Throwable {
@@ -68,9 +68,7 @@ public class ACLInterceptor implements Interceptor {
       //Logger.debug("ACLInterceptor: User = "+user);
       //Logger.debug("ACLInterceptor: Snip = "+snip);
       if (user != null && !user.isAdmin()) {// TODO: checking for the admin is a hack
-        if (!(Security.checkPermission("Edit", user, snip)
-                || Security.hasRoles(user, snip, roles))) {
-          //Logger.debug("SECURITY EXCEPTION");
+        if (!( controller.checkPermission(user, AccessController.EDIT_SNIP, snip))) {
           throw new GeneralSecurityException(snip.getName() + ": " + user + " is not allowed to modify object");
         }
       }

@@ -43,9 +43,9 @@ import org.snipsnap.snip.Snip;
  */
 
 public interface AccessController {
-  public static String EDIT_SNIP = "EDIT_SNIP";
-  public static String ADD_ATTACHMENT = "ADD_ATTACHMENT";
+  public static Permission EDIT_SNIP = new Permission("EDIT_SNIP");
+  public static Permission ADD_ATTACHMENT = new Permission("ADD_ATTACHMENT");
 
   boolean checkPermission(User user, Permission permission, AccessContext context);
-  boolean checkPermission(User user, String permission, Snip snip);
+  boolean checkPermission(User user, Permission permission, Snip snip);
 }

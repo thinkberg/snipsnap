@@ -24,8 +24,6 @@
   <!-- content type and generator -->
   <meta http-equiv="Content-Type" content="text/html; charset=<c:out value='${app.configuration.encoding}'/>"/>
   <meta http-equiv="Generator" content="SnipSnap/<c:out value="${app.configuration.version}"/>"/>
-  <!-- dublin core classification and geographic location information -->
-  <s:dublinCore snip="${snip}"/>
   <s:geoUrl/>
   <!-- aggregrator related info -->
   <link rel="EditURI" type="application/rsd+xml" title="RSD" href="<c:out value='${app.configuration.url}/exec/rsd'/>"/>
