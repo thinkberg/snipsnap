@@ -237,8 +237,6 @@ public class InitFilter implements Filter {
       appConfig = configManager.getConfiguration(appOid);
       app.setConfiguration(appConfig);
       app.storeObject(Application.OID, appOid);
-      // add the applications locale, now that may have it
-      resourceManager.setDefaultLocale(appConfig.getLocale());
     }
 
     // configure the url (base context path) for the current request
