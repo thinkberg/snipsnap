@@ -84,6 +84,7 @@ public class RdfServlet extends HttpServlet {
             props.setProperty("uri.prefix", config.getUrl("/rdf"));
             props.setProperty("rdf.format", "RDF/XML-ABBREV");
             ser.configure(props);
+
             ser.serialize(snip, writer);
         } catch (Exception e) {
 			// some exception handling here ...
