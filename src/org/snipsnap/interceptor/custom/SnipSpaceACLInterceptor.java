@@ -22,22 +22,36 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-package org.snipsnap.test.snip;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+package org.snipsnap.interceptor.custom;
 
-public class AllSnips extends TestCase {
-  public AllSnips(String name) {
-    super(name);
+import org.snipsnap.app.Application;
+import org.snipsnap.interceptor.InterceptorSupport;
+import org.snipsnap.interceptor.Invocation;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.user.Roles;
+import org.snipsnap.user.Security;
+import org.snipsnap.user.User;
+
+import java.security.GeneralSecurityException;
+
+public class SnipSpaceACLInterceptor extends InterceptorSupport {
+  private Roles roles;
+
+  public SnipSpaceACLInterceptor() {
+    super();
+    roles = new Roles();
+    roles.add("Editor");
   }
 
-  public static Test suite() {
-    TestSuite s = new TestSuite();
-    s.addTestSuite(SnipSpaceTest.class);
-    s.addTestSuite(SnipTest.class);
-    s.addTestSuite(ChildrenTest.class);
-    return s;
+  public Object invoke(Invocation invocation) throws Throwable {
+    if (invocation.getMethod().getName().startsWith("post")) {
+      User user = Application.get().getUser();
+      if (!Security.hasRoles(user, null, roles)) {
+        //Logger.debug("SECURITY EXCEPTION");
+        throw new GeneralSecurityException("Not allowed to post.");
+      }
+    }
+    return invocation.next();
   }
 }

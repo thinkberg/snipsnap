@@ -43,12 +43,15 @@ import java.util.Map;
  */
 
 public class DublinCore {
-  private static SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+  // For date and time see http://www.w3.org/TR/NOTE-datetime
+  // @TODO add support for time zone
+  private static SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'-00:00'");
   private static SimpleDateFormat year = new SimpleDateFormat("yyyy");
   private static AppConfiguration conf = Application.get().getConfiguration();
 
   public static Map generate(Snip snip) {
     Map dublinCore = new HashMap();
+    //@TODO add support for dc:subject, this is best read from a category label
     dublinCore.put("creator", snip.getCUser());
     dublinCore.put("title", snip.getName());
     dublinCore.put("date", sf.format(snip.getModified().getmTime()));

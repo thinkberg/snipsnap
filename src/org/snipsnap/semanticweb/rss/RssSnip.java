@@ -25,20 +25,19 @@
 
 package org.snipsnap.semanticweb.rss;
 
-import org.snipsnap.snip.*;
-import org.snipsnap.snip.label.Labels;
-import org.snipsnap.snip.attachment.Attachments;
-import org.snipsnap.user.User;
-import org.snipsnap.user.Permissions;
-import org.snipsnap.render.context.SnipRenderContext;
-import org.snipsnap.interceptor.Aspects;
-import org.snipsnap.app.Application;
-import org.radeox.engine.context.RenderContext;
 import org.radeox.EngineManager;
+import org.radeox.engine.context.RenderContext;
+import org.snipsnap.app.Application;
+import org.snipsnap.render.context.SnipRenderContext;
+import org.snipsnap.snip.*;
+import org.snipsnap.snip.attachment.Attachments;
+import org.snipsnap.snip.label.Labels;
+import org.snipsnap.user.Permissions;
+import org.snipsnap.user.User;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.Writer;
 import java.io.IOException;
+import java.io.Writer;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -60,7 +59,7 @@ public class RssSnip implements Snip {
     this.title = snip.getName();
     this.content = snip.getContent();
     this.snip = snip;
-    this.url="";
+    this.url = "";
   }
 
   public RssSnip(Snip snip, String content) {
@@ -75,7 +74,7 @@ public class RssSnip implements Snip {
 
   public RssSnip(Snip snip, String content, String title, String url) {
     this(snip, content, title);
-    this.url = "#"+url.replace(' ', '_');
+    this.url = "#" + url.replace(' ', '_');
   }
 
   public String getName() {
@@ -87,7 +86,7 @@ public class RssSnip implements Snip {
   }
 
   public String getNameEncoded() {
-    return snip.getNameEncoded()+url;
+    return snip.getNameEncoded() + url;
   }
 
   public String toXML() {

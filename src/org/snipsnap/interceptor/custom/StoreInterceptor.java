@@ -22,40 +22,29 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
-package org.snipsnap.test.snip;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+package org.snipsnap.interceptor.custom;
+
+import org.snipsnap.app.Application;
+import org.snipsnap.interceptor.InterceptorSupport;
+import org.snipsnap.interceptor.Invocation;
 import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipImpl;
-import org.snipsnap.snip.SnipUtil;
+import org.snipsnap.user.Roles;
+import org.snipsnap.user.Security;
+import org.snipsnap.user.User;
+import org.radeox.util.logging.Logger;
 
-import java.sql.Date;
+import java.security.GeneralSecurityException;
 
-public class SnipTest extends TestCase {
-  public SnipTest(String name) {
-    super(name);
+public class StoreInterceptor extends InterceptorSupport {
+  public StoreInterceptor() {
+    super();
   }
 
-  public static Test suite() {
-    TestSuite s = new TestSuite();
-    s.addTestSuite(SnipTest.class);
-    return s;
+  public Object invoke(Invocation invocation) throws Throwable {
+    if (invocation.getMethod().getName().startsWith("store")) {
+        Logger.debug("Store called.");
+    }
+    return invocation.next();
   }
-
-  public void testName() {
-    Snip snip1 = new SnipImpl("A", "A Content");
-    assertEquals(snip1.getName(), "A");
-  }
-
-  public void testContent() {
-    Snip snip1 = new SnipImpl("A", "A Content");
-    assertEquals(snip1.getContent(), "A Content");
-  }
-
-  public void testDateName() {
-    assertEquals(SnipUtil.toName(new Date(new java.util.Date("01 Jan 2002").getTime())), "2002-01-01");
-  }
-
 }
