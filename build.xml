@@ -7,11 +7,6 @@
 
   <property file="conf/build.properties"/>
 
-  <tstamp>
-    <format property="build.time" pattern="yyyyMMddhhmm"/>
-  </tstamp>
-
-
   <!-- the overall class path -->
   <path id="classpath">
     <pathelement location="${jar}/jdbcpool.jar"/>
@@ -27,7 +22,7 @@
 
   <!-- build binary distribution package -->
   <target depends="clean,jar" description="build binary package" name="bin-tar">
-    <tar destfile="../${appname}-${version}-${build.time}.tgz" compression="gzip">
+    <tar destfile="../${appname}-${version}-${DSTAMP}${TSTAMP}.tgz" compression="gzip">
       <tarfileset dir="." prefix="${appname}-${version}">
         <include name="**"/>
         <excluden ame="**/CVS"/>
