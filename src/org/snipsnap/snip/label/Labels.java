@@ -39,7 +39,7 @@ import java.util.*;
  * @version $Id$
  */
 
-public class Labels implements Cloneable {
+public class Labels {
   private Map labels;
   private String cache;
 
@@ -168,11 +168,4 @@ public class Labels implements Cloneable {
     }
     return cache;
   }
-
-  public Object clone() {
-    Labels clone = new Labels();
-    clone.cache = serialize();
-    return clone;
-  }
-
 }
