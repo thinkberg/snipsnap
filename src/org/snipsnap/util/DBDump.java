@@ -62,7 +62,7 @@ public class DBDump {
 
     ResultSet results = null;
 
-    System.out.println("<snipspace");
+    System.out.println("<snipspace>");
     toXml("Snip", "snip", connection);
     toXml("User", "user", connection);
 
