@@ -497,8 +497,8 @@ public class ConfigureServlet extends HttpServlet {
           errors.put(Configuration.APP_GEOCOORDINATES, Configuration.APP_GEOCOORDINATES);
         } else {
           try {
-            long latitude = Long.parseLong(latStr);
-            long longitude = Long.parseLong(lonStr);
+            double latitude = Double.parseDouble(latStr);
+            double longitude = Double.parseDouble(lonStr);
             if (latitude >= -90 && latitude <= 90 && longitude >= -180 && longitude <= 180) {
               config.setGeoCoordinates(geoCoordinates);
             } else {
