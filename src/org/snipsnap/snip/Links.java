@@ -135,7 +135,7 @@ public class Links {
           removedLinks++;
         }
       } catch (MalformedURLException e) {
-        Logger.warn("illegal referrer url found: '"+url+"'"+e.getLocalizedMessage());
+        Logger.warn("illegal referrer url found: '"+url+"' "+e.getLocalizedMessage());
         linkIt.remove();
         removedLinks++;
       }
