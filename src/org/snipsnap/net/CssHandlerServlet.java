@@ -39,6 +39,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.sql.Timestamp;
+import java.util.HashMap;
 
 /**
  * Handler for CSS Stylesheets (virtual)
@@ -47,8 +48,8 @@ import java.sql.Timestamp;
  */
 public class CssHandlerServlet extends HttpServlet {
 
-  ApplicationAwareMap styleSheets = new ApplicationAwareMap();
-  ApplicationAwareMap timeStamps = new ApplicationAwareMap();
+  ApplicationAwareMap styleSheets = new ApplicationAwareMap(HashMap.class, HashMap.class);
+  ApplicationAwareMap timeStamps = new ApplicationAwareMap(HashMap.class, HashMap.class);
 
   private String getStyleSheet(String id) {
     Configuration config = Application.get().getConfiguration();
