@@ -112,13 +112,16 @@ public class BackLinks {
   }
 
   private static String getQuery(String query, String id) {
-    String vars[] = query.split("&");
-    for(int v = 0; v < vars.length; v++) {
-      if(vars[v].startsWith(id+"=")) {
-        try {
-          return URLEncoderDecoder.decode(vars[v].substring(id.length()+1), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-          return null;
+    if(null != query) {
+      String vars[] = query.split("&");
+      for(int v = 0; v < vars.length; v++) {
+        if(vars[v].startsWith(id+"=")) {
+          try {
+            String value = URLEncoderDecoder.decode(vars[v].substring(id.length()+1), "UTF-8");
+            return value.replace('+', ' ');
+          } catch (UnsupportedEncodingException e) {
+            return null;
+          }
         }
       }
     }
