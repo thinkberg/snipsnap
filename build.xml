@@ -34,6 +34,8 @@
     <pathelement location="${jar}/cvslib.jar"/>
     <pathelement location="${jar}/j2h.jar"/>
     <pathelement location="${jar}/junit.jar"/>
+    <pathelement location="${jar}/picocontainer-1.0.jar"/>
+    <pathelement location="${jar}/nanocontainer-1.0.jar"/>
   </path>
 
   <path id="all.classpath">
@@ -343,6 +345,8 @@
         <include name="mail.jar"/>
         <include name="activation.jar"/>
         <include name="j2h.jar"/>
+        <include name="picocontainer-1.0.jar"/>
+        <include name="nanocontainer-1.0.jar"/>
       </fileset>
     </copy>
 
@@ -469,6 +473,8 @@
         <include name="mail.jar"/>
         <include name="activation.jar"/>
         <include name="j2h.jar"/>
+        <include name="picocontainer-1.0.jar"/>
+        <include name="nanocontainer-1.0.jar"/>
       </fileset>
     </copy>
 

@@ -26,8 +26,7 @@ package org.snipsnap.user;
 
 import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
-import org.snipsnap.jdbc.FinderFactory;
-import org.snipsnap.snip.storage.JDBCUserStorage;
+import org.snipsnap.snip.storage.UserStorage;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -42,23 +41,41 @@ import java.net.URL;
 import java.sql.Timestamp;
 import java.util.*;
 
+import picocontainer.Container;
+import nanocontainer.StringRegistrationNanoContainer;
+import nanocontainer.StringRegistrationNanoContainerImpl;
+
 /**
  * User manager handles all register, creation and authentication of users.
  * @author Stephan J. Schmidt
  * @version $Id$
  */
 public class UserManager {
-  private static UserManager instance;
+  private static Container container;
 
   public static synchronized UserManager getInstance() {
-    if (null == instance) {
-      instance = new UserManager();
+    if (null == container) {
+      StringRegistrationNanoContainer c  =
+          new StringRegistrationNanoContainerImpl.Default();
+
+      try {
+        c.registerComponent("org.snipsnap.snip.storage.JDBCUserStorage");
+        c.registerComponent("org.snipsnap.user.UserManager");
+        c.start();
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+      container = c;
     }
-    return instance;
+
+    return (UserManager) container.getComponent(UserManager.class);
   }
 
   public static synchronized void removeInstance() {
-    instance = null;
+    // @TODO: This is a workaround
+    // there should be no need to remove an Instance
+    // perhaps reinitialice or start/stop would be better
+    container = null;
   }
 
   private final static String COOKIE_NAME = "SnipSnapUser";
@@ -69,15 +86,15 @@ public class UserManager {
   private Map robots = new HashMap();
   private Map robotIds = new HashMap();
   private List delayed;
-  private FinderFactory finders;
-  private JDBCUserStorage storage;
   private Map authKeys;
 
-  protected UserManager() {
+  private UserStorage storage;
+
+  public UserManager(UserStorage storage) {
+    this.storage = storage;
+
     delayed = new LinkedList();
     authKeys = new HashMap();
-
-    storage = new JDBCUserStorage();
 
     Timer timer = new Timer();
     timer.schedule(new TimerTask() {

@@ -1,5 +1,7 @@
 0.5
 
+- Developer: Added support for PicoContainer
+- Added feature: moved some messages to messages_en.properties for language packs
 - Added feature: target=... in image macro {image}
 - Added feature: parameter for Mail-To-Blog POP3 polling (app.mail.pop3.interval in minutes)
 - Added feature: instead of snip-notfound SnipSnap can now display a create page (see app.perm.createSnips)
