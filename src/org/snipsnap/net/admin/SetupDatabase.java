@@ -31,7 +31,7 @@ import org.snipsnap.app.JDBCApplicationStorage;
 import org.snipsnap.snip.storage.JDBCSnipStorage;
 import org.snipsnap.snip.storage.JDBCUserStorage;
 import org.snipsnap.versioning.JDBCVersionStorage;
-import org.snipsnap.util.ConnectionManager;
+import org.snipsnap.jdbc.ConnectionManager;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
