@@ -70,7 +70,7 @@ public class Cache {
   public void put(Class type, String name, Object snip) {
     Map cache = (Map) caches.get(type);
     if (null != cache) {
-      cache.put(name, snip);
+      cache.put(name.toUpperCase(), snip);
     }
     return;
   }
@@ -78,7 +78,7 @@ public class Cache {
   public boolean contains(Class type, String name) {
     Map cache = (Map) caches.get(type);
     if (null != cache) {
-      return cache.containsKey(name);
+      return cache.containsKey(name.toUpperCase());
     } else {
       return false;
     }
@@ -87,7 +87,7 @@ public class Cache {
   public Object get(Class type, String name) {
     Map cache = (Map) caches.get(type);
     if (null != cache) {
-      return cache.get(name);
+      return cache.get(name.toUpperCase());
     } else {
       return null;
     }
@@ -96,7 +96,7 @@ public class Cache {
   public void remove(Class type, String name) {
     Map cache = (Map) caches.get(type);
     if (null != cache) {
-      cache.remove(name);
+      cache.remove(name.toUpperCase());
     }
     return;
   }

@@ -386,8 +386,8 @@ public class SnipSpace implements LinkTester, Loader {
       statement = connection.prepareStatement("SELECT name, content, cTime, mTime, cUser, mUser, parentSnip, commentSnip, permissions, " +
                                               " oUser, backLinks, snipLinks, labels, attachments, viewCount " +
                                               " FROM Snip " +
-                                              " WHERE name=?");
-      statement.setString(1, name);
+                                              " WHERE UPPER(name)=?");
+      statement.setString(1, name.toUpperCase());
 
       result = statement.executeQuery();
       if (result.next()) {

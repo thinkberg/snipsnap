@@ -1,5 +1,7 @@
 0.2.6
 
+- Added feature: Broader search: searching for tree will no also find treehouse
+- Added feature: Snip names are case insensitive
 - Added feature: Jabber notification for new snips and User logins
 - Added feature: {since-last-visit:funzel} to show all changed snips since last visit for funzel
 - Added feature: --strike-- for strike through text
