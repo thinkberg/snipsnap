@@ -51,8 +51,6 @@ public class NotificationService {
   private Thread thread;
 
   private List notifiers;
-  private Notifier notifier;
-  private Object monitor = new Object();
 
   public synchronized static NotificationService getInstance() {
     if (null == instance) {

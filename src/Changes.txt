@@ -1,5 +1,7 @@
 0.5
 
+- Fixed bug: commenting order beyond 10 was wrong
+- Added feature: name parameter to notfound snip. You can add [{$name}] to the snip to add [create name] on the page
 - Fixed bug: strike through with dashes, --Test-Text-- did not render
 - Developer: Refactored blog functionality to class Blog
 - Developer: Refactored missing to MissingInterceptor in SnipSpace
