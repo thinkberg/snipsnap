@@ -142,8 +142,8 @@ img.float-right {
   color: inherit;
   font-weight: bold;
   /* background-color: #DDEEFF; */
-  color: #fff;
-  background-color: transparent;
+  background:#EADE00;
+  color: #000000;
 }
 
 .wiki-table .table-odd {
