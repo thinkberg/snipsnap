@@ -31,6 +31,9 @@ import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.user.UserManager;
 
 import javax.mail.*;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.io.IOException;
 import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -99,34 +102,75 @@ public class PostDaemon {
         Message message[] = folder.getMessages();
 
         for (int i = 0, n = message.length; i < n; i++) {
+          StringWriter writer = new StringWriter();
+
           System.err.println(i + ": " + message[i].getFrom()[0]
               + "\t" + message[i].getSubject());
-          if (message[i].getContentType().startsWith("text/plain")) {
+          System.err.println(message[i].getContentType());
+
+          Address sender = message[i].getFrom()[0];
+          String title = message[i].getSubject();
+          if (title != null && title.startsWith(mailPassword)) {
+            // only correct sender
+            // cut password from title
+            title = title.substring(mailPassword.length()).trim();
+
             try {
-              // only correct sender
-              Address sender = message[i].getFrom()[0];
-              String content = (String) message[i].getContent();
-              String title = message[i].getSubject();
-              if (title != null && title.startsWith(mailPassword)) {
-                // cut password from title
-                title = title.substring(mailPassword.length()).trim();
-                Application.get().setUser(UserManager.getInstance().load("stephan"));
-                SnipSpace.getInstance().post(content, title);
+              String contentType = message[i].getContentType();
+              if (contentType.startsWith("text/plain")) {
+                writer.write((String) message[i].getContent());
+              } else if (contentType.startsWith("image/")) {
+                processImage(writer, message[i]);
+              } else if (contentType.startsWith("multipart/")) {
+                // process multipart message
+                processMultipart(writer, (Multipart) message[i].getContent());
               }
+
+              Application.get().setUser(UserManager.getInstance().load("stephan"));
+              SnipSpace.getInstance().post(writer.getBuffer().toString(), title);
             } catch (Exception e) {
-              System.err.println("PostDaemon: Error reading message: " + e.getMessage());
+              System.err.println("PostDaemon Error:" + e.getMessage());
               e.printStackTrace();
             } finally {
+              // Delete message, either because we processed it or we couldn't
+              // process it
               message[i].setFlag(Flags.Flag.DELETED, true);
             }
           }
         }
-
 // Close connection
         folder.close(true);
         store.close();
-      } catch (MessagingException e) {
-        System.err.println("Error:" + e.getMessage());
+      } catch (Exception e) {
+        System.err.println("PostDaemon Error:" + e.getMessage());
+        e.printStackTrace();
+      }
+    }
+  }
+
+  public void processImage(Writer writer, Part part) throws MessagingException, IOException {
+    writer.write("{image:");
+    writer.write(part.getFileName());
+    writer.write("}");
+  }
+
+  public void processMultipart(Writer writer, Multipart mp) throws MessagingException {
+    for (int j = 0; j < mp.getCount(); j++) {
+      try {
+      Part part = mp.getBodyPart(j);
+      System.err.println("Disposition=" + part.getDisposition());
+      String contentType = part.getContentType();
+      System.err.println("content-type=" + contentType);
+      System.err.println("Object=" + part);
+        if (contentType.startsWith("text/plain")) {
+          writer.write((String) part.getContent());
+        } else if (contentType.startsWith("image/")) {
+          processImage(writer, part);
+        } else if (contentType.startsWith("multipart/")) {
+          processMultipart(writer, (Multipart) part.getContent());
+        }
+      } catch (Exception e) {
+        System.err.println("PostDaemon: Error reading message: " + e.getMessage());
         e.printStackTrace();
       }
     }
