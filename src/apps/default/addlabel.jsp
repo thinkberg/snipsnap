@@ -8,7 +8,7 @@
 <%@ taglib uri="http://snipsnap.com/snipsnap" prefix="s" %>
 
 <s:check roles="Authenticated" permission="Edit" snip="${snip}">
-  <p>Add label to <b><c:out value="${snip.name}"/></b></p>
+  <p>Add a label to <b><c:out value="${snip.name}"/></b> (step 2/2)</p>
   <form name="form" method="post" action="../exec/storelabel">
     <table border="0" cellpadding="0" cellspacing="2">
       <tr><td><c:out value="${label.inputProxy}" escapeXml="false"/></td></tr>
@@ -17,9 +17,9 @@
         <input value="Cancel" name="cancel" type="submit"/>
       </td></tr>
     </table>
-    <input name="snip.name" type="hidden" value="<c:out value="${snip.name}"/>"/>
+    <input name="snipname" type="hidden" value="<c:out value="${snip.name}"/>"/>
     <input name="referer" type="hidden" value="<%= request.getHeader("REFERER") %>"/>
-    <input name="label.type" type="hidden" value="<c:out value="${label.type}"/>"/>
+    <input name="labeltype" type="hidden" value="<c:out value="${label.type}"/>"/>
   </form>
 </s:check>
 

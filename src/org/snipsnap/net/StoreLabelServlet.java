@@ -56,18 +56,18 @@ public class StoreLabelServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
 
-    String snipName = request.getParameter("snip.name");
+    String snipName = request.getParameter("snipname");
 
     // cancel pressed
     if (null != request.getParameter("cancel")) {
-      response.sendRedirect(SnipLink.absoluteLink(request, "/space/" + SnipLink.encode(snipName)));
+      response.sendRedirect(SnipLink.absoluteLink(request, "/exec/labels?snipname=" + SnipLink.encode(snipName)));
       return;
     }
 
-    String type = request.getParameter("label.type");
-    if (null != type) {
+    String labelType = request.getParameter("labeltype");
+    if (null != labelType) {
       LabelManager manager = LabelManager.getInstance();
-      Label label = manager.getLabel(type);
+      Label label = manager.getLabel(labelType);
       Map params = new HashMap();
       Enumeration enumeration = request.getParameterNames();
       while (enumeration.hasMoreElements()) {
@@ -78,6 +78,6 @@ public class StoreLabelServlet extends HttpServlet {
       Snip snip = SnipSpaceFactory.getInstance().load(snipName);
       snip.getLabels().addLabel(label);
     }
-    response.sendRedirect(SnipLink.absoluteLink(request, "/space/" + SnipLink.encode(snipName)));
+    response.sendRedirect(SnipLink.absoluteLink(request, "/exec/labels?snipname=" + SnipLink.encode(snipName)));
   }
 }

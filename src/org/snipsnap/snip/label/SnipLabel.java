@@ -25,16 +25,49 @@
 
 package org.snipsnap.snip.label;
 
-
 /**
- * SnipLabel connects a Snip to another Snip
- *
+ * SnipLabel connects a Snip to another Snip (should it be possible to reference more than one Snip?)
  * @author Stephan J. Schmidt
  * @version $Id$
  */
-
 public class SnipLabel extends BaseLabel {
-  public String getType() {
-    return "SnipLabel";
-  }
+    public SnipLabel() {
+        super();
+    }
+
+    public SnipLabel(String name, String value) {
+        super(name, value);
+    }
+
+    public String getType() {
+        return "SnipLabel";
+    }
+
+    public String getInputProxy() {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("<table border=\"0\" cellpadding=\"0\" cellspacing=\"2\">");
+        buffer.append("<tr>");
+        buffer.append("<td>Link label: </td>");
+        buffer.append("<td><input type=\"text\" value=\"");
+        buffer.append(name);
+        buffer.append("\" name=\"label.name\"/></td>");
+        buffer.append("</tr><tr>");
+        buffer.append("<td>Link target (Snip): </td>");
+        buffer.append("<td><input type=\"text\" value=\"");
+        buffer.append(value);
+        buffer.append("\" name=\"label.value\"/></td>");
+        buffer.append("</tr></table>");
+        return buffer.toString();
+    }
+
+    public String getSnipLink() {
+        // for now, assume value is exactly the linked Snip name ...
+        return value;
+    }
+
+    public String[] getSnipLinks() {
+        // for now, assume value is exactly the linked Snip name ...
+        return new String[] { value };
+    }
+
 }

@@ -26,68 +26,81 @@
 package org.snipsnap.snip.label;
 
 import org.radeox.util.logging.Logger;
-
+import org.snipsnap.util.Service;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.Iterator;
 
 /**
  * Manages the creation and finding of labels, e.g. by type.
  * Delivers a plugin structure to easily add labels.
- *
  * @author Stephan J. Schmidt
  * @version $Id$
  */
-
 public class LabelManager {
-  private Map typeMap;
-  private String defaultName;
+    private Map typeMap;
+    private String defaultName;
+    private static LabelManager instance = null;
+    private static String labelClassName = "org.snipsnap.snip.label.Label";
 
-  public static LabelManager instance;
-
-  public synchronized static LabelManager getInstance() {
-    if (null == instance) {
-      instance = new LabelManager();
+    private LabelManager() {
+        typeMap = new HashMap();
+        defaultName = "DefaultLabel";
+        try {
+            Iterator labelTypes = Service.providers(Class.forName(labelClassName));
+            while (labelTypes.hasNext()) {
+                Label label = (Label)labelTypes.next();
+                addLabelType(label.getType(), label.getClass());
+            }
+        } catch (ClassNotFoundException e) {
+            Logger.warn("LabelManager: base label type " + labelClassName + " not found. Label types have not been registered.", e);
+        }
     }
-    return instance;
-  }
 
-  private void addLabelType(String name, String className) {
-    try {
-      Class labelClass = Class.forName(className);
-      typeMap.put(name, labelClass);
-    } catch (ClassNotFoundException e) {
-      Logger.warn("LabelManager: label " + className + " not found", e);
+    public synchronized static LabelManager getInstance() {
+        if (null == instance) {
+            instance = new LabelManager();
+        }
+        return instance;
     }
-    return;
-  }
 
-  private LabelManager() {
-    typeMap = new HashMap();
-    defaultName = "SnipLabel";
-    addLabelType("SnipLabel", "org.snipsnap.snip.label.SnipLabel");
-    return;
-  }
-
-  public Label getLabel(String type) {
-    if (null == type) return null;
-    Class labelClass = (Class) typeMap.get(type);
-    if (null == labelClass) return null;
-    Label label = null;
-    try {
-      label = (Label) labelClass.newInstance();
-    } catch (Exception e) {
+    private void addLabelType(String name, String className) {
+    // TODO: check if labeltype with same name exists
+    // additional parameter 'overwrite' or exception or return value?
+    // (decision should to be made by user)
+        try {
+            Class labelClass = Class.forName(className);
+            addLabelType(name, labelClass);
+        } catch (ClassNotFoundException e) {
+            Logger.warn("LabelManager: label class " + className + " not found and therefore not registered.", e);
+        }
     }
-    return label;
-  }
 
-  public Label getDefaulLabel() {
-    return getLabel(defaultName);
-  }
+    private void addLabelType(String name, Class labelClass) {
+    // TODO: check if labeltype with same name exists
+    // additional parameter 'overwrite' or exception or return value?
+    // (decision should to be made by user)
+        typeMap.put(name, labelClass);
+    }
 
-  public Set getTypes() {
-    return typeMap.keySet();
-  }
+    public Label getLabel(String type) {
+        if (null == type) return null;
+        Class labelClass = (Class)typeMap.get(type);
+        if (null == labelClass) return null;
+        Label label = null;
+        try {
+            label = (Label)labelClass.newInstance();
+        } catch (Exception e) {
+        }
+        return label;
+    }
 
+    public Label getDefaultLabel() {
+        return getLabel(defaultName);
+    }
 
+    public Set getTypes() {
+        return typeMap.keySet();
+    }
 }

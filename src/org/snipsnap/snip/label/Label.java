@@ -29,25 +29,27 @@ import java.util.Map;
 
 /**
  * Label is attached to Snips
- *
  * @author Stephan J. Schmidt
  * @version $Id$
  */
-
 public interface Label {
-  public String getListProxy();
+    // public String serialize();
 
-  public String getInputProxy();
+    // public void deserialize(String label);
 
-  public void handleInput(Map input);
+    public String getListProxy();
 
-  public String getType();
+    public String getInputProxy();
 
-  public String getName();
+    public void handleInput(Map input);
 
-  public String getValue();
+    public String getType();
 
-  public void setName(String name);
+    public String getName();
 
-  public void setValue(String value);
+    public String getValue();
+
+    public void setName(String name);
+
+    public void setValue(String value);
 }

@@ -22,6 +22,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  * --LICENSE NOTICE--
  */
+
 package org.snipsnap.net;
 
 import org.snipsnap.snip.Snip;
@@ -30,49 +31,50 @@ import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.snip.label.Label;
 import org.snipsnap.snip.label.LabelManager;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServlet;
 import java.io.IOException;
-
+import java.util.Set;
+import java.util.Iterator;
+import org.snipsnap.snip.label.Labels;
 
 /**
  * Adding a label to a snip
- *
  * @author Stephan J. Schmidt
  * @version $Id$
  */
 public class AddLabelServlet extends HttpServlet {
-
-  protected void doPost(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
-    doGet(httpServletRequest, httpServletResponse);
-  }
-
-  public void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws IOException, ServletException {
-
-    String name = request.getParameter("name");
-    if (null == name) {
-      response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));
-      return;
+    protected void doPost(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
+        throws ServletException, IOException {
+            doGet(httpServletRequest, httpServletResponse);
     }
 
-    // cancel pressed
-    if (null != request.getParameter("cancel")) {
-      response.sendRedirect(SnipLink.absoluteLink(request, "/space/" + SnipLink.encode(name)));
-      return;
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+
+        String snipName = request.getParameter("snipname");
+        if (null == snipName) {
+            response.sendRedirect(SnipLink.absoluteLink(request, "/space/start"));
+            return;
+        }
+        // cancel pressed
+        if (null != request.getParameter("cancel")) {
+            response.sendRedirect(SnipLink.absoluteLink(request, "/exec/labels?snipname=" + SnipLink.encode(snipName)));
+            return;
+        }
+
+        Snip snip = SnipSpaceFactory.getInstance().load(snipName);
+        request.setAttribute("snip", snip);
+
+        String labelType = request.getParameter("labeltype");
+        LabelManager manager = LabelManager.getInstance();
+        Label label = manager.getLabel(labelType);
+        request.setAttribute("label", label);
+
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/addlabel.jsp");
+        dispatcher.forward(request, response);
     }
 
-    LabelManager manager = LabelManager.getInstance();
-    Label label = manager.getDefaulLabel();
-
-    Snip snip = SnipSpaceFactory.getInstance().load(name);
-    request.setAttribute("snip", snip);
-    request.setAttribute("label", label);
-    RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/addlabel.jsp");
-    dispatcher.forward(request, response);
-  }
 }

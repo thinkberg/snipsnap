@@ -48,11 +48,17 @@ public class Labels {
   }
 
   public void addLabel(Label label) {
+    // TODO: check if label with same name exists
+    // additional parameter 'overwrite' or exception or return value?
+    // (decision should to be made by user)
     cache = null;
     labels.put(label.getName(), label);
   }
 
   public void addLabel(String name, String value) {
+    // TODO: check if label with same name exists
+    // additional parameter 'overwrite' or exception or return value?
+    // (decision should to be made by user)
     cache = null;
     Label label = createDefaultLabel(name, value);
     labels.put(name, label);
@@ -62,13 +68,18 @@ public class Labels {
     return (Label) labels.get(name);
   }
 
+  public void removeLabel(String name) {
+    cache = null;
+	labels.remove(name);
+  }
+
   public Set getIds() {
     return labels.keySet();
   }
 
   private Label createDefaultLabel(String name, String value)
   {
-    Label label = LabelManager.getInstance().getDefaulLabel();
+    Label label = LabelManager.getInstance().getDefaultLabel();
     label.setName( name );
     label.setValue( value );
     return label; 
