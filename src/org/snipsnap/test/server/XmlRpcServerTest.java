@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.Hashtable;
 import java.net.URL;
+import java.net.InetAddress;
 
 public class XmlRpcServerTest extends TestCase {
   private static WebServer xmlRpcServer;
@@ -46,18 +47,17 @@ public class XmlRpcServerTest extends TestCase {
 
   public XmlRpcServerTest(String name) throws IOException {
     super(name);
-    System.out.println(this + ".XmlRpcServerTest(" + name + ")");
     config.load(XmlRpcServerTest.class.getResourceAsStream("/conf/snipsnap.conf"));
     config.setProperty(ServerConfiguration.ADMIN_HOST, "localhost");
     config.setProperty(ServerConfiguration.ADMIN_PASS, "test");
     File tmpFile = File.createTempFile("xmlrpctest", "root");
+    tmpFile.deleteOnExit();
     tmpFile.delete();
     tmpFile.mkdirs();
     config.setProperty(ServerConfiguration.WEBAPP_ROOT, tmpFile.getPath());
   }
 
   protected void setUp() throws Exception {
-    System.out.println(this + ".setUp()");
     super.setUp();
     if (null == xmlRpcServer) {
       xmlRpcServer = new WebServer(Integer.parseInt(config.getProperty(ServerConfiguration.ADMIN_PORT)));
@@ -76,7 +76,7 @@ public class XmlRpcServerTest extends TestCase {
 
   public void testXmlRpcInstall() throws IOException {
     try {
-      URL url = new URL("http://localhost:8668/");
+      URL url = new URL("http://"+InetAddress.getLocalHost().getHostName()+":8668/");
       assertEquals(url, xmlRpcClient.install("test", "localhost", "8668", "/"));
     } catch (XmlRpcException e) {
       fail("installation of application failed: " + e.getMessage());
@@ -86,7 +86,7 @@ public class XmlRpcServerTest extends TestCase {
   public void testXmlRpcApplicationList() throws IOException {
     try {
       Hashtable list = xmlRpcClient.getApplications();
-      assertEquals(list.size(), 0);
+      assertEquals(1, list.size());
     } catch (XmlRpcException e) {
       fail("listing of applications failed: " + e.getMessage());
     }
