@@ -238,7 +238,7 @@
   </target>
 
   <!-- create web archive of the template application -->
-  <target depends="theme-jar" description="build template war" name="snipsnap-war">
+  <target depends="jsp-jar,theme-jar" description="build template war" name="snipsnap-war">
     <loadfile property="web.inc" srcfile="${target}/jsp/web.inc"/>
     <mkdir dir="${target}/webapp"/>
     <copy todir="${target}/webapp">

@@ -19,17 +19,16 @@
  <head>
   <meta http-equiv="Content-Type" content="text/html; charset=<c:out value='${app.configuration.encoding}'/>"/>
   <meta http-equiv="Generator" content="SnipSnap/<c:out value="${app.configuration.version}"/>"/>
-  <link rel="EditURI" type="application/rsd+xml" title="RSD"
-      href="<c:out value='${app.configuration.url}/exec/rsd'/>"/>
-  <link rel="alternate" type="application/rss+xml" title="RSS"
-      href="<c:out value='${app.configuration.url}/exec/rss'/>"/>
-  <link rel="index" href="../space/snipsnap-index"/>
+  <link rel="EditURI" type="application/rsd+xml" title="RSD" href="<c:out value='${app.configuration.url}/exec/rsd'/>"/>
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="<c:out value='${app.configuration.url}/exec/rss'/>"/>
+  <link rel="index" href="<c:out value='${app.configuration.url}/space/snipsnap-index'/>"/>
+  <link rel="shortcut icon" href="<c:out value='${app.configuration.url}/favicon.ico'/>">
+  <link rel="icon" href="<c:out value='${app.configuration.url}/favicon.ico'/>">
   <s:geoUrl/>
   <s:dublinCore snip="${snip}"/>
   <title><c:out value="${app.configuration.name}" default="SnipSnap"/> :: <c:out value="${snip.name}" default=""/></title>
-  <link type="text/css" href="<c:url value='../default.css'/>" rel="STYLESHEET"/>
-  <link type="text/css" href="<c:url value='../print.css'/>" media="print" rel="STYLESHEET"/>
-
+  <link type="text/css" href="<c:url value='${app.configuration.url}/default.css'/>" rel="STYLESHEET"/>
+  <link type="text/css" href="<c:url value='${app.configuration.url}/print.css'/>" media="print" rel="STYLESHEET"/>
  </head>
  <body>
   <div id="page-logo">

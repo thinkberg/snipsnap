@@ -30,6 +30,7 @@ import org.snipsnap.config.Configuration;
 import org.snipsnap.snip.XMLSnipImport;
 import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
+import org.snipsnap.server.Shutdown;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,6 +39,12 @@ import java.io.IOException;
 public class DBImport {
 
   public static void main(String args[]) {
+    Runtime.getRuntime().addShutdownHook(new Thread() {
+      public void run() {
+        Shutdown.shutdown();
+      }
+    });
+
     if (args.length < 3) {
       System.out.println("usage: DBImport <application> <user> <xml-file> [overwrite]");
       System.exit(-1);
@@ -55,7 +62,7 @@ public class DBImport {
     AppConfiguration config = null;
     try {
       config = new AppConfiguration(
-        new File(serverConfig.getProperty(Configuration.WEBAPP_ROOT) + args[0] + "/WEB-INF/application.conf"));
+        new File(serverConfig.getProperty(Configuration.WEBAPP_ROOT) + "/" + args[0] + "/WEB-INF/application.conf"));
     } catch (IOException e) {
       System.out.println("Unable to load application config: " + e);
       System.exit(-1);
@@ -83,11 +90,6 @@ public class DBImport {
     } catch (IOException e) {
       System.out.println("Unable to load import file: "+e);
       System.exit(-1);
-    }
-    try {
-      Thread.sleep(20);
-    } catch (InterruptedException e) {
-      // ignore
     }
     System.exit(0);
   }
