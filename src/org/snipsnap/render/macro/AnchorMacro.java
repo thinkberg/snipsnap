@@ -79,7 +79,7 @@ public class AnchorMacro extends SnipMacro {
       writer.write("\" title=\"Permalink to ");
       writer.write(anchor);
       writer.write("\">");
-      SnipLink.appendImage(writer, "permalink", "");
+      SnipLink.appendImage(writer, "Icon-Permalink", "");
       writer.write("</a>");
     }
     return;

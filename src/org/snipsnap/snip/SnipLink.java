@@ -180,7 +180,7 @@ public class SnipLink {
 //  }
 
   public static String getImageRoot() {
-    return "images";
+    return "theme/images";
   }
 
   public static String getSpaceRoot() {

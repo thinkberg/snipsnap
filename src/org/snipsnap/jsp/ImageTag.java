@@ -37,6 +37,7 @@ public class ImageTag extends TagSupport {
   private String ext = null;
   private String name = null;
   private String alt = null;
+  private String root = null;
 
   public int doStartTag() throws JspException {
     try {
@@ -53,15 +54,16 @@ public class ImageTag extends TagSupport {
 
     JspWriter out = pageContext.getOut();
     try {
+      if(null == root) {
+
       SnipLink.appendImage(out, name, alt, ext);
+      } else {
+        SnipLink.appendImageWithRoot(out, SnipLink.getSpaceRoot()+"/" + root, name, alt, ext, null);
+      }
     } catch (IOException e) {
       Logger.warn("ImageTag: error writing image tag for " + name);
     }
     return SKIP_BODY;
-  }
-
-  public String getExt() {
-    return ext;
   }
 
   public void setExt(String ext) {
@@ -72,15 +74,11 @@ public class ImageTag extends TagSupport {
     this.name = name;
   }
 
-  public String getName() {
-    return name;
-  }
-
-  public String getAlt() {
-    return alt;
-  }
-
   public void setAlt(String alt) {
     this.alt = alt;
+  }
+
+  public void setRoot(String root) {
+    this.root = root;
   }
 }

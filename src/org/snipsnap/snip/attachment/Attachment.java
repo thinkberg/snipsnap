@@ -25,6 +25,8 @@
 
 package org.snipsnap.snip.attachment;
 
+import org.snipsnap.snip.SnipLink;
+
 import java.util.Date;
 
 /**
@@ -56,6 +58,10 @@ public class Attachment {
 
   public String getName() {
     return name;
+  }
+
+  public String getNameEncoded() {
+    return SnipLink.encode(name);
   }
 
   public void setContentType(String contentType) {

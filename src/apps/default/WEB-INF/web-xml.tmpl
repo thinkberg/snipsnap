@@ -54,6 +54,11 @@
   </servlet>
 
   <servlet>
+    <servlet-name>org.snipsnap.net.ThemeImageServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.ThemeImageServlet</servlet-class>
+  </servlet>
+
+  <servlet>
     <servlet-name>org.snipsnap.net.FileUploadServlet</servlet-name>
     <servlet-class>org.snipsnap.net.FileUploadServlet</servlet-class>
   </servlet>
@@ -292,7 +297,12 @@
 
   <servlet-mapping>
     <servlet-name>org.snipsnap.net.CssHandlerServlet</servlet-name>
-    <url-pattern>/css/*</url-pattern>
+    <url-pattern>/theme/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>org.snipsnap.net.ThemeImageServlet</servlet-name>
+    <url-pattern>/theme/images/*</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>

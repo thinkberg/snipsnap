@@ -73,9 +73,15 @@ public class FileUploadServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
     String snipName = request.getParameter("name");
+    Configuration config = Application.get().getConfiguration();
+
+    if(null == snipName) {
+      response.sendRedirect(config.getUrl());
+      return;
+    }
+
     SnipSpace space = SnipSpaceFactory.getInstance();
     Snip snip = space.load(snipName);
-    Configuration config = Application.get().getConfiguration();
 
     if (request.getParameter("cancel") != null) {
       response.sendRedirect(config.getUrl("/space/" + snip.getNameEncoded()));
@@ -88,10 +94,18 @@ public class FileUploadServlet extends HttpServlet {
 
       if (request.getParameter("upload") != null) {
         MultipartWrapper wrapper = (MultipartWrapper) request;
-        String contentType = wrapper.getFileContentType("file");
+        String fileName = wrapper.getParameter("filename");
+        String contentType = wrapper.getParameter("mimetype");
+        if(null == contentType || contentType.length() == 0) {
+          contentType = wrapper.getFileContentType("file");
+        }
         try {
           // make sure the file name does not contain slashes or backslashes
-          String fileName = getCanonicalFileName(wrapper.getFileName("file"));
+          if (null == fileName || fileName.length() == 0) {
+            fileName = getCanonicalFileName(wrapper.getFileName("file"));
+          } else {
+            fileName = getCanonicalFileName(fileName);
+          }
 
           InputStream fileInputStream = wrapper.getFileInputStream("file");
           if (fileInputStream != null && fileName != null && fileName.length() > 0 && contentType != null) {

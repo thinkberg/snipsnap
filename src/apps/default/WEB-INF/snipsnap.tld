@@ -217,6 +217,10 @@
       <name>ext</name>
       <required>false</required>
     </attribute>
+    <attribute>
+      <name>root</name>
+      <required>false</required>
+    </attribute>
   </tag>
 
 </taglib>

@@ -131,7 +131,7 @@ public class WeblogMacro extends SnipMacro {
         writer.write("\" title=\"Permalink to ");
         writer.write(entry.getName());
         writer.write("\">");
-        SnipLink.appendImage(writer, "permalink", "PermaLink");
+        SnipLink.appendImage(writer, "Icon-Permalink", "PermaLink");
         writer.write("</a>");
 
         writer.write("<div class=\"snip-post-comments\">");

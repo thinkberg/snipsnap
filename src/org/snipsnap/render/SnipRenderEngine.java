@@ -114,7 +114,7 @@ public class SnipRenderEngine extends BaseRenderEngine
     if(null == externalImageLink) {
       Writer writer = new StringBufferWriter();
       try {
-        SnipLink.appendImage(writer, "external-link", "&gt;&gt;");
+        SnipLink.appendImage(writer, "Icon-Extlink", "&gt;&gt;");
       } catch (IOException e) {
         // ignore
       }

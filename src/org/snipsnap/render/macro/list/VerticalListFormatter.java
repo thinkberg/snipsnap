@@ -82,7 +82,7 @@ public class VerticalListFormatter implements ListFormatter {
             int lastIndex = name.lastIndexOf("-");
             // String count = name.substring(lastIndex+1);
             realName = name.substring(name.indexOf("-") + 1, lastIndex);
-            SnipLink.appendImage(writer, "comment-icon", "");
+            SnipLink.appendImage(writer, "Icon-Comment", "");
             writer.write(" ");
             SnipLink.appendLinkWithRoot(writer, SnipLink.getCommentsRoot(), SnipLink.encode(realName) + "#" + name, realName);
             //SnipLink.appendLink(writer, name, realName);
@@ -91,12 +91,12 @@ public class VerticalListFormatter implements ListFormatter {
             writer.write(")");
             // @TODO replace with Type Snip check
           } else if (UserManagerFactory.getInstance().exists(name)) {
-            SnipLink.appendImage(writer, "person-icon", "");
+            SnipLink.appendImage(writer, "Icon-Person", "");
             writer.write(" ");
             SnipLink.appendLink(writer, ((Nameable) object).getName());
             //SnipLink.appendLinkWithRoot(writer, SnipLink.getCommentsRoot(), SnipLink.encode(realName) + "#" + name, realName);
           } else {
-            SnipLink.appendImage(writer, "snip-icon", "");
+            SnipLink.appendImage(writer, "Icon-Snip", "");
             writer.write(" ");
             SnipLink.appendLink(writer, name, realName);
           }

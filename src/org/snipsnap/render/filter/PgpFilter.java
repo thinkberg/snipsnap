@@ -56,7 +56,7 @@ public class PgpFilter extends RegexTokenFilter {
     Snip snip = ((SnipFilterContext) context).getSnip();
     Writer writer = new StringBufferWriter(buffer);
     try {
-      SnipLink.appendImage(writer, "key-icon", "");
+      SnipLink.appendImage(writer, "Icon-Key", "");
       writer.write(result.group(0));
     } catch (IOException e) {
       // ignore

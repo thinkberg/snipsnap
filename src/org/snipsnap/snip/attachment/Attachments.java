@@ -41,6 +41,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Comparator;
+import java.util.Collections;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Class for grouping and managing attachments for a snip
@@ -52,6 +56,11 @@ import java.util.Map;
 public class Attachments {
 
   private String cache = null;
+  private final static Comparator attSorter = new Comparator() {
+    public int compare(Object o1, Object o2) {
+      return ((Attachment) o1).getName().compareTo(((Attachment) o2).getName());
+    }
+  };
 
   /**
    * Initialize Attachments object with a serialized string.
@@ -110,20 +119,19 @@ public class Attachments {
   }
 
   public Iterator iterator() {
+    return getAll().iterator();
+  }
+
+  public List getAll() {
     if (null == attachments) {
       deserialize();
     }
-    return attachments.values().iterator();
+    List list = new ArrayList(attachments.values());
+    Collections.sort(list, attSorter);
+    return list;
   }
 
-  public Collection getAll() {
-    if (null == attachments) {
-      deserialize();
-    }
-    return attachments.values();
-  }
-
-  public boolean empty() {
+  public boolean isEmpty() {
     return null == attachments || attachments.size() == 0;
   }
 

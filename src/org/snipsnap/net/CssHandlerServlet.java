@@ -52,15 +52,16 @@ public class CssHandlerServlet extends HttpServlet {
   Map timeStamps = new HashMap();
 
   private String getStyleSheet(String id) {
-    Snip cssSnip = (Snip)styleSheets.get(id);
-    Timestamp cssTimestamp = (Timestamp)timeStamps.get(id);
+    Configuration config = Application.get().getConfiguration();
+    String themeId = config.getTheme() + id;
+    Snip cssSnip = (Snip)styleSheets.get(themeId);
+    Timestamp cssTimestamp = (Timestamp)timeStamps.get(themeId);
     if (null == cssSnip || cssSnip.getMTime().after(cssTimestamp)) {
       SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
-      Configuration config = Application.get().getConfiguration();
       String snipName = Configuration.SNIPSNAP_THEMES + "/" + config.getTheme() + ("/default.css".equals(id) ? "/css" : id);
       cssSnip = space.load(snipName);
-      styleSheets.put(id, cssSnip);
-      timeStamps.put(id, cssSnip.getMTime().clone());
+      styleSheets.put(themeId, cssSnip);
+      timeStamps.put(themeId, cssSnip.getMTime().clone());
     }
 
     return cssSnip.getContent();
