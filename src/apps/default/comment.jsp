@@ -11,7 +11,7 @@
  <c:if test="${snip.notWeblog}">
   <tr>
    <td><span class="snip-name"><c:out value="${snip.name}"/></span></td>
-   <td>
+   <td align="right">
     <s:check roles="Authenticated" permission="Edit" snip="${snip}">
      [<a href="../exec/edit?name=<c:out value='${snip.name}'/>">edit</a>]
     </s:check>
