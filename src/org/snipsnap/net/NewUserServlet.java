@@ -92,7 +92,7 @@ public class NewUserServlet extends HttpServlet {
       // TODO 1.4 if(!login.matches("[A-Za-z0-9.][]+")) {
       StringTokenizer tok = new StringTokenizer(login, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789. ");
       if(login.startsWith(" ") || tok.hasMoreTokens()) {
-        errors.put("login", ERR_ILLEGAL+": "+tok.nextToken());
+        errors.put("login", ERR_ILLEGAL+": "+(tok.hasMoreTokens() ? tok.nextToken() : ""));
         sendError(session, errors, request, response);
         return;
       }
