@@ -92,7 +92,6 @@ public class LinkTestFilter extends Filter {
       buffer.append(input.substring(lastmatch, result.beginOffset(0)));
       String targetSnip = result.group(1);
       if (targetSnip.startsWith("&#")) {
-        System.out.println("native2ascii: "+targetSnip);
         targetSnip = trans.nativeToAscii(targetSnip);
       }
 

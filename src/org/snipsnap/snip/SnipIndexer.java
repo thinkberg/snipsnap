@@ -116,7 +116,7 @@ public class SnipIndexer {
     try {
       searcher = new IndexSearcher(indexFile().getAbsolutePath());
     } catch (IOException e) {
-      System.out.println("Unable to open index file: " + indexFile());
+      System.err.println("Unable to open index file: " + indexFile());
       e.printStackTrace();
     }
 
@@ -132,7 +132,7 @@ public class SnipIndexer {
       query = MultiFieldQueryParser.parse(queryString, searchFields, new SnipAnalyzer());
     } catch (org.apache.lucene.queryParser.ParseException e1) {
       close(searcher);
-      System.out.println("Unable to parse: " + queryString);
+      System.err.println("Unable to parse: '" + queryString + "'");
     }
 
     // get the hits from the searcher for
@@ -142,7 +142,6 @@ public class SnipIndexer {
       hits = searcher.search(query);
     } catch (IOException e) {
       close(searcher);
-      System.out.println("IO Error.");
       e.printStackTrace();
     }
     return hits;
