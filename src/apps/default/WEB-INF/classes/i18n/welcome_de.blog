@@ -1,0 +1,13 @@
+Willkommen bei SnipSnap
+Sie können sich jetzt einloggen und Ihren ersten Beitrag hinzufügen/editieren.
+Klicken Sie auf den __Blog abschicken__ link in der Menüzeile. Für Hilfe bei der Formatiereung
+Ihres Beitrags schauen Sie sich [snipsnap-help] an.
+Um einen Link auf eine Seite innerhalb Ihrer Site zu erzeugen, umschließen Sie den Namen 
+mit \[ und \]. Mit \_\_ umschlossene Ausdrücke werden __fett__ wiedergegeben und \~\~  um einen 
+Ausdruck bewirkt, daß er ~~kursiv~~ ausgegeben wird. 
+Sie können einen Link in das Internet erzeugen, indem Sie die URL einfach in dieser Form 
+angeben http://snipsnap.org oder durch Benutzung von \{link:Name|url\}.
+Der Link \{link:SnipSnap|\http://snipsnap.org\} beispielsweise erzeugt {link:SnipSnap|http://snipsnap.org}.
+
+Das Pingen von weblogs.com kann aktiviert werden. Die 
+{link:FAQ|http://snipsnap.org/space/FAQ} erklären wie dies ein- oder ausgeschaltet werden kann.
