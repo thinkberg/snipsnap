@@ -30,6 +30,8 @@ import org.snipsnap.snip.SnipLink;
 import org.snipsnap.snip.SnipSpaceFactory;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
+import org.snipsnap.net.filter.MultipartWrapper;
+import org.radeox.util.logging.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -51,6 +53,15 @@ public class RemoveLabelServlet extends HttpServlet {
 
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
     Configuration config = Application.get().getConfiguration();
+    // If this is not a multipart/form-data request continue
+    String type = request.getHeader("Content-Type");
+    if (type != null && type.startsWith("multipart/form-data")) {
+      try {
+        request = new MultipartWrapper(request, config.getEncoding() != null ? config.getEncoding() : "UTF-8");
+      } catch (IllegalArgumentException e) {
+        Logger.warn("RemoveLabelServlet: multipart/form-data wrapper:" + e.getMessage());
+      }
+    }
 
     String snipName = request.getParameter("snipname");
     if (null == snipName) {
