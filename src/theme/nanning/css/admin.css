@@ -1,0 +1,45 @@
+/**
+ * Debug Stylesheet definitions.
+ * @author Matthias L. Jugel
+ * @version $Id$
+ */
+
+.admin {
+  color: inherit;
+  background-color: #eeeeee;
+  padding-top: 10px;
+  padding-left: 6px;
+  padding-right: 6px;
+  padding-bottom: 6px;
+}
+
+.admin-menu {
+  font-size: 120%;
+  width: 100%;
+  border-bottom: 3px solid #aaaaaa;
+  margin-top: 10px;
+}
+
+.menu-items {
+  display: table-row;
+}
+
+.menu-active {
+  display: table-cell;
+  font-weight: bold;
+  color: inherit;
+  background-color: #eeeeee;
+  border-left: 1px solid #aaaaaa;
+  padding: 5px;
+}
+
+.menu-inactive {
+  display: table-cell;
+  background-color: #ffffff;
+  border-left: 1px solid #aaaaaa;
+  padding: 5px;
+}
+
+.admin th {
+  font-size: 120%;
+}

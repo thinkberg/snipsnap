@@ -1,0 +1,192 @@
+/**
+ * Snip block display stylesheet definitions.
+ * @author Matthias L. Jugel
+ * @version $Id$
+ */
+
+.snip-wrapper {
+}
+
+.snip-title {
+  width: 100%;
+  text-align: left;
+  padding: 0px;
+  margin-bottom: 2em;
+}
+
+.snip-name {
+  width: 100%;
+  font-family: georgia, times new roman, times, serif;
+  font-size: 15px;
+  color: #000000;
+  text-transform: none;
+  border-bottom: 1px solid #003366;
+}
+
+.snip-commented-snip {
+  font-size: 10px;
+}
+
+.snip-buttons {
+  border: 0;
+  display: table-cell;
+  width: 49%;
+  float: right;
+  font-family: verdana, arial, sans-serif;
+  font-size:10px;
+  font-weight:normal;
+  text-align: right;
+}
+
+.snip-info {
+  border: 0;
+  display: table-cell;
+  width: 49%;
+  float: left;
+  font-family: verdana, arial, sans-serif;
+  font-size:10px;
+  font-weight:normal;
+}
+
+.snip-content {
+  clear: left;
+  border: 0;
+  display: block;
+  font-family: verdana, arial, sans-serif;
+  color:#666;
+  font-size:11px;
+  font-weight:normal;
+  background:#FFF;
+  line-height:16px;
+}
+
+.snip-attachments {
+  float: right;
+  border: 1px solid #003366;
+  padding: 3px;
+  padding-bottom: 10px;
+  width: auto;
+}
+
+.snip-post-comments {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.snip-sniplinks {
+  margin-top: 20px;
+}
+
+.snip-sniplinks table {
+  table-layout: fixed;
+}
+
+.snip-sniplinks caption {
+  text-align: left;
+  color: #999999;
+  background-color: inherit;
+}
+
+.snip-sniplinks td, th {
+  padding: 4px;
+}
+
+.snip-backlinks {
+  margin-top: 20px;
+}
+
+.snip-backlinks .list {
+  list-style-type: none;
+  margin-top: 0;
+  padding-left: 0;
+  margin-left: 0;
+}
+
+.snip-backlinks .caption {
+  text-align: left;
+  color: #999999;
+  background-color: inherit;
+}
+
+span.content {
+}
+
+span.count {
+  margin-right: 4px;
+}
+
+span.count:before {
+  content: "";
+}
+
+span.count:after {
+  content: ": ";
+}
+
+/**************************************************/
+/* snip edit part                                 */
+
+.snip-input {
+  margin-top: 20px;
+}
+
+.snip-input img {
+  width: 20px
+}
+
+.form {
+}
+
+.form .form-buttons {
+  text-align: right;
+}
+
+.form input[type=submit] {
+  vertical-align: text-bottom;
+}
+
+/**************************************************/
+/* snip with comments part                        */
+
+.snip-comments {
+}
+
+.comment-title {
+  margin-top: 20px;
+  font-weight: normal !important;
+  font-size: 100% !important;
+}
+
+h2.comment-name {
+  display: inline;
+  font-weight: normal;
+  font-size: 110%;
+}
+
+h2.comment-name a {
+  display: inline;
+  font-weight: normal;
+  font-size: 110%;
+}
+
+.comment-buttons {
+  display: inline;
+}
+
+.comment-content {
+  margin-top: 5px;
+  margin-left: 20px;
+}
+
+.comment-input {
+  margin-top: 20px;
+}
+
+/**************************************************/
+/* preview formatting                             */
+
+
+.preview {
+  background-color: #eeeeee;
+  color: inherit;
+}
