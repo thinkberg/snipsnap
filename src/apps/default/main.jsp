@@ -39,6 +39,10 @@
     <tr>
      <td valign="top" width="100%">
       <c:import url="${page}"/>
+      <pre>
+
+      </pre>
+      <s:debug/>
      </td>
      <td valign="top">
       <div id="Menu">

@@ -28,6 +28,7 @@ import org.snipsnap.snip.filter.SnipFormatter;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.User;
 import org.snipsnap.util.Nameable;
+import org.snipsnap.app.Application;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -289,7 +290,10 @@ public class Snip implements Ownable, Nameable {
   }
 
   public String toXML() {
-    return SnipFormatter.toXML(this, getContent());
+    long start = Application.get().start();
+    String xml = SnipFormatter.toXML(this, getContent());
+    Application.get().stop(start, "Formatting "+name);
+    return xml;
   }
 
   public String getXMLContent() {

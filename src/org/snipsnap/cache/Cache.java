@@ -28,6 +28,7 @@ package org.snipsnap.cache;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.jdbc.Loader;
+import org.snipsnap.app.Application;
 
 import java.util.HashMap;
 import java.util.Map;

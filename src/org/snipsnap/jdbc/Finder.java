@@ -82,12 +82,15 @@ public class Finder {
   }
 
   public List find(PreparedStatement statement) {
-    return find(statement, Integer.MAX_VALUE);
+    return find(statement, Integer.MAX_VALUE, new ArrayList());
   }
 
   public List find(PreparedStatement statement, int count) {
+    return find(statement, count, new ArrayList(count));
+  }
+
+  public List find(PreparedStatement statement, int count, List resultList) {
     ResultSet result = null;
-    List snips = new ArrayList();
 
     try {
       result = statement.executeQuery();
@@ -101,7 +104,7 @@ public class Finder {
             cache.put(name, snip);
           }
         }
-        snips.add(snip);
+        resultList.add(snip);
       }
     } catch (SQLException e) {
       e.printStackTrace();
@@ -110,6 +113,6 @@ public class Finder {
       ConnectionManager.close(statement);
       ConnectionManager.close(connection);
     }
-    return snips;
+    return resultList;
   }
 }

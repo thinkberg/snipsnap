@@ -155,6 +155,11 @@ table {
 	empty-cells: show;
 }
 
+table.debug {
+    background-color: #ffff99;
+	empty-cells: show;
+}
+
 input[type=submit] {
     background: #eeeeee;
     border: 1px ridge #aaaaaa;

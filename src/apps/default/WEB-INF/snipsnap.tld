@@ -8,6 +8,11 @@
   <short-name>SnipSnap</short-name>
   <uri>http://snipsnap.com/snipsnap.tld</uri>
 
+    <tag>
+    <name>debug</name>
+    <tag-class>org.snipsnap.jsp.DebugTag</tag-class>
+   </tag>
+
   <tag>
     <name>backLinks</name>
     <tag-class>org.snipsnap.jsp.BackLinkTag</tag-class>

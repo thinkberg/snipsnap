@@ -33,6 +33,7 @@ import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
 import org.snipsnap.util.ConnectionManager;
 import org.snipsnap.util.Queue;
+import org.snipsnap.util.log.Logger;
 import org.apache.lucene.search.Hits;
 
 import java.sql.*;
@@ -123,12 +124,9 @@ public class SnipSpace implements LinkTester, Loader {
   public void reIndex() {
     List snips = getAll();
     Iterator iterator = snips.iterator();
-    System.out.println("Reindexing");
     while (iterator.hasNext()) {
       Snip snip = (Snip) iterator.next();
-      System.out.print("  " + snip.getName() + " ... ");
       indexer.reIndex(snip);
-      System.out.println("ok.");
     }
   }
 
@@ -178,11 +176,13 @@ public class SnipSpace implements LinkTester, Loader {
 
   public void store(Snip snip) {
     Application app = Application.get();
+    long start = app.start();
     snip.setMUser(app.getUser());
     changed.add(snip);
     snip.setMTime(new Timestamp(new java.util.Date().getTime()));
     storageStore(snip);
     indexer.reIndex(snip);
+    app.stop(start, "store - " + snip.getName());
     return;
   }
 
@@ -194,8 +194,10 @@ public class SnipSpace implements LinkTester, Loader {
    * @param snip The snip to store
    */
   public void systemStore(Snip snip) {
-    System.err.println("Storing: snip="+snip.getName());
+    Application app = Application.get();
+    long start = app.start();
     storageStore(snip);
+    app.stop(start, "systemStore - " + snip.getName());
     return;
   }
 
@@ -320,6 +322,8 @@ public class SnipSpace implements LinkTester, Loader {
   }
 
   public Snip storageLoad(String name) {
+    Application app = Application.get();
+    long start = app.start();
     Snip snip = null;
     PreparedStatement statement = null;
     ResultSet result = null;
@@ -343,6 +347,7 @@ public class SnipSpace implements LinkTester, Loader {
       ConnectionManager.close(statement);
       ConnectionManager.close(connection);
     }
+    app.stop(start, "storageLoad - "+name);
     return snip;
   }
 

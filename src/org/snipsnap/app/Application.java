@@ -26,6 +26,7 @@ package org.snipsnap.app;
 
 import org.snipsnap.config.AppConfiguration;
 import org.snipsnap.user.User;
+import org.snipsnap.util.log.Logger;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
@@ -46,6 +47,7 @@ public class Application {
   private User user;
   private AppConfiguration config;
   private Map parameters;
+  private List log = new ArrayList();
 
   private static ThreadLocal instance = new ThreadLocal() {
     protected synchronized Object initValue() {
@@ -53,6 +55,26 @@ public class Application {
       return new Application();
     }
   };
+
+  public void clearLog() {
+    log = new ArrayList();
+  }
+
+  public List getLog() {
+    return log;
+  }
+
+  public void log(String output) {
+    log.add(output);
+  }
+
+  public long start() {
+    return System.currentTimeMillis();
+  }
+
+  public void stop(long start, String output) {
+    Logger.log(Logger.PERF, output + " - " + (System.currentTimeMillis() - start));
+  }
 
   public static Application get() {
     Application app = (Application) instance.get();
