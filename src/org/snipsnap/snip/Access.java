@@ -29,7 +29,6 @@ import org.snipsnap.app.Application;
 import org.snipsnap.user.User;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -100,13 +99,11 @@ public class Access {
             }
           }
         } else {
-          // Referrer was external link
-          String url = SnipLink.decode(referrer);
           // do not count localhosts, single hosts. Will
           // not find local network IPs and MacOS X
           // hosts like megid.local
           if (! isLocalhost(referrer)) {
-            backLinks.addLink(url);
+            backLinks.addLink(referrer);
           }
         }
       }

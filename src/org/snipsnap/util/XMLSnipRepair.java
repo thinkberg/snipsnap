@@ -32,6 +32,11 @@ import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
+import org.dom4j.io.aelfred.DefaultHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLFilter;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.helpers.XMLFilterImpl;
 
 import java.io.*;
 import java.text.NumberFormat;
@@ -98,8 +103,21 @@ public class XMLSnipRepair {
    */
   private static Document load(File file) throws Exception {
     final long fileLength = file.length();
-    System.err.print("0%");
     SAXReader saxReader = new SAXReader();
+    saxReader.setXMLFilter(new XMLFilterImpl() {
+      public void characters(char ch[], int start, int length)
+        throws SAXException {
+        System.err.println(ch);
+        super.characters(ch, start, length);
+      }
+    });
+    saxReader.getXMLFilter().setContentHandler(new DefaultHandler() {
+      public void startEntity(String s) throws SAXException {
+        System.err.println("entity: '"+s+"'");
+        super.startEntity(s);
+      }
+    });
+    System.err.print("0%");
     InputStreamReader reader = new InputStreamReader(new FileInputStream(file), "UTF-8") {
       private long read = 0;
 
@@ -138,6 +156,7 @@ public class XMLSnipRepair {
         }
       }
     };
+
 
     Document document = saxReader.read(reader);
     System.err.println();
