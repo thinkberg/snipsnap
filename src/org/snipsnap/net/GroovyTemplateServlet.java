@@ -28,45 +28,68 @@ import groovy.text.SimpleTemplateEngine;
 import groovy.text.Template;
 import org.snipsnap.app.Application;
 import org.snipsnap.container.Components;
-import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.InputStream;
 
 public class GroovyTemplateServlet extends HttpServlet {
 
   SimpleTemplateEngine templateEngine = new SimpleTemplateEngine();
 
   protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    SnipSpace space = (SnipSpace)Components.getComponent(SnipSpace.class);
 
-    String groovyFile = (String) request.getAttribute("javax.servlet.include.servlet_path");
-    if(null == groovyFile) {
-      groovyFile = request.getServletPath();
+    String groovyFile = (String) request.getAttribute("javax.servlet.include.path_info");
+    if (null == groovyFile) {
+      groovyFile = request.getPathInfo();
     }
 
-    if(groovyFile.startsWith("/")) {
+    if (groovyFile.startsWith("/")) {
       groovyFile = groovyFile.substring(1);
     }
 
-    if(groovyFile.endsWith(".gsp")) {
-      groovyFile = groovyFile.substring(0, groovyFile.lastIndexOf("."));
+    String templateSource = getTemplateSource(groovyFile);
+    try {
+      Template groovyTemplate = templateEngine.createTemplate(templateSource);
+      groovyTemplate.setBinding(Application.get().getParameters());
+      response.getWriter().write(groovyTemplate.toString());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * Read the template source from either a snip or if not existent try the
+   * jar/classpath based file read.
+   * @param name the name of the resource to load
+   * @return a string with the template source
+   * @throws IOException
+   */
+  private String getTemplateSource(String name) throws IOException {
+    SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
+    if (space.exists(name)) {
+      return space.load(name).getContent();
     }
 
-    Snip templateSnip = space.load(groovyFile);
-    if(null != templateSnip) {
-      String templateSource = templateSnip.getContent();
-      try {
-        Template groovyTemplate = templateEngine.createTemplate(templateSource);
-        groovyTemplate.setBinding(Application.get().getParameters());
-        response.getWriter().write(groovyTemplate.toString());
-      } catch (Exception e) {
-        e.printStackTrace();
+    InputStream resource = getClass().getResourceAsStream(name);
+    if(null != resource) {
+      // if there is no snip to load, try jar/classpath based file read
+      BufferedReader reader = new BufferedReader(new InputStreamReader(resource));
+      StringBuffer content = new StringBuffer();
+      char buffer[] = new char[1024];
+      int length = 0;
+      while ((length = reader.read(buffer)) != -1) {
+        content.append(buffer, 0, length);
       }
+      return content.toString();
     }
+
+    throw new IOException("unable to load template source: '"+name+"'");
   }
 }

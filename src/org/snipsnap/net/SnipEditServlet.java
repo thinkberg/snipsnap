@@ -24,17 +24,15 @@
  */
 package org.snipsnap.net;
 
-import org.snipsnap.snip.Snip;
-import org.snipsnap.snip.SnipLink;
-import org.snipsnap.snip.SnipSpaceFactory;
-import org.snipsnap.snip.label.Label;
+import org.radeox.util.logging.Logger;
 import org.snipsnap.app.Application;
 import org.snipsnap.config.Configuration;
-import org.snipsnap.user.Roles;
-import org.snipsnap.user.Permission;
-import org.snipsnap.user.Security;
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.SnipSpaceFactory;
+import org.snipsnap.snip.label.MIMETypeLabel;
 import org.snipsnap.user.Permissions;
-import org.radeox.util.logging.Logger;
+import org.snipsnap.user.Roles;
+import org.snipsnap.user.Security;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -42,6 +40,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * Load a snip to edit. Loads the snip into the request context. In case
@@ -55,17 +55,17 @@ public class SnipEditServlet extends HttpServlet {
   private final static Roles authRoles = new Roles(Roles.AUTHENTICATED);
 
   public void doPost(HttpServletRequest request, HttpServletResponse response)
-      throws IOException, ServletException {
+    throws IOException, ServletException {
     doGet(request, response);
   }
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws IOException, ServletException {
+    throws IOException, ServletException {
 
     final String name = request.getParameter("name");
     if (null == name) {
       Configuration config = Application.get().getConfiguration();
-      response.sendRedirect(config.getUrl("/space/"+config.getStartSnip()));
+      response.sendRedirect(config.getUrl("/space/" + config.getStartSnip()));
       return;
     }
 
@@ -81,18 +81,27 @@ public class SnipEditServlet extends HttpServlet {
     }
 
     if (null != snip) {
-      Label editHandler = snip.getLabels().getLabel("EditHelper");
-      if(Security.checkPermission(Permissions.EDIT_SNIP, Application.get().getUser(), snip) &&
-        Security.hasRoles(Application.get().getUser(), snip, authRoles)) {
-        if (null != editHandler) {
-          Logger.log("SnipEditServlet: calling " + editHandler.getValue()+".gsp");
-          RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/"+editHandler.getValue()+".gsp");
-          dispatcher.forward(request, response);
-          return;
+      // get all mime types associated with the snip
+      Collection mimeTypes = snip.getLabels().getLabels("mime-type");
+      if (!mimeTypes.isEmpty()) {
+        Iterator handlerIt = mimeTypes.iterator();
+        while (handlerIt.hasNext()) {
+          MIMETypeLabel mimeType = (MIMETypeLabel) handlerIt.next();
+          String editHandler = mimeType.getEditHandler();
+          // check that an edit handler is set
+          if (null != editHandler && !"".equals(editHandler)) {
+            if (Security.checkPermission(Permissions.EDIT_SNIP, Application.get().getUser(), snip) &&
+              Security.hasRoles(Application.get().getUser(), snip, authRoles)) {
+              Logger.log("SnipEditServlet: calling " + editHandler);
+              RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/" + editHandler);
+              dispatcher.forward(request, response);
+              return;
+            }
+            break;
+          }
         }
       }
     }
-
     RequestDispatcher dispatcher = request.getRequestDispatcher("/exec/edit.jsp");
     dispatcher.forward(request, response);
   }

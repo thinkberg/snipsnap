@@ -44,13 +44,13 @@
   </listener>
 
   <servlet>
-    <servlet-name>org.snipsnap.net.GroovyTemplateServlet</servlet-name>
-    <servlet-class>org.snipsnap.net.GroovyTemplateServlet</servlet-class>
+    <servlet-name>org.snipsnap.net.Layouter</servlet-name>
+    <servlet-class>org.snipsnap.net.Layouter</servlet-class>
   </servlet>
 
   <servlet>
-    <servlet-name>org.snipsnap.net.Layouter</servlet-name>
-    <servlet-class>org.snipsnap.net.Layouter</servlet-class>
+    <servlet-name>org.snipsnap.net.PluginServlet</servlet-name>
+    <servlet-class>org.snipsnap.net.PluginServlet</servlet-class>
   </servlet>
 
   <servlet>
@@ -228,17 +228,6 @@
     <servlet-class>org.snipsnap.net.RobotServlet</servlet-class>
   </servlet>
 
-  <!-- ADMIN -->
-  <servlet>
-    <servlet-name>org.snipsnap.net.admin.AdminServlet</servlet-name>
-    <servlet-class>org.snipsnap.net.admin.AdminServlet</servlet-class>
-  </servlet>
-
-  <servlet>
-    <servlet-name>org.snipsnap.net.admin.UserManagerServlet</servlet-name>
-    <servlet-class>org.snipsnap.net.admin.UserManagerServlet</servlet-class>
-  </servlet>
-
   <!-- setup and configuration -->
   <servlet>
     <servlet-name>org.snipsnap.net.admin.ConfigureServlet</servlet-name>
@@ -256,11 +245,6 @@
   <!-- servlet mappings -->
 
   <servlet-mapping>
-    <servlet-name>org.snipsnap.net.GroovyTemplateServlet</servlet-name>
-    <url-pattern>*.groovy</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
     <servlet-name>org.snipsnap.net.SnipRawServlet</servlet-name>
     <url-pattern>/raw/*</url-pattern>
   </servlet-mapping>
@@ -273,6 +257,11 @@
   <servlet-mapping>
     <servlet-name>org.snipsnap.net.CommentViewServlet</servlet-name>
     <url-pattern>/comments/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>org.snipsnap.net.PluginServlet</servlet-name>
+    <url-pattern>/plugin/*</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
@@ -436,16 +425,6 @@
   </servlet-mapping>
 
   <!-- ADMIN -->
-  <servlet-mapping>
-    <servlet-name>org.snipsnap.net.admin.AdminServlet</servlet-name>
-    <url-pattern>/manager/*</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>org.snipsnap.net.admin.UserManagerServlet</servlet-name>
-    <url-pattern>/manager/user</url-pattern>
-  </servlet-mapping>
-
   <servlet-mapping>
     <servlet-name>org.snipsnap.net.admin.ConfigureServlet</servlet-name>
     <url-pattern>/admin/configure</url-pattern>

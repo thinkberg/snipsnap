@@ -6,3 +6,4 @@ org.snipsnap.snip.label.BooleanLabel
 org.snipsnap.snip.label.RenderEngineLabel
 org.snipsnap.snip.label.CategoryLabel
 org.snipsnap.snip.label.TaxonomyLabel
+org.snipsnap.snip.label.MIMETypeLabel
