@@ -83,9 +83,9 @@ public class WeblogsPing extends Thread {
         params.addElement(config.getSnipUrl(weblog.getName()));
         result = home.execute("weblogUpdates.ping", params);
         //System.err.println("xmlrpc result="+result);
-      } catch (Exception e) {
-        System.err.println("Unable to ping weblogs.com " + e);
       }
+    } catch (Exception e) {
+      System.err.println("Unable to ping weblogs.com " + e);
     }
   }
 
