@@ -99,7 +99,7 @@ public class Launcher {
         classPath.append(new File(directoryBase, file).getCanonicalPath());
       }
       System.setProperty("java.class.path", classPath.toString());
-      System.err.println("SnipSnapLauncher: CLASSPATH=" + classPath.toString());
+      //System.err.println("SnipSnapLauncher: CLASSPATH=" + classPath.toString());
     } catch (IOException e) {
       System.err.println("Warning: not running from a jar: make sure your CLASSPATH is set correctly.");
     }
