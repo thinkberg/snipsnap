@@ -74,6 +74,7 @@ public class XMLSnipRepair {
       XMLWriter xmlWriter = new XMLWriter(new FileOutputStream(args[1]));
       xmlWriter.write(repaired);
       xmlWriter.flush();
+      xmlWriter.close();
     } catch (Exception e) {
       System.err.println("Error: unable to write data: " + e);
     }
