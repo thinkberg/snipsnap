@@ -258,7 +258,11 @@ public class InitFilter implements Filter {
         int port = request.getServerPort();
         String contextPath = request.getContextPath() + ("/".equals(prefix) ? "" : prefix);
 
-        app.storeObject(Application.URL, new URL(protocol, host, port, contextPath));
+        if(port != 80) {
+          app.storeObject(Application.URL, new URL(protocol, host, port, contextPath));
+        } else {
+          app.storeObject(Application.URL, new URL(protocol, host, contextPath));
+        }
       }
 //      System.out.println("autoconfigured url: " + appConfig.getUrl());
     }
