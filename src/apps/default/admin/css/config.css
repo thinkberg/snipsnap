@@ -7,8 +7,10 @@
 body {
   background-color: #ffffff;
   color: #4c4c4c;
-  font-size: 100%;
+  font-size: 12pt;
   font-family: "Lucida Grande", "Trebuchet MS", Verdana, Geneva, Lucida, Helvetica, sans-serif;
+  font-weight: normal;
+
   margin: 0px;
   padding: 0px;
 }
@@ -88,15 +90,30 @@ li.current-step {
 .edit td {
   margin: 0px;
   vertical-align: top;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   padding-left: 5px;
   padding-right: 5px;
+  font-size: x-small;
+  font-weight: bold;
+  line-height: 1.6em;
+  border: 1px solid white;
+  color: black;
 }
 
 .edit td:first-child {
   background: #eeeeee;
-  text-align: right;
+  /*color: black;*/
+  text-align: justify;
   width: 40%;
-  font-size: small;
+  font-size: x-small;
+  font-weight: normal;
+  line-height: 1.2em;
 }
+
+.edit .hint {
+  font-size: x-small;
+  font-weight: normal;
+  color: #999999;
+}
+

@@ -42,6 +42,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * @author Matthias L. Jugel
@@ -51,25 +53,23 @@ public class ConfigureServlet extends HttpServlet {
 
   protected final static String ATT_APPLICATION = "app";
   protected final static String ATT_CONFIG = "config";
-  protected final static String ATT_EXPERT = "expert";
+  protected final static String ATT_ADVANCED = "advanced";
+  protected final static String ATT_USAGE = "usage";
   protected final static String ATT_FINISH = "finish";
   protected final static String ATT_STEPS = "steps";
   protected final static String ATT_STEP = "step";
+  protected final static String ATT_ERROR = "error";
 
   private final static List BASIC_STEPS = Arrays.asList(new String[]{
-    "application", "localization", "administrator",
+    "application", /*"theme",*/ "localization", "administrator",
   });
 
-  public void init(ServletConfig servletConfig) throws ServletException {
-    super.init(servletConfig);
+  private final static List EXPERT_STEPS = Arrays.asList(new String[]{
+    "permissions", "mail", "moblog", "proxy", /*"expert"*/
+  });
 
-/*
-    EXPERT = new ArrayList(BASIC);
-    EXPERT.addAll(
-      Arrays.asList(new String[]{
-        "permissions", "mail", "proxy", "expert"
-      }));
-*/
+  protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    doGet(request, response);
   }
 
   public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -79,67 +79,109 @@ public class ConfigureServlet extends HttpServlet {
     Application app = Application.getInstance(session);
     Configuration config = app.getConfiguration();
 
+    session.setAttribute(ATT_APPLICATION, app);
+    session.setAttribute(ATT_CONFIG, config);
+    List steps = (List) session.getAttribute(ATT_STEPS);
+    if (steps == null) {
+      steps = new ArrayList(BASIC_STEPS);
+    }
+    if (session.getAttribute(ATT_USAGE) == null) {
+      if (config.allow(Configuration.APP_PERM_REGISTER) &&
+        config.allow(Configuration.APP_PERM_WEBLOGSPING)) {
+        session.setAttribute(ATT_USAGE, "public");
+      } else if (!config.allow(Configuration.APP_PERM_REGISTER)) {
+        session.setAttribute(ATT_USAGE, "closed");
+      } else if (!config.allow(Configuration.APP_PERM_WEBLOGSPING)) {
+        session.setAttribute(ATT_USAGE, "intranet");
+      } else {
+        session.setAttribute(ATT_USAGE, "custom");
+      }
+    }
+
     if (!config.isInstalled()) {
-      session.setAttribute(ATT_APPLICATION, app);
-      session.setAttribute(ATT_CONFIG, config);
-      List steps = (List)session.getAttribute(ATT_STEPS);
-      if(steps == null) {
-        steps = BASIC_STEPS;
+      if(session.getAttribute("DEFAULTS") == null) {
+        Locale locale = request.getLocale();
+        config.set(Configuration.APP_COUNTRY, locale.getCountry());
+        config.set(Configuration.APP_LANGUAGE, locale.getLanguage());
+        int offset = TimeZone.getDefault().getRawOffset() / (60 * 60 *  1000);
+        String id = "GMT" + (offset >= 0 ? "+" : "") + offset;
+        config.set(Configuration.APP_TIMEZONE, TimeZone.getTimeZone(id).getID());
+        session.setAttribute("DEFAULTS", "true");
       }
-      if ("true".equals(session.getAttribute(ATT_EXPERT))) {
-        //steps = EXPERT;
+      String step = request.getParameter("step");
+      if (null == step || "".equals(step)) {
+        step = (String) steps.get(0);
       } else {
-        //steps = BASIC;
-      }
-      request.setAttribute(ATT_STEPS, steps);
+        if (checkStep(step, request, session)) {
+          if (request.getParameter("finish") != null) {
+            Map params = request.getParameterMap();
+            Iterator iterator = params.keySet().iterator();
+            Map paramMap = new HashMap();
+            while (iterator.hasNext()) {
+              String key = (String) iterator.next();
+              String[] values = (String[]) params.get(key);
+              paramMap.put(key, values[0]);
+            }
 
-      if (request.getParameter("finish") != null) {
-        Map params = request.getParameterMap();
-        Iterator iterator = params.keySet().iterator();
-        Map paramMap = new HashMap();
-        while (iterator.hasNext()) {
-          String key = (String) iterator.next();
-          String[] values = (String[]) params.get(key);
-          paramMap.put(key, values[0]);
-        }
-
-        //install(request, response);
-      } else {
-        String step = request.getParameter("step");
-        // checkStep()
-
-        if (null == step || "".equals(step)) {
-          step = (String) steps.get(0);
-        } else if (request.getParameter("next") != null || request.getParameter("expert") != null) {
-          int idx = steps.indexOf(step);
-          step = (String) steps.get(idx + 1);
-          if(idx + 2 >= steps.size()) {
-            request.setAttribute(ATT_FINISH, "true");
+            try {
+              install(config);
+              response.sendRedirect(config.getUrl());
+              return;
+            } catch (Exception e) {
+              request.setAttribute(ATT_ERROR, "FATAL: Unable to configure. See server log for details");
+              e.printStackTrace();
+            }
+          } else {
+            if (request.getParameter("next") != null) {
+              int idx = steps.indexOf(step);
+              // if we see a "next" and this is the end it must be expert settings
+              if (null != request.getParameter(ATT_ADVANCED)) {
+                session.setAttribute(ATT_ADVANCED, "true");
+                steps = addSteps(steps, EXPERT_STEPS);
+              }
+              step = (String) steps.get(idx + 1);
+              if (idx + 2 >= steps.size()) {
+                request.setAttribute(ATT_FINISH, "true");
+              }
+            } else if (request.getParameter("previous") != null) {
+              int idx = steps.indexOf(step);
+              step = (String) steps.get(idx - 1);
+            }
           }
-        } else if (request.getParameter("previous") != null) {
-          int idx = steps.indexOf(step);
-          step = (String) steps.get(idx - 1);
         }
-        request.setAttribute(ATT_STEP, step);
-
-        if (!request.getContextPath().equals(config.getPath())) {
-          config.set(Configuration.APP_PATH, request.getContextPath());
-        }
-
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/configure.jsp");
-        dispatcher.forward(request, response);
-        return;
       }
+
+      if (!request.getContextPath().equals(config.getPath())) {
+        config.set(Configuration.APP_PATH, request.getContextPath());
+      }
+
+      session.setAttribute(ATT_STEP, step);
+      session.setAttribute(ATT_STEPS, steps);
+      RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/configure.jsp");
+      dispatcher.forward(request, response);
+      return;
     }
     response.sendRedirect(SnipLink.absoluteLink("/"));
   }
 
-  private String getNextStep(List steps, String currentStep, String command) {
-    return null;
-
+  private void install(Configuration config) throws Exception {
+    System.out.println("Config: " + config);
   }
 
-  protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    doGet(request, response);
+  private boolean checkStep(String step, HttpServletRequest request, HttpSession session) {
+
+    return true;
   }
+
+  private List addSteps(List steps, List toAdd) {
+    Iterator it = toAdd.iterator();
+    while (it.hasNext()) {
+      String step = (String) it.next();
+      if (!steps.contains(step)) {
+        steps.add(step);
+      }
+    }
+    return steps;
+  }
+
 }

@@ -13,7 +13,7 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-    <title><fmt:message key="admin.config.title"/></title>
+    <title><fmt:message key="admin.config.title"/> :: <fmt:message key="admin.config.step.${step}"/></title>
     <link type="text/css" href="css/config.css" rel="STYLESHEET"/>
   </head>
   <body>
