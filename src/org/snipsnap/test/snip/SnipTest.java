@@ -17,12 +17,13 @@ public class SnipTest extends TestCase {
   }
 
   public void testName() {
-    Snip snip1 = new Snip("testName", "testContent");
-    assertEquals(snip1.getName(), "testName");
+    Snip snip1 = new Snip("A", "A Content");
+    assertEquals(snip1.getName(), "A");
   }
 
   public void testContent() {
-    Snip snip1 = new Snip("testName", "testContent");
-    assertEquals(snip1.getContent(), "testContent");
+    Snip snip1 = new Snip("A", "A Content");
+    assertEquals(snip1.getContent(), "A Content");
   }
+
 }

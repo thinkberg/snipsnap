@@ -17,8 +17,8 @@ public class XmlCodeFilter extends RegexReplaceFilter {
   private static final String QUOTE = "\"(([^\"\\\\]|\\.)*)\"";
 
   public XmlCodeFilter() {
-    super(QUOTE, "<style type=\"xml-quote\">\"$1\"</style>");
-    addRegex(TAGS, "<style type=\"xml-tag\">$1</style>");
-    addRegex(KEYWORDS, "<style type=\"xml-keyword\">$1</style>");
+    super(QUOTE, "<span class=\"xml-quote\">\"$1\"</class>");
+    addRegex(TAGS, "<span class=\"xml-tag\">$1</class>");
+    addRegex(KEYWORDS, "<span class=\"xml-keyword\">$1</class>");
   };
 }

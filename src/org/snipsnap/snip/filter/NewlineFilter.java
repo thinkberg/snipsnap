@@ -14,6 +14,6 @@ public class NewlineFilter extends RegexReplaceFilter {
 
   public NewlineFilter() {
     // matches \\
-    super("\\\\\\\\", "<newline/>");
+    super("\\\\\\\\", "<br/>");
   };
 }

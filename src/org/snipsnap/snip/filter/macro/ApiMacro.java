@@ -35,7 +35,6 @@ public class ApiMacro extends Macro {
       url.append(params[0].toLowerCase());
       url.append(".html");
     }
-    System.err.println("<elink name=\"" + params[0] + "\" href=\"" + url.toString() + "\"/>");
-    return "<elink name=\"" + params[0] + "\" href=\"" + url.toString() + "\"/>";
+    return "<a href=\"" + params[0] + "\"<a href=\"" + url.toString() + "\">" + params[0] + "</a>";
   }
 }

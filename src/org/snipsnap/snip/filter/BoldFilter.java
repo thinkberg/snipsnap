@@ -13,6 +13,6 @@ import com.neotis.snip.filter.regex.RegexReplaceFilter;
 public class BoldFilter extends RegexReplaceFilter {
 
   public BoldFilter() {
-    super("__(.*?)__", "<bold>$1</bold>");
+    super("__(.*?)__", "<span class=\"bold\">$1</span>");
   };
 }

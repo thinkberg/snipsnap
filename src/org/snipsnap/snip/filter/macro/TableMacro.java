@@ -16,7 +16,7 @@ public class TableMacro extends Macro {
     content = content.trim()+"\n";
 
     StringTokenizer tokenizer = new StringTokenizer(content, "|\n", true);
-    StringBuffer result = new StringBuffer("<table style=\"wiki-table\">");
+    StringBuffer result = new StringBuffer("<table class=\"wiki-table\">");
     StringBuffer cell = new StringBuffer();
     StringBuffer row = new StringBuffer();
     boolean firstLine = true;

@@ -6,6 +6,8 @@ import com.neotis.snip.filter.LinkTester;
 import java.sql.*;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Collection;
+import java.util.ArrayList;
 
 public class SnipSpace implements LinkTester {
   private Connection connection;
@@ -23,6 +25,10 @@ public class SnipSpace implements LinkTester {
   private SnipSpace() {
     cache = new HashMap();
     connection = ConnectionManager.getConnection();
+  }
+
+  public Collection getChildren(Snip snip) {
+    return storageByParent(snip);
   }
 
   public boolean exists(String name) {
@@ -57,6 +63,37 @@ public class SnipSpace implements LinkTester {
     cache.remove(snip.getName());
     storageRemove(snip);
     return;
+  }
+
+  private Collection storageByParent(Snip parent) {
+    PreparedStatement statement = null;
+    ResultSet result = null;
+    Collection children = new ArrayList();
+
+    try {
+      statement = connection.prepareStatement("SELECT name, content FROM Snip WHERE parentSnip=?");
+      statement.setString(1, parent.getName());
+
+      result = statement.executeQuery();
+      Snip snip = null;
+      while (result.next()) {
+        String name = result.getString(1);
+        if (cache.containsKey(name)) {
+          snip = (Snip) cache.get(name);
+        } else {
+          String content = result.getString(2);
+          snip = new Snip(name, content);
+          cache.put(name, content);
+        }
+        children.add(snip);
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    } finally {
+      ConnectionManager.close(statement);
+      ConnectionManager.close(result);
+    }
+    return children;
   }
 
   private void storageStore(Snip snip) {

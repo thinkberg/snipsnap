@@ -13,6 +13,6 @@ import com.neotis.snip.filter.regex.RegexReplaceFilter;
 public class ItalicFilter extends RegexReplaceFilter {
 
   public ItalicFilter() {
-    super("~~(.*?)~~", "<italic>$1</italic>");
+    super("~~(.*?)~~", "<span class=\"italic\">$1</span>");
   };
 }

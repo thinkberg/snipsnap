@@ -23,8 +23,8 @@ public class SqlCodeFilter extends RegexReplaceFilter {
 
 
   public SqlCodeFilter() {
-    super(QUOTES, "<style type=\"sql-quote\">\"$1\"</style>");
-    addRegex(OBJECTS, "<style type=\"sql-object\">$1</style>");
-    addRegex(KEYWORDS, "<style type=\"sql-keyword\">$1</style>");
+    super(QUOTES, "<span class=\"sql-quote\">\"$1\"</class>");
+    addRegex(OBJECTS, "<span class=\"sql-object\">$1</class>");
+    addRegex(KEYWORDS, "<span class=\"sql-keyword\">$1</class>");
   };
 }

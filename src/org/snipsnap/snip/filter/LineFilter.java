@@ -13,6 +13,6 @@ import com.neotis.snip.filter.regex.RegexReplaceFilter;
 public class LineFilter extends RegexReplaceFilter {
 
   public LineFilter() {
-    super("-----*", "<line/>");
+    super("-----*", "<hr class=\"line\"/>");
   };
 }

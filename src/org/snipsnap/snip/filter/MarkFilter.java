@@ -11,6 +11,6 @@ import com.neotis.snip.filter.regex.RegexReplaceFilter;
 public class MarkFilter extends RegexReplaceFilter {
 
   public MarkFilter() {
-    super("(^|\\s+)neotis(\\s?|[.!,:]?|$)", " <elink href=\"http://neotis.de/\" name=\"neotis&#174;\"/> ");
+    super("(^|\\s+)neotis(\\s?|[.!,:]?|$)", "<a href=\"http://neotis.de/\">neotis&#174;</a>");
   };
 }

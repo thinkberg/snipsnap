@@ -18,6 +18,6 @@ public class HeadingFilter extends RegexTokenFilter {
 
   public String handleMatch(MatchResult result) {
     String indent = result.group(1).replace('.', '-');
-    return "<style class=\"wiki-heading-"+indent+"\">" + result.group(3) + "</style>";
+    return "<div class=\"heading-"+indent+"\">" + result.group(3) + "</div>";
   }
 }

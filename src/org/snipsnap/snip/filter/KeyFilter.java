@@ -13,6 +13,6 @@ import com.neotis.snip.filter.regex.RegexReplaceFilter;
 public class KeyFilter extends RegexReplaceFilter {
 
   public KeyFilter() {
-    super("((Ctrl|Alt|Shift)-[^ ]*)", "<style type=\"key\">$1</style>");
+    super("((Ctrl|Alt|Shift)-[^ ]*)", "<span class=\"key\">$1</span>");
   };
 }

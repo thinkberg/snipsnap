@@ -32,8 +32,8 @@ public class JavaCodeFilter extends RegexReplaceFilter {
 
 
   public JavaCodeFilter() {
-    super(QUOTES, "<style type=\"java-quote\">\"$1\"</style>");
-    addRegex(OBJECTS, "<style type=\"java-object\">$1</style>");
-    addRegex(KEYWORDS, "<style type=\"java-keyword\">$1</style>");
+    super(QUOTES, "<span class=\"java-quote\">\"$1\"</span>");
+    addRegex(OBJECTS, "<span class=\"java-object\">$1</span>");
+    addRegex(KEYWORDS, "<span class=\"java-keyword\">$1</span>");
   };
 }

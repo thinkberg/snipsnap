@@ -14,6 +14,6 @@ public class UrlFilter extends RegexReplaceFilter {
 
   public UrlFilter() {
     super("([^\"]|^)((http|ftp)s?://(%[[:digit:]A-Fa-f][[:digit:]A-Fa-f]|[-_.!~*';/?:@&=+$,[:alnum:]])+)",
-             "$1<elink href=\"$2\" name=\"$2\"/>");
+             "$1<a href=\"$2\">$2</a>");
   };
 }
