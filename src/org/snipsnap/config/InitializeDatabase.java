@@ -32,7 +32,6 @@ import org.snipsnap.snip.HomePage;
 import org.snipsnap.snip.Snip;
 import org.snipsnap.snip.SnipSpace;
 import org.snipsnap.snip.XMLSnipImport;
-import org.snipsnap.snip.attachment.Attachments;
 import org.snipsnap.snip.label.RenderEngineLabel;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
@@ -40,13 +39,18 @@ import org.snipsnap.user.User;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.user.UserManagerFactory;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Properties;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
 /**
  * @author Matthias L. Jugel

@@ -46,7 +46,7 @@
 </div>
 <table>
   <tr>
-    <th><fmt:message key="config.users.name"/></th>
+    <th><fmt:message key="config.users.login"/></th>
     <th><fmt:message key="config.users.email"/></th>
     <th><fmt:message key="config.users.roles"/></th>
     <th><fmt:message key="config.users.lastlogin"/></th>
@@ -59,7 +59,7 @@
      </c:choose>>
       <td>
         <span class="nobr"><b><a href="space/<c:out value='${user.login}'/>"><c:out value="${user.login}"/></a></b></span>
-        <c:if test="${user.status != 'not set'}"><br/><fmt:message key="config.users.status"/> <i><c:out value="${user.status}"/></i></c:if><br/>
+        <c:if test="${not empty user.status && user.status != 'not set'}"><br/><fmt:message key="config.users.status"/> <i><c:out value="${user.status}"/></i></c:if><br/>
       </td>
       <td>
         <c:if test="${user.email != null}">
@@ -70,12 +70,12 @@
       <td><fmt:formatDate pattern="yy-MM-dd hh:mm" value="${user.lastLogin}"/></td>
       <td>
         <input type="hidden" name="edit_login" value="<c:out value='${user.login}'/>"/>
-        <input type="submit" name="edit_user" value="<fmt:message key="config.users.edit"/>"/>
+        <input type="submit" name="edit" value="<fmt:message key="config.users.edit"/>"/>
       </td>
       <td>
         <c:if test="${configuser.login != user.login}">
           <input type="hidden" name="remove_login" value="<c:out value='${user.login}'/>"/>
-          <input style="color: red" type="submit" name="ok" value="<fmt:message key="config.users.remove"/>"/>
+          <input style="color: red" type="submit" name="remove" value="<fmt:message key="config.users.remove"/>"/>
         </c:if>
       </td>
     </tr>

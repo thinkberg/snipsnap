@@ -12,13 +12,13 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
 
-<div class="users">
-  <c:choose>
-    <c:when test="${not empty param.edit_user}">
-      <c:out value="not implemented yet"/>
-    </c:when>
-    <c:otherwise>
+<c:choose>
+  <c:when test="${not empty param.edit_login && not empty user}">
+    <c:import url="config/users.edit.jsp"/>
+  </c:when>
+  <c:otherwise>
+    <div class="users">
       <c:import url="config/users.list.jsp"/>
-    </c:otherwise>
-  </c:choose>
-</div>
+    </div>
+  </c:otherwise>
+</c:choose>
