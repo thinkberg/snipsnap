@@ -260,22 +260,18 @@ public class DBImport {
       // creation user
       User cUser = null;
       if ((tmp = (String) elements.get("cUser")) != null) {
-        cUser = um.load(tmp);
-      }
-      if(null == cUser) {
+        snip.setCUser(um.load(tmp));
+      } else if(snip.getCUser() == null) {
         cUser = Application.get().getUser();
       }
-      snip.setCUser(cUser);
 
       // owner user
       User oUser = null;
       if ((tmp = (String) elements.get("oUser")) != null) {
-        oUser = um.load(tmp);
+        snip.setOUser(um.load(tmp));
+      } else if(snip.getOUser() == null) {
+        snip.setOUser(Application.get().getUser());
       }
-      if(null == oUser) {
-        oUser = Application.get().getUser();
-      }
-      snip.setOUser(oUser);
 
       // store last modification time
       if ((tmp = (String) elements.get("mTime")) != null) {
@@ -287,12 +283,10 @@ public class DBImport {
       // store modification user
       User mUser = null;
       if ((tmp = (String) elements.get("mUser")) != null) {
-        mUser = um.load(tmp);
-      }
-      if (null == mUser) {
+        snip.setMUser(um.load(tmp));
+      } else if (snip.getMUser() == null) {
         mUser = Application.get().getUser();
       }
-      snip.setMUser(tmp);
 
       if ((tmp = (String) elements.get("parentSnip")) != null) {
         if(space.exists(tmp)) {
