@@ -47,6 +47,10 @@ public class VersionMacro extends Macro {
     version = Application.get().getConfiguration().getVersion();
   }
 
+  public String getDescription() {
+    "Displays the SnipSnap version.";
+  }
+
   public String getName() {
     return "version";
   }
