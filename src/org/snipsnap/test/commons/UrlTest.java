@@ -23,25 +23,31 @@
  * --LICENSE NOTICE--
  */
 
-package org.snipsnap.test;
+package org.snipsnap.test.commons;
 
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import org.snipsnap.test.snip.AllSnipTests;
-import org.snipsnap.test.admin.AllAdminTests;
-import org.snipsnap.test.commons.AllCommonsTests;
+import org.snipsnap.snip.Access;
+import org.snipsnap.test.snip.SnipTestSupport;
 
-public class AllTests extends TestCase {
-  public AllTests(String name) {
+import java.io.StringWriter;
+
+public class UrlTest extends SnipTestSupport {
+  protected StringWriter writer;
+
+  public UrlTest(String name) {
     super(name);
   }
 
+  protected void setUp() throws Exception {
+    super.setUp();
+  }
+
   public static Test suite() {
-    TestSuite s = new TestSuite();
-    s.addTest(AllSnipTests.suite());
-    s.addTest(AllAdminTests.suite());
-    s.addTest(AllCommonsTests.suite());
-    return s;
+    return new TestSuite(UrlTest.class);
+  }
+
+  public void testLocalhost() {
+    assertTrue("Host is local", Access.isLocalhost("http://localhost"));
   }
 }

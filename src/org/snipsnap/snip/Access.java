@@ -29,8 +29,8 @@ import org.snipsnap.app.Application;
 import org.snipsnap.user.User;
 
 import javax.servlet.http.HttpServletRequest;
-import java.net.URL;
 import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Stores Access information for a snip like viewCount, backLinks, ...
@@ -85,7 +85,7 @@ public class Access {
             }
 
             String name = SnipLink.decode(url);
-            if (!"start".equals(name) && ! snipName.equals(name)) {
+            if (!"start".equals(name) && !snipName.equals(name)) {
               snipLinks.addLink(name);
             }
           }
@@ -95,14 +95,9 @@ public class Access {
           // do not count localhosts, single hosts. Will
           // not find local network IPs and MacOS X
           // hosts like megid.local
-            try {
-                URL refURL = new URL(referrer);
-                if (refURL.getHost().indexOf(".") > -1) {
-                  backLinks.addLink(url);
-                }
-            } catch (MalformedURLException e) {
-                // not an URL, so allways drop
-            }
+          if (! isLocalhost(referrer)) {
+            backLinks.addLink(url);
+          }
         }
       }
     }
@@ -148,4 +143,18 @@ public class Access {
     isModified = true;
     return ++this.viewCount;
   }
+
+  public static boolean isLocalhost(String url) {
+    boolean isLocalhost = true;
+    try {
+      URL refURL = new URL(url);
+      if (refURL.getHost().indexOf(".") > -1) {
+        isLocalhost = false;
+      }
+    } catch (MalformedURLException e) {
+      // not an URL, so allways drop
+    }
+    return isLocalhost;
+  }
+
 }
