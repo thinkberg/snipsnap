@@ -9,4 +9,7 @@
 <s:check roles="Authenticated" permission="Edit" snip="${snip}" invert="true">
   <span class="inactive">[edit]</span>
 </s:check>
+<s:check roles="Editor" snip="${snip}">
+  [<a href="../exec/remove?name=<c:out value='${snip.name}'/>">remove</a>]
+</s:check>
 

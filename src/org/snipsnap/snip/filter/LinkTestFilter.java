@@ -84,7 +84,6 @@ public class LinkTestFilter extends Filter {
 
       if (key != null) {
         int colonIndex = key.indexOf(':');
-        System.err.println("Colon=" + colonIndex);
         if (-1 != colonIndex) {
           String extSpace = key.substring(0, colonIndex);
           key = key.substring(colonIndex+1);

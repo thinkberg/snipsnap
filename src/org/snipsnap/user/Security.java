@@ -73,16 +73,14 @@ public class Security {
     return roles;
   }
 
-  public static boolean hasRoles(User user, List roles) {
+  public static boolean hasRoles(User user, Set roles) {
     Set userRoles = getRoles(user);
-    userRoles.retainAll(roles);
-    return !userRoles.isEmpty();
+    return Permissions.containsAny(roles, userRoles);
   }
 
-  public static boolean hasRoles(User user, Snip object, List roles) {
+  public static boolean hasRoles(User user, Snip object, Set roles) {
     Set userRoles = getRoles(user, object);
-    userRoles.retainAll(roles);
-    return !userRoles.isEmpty();
+    return Permissions.containsAny(roles, userRoles);
   }
 
   /**

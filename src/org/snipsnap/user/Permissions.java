@@ -60,7 +60,7 @@ public class Permissions {
     return serialize();
   }
 
-  public boolean containsAny(Set s1, Set s2) {
+  public static boolean containsAny(Set s1, Set s2) {
     // Optimize to use the smaller set
     Iterator iterator = s1.iterator();
     while (iterator.hasNext()) {
