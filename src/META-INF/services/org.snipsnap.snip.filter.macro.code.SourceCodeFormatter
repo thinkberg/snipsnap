@@ -1,0 +1,4 @@
+org.snipsnap.snip.filter.macro.code.SqlCodeFilter
+org.snipsnap.snip.filter.macro.code.JavaCodeFilter
+org.snipsnap.snip.filter.macro.code.XmlCodeFilter
+org.snipsnap.snip.filter.macro.code.NullCodeFilter
