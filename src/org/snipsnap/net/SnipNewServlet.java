@@ -68,7 +68,8 @@ public class SnipNewServlet extends HttpServlet {
     String content = request.getParameter("content");
     String name = request.getParameter("name");
     String template = request.getParameter("template");
-    if (template != null) {
+	  String copy = request.getParameter("copy.template");
+    if ((copy != null) && (template != null)) {
       SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
       Snip snip = space.load(template);
       content = snip.getContent();
