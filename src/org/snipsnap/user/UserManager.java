@@ -24,33 +24,37 @@
  */
 package org.snipsnap.user;
 
+import org.snipsnap.app.Application;
+import org.snipsnap.cache.Cache;
+import org.snipsnap.jdbc.Finder;
+import org.snipsnap.jdbc.FinderFactory;
+import org.snipsnap.jdbc.Loader;
 import org.snipsnap.util.ConnectionManager;
 import org.snipsnap.util.log.Logger;
-import org.snipsnap.cache.Cache;
-import org.snipsnap.jdbc.Loader;
-import org.snipsnap.jdbc.FinderFactory;
-import org.snipsnap.jdbc.Finder;
-import org.snipsnap.app.Application;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.*;
-import java.net.URL;
-import java.net.MalformedURLException;
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.io.BufferedReader;
-import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * User manager handles all register, creation and authentication of users.
@@ -117,25 +121,25 @@ public class UserManager implements Loader {
         new InputStreamReader(new FileInputStream("conf/robotdetect.txt")));
       String line = null;
       int ln = 0;
-      while((line = crawler.readLine()) != null) {
+      while ((line = crawler.readLine()) != null) {
         ln++;
-        if(line.length() > 0 && !line.startsWith("#")) {
+        if (line.length() > 0 && !line.startsWith("#")) {
           try {
             String id = line.substring(0, line.indexOf(' '));
-            String url = line.substring(line.indexOf(' ')+1);
-            if(url.indexOf("IGNORE") != -1) {
+            String url = line.substring(line.indexOf(' ') + 1);
+            if (url.indexOf("IGNORE") != -1) {
               robotIds.put(id, "IGNORE");
             } else {
               robotIds.put(id, url);
             }
           } catch (Exception e) {
-            System.err.println("UserManager: conf/robotdetect.txt line "+ln+": syntax error");
+            System.err.println("UserManager: conf/robotdetect.txt line " + ln + ": syntax error");
             e.printStackTrace();
           }
         }
       }
     } catch (IOException e) {
-      System.err.println("UserManager: unable to read conf/robotdetect.txt: "+e);
+      System.err.println("UserManager: unable to read conf/robotdetect.txt: " + e);
       e.printStackTrace();
     }
   }
@@ -173,19 +177,19 @@ public class UserManager implements Loader {
           user = authenticate(user.getLogin(), user.getPasswd());
           setCookie(request, response, user);
         } else {
-          System.err.println("UserManager: invalid hash: "+auth);
+          System.err.println("UserManager: invalid hash: " + auth);
         }
       }
 
       if (null == user) {
         String agent = request.getHeader("User-Agent");
         Iterator it = robotIds.keySet().iterator();
-        while(agent != null && user == null && it.hasNext()) {
-          String key = (String)it.next();
-          if(agent.toLowerCase().indexOf(key.toLowerCase()) != -1) {
-            user = (User)robots.get(key);
-            if(null == user) {
-              user = new User(key, key, (String)robotIds.get(key));
+        while (agent != null && user == null && it.hasNext()) {
+          String key = (String) it.next();
+          if (agent.toLowerCase().indexOf(key.toLowerCase()) != -1) {
+            user = (User) robots.get(key);
+            if (null == user) {
+              user = new User(key, key, (String) robotIds.get(key));
               user.setNonUser(true);
               robots.put(key, user);
             }
@@ -193,10 +197,10 @@ public class UserManager implements Loader {
           }
         }
 
-        if(user != null) {
-          System.err.println("Found robot: "+user);
+        if (user != null) {
+          System.err.println("Found robot: " + user);
         } else {
-          System.err.println("User agent of unknown user: '"+agent+"'");
+          System.err.println("User agent of unknown user: '" + agent + "'");
           user = new User("Guest", "Guest", "");
           user.setGuest(true);
         }
@@ -219,28 +223,36 @@ public class UserManager implements Loader {
     authHash.put(auth, user);
     Cookie cookie = new Cookie(COOKIE_NAME, auth);
     cookie.setMaxAge(SECONDS_PER_YEAR);
-    String path = null;
-    try {
-      path = new URL(Application.get().getConfiguration().getUrl()).getPath();
-      if(path == null || path.length() == 0) {
-        path = "/";
-      }
-    } catch (MalformedURLException e) {
-      System.err.println("Malformed URL: "+e);
-      path = "/";
-    }
-    cookie.setPath(path);
+    cookie.setPath(getCookiePath());
     cookie.setComment("SnipSnap User");
     response.addCookie(cookie);
   }
 
+
   public void removeCookie(HttpServletRequest request, HttpServletResponse response) {
     Cookie cookie = getCookie(request, COOKIE_NAME);
     if (cookie != null) {
+      System.out.println(cookie);
+      cookie.setPath(getCookiePath());
       cookie.setMaxAge(0);
       response.addCookie(cookie);
     }
   }
+
+  private String getCookiePath() {
+    String path;
+    try {
+      path = new URL(Application.get().getConfiguration().getUrl()).getPath();
+      if (path == null || path.length() == 0) {
+        path = "/";
+      }
+    } catch (MalformedURLException e) {
+      System.err.println("Malformed URL: " + e);
+      path = "/";
+    }
+    return path;
+  }
+
 
   /**
    * Helper method for getUser to extract user from request/cookie/session
@@ -467,7 +479,7 @@ public class UserManager implements Loader {
   }
 
   private User storageLoad(String login) {
-    System.err.println("storageLoad() User="+login);
+    System.err.println("storageLoad() User=" + login);
     User user = null;
     PreparedStatement statement = null;
     ResultSet result = null;
