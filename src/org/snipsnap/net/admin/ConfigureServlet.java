@@ -127,7 +127,7 @@ public class ConfigureServlet extends HttpServlet {
   private final static List CONFIG_STEPS = Arrays.asList(new String[]{
     STEP_IMPORT,
     STEP_EXPORT,
-    /*STEP_USERS*/
+    STEP_USERS
   });
 
   public void init() throws ServletException {
@@ -820,7 +820,7 @@ public class ConfigureServlet extends HttpServlet {
   }
 
   private void manageUsers(HttpServletRequest request, Configuration config, Map errors) {
-
+    
   }
 
 // SPECIAL FIRST TIME INSTALLATIONS

@@ -200,3 +200,21 @@ li.current-step {
 .advanced ul {
   list-style-type: none;
 }
+
+.users table {
+  margin: 0;
+  padding: 0;
+}
+
+.users td {
+  padding: 2px;
+  margin: 0px;
+}
+
+.users td:first-child {
+  background: inherit;
+}
+
+.users-odd {
+  background: #eeeeee;
+}

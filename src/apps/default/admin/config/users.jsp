@@ -15,7 +15,7 @@
 <% pageContext.setAttribute("usermanager", Components.getComponent(UserManager.class)); %>
 
 
-<table class="user">
+<table class="users">
   <tr>
     <th><fmt:message key="config.users.name"/></th>
     <th><fmt:message key="config.users.lastlogin"/></th>
@@ -25,12 +25,12 @@
   </tr>
   <c:forEach items="${usermanager.all}" var="user" varStatus="idx">
     <tr <c:choose>
-      <c:when test="${idx.count mod 2 == 0}">class="user-table-odd"</c:when>
-      <c:otherwise>class="user-table-even"</c:otherwise>
+      <c:when test="${idx.count mod 2 == 0}">class="users-odd"</c:when>
+      <c:otherwise>class="user-even"</c:otherwise>
      </c:choose>>
       <td>
         <span class="nobr"><b><a href="space/${user.login}"><c:out value="${user.login}"/></a></b></span>
-        <c:if test="${not empty user.status}"><fmt:message key="config.users.status"/> <i><c:out value="${user.status}"/></i></c:if><br/>
+        <c:if test="${user.status != 'not set'}"><br/><fmt:message key="config.users.status"/> <i><c:out value="${user.status}"/></i></c:if><br/>
       </td>
       <td><c:out value="${user.lastLogin}"/></td>
       <td>
@@ -44,7 +44,7 @@
         <input type="submit" name="edit_user" value="<fmt:message key="config.users.edit"/>"/>
       </td>
       <td>
-        <c:if test="${config.adminLogin != user.login}">
+        <c:if test="${configuser.login != user.login}">
           <input type="hidden" name="remove_login" value="<c:out value='${user.login}'/>"/>
           <input style="color: red" type="submit" name="ok" value="<fmt:message key="config.users.remove"/>"/>
         </c:if>
