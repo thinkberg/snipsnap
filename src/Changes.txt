@@ -1,5 +1,6 @@
 0.2.8
 
+- Added Feature: Introduced portlet snip snipsnap-portlet-<number>
 - Added Feature: VerticalListFormatter introduced
 - Added Feature: {logins} macro
 - Added Feature: {calendar} macro
