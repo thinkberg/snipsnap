@@ -1,29 +1,34 @@
 0.5
 
+- Added feature: Each post can be a single snip (with comments etc.)
+- Developer: Upgrade to Radeox 0.9
+- Developer: Moved aspects into container
+- Developer: Moved the rest of the XML-RPC handlers into container
+- Developer: Upgrade to PicoContainer 1.0-BETA-3
 - Improvement: Added edit button to weblog snips 
-- Fixed Bug: SnipSnap XML-RPC handlers are now protected
-- Added Feature: Multiple weblogs
-- Fixed Bug: Reimplemented Weblog 
+- Fixed bug: SnipSnap XML-RPC handlers are now authentication protected
+- Added feature: Multiple weblogs
+- Fixed bug: Reimplemented Weblog
 - Added feature: new Snip button for Snip creation
-- Fixed Bug: removed hard coded references to 'start' with getStartSnip
-- Added Feature: space encoding (+) is now configurable
-- Added Feature: File system storage for Snips
-- Added Feature: Stylesheets are now contained within the SnipSpace
+- Fixed bug: removed hard coded references to 'start' with getStartSnip
+- Added feature: space encoding (+) is now configurable
+- Added feature: File system storage for Snips
+- Added feature: Stylesheets are now contained within the SnipSpace
 - Developer: Macro, Servlet and ContentRenderer for rendering inline content (PNG, ...)
-- Added Feature: Rendering MindMaps and Organigrams
-- New Installer (first time run installs a basic SnipSnap applicaton)
-- Fixed Bug: cyclic dependency temp. fixed for component loading
-- Added Feature: Snips can be displayed as RDF
+- Added feature: Rendering MindMaps and Organigrams
+- Improvement: New Installer (first time run installs a basic SnipSnap applicaton)
+- Fixed bug: cyclic dependency temp. fixed for component loading
+- Added feature: Snips can be displayed as RDF
 - Developer: Added interfaces for XML-RPC webservices (MetaWeblog, ...) and stuffed this in Pico
 - Developer: Moved more stuff to Pico
-- Added Feature: Support for NameFormatters to change the look of snip names (like capitalize etc.)
-- Added Label: RenderEngineLabel allows to set a different engine for a snip
+- Added feature: Support for NameFormatters to change the look of snip names (like capitalize etc.)
+- Added feature: RenderEngineLabel allows to set a different engine for a snip
 - Fixed bug: display login warning instead of edit field when snip auto-create is on
 - Fixed bug: attachment download working with deep namespace now
-- Added Feature: RenderEngineLabel to change rendering of content
-- Added Feature: /robots.txt editable via Snip
-- Added Feature: moved configuration settings into SnipSpace
-- Added Feature: Installer for WAR (w/ Localization)
+- Added feature: RenderEngineLabel to change rendering of content
+- Added feature: /robots.txt editable via Snip
+- Added feature: moved configuration settings into SnipSpace
+- Added feature: Installer for WAR (w/ Localization)
 - Developer: Added support for PicoContainer
 - Added feature: moved some messages to messages_en.properties for language packs
 - Added feature: target=... in image macro {image}

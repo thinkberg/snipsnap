@@ -45,6 +45,16 @@ public class WeblogsPingHandler extends XmlRpcSupport {
   }
 
   /**
+   * Like the spec version, but added
+   * the name and version of the weblog tool
+   */
+  public String versionPing(String weblogName, String weblogUrl, String toolName, String toolVersion) {
+    Logger.debug("XML-RPC call to ping() from " + weblogName+" "+toolName+" "+toolVersion);
+    SnipSnapPing.getInstance().addChangedWeblog(weblogName, weblogUrl);
+    return "";
+  }
+
+  /**
    * From the spec:
    * weblogUpdates.ping()
    **/
