@@ -421,12 +421,10 @@ public class JDBCSnipStorage implements SnipStorage, CacheableStorage {
     snip.setCUser(result.getString("cUser"));
     snip.setMUser(result.getString("mUser"));
     String commentString = result.getString("commentSnip");
-    // snip.setCommentedSnip(getProxy(commentString));
     if (!result.wasNull()) {
       snip.setCommentedName(commentString);
     }
     String parentString = result.getString("parentSnip");
-    // snip.setDirectParent(getProxy(parentString));
     if (!result.wasNull()) {
       snip.setParentName(parentString);
     }
