@@ -1,12 +1,15 @@
 0.2.8
 
+- Added feature: {api} now reads from conf/apidocs.txt so {api}
+  can point to other online api documentation,
 - re-validated XHTML 1.0
 - Fixed bug: correct context path in cookies
 - Added feature: {backlinks} macro lists backlinks, e.g. {backlinks:10}
 - Added feature: {sniplinks} macro lists sniplinks, e.g. {sniplinks:4}
 - Fixed bug: escape '-' and '*' within code macro
 - Fixed bug: first start on a different port than 8668
-- Added feature: Introduced Skins for SnipSnap
+- Added feature: Introduced Themes for SnipSnap, using a more
+  Weblog like theme similiar to MovableType
 - Added feature: Interwiki (e.g. [Wiki@MoinMoin]) reads from a standard
   intermap file in conf/intermap.txt
 - Added Feature: {isbn} macro now reads books services from conf/bookservices.txt
@@ -32,6 +35,7 @@
 - Changed <s:snip> JSTL tag
 - Switched to DIV from TABLE layout
 - Worked on Accessibility
+- Fixed a lot of smaller bugs
 
 0.2.7
 

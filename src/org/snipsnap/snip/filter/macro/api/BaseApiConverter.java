@@ -40,4 +40,10 @@ public abstract class BaseApiConverter implements ApiConverter {
   public void setBaseUrl(String baseUrl) {
     this.baseUrl = baseUrl;
   }
+
+  public String getBaseUrl() {
+    return this.baseUrl;
+  }
+
+  public abstract String getName();
 }

@@ -36,4 +36,8 @@ public class RubyApiConverter extends BaseApiConverter {
   public String convert(String className) {
     return baseUrl + className.toLowerCase() + ".html";
   }
+
+  public String getName() {
+    return "Ruby";
+  }
 }

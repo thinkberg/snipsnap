@@ -23,21 +23,38 @@
  * --LICENSE NOTICE--
  */
 
-package org.snipsnap.snip.filter.macro.api;
+package org.snipsnap.snip.filter.macro;
 
-/**
- * Converts a Java class name to an API url
+
+import org.snipsnap.snip.Snip;
+import org.snipsnap.snip.filter.interwiki.InterWiki;
+import org.snipsnap.snip.filter.macro.api.ApiDoc;
+
+import java.io.IOException;
+import java.io.Writer;
+
+/*
+ * Lists all known API documentation repositorys and
+ * mappings
  *
- * @author Stephan J. Schmidt
+ * @author stephan
+ * @team sonicteam
  * @version $Id$
  */
 
-public class JavaApiConverter extends BaseApiConverter {
-  public String convert(String className) {
-    return baseUrl+className.replace('.', '/')+".html";
+public class ApiDocMacro extends Macro {
+  public String getName() {
+    return "api-docs";
   }
 
-  public String getName() {
-    return "Java";
+  public String getDescription() {
+    return "Displays a list of known online API documentations and mappings.";
+  }
+
+  public void execute(Writer writer, MacroParameter params)
+      throws IllegalArgumentException, IOException {
+    ApiDoc apiDoc = ApiDoc.getInstance();
+    apiDoc.appendTo(writer);
+    return;
   }
 }

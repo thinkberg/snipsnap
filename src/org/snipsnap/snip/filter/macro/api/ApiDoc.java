@@ -31,6 +31,7 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.Iterator;
 
 /**
  * Stores information and links to api documentation, e.g. for Java, Ruby, JBoss
@@ -99,4 +100,23 @@ public class ApiDoc {
     }
     return writer;
   }
+
+  public Writer appendTo(Writer writer) throws IOException {
+    writer.write("{table}\n");
+    writer.write("Binding|BaseUrl|Name\n");
+    Iterator iterator = apiDocs.entrySet().iterator();
+    while (iterator.hasNext()) {
+      Map.Entry entry = (Map.Entry) iterator.next();
+      writer.write((String) entry.getKey());
+      ApiConverter converter = (ApiConverter) entry.getValue();
+      writer.write("|");
+      writer.write(converter.getBaseUrl());
+      writer.write("|");
+      writer.write(converter.getName());
+      writer.write("\n");
+    }
+    writer.write("{table}");
+    return writer;
+  }
+
 }
