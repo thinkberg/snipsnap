@@ -29,6 +29,7 @@ import java.util.HashSet;
 
 /**
  * User class.
+ *
  * @author Stephan J. Schmidt
  * @version $Id$
  */
@@ -52,6 +53,9 @@ public class User {
   }
 
   public String getStatus() {
+    if (null == status) {
+      status = "not set";
+    }
     return status;
   }
 
