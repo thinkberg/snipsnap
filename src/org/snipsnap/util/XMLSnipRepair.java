@@ -24,140 +24,318 @@
  */
 package org.snipsnap.util;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.apache.xmlrpc.Base64;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.io.OutputFormat;
+import org.dom4j.io.SAXReader;
+import org.dom4j.io.XMLWriter;
+import org.xml.sax.InputSource;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.FactoryConfigurationError;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.sax.SAXTransformerFactory;
-import javax.xml.transform.stream.StreamResult;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.text.NumberFormat;
 
 /**
  * Repair XML File
  */
 public class XMLSnipRepair {
   public static void main(String args[]) {
-    try {
-      load(new FileInputStream(args[0]), new FileOutputStream(args[1]));
-    } catch (IOException e) {
-      e.printStackTrace();
+    if (args.length < 3) {
+      System.err.println("usage: XMLSnipRepair <input file> <output file> <webapp directory>");
+      System.exit(0);
     }
+
+
+    System.err.println("STEP 1: parsing input file ...");
+    Document document = null;
+    try {
+      document = load(new File(args[0]));
+    } catch (Exception e) {
+      System.err.println("Unable to read input document: " + e);
+      System.err.println("This is usually the case for illegal XML characters, please manually edit the file and remove them.");
+      System.exit(0);
+    }
+
+    System.err.println("STEP 2: checking SnipSpace consistency ...");
+    Document repaired = repair(document, new File(args[2]));
+
+    System.err.println("STEP 3: writing output file ...");
+    OutputFormat outputFormat = new OutputFormat();
+    outputFormat.setEncoding("UTF-8");
+    outputFormat.setNewlines(true);
+    try {
+      XMLWriter xmlWriter = new XMLWriter(new FileOutputStream(args[1]));
+      xmlWriter.write(repaired);
+      xmlWriter.flush();
+    } catch (Exception e) {
+      System.err.println("Error: unable to write data: " + e);
+    }
+    System.err.println("Finished.");
   }
 
-  private static DocumentBuilder documentBuilder;
-
+  static int errCount = 0;
+  static int curr = 0;
   /**
    * Load snips and users into the SnipSpace from an xml document out of a stream.
-   * @param in  the input stream to load from
+   * @param file  the file to load from
    */
-  private static void load(InputStream in, OutputStream out) throws IOException {
-    try {
-      DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-      documentBuilder = documentBuilderFactory.newDocumentBuilder();
-    } catch (FactoryConfigurationError error) {
-      System.err.println("Unable to create document builder factory: " + error);
-    } catch (ParserConfigurationException e) {
-      System.err.println("Unable to create document builder");
-      e.printStackTrace();
-    }
-
-    try {
-      System.out.print("Parsing input document ...");
-      Document document = documentBuilder.parse(in);
-      System.out.println(" done.");
-      Document repaired = repair(document);
-      StreamResult streamResult = new StreamResult(out);
-      TransformerFactory tf = SAXTransformerFactory.newInstance();
-      Transformer serializer = tf.newTransformer();
-      serializer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-      serializer.setOutputProperty(OutputKeys.INDENT, "yes");
-      System.out.print("Writing output document ...");
-      serializer.transform(new DOMSource(repaired), streamResult);
-      System.out.println(" done.");
-    } catch (Exception e) {
-      System.err.println("XMLSnipImport: error: " + e.getMessage());
-    }
-  }
-
-  private static Document repair(Document document) {
-    Map data = new TreeMap();
-    Node rootNode = document.getFirstChild();
-    System.out.println("root: " + rootNode.getNodeName());
-    NodeList children = rootNode.getChildNodes();
-
-    long identDup = 0;
-    long oldDup = 0;
-    long newDup = 0;
-    while (children.getLength() > 0) {
-      Node node = children.item(0);
-      Node idNode = null;
-      if ("user".equals(node.getNodeName())) {
-        idNode = getChildNode(node, "login");
-      } else if ("snip".equals(node.getNodeName())) {
-        idNode = getChildNode(node, "name");
-      }
-
-      if (null != idNode) {
-        String id = node.getNodeName() + "[" + idNode.getFirstChild().getNodeValue() + "]";
-        Node changed = getChildNode(node, "mTime");
-        long mtime = Long.parseLong(changed.getFirstChild().getNodeValue());
-        Node lastNode = (Node) data.get(id);
-        if (lastNode != null) {
-          Node lastChanged = getChildNode(lastNode, "mTime");
-          long lastmtime = Long.parseLong(lastChanged.getFirstChild().getNodeValue());
-          if (mtime > lastmtime) {
-            newDup++;
-            System.out.println("Replacing duplicate by newer node: " + id + " (" + (mtime - lastmtime) + "ms)");
-            data.put(id, node);
-          } else if (mtime == lastmtime) {
-            identDup++;
-            System.out.println("Identical duplicate found: " + id);
-          } else {
-            oldDup++;
-            System.out.println("Older duplicate found: " + id);
-          }
-        } else {
-          data.put(id, node);
+  private static Document load(File file) throws Exception {
+    final long fileLength = file.length();
+    System.err.print("0%");
+    SAXReader saxReader = new SAXReader();
+    Document document = saxReader.read(new FileReader(file) {
+      public int read(char[] chars) throws IOException {
+        int n = super.read(chars);
+        for (int i = 0; i < n; i++) {
+          chars[i] = replaceIfIllegal(chars[i]);
         }
-      } else if (Node.TEXT_NODE != node.getNodeType()) {
-        System.out.println("Unknown node '" + node.getNodeName() + "', ignoring ...");
-        data.put(node, node);
+        return n;
       }
-      rootNode.removeChild(node);
+
+      public int read(char[] chars, int start, int length) throws IOException {
+        int n = super.read(chars, start, length);
+        for (int i = 0; i < n; i++) {
+          chars[i] = replaceIfIllegal(chars[i]);
+        }
+        readProgress(fileLength, curr += n, length);
+        return n;
+      }
+
+      private char replaceIfIllegal(char c) {
+        if (c < 0x20 && !(c == 0x09 || c == 0x0a || c == 0x0d)) {
+//          System.err.println("Replacing illegal character '" + c + "' by space.");
+          errCount++;
+          return (char) 0x20;
+        }
+        return c;
+      }
+
+      private void readProgress(long length, long current, int blockSize) {
+        long percentage = current * 100 / length;
+        if (percentage % 5 != 0 && ((current - blockSize) * 100 / length) % 5 == 0) {
+          System.err.print(".");
+        } else if (percentage % 20 == 0 && ((current - blockSize) * 100 / length) % 20 != 0) {
+          System.err.print(NumberFormat.getIntegerInstance().format(percentage) + "%");
+        }
+      }
+    });
+    System.err.println();
+
+    if(errCount > 0) {
+      System.err.println("Replaced "+errCount+" illegal characters in input document by a space.");
+      System.err.println("Characters not considered valid in an XML document are considered illegal.");
+      System.err.println("This includes all characters with a code below 32 unless its TAB, CR or LF.");
     }
-    Iterator it = data.values().iterator();
-    while (it.hasNext()) {
-      rootNode.appendChild((Node) it.next());
-    }
-    System.out.println("Found "+identDup+" identical duplicates, replaced "+newDup+", ignored "+oldDup+".");
-    System.out.println("Repair done.");
+
     return document;
   }
 
-  private static Node getChildNode(Node parent, String name) {
-    NodeList children = parent.getChildNodes();
-    for (int i = 0; i < children.getLength(); i++) {
-      Node child = children.item(i);
-      if (name.equals(child.getNodeName())) {
-        return child;
+  private static Document repair(Document document, File webAppRoot) {
+    Map userData = new TreeMap();
+    Map snipData = new TreeMap();
+    Map unknown = new TreeMap();
+
+    Element rootEl = document.getRootElement();
+    Iterator elementIt = rootEl.elementIterator();
+
+    System.err.println("STEP 2.1: checking for duplicates ...");
+    long identDup = 0;
+    long oldDup = 0;
+    long newDup = 0;
+    while (elementIt.hasNext()) {
+      Element element = (Element) elementIt.next();
+      Element idElement = null;
+      Map data = null;
+      if ("user".equals(element.getName())) {
+        idElement = element.element("login");
+        data = userData;
+      } else if ("snip".equals(element.getName())) {
+        idElement = element.element("name");
+        data = snipData;
+      }
+
+      if (null != data && null != idElement) {
+        String id = element.getName() + "[" + idElement.getText() + "]";
+        long mtime = Long.parseLong(element.element("mTime").getTextTrim());
+
+        Element existingElement = (Element) data.get(id);
+        if (existingElement != null) {
+          long lastmtime = Long.parseLong(existingElement.element("mTime").getTextTrim());
+          if (mtime > lastmtime) {
+            newDup++;
+            System.err.println("Replacing duplicate by newer element: " + id + " (" + (mtime - lastmtime) + "ms)");
+            data.put(id, element);
+          } else if (mtime == lastmtime) {
+            identDup++;
+            System.err.println("Identical duplicate found: " + id);
+          } else {
+            oldDup++;
+            System.err.println("Older duplicate found: " + id);
+          }
+          if (snipData == data) {
+            String name = idElement.getText();
+            if (name.startsWith("comment-")) {
+              String commentSnip = name.substring("comment-".length(), name.lastIndexOf("-"));
+              Element commentEl = element.element("commentSnip");
+              if (commentEl == null) {
+                commentEl = element.addElement("commentSnip");
+              }
+              if (!commentSnip.equals(commentEl.getText())) {
+                commentEl.addText(commentSnip);
+                System.err.println("Fixing commented snip for '" + name + "' (" + commentSnip + ")");
+              }
+            } else if (name.matches("\\d\\d\\d\\d-\\d\\d-\\d\\d")) {
+              Element parentEl = element.element("parentSnip");
+              if (null == parentEl) {
+                parentEl = element.addElement("parentSnip");
+              }
+              if (!"start".equals(parentEl.getText())) {
+                parentEl.addText("start");
+                System.err.println("Fixing parent snip for '" + name + "'");
+              }
+            }
+
+          }
+        } else {
+          data.put(id, element);
+        }
+      } else {
+        System.err.println("Unknown element '" + element.getName() + "', ignoring ...");
+        unknown.put(element, element);
       }
     }
-    return null;
+
+    System.err.println("Found " + identDup + " identical duplicates, replaced " + newDup + ", ignored " + oldDup + ".");
+    if (unknown.size() > 0) {
+      System.err.println("Found " + unknown.size() + " unknown xml elements.");
+    }
+
+    Document outputDocument = DocumentHelper.createDocument();
+    outputDocument.addElement(rootEl.getName());
+    rootEl = outputDocument.getRootElement();
+
+    System.err.println("STEP 2.2: finishing user data (" + userData.size() + ")...");
+    Iterator userIt = userData.values().iterator();
+    while (userIt.hasNext()) {
+      Element userEl = (Element) userIt.next();
+      rootEl.add(userEl.detach());
+    }
+
+    int attCount = 0;
+    System.err.println("STEP 2.3: fixing snip data (" + snipData.size() + ") and attachments ...");
+    Iterator snipIt = snipData.values().iterator();
+    while (snipIt.hasNext()) {
+      Element snipEl = (Element) snipIt.next();
+      attCount += storeAttachments(snipEl, new File(webAppRoot, "/WEB-INF/files"));
+      attCount += storeOldImages(snipEl, new File(webAppRoot, "/images"));
+      rootEl.add(snipEl.detach());
+    }
+    System.err.println("Added " + attCount + " attachments.");
+    return outputDocument;
+  }
+
+  private static int storeOldImages(Element snipEl, File imageRoot) {
+    int attCount = 0;
+    final String snipName = snipEl.element("name").getText();
+    File[] files = imageRoot.listFiles(new FilenameFilter() {
+      public boolean accept(File file, String s) {
+        return s.startsWith("image-" + snipName);
+      }
+    });
+
+    Element attachmentsEl = snipEl.element("attachments");
+    if (null == attachmentsEl) {
+      attachmentsEl = DocumentHelper.createElement("attachments");
+      snipEl.add(attachmentsEl);
+    }
+
+    Set attList = new HashSet();
+    Iterator attIt = attachmentsEl.elementIterator("attachment");
+    while (attIt.hasNext()) {
+      Element attEl = (Element) attIt.next();
+      attList.add(attEl.element("name").getText());
+    }
+
+    for (int n = 0; n < files.length; n++) {
+      File file = files[n];
+      String fileName = file.getName().substring(("image-" + snipName + "-").length());
+      if (!attList.contains(fileName)) {
+        Element attEl = attachmentsEl.addElement("attachment");
+        attEl.addElement("name").addText(fileName);
+        attEl.addElement("content-type").addText("image/" + fileName.substring(fileName.lastIndexOf(".") + 1));
+        attEl.addElement("size").addText("" + file.length());
+        attEl.addElement("date").addText("" + file.lastModified());
+        attEl.addElement("location").addText(snipName + "/" + fileName);
+        try {
+          addAttachmentFile(attEl, file);
+          attCount++;
+        } catch (IOException e) {
+          System.err.println("Error adding attachment data: " + e.getMessage());
+          attEl.detach();
+        }
+        System.err.println("Added old image attachment '" + fileName + "' to '" + snipName + "'");
+      }
+    }
+    return attCount;
+  }
+
+  private static int storeAttachments(Element snipEl, File attRoot) {
+    Element attachmentsEl = snipEl.element("attachments");
+    attachmentsEl.detach();
+    String textContent = attachmentsEl.getText();
+    if (textContent != null && textContent.length() > 0 && attachmentsEl.elements("attachment").size() == 0) {
+      SAXReader saxReader = new SAXReader();
+      try {
+        attachmentsEl = saxReader.read(new StringReader("<attachments>" + textContent + "</attachments>")).getRootElement();
+      } catch (DocumentException e) {
+        System.err.println("Error parsing the attachments ...: " + e.getMessage());
+      }
+    }
+
+    int attCount = 0;
+    Iterator attIt = attachmentsEl.elements("attachment").iterator();
+    while (attIt.hasNext()) {
+      Element att = (Element) attIt.next();
+      File file = new File(attRoot, att.elementText("location"));
+      String snipName = snipEl.element("name").getText();
+      if (att.element("data") == null) {
+        if (file.exists()) {
+          try {
+            addAttachmentFile(att, file);
+            attCount++;
+            //          System.err.println("Added '" + file.getPath() + "' to " + snipName);
+          } catch (Exception e) {
+            System.err.println("Error adding '" + file.getPath() + "' to '" + snipName + "'");
+            e.printStackTrace();
+            att.detach();
+          }
+        } else {
+          System.err.println("Missing file '" + file.getPath() + "' attached to '" + snipName + "'");
+          att.detach();
+        }
+      }
+    }
+    snipEl.add(attachmentsEl);
+    return attCount;
+  }
+
+  public static void addAttachmentFile(Element att, File attFile) throws IOException {
+    ByteArrayOutputStream data = new ByteArrayOutputStream();
+    BufferedInputStream fileIs = new BufferedInputStream(new FileInputStream(attFile));
+    int count = 0;
+    byte[] buffer = new byte[8192];
+    while ((count = fileIs.read(buffer)) != -1) {
+      data.write(buffer, 0, count);
+    }
+    data.close();
+    att.addElement("data").addText(new String(Base64.encode(data.toByteArray()), "UTF-8"));
   }
 
 }
