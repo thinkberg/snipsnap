@@ -84,12 +84,12 @@ public class UserSerializer extends SerializerSupport {
     userElement.addElement(USER_EMAIL).addText(notNull(user.getEmail()));
     userElement.addElement(USER_ROLES).addText(user.getRoles().toString());
     userElement.addElement(USER_STATUS).addText(notNull(user.getStatus()));
-    userElement.addElement(USER_CTIME, getStringTimestamp(user.getCTime()));
-    userElement.addElement(USER_MTIME, getStringTimestamp(user.getMTime()));
-    userElement.addElement(USER_LAST_ACCESS, getStringTimestamp(user.getLastAccess()));
-    userElement.addElement(USER_LAST_LOGIN, getStringTimestamp(user.getLastLogin()));
-    userElement.addElement(USER_LAST_LOGOUT, getStringTimestamp(user.getLastLogout()));
-    userElement.addElement(USER_APPLICATION, notNull(user.getApplication()));
+    userElement.addElement(USER_CTIME).addText(getStringTimestamp(user.getCTime()));
+    userElement.addElement(USER_MTIME).addText(getStringTimestamp(user.getMTime()));
+    userElement.addElement(USER_LAST_ACCESS).addText(getStringTimestamp(user.getLastAccess()));
+    userElement.addElement(USER_LAST_LOGIN).addText(getStringTimestamp(user.getLastLogin()));
+    userElement.addElement(USER_LAST_LOGOUT).addText(getStringTimestamp(user.getLastLogout()));
+    userElement.addElement(USER_APPLICATION).addText(notNull(user.getApplication()));
 
     return userElement;
   }
