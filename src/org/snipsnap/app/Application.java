@@ -48,6 +48,7 @@ import java.util.Map;
  */
 public class Application {
   public final static String OID = "_applicationOid";
+  public final static String URL = "_url";
 
   private static ApplicationAwareMap currentUsers =
     new ApplicationAwareMap(HashMap.class, HashMap.class);

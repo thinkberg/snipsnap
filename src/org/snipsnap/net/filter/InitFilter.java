@@ -64,6 +64,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.net.URL;
 
 /**
  * A ServletFilter that takes care of uninstalled web applications and creating the
@@ -241,23 +242,27 @@ public class InitFilter implements Filter {
       // however, they do not provide the context path, TODO maybe Apache 2
       String xForwardedHost = request.getHeader("X-Forwarded-Host");
       if (xForwardedHost != null) {
+        String protocol = appConfig.get(Configuration.APP_REAL_PROTOCOL, "http");
+        String contextPath = appConfig.get(Configuration.APP_REAL_PATH, "");
+
         int colonIndex = xForwardedHost.indexOf(':');
         String host = xForwardedHost;
-        String port = null;
         if (colonIndex != -1) {
           host = host.substring(0, colonIndex);
-          port = xForwardedHost.substring(colonIndex + 1);
+          int port = Integer.parseInt(xForwardedHost.substring(colonIndex + 1));
+          app.storeObject(Application.URL, new URL(protocol, host, port, contextPath));
+        } else {
+          app.storeObject(Application.URL, new URL(protocol, host, contextPath));
         }
-        appConfig.set(Configuration.APP_REAL_HOST, host);
-        appConfig.set(Configuration.APP_REAL_PORT, port == null ? "80" : port);
       } else {
+        String protocol = new URL(request.getRequestURL().toString()).getProtocol();
         String host = request.getServerName();
-        String port = "" + request.getServerPort();
-        appConfig.set(Configuration.APP_REAL_HOST, host);
-        appConfig.set(Configuration.APP_REAL_PORT, port);
-        appConfig.set(Configuration.APP_REAL_PATH, request.getContextPath());
+        int port = request.getServerPort();
+        String contextPath = request.getContextPath() + ("/".equals(prefix) ? "" : prefix);
+
+        app.storeObject(Application.URL, new URL(protocol, host, port, contextPath));
       }
-      // System.err.println("autoconfigured url: " + config.getUrl());
+//      System.out.println("autoconfigured url: " + appConfig.getUrl());
     }
 
     //System.out.println("appManager: "+appManager+", appConfig="+appConfig+", "+(appConfig != null ? ""+appConfig.isConfigured() : "not configured"));

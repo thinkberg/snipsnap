@@ -355,10 +355,15 @@ public class ConfigurationMap {
    * Return base url to Snipsnap instance
    */
   public String getUrl() {
+    URL url = (URL)Application.get().getObject(Application.URL);
+    if(null != url) {
+      return url.toExternalForm();
+    }
+
+    String prot = get(Configuration.APP_REAL_PROTOCOL, "http");
     String host = get(Configuration.APP_REAL_HOST);
     String port = get(Configuration.APP_REAL_PORT);
     String path = get(Configuration.APP_REAL_PATH);
-    String prefix = get(Configuration.APP_PREFIX);
 
     if (null == host) {
       host = getGlobal(Globals.APP_HOST);
@@ -367,7 +372,7 @@ public class ConfigurationMap {
     }
 
     StringBuffer tmp = new StringBuffer();
-    tmp.append("http://");
+    tmp.append(prot).append("://");
     try {
       tmp.append(host == null || host.length() == 0 /*|| "localhost".equals(host)*/ ? InetAddress.getLocalHost().getHostName() : host);
     } catch (UnknownHostException e) {
@@ -378,7 +383,6 @@ public class ConfigurationMap {
       tmp.append(port);
     }
     tmp.append(path != null ? path : "");
-    tmp.append(prefix != null && !"/".equals(prefix) ? prefix : "");
     return tmp.toString();
   }
 

@@ -214,9 +214,9 @@ public class DefaultSessionService implements SessionService {
       Logger.warn("Malformed URL: " + Application.get().getConfiguration().getUrl(), e);
       path = "/";
     }
+//    System.out.println("Cookie path: "+path);
     return path;
   }
-
 
   /**
    * Helper method for getUser to extract user from request/cookie/session

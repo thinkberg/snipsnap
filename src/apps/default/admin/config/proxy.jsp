@@ -27,6 +27,16 @@
     </td>
   </tr>
   <tr>
+    <td><fmt:message key="config.app.real.protocol.text"/></td>
+    <td>
+      <fmt:message key="config.app.real.protocol"/><br/>
+      <select size="1" name="app.real.protocol">
+        <option value="http" <c:if test="${newconfig.properties['app.real.protocol'] == 'http'}">selected="selected"</c:if>>http</option>
+        <option value="https" <c:if test="${newconfig.properties['app.real.protocol'] == 'https'}">selected="selected"</c:if>>https</option>
+      </select>
+    </td>
+  </tr>
+  <tr>
     <td><fmt:message key="config.app.real.host.text"/></td>
     <td>
       <fmt:message key="config.app.real.host"/><br/>

@@ -64,6 +64,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.net.URL;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -178,8 +179,11 @@ public class ConfigureServlet extends HttpServlet {
       config.set(Configuration.APP_REAL_HOST, host);
       config.set(Configuration.APP_REAL_PORT, port == null ? "80" : port);
     } else {
+      String protocol = new URL(request.getRequestURL().toString()).getProtocol();
       String host = request.getServerName();
       String port = "" + request.getServerPort();
+
+      config.set(Configuration.APP_REAL_PROTOCOL, protocol);
       config.set(Configuration.APP_REAL_HOST, host);
       config.set(Configuration.APP_REAL_PORT, port);
       config.set(Configuration.APP_REAL_PATH, request.getContextPath());
@@ -644,6 +648,10 @@ public class ConfigureServlet extends HttpServlet {
           errors.put(Configuration.APP_REAL_PORT, Configuration.APP_REAL_PORT);
         }
       }
+    }
+    String realProtocol = request.getParameter(Configuration.APP_REAL_PROTOCOL);
+    if (null != realProtocol && !"".equals(realProtocol)) {
+      config.setRealPath(realProtocol.trim());
     }
     String realPath = request.getParameter(Configuration.APP_REAL_PATH);
     if (null != realPath && !"".equals(realPath)) {

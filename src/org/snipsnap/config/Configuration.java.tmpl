@@ -48,6 +48,7 @@ public interface Configuration extends Globals {
   public final static String SNIPSNAP_THEMES = "SnipSnap/themes";
 
   public String get(String name);
+  public String get(String name, String defaultValue);
   public void set(String name, String value);
 
   public void load(InputStream stream) throws IOException;
