@@ -102,10 +102,6 @@ public class InitializeDatabase {
       InputStream data = getLocalizedResource("i18n.snipsnap", "snip", config.getLocale());
       XMLSnipImport.load(data, XMLSnipImport.OVERWRITE | XMLSnipImport.IMPORT_USERS | XMLSnipImport.IMPORT_SNIPS);
 
-      postFirstBlog(config, space);
-
-      config.set(Configuration.APP_PERM_WEBLOGSPING, ping);
-      config.set(Configuration.APP_PERM_NOTIFICATION, notify);
 
       message("loading defaults into configuration space");
       // load other configurations
@@ -120,6 +116,11 @@ public class InitializeDatabase {
       File themeTemplateDir = new File(config.getWebInfDir(), "themes");
       XMLSnipImport.load(new FileInputStream(new File(themeTemplateDir, "SnipSnap-Theme-"+config.getTheme()+".snip")),
                          XMLSnipImport.OVERWRITE | XMLSnipImport.IMPORT_SNIPS);
+
+      postFirstBlog(config, space);
+
+      config.set(Configuration.APP_PERM_WEBLOGSPING, ping);
+      config.set(Configuration.APP_PERM_NOTIFICATION, notify);
 
       // last, but not least store to file and configuration snip
       storeConfiguration(config, space);
