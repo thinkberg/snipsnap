@@ -111,6 +111,7 @@ public class AdminServer implements Runnable {
             command = line.substring(0, idx);
             args = line.substring(idx+1);
           }
+          System.out.println("AdminServer: got command: "+command+" "+args);
           if ("shutdown".equals(command)) {
             Shutdown.shutdown();
           } else if("reload".equals(command) && args != null) {

@@ -3,6 +3,8 @@
 - Switched to RSS 2.0 by default
 - Added feature: {version} macros displays SnipSnap version.
 - Added feature: Added description to RSS, remove HTML from snip content
+- Fixed Bug: AdminServer did not receive shutdown command
+- Fixed Bug: application dirs must not contain space (replaced by _ now)
 
 0.2.6
 
