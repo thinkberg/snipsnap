@@ -80,9 +80,13 @@ public class InitFilter implements Filter {
   public void init(FilterConfig filterConfig) throws ServletException {
     ServletContext context = filterConfig.getServletContext();
 
+    // create globals configuration by getting an instance and loading application.conf
+    globals = ConfigurationProxy.getInstance();
+
     // check servlet context and then local servlet parameter or assume WEB-INF
     String configParam = (String) context.getAttribute(ServerConfiguration.INIT_PARAM);
     if (null == configParam) {
+      System.out.println("SnipSnap "+globals.getVersion());
       BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/defaults/copyright.txt")));
       try {
         String line;
@@ -91,8 +95,7 @@ public class InitFilter implements Filter {
         }
       } catch (IOException e) {
         // create copyright output if the copyrights file was not found
-        System.out.println("SnipSnap (unknown version)");
-        System.out.println("Copyright (c) 2003 Fraunhofer Gesellschaft");
+        System.out.println("Copyright (c) Fraunhofer Gesellschaft");
         System.out.println("Fraunhofer Institute for Computer Architecture and Software Technology");
         System.out.println("All Rights Reserved. See License Agreement for terms and conditions of use.");
       }

@@ -130,7 +130,7 @@ public class ConfigurationMap {
   public String getVersion() {
     String version = System.getProperty(ServerConfiguration.VERSION);
     if (null == version) {
-      version = (String)ConfigurationMap.globals.get(ServerConfiguration.VERSION);
+      version = getGlobal(ServerConfiguration.VERSION);
     }
     return version;
   }

@@ -19,7 +19,7 @@
       function enableOnCheck(checkbox) {
         document.getElementById("submit.advanced").disabled = !checkbox.checked;
         if(checkbox.name == 'advanced.all') {
-          document.getElementById("advanced.application").disabled = checkbox.checked;
+<%--          document.getElementById("advanced.application").disabled = checkbox.checked;--%>
           document.getElementById("advanced.theme").disabled = checkbox.checked;
           document.getElementById("advanced.localization").disabled = checkbox.checked;
           document.getElementById("advanced.moblog").disabled = checkbox.checked;
@@ -33,10 +33,12 @@
       <div class="advanced">
         <fmt:message key="config.advanced"/>
         <ul>
+<%--
           <li>
             <input onClick="enableOnCheck(this);" id="advanced.application" type="checkbox" name="advanced.step.application">
             <fmt:message key="config.advanced.application"/>
           </li>
+--%>
           <li>
             <input onClick="enableOnCheck(this);" id="advanced.theme" type="checkbox" name="advanced.step.theme">
             <fmt:message key="config.advanced.theme"/>

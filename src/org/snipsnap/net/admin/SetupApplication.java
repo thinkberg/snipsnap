@@ -57,7 +57,7 @@ public class SetupApplication implements SetupHandler {
           SnipSpace space = SnipSpaceFactory.getInstance();
           Snip snip = space.load(Configuration.SNIPSNAP_CONFIG);
           String logoName = uploader.uploadFile(request, snip, config.getFilePath());
-          if(logoName != null && !"".equals(logoName)) {
+          if (logoName != null && !"".equals(logoName)) {
             config.setLogo(logoName);
           }
         } else {
@@ -92,21 +92,20 @@ public class SetupApplication implements SetupHandler {
       }
     }
 
-//    String usage = request.getParameter("usage");
-//    if ("public".equals(usage)) {
-//      config.setPermRegister("allow");
-//      config.setPermWeblogsPing("allow");
-//    } else if ("closed".equals(usage)) {
-//      config.setPermRegister("deny");
-//      config.setPermWeblogsPing("deny");
-//    } else if ("intranet".equals(usage)) {
-//      config.setPermWeblogsPing("deny");
-//    } else {
-//      if (!steps.contains(STEP_PERMISSIONS)) {
-//        steps.add(steps.size() - 1, STEP_PERMISSIONS);
-//      }
-//      request.getSession().setAttribute(ATT_USAGE, "custom");
-//    }
+    if (!config.isConfigured()) {
+      String usage = request.getParameter("usage");
+      if ("public".equals(usage)) {
+        config.setPermRegister("allow");
+        config.setPermWeblogsPing("allow");
+      } else if ("closed".equals(usage)) {
+        config.setPermRegister("deny");
+        config.setPermWeblogsPing("deny");
+      } else if ("intranet".equals(usage)) {
+        config.setPermWeblogsPing("deny");
+      }
+      request.getSession().setAttribute(ConfigureServlet.ATT_USAGE, usage);
+    }
+
 
     String name = config.getName();
     if (null == name || "".equals(name)) {

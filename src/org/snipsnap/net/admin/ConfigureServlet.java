@@ -104,11 +104,11 @@ public class ConfigureServlet extends HttpServlet {
 
   private final static List BASIC_STEPS = Arrays.asList(new String[]{
     STEP_ADMINISTRATOR,
+    STEP_APPLICATION,
     STEP_FINISH,
   });
 
   private final static List EXPERT_STEPS = Arrays.asList(new String[]{
-    STEP_APPLICATION,
     STEP_THEME,
     STEP_LOCALIZATION,
     STEP_PERMISSIONS,
@@ -119,9 +119,9 @@ public class ConfigureServlet extends HttpServlet {
   });
 
   private final static List CONFIG_STEPS = Arrays.asList(new String[]{
+    STEP_USERS,
     STEP_IMPORT,
     STEP_EXPORT,
-    STEP_USERS,
     STEP_SEARCH
   });
 
@@ -230,17 +230,17 @@ public class ConfigureServlet extends HttpServlet {
     Application.get().setConfiguration(config);
     session.setAttribute(ATT_CONFIG, config);
 
-    if (config.allow(Configuration.APP_PERM_REGISTER) &&
-      config.allow(Configuration.APP_PERM_WEBLOGSPING)) {
-      session.setAttribute(ATT_USAGE, "public");
-    } else if (!config.allow(Configuration.APP_PERM_REGISTER) &&
-      !config.allow(Configuration.APP_PERM_WEBLOGSPING)) {
-      session.setAttribute(ATT_USAGE, "closed");
-    } else if (!config.allow(Configuration.APP_PERM_WEBLOGSPING)) {
-      session.setAttribute(ATT_USAGE, "intranet");
-    } else {
-      session.setAttribute(ATT_USAGE, "custom");
-    }
+//    if (config.allow(Configuration.APP_PERM_REGISTER) &&
+//      config.allow(Configuration.APP_PERM_WEBLOGSPING)) {
+//      session.setAttribute(ATT_USAGE, "public");
+//    } else if (!config.allow(Configuration.APP_PERM_REGISTER) &&
+//      !config.allow(Configuration.APP_PERM_WEBLOGSPING)) {
+//      session.setAttribute(ATT_USAGE, "closed");
+//    } else if (!config.allow(Configuration.APP_PERM_WEBLOGSPING)) {
+//      session.setAttribute(ATT_USAGE, "intranet");
+//    } else {
+//      session.setAttribute(ATT_USAGE, "custom");
+//    }
 
     User user = Application.get().getUser();
     if (!config.isInstalled() || !config.isConfigured() || user.isAdmin()) {
@@ -274,6 +274,8 @@ public class ConfigureServlet extends HttpServlet {
           if (!config.isInstalled()) {
             steps.add(0, STEP_DATABASE);
           }
+
+          session.setAttribute(ATT_USAGE, "public");
         }
       }
 

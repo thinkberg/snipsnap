@@ -33,21 +33,23 @@
       <c:if test="${!empty errors['app.logo']}"><img src="images/attention.jpg"></c:if>
     </td>
   </tr>
-  <tr>
-    <td><fmt:message key="config.usage.text"/></td>
-    <td>
-      <input type="radio" name="usage" value="public"
-        <c:if test="${usage == 'public'}">checked="checked"</c:if>
-      ><fmt:message key="config.usage.public"/><br/>
-      <input type="radio" name="usage" value="closed"
-        <c:if test="${usage == 'closed'}">checked="checked"</c:if>
-      ><fmt:message key="config.usage.closed"/><br/>
-      <input type="radio" name="usage" value="intranet"
-        <c:if test="${usage == 'intranet'}">checked="checked"</c:if>
-      ><fmt:message key="config.usage.intranet"/><br/>
-      <input type="radio" name="usage" value="custom"
-        <c:if test="${usage == 'custom'}">checked="checked"</c:if>
-      ><fmt:message key="config.usage.custom"/>
-    </td>
-  </tr>
+  <c:if test="${not newconfig.configured}">
+    <tr>
+      <td><fmt:message key="config.usage.text"/></td>
+      <td>
+        <input type="radio" name="usage" value="public"
+          <c:if test="${usage == 'public'}">checked="checked"</c:if>
+        ><fmt:message key="config.usage.public"/><br/>
+        <input type="radio" name="usage" value="closed"
+          <c:if test="${usage == 'closed'}">checked="checked"</c:if>
+        ><fmt:message key="config.usage.closed"/><br/>
+        <input type="radio" name="usage" value="intranet"
+          <c:if test="${usage == 'intranet'}">checked="checked"</c:if>
+        ><fmt:message key="config.usage.intranet"/><br/>
+        <input type="radio" name="usage" value="custom"
+          <c:if test="${usage == 'custom'}">checked="checked"</c:if>
+        ><fmt:message key="config.usage.custom"/>
+      </td>
+    </tr>
+  </c:if>
 </table>
