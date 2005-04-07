@@ -24,7 +24,7 @@
  */
 package org.snipsnap.user;
 
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import org.snipsnap.snip.storage.UserStorage;
 import org.snipsnap.util.ApplicationAwareMap;
 import org.snipsnap.util.ApplicationAwareIntegerMap;

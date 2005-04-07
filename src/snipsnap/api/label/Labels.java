@@ -27,7 +27,7 @@ package snipsnap.api.label;
 
 import org.snipsnap.util.StringUtil;
 import snipsnap.api.snip.Snip;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import org.snipsnap.snip.label.LabelManager;
 import snipsnap.api.app.Application;
 
@@ -130,7 +130,7 @@ public class Labels {
   }
 
   private Label createDefaultLabel(String name, String value) {
-    snipsnap.api.label.Label label = ((LabelManager) Components.getComponent(LabelManager.class)).getDefaultLabel();
+    snipsnap.api.label.Label label = ((LabelManager) snipsnap.api.container.Components.getComponent(LabelManager.class)).getDefaultLabel();
     label.setName(name);
     label.setValue(value);
     return label;

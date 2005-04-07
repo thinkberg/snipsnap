@@ -33,7 +33,7 @@ import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 import org.radeox.util.logging.Logger;
 import snipsnap.api.app.Application;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import org.snipsnap.snip.attachment.storage.AttachmentStorage;
 import snipsnap.api.snip.SnipLink;
 
@@ -215,7 +215,7 @@ public class Attachments {
   }
 
   public String getLinks(String name) {
-    AttachmentStorage storage = (AttachmentStorage) Components.getComponent(AttachmentStorage.class);
+    AttachmentStorage storage = (AttachmentStorage) snipsnap.api.container.Components.getComponent(AttachmentStorage.class);
 
     StringBuffer tmp = new StringBuffer();
     Iterator it = iterator();
@@ -235,7 +235,7 @@ public class Attachments {
   }
 
   public Attachments copy(String name) {
-    AttachmentStorage storage = (AttachmentStorage) Components.getComponent(AttachmentStorage.class);
+    AttachmentStorage storage = (AttachmentStorage) snipsnap.api.container.Components.getComponent(AttachmentStorage.class);
     Attachments copy = new Attachments();
     List atts = getAll();
     Iterator attsIt = atts.iterator();

@@ -24,7 +24,7 @@
  */
 package org.snipsnap.render.macro.list;
 
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import snipsnap.api.snip.Snip;
 import snipsnap.api.snip.SnipLink;
 import snipsnap.api.snip.SnipSpace;
@@ -97,7 +97,7 @@ public class VerticalListFormatter implements ListFormatter {
     String realName = snip.getTitle();
     if (name.startsWith("comment-")) {
       int lastIndex = name.lastIndexOf("-");
-      SnipSpace space = (SnipSpace) Components.getComponent(snipsnap.api.snip.SnipSpace.class);
+      SnipSpace space = (SnipSpace) snipsnap.api.container.Components.getComponent(snipsnap.api.snip.SnipSpace.class);
       snipsnap.api.snip.Snip commentedSnip = space.load(name.substring(name.indexOf("-") + 1, lastIndex));
       realName = commentedSnip.getTitle();
       snipsnap.api.snip.SnipLink.appendImage(writer, "Icon-Comment", "");

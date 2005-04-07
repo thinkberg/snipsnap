@@ -34,7 +34,7 @@ import org.snipsnap.config.ConfigurationManager;
 import org.snipsnap.config.ConfigurationProxy;
 import org.snipsnap.config.Globals;
 import org.snipsnap.config.ServerConfiguration;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import org.snipsnap.container.SessionService;
 import snipsnap.api.snip.Snip;
 import snipsnap.api.snip.SnipLink;
@@ -153,7 +153,7 @@ public class InitFilter implements Filter {
   }
 
   private void loadApplicationContexts() {
-    ApplicationManager appManager = (ApplicationManager) Components.getComponent(ApplicationManager.class);
+    ApplicationManager appManager = (ApplicationManager) snipsnap.api.container.Components.getComponent(ApplicationManager.class);
     Collection prefixes = appManager.getPrefixes();
     Iterator prefixIt = prefixes.iterator();
     snipsnap.api.app.Application app = snipsnap.api.app.Application.get();
@@ -166,7 +166,7 @@ public class InitFilter implements Filter {
 
       System.out.print(">> Loading: " + prefix + " ");
       Configuration appConfig = ConfigurationProxy.newInstance();
-      snipsnap.api.snip.SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
+      snipsnap.api.snip.SnipSpace space = (SnipSpace) snipsnap.api.container.Components.getComponent(SnipSpace.class);
       if (space.exists(Configuration.SNIPSNAP_CONFIG)) {
         Snip configSnip = space.load(Configuration.SNIPSNAP_CONFIG);
         String configContent = configSnip.getContent();
@@ -221,7 +221,7 @@ public class InitFilter implements Filter {
     resourceManager.setLocale(request.getLocale(), request.getLocales());
 
     if (globals.isInstalled()) {
-      appManager = (ApplicationManager) Components.getComponent(ApplicationManager.class);
+      appManager = (ApplicationManager) snipsnap.api.container.Components.getComponent(ApplicationManager.class);
     }
 
     String prefix = "/";
@@ -315,7 +315,7 @@ public class InitFilter implements Filter {
       session.setAttribute("space", snipsnap.api.snip.SnipSpaceFactory.getInstance());
 
       // check for a logged in user
-      SessionService service = (SessionService) Components.getComponent(SessionService.class);
+      SessionService service = (SessionService) snipsnap.api.container.Components.getComponent(SessionService.class);
       User user = service.getUser(request, (HttpServletResponse) response);
       app.setUser(user, session);
 

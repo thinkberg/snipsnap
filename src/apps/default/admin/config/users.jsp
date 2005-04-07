@@ -1,7 +1,7 @@
 <%@ page import="java.util.*,
                  snipsnap.api.config.Configuration,
                  snipsnap.api.app.Application,
-                 org.snipsnap.container.Components,
+                 snipsnap.api.container.Components,
                  org.snipsnap.user.UserManager"%>
  <%--
   ** User management

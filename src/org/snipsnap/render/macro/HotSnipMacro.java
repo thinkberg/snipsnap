@@ -31,7 +31,7 @@ import org.radeox.macro.BaseMacro;
 import org.radeox.macro.parameter.MacroParameter;
 import org.radeox.util.logging.Logger;
 import org.radeox.util.i18n.ResourceManager;
-import org.snipsnap.render.context.SnipRenderContext;
+import snipsnap.api.render.context.SnipRenderContext;
 import snipsnap.api.snip.Snip;
 import snipsnap.api.snip.SnipLink;
 import snipsnap.api.snip.SnipSpace;

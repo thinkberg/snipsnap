@@ -26,7 +26,7 @@ package org.snipsnap.net;
 
 import snipsnap.api.app.Application;
 import snipsnap.api.config.Configuration;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import snipsnap.api.snip.Snip;
 import snipsnap.api.snip.SnipSpace;
 
@@ -51,7 +51,7 @@ public class ThemeImageServlet extends HttpServlet {
 
     if (fileName != null && fileName.length() > 1) {
       snipsnap.api.config.Configuration config = snipsnap.api.app.Application.get().getConfiguration();
-      snipsnap.api.snip.SnipSpace space = (SnipSpace)Components.getComponent(SnipSpace.class);
+      snipsnap.api.snip.SnipSpace space = (SnipSpace)snipsnap.api.container.Components.getComponent(SnipSpace.class);
       snipsnap.api.snip.Snip themeSnip = space.load("SnipSnap/themes/"+config.getTheme());
 
       if(themeSnip != null) {

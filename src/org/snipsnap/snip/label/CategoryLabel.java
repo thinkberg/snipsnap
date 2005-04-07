@@ -30,7 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import snipsnap.api.app.Application;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import snipsnap.api.snip.Snip;
 import snipsnap.api.snip.SnipLink;
 import snipsnap.api.snip.SnipSpace;
@@ -77,7 +77,7 @@ public class CategoryLabel extends BaseLabel {
    */
   public String getInputProxy() {
     StringBuffer buffer = new StringBuffer();
-    snipsnap.api.snip.SnipSpace snipspace = (SnipSpace) Components.getComponent(SnipSpace.class);
+    snipsnap.api.snip.SnipSpace snipspace = (SnipSpace) snipsnap.api.container.Components.getComponent(SnipSpace.class);
     List snipList = snipspace.getAll();
 
     buffer.append("Category: ");
@@ -126,7 +126,7 @@ public class CategoryLabel extends BaseLabel {
    * Create s snipLink, should probably moved around
    */
   private StringBuffer getSnipLink(StringBuffer buffer, String name) {
-    AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
+    AuthenticationService service = (AuthenticationService) snipsnap.api.container.Components.getComponent(AuthenticationService.class);
 
     if (SnipSpaceFactory.getInstance().exists(name)) {
       String[] strings = name.split("/");

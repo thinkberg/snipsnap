@@ -29,7 +29,7 @@ import groovy.lang.GroovyClassLoader;
 import org.radeox.macro.Macro;
 import org.radeox.macro.MacroLoader;
 import org.radeox.macro.Repository;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import org.snipsnap.notification.Consumer;
 import org.snipsnap.notification.Message;
 import org.snipsnap.notification.MessageService;
@@ -50,7 +50,7 @@ import java.io.InputStream;
 public class GroovyMacroLoader extends MacroLoader implements Consumer {
   public GroovyMacroLoader() {
     // We're interested in changed snips
-    MessageService service = (MessageService) Components.getComponent(MessageService.class);
+    MessageService service = (MessageService) snipsnap.api.container.Components.getComponent(MessageService.class);
     service.register(this);
   }
 
@@ -96,7 +96,7 @@ public class GroovyMacroLoader extends MacroLoader implements Consumer {
    */
   public Repository loadPlugins(Repository repository, Class klass) {
     if (null != repository) {
-      snipsnap.api.snip.SnipSpace space = (snipsnap.api.snip.SnipSpace) Components.getComponent(snipsnap.api.snip.SnipSpace.class);
+      snipsnap.api.snip.SnipSpace space = (snipsnap.api.snip.SnipSpace) snipsnap.api.container.Components.getComponent(snipsnap.api.snip.SnipSpace.class);
       snipsnap.api.snip.Snip[] snips = space.match("SnipSnap/config/macros/");
 
       for (int i = 0; i < snips.length; i++) {

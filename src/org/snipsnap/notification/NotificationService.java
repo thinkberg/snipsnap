@@ -30,7 +30,7 @@ import snipsnap.api.config.Configuration;
 import org.snipsnap.notification.jabber.JabberNotifier;
 import snipsnap.api.snip.Snip;
 import snipsnap.api.user.User;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 
 import java.util.ArrayList;
 import java.util.Iterator;

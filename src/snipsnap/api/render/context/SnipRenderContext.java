@@ -23,13 +23,13 @@
  * --LICENSE NOTICE--
  */
 
-package org.snipsnap.render.context;
+package snipsnap.api.render.context;
 
 import org.radeox.api.engine.context.RenderContext;
 import org.radeox.engine.context.BaseRenderContext;
 import org.radeox.util.i18n.ResourceManager;
 import snipsnap.api.app.Application;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import snipsnap.api.snip.Snip;
 import snipsnap.api.snip.SnipSpace;
 
@@ -46,7 +46,7 @@ import java.util.Enumeration;
  * Rendering Engine
  *
  * @author Stephan J. Schmidt
- * @version $Id$
+ * @version $Id: SnipRenderContext.java 1816 2005-04-06 17:56:22Z stephan $
  */
 
 public class SnipRenderContext extends BaseRenderContext {

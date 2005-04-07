@@ -30,7 +30,7 @@ import org.snipsnap.notification.MessageService;
 import snipsnap.api.snip.Snip;
 import snipsnap.api.config.*;
 import snipsnap.api.config.Configuration;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import org.radeox.util.logging.Logger;
 
 import java.util.HashMap;

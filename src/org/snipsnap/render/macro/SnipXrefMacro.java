@@ -32,7 +32,7 @@ import org.radeox.macro.parameter.MacroParameter;
 import org.radeox.util.logging.Logger;
 import org.radeox.util.i18n.ResourceManager;
 import snipsnap.api.app.Application;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import snipsnap.api.snip.SnipLink;
 import snipsnap.api.snip.SnipSpace;
 import snipsnap.api.snip.SnipSpaceFactory;

@@ -30,7 +30,7 @@ import snipsnap.api.app.Application;
 import org.snipsnap.app.ApplicationManager;
 import snipsnap.api.config.Configuration;
 import org.snipsnap.config.ConfigurationManager;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import org.snipsnap.snip.Blog;
 import org.snipsnap.snip.BlogKit;
 import snipsnap.api.snip.SnipSpaceFactory;

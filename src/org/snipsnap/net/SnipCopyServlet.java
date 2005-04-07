@@ -27,7 +27,7 @@ package org.snipsnap.net;
 import org.radeox.util.logging.Logger;
 import snipsnap.api.app.Application;
 import snipsnap.api.config.Configuration;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import org.snipsnap.net.filter.MultipartWrapper;
 import snipsnap.api.snip.Snip;
 import snipsnap.api.snip.SnipLink;
@@ -74,7 +74,7 @@ public class SnipCopyServlet extends HttpServlet {
       return;
     }
 
-    snipsnap.api.snip.SnipSpace space = (SnipSpace) Components.getComponent(snipsnap.api.snip.SnipSpace.class);
+    snipsnap.api.snip.SnipSpace space = (SnipSpace) snipsnap.api.container.Components.getComponent(snipsnap.api.snip.SnipSpace.class);
 
     if (null != name && space.exists(name)) {
       snipsnap.api.snip.Snip snip = space.load(name);

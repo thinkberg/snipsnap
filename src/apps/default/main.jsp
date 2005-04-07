@@ -7,7 +7,7 @@
 <%@ page import="snipsnap.api.snip.SnipSpace,
                  snipsnap.api.app.Application,
                  snipsnap.api.snip.SnipSpaceFactory,
-                 org.snipsnap.container.Components,
+                 snipsnap.api.container.Components,
                  snipsnap.api.snip.Snip"%>
 <%@ page pageEncoding="iso-8859-1" %>
 <% response.setContentType("text/html; charset="+Application.get().getConfiguration().getEncoding()); %>

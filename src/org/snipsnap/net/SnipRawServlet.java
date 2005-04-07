@@ -26,7 +26,7 @@ package org.snipsnap.net;
 
 import snipsnap.api.app.Application;
 import snipsnap.api.config.Configuration;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import snipsnap.api.snip.Snip;
 import snipsnap.api.snip.SnipSpaceFactory;
 import org.snipsnap.user.AuthenticationService;
@@ -50,7 +50,7 @@ public class SnipRawServlet extends HttpServlet {
       throws IOException, ServletException {
 
     User user = snipsnap.api.app.Application.get().getUser();
-    AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
+    AuthenticationService service = (AuthenticationService) snipsnap.api.container.Components.getComponent(AuthenticationService.class);
 
     if (service.isAuthenticated(user)) {
       user.lastAccess();

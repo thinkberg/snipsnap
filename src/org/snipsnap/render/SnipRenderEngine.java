@@ -34,7 +34,7 @@ import org.radeox.filter.context.FilterContext;
 import org.radeox.util.Encoder;
 import snipsnap.api.app.Application;
 import snipsnap.api.config.Configuration;
-import org.snipsnap.render.context.SnipRenderContext;
+import snipsnap.api.render.context.SnipRenderContext;
 import org.snipsnap.render.filter.context.SnipFilterContext;
 import org.snipsnap.serialization.StringBufferWriter;
 import snipsnap.api.snip.Snip;

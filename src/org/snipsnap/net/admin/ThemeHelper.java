@@ -29,7 +29,7 @@ import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.radeox.util.logging.Logger;
 import snipsnap.api.config.Configuration;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import snipsnap.api.snip.Snip;
 import snipsnap.api.snip.SnipSpace;
 
@@ -47,7 +47,7 @@ public class ThemeHelper {
   public final static int CONTENT = 2;
 
   public static Map getInstalledThemes() {
-    SnipSpace space = (snipsnap.api.snip.SnipSpace) Components.getComponent(snipsnap.api.snip.SnipSpace.class);
+    SnipSpace space = (snipsnap.api.snip.SnipSpace) snipsnap.api.container.Components.getComponent(snipsnap.api.snip.SnipSpace.class);
     snipsnap.api.snip.Snip[] themeSnips = space.match(THEME_PREFIX);
     Map themes = new HashMap();
     for (int t = 0; t < themeSnips.length; t++) {

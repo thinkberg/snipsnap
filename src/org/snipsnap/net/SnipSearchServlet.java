@@ -31,7 +31,7 @@ import snipsnap.api.snip.SnipSpaceFactory;
 import snipsnap.api.config.Configuration;
 import snipsnap.api.app.Application;
 import org.snipsnap.components.SearchService;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -54,7 +54,7 @@ public class SnipSearchServlet extends HttpServlet {
     String query = request.getParameter("query");
     if (query != null && query.length() > 0) {
       HttpSession session = request.getSession();
-      SearchService searchService = (SearchService) Components.getComponent(SearchService.class);
+      SearchService searchService = (SearchService) snipsnap.api.container.Components.getComponent(SearchService.class);
       Hits hits = searchService.search(query);
       session.setAttribute("query", query);
       session.setAttribute("hits", hits);

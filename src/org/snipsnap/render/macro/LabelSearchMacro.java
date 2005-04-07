@@ -26,7 +26,7 @@
 package org.snipsnap.render.macro;
 
 import org.radeox.util.i18n.ResourceManager;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
 import snipsnap.api.snip.Snip;
 import snipsnap.api.snip.SnipSpace;
@@ -70,7 +70,7 @@ public class LabelSearchMacro extends ListOutputMacro {
     String name = params.get("name");
     String value = params.get("value");
 
-    SnipSpace snipspace = (snipsnap.api.snip.SnipSpace) Components.getComponent(SnipSpace.class);
+    SnipSpace snipspace = (snipsnap.api.snip.SnipSpace) snipsnap.api.container.Components.getComponent(SnipSpace.class);
     List snipList = snipspace.getAll();
 
     List result = new ArrayList();

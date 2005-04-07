@@ -33,7 +33,7 @@ import org.snipsnap.snip.label.LabelManager;
 import snipsnap.api.label.Labels;
 import snipsnap.api.app.Application;
 import snipsnap.api.config.Configuration;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import org.snipsnap.net.filter.MultipartWrapper;
 import org.radeox.util.logging.Logger;
 

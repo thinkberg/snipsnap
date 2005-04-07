@@ -28,8 +28,8 @@ package org.snipsnap.semanticweb.rss;
 import org.radeox.api.engine.RenderEngine;
 import org.radeox.api.engine.context.RenderContext;
 import snipsnap.api.app.Application;
-import org.snipsnap.container.Components;
-import org.snipsnap.render.context.SnipRenderContext;
+import snipsnap.api.container.Components;
+import snipsnap.api.render.context.SnipRenderContext;
 import org.snipsnap.snip.*;
 import snipsnap.api.snip.Snip;
 import org.snipsnap.snip.attachment.Attachments;
@@ -143,7 +143,7 @@ public class RssSnip implements snipsnap.api.snip.Snip {
   }
 
   public String getXMLContent() {
-    RenderEngine engine = (RenderEngine) Components.getComponent(Components.DEFAULT_ENGINE);
+    RenderEngine engine = (RenderEngine) Components.getComponent(snipsnap.api.container.Components.DEFAULT_ENGINE);
     RenderContext context = new SnipRenderContext(snip, SnipSpaceFactory.getInstance());
     context.setParameters(snipsnap.api.app.Application.get().getParameters());
     return engine.render(content, context);

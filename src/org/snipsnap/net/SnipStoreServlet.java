@@ -27,7 +27,7 @@ package org.snipsnap.net;
 import org.radeox.util.logging.Logger;
 import snipsnap.api.app.Application;
 import snipsnap.api.config.Configuration;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import org.snipsnap.net.filter.MultipartWrapper;
 import org.snipsnap.security.AccessController;
 import snipsnap.api.snip.Snip;
@@ -122,8 +122,8 @@ public class SnipStoreServlet extends HttpServlet {
     HttpSession session = request.getSession();
     if (session != null) {
       User user = snipsnap.api.app.Application.get().getUser();
-      AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
-      AccessController accessController = (AccessController) Components.getComponent(AccessController.class);
+      AuthenticationService service = (AuthenticationService) snipsnap.api.container.Components.getComponent(AuthenticationService.class);
+      AccessController accessController = (AccessController) snipsnap.api.container.Components.getComponent(AccessController.class);
       String storeHandler = request.getParameter("store_handler");
       if (service.isAuthenticated(user) && (null == snip
                                             || accessController.checkPermission(snipsnap.api.app.Application.get().getUser(), AccessController.EDIT_SNIP, snip))) {

@@ -28,7 +28,7 @@ package org.snipsnap.xmlrpc;
 import org.apache.xmlrpc.XmlRpcException;
 import org.radeox.util.logging.Logger;
 import snipsnap.api.app.Application;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import org.snipsnap.net.FileUploadServlet;
 import org.snipsnap.feeder.custom.BlogFeeder;
 import org.snipsnap.snip.Blog;

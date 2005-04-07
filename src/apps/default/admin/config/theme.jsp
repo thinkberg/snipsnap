@@ -9,7 +9,7 @@
                  org.dom4j.Node,
                  java.io.FilenameFilter,
                  snipsnap.api.snip.Snip,
-                 org.snipsnap.container.Components,
+                 snipsnap.api.container.Components,
                  snipsnap.api.snip.SnipSpace,
                  org.snipsnap.net.admin.ThemeHelper"%>
  <%--

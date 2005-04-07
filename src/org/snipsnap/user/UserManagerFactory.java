@@ -24,7 +24,7 @@
  */
 package org.snipsnap.user;
 
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 
 /**
  * User manager factory handles access to UserManager implementations and

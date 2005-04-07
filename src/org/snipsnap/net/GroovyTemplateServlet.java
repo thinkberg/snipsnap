@@ -27,7 +27,7 @@ package org.snipsnap.net;
 import groovy.text.SimpleTemplateEngine;
 import groovy.text.Template;
 import snipsnap.api.app.Application;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import snipsnap.api.snip.SnipSpace;
 
 import javax.servlet.ServletException;

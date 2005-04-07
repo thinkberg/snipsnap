@@ -26,7 +26,7 @@
 package org.snipsnap.snip;
 
 import org.radeox.util.i18n.ResourceManager;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import org.snipsnap.user.UserManager;
 
 import java.sql.Timestamp;

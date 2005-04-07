@@ -27,11 +27,12 @@ package org.snipsnap.net;
 
 import org.radeox.util.Service;
 import org.radeox.util.logging.Logger;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import snipsnap.api.snip.Snip;
 import snipsnap.api.snip.SnipSpace;
 import snipsnap.api.label.Label;
 import snipsnap.api.label.Labels;
+import snipsnap.api.plugin.ServletPlugin;
 import org.snipsnap.snip.label.TypeLabel;
 import org.snipsnap.xmlrpc.XmlRpcHandler;
 import org.picocontainer.PicoContainer;
@@ -94,7 +95,7 @@ public class ServletPluginLoader {
     if (null == pluginServlets) {
       pluginServlets = new HashMap();
 
-        Collection components = Components.findComponents(ServletPlugin.class);
+        Collection components = snipsnap.api.container.Components.findComponents(ServletPlugin.class);
 
          Iterator iterator = components.iterator();
          while (iterator.hasNext()) {

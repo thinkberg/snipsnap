@@ -27,7 +27,7 @@ package org.snipsnap.net.admin;
 
 import snipsnap.api.app.Application;
 import snipsnap.api.config.Configuration;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import snipsnap.api.snip.SnipSpace;
 
 import javax.servlet.http.HttpServletRequest;

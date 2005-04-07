@@ -33,7 +33,7 @@ import org.snipsnap.user.UserManager;
 import org.snipsnap.user.AuthenticationService;
 import org.snipsnap.user.UserManagerFactory;
 import org.snipsnap.util.Base64;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -72,7 +72,7 @@ public class iCalServlet extends HttpServlet {
       password = auth.substring(auth.indexOf(':') + 1);
     }
 
-    User user = ((AuthenticationService) Components.getComponent(AuthenticationService.class)).authenticate(login, password);
+    User user = ((AuthenticationService) snipsnap.api.container.Components.getComponent(AuthenticationService.class)).authenticate(login, password);
     if (user == null) {
       response.setHeader("WWW-Authenticate", "Basic realm=\"SnipSnap\"");
       response.setStatus(WD_UNAUTHORIZED);

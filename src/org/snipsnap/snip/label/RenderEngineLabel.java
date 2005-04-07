@@ -27,7 +27,7 @@ package org.snipsnap.snip.label;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import snipsnap.api.snip.Snip;
 import snipsnap.api.label.*;
 import snipsnap.api.label.LabelContext;

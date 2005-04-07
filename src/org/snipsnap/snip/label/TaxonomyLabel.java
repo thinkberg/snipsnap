@@ -30,7 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import snipsnap.api.app.Application;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import snipsnap.api.snip.Snip;
 import snipsnap.api.snip.SnipLink;
 import snipsnap.api.snip.SnipSpace;
@@ -74,7 +74,7 @@ public class TaxonomyLabel extends BaseLabel {
    */
   public String getInputProxy() {
     StringBuffer buffer = new StringBuffer();
-    snipsnap.api.snip.SnipSpace snipspace = (SnipSpace) Components.getComponent(snipsnap.api.snip.SnipSpace.class);
+    snipsnap.api.snip.SnipSpace snipspace = (SnipSpace) snipsnap.api.container.Components.getComponent(snipsnap.api.snip.SnipSpace.class);
     List snipList = snipspace.getAll();
 
     buffer.append("Taxonomy: ");
@@ -119,7 +119,7 @@ public class TaxonomyLabel extends BaseLabel {
   }
 
   private StringBuffer getSnipLink(StringBuffer buffer, String name) {
-    AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
+    AuthenticationService service = (AuthenticationService) snipsnap.api.container.Components.getComponent(AuthenticationService.class);
 
     if (snipsnap.api.snip.SnipSpaceFactory.getInstance().exists(name)) {
       snipsnap.api.snip.SnipLink.appendLink(buffer, name, name);

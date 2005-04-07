@@ -29,7 +29,7 @@ import org.snipsnap.snip.Ownable;
 import snipsnap.api.snip.Snip;
 import snipsnap.api.user.*;
 import snipsnap.api.user.User;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 
 /**
  * Security manager for checking permission, roles etc.
@@ -47,7 +47,7 @@ public class Security {
    */
   private static Roles getRoles(User user) {
     Roles userRoles = new Roles(user.getRoles());
-    AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
+    AuthenticationService service = (AuthenticationService) snipsnap.api.container.Components.getComponent(AuthenticationService.class);
 
     if (service.isAuthenticated(user)) {
       userRoles.add(Roles.AUTHENTICATED);

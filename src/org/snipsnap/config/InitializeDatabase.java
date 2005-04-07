@@ -27,7 +27,7 @@ package org.snipsnap.config;
 import snipsnap.api.app.Application;
 import org.snipsnap.app.ApplicationManager;
 import org.snipsnap.app.ApplicationStorage;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import org.snipsnap.snip.HomePage;
 import snipsnap.api.snip.Snip;
 import snipsnap.api.snip.SnipSpace;

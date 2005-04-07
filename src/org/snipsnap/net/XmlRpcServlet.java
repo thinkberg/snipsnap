@@ -29,7 +29,7 @@ import org.apache.xmlrpc.XmlRpc;
 import org.picocontainer.PicoContainer;
 import org.snipsnap.config.ConfigurationProxy;
 import org.snipsnap.config.Globals;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import org.snipsnap.util.Base64;
 import org.snipsnap.xmlrpc.XmlRpcHandler;
 import org.xml.sax.SAXException;
@@ -71,7 +71,7 @@ public class XmlRpcServlet extends HttpServlet {
   }
 
   private void initialize() {
-    Collection components = Components.findComponents(XmlRpcHandler.class);
+    Collection components = snipsnap.api.container.Components.findComponents(XmlRpcHandler.class);
 
     Iterator iterator = components.iterator();
     while (iterator.hasNext()) {

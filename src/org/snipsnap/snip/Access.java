@@ -27,7 +27,7 @@ package org.snipsnap.snip;
 
 import org.radeox.util.logging.Logger;
 import snipsnap.api.app.Application;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import snipsnap.api.user.User;
 import org.snipsnap.util.ApplicationAwareMap;
 

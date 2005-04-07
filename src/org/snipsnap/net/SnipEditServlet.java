@@ -27,7 +27,7 @@ package org.snipsnap.net;
 import org.radeox.util.Encoder;
 import org.radeox.util.logging.Logger;
 import snipsnap.api.app.Application;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import org.snipsnap.security.AccessController;
 import snipsnap.api.snip.Snip;
 import snipsnap.api.snip.SnipSpace;
@@ -74,7 +74,7 @@ public class SnipEditServlet extends HttpServlet {
     String editHandler = request.getParameter("handler");
 
     snipsnap.api.snip.SnipSpace space = (snipsnap.api.snip.SnipSpace) Components.getComponent(snipsnap.api.snip.SnipSpace.class);
-    AccessController controller = (AccessController) Components.getComponent(AccessController.class);
+    AccessController controller = (AccessController) snipsnap.api.container.Components.getComponent(AccessController.class);
 
     snipsnap.api.snip.Snip snip = null;
     if (name != null && space.exists(name)) {
@@ -156,7 +156,7 @@ public class SnipEditServlet extends HttpServlet {
   private List getTemplates() {
     List templates = new ArrayList();
 
-    snipsnap.api.snip.SnipSpace snipspace = (snipsnap.api.snip.SnipSpace) Components.getComponent(snipsnap.api.snip.SnipSpace.class);
+    snipsnap.api.snip.SnipSpace snipspace = (snipsnap.api.snip.SnipSpace) snipsnap.api.container.Components.getComponent(snipsnap.api.snip.SnipSpace.class);
     List snipList = snipspace.getAll();
 
     Iterator iterator = snipList.iterator();

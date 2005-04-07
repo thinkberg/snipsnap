@@ -30,7 +30,7 @@ import snipsnap.api.config.Configuration;
 import snipsnap.api.snip.Snip;
 import org.snipsnap.snip.attachment.Attachment;
 import org.snipsnap.snip.attachment.storage.AttachmentStorage;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -75,7 +75,7 @@ public class FileDownloadServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
-    AttachmentStorage attachmentStorage = (AttachmentStorage) Components.getComponent(AttachmentStorage.class);
+    AttachmentStorage attachmentStorage = (AttachmentStorage) snipsnap.api.container.Components.getComponent(AttachmentStorage.class);
 
     Snip snip = (Snip) request.getAttribute(SNIP);
     String fileName = (String) request.getAttribute(FILENAME);

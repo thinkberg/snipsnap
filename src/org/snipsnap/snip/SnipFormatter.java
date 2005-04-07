@@ -29,8 +29,8 @@ import org.picocontainer.PicoContainer;
 import org.radeox.api.engine.RenderEngine;
 import org.radeox.api.engine.context.RenderContext;
 import snipsnap.api.app.Application;
-import org.snipsnap.container.Components;
-import org.snipsnap.render.context.SnipRenderContext;
+import snipsnap.api.container.Components;
+import snipsnap.api.render.context.SnipRenderContext;
 
 import java.util.Collection;
 
@@ -49,8 +49,8 @@ public class SnipFormatter
 	public static String toXML(Snip snip, String content)
 	{
     //@FIXME: This duplicates SnipImpl.toXML()
-    RenderEngine engine = (RenderEngine) Components.getComponent(Components.DEFAULT_ENGINE);
-    RenderContext context = new SnipRenderContext(snip, (snipsnap.api.snip.SnipSpace) Components.getComponent(SnipSpace.class));
+    RenderEngine engine = (RenderEngine) snipsnap.api.container.Components.getComponent(snipsnap.api.container.Components.DEFAULT_ENGINE);
+    RenderContext context = new snipsnap.api.render.context.SnipRenderContext(snip, (snipsnap.api.snip.SnipSpace) Components.getComponent(SnipSpace.class));
     context.setParameters(Application.get().getParameters());
     return engine.render(content, context);
   }

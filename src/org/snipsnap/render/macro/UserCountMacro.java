@@ -31,7 +31,7 @@ import org.radeox.macro.parameter.MacroParameter;
 import org.radeox.util.i18n.ResourceManager;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.user.UserManagerFactory;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 
 import java.io.IOException;
 import java.io.Writer;

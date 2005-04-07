@@ -27,7 +27,7 @@ package org.snipsnap.net;
 import org.radeox.util.logging.Logger;
 import snipsnap.api.app.Application;
 import snipsnap.api.config.Configuration;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import org.snipsnap.net.filter.MultipartWrapper;
 import snipsnap.api.snip.Snip;
 import org.snipsnap.snip.SnipFormatter;
@@ -81,7 +81,7 @@ public class CommentStoreServlet extends HttpServlet {
       HttpSession session = request.getSession();
       if (session != null) {
         snipsnap.api.user.User user = snipsnap.api.app.Application.get().getUser();
-        AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
+        AuthenticationService service = (AuthenticationService) snipsnap.api.container.Components.getComponent(AuthenticationService.class);
 
         if (snip != null && service.isAuthenticated(user)) {
           snip.getComments().postComment(content);

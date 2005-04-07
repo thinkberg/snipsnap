@@ -28,7 +28,7 @@ import gabriel.Permission;
 import gabriel.components.context.OwnerAccessContext;
 import org.radeox.util.logging.Logger;
 import snipsnap.api.app.Application;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import org.snipsnap.security.AccessController;
 import snipsnap.api.snip.Snip;
 import snipsnap.api.snip.SnipSpaceFactory;
@@ -81,7 +81,7 @@ public class NewCheckPermission extends ConditionalTagSupport {
   }
 
   protected boolean condition() throws JspTagException {
-    AccessController controller = (AccessController) Components.getComponent(AccessController.class);
+    AccessController controller = (AccessController) snipsnap.api.container.Components.getComponent(AccessController.class);
 
     Application app = snipsnap.api.app.Application.get();
     User user = app.getUser();

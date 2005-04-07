@@ -39,7 +39,7 @@ import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.Security;
 import snipsnap.api.user.User;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import org.snipsnap.security.AccessController;
 
 import javax.servlet.RequestDispatcher;

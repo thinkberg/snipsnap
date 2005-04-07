@@ -31,7 +31,7 @@ import snipsnap.api.config.Configuration;
 import org.snipsnap.config.ConfigurationManager;
 import org.snipsnap.config.ConfigurationProxy;
 import org.snipsnap.config.InitializeDatabase;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import org.snipsnap.net.filter.MultipartWrapper;
 import snipsnap.api.snip.Snip;
 import snipsnap.api.snip.SnipSpace;
@@ -370,7 +370,7 @@ public class ConfigureServlet extends HttpServlet {
               int idx = steps.indexOf(step);
               step = (String) steps.get(idx - 1);
             } else if (request.getParameter("save") != null) {
-              SnipSpace space = (SnipSpace) Components.getComponent(snipsnap.api.snip.SnipSpace.class);
+              SnipSpace space = (SnipSpace) snipsnap.api.container.Components.getComponent(snipsnap.api.snip.SnipSpace.class);
               ByteArrayOutputStream configStream = new ByteArrayOutputStream();
               config.store(configStream);
               snipsnap.api.snip.Snip configSnip = space.load(Configuration.SNIPSNAP_CONFIG);

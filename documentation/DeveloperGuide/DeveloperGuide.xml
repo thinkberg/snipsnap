@@ -143,7 +143,7 @@ to be accessed through Application though.
 <subsubsection title="SnipViewServlet">
 HTTP requests are handled by \textit{org.snipsnap.net.SnipViewServlet} which is
 mapped to /space in the default application.  The URL is parsed to extract the snip name and
-the SnipSpace is retrieved via \textit{org.snipsnap.container.Components} which stores
+the SnipSpace is retrieved via \textit{snipsnap.api.container.Components} which stores
 all components in a PicoContainer. Then the snip is loaded by name  and 
 placed in request scope.
 

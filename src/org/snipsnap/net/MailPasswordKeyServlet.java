@@ -32,7 +32,7 @@ import org.snipsnap.user.UserManager;
 import org.snipsnap.user.PasswordService;
 import org.snipsnap.user.UserManagerFactory;
 import org.snipsnap.util.mail.Mail;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;

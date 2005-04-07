@@ -26,7 +26,7 @@
 package org.snipsnap.snip.label;
 
 import snipsnap.api.app.Application;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import snipsnap.api.snip.SnipLink;
 import snipsnap.api.snip.SnipSpaceFactory;
 import org.snipsnap.user.AuthenticationService;
@@ -88,7 +88,7 @@ public class SnipLabel extends BaseLabel {
 
   private StringBuffer getSnipLink(StringBuffer buffer, String name) {
     // @TODO: move this to SnipLink or Snip
-    AuthenticationService service = (AuthenticationService) Components.getComponent(AuthenticationService.class);
+    AuthenticationService service = (AuthenticationService) snipsnap.api.container.Components.getComponent(AuthenticationService.class);
 
     if (SnipSpaceFactory.getInstance().exists(name)) {
       snipsnap.api.snip.SnipLink.appendLink(buffer, name, name);

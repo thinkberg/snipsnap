@@ -26,7 +26,7 @@
 package org.snipsnap.net.admin;
 
 import snipsnap.api.config.Configuration;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import snipsnap.api.snip.SnipSpace;
 import org.snipsnap.snip.XMLSnipExport;
 import org.snipsnap.user.UserManager;
@@ -74,7 +74,7 @@ public class DatabaseExport implements SetupHandler {
     String exportTypes[] = request.getParameterValues("export.types");
     request.setAttribute("exportTypes", exportTypes);
 
-    UserManager um = (UserManager) Components.getComponent(UserManager.class);
+    UserManager um = (UserManager) snipsnap.api.container.Components.getComponent(UserManager.class);
     snipsnap.api.snip.SnipSpace space = (SnipSpace) Components.getComponent(snipsnap.api.snip.SnipSpace.class);
 
     List users = null;

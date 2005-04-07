@@ -30,7 +30,7 @@ import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
 import org.radeox.util.logging.Logger;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import org.snipsnap.jdbc.IntHolder;
 import org.snipsnap.snip.storage.SnipSerializer;
 import org.snipsnap.snip.storage.UserSerializer;

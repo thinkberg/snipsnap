@@ -1,5 +1,5 @@
 <%@ page import="org.snipsnap.user.UserManager,
-                 org.snipsnap.container.Components,
+                 snipsnap.api.container.Components,
                  java.util.List"
  %>
 <%--

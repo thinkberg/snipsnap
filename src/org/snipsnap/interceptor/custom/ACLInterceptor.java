@@ -31,7 +31,7 @@ import snipsnap.api.snip.Snip;
 import org.snipsnap.user.Roles;
 import snipsnap.api.user.User;
 import org.snipsnap.security.AccessController;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 
 import java.security.GeneralSecurityException;
 

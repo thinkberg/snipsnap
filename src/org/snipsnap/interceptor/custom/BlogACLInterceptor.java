@@ -28,7 +28,7 @@ package org.snipsnap.interceptor.custom;
 import snipsnap.api.app.Application;
 
 import snipsnap.api.user.User;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import org.snipsnap.security.AccessController;
 
 import java.security.GeneralSecurityException;

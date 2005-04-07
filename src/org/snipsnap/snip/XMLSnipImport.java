@@ -34,7 +34,7 @@ import org.dom4j.io.SAXReader;
 import org.radeox.util.logging.Logger;
 import snipsnap.api.app.Application;
 import snipsnap.api.config.Configuration;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import org.snipsnap.jdbc.IntHolder;
 import org.snipsnap.snip.storage.SnipSerializer;
 import org.snipsnap.snip.storage.UserSerializer;
@@ -208,7 +208,7 @@ public class XMLSnipImport {
     String name = (String) snipMap.get(SnipSerializer.SNIP_NAME);
     String content = (String) snipMap.get(SnipSerializer.SNIP_CONTENT);
 
-    SnipSpace space = (snipsnap.api.snip.SnipSpace) Components.getComponent(SnipSpace.class);
+    SnipSpace space = (snipsnap.api.snip.SnipSpace) snipsnap.api.container.Components.getComponent(SnipSpace.class);
     Snip snip = null;
     if (space.exists(name)) {
       Logger.log("loading existing snip '" + name + "'");
@@ -222,7 +222,7 @@ public class XMLSnipImport {
       snip = space.create(name, content);
     }
 
-    UserManager um = (UserManager) Components.getComponent(UserManager.class);
+    UserManager um = (UserManager) snipsnap.api.container.Components.getComponent(UserManager.class);
     snipsnap.api.user.User importUser = snipsnap.api.app.Application.get().getUser();
 
     // check existing users

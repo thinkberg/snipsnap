@@ -34,7 +34,7 @@ import org.snipsnap.xmlrpc.ping.PingHandler;
 import org.snipsnap.notification.Message;
 import org.snipsnap.notification.MessageService;
 import org.snipsnap.notification.Consumer;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import org.apache.xmlrpc.XmlRpc;
 
 import java.io.BufferedReader;

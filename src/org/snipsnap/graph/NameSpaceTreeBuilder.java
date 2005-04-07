@@ -24,7 +24,7 @@
  */
 package org.snipsnap.graph;
 
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import org.snipsnap.graph.builder.TreeBuilder;
 import org.snipsnap.graph.graph.Tree;
 import org.snipsnap.graph.graph.TreeNode;
@@ -39,7 +39,7 @@ public class NameSpaceTreeBuilder implements TreeBuilder {
   }
 
   public Tree build() {
-    SnipSpace space = (snipsnap.api.snip.SnipSpace) Components.getComponent(SnipSpace.class);
+    SnipSpace space = (snipsnap.api.snip.SnipSpace) snipsnap.api.container.Components.getComponent(SnipSpace.class);
 
     snipsnap.api.snip.Snip[] snips = space.match(root);
 

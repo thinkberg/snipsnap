@@ -27,6 +27,8 @@
 package org.snipsnap.xmlrpc;
 
 import org.radeox.util.logging.Logger;
+import snipsnap.api.xmlrpc.*;
+import snipsnap.api.xmlrpc.SnipSnapPing;
 
 
 /**
@@ -60,7 +62,7 @@ public class WeblogsPingHandler extends XmlRpcSupport {
    **/
   public String ping(String weblogName, String weblogUrl) {
     Logger.debug("XML-RPC call to ping() from " + weblogName);
-    SnipSnapPing.getInstance().addChangedWeblog(weblogName, weblogUrl);
+    snipsnap.api.xmlrpc.SnipSnapPing.getInstance().addChangedWeblog(weblogName, weblogUrl);
     return "";
   }
 }

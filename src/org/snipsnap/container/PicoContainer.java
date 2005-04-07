@@ -35,6 +35,7 @@ import org.snipsnap.versioning.*;
 import org.snipsnap.versioning.cookbook.CookbookDifferenceService;
 import org.snipsnap.xmlrpc.*;
 import snipsnap.api.snip.SnipSpace;
+import snipsnap.api.container.*;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
@@ -83,7 +84,7 @@ public class PicoContainer implements Container {
         addComponent(AuthenticationService.class, DefaultAuthenticationService.class);
         addComponent(PasswordService.class);
         addComponent(SessionService.class, DefaultSessionService.class);
-        addComponent(Components.DEFAULT_ENGINE, SnipRenderEngine.class);
+        addComponent(snipsnap.api.container.Components.DEFAULT_ENGINE, SnipRenderEngine.class);
         addComponent(PlainTextRenderEngine.class);
         addComponent(SnipSpace.class, SnipSpaceImpl.class);
 

@@ -30,7 +30,7 @@ import org.radeox.util.logging.Logger;
 import snipsnap.api.app.Application;
 import org.snipsnap.app.ApplicationManager;
 import org.snipsnap.app.ApplicationStorage;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import org.snipsnap.notification.Message;
 import org.snipsnap.notification.MessageService;
 import org.snipsnap.snip.storage.CacheSnipStorage;

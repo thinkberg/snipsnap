@@ -26,7 +26,7 @@ package org.snipsnap.net;
 
 import snipsnap.api.app.Application;
 import snipsnap.api.config.Configuration;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import snipsnap.api.snip.Snip;
 import snipsnap.api.snip.SnipSpace;
 import org.snipsnap.versioning.VersionManager;
@@ -61,7 +61,7 @@ public class DiffServlet extends HttpServlet {
     int oldVersion = Integer.parseInt(oldString);
     int newVersion = Integer.parseInt(newString);
 
-    snipsnap.api.snip.SnipSpace space = (snipsnap.api.snip.SnipSpace)Components.getComponent(snipsnap.api.snip.SnipSpace.class);
+    snipsnap.api.snip.SnipSpace space = (snipsnap.api.snip.SnipSpace)snipsnap.api.container.Components.getComponent(snipsnap.api.snip.SnipSpace.class);
     snipsnap.api.snip.Snip snip = space.load(name);
 
     VersionManager versionManager = (VersionManager) Components.getComponent(VersionManager.class);

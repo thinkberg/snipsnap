@@ -30,7 +30,7 @@ import snipsnap.api.user.User;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.user.PasswordService;
 import org.snipsnap.user.UserManagerFactory;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import org.snipsnap.container.SessionService;
 import snipsnap.api.config.Configuration;
 
@@ -63,7 +63,7 @@ public class ChangePasswordServlet extends HttpServlet {
     if (request.getParameter("cancel") == null) {
       snipsnap.api.user.User user;
       if (null != password1 && password1.equals(password2)) {
-        PasswordService passwordService = (PasswordService) Components.getComponent(PasswordService.class);
+        PasswordService passwordService = (PasswordService) snipsnap.api.container.Components.getComponent(PasswordService.class);
         user = passwordService.changePassWord(key, password1);
       } else {
         request.setAttribute("error", "user.password.error.nomatch");

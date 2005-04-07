@@ -32,7 +32,7 @@ import snipsnap.api.snip.SnipLink;
 import snipsnap.api.snip.SnipSpaceFactory;
 import snipsnap.api.label.Label;
 import org.snipsnap.snip.label.LabelManager;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import org.snipsnap.net.filter.MultipartWrapper;
 import org.radeox.util.logging.Logger;
 
@@ -83,7 +83,7 @@ public class AddLabelServlet extends HttpServlet {
     request.setAttribute("snip", snip);
 
     String labelType = request.getParameter("labeltype");
-    LabelManager manager = (LabelManager)Components.getComponent(LabelManager.class);
+    LabelManager manager = (LabelManager)snipsnap.api.container.Components.getComponent(LabelManager.class);
     snipsnap.api.label.Label label = manager.getLabel(labelType);
     request.setAttribute("label", label);
 

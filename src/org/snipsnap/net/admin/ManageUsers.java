@@ -29,7 +29,7 @@ import snipsnap.api.config.Configuration;
 import org.snipsnap.user.UserManager;
 import snipsnap.api.user.User;
 import org.snipsnap.user.Roles;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import org.snipsnap.snip.HomePage;
 import snipsnap.api.app.Application;
 
@@ -45,7 +45,7 @@ public class ManageUsers implements SetupHandler {
   }
 
   public Map setup(HttpServletRequest request, HttpServletResponse response, Configuration config, Map errors) {
-    UserManager um = (UserManager) Components.getComponent(UserManager.class);
+    UserManager um = (UserManager) snipsnap.api.container.Components.getComponent(UserManager.class);
     if (request.getParameter("remove") != null) {
       User user = um.load(request.getParameter("remove"));
       if(user != null) {

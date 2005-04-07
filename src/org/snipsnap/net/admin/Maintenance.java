@@ -28,7 +28,7 @@ package org.snipsnap.net.admin;
 import org.radeox.util.logging.Logger;
 import snipsnap.api.app.Application;
 import snipsnap.api.config.Configuration;
-import org.snipsnap.container.Components;
+import snipsnap.api.container.Components;
 import org.snipsnap.snip.Access;
 import org.snipsnap.snip.Links;
 import snipsnap.api.snip.Snip;
@@ -135,7 +135,7 @@ public class Maintenance implements SetupHandler {
 
     public void run() {
       snipsnap.api.app.Application.get().storeObject(snipsnap.api.app.Application.OID, appOid);
-      SnipSpace space = (snipsnap.api.snip.SnipSpace) Components.getComponent(snipsnap.api.snip.SnipSpace.class);
+      SnipSpace space = (snipsnap.api.snip.SnipSpace) snipsnap.api.container.Components.getComponent(snipsnap.api.snip.SnipSpace.class);
 
       if (!repair) {
         List allSnips = Collections.unmodifiableList(space.getAll());
