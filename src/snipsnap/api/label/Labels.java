@@ -32,6 +32,7 @@ import org.snipsnap.snip.label.LabelManager;
 import snipsnap.api.app.Application;
 
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * Stores Label information for a snip
@@ -142,6 +143,9 @@ public class Labels {
     if (label != null) {
       label.setName(name);
       label.setValue(value);
+
+    } else {
+      System.err.println("Labels: Label not found: "+type);
     }
     return label;
   }

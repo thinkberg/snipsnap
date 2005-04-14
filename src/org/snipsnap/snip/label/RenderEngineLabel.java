@@ -31,7 +31,6 @@ import snipsnap.api.container.Components;
 import snipsnap.api.snip.Snip;
 import snipsnap.api.label.*;
 import snipsnap.api.label.LabelContext;
-import org.radeox.api.engine.RenderEngine;
 
 import java.util.Map;
 

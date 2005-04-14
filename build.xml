@@ -218,12 +218,23 @@
     </copy>
   </target>
 
-  <target depends="compile-util" description="create api jar" name="jar-api">
+  <target depends="compile-api" description="create api jar" name="jar-api">
 	  <jar destfile="${jar}/snipsnap-api.jar">
-		  <fileset dir="${target}/util/" includes="snipsnap/api/**"/>
+		  <fileset dir="${target}/api/" includes="snipsnap/api/**"/>
 	  </jar>
   </target>
  
+  <target description="compile api code" name="compile-api">
+    <mkdir dir="${target}/api"/>
+    <javac deprecation="${deprecation}" debug="${debug}"
+      srcdir="${src}"
+      destdir="${target}/api"
+      classpathref="all.classpath">
+
+      <include name="snipsnap/api/**"/>
+    </javac>
+  </target>
+
   <!-- create server code -->
   <target depends="compile-jsp, compile-server,installer-war,snipsnap-war" description="create server jar" name="jar-server">
     <copy file="conf/copyright.txt" tofile="${target}/server/conf/copyright.txt" filtering="true">
