@@ -65,7 +65,7 @@ public interface AttachmentStorage {
    * @throws IOException if the data cannot be deleted
    */
   public void delete(Attachment attachment) throws IOException;
-
+                                                                    
   /**
    * Copy one attachment to another
    *
