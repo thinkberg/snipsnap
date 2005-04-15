@@ -8,7 +8,10 @@
                  snipsnap.api.app.Application,
                  snipsnap.api.snip.SnipSpaceFactory,
                  snipsnap.api.container.Components,
-                 snipsnap.api.snip.Snip"%>
+                 snipsnap.api.snip.Snip,
+                 java.util.Collection,
+                 java.util.Iterator,
+                 org.snipsnap.snip.label.TypeLabel"%>
 <%@ page pageEncoding="iso-8859-1" %>
 <% response.setContentType("text/html; charset="+Application.get().getConfiguration().getEncoding()); %>
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
@@ -56,16 +59,53 @@
     <s:debug/>
    </div>
    <%
-     SnipSpace space = (SnipSpace)Components.getComponent(SnipSpace.class);
+     SnipSpace space = (SnipSpace)org.snipsnap.container.Components.getComponent(SnipSpace.class);
      for(int i = 1; space.exists("snipsnap-portlet-"+i) || space.exists("SnipSnap/portlet/"+i); i++) {
-       snipsnap.api.snip.Snip snip = space.load("snipsnap-portlet-"+i);
+       Snip snip = space.load("snipsnap-portlet-"+i);
        if(null == snip) {
          snip = space.load("SnipSnap/portlet/" + i);
        }
        pageContext.setAttribute("portlet", snip);
+       pageContext.removeAttribute("view_handler");
+       pageContext.removeAttribute("mime_type");
+
+           String viewHandler = null;
+           String type = null;
+           Collection mimeTypes = snip.getLabels().getLabels("TypeLabel");
+           if (!mimeTypes.isEmpty()) {
+             Iterator handlerIt = mimeTypes.iterator();
+             while (handlerIt.hasNext()) {
+               TypeLabel typeLabel = (TypeLabel) handlerIt.next();
+               viewHandler = typeLabel.getViewHandler();
+               // search for default handler if non found
+               if (null == viewHandler) {
+                 viewHandler = TypeLabel.getViewHandler(typeLabel.getTypeValue());
+               }
+
+               if (null != viewHandler) {
+                 type = typeLabel.getTypeValue();
+                 pageContext.setAttribute("view_handler", viewHandler);
+                 pageContext.setAttribute("mime_type", type);
+                 break;
+               }
+             }
+           }
+
    %>
     <div id="page-portlet-<%=i%>-wrapper">
-     <div id="page-portlet-<%=i%>"><s:snip snip="${portlet}"/></div>
+     <div id="page-portlet-<%=i%>">
+       <%-- if there is a special view handler, use it, else display standard page --%>
+       <c:choose>
+         <c:when test="${not empty(view_handler)}">
+           <c:catch var="error">
+             <c:import url="/plugin/${view_handler}"/>
+           </c:catch>
+         </c:when>
+         <c:otherwise>
+           <c:out value="${portlet.XMLContent}" escapeXml="false" />
+         </c:otherwise>
+       </c:choose>
+     </div>
     </div>
    <% } %>
   </div>
