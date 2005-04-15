@@ -24,7 +24,6 @@
  */
 package org.snipsnap.graph;
 
-import snipsnap.api.container.Components;
 import org.snipsnap.graph.builder.TreeBuilder;
 import org.snipsnap.graph.graph.Tree;
 import org.snipsnap.graph.graph.TreeNode;

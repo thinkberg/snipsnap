@@ -28,6 +28,7 @@ import org.snipsnap.graph.builder.StringUMLBuilder;
 import org.snipsnap.graph.builder.UMLBuilder;
 import org.snipsnap.graph.context.UMLRendererContext;
 import org.snipsnap.graph.renderer.UMLGraphRenderer;
+import org.snipsnap.graph.renderer.Renderer;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -38,6 +39,10 @@ public class UMLContentRenderer implements ContentRenderer {
 
   public String getName() {
     return "uml";
+  }
+
+  public Renderer getRenderer() {
+    return null;
   }
 
   public void render(HttpServletRequest request, HttpServletResponse response, String content) throws IOException {

@@ -24,6 +24,8 @@
  */
 package org.snipsnap.graph;
 
+import org.snipsnap.graph.renderer.Renderer;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -36,5 +38,6 @@ import java.io.IOException;
  */
 public interface ContentRenderer {
   public String getName();
+  public Renderer getRenderer();
   public void render(HttpServletRequest request, HttpServletResponse response, String content) throws IOException;
 }

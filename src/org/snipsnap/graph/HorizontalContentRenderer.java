@@ -36,9 +36,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class HorizontalContentRenderer implements ContentRenderer {
+  Renderer renderer = new HorizontalRenderer();
 
   public String getName() {
     return "horizontal";
+  }
+
+  public Renderer getRenderer() {
+    return renderer;
   }
 
   public void render(HttpServletRequest request, HttpServletResponse response, String content) throws IOException {
@@ -47,7 +52,6 @@ public class HorizontalContentRenderer implements ContentRenderer {
     ServletOutputStream out = response.getOutputStream();
 
     TreeBuilder builder = new StringTreeBuilder(content);
-    Renderer renderer = new HorizontalRenderer();
     renderer.render(builder.build(), out, new GraphRendererContext());
   }
 }

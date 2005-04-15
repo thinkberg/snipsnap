@@ -35,9 +35,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class PSPContentRenderer implements ContentRenderer {
+  Renderer renderer = new DirectedAcyclicGraphRenderer();
 
   public String getName() {
     return "psp";
+  }
+
+  public Renderer getRenderer() {
+    return renderer;
   }
 
   public void render(HttpServletRequest request, HttpServletResponse response, String content) throws IOException {
@@ -46,7 +51,6 @@ public class PSPContentRenderer implements ContentRenderer {
     ServletOutputStream out = response.getOutputStream();
 
     StringDirectedAcyclicGraphBuilder builder = new StringDirectedAcyclicGraphBuilder(content);
-    Renderer renderer = new DirectedAcyclicGraphRenderer();
     renderer.render(builder.build(), out, new GraphRendererContext());
   }
 }

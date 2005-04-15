@@ -36,9 +36,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class VerticalContentRenderer implements ContentRenderer {
+  Renderer renderer = new VerticalRenderer();
 
   public String getName() {
     return "vertical";
+  }
+
+  public Renderer getRenderer() {
+    return renderer;
   }
 
   public void render(HttpServletRequest request, HttpServletResponse response, String content) throws IOException {
@@ -47,7 +52,6 @@ public class VerticalContentRenderer implements ContentRenderer {
     ServletOutputStream out = response.getOutputStream();
 
     TreeBuilder builder = new StringTreeBuilder(content);
-    Renderer renderer = new VerticalRenderer();
     renderer.render(builder.build(), out, new GraphRendererContext());
   }
 }
