@@ -29,8 +29,8 @@ import org.radeox.util.Encoder;
 import org.radeox.util.i18n.ResourceManager;
 import org.snipsnap.net.RenderServlet;
 import org.snipsnap.render.macro.parameter.SnipMacroParameter;
-import snipsnap.api.snip.Snip;
 import snipsnap.api.snip.SnipLink;
+import snipsnap.api.snip.Snip;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -61,16 +61,34 @@ public class GraphMacro extends SnipMacro {
 
   public void execute(Writer writer, SnipMacroParameter params)
           throws IllegalArgumentException, IOException {
-    snipsnap.api.snip.Snip snip = params.getSnipRenderContext().getSnip();
+    Snip snip = params.getSnipRenderContext().getSnip();
     String name = snip.getName();
     String handler = params.get("handler", 0);
-    writer.write("<img src=\"exec/render?name=");
+    String size = params.get("size", 1);
+    String imageMap = params.get("ismap", 2);
+
+    writer.write("<img class=\"graph-image\" ");
+    if (null != size && size.matches("[0-9]+%")) {
+      writer.write("width=\"");
+      writer.write(size);
+      writer.write("\" ");
+    }
+    writer.write("src=\"exec/render?name=");
     writer.write(SnipLink.encode(name));
     writer.write("&amp;handler=");
     writer.write(handler);
-
     String content = Encoder.unescape(params.getContent());
-    writer.write("&amp;id=" + RenderServlet.addContent(content));
+    String renderId = RenderServlet.addContent(name, content);
+    writer.write("&amp;id=");
+    writer.write(renderId);
+    if (null != imageMap) {
+      writer.write("\" usemap=\"#");
+      writer.write(renderId);
+    }
     writer.write("\"/>");
+
+    if (null != imageMap) {
+      writer.write(RenderServlet.getImageMap(renderId, handler));
+    }
   }
 }
