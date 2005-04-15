@@ -95,7 +95,10 @@ public class LoginServlet extends HttpServlet {
   }
 
   private String sanitize(String parameter) {
-    return parameter.split("[\r\n]")[0];
+    if(parameter != null) {
+      return parameter.split("[\r\n]")[0];
+    }
+    return parameter;
   }
 
   protected void doGet(HttpServletRequest request, HttpServletResponse response)

@@ -25,19 +25,13 @@
 package org.snipsnap.net;
 
 import org.radeox.util.logging.Logger;
-import snipsnap.api.app.Application;
-import snipsnap.api.config.Configuration;
-import snipsnap.api.container.Components;
 import org.snipsnap.net.filter.MultipartWrapper;
 import org.snipsnap.security.AccessController;
-import snipsnap.api.snip.Snip;
 import org.snipsnap.snip.SnipFormatter;
+import org.snipsnap.user.AuthenticationService;
 import snipsnap.api.snip.SnipLink;
 import snipsnap.api.snip.SnipSpace;
 import snipsnap.api.snip.SnipSpaceFactory;
-import org.snipsnap.user.AuthenticationService;
-import org.snipsnap.user.Permissions;
-import org.snipsnap.user.Security;
 import snipsnap.api.user.User;
 
 import javax.servlet.RequestDispatcher;
@@ -160,6 +154,9 @@ public class SnipStoreServlet extends HttpServlet {
   }
 
   private String sanitize(String parameter) {
-    return parameter.split("[\r\n]")[0];
+    if (parameter != null) {
+      return parameter.split("[\r\n]")[0];
+    }
+    return parameter;
   }
 }

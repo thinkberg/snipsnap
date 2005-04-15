@@ -27,16 +27,24 @@ package org.snipsnap.net;
 import org.radeox.util.Service;
 import org.snipsnap.graph.ContentRenderer;
 import org.snipsnap.graph.HorizontalContentRenderer;
+import org.snipsnap.graph.builder.StringTreeBuilder;
+import org.snipsnap.graph.builder.TreeBuilder;
+import org.snipsnap.graph.context.UrlContext;
+import org.snipsnap.graph.renderer.HtmlMapRenderer;
+import org.snipsnap.graph.renderer.Renderer;
+import snipsnap.api.app.Application;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Collections;
-import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.io.IOException;
+import java.util.Map;
 
 /**
  * Render special content added to a temporary store. This is used for the
@@ -47,40 +55,16 @@ import java.io.IOException;
  * @version $Id$
  */
 public class RenderServlet extends HttpServlet {
+  private final static String RENDER_ID = "__render_id";
+
   private static Map contentMap = Collections.synchronizedMap(new HashMap());
-  private Map handlers = new HashMap();
+  private static Map handlers = new HashMap();
   private final static ContentRenderer DEFAULT_HANDLER = new HorizontalContentRenderer();
 
   /**
-   * Add content to the temporary store and return an id that can be used to select
-   * the content later. The graph macro uses this to store the graph description
-   * here which is then handed over to the rendering handler to translate to an image.
-   * <p/>
-   * Example:
-   * &lt;img src="/exec/render?id=XXXX&handler=YYYY"/&gt;
-   *
-   * @param content the textual content to be rendered
-   * @return an it to add to the url for retrieving the rendered content
-   */
-  public static String addContent(String content) {
-    String key = null;
-    synchronized (contentMap) {
-      int add = 0;
-      int hashCode = content.hashCode();
-      do {
-        key = String.valueOf(hashCode + add++);
-      } while (contentMap.containsKey(key));
-      contentMap.put(key, content);
-    }
-    return key;
-  }
-
-  /**
    * Initialize the render servlet by loading the content handlers.
-   *
-   * @throws ServletException
    */
-  public void init() throws ServletException {
+  static {
     Iterator contentRenderer =
             Service.providers(org.snipsnap.graph.ContentRenderer.class);
     while (contentRenderer.hasNext()) {
@@ -89,13 +73,72 @@ public class RenderServlet extends HttpServlet {
     }
   }
 
+
+  /**
+   * Add content to the temporary store and return an id that can be used to select
+   * the content later. The graph macro uses this to store the graph description
+   * here which is then handed over to the rendering handler to translate to an image.
+   * The id will persist until content for the same name is added.
+   * <p/>
+   * Example:
+   * &lt;img src="/exec/render?id=XXXX&handler=YYYY"/&gt;
+   *
+   * @param content the textual content to be rendered
+   * @return an it to add to the url for retrieving the rendered content
+   */
+  public static String addContent(String name, String content) {
+    Application app = Application.get();
+    String baseId = RENDER_ID + name;
+    String renderId = null;
+    synchronized (contentMap) {
+      String key = null;
+      int add = 0;
+      do {
+        key = String.valueOf(baseId + add++);
+      } while (app.getObject(key) != null);
+      // store a dummy to ensure the id is taken
+      app.storeObject(key, "");
+      // store content with corresponding id
+      renderId = Integer.toHexString(key.hashCode());
+      contentMap.put(renderId, content);
+    }
+    return renderId;
+  }
+
+  public static String getImageMap(String renderId, String handler) {
+    HtmlMapRenderer mapRenderer = new HtmlMapRenderer();
+    TreeBuilder builder = new StringTreeBuilder((String) contentMap.get(renderId));
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+    Renderer renderer = ((ContentRenderer) handlers.get(handler)).getRenderer();
+    if (null != renderer) {
+      UrlContext context = new UrlContext(renderId, renderer);
+      mapRenderer.render(builder.build(), out, context);
+      try {
+        out.flush();
+        out.close();
+      } catch (IOException e) {
+        // ignore as this is unlikely to happen
+        e.printStackTrace();
+      }
+      try {
+        return out.toString(Application.get().getConfiguration().getEncoding());
+      } catch (UnsupportedEncodingException e) {
+        return out.toString();
+      }
+    } else {
+      // we can't render the image map, so return comment
+      return "<!-- image map not possible, missing renderer for handler: " + handler + " -->";
+    }
+  }
+
+
   public void doGet(HttpServletRequest request, HttpServletResponse response)
           throws IOException, ServletException {
 
     String handler = request.getParameter("handler");
     String id = request.getParameter("id");
     String content = (String) contentMap.get(id);
-    contentMap.remove(id);
 
     ContentRenderer renderer = (ContentRenderer) handlers.get(handler);
     if (null == renderer) {

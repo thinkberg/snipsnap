@@ -148,6 +148,9 @@ public class NewUserServlet extends HttpServlet {
   }
 
   private String sanitize(String parameter) {
-    return parameter.split("[\r\n]")[0];
+    if(parameter != null) {
+      return parameter.split("[\r\n]")[0];
+    }
+    return parameter;
   }
 }
