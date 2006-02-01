@@ -36,7 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class ExplorerContentRenderer implements ContentRenderer {
-  Renderer renderer = new ExplorerRenderer();
+  private Renderer renderer = new ExplorerRenderer();
 
   public String getName() {
     return "explorer";

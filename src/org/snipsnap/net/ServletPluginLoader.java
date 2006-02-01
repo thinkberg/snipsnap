@@ -29,6 +29,8 @@ import snipsnap.api.container.Components;
 import snipsnap.api.snip.Snip;
 import snipsnap.api.plugin.ServletPlugin;
 import org.snipsnap.snip.label.TypeLabel;
+import org.radeox.util.Service;
+import org.radeox.util.logging.Logger;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -88,13 +90,20 @@ public class ServletPluginLoader {
     if (null == pluginServlets) {
       pluginServlets = new HashMap();
 
-        Collection components = snipsnap.api.container.Components.findComponents(ServletPlugin.class);
-
-         Iterator iterator = components.iterator();
-         while (iterator.hasNext()) {
-             ServletPlugin plugin = (ServletPlugin) iterator.next();
-             pluginServlets.put(plugin.getPath(), plugin);
-         }
-     }
+      // load plugins from services api
+      Iterator pluginServletNames = Service.providerNames(ServletPlugin.class);
+      while (pluginServletNames.hasNext()) {
+        String pluginLine = (String) pluginServletNames.next();
+        if (!pluginLine.startsWith("#")) {
+          String[] pluginInfo = pluginLine.split("\\p{Space}+");
+          if (pluginInfo.length > 0) {
+            pluginServlets.put(pluginInfo[0], pluginInfo.length > 1 ? pluginInfo[1] : null);
+            Logger.log("found plugin: " + pluginInfo[0]);
+          } else {
+            Logger.warn("ignoring servlet plugin '" + pluginLine + "': missing type or servlet");
+          }
+        }
+      }
+    }
   }
 }

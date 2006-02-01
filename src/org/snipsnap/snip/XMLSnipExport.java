@@ -24,7 +24,6 @@
  */
 package org.snipsnap.snip;
 
-import org.apache.xmlrpc.Base64;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
@@ -37,6 +36,7 @@ import org.snipsnap.snip.storage.UserSerializer;
 import snipsnap.api.user.User;
 import org.snipsnap.versioning.VersionInfo;
 import org.snipsnap.versioning.VersionManager;
+import org.apache.commons.codec.binary.Base64;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -164,6 +164,6 @@ public class XMLSnipExport {
       data.write(buffer, 0, count);
     }
     data.close();
-    att.addElement("data").addText(new String(Base64.encode(data.toByteArray()), "UTF-8"));
+    att.addElement("data").addText(new String(Base64.encodeBase64(data.toByteArray()), "UTF-8"));
   }
 }

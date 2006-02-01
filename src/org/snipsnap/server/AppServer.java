@@ -34,6 +34,7 @@ import org.snipsnap.config.ServerConfiguration;
 import org.snipsnap.user.Digest;
 
 import java.io.*;
+import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;

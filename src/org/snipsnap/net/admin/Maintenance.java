@@ -26,11 +26,11 @@
 package org.snipsnap.net.admin;
 
 import org.radeox.util.logging.Logger;
+import org.snipsnap.snip.Access;
+import org.snipsnap.snip.Links;
 import snipsnap.api.app.Application;
 import snipsnap.api.config.Configuration;
 import snipsnap.api.container.Components;
-import org.snipsnap.snip.Access;
-import org.snipsnap.snip.Links;
 import snipsnap.api.snip.Snip;
 import snipsnap.api.snip.SnipSpace;
 

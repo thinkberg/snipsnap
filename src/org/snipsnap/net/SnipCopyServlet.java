@@ -25,10 +25,10 @@
 package org.snipsnap.net;
 
 import org.radeox.util.logging.Logger;
+import org.snipsnap.net.filter.MultipartWrapper;
 import snipsnap.api.app.Application;
 import snipsnap.api.config.Configuration;
 import snipsnap.api.container.Components;
-import org.snipsnap.net.filter.MultipartWrapper;
 import snipsnap.api.snip.Snip;
 import snipsnap.api.snip.SnipLink;
 import snipsnap.api.snip.SnipSpace;
@@ -110,11 +110,18 @@ public class SnipCopyServlet extends HttpServlet {
       return;
     }
 
-    String referer = request.getHeader("REFERER");
+    String referer = sanitize(request.getHeader("REFERER"));
     if (referer == null || referer.length() == 0) {
       referer = config.getSnipUrl(config.getStartSnip());
     }
     response.sendRedirect(referer);
+  }
+
+  private String sanitize(String parameter) {
+    if (null != parameter) {
+      return parameter.split("[\r\n]")[0];
+    }
+    return parameter;
   }
 
 }

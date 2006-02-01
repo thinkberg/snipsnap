@@ -44,9 +44,6 @@ import java.io.IOException;
  */
 public class NameSpaceServlet extends HttpServlet {
 
-  public void init() throws ServletException {
-  }
-
   public void doGet(HttpServletRequest request, HttpServletResponse response)
           throws IOException, ServletException {
 

@@ -91,4 +91,6 @@ public class GraphMacro extends SnipMacro {
       writer.write(RenderServlet.getImageMap(renderId, handler));
     }
   }
+
+
 }

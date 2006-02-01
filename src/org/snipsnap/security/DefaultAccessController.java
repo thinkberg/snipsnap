@@ -46,8 +46,9 @@ import snipsnap.api.snip.Snip;
  * @version $Id$
  */
 
-public class DefaultAccessController implements AccessController  {
+public class DefaultAccessController implements AccessController {
   private AccessManager manager;
+  private static final Permission VIEW_LOGIN_PERMISSION = new Permission("VIEW_LOGIN");
 
   public DefaultAccessController() {
     AclStore store = new FileAclStore(new AclParser());
@@ -61,9 +62,15 @@ public class DefaultAccessController implements AccessController  {
   public boolean checkPermission(User user, Permission permission, AccessContext context) {
     Subject subject = user.getSubject();
 
-    System.err.println("Check user="+user.getLogin()+":"+subject.getName() +" permission="+permission+" principals="+subject.getPrincipals());
-    boolean hasPermission = manager.checkPermission(subject.getPrincipals(), permission);
-    System.err.println("  hasPermission="+hasPermission);
+    System.err.println("Check user=" + user.getLogin() + ":" + subject.getName() + " permission=" + permission + " principals=" + subject.getPrincipals());
+    boolean hasPermission;
+    if (VIEW_LOGIN_PERMISSION.equals(permission)) {
+      hasPermission = user.isGuest();
+    } else {
+      hasPermission = manager.checkPermission(subject.getPrincipals(), permission);
+    }
+//    boolean hasPermission = manager.checkPermission(subject.getPrincipals(), permission);
+    System.err.println("  hasPermission=" + hasPermission);
     return hasPermission;
   }
 }

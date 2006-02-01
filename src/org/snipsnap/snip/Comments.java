@@ -24,27 +24,25 @@
  */
 package org.snipsnap.snip;
 
-import org.radeox.util.logging.Logger;
 import org.radeox.util.i18n.ResourceManager;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
-import org.snipsnap.util.StringUtil;
+import snipsnap.api.app.Application;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipLink;
+import snipsnap.api.snip.SnipSpaceFactory;
+import snipsnap.api.config.Configuration;
 
 import java.io.IOException;
-import java.io.StringWriter;
+import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.text.MessageFormat;
-
-import snipsnap.api.snip.*;
-import snipsnap.api.snip.Snip;
-import snipsnap.api.snip.SnipLink;
-import snipsnap.api.snip.SnipSpaceFactory;
 
 /**
  * Handler for comments added to snips.
+ *
  * @author Stephan J. Schmidt
  * @version $Id$
  */
@@ -119,11 +117,11 @@ public class Comments {
       MessageFormat mf = new MessageFormat(ResourceManager.getString("i18n.messages", "comments.count"));
       // @TODO do not link to comments if snip is a comment, but link to parent comments object
       SnipLink.appendLinkWithRoot(buffer, SnipLink.getCommentsRoot(),
-                                  SnipLink.encode(snip.getName()),
-                                  mf.format(new Object[]{new Integer(getCount())}));
+              SnipLink.encode(snip.getName()),
+              mf.format(new Object[]{new Integer(getCount())}));
       buffer.append(" ");
       MessageFormat mfBy = new MessageFormat(ResourceManager.getString("i18n.messages", "comments.by"));
-      buffer.append(mfBy.format(new Object[] { getUserString() }));
+      buffer.append(mfBy.format(new Object[]{getUserString()}));
     } else {
       buffer.append(ResourceManager.getString("i18n.messages", "comments.none"));
     }
@@ -132,24 +130,22 @@ public class Comments {
   }
 
   public String getPostUrl() throws IOException {
-    StringWriter writer = new StringWriter();
-    SnipLink.appendCommentsUrl(writer, snip.getName(), "post");
-    return writer.getBuffer().toString();
+    Configuration config = Application.get().getConfiguration();
+    return SnipLink.getCommentsRoot() + "/" + snip.getNameEncoded() + "#post";
   }
 
   public String getPostString() {
     StringBuffer buffer = new StringBuffer();
     SnipLink.appendLinkWithRoot(buffer,
-                                SnipLink.getCommentsRoot(),
-                                SnipLink.encode(snip.getName()) + "#post",
-                                ResourceManager.getString("i18n.messages", "comments.post"));
+            SnipLink.getCommentsRoot(),
+            snip.getNameEncoded() + "#post",
+            ResourceManager.getString("i18n.messages", "comments.post"));
     return buffer.toString();
   }
 
   /**
    * Append user list "funzel, arte, warg" to
    * buffer.
-   *
    */
   public String getUserString() {
     init();

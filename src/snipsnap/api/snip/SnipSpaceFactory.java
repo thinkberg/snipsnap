@@ -26,8 +26,6 @@
 package snipsnap.api.snip;
 
 import snipsnap.api.container.Components;
-import snipsnap.api.snip.*;
-import snipsnap.api.snip.SnipSpace;
 
 
 /**
@@ -38,8 +36,8 @@ import snipsnap.api.snip.SnipSpace;
  */
 
 public class SnipSpaceFactory {
-  public static synchronized snipsnap.api.snip.SnipSpace getInstance() {
-    return (SnipSpace) snipsnap.api.container.Components.getComponent(SnipSpace.class);
+  public static synchronized SnipSpace getInstance() {
+    return (SnipSpace) Components.getComponent(SnipSpace.class);
   }
 
   public static synchronized void removeInstance() {

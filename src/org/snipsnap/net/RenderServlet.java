@@ -61,6 +61,7 @@ public class RenderServlet extends HttpServlet {
   private static Map handlers = new HashMap();
   private final static ContentRenderer DEFAULT_HANDLER = new HorizontalContentRenderer();
 
+  private final static Map CTOR = new HashMap();
   /**
    * Initialize the render servlet by loading the content handlers.
    */

@@ -54,7 +54,7 @@ import java.io.Writer;
  */
 
 public class SnipRenderEngine extends BaseRenderEngine
-    implements WikiRenderEngine, IncludeRenderEngine, ImageRenderEngine {
+        implements WikiRenderEngine, IncludeRenderEngine, ImageRenderEngine {
 
 //  private SnipSpace space;
   private AuthenticationService authService;
@@ -70,7 +70,7 @@ public class SnipRenderEngine extends BaseRenderEngine
     return "snipsnap";
   }
 
-   public boolean exists(String name) {
+  public boolean exists(String name) {
     return SnipSpaceFactory.getInstance().exists(name);
   }
 
@@ -90,10 +90,10 @@ public class SnipRenderEngine extends BaseRenderEngine
     Configuration config = snipsnap.api.app.Application.get().getConfiguration();
     String encodedSpace = config.getEncodedSpace();
 
-    if(name.indexOf(encodedSpace.charAt(0)) == -1) {
+    if (name.indexOf(encodedSpace.charAt(0)) == -1) {
       SnipLink.appendCreateLink(buffer, name);
     } else {
-      buffer.append("&#91;<span class=\"error\">illegal '"+encodedSpace+"' in "+Encoder.escape(name)+"</span>&#93;");
+      buffer.append("&#91;<span class=\"error\">illegal '" + encodedSpace + "' in " + Encoder.escape(name) + "</span>&#93;");
     }
   }
 
@@ -106,18 +106,14 @@ public class SnipRenderEngine extends BaseRenderEngine
     }
   }
 
-  private String externalImageLink = null;
   public String getExternalImageLink() {
-    if(null == externalImageLink) {
       Writer writer = new StringBufferWriter();
       try {
         snipsnap.api.snip.SnipLink.appendImage(writer, "Icon-Extlink", "&gt;&gt;");
       } catch (IOException e) {
         // ignore
       }
-      externalImageLink = writer.toString();
-    }
-    return externalImageLink;
+    return writer.toString();
   }
 
   public String render(String content, RenderContext context) {

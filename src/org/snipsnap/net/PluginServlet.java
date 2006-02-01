@@ -27,17 +27,11 @@ package org.snipsnap.net;
 import groovy.text.SimpleTemplateEngine;
 import groovy.text.Template;
 import org.radeox.util.logging.Logger;
-import snipsnap.api.app.Application;
-import snipsnap.api.container.Components;
-import snipsnap.api.snip.Snip;
-import snipsnap.api.snip.SnipSpace;
-import snipsnap.api.plugin.ServletPlugin;
+import org.snipsnap.container.Components;
 import org.snipsnap.snip.label.TypeLabel;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
 import org.snipsnap.user.Security;
-import org.snipsnap.xmlrpc.XmlRpcHandler;
-import org.picocontainer.PicoContainer;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -56,6 +50,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import snipsnap.api.snip.SnipSpace;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.plugin.ServletPlugin;
+import snipsnap.api.app.Application;
+
 public class PluginServlet extends HttpServlet {
   private Map extTypeMap = new HashMap();
   private Map servletCache = new HashMap();
@@ -70,7 +69,6 @@ public class PluginServlet extends HttpServlet {
     // currently supported script types (with extensions)
     extTypeMap.put(".gsp", "text/gsp");
     extTypeMap.put(".groovy", "text/groovy");
-
   }
 
   protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -87,7 +85,7 @@ public class PluginServlet extends HttpServlet {
     // check for the plugin in the snip space which overrides other plugins
     SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
     if (space.exists(pluginName)) {
-      snipsnap.api.snip.Snip snip = space.load(pluginName);
+      Snip snip = space.load(pluginName);
       // only execute plugins who are locked by an Admin
       if (Security.existsPermission(Permissions.EDIT_SNIP, snip, EXEC_ROLES)) {
         String mimeType = getMIMEType(snip);
@@ -111,28 +109,67 @@ public class PluginServlet extends HttpServlet {
     // check for registered plugins
     Map plugins = ServletPluginLoader.getPlugins();
     if (plugins.containsKey(pluginName)) {
-      // a non-script plugin (i.e. servlet or simply a file)
-      ServletPlugin servletPlugin = (ServletPlugin) plugins.get(pluginName);
-      if (null == servletPlugin) {
-        try {
-          servletPlugin = getServletPlugin(pluginName);
-          servletCache.put(pluginName, servletPlugin);
-        } catch (Exception e) {
-          // ignore plugins not found ...
+      String handlerMIMEType = (String) plugins.get(pluginName);
+
+      // try to find a mime type for the requested plugin
+      if (null == handlerMIMEType) {
+        int extIndex = pluginName.indexOf(".");
+        if (extIndex != -1) {
+          handlerMIMEType = (String) extTypeMap.get(pluginName.substring(extIndex));
         }
       }
 
-      // a servlet plugin is executed, everything else is included into the response
-      if (null != servletPlugin) {
+      if ("text/gsp".equalsIgnoreCase(handlerMIMEType)) {
+        BufferedWriter writer = new BufferedWriter(response.getWriter());
         try {
-          servletPlugin.service(request, response);
+          handleGroovyTemplate(getTemplateSource(pluginName), writer);
         } catch (Exception e) {
-          Logger.warn("error while executing servlet plugin", e);
-          throw new ServletException("error while executing servlet plugin", e);
+          e.printStackTrace();
+          writer.write("<span class=\"error\">" + e.getLocalizedMessage() + "</span>");
         }
+        writer.flush();
+        return;
+      } else {
+        // a non-script plugin (i.e. servlet or simply a file)
+        ServletPlugin servletPlugin = (ServletPlugin) servletCache.get(pluginName);
+        if (null == servletPlugin) {
+          try {
+            servletPlugin = getServletPlugin(pluginName);
+            servletCache.put(pluginName, servletPlugin);
+          } catch (Exception e) {
+            // ignore plugins not found ...
+          }
+        }
+
+        // a servlet plugin is executed, everything else is included into the response
+        if (null != servletPlugin) {
+          try {
+            servletPlugin.service(request, response);
+          } catch (Exception e) {
+            Logger.warn("error while executing servlet plugin", e);
+            throw new ServletException("error while executing servlet plugin", e);
+          }
+        } else {
+          if (null != handlerMIMEType) {
+            response.setContentType(handlerMIMEType);
+          }
+          OutputStream out = response.getOutputStream();
+          InputStream fileIs = PluginServlet.class.getResourceAsStream("/" + pluginName);
+          if (null != fileIs) {
+            byte[] buffer = new byte[1024];
+            int bytes = 0;
+            while ((bytes = fileIs.read(buffer)) != -1) {
+              out.write(buffer, 0, bytes);
+            }
+            out.flush();
+          } else {
+            throw new ServletException("unable to load servlet plugin: not found");
+          }
+        }
+        return;
       }
-      return;
     }
+
     response.sendError(HttpServletResponse.SC_FORBIDDEN);
   }
 
@@ -141,7 +178,7 @@ public class PluginServlet extends HttpServlet {
     return (ServletPlugin) pluginClass.newInstance();
   }
 
-  private String getMIMEType(snipsnap.api.snip.Snip snip) {
+  private String getMIMEType(Snip snip) {
     Collection mimeTypes = snip.getLabels().getLabels("TypeLabel");
     if (!mimeTypes.isEmpty()) {
       Iterator handlerIt = mimeTypes.iterator();
@@ -156,7 +193,7 @@ public class PluginServlet extends HttpServlet {
   private void handleGroovyTemplate(String source, Writer out) throws Exception {
     try {
       Template groovyTemplate = templateEngine.createTemplate(source);
-      groovyTemplate.make(snipsnap.api.app.Application.get().getParameters()).writeTo(out);
+      groovyTemplate.make(Application.get().getParameters()).writeTo(out);
     } catch (Error e) {
       e.printStackTrace();
       throw new ServletException("groovy error", e);

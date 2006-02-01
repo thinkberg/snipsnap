@@ -25,7 +25,6 @@
  */
 package org.snipsnap.net.admin;
 
-import org.apache.xmlrpc.Base64;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.radeox.util.logging.Logger;
@@ -35,6 +34,8 @@ import snipsnap.api.snip.Snip;
 import org.snipsnap.snip.attachment.Attachment;
 import org.snipsnap.snip.attachment.storage.AttachmentStorage;
 import snipsnap.api.container.Components;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.BinaryDecoder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -84,7 +85,7 @@ public class ThemeImageServlet extends HttpServlet {
   }
 
   private InputStream getImageStream(String base64str) throws Exception {
-    byte buffer[] = Base64.decode(base64str.getBytes("UTF-8"));
+    byte buffer[] = Base64.decodeBase64(base64str.getBytes("UTF-8"));
     return new ByteArrayInputStream(buffer);
   }
 

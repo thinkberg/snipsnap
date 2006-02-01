@@ -25,34 +25,37 @@
 
 package org.snipsnap.xmlrpc;
 
-import org.apache.xmlrpc.XmlRpcException;
-import org.dom4j.io.OutputFormat;
-import org.dom4j.io.XMLWriter;
-import snipsnap.api.app.Application;
 import org.snipsnap.app.ApplicationManager;
-import snipsnap.api.config.Configuration;
 import org.snipsnap.config.ConfigurationManager;
 import org.snipsnap.config.ConfigurationProxy;
 import org.snipsnap.config.Globals;
 import org.snipsnap.config.InitializeDatabase;
-import snipsnap.api.snip.Snip;
-import snipsnap.api.snip.SnipSpace;
+import org.snipsnap.container.Components;
 import org.snipsnap.snip.XMLSnipExport;
 import org.snipsnap.snip.XMLSnipImport;
 import org.snipsnap.snip.storage.SnipSerializer;
 import org.snipsnap.user.AuthenticationService;
-import snipsnap.api.user.User;
 import org.snipsnap.user.UserManager;
+import org.dom4j.io.XMLWriter;
+import org.dom4j.io.OutputFormat;
+import org.apache.xmlrpc.XmlRpcException;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.File;
 import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
+
+import snipsnap.api.snip.SnipSpace;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.app.Application;
+import snipsnap.api.user.User;
+import snipsnap.api.config.Configuration;
 
 /**
  * Handles XML-RPC calls for the SnipSnap API
@@ -62,9 +65,9 @@ import java.util.Vector;
  */
 
 public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler {
-  // @TODO use Gabriel instead
   private final static List FREE_METHODS = Arrays.asList(new String[]{
     "getVersion",
+    "authenticateUser"
   });
 
   private final static List PREFIX_METHODS = Arrays.asList(new String[]{
@@ -96,11 +99,11 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
 
   protected boolean authenticate(String username, String password) {
     Globals globals = ConfigurationProxy.getInstance();
-    if (password != null && password.equals(globals.getInstallKey())) {
+    if(password != null && password.equals(globals.getInstallKey())) {
       return true;
     }
 
-    snipsnap.api.user.User user = authenticationService.authenticate(username, password);
+    User user = authenticationService.authenticate(username, password);
     if (user != null && user.isAdmin()) {
       Application.get().setUser(user);
       return true;
@@ -110,26 +113,33 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
   }
 
   public Object execute(String method, Vector vector, String user, String password) throws Exception {
+    if(method.startsWith(API_PREFIX)) {
+        method = method.substring(API_PREFIX.length()+1);
+    }
+
+    if (PREFIX_METHODS.contains(method)) {
+      if(Application.get().getObject(Application.OID) == null || Application.get().getConfiguration() == null) {
+        if(!(vector.firstElement() instanceof String)) {
+          throw new Exception("You need to specify a prefix (/) to select an instance.");
+        }
+        String prefix = (String) vector.firstElement();
+        String appOid = applicationManager.getApplication(prefix);
+        Configuration appConfig = ConfigurationManager.getInstance().getConfiguration(appOid);
+        if (appConfig != null) {
+          if(prefix.equals(vector.get(0))) {
+            vector.remove(0);
+          }
+          Application.get().setConfiguration(appConfig);
+          Application.get().storeObject(Application.OID, appOid);
+        }
+      }
+    }
+
     if (FREE_METHODS.contains(method)) {
       return super.execute(method, vector);
-    } else if (PREFIX_METHODS.contains(method)) {
-      if (!(vector.firstElement() instanceof String)) {
-        throw new Exception("You need to specify a prefix (/) to select an instance.");
-      }
-      String prefix = (String) vector.firstElement();
-      String appOid = applicationManager.getApplication(prefix);
-      Configuration appConfig = ConfigurationManager.getInstance().getConfiguration(appOid);
-      if (appConfig != null) {
-        if (prefix.equals(vector.get(0))) {
-          vector.remove(0);
-        }
-        snipsnap.api.app.Application.get().setConfiguration(appConfig);
-        Application.get().storeObject(snipsnap.api.app.Application.OID, appOid);
-        return super.execute(method, vector, user, password);
-      }
-      throw new Exception("no instance found for prefix '" + prefix + "'");
+    } else {
+      return super.execute(method, vector, user, password);
     }
-    return super.execute(method, vector, user, password);
   }
 
   public String getName() {
@@ -137,7 +147,7 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
   }
 
   public String getSnipAsXml(String name) {
-    snipsnap.api.snip.Snip snip = space.load(name);
+    Snip snip = space.load(name);
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     OutputFormat outputFormat = OutputFormat.createCompactFormat();
     outputFormat.setEncoding("UTF-8");
@@ -152,17 +162,17 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
   }
 
   public String getSnip(String name) {
-    snipsnap.api.snip.Snip snip = space.load(name);
+    Snip snip = space.load(name);
     return snip.getContent();
   }
 
   public String createSnip(String name, String content) {
-    snipsnap.api.snip.Snip snip = space.create(name, content);
+    Snip snip = space.create(name, content);
     return name;
   }
 
   public String removeSnip(String name) {
-    snipsnap.api.snip.Snip snip = space.load(name);
+    Snip snip = space.load(name);
     space.remove(snip);
     return name;
   }
@@ -181,12 +191,13 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
    * Authenticate a user. This can be used for single sign on
    * (e.g. the #java.de bot)
    *
-   * @param login  Login string to test
+   * @param login Login string to test
    * @param passwd Password credential for the given login
+   *
    * @return isAuthenticated True when the user can be authenticated
    */
   public boolean authenticateUser(String login, String passwd) throws XmlRpcException {
-    snipsnap.api.user.User user = authenticationService.authenticate(login, passwd);
+    User user = authenticationService.authenticate(login, passwd);
     return (null != user);
   }
 
@@ -194,19 +205,18 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
 
   /**
    * Dump the database contents.
-   *
    * @return a XML stream containing the dump of the database
    * @throws IOException
    */
   public byte[] dumpXml() throws IOException {
-    Configuration config = snipsnap.api.app.Application.get().getConfiguration();
+    Configuration config = Application.get().getConfiguration();
     ByteArrayOutputStream exportStream = new ByteArrayOutputStream();
     XMLSnipExport.store(exportStream, space.getAll(), um.getAll(), null, null, config.getFilePath());
     return exportStream.toByteArray();
   }
 
   public byte[] dumpXml(String match) throws IOException {
-    snipsnap.api.config.Configuration config = snipsnap.api.app.Application.get().getConfiguration();
+    Configuration config = Application.get().getConfiguration();
     ByteArrayOutputStream exportStream = new ByteArrayOutputStream();
     XMLSnipExport.store(exportStream, Arrays.asList(space.match(match)), null, null, null, config.getFilePath());
     return exportStream.toByteArray();
@@ -221,7 +231,7 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
     try {
       XMLSnipImport.load(importStream, flags);
     } catch (Exception e) {
-      System.err.println("SnipSnapHandler.restoreXml: unable to import snips: " + e);
+      System.err.println("SnipSnapHandler.restoreXml: unable to import snips: "+e);
       throw new IOException(e.getMessage());
     }
     return true;
@@ -229,7 +239,8 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
 
   public String install(String prefix, Hashtable appConfig) throws Exception {
     ConfigurationManager configManager = ConfigurationManager.getInstance();
-    String appOid = applicationManager.getApplication(prefix);
+    ApplicationManager appManager = (ApplicationManager) Components.getComponent(ApplicationManager.class);
+    String appOid = appManager.getApplication(prefix);
     Configuration config = configManager.getConfiguration(appOid);
 
     // only set new values if config does not exits
@@ -238,7 +249,7 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
       Iterator optionIt = appConfig.keySet().iterator();
       while (optionIt.hasNext()) {
         String option = (String) optionIt.next();
-        String value = (String) appConfig.get(option);
+        String value = (String)appConfig.get(option);
         config.set(option, value);
       }
       if (prefix != null && !"".equals(prefix)) {
@@ -251,15 +262,14 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
       return configManager.getConfiguration(appOid).getUrl(prefix);
     }
 
-    return "a configuration for '" + prefix + "' already exists, aborting.";
+    return "a configuration for '"+prefix+"' already exists, aborting.";
   }
 
   /**
    * Install a new instance with user name and password. Uses default configuration.
-   *
-   * @param prefix     the instance prefix
+   * @param prefix the instance prefix
    * @param adminLogin admin login name
-   * @param passwd     admin password
+   * @param passwd admin password
    */
   public String install(String prefix, String adminLogin, String passwd) throws Exception {
     Hashtable appConfig = new Hashtable();
@@ -272,13 +282,12 @@ public class SnipSnapHandler extends AuthXmlRpcHandler implements XmlRpcHandler 
    * Install a new instance with user name and password. Uses the configuration as
    * provided in the command line but overrides the admin user/password found in
    * that file.
-   *
-   * @param prefix     the instance prefix
+   * @param prefix the instance prefix
    * @param adminLogin admin login name
-   * @param passwd     admin password
+   * @param passwd admin password
    */
-  public String install(String prefix, String adminLogin, String passwd, Hashtable appConfig) throws Exception {
-    appConfig.put(snipsnap.api.config.Configuration.APP_ADMIN_LOGIN, adminLogin);
+  public String install(String prefix, String adminLogin, String passwd, Hashtable appConfig) throws Exception{
+    appConfig.put(Configuration.APP_ADMIN_LOGIN, adminLogin);
     appConfig.put(Configuration.APP_ADMIN_PASSWORD, passwd);
     return install(prefix, appConfig);
   }

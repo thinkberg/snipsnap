@@ -26,6 +26,6 @@ User   {
 
 Owner  { }
 Guest  { 
-  VIEW_LOGIN
   VIEW_SNIP
+  VIEW_LOGIN
 }

@@ -27,8 +27,8 @@ package org.snipsnap.graph;
 import org.snipsnap.graph.builder.StringUMLBuilder;
 import org.snipsnap.graph.builder.UMLBuilder;
 import org.snipsnap.graph.context.UMLRendererContext;
-import org.snipsnap.graph.renderer.UMLGraphRenderer;
 import org.snipsnap.graph.renderer.Renderer;
+import org.snipsnap.graph.renderer.UMLGraphRenderer;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class UMLContentRenderer implements ContentRenderer {
+  private UMLGraphRenderer renderer = new UMLGraphRenderer();
 
   public String getName() {
     return "uml";
@@ -49,9 +50,7 @@ public class UMLContentRenderer implements ContentRenderer {
     response.setContentType("image/png");
 
     ServletOutputStream out = response.getOutputStream();
-
     UMLBuilder builder = new StringUMLBuilder(content);
-    UMLGraphRenderer renderer = new UMLGraphRenderer();
     try {
       renderer.render(builder.build(), out, new UMLRendererContext());
     } catch (Exception e) {

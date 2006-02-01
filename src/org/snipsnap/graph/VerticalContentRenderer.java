@@ -50,7 +50,6 @@ public class VerticalContentRenderer implements ContentRenderer {
     response.setContentType("image/png");
 
     ServletOutputStream out = response.getOutputStream();
-
     TreeBuilder builder = new StringTreeBuilder(content);
     renderer.render(builder.build(), out, new GraphRendererContext());
   }

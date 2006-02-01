@@ -36,7 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class HorizontalContentRenderer implements ContentRenderer {
-  Renderer renderer = new HorizontalRenderer();
+  private Renderer renderer = new HorizontalRenderer();;
 
   public String getName() {
     return "horizontal";

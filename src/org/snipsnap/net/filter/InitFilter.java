@@ -27,20 +27,17 @@ package org.snipsnap.net.filter;
 import org.radeox.util.i18n.ResourceManager;
 import org.radeox.util.logging.LogHandler;
 import org.radeox.util.logging.Logger;
-import snipsnap.api.app.Application;
 import org.snipsnap.app.ApplicationManager;
-import snipsnap.api.config.Configuration;
 import org.snipsnap.config.ConfigurationManager;
 import org.snipsnap.config.ConfigurationProxy;
 import org.snipsnap.config.Globals;
 import org.snipsnap.config.ServerConfiguration;
-import snipsnap.api.container.Components;
 import org.snipsnap.container.SessionService;
+import org.snipsnap.user.Digest;
+import snipsnap.api.config.Configuration;
 import snipsnap.api.snip.Snip;
 import snipsnap.api.snip.SnipLink;
 import snipsnap.api.snip.SnipSpace;
-import snipsnap.api.snip.SnipSpaceFactory;
-import org.snipsnap.user.Digest;
 import snipsnap.api.user.User;
 
 import javax.servlet.Filter;
@@ -187,9 +184,9 @@ public class InitFilter implements Filter {
     }
     if (weblogsPing) {
       System.out.println(">> WARNING: Weblogs ping is enabled for some instances.\n" +
-                         ">> This means that SnipSnap sends notifications to hosts on the internet\n" +
-                         ">> when your weblog changes. To turn this off take a look at the FAQ at\n" +
-                         ">> http://snipsnap.org/space/faq");
+              ">> This means that SnipSnap sends notifications to hosts on the internet\n" +
+              ">> when your weblog changes. To turn this off take a look at the FAQ at\n" +
+              ">> http://snipsnap.org/space/faq");
     }
     System.out.println(">> Installation key: " + globals.getInstallKey());
     System.out.println(">> Loaded " + okCount + " instances (" + (prefixes.size() - okCount) + " not configured).");
@@ -205,7 +202,7 @@ public class InitFilter implements Filter {
 
     if (!startUpDone) {
       ((HttpServletResponse) response).sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE,
-                                                 "Startup in progress, please wait ...");
+              "Startup in progress, please wait ...");
       return;
     }
 
@@ -257,7 +254,7 @@ public class InitFilter implements Filter {
         chain.doFilter(request, response);
       } else {
         ((HttpServletResponse) response).sendError(HttpServletResponse.SC_PRECONDITION_FAILED,
-                                                   "Please finish database installation first.");
+                "Please finish database installation first.");
       }
       return;
     }
@@ -331,7 +328,7 @@ public class InitFilter implements Filter {
       } else {
         String pathInfo = request.getPathInfo();
         paramMap.put("URI", appConfig.getUrl((path != null ? path : "") +
-                                             (pathInfo != null ? pathInfo : "")));
+                (pathInfo != null ? pathInfo : "")));
       }
       paramMap.put("RSS", appConfig.getUrl("/exec/rss"));
       paramMap.put("request", request);

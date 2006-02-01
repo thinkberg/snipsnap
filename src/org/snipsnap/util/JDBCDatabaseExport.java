@@ -29,13 +29,13 @@ import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
 import snipsnap.api.config.Configuration;
-import org.snipsnap.snip.storage.SnipDataSerializer;
 import org.snipsnap.snip.storage.Serializer;
+import org.snipsnap.snip.storage.SnipDataSerializer;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -44,10 +44,9 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Iterator;
-import java.util.Arrays;
 
 public class JDBCDatabaseExport {
   private final static Map DBSER = new HashMap();

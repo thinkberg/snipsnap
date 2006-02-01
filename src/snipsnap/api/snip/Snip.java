@@ -25,24 +25,28 @@
 
 package snipsnap.api.snip;
 
-import org.snipsnap.serialization.Appendable;
-import org.snipsnap.snip.attachment.Attachments;
-import snipsnap.api.label.Labels;
-import org.snipsnap.snip.*;
-import org.snipsnap.user.Permissions;
-import snipsnap.api.user.User;
 import org.snipsnap.render.macro.list.Linkable;
 import org.snipsnap.render.macro.list.Nameable;
+import org.snipsnap.serialization.Appendable;
+import org.snipsnap.snip.Access;
+import org.snipsnap.snip.Comments;
+import org.snipsnap.snip.Modified;
+import org.snipsnap.snip.SnipPath;
+import org.snipsnap.snip.Links;
+import org.snipsnap.snip.attachment.Attachments;
+import org.snipsnap.user.Permissions;
+import snipsnap.api.label.Labels;
+import snipsnap.api.user.User;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.List;
-import java.io.IOException;
 
 /**
  * Interface for snips
  *
- * @author  Stephan J. Schmidt
+ * @author Stephan J. Schmidt
  * @version $Id: Snip.java 1706 2004-07-08 08:53:20Z stephan $
  */
 

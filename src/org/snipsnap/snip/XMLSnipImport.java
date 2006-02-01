@@ -24,8 +24,7 @@
  */
 package org.snipsnap.snip;
 
-import org.apache.xmlrpc.Base64;
-import org.dom4j.Document;
+import org.apache.commons.codec.binary.Base64;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.ElementHandler;
@@ -48,7 +47,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -60,6 +58,7 @@ import snipsnap.api.snip.Snip;
 
 /**
  * Helper class for importing serialized database backups.
+ *
  * @author Matthias L. Jugel
  * @version $Id$
  */
@@ -84,9 +83,11 @@ public class XMLSnipImport {
   }
 
   private static long charErrCount = 0;
+
   /**
    * Load snips and users into the SnipSpace from an xml document out of a stream.
-   * @param in  the input stream to load from
+   *
+   * @param in    the input stream to load from
    * @param flags whether or not to overwrite existing content
    */
   public static void load(InputStream in, final int flags) throws IOException {
@@ -123,7 +124,7 @@ public class XMLSnipImport {
             try {
               XMLSnipImport.loadSnip(snipElement, flags);
             } catch (Exception e) {
-              Logger.fatal("XMLSnipImport: error importing snip: "+snipElement.elementText("name"));
+              Logger.fatal("XMLSnipImport: error importing snip: " + snipElement.elementText("name"));
             }
             getStatus().inc();
           }
@@ -163,7 +164,7 @@ public class XMLSnipImport {
 
       saxReader.read(reader);
       Logger.warn("XMLSnipImport: corrected " + charErrCount + " characters in input");
-      Logger.log("XMLSnipImport: imported "+getStatus().getValue() +" data records");
+      Logger.log("XMLSnipImport: imported " + getStatus().getValue() + " data records");
     } catch (DocumentException e) {
       Logger.warn("XMLSnipImport: unable to parse document", e);
       throw new IOException("Error parsing document: " + e);
@@ -172,8 +173,9 @@ public class XMLSnipImport {
 
   /**
    * Load a user object from a serialized xml element
+   *
    * @param userElement the xml user element
-   * @param flags flags indicating overwriting any existing users or not
+   * @param flags       flags indicating overwriting any existing users or not
    */
   public static void loadUser(Element userElement, int flags) {
     Map userMap = UserSerializer.getInstance().getElementMap(userElement);
@@ -263,7 +265,7 @@ public class XMLSnipImport {
           try {
             // make sure the directory hierarchy exists
             attFile.getParentFile().mkdirs();
-            byte buffer[] = Base64.decode(att.elementText("data").getBytes("UTF-8"));
+            byte buffer[] = Base64.decodeBase64(att.elementText("data").getBytes("UTF-8"));
             BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(attFile));
             os.write(buffer);
             os.flush();

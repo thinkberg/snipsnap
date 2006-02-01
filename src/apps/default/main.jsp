@@ -30,7 +30,14 @@
   <s:geoUrl/>
   <!-- aggregrator related info -->
   <link rel="EditURI" type="application/rsd+xml" title="RSD" href="<c:out value='${app.configuration.url}/exec/rsd'/>"/>
-  <link rel="alternate" type="application/rss+xml" title="RSS" href="<c:out value='${app.configuration.url}/exec/rss'/>"/>
+  <c:choose>
+   <c:when test="${snip.notWeblog}">
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="<c:out value='${app.configuration.url}/exec/rss'/>"/>
+   </c:when>
+   <c:otherwise>
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="<c:out value='${app.configuration.url}/exec/rss?snip=${snip.nameEncoded}'/>"/>
+   </c:otherwise>
+  </c:choose>
   <link rel="index" href="<c:out value='${app.configuration.url}/space/snipsnap-index'/>"/>
   <!-- icons and stylesheet -->
   <link rel="shortcut icon" href="<c:out value='${app.configuration.url}/favicon.ico'/>"/>

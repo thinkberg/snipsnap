@@ -24,7 +24,6 @@
  */
 package org.snipsnap.util;
 
-import org.apache.xmlrpc.Base64;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -32,15 +31,17 @@ import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
-import org.dom4j.io.aelfred.DefaultHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLFilter;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.Attributes;
-import org.xml.sax.InputSource;
-import org.xml.sax.helpers.XMLFilterImpl;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.StringReader;
 import java.text.NumberFormat;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -79,7 +80,7 @@ public class XMLSnipRepair {
     outputFormat.setEncoding("UTF-8");
     outputFormat.setNewlines(true);
     try {
-      XMLWriter xmlWriter = new XMLWriter(null == output ? System.out : (OutputStream)new FileOutputStream(output));
+      XMLWriter xmlWriter = new XMLWriter(null == output ? System.out : (OutputStream) new FileOutputStream(output));
       xmlWriter.write(repaired);
       xmlWriter.flush();
       xmlWriter.close();
@@ -91,9 +92,11 @@ public class XMLSnipRepair {
 
   static int errCount = 0;
   static int curr = 0;
+
   /**
    * Load snips and users into the SnipSpace from an xml document out of a stream.
-   * @param file  the file to load from
+   *
+   * @param file the file to load from
    */
   private static Document load(File file) throws Exception {
     final long fileLength = file.length();
@@ -140,8 +143,8 @@ public class XMLSnipRepair {
     Document document = saxReader.read(reader);
     System.err.println();
 
-    if(errCount > 0) {
-      System.err.println("Replaced "+errCount+" illegal characters in input document by a space.");
+    if (errCount > 0) {
+      System.err.println("Replaced " + errCount + " illegal characters in input document by a space.");
       System.err.println("Characters not considered valid in an XML document are considered illegal.");
       System.err.println("This includes all characters with a code below 32 unless its TAB, CR or LF.");
     }
@@ -242,7 +245,7 @@ public class XMLSnipRepair {
 
     int attCount = 0;
     System.err.print("STEP 2.3: fixing snip data (" + snipData.size() + ")");
-    if(webAppRoot != null) {
+    if (webAppRoot != null) {
       System.out.println(" and attachments ...");
     } else {
       System.out.println();
@@ -250,7 +253,7 @@ public class XMLSnipRepair {
     Iterator snipIt = snipData.values().iterator();
     while (snipIt.hasNext()) {
       Element snipEl = (Element) snipIt.next();
-      if(webAppRoot != null) {
+      if (webAppRoot != null) {
         attCount += storeAttachments(snipEl, new File(webAppRoot, "/WEB-INF/files"));
         attCount += storeOldImages(snipEl, new File(webAppRoot, "/images"));
       }
@@ -279,7 +282,9 @@ public class XMLSnipRepair {
     Iterator attIt = attachmentsEl.elementIterator("attachment");
     while (attIt.hasNext()) {
       Element attEl = (Element) attIt.next();
-      attList.add(attEl.element("name").getText());
+      if(attEl != null && attEl.element("name") != null) {
+        attList.add(attEl.element("name").getText());
+      }
     }
 
     for (int n = 0; n < files.length; n++) {
@@ -354,7 +359,7 @@ public class XMLSnipRepair {
       data.write(buffer, 0, count);
     }
     data.close();
-    att.addElement("data").addText(new String(Base64.encode(data.toByteArray()), "UTF-8"));
+    att.addElement("data").addText(new String(org.apache.commons.codec.binary.Base64.encodeBase64(data.toByteArray()), "UTF-8"));
   }
 
 }

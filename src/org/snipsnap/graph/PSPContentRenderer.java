@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class PSPContentRenderer implements ContentRenderer {
-  Renderer renderer = new DirectedAcyclicGraphRenderer();
+  private Renderer renderer = new DirectedAcyclicGraphRenderer();
 
   public String getName() {
     return "psp";
