@@ -26,14 +26,18 @@
 package org.snipsnap.container;
 
 import org.radeox.util.logging.Logger;
-import snipsnap.api.app.Application;
-import snipsnap.api.config.Configuration;
-import snipsnap.api.snip.Snip;
-import snipsnap.api.snip.SnipSpace;
-import org.snipsnap.snip.storage.UserStorage;
+import snipsnap.api.storage.UserStorage;
+import org.snipsnap.snip.HomePage;
 import org.snipsnap.user.AuthenticationService;
 import org.snipsnap.user.Digest;
+import org.snipsnap.user.UserManager;
+import org.snipsnap.util.Base64;
+import org.snipsnap.util.X509NameTokenizer;
+import snipsnap.api.app.Application;
+import snipsnap.api.config.Configuration;
+import snipsnap.api.snip.SnipSpace;
 import snipsnap.api.user.User;
+import snipsnap.api.container.Components;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -43,6 +47,7 @@ import java.io.BufferedReader;
 import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -51,6 +56,8 @@ public class DefaultSessionService implements SessionService {
   private final static String COOKIE_NAME = "SnipSnapUser";
   private final static String ATT_USER = "user";
   private final static int SECONDS_PER_YEAR = 60 * 60 * 24 * 365;
+  private final static int HTTP_UNAUTHORIZED = 401;
+
 
   private Map authHash = new HashMap();
   private Map robots = new HashMap();
@@ -67,7 +74,7 @@ public class DefaultSessionService implements SessionService {
       snipsnap.api.snip.Snip robots = space.load(snipsnap.api.config.Configuration.SNIPSNAP_CONFIG_ROBOTS);
       if (robots != null) {
         BufferedReader crawler = new BufferedReader(new StringReader(robots.getContent()));
-        String line = null;
+        String line;
         int ln = 0;
         while ((line = crawler.readLine()) != null) {
           ln++;
@@ -121,28 +128,82 @@ public class DefaultSessionService implements SessionService {
   public User getUser(HttpServletRequest request, HttpServletResponse response) {
     HttpSession session = request.getSession();
     User user = (User) session.getAttribute(ATT_USER);
-    String appOid = (String)Application.get().getObject(Application.OID);
+    String appOid = (String) Application.get().getObject(Application.OID);
     if (null != user && !appOid.equals(user.getApplication())) {
-      user = null; 
+      user = null;
     }
 
+    // TODO: refactor to several session service modules
+    // TODO: Idea: Basic, Digest or Certificate access and possible guest access (Cookie)
     if (null == user) {
-      Cookie cookie = getCookie(request, COOKIE_NAME);
-      if (cookie != null) {
-        String auth = cookie.getValue();
-        if (!authHash.containsKey(auth)) {
-          updateAuthHash();
+      if ("Cookie".equals(Application.get().getConfiguration().getAuth())) {
+        Cookie cookie = getCookie(request, COOKIE_NAME);
+        if (cookie != null) {
+          String auth = cookie.getValue();
+          if (!authHash.containsKey(auth)) {
+            updateAuthHash();
+          }
+
+          user = (User) authHash.get(auth);
+          if (user != null && appOid.equals(user.getApplication())) {
+            user = authService.authenticate(user.getLogin(), user.getPasswd(), AuthenticationService.ENCRYPTED);
+            if (null != user) {
+              setCookie(request, response, user);
+            }
+          } else {
+            Logger.warn("SessionService: invalid hash: " + auth);
+            user = null;
+          }
+        }
+      } else if ("Basic".equals(Application.get().getConfiguration().getAuth())) {
+        // make sure the user is authorized
+        String auth = request.getHeader("Authorization");
+        String login = "", password = "";
+
+        if (auth != null) {
+          auth = new String(Base64.decode(auth.substring(auth.indexOf(' ') + 1)));
+          login = auth.substring(0, auth.indexOf(':'));
+          password = auth.substring(auth.indexOf(':') + 1);
         }
 
-        user = (User) authHash.get(auth);
-        if (user != null && appOid.equals(user.getApplication())) {
-          user = authService.authenticate(user.getLogin(), user.getPasswd(), AuthenticationService.ENCRYPTED);
-          if(null != user) {
-            setCookie(request, response, user);
+        user = authService.authenticate(login, password);
+        if (user == null) {
+          response.setHeader("WWW-Authenticate", "Basic realm=\"SnipSnap\"");
+          response.setStatus(HTTP_UNAUTHORIZED);
+          return null;
+        }
+      } else if ("Certificate".equals(Application.get().getConfiguration().getAuth())) {
+        // Part for authenticating users with X509Certificates. If the user have a trusted client certificate
+        // he can get access to the server. Since the certificate is trusted already, by java/jsse, we don't
+        // have to verify it here.
+        // If the CA puts the users uid in the DN we can use that as login.
+
+        // Check if we have a user in the certificate authentication
+        X509Certificate[] certs = (X509Certificate[]) request.getAttribute("javax.servlet.request.X509Certificate");
+        if (certs != null) {
+          X509Certificate clientCert = certs[0];
+          if (clientCert != null) {
+            // Get the Distinguised Name for the user.
+            java.security.Principal userDN = clientCert.getSubjectDN();
+            String dn = userDN.toString();
+            // Get uid, which is the username we will use
+            String uid = getPartFromDN(dn, "UID");
+            String email = getPartFromDN(dn, "emailAddress");
+            // Create users home page if it does not exist
+            UserManager um = (UserManager) Components.getComponent(UserManager.class);
+            user = authService.authenticate(uid);
+            // create a user and home page for new logins
+            if(null == user) {
+              // set password to "*", if we switch back to Cookie auth service
+              // this is no problem as the users password is expected to be encrypted
+              // switching to Basic auth poses a security risk as it compares unencrypted
+              // passwords.
+              user = um.create(uid, "*", email);
+              Application.get().setUser(user, session);
+              HomePage.create(uid);
+              user = authService.authenticate(uid);
+            }
           }
-        } else {
-          Logger.warn("SessionService: invalid hash: " + auth);
-          user = null;
         }
       }
 
@@ -221,9 +282,10 @@ public class DefaultSessionService implements SessionService {
 
   /**
    * Helper method for getUser to extract user from request/cookie/session
+   *
    * @param request
    * @param name
-   * @return
+   * @return the cookie
    */
   public Cookie getCookie(HttpServletRequest request, String name) {
     Cookie cookies[] = request.getCookies();
@@ -234,4 +296,32 @@ public class DefaultSessionService implements SessionService {
     }
     return null;
   }
+
+  /**
+   * Gets a specified part of a DN. Specifically the first occurrence it the DN contains several
+   * instances of a part (i.e. cn=x, cn=y returns x).
+   *
+   * @param dn     String containing DN, The DN string has the format "C=SE, O=xx, OU=yy, CN=zz".
+   * @param dnpart String specifying which part of the DN to get, should be "CN" or "OU" etc.
+   * @return String containing dnpart or null if dnpart is not present
+   */
+  private String getPartFromDN(String dn, String dnpart) {
+    String part = null;
+    if ((dn != null) && (dnpart != null)) {
+      String o;
+      dnpart += "="; // we search for 'CN=' etc.
+      X509NameTokenizer xt = new X509NameTokenizer(dn);
+      while (xt.hasMoreTokens()) {
+        o = xt.nextToken();
+        if ((o.length() > dnpart.length()) &&
+                o.substring(0, dnpart.length()).equalsIgnoreCase(dnpart)) {
+          part = o.substring(dnpart.length());
+          break;
+        }
+      }
+    }
+    return part;
+  } //getPartFromDN
+
+
 }
