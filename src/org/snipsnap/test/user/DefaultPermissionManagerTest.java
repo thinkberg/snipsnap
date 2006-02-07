@@ -57,6 +57,9 @@ public class DefaultPermissionManagerTest extends TestCase {
       public User authenticate(String login, String passwd, boolean encrypted) {
         return null;
       }
+      public User authenticate(String login) {
+        return null;
+      }
 
       public boolean isAuthenticated(User user) {
         return false;

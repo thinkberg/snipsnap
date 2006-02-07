@@ -30,7 +30,6 @@ import org.snipsnap.config.ConfigurationManager;
 import org.snipsnap.config.ConfigurationProxy;
 import org.snipsnap.config.Globals;
 import org.snipsnap.config.InitializeDatabase;
-import org.snipsnap.container.Components;
 import org.snipsnap.snip.XMLSnipExport;
 import org.snipsnap.snip.XMLSnipImport;
 import org.snipsnap.snip.storage.SnipSerializer;
@@ -56,6 +55,7 @@ import snipsnap.api.snip.Snip;
 import snipsnap.api.app.Application;
 import snipsnap.api.user.User;
 import snipsnap.api.config.Configuration;
+import snipsnap.api.container.Components;
 
 /**
  * Handles XML-RPC calls for the SnipSnap API

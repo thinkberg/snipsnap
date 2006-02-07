@@ -26,33 +26,41 @@ package snipsnap.api.container;
  */
 
 import org.snipsnap.container.Container;
-import org.snipsnap.container.PicoContainer;
 
 import java.util.Collection;
 
 public class Components {
-    public final static String DEFAULT_ENGINE = "defaultRenderEngine";
+  private static final String DEFAULT_CONTAINER_SERVICE = "org.snipsnap.container.PicoContainer";
+  public final static String DEFAULT_ENGINE = "defaultRenderEngine";
 
-    private static Container container;
+  private static Container container;
 
-    public static synchronized Container getContainer() {
-        if (null == container) {
-            container = new PicoContainer();
-            container.init();
-        }
-
-        return container;
+  public static synchronized Container getContainer() {
+    if (null == container) {
+      try {
+        container = (Container) Class.forName(DEFAULT_CONTAINER_SERVICE).newInstance();
+        container.init();
+      } catch (InstantiationException e) {
+        e.printStackTrace();
+      } catch (IllegalAccessException e) {
+        e.printStackTrace();
+      } catch (ClassNotFoundException e) {
+        e.printStackTrace();
+      }
     }
 
-    public static Object getComponent(Class c) {
-        return getContainer().getComponent(c);
-    }
+    return container;
+  }
 
-    public static Object getComponent(String id) {
-         return getContainer().getComponent(id);
-     }
+  public static Object getComponent(Class c) {
+    return getContainer().getComponent(c);
+  }
 
-    public static Collection findComponents(Class c) {
-        return getContainer().findComponents(c);
-    }
+  public static Object getComponent(String id) {
+    return getContainer().getComponent(id);
+  }
+
+  public static Collection findComponents(Class c) {
+    return getContainer().findComponents(c);
+  }
 }

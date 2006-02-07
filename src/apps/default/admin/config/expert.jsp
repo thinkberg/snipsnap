@@ -14,6 +14,29 @@
 
 <table>
   <tr>
+    <td><fmt:message key="config.app.auth.text"/></td>
+    <td>
+      <fmt:message key="config.app.auth"/><br/>
+      <select name="app.auth">
+        <option value="Cookie"
+          <c:if test="${newconfig.auth == 'Cookie'}">selected="selected"</c:if>>
+          <fmt:message key="config.app.auth.cookie"/></option>
+        <option value="Basic"
+          <c:if test="${newconfig.auth == 'Basic'}">selected="selected"</c:if>>
+          <fmt:message key="config.app.auth.basic"/></option>
+        <option value="Digest"
+          <c:if test="${newconfig.auth == 'Digest'}">selected="selected"</c:if>>
+          <fmt:message key="config.app.auth.digest"/></option>
+        <option value="Certificate"
+          <c:if test="${newconfig.auth == 'Certificate'}">selected="selected"</c:if>>
+          <fmt:message key="config.app.auth.certificate"/></option>
+      </select>
+      <%--
+      <input type="checkbox" name="app.auth.guest" value="<c:out value='${newconfig.auth}'/>">
+      --%>
+    </td>
+  </tr>
+  <tr>
     <td><fmt:message key="config.app.start.snip.text"/></td>
     <td>
       <fmt:message key="config.app.start.snip"/><br/>

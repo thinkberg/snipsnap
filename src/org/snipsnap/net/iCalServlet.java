@@ -72,7 +72,7 @@ public class iCalServlet extends HttpServlet {
       password = auth.substring(auth.indexOf(':') + 1);
     }
 
-    User user = ((AuthenticationService) snipsnap.api.container.Components.getComponent(AuthenticationService.class)).authenticate(login, password);
+    User user = ((AuthenticationService) Components.getComponent(AuthenticationService.class)).authenticate(login, password);
     if (user == null) {
       response.setHeader("WWW-Authenticate", "Basic realm=\"SnipSnap\"");
       response.setStatus(WD_UNAUTHORIZED);

@@ -88,8 +88,8 @@ public interface Configuration extends Globals {
   // EASY ACCESS
   
   // automatically created interface/constants stub from
-  // /Users/stephan/src/snipsnap/trunk/src/org/snipsnap/config/defaults.conf
-  // generated on 4/6/05 7:40 PM
+  // /Users/leo/src/Projects/SnipSnap/core/trunk/src/org/snipsnap/config/defaults.conf
+  // generated on 2/7/06 9:58 PM
   // constant/getter for 'app.admin.email'
   public final static String APP_ADMIN_EMAIL = "app.admin.email";
   public String getAdminEmail();
@@ -102,6 +102,10 @@ public interface Configuration extends Globals {
   public final static String APP_ADMIN_PASSWORD = "app.admin.password";
   public String getAdminPassword();
   public String setAdminPassword(String value);
+  // constant/getter for 'app.auth'
+  public final static String APP_AUTH = "app.auth";
+  public String getAuth();
+  public String setAuth(String value);
   // constant/getter for 'app.configured'
   public final static String APP_CONFIGURED = "app.configured";
   public String getConfigured();

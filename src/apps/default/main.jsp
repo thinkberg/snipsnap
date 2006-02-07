@@ -6,7 +6,6 @@
 
 <%@ page import="snipsnap.api.snip.SnipSpace,
                  snipsnap.api.app.Application,
-                 snipsnap.api.snip.SnipSpaceFactory,
                  snipsnap.api.container.Components,
                  snipsnap.api.snip.Snip,
                  java.util.Collection,
@@ -66,7 +65,7 @@
     <s:debug/>
    </div>
    <%
-     SnipSpace space = (SnipSpace)org.snipsnap.container.Components.getComponent(SnipSpace.class);
+     SnipSpace space = (SnipSpace) Components.getComponent(SnipSpace.class);
      for(int i = 1; space.exists("snipsnap-portlet-"+i) || space.exists("SnipSnap/portlet/"+i); i++) {
        Snip snip = space.load("snipsnap-portlet-"+i);
        if(null == snip) {
@@ -76,8 +75,8 @@
        pageContext.removeAttribute("view_handler");
        pageContext.removeAttribute("mime_type");
 
-           String viewHandler = null;
-           String type = null;
+           String viewHandler;
+           String type;
            Collection mimeTypes = snip.getLabels().getLabels("TypeLabel");
            if (!mimeTypes.isEmpty()) {
              Iterator handlerIt = mimeTypes.iterator();

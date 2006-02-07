@@ -25,8 +25,8 @@
 
 package org.snipsnap.snip.storage;
 
-import snipsnap.api.app.Application;
 import snipsnap.api.snip.Snip;
+import snipsnap.api.storage.SnipStorage;
 import org.snipsnap.snip.SnipPostNameComparator;
 import org.snipsnap.snip.storage.query.QueryKit;
 import org.snipsnap.snip.storage.query.SnipComparator;

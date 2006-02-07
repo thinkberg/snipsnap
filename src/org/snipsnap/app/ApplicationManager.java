@@ -25,6 +25,8 @@
 
 package org.snipsnap.app;
 
+import snipsnap.api.storage.ApplicationStorage;
+
 import java.util.Collection;
 import java.util.Map;
 import java.util.Iterator;

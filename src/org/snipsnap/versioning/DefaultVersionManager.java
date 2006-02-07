@@ -25,7 +25,7 @@
 
 package org.snipsnap.versioning;
 
-import snipsnap.api.snip.Snip;
+import snipsnap.api.storage.VersionStorage;
 import org.snipsnap.snip.SnipFactory;
 
 import java.util.List;

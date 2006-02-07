@@ -23,7 +23,7 @@
  * --LICENSE NOTICE--
  */
 
-package org.snipsnap.snip.storage;
+package snipsnap.api.storage;
 
 import snipsnap.api.snip.Snip;
 
@@ -34,7 +34,7 @@ import java.util.List;
  * Interface that describes SnipStorage backends for SnipSnap
  *
  * @author Stephan J. Schmidt
- * @version $Id$
+ * @version $Id: SnipStorage.java 1816 2005-04-06 17:56:22Z stephan $
  */
 
 public interface SnipStorage {

@@ -23,25 +23,18 @@
  * --LICENSE NOTICE--
  */
 
-package org.snipsnap.app;
+package snipsnap.api.notification;
 
-import java.util.Map;
-import java.util.Properties;
+import org.snipsnap.notification.Message;
+
 
 /**
- * ApplicationStorage is a DAO for applications.
+ * Simple Consumer interface to consume Messages from MessageService
  *
  * @author Stephan J. Schmidt
- * @version $Id$
+ * @version $Id: Consumer.java 1606 2004-05-17 10:56:18Z leo $
  */
 
-public interface ApplicationStorage {
-  public final static String OID = "OID";
-  public final static String PREFIX = "prefix";
-  public final static String NAME = "name";
-
-
-  public Map getApplications();
-  public void removeApplication(String oid);
-  public Properties createApplication(String name, String prefix);
+public interface Consumer {
+  public void consume(Message message);
 }

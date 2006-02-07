@@ -23,7 +23,7 @@
 * --LICENSE NOTICE--
 */
 
-package org.snipsnap.snip.storage;
+package snipsnap.api.storage;
 
 import org.snipsnap.util.ApplicationAwareMap;
 

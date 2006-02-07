@@ -29,12 +29,10 @@ import groovy.lang.GroovyClassLoader;
 import org.radeox.macro.Macro;
 import org.radeox.macro.MacroLoader;
 import org.radeox.macro.Repository;
-import snipsnap.api.container.Components;
-import org.snipsnap.notification.Consumer;
+import snipsnap.api.notification.Consumer;
 import org.snipsnap.notification.Message;
 import org.snipsnap.notification.MessageService;
 import snipsnap.api.snip.Snip;
-import snipsnap.api.snip.SnipSpace;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;

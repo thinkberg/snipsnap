@@ -39,6 +39,7 @@ import snipsnap.api.snip.Snip;
 import snipsnap.api.snip.SnipLink;
 import snipsnap.api.snip.SnipSpace;
 import snipsnap.api.user.User;
+import snipsnap.api.container.Components;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -312,8 +313,13 @@ public class InitFilter implements Filter {
       session.setAttribute("space", snipsnap.api.snip.SnipSpaceFactory.getInstance());
 
       // check for a logged in user
-      SessionService service = (SessionService) snipsnap.api.container.Components.getComponent(SessionService.class);
+      SessionService service = (SessionService) Components.getComponent(SessionService.class);
       User user = service.getUser(request, (HttpServletResponse) response);
+      if(null == user) {
+        // someone else did something and is responsible for status codes       
+        return;
+      }
+
       app.setUser(user, session);
 
       Iterator paramIt = request.getParameterMap().keySet().iterator();

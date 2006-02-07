@@ -25,8 +25,8 @@
 package org.snipsnap.config;
 
 import snipsnap.api.app.Application;
+import snipsnap.api.storage.ApplicationStorage;
 import org.snipsnap.app.ApplicationManager;
-import org.snipsnap.app.ApplicationStorage;
 import snipsnap.api.container.Components;
 import org.snipsnap.snip.HomePage;
 import snipsnap.api.snip.Snip;
@@ -36,7 +36,6 @@ import org.snipsnap.snip.label.RenderEngineLabel;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
 import snipsnap.api.user.User;
-import snipsnap.api.config.*;
 import snipsnap.api.config.Configuration;
 import org.snipsnap.user.UserManager;
 import org.snipsnap.user.UserManagerFactory;

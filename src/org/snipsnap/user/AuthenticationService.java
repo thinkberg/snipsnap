@@ -33,5 +33,6 @@ public interface AuthenticationService {
 
   public User authenticate(String login, String passwd, boolean encrypted);
   public User authenticate(String login, String passwd);
+  public User authenticate(String login);
   public boolean isAuthenticated(snipsnap.api.user.User user);
 }

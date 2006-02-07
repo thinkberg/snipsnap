@@ -24,8 +24,7 @@
  */
 package org.snipsnap.user;
 
-import snipsnap.api.container.Components;
-import org.snipsnap.snip.storage.UserStorage;
+import snipsnap.api.storage.UserStorage;
 import org.snipsnap.util.ApplicationAwareMap;
 import org.snipsnap.util.ApplicationAwareIntegerMap;
 import org.snipsnap.jdbc.IntHolder;
@@ -33,7 +32,6 @@ import org.snipsnap.jdbc.IntHolder;
 import java.sql.Timestamp;
 import java.util.*;
 
-import snipsnap.api.user.*;
 import snipsnap.api.user.User;
 
 /**

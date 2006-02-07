@@ -27,22 +27,18 @@ package org.snipsnap.xmlrpc;
 
 import org.radeox.util.logging.Logger;
 import snipsnap.api.app.Application;
-import snipsnap.api.config.Configuration;
 import snipsnap.api.snip.Snip;
 import snipsnap.api.snip.SnipSpace;
 import org.snipsnap.xmlrpc.ping.PingHandler;
 import org.snipsnap.notification.Message;
 import org.snipsnap.notification.MessageService;
-import org.snipsnap.notification.Consumer;
+import snipsnap.api.notification.Consumer;
 import snipsnap.api.container.Components;
-import org.apache.xmlrpc.XmlRpc;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;

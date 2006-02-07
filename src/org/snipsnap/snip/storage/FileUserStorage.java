@@ -28,6 +28,7 @@ package org.snipsnap.snip.storage;
 import org.radeox.util.logging.Logger;
 import snipsnap.api.app.Application;
 import snipsnap.api.user.User;
+import snipsnap.api.storage.UserStorage;
 
 import java.io.File;
 import java.io.FileInputStream;

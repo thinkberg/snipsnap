@@ -29,16 +29,16 @@ import org.apache.lucene.search.Hits;
 import org.radeox.util.logging.Logger;
 import snipsnap.api.app.Application;
 import org.snipsnap.app.ApplicationManager;
-import org.snipsnap.app.ApplicationStorage;
+import snipsnap.api.storage.ApplicationStorage;
 import snipsnap.api.container.Components;
 import org.snipsnap.notification.Message;
 import org.snipsnap.notification.MessageService;
 import org.snipsnap.snip.storage.CacheSnipStorage;
 import org.snipsnap.snip.storage.CacheStorage;
-import org.snipsnap.snip.storage.CacheableStorage;
+import snipsnap.api.storage.CacheableStorage;
 import org.snipsnap.snip.storage.MemorySnipStorage;
 import org.snipsnap.snip.storage.QuerySnipStorage;
-import org.snipsnap.snip.storage.SnipStorage;
+import snipsnap.api.storage.SnipStorage;
 import org.snipsnap.user.Digest;
 import org.snipsnap.util.ApplicationAwareMap;
 import org.snipsnap.util.Queue;
@@ -57,7 +57,6 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import snipsnap.api.snip.*;
 import snipsnap.api.snip.Snip;
 
 /**

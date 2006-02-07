@@ -1,5 +1,3 @@
-package org.snipsnap.container;
-
 /*
  * This file is part of "SnipSnap Wiki/Weblog".
  *
@@ -25,31 +23,43 @@ package org.snipsnap.container;
  * --LICENSE NOTICE--
  */
 
-import java.util.Collection;
+package snipsnap.api.storage;
 
-public class Components {
-    public final static String DEFAULT_ENGINE = "defaultRenderEngine";
+import snipsnap.api.snip.Snip;
 
-    private static Container container;
+import java.util.List;
 
-    public static synchronized Container getContainer() {
-        if (null == container) {
-            container = new PicoContainer();
-            container.init();
-        }
+/**
+ * Stores versions of snips
+ *
+ * @author Stephan J. Schmidt
+ * @version $Id: VersionStorage.java 1816 2005-04-06 17:56:22Z stephan $
+ */
 
-        return container;
-    }
+public interface VersionStorage {
 
-    public static Object getComponent(Class c) {
-        return getContainer().getComponent(c);
-    }
+  /**
+   * Return a list of VersionInfo objects for the
+   * given snip. Objects should be ordered by decreasing version
+   *
+   * @param snip Snip for which the revision should be loaded
+   * @return list of version infos
+   */
+  public List getVersionHistory(Snip snip);
 
-    public static Object getComponent(String id) {
-         return getContainer().getComponent(id);
-     }
+  /**
+   * Load a version of a snip from the storage
+   *
+   * @param snip Example of a snip to load
+   * @param version Version number
+   * @return version of a snip
+   */
+  public Snip loadVersion(Snip snip, int version);
 
-    public static Collection findComponents(Class c) {
-        return getContainer().findComponents(c);
-    }
+  /**
+   * Stora a version of a snip in the storage.
+   *
+   * @param snip Snip to store
+   */
+  public void storeVersion(Snip snip);
 }

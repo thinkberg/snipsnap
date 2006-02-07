@@ -26,6 +26,7 @@
 package org.snipsnap.snip.storage;
 
 import snipsnap.api.snip.Snip;
+import snipsnap.api.storage.SnipStorage;
 import org.snipsnap.util.ApplicationAwareMap;
 
 import java.sql.Timestamp;

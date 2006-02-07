@@ -1,7 +1,6 @@
 package org.snipsnap.user;
 
-import org.snipsnap.snip.storage.UserStorage;
-import snipsnap.api.user.*;
+import snipsnap.api.storage.UserStorage;
 import snipsnap.api.user.User;
 
 /*
@@ -51,6 +50,21 @@ public class DefaultAuthenticationService implements AuthenticationService {
     //@TODO split authenticate and lastLogin
     if (null != user &&
       (encrypted ? user.getPasswd().equals(passwd) : Digest.authenticate(passwd, user.getPasswd()))) {
+      user.lastLogin();
+      storage.storageStore(user);
+      return user;
+    } else {
+      return null;
+    }
+  }
+
+  /** Used for password-less login, i.e. X509Certificate
+  */
+  public User authenticate(String login) {
+    User user = storage.storageLoad(login);
+
+    //@TODO split authenticate and lastLogin
+    if (null != user) {
       user.lastLogin();
       storage.storageStore(user);
       return user;

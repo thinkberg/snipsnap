@@ -32,11 +32,12 @@ import org.snipsnap.snip.Links;
 import snipsnap.api.snip.Snip;
 import org.snipsnap.snip.SnipFactory;
 import org.snipsnap.snip.attachment.Attachments;
-import snipsnap.api.label.Labels;
+import snipsnap.api.storage.SnipStorage;
+import snipsnap.api.storage.CacheableStorage;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.util.ApplicationAwareMap;
 import org.snipsnap.versioning.VersionInfo;
-import org.snipsnap.versioning.VersionStorage;
+import snipsnap.api.storage.VersionStorage;
 
 import java.io.File;
 import java.io.IOException;

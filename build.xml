@@ -29,8 +29,8 @@
 
   <!-- the overall class path -->
   <path id="app.classpath">
-    <pathelement location="${jar}/rss-ng-1.0-alpha-1.jar"/>
-    <pathelement location="${jar}/jdbcstorage-1.0-alpha-1.jar"/>
+    <pathelement location="${jar}/${jdbcstorage.jar}"/>
+    <pathelement location="${jar}/${rss-ng.jar}"/>
     <pathelement location="${jar}/${search-ng.jar}"/>
     <pathelement location="${jar}/gabriel.jar"/>
     <pathelement location="${jar}/jmdns.jar"/>
@@ -133,10 +133,10 @@
         <include name="lib/${appname}-utils.jar"/>
         <include name="lib/gabriel.jar"/>
         <include name="lib/jmdns.jar"/>
-	<include name="lib/${rome.jar}"/>
-	<include name="lib/${jdom.jar}"/>
-	<include name="lib/${spring-core.jar}"/>
-	<include name="lib/${spring-beans.jar}"/>
+        <include name="lib/${rome.jar}"/>
+        <include name="lib/${jdom.jar}"/>
+        <include name="lib/${spring-core.jar}"/>
+        <include name="lib/${spring-beans.jar}"/>
         <include name="lib/jdom-b10.jar"/>
         <include name="lib/asm-1.4.1.jar"/>
         <include name="lib/dynaop-1.0-beta.jar"/>
@@ -190,38 +190,38 @@
   <target name="buildtask">
     <mkdir dir="${target}/ant"/>
     <javac deprecation="false" debug="false"
-      srcdir="${src}" destdir="${target}/ant">
+           srcdir="${src}" destdir="${target}/ant">
       <include name="org/snipsnap/util/PropertyConstantBuilder.java"/>
     </javac>
   </target>
 
   <target depends="buildtask" name="declaretask">
     <taskdef name="constants"
-      classname="org.snipsnap.util.PropertyConstantBuilder"
-      classpath="${target}/ant"/>
+             classname="org.snipsnap.util.PropertyConstantBuilder"
+             classpath="${target}/ant"/>
   </target>
 
   <!-- prepare special generated classes -->
   <target depends="declaretask" name="generate">
     <constants
-      properties="${src}/org/snipsnap/config/defaults.conf"
-      file="${target}/ant/config.stub" prefix="app."
-      />
+            properties="${src}/org/snipsnap/config/defaults.conf"
+            file="${target}/ant/config.stub" prefix="app."
+            />
     <loadfile property="config-stub" srcfile="${target}/ant/config.stub" failonerror="false"/>
     <copy file="${src}/org/snipsnap/config/Configuration.java.tmpl"
-      tofile="${src}/org/snipsnap/config/Configuration.java" filtering="true" overwrite="true">
+          tofile="${src}/snipsnap/api/config/Configuration.java" filtering="true" overwrite="true">
       <filterset>
         <filter token="DEFAULTS" value="${config-stub}"/>
       </filterset>
     </copy>
 
     <constants
-      properties="${src}/org/snipsnap/config/globals.conf"
-      file="${target}/ant/globals.stub" prefix="app."
-      />
+            properties="${src}/org/snipsnap/config/globals.conf"
+            file="${target}/ant/globals.stub" prefix="app."
+            />
     <loadfile property="globals-stub" srcfile="${target}/ant/globals.stub" failonerror="false"/>
     <copy file="${src}/org/snipsnap/config/Globals.java.tmpl"
-      tofile="${src}/org/snipsnap/config/Globals.java" filtering="true" overwrite="true">
+          tofile="${src}/org/snipsnap/config/Globals.java" filtering="true" overwrite="true">
       <filterset>
         <filter token="DEFAULTS" value="${globals-stub}"/>
       </filterset>
@@ -229,30 +229,55 @@
   </target>
 
   <target depends="compile-api" description="create api jar" name="jar-api">
-	  <jar destfile="${jar}/snipsnap-api.jar">
-		  <fileset dir="${target}/api/" includes="snipsnap/api/**"/>
-	  </jar>
+    <jar destfile="${jar}/snipsnap-api.jar">
+      <fileset dir="${target}/api/" includes="snipsnap/api/**"/>
+    </jar>
   </target>
- 
+
   <target description="compile api code" name="compile-api">
     <mkdir dir="${target}/api"/>
     <javac deprecation="${deprecation}" debug="${debug}"
-      srcdir="${src}"
-      destdir="${target}/api"
-      classpathref="all.classpath">
+           srcdir="${src}"
+           destdir="${target}/api"
+           classpathref="all.classpath">
 
       <include name="snipsnap/api/**"/>
     </javac>
   </target>
 
+  <target description="compile implementation code" name="compile-impl">
+    <mkdir dir="${target}/impl"/>
+    <javac deprecation="${deprecation}" debug="${debug}"
+           srcdir="${src}"
+           destdir="${target}/impl"
+           classpathref="all.classpath">
+
+      <include name="org/snipsnap/util/ApplicationAwareMap.java"/>
+      <include name="org/snipsnap/interceptor/Aspects.java"/>
+      <include name="org/snipsnap/snip/SnipFactory.java"/>
+      <include name="org/snipsnap/versioning/VersionInfo.java"/>
+      <include name="org/snipsnap/user/Security.java"/>
+      <include name="org/snipsnap/snip/storage/query/*.java"/>
+      <include name="org/snipsnap/render/PlainTextRenderEngine.java"/>
+    </javac>
+  </target>
+
+  <target depends="compile-impl" description="create implementation jar" name="jar-impl">
+    <jar destfile="${jar}/snipsnap-impl.jar">
+      <fileset dir="${target}/impl/" includes="**"/>
+    </jar>
+  </target>
+
   <!-- create server code -->
-  <target depends="compile-jsp, compile-server,installer-war,snipsnap-war" description="create server jar" name="jar-server">
+  <target depends="compile-jsp, compile-server,installer-war,snipsnap-war" description="create server jar"
+          name="jar-server">
     <copy file="conf/copyright.txt" tofile="${target}/server/conf/copyright.txt" filtering="true">
       <filterset>
         <filter token="VERSION" value="${snipsnap.server.version}"/>
       </filterset>
     </copy>
-    <jar destfile="${jar}/${appname}-server.jar" excludes="**/CVS, org/snipsnap/server/*Launcher*" manifest="conf/manifest">
+    <jar destfile="${jar}/${appname}-server.jar" excludes="**/CVS, org/snipsnap/server/*Launcher*"
+         manifest="conf/manifest">
       <fileset dir="${target}/server" includes="**">
         <exclude name="org/snipsnap/server/*Launcher*"/>
       </fileset>
@@ -293,9 +318,9 @@
   <target depends="generate" description="compile server code" name="compile-server">
     <mkdir dir="${target}/server"/>
     <javac deprecation="${deprecation}" debug="${debug}"
-      srcdir="${src}"
-      destdir="${target}/server"
-      classpathref="server.classpath">
+           srcdir="${src}"
+           destdir="${target}/server"
+           classpathref="server.classpath">
 
       <include name="org/snipsnap/server/**"/>
       <exclude name="org/snipsnap/server/Admin*"/>
@@ -316,9 +341,9 @@
   <target depends="generate" description="compile util code" name="compile-util">
     <mkdir dir="${target}/util"/>
     <javac deprecation="${deprecation}" debug="${debug}"
-      srcdir="${src}"
-      classpathref="all.classpath"
-      destdir="${target}/util">
+           srcdir="${src}"
+           classpathref="all.classpath"
+           destdir="${target}/util">
       <include name="org/snipsnap/util/Test*"/>
       <include name="org/snipsnap/util/*Util.java"/>
       <include name="org/snipsnap/util/DB*.java"/>
@@ -345,20 +370,20 @@
   <target depends="generate" description="compile test code" name="compile-test">
     <mkdir dir="${target}/test"/>
     <javac deprecation="${deprecation}" debug="${debug}"
-      srcdir="${src}"
-      classpathref="test.classpath"
-      destdir="${target}/test"
-      includes="org/snipsnap/test/**"/>
+           srcdir="${src}"
+           classpathref="test.classpath"
+           destdir="${target}/test"
+           includes="org/snipsnap/test/**"/>
   </target>
 
   <target depends="generate" description="compile template application code" name="compile-servlets">
     <mkdir dir="${target}/default/WEB-INF/classes"/>
     <!-- fix, why junit to compile servlets? -->
     <javac deprecation="${deprecation}" debug="${debug}"
-      srcdir="${src}"
-      classpathref="test.classpath"
-      destdir="${target}/default/WEB-INF/classes"
-      excludes="org/snipsnap/admin/**, org/snipsnap/server/**">
+           srcdir="${src}"
+           classpathref="test.classpath"
+           destdir="${target}/default/WEB-INF/classes"
+           excludes="org/snipsnap/admin/**, org/snipsnap/server/**">
       <src path="${src}"/>
       <include name="org/snipsnap/**"/>
     </javac>
@@ -387,22 +412,22 @@
     <mkdir dir="${target}/jsp/source"/>
     <mkdir dir="${target}/jsp/classes"/>
     <jspc destdir="${target}/jsp/source"
-      verbose="1" srcdir="${src}/apps/default"
-      classpathref="all.classpath"
-      webinc="${target}/jsp/web.inc">
+          verbose="1" srcdir="${src}/apps/default"
+          classpathref="all.classpath"
+          webinc="${target}/jsp/web.inc">
       <include name="**/*.jsp"/>
       <webapp basedir="${src}/apps/default"/>
     </jspc>
     <depend
-      srcdir="${target}/jsp/source"
-      destdir="${target}/jsp/classes"
-      cache="${target}/jsp/dependencies"
-      classpathref="all.classpath"/>
+            srcdir="${target}/jsp/source"
+            destdir="${target}/jsp/classes"
+            cache="${target}/jsp/dependencies"
+            classpathref="all.classpath"/>
     <javac deprecation="${deprecation}" debug="${debug}"
-      srcdir="${target}/jsp/source"
-      classpath="${src}/apps/default/WEB-INF/lib/snipsnap-servlets.jar"
-      classpathref="all.classpath"
-      destdir="${target}/jsp/classes">
+           srcdir="${target}/jsp/source"
+           classpath="${src}/apps/default/WEB-INF/lib/snipsnap-servlets.jar"
+           classpathref="all.classpath"
+           destdir="${target}/jsp/classes">
       <include name="**"/>
     </javac>
   </target>
@@ -411,21 +436,21 @@
     <mkdir dir="${target}/jsp/source"/>
     <mkdir dir="${target}/jsp/classes"/>
     <jspc destdir="${target}/jsp/source"
-      verbose="1" srcdir="${src}"
-      package="org.snipsnap.jsp"
-      classpathref="all.classpath">
+          verbose="1" srcdir="${src}"
+          package="org.snipsnap.jsp"
+          classpathref="all.classpath">
       <include name="**/EditTest.jsp"/>
     </jspc>
     <depend
-      srcdir="${target}/jsp/source"
-      destdir="${target}/jsp/classes"
-      cache="${target}/jsp/dependencies"
-      classpathref="all.classpath"/>
+            srcdir="${target}/jsp/source"
+            destdir="${target}/jsp/classes"
+            cache="${target}/jsp/dependencies"
+            classpathref="all.classpath"/>
     <javac deprecation="${deprecation}" debug="${debug}"
-      srcdir="${target}/jsp/source"
-      classpath="${src}/apps/default/WEB-INF/lib/snipsnap-servlets.jar"
-      classpathref="all.classpath"
-      destdir="${target}/jsp/classes">
+           srcdir="${target}/jsp/source"
+           classpath="${src}/apps/default/WEB-INF/lib/snipsnap-servlets.jar"
+           classpathref="all.classpath"
+           destdir="${target}/jsp/classes">
       <include name="**"/>
     </javac>
     <jar destfile="${src}/apps/default/WEB-INF/lib/edittest.jar" excludes="**/CVS">
@@ -451,7 +476,7 @@
       </fileset>
     </copy>
     <copy tofile="${target}/webapp/WEB-INF/classes/i18n/messages.properties"
-      file="${src}/apps/default/WEB-INF/classes/i18n/messages_en.properties"/>
+          file="${src}/apps/default/WEB-INF/classes/i18n/messages_en.properties"/>
 
     <loadfile property="web.inc" srcfile="${target}/jsp/web.inc" failonerror="false"/>
     <condition property="web.inc" value="">
@@ -461,8 +486,8 @@
     </condition>
     <!-- copy with filter if web.inc is available -->
     <copy
-      tofile="${target}/webapp/WEB-INF/web.xml"
-      file="${src}/apps/default/WEB-INF/web-xml.tmpl" overwrite="true">
+            tofile="${target}/webapp/WEB-INF/web.xml"
+            file="${src}/apps/default/WEB-INF/web-xml.tmpl" overwrite="true">
       <filterset>
         <filter token="VERSION" value="${snipsnap.server.version}"/>
         <filter token="PRECOMPILED-JSP" value="${web.inc}"/>
@@ -472,7 +497,7 @@
     <copy file="${src}/apps/default/index.jsp" tofile="${target}/webapp/index.jsp"/>
 
     <copy file="conf/copyright.txt" filtering="true"
-      todir="${target}/webapp/WEB-INF/classes/defaults">
+          todir="${target}/webapp/WEB-INF/classes/defaults">
       <filterset>
         <filter token="VERSION" value="${snipsnap.server.version}"/>
       </filterset>
@@ -483,10 +508,10 @@
         <include name="asm-1.4.1.jar"/>
         <include name="gabriel.jar"/>
         <include name="jmdns.jar"/>
-	<include name="${rome.jar}"/>
-	<include name="${jdom.jar}"/>
-	<include name="${spring-core.jar}"/>
-	<include name="${spring-beans.jar}"/>
+        <include name="${rome.jar}"/>
+        <include name="${jdom.jar}"/>
+        <include name="${spring-core.jar}"/>
+        <include name="${spring-beans.jar}"/>
         <include name="dynaop-1.0-beta.jar"/>
         <include name="cglib-asm-1.0.jar"/>
         <include name="asm-util-1.4.1.jar"/>
@@ -513,7 +538,7 @@
         <include name="nanocontainer-1.0.jar"/>
         <include name="nanocontainer-dynaop-1.0-beta-1-SNAPSHOT.jar"/>
         <include name="rss-ng-1.0-alpha-1.jar"/>
-	<include name="${search-ng.jar}"/>
+        <include name="${search-ng.jar}"/>
         <include name="jdbcstorage-1.0-alpha-1.jar"/>
       </fileset>
     </copy>
@@ -523,26 +548,27 @@
     </jar>
   </target>
 
-  <target if="precompile.jsp" depends="installer-servlets-jar" name="compile-installer-jsp" description="compile installer jsp files">
+  <target if="precompile.jsp" depends="installer-servlets-jar" name="compile-installer-jsp"
+          description="compile installer jsp files">
     <mkdir dir="${target}/installer/jsp/source"/>
     <mkdir dir="${target}/installer/jsp/classes"/>
     <jspc destdir="${target}/installer/jsp/source"
-      verbose="1"
-      classpathref="all.classpath"
-      webinc="${target}/installer/jsp/web.inc">
+          verbose="1"
+          classpathref="all.classpath"
+          webinc="${target}/installer/jsp/web.inc">
       <include name="**/*.jsp"/>
       <webapp basedir="${src}/apps/installer"/>
     </jspc>
     <depend
-      srcdir="${target}/installer/jsp/source"
-      destdir="${target}/installer/jsp/classes"
-      cache="${target}/installer/jsp/dependencies"
-      classpathref="all.classpath"/>
+            srcdir="${target}/installer/jsp/source"
+            destdir="${target}/installer/jsp/classes"
+            cache="${target}/installer/jsp/dependencies"
+            classpathref="all.classpath"/>
     <javac deprecation="${deprecation}" debug="${debug}"
-      srcdir="${target}/installer/jsp/source"
-      classpath="${target}/installer/webapp/WEB-INF/lib/installer-servlets.jar"
-      classpathref="all.classpath"
-      destdir="${target}/installer/jsp/classes">
+           srcdir="${target}/installer/jsp/source"
+           classpath="${target}/installer/webapp/WEB-INF/lib/installer-servlets.jar"
+           classpathref="all.classpath"
+           destdir="${target}/installer/jsp/classes">
       <include name="**"/>
     </javac>
   </target>
@@ -550,15 +576,16 @@
   <target description="compile installer application code" name="compile-installer">
     <mkdir dir="${target}/installer/servlets"/>
     <javac deprecation="${deprecation}" debug="${debug}"
-      srcdir="${src}"
-      classpathref="all.classpath"
-      destdir="${target}/installer/servlets">
+           srcdir="${src}"
+           classpathref="all.classpath"
+           destdir="${target}/installer/servlets">
       <include name="org/snipsnap/admin/AdminInitFilter.java"/>
       <include name="org/snipsnap/admin/Installer.java"/>
     </javac>
   </target>
 
-  <target if="precompile.jsp" depends="compile-installer-jsp" name="installer-jsp-jar" description="package precompiled installer jsp files">
+  <target if="precompile.jsp" depends="compile-installer-jsp" name="installer-jsp-jar"
+          description="package precompiled installer jsp files">
     <mkdir dir="${target}/installer/webapp/WEB-INF/lib"/>
     <jar destfile="${target}/installer/webapp/WEB-INF/lib/installer-jsp.jar" excludes="**/CVS">
       <fileset dir="${target}/installer/jsp/classes" includes="**"/>
@@ -600,8 +627,8 @@
       </not>
     </condition>
     <copy
-      tofile="${target}/installer/webapp/WEB-INF/web.xml"
-      file="${src}/apps/installer/WEB-INF/web-xml.tmpl" overwrite="true">
+            tofile="${target}/installer/webapp/WEB-INF/web.xml"
+            file="${src}/apps/installer/WEB-INF/web-xml.tmpl" overwrite="true">
       <filterset>
         <filter token="PRECOMPILED-JSP" value="${installer-web.inc}"/>
       </filterset>
@@ -651,14 +678,14 @@
 
   <target description="generation javadocs" name="javadoc">
     <javadoc packagenames="org.snipsnap.*"
-      sourcepath="src"
-      excludepackagenames="org.snipsnap.test.*"
-      defaultexcludes="yes"
-      destdir="docs/api"
-      author="true"
-      version="true"
-      use="true"
-      windowtitle="SnipSnap API">
+             sourcepath="src"
+             excludepackagenames="org.snipsnap.test.*"
+             defaultexcludes="yes"
+             destdir="docs/api"
+             author="true"
+             version="true"
+             use="true"
+             windowtitle="SnipSnap API">
       <doctitle><![CDATA[<h1>SnipSnap</h1>]]></doctitle>
       <bottom><![CDATA[<i>Copyright &#169; 2001-2004 Matthias L. Jugel, Stephan J. Schmidt. All Rights Reserved
 .</i>]]></bottom>

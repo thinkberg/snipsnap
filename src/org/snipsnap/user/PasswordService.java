@@ -1,12 +1,11 @@
 package org.snipsnap.user;
 
-import org.snipsnap.snip.storage.UserStorage;
+import snipsnap.api.storage.UserStorage;
 
 import java.util.Random;
 import java.util.Map;
 import java.util.HashMap;
 
-import snipsnap.api.user.*;
 import snipsnap.api.user.User;
 
 /*

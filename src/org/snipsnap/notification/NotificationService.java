@@ -29,8 +29,8 @@ import snipsnap.api.app.Application;
 import snipsnap.api.config.Configuration;
 import org.snipsnap.notification.jabber.JabberNotifier;
 import snipsnap.api.snip.Snip;
-import snipsnap.api.user.User;
 import snipsnap.api.container.Components;
+import snipsnap.api.notification.Consumer;
 
 import java.util.ArrayList;
 import java.util.Iterator;

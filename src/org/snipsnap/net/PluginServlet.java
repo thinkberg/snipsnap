@@ -27,7 +27,6 @@ package org.snipsnap.net;
 import groovy.text.SimpleTemplateEngine;
 import groovy.text.Template;
 import org.radeox.util.logging.Logger;
-import org.snipsnap.container.Components;
 import org.snipsnap.snip.label.TypeLabel;
 import org.snipsnap.user.Permissions;
 import org.snipsnap.user.Roles;
@@ -54,6 +53,7 @@ import snipsnap.api.snip.SnipSpace;
 import snipsnap.api.snip.Snip;
 import snipsnap.api.plugin.ServletPlugin;
 import snipsnap.api.app.Application;
+import snipsnap.api.container.Components;
 
 public class PluginServlet extends HttpServlet {
   private Map extTypeMap = new HashMap();

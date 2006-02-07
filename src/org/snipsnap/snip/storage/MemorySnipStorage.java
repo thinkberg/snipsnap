@@ -30,7 +30,9 @@ import org.snipsnap.util.PartialSearcher;
 import org.snipsnap.util.ApplicationAwareMap;
 import snipsnap.api.app.Application;
 import org.snipsnap.app.ApplicationManager;
-import org.snipsnap.app.ApplicationStorage;
+import snipsnap.api.storage.ApplicationStorage;
+import snipsnap.api.storage.SnipStorage;
+import snipsnap.api.storage.CacheableStorage;
 
 import java.sql.Timestamp;
 import java.util.*;

@@ -23,7 +23,7 @@
  * --LICENSE NOTICE--
  */
 
-package org.snipsnap.snip.storage;
+package snipsnap.api.storage;
 
 import snipsnap.api.user.User;
 
@@ -33,7 +33,7 @@ import java.util.List;
  * Storage backend for User data
  *
  * @author Stephan J. Schmidt
- * @version $Id$
+ * @version $Id: UserStorage.java 1816 2005-04-06 17:56:22Z stephan $
  */
 
 public interface UserStorage  {

@@ -39,6 +39,7 @@ public class SetupExpert implements SetupHandler {
   }
 
   public Map setup(HttpServletRequest request, HttpServletResponse response, Configuration config, Map errors) {
+    config.setAuth(request.getParameter(Configuration.APP_AUTH));
     String startSnip = request.getParameter(Configuration.APP_START_SNIP);
     config.setStartSnip(null == startSnip || "".equals(startSnip) ? "start" : startSnip);
     config.setPermCreateSnip(allowDeny(request.getParameter(Configuration.APP_PERM_CREATESNIP)));
