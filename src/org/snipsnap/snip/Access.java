@@ -26,10 +26,12 @@
 package org.snipsnap.snip;
 
 import org.radeox.util.logging.Logger;
-import snipsnap.api.app.Application;
-import snipsnap.api.container.Components;
-import snipsnap.api.user.User;
 import org.snipsnap.util.ApplicationAwareMap;
+import snipsnap.api.container.Components;
+import snipsnap.api.snip.Snip;
+import snipsnap.api.snip.SnipLink;
+import snipsnap.api.snip.SnipSpace;
+import snipsnap.api.user.User;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
@@ -39,16 +41,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import snipsnap.api.snip.*;
-import snipsnap.api.snip.SnipSpace;
-import snipsnap.api.snip.Snip;
-import snipsnap.api.snip.SnipLink;
+import java.util.*;
 
 /**
  * Stores Access information for a snip like viewCount, backLinks, ...
@@ -161,7 +154,7 @@ public class Access {
             String name = SnipLink.decode(url);
 
             if (!snipsnap.api.app.Application.get().getConfiguration().getStartSnip().equals(name)
-                && !snipName.equals(name)) {
+                    && !snipName.equals(name)) {
               snipLinks.addLink(name);
             }
           }

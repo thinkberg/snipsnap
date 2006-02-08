@@ -26,19 +26,11 @@ package org.snipsnap.date;
 
 import org.radeox.util.i18n.ResourceManager;
 import snipsnap.api.app.Application;
-import snipsnap.api.config.Configuration;
 import snipsnap.api.snip.Snip;
-import snipsnap.api.snip.SnipLink;
 import snipsnap.api.snip.SnipSpaceFactory;
 
 import java.text.DateFormatSymbols;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Object that generates a View of the month
@@ -48,15 +40,14 @@ import java.util.Set;
  */
 public class Month {
 
-
 //  private String[] months = {
 //    "Januar", "Februar", "Maerz", "April",
 //    "Mai", "Juni", "Juli", "August",
 //    "September", "Oktober", "November", "Dezember"
 //  };
-  private String[] monthsValue = {
-    "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"
-  };
+//  private String[] monthsValue = {
+//          "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"
+//  };
 
   // @TODO Use locale
   private String[] months;
@@ -68,9 +59,9 @@ public class Month {
    * The days in each month.
    */
   public final static int dom[] = {
-    31, 28, 31, 30, /* jan feb mar apr */
-    31, 30, 31, 31, /* may jun jul aug */
-    30, 31, 30, 31	/* sep oct nov dec */
+          31, 28, 31, 30, /* jan feb mar apr */
+          31, 30, 31, 31, /* may jun jul aug */
+          30, 31, 30, 31  /* sep oct nov dec */
   };
 
   public Month() {
@@ -83,8 +74,8 @@ public class Month {
 
   public static String toKey(Calendar calendar) {
     return toKey(calendar.get(Calendar.YEAR),
-                 calendar.get(Calendar.MONTH) + 1,
-                 calendar.get(Calendar.DAY_OF_MONTH));
+            calendar.get(Calendar.MONTH) + 1,
+            calendar.get(Calendar.DAY_OF_MONTH));
   }
 
   public static String toKey(int year, int month, int day) {

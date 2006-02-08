@@ -51,7 +51,7 @@ public class NameSpaceTreeBuilder implements TreeBuilder {
     Tree tree = new Tree(parent);
 
     int depth = -1;
-    int currentDepth = -1;
+    int currentDepth;
     for (int i = 0; i < snips.length; i++) {
       Snip snip = snips[i];
       String elements[] = snip.getName().split("/");
