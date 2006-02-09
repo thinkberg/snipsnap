@@ -26,7 +26,6 @@
 package org.snipsnap.container;
 
 import org.radeox.util.logging.Logger;
-import snipsnap.api.storage.UserStorage;
 import org.snipsnap.snip.HomePage;
 import org.snipsnap.user.AuthenticationService;
 import org.snipsnap.user.Digest;
@@ -35,9 +34,10 @@ import org.snipsnap.util.Base64;
 import org.snipsnap.util.X509NameTokenizer;
 import snipsnap.api.app.Application;
 import snipsnap.api.config.Configuration;
-import snipsnap.api.snip.SnipSpace;
-import snipsnap.api.user.User;
 import snipsnap.api.container.Components;
+import snipsnap.api.snip.SnipSpace;
+import snipsnap.api.storage.UserStorage;
+import snipsnap.api.user.User;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -168,7 +168,7 @@ public class DefaultSessionService implements SessionService {
 
         user = authService.authenticate(login, password);
         if (user == null) {
-          response.setHeader("WWW-Authenticate", "Basic realm=\"SnipSnap\"");
+          response.setHeader("WWW-Authenticate", "Basic realm=\"" + Application.get().getConfiguration().getName() + "\"");
           response.setStatus(HTTP_UNAUTHORIZED);
           return null;
         }
@@ -193,7 +193,7 @@ public class DefaultSessionService implements SessionService {
             UserManager um = (UserManager) Components.getComponent(UserManager.class);
             user = authService.authenticate(uid);
             // create a user and home page for new logins
-            if(null == user) {
+            if (null == user) {
               // set password to "*", if we switch back to Cookie auth service
               // this is no problem as the users password is expected to be encrypted
               // switching to Basic auth poses a security risk as it compares unencrypted
