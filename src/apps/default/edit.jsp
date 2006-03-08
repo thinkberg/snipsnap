@@ -1,4 +1,3 @@
-<%@ page import="org.radeox.util.Encoder"%>
  <%--
   ** Template for editing Snips.
   ** @author Matthias L. Jugel
@@ -50,7 +49,7 @@
                 <c:if test="${error == 'snip.name.empty'}"><span class="error"><fmt:message key="snip.name.empty"/></span></c:if>
               </td>
             </tr>
-          </div>
+          </table>
         </c:if>
         <table>
          <tr><td>

@@ -110,7 +110,6 @@ public class InitFilter implements Filter {
       configParam = context.getRealPath("/WEB-INF/application.conf");
     }
 
-
     // create globals configuration by getting an instance and loading application.conf
     globals = ConfigurationProxy.getInstance();
     try {

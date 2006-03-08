@@ -36,7 +36,7 @@ import java.io.File;
 /**
  * Interface template for easy usage of the configuration.
  * @author Matthias L. Jugel
- * @version $Id: Configuration.java.tmpl 1606 2004-05-17 10:56:18Z leo $
+ * @version $Id: Configuration.java.tmpl 1846 2006-02-07 21:08:46Z leo $
  */
 public interface Configuration extends Globals {
   public final static String SNIPSNAP_CONFIG = "SnipSnap/config";
@@ -89,7 +89,7 @@ public interface Configuration extends Globals {
   
   // automatically created interface/constants stub from
   // /Users/leo/src/Projects/SnipSnap/core/trunk/src/org/snipsnap/config/defaults.conf
-  // generated on 2/7/06 9:58 PM
+  // generated on 3/8/06 10:51 AM
   // constant/getter for 'app.admin.email'
   public final static String APP_ADMIN_EMAIL = "app.admin.email";
   public String getAdminEmail();

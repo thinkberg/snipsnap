@@ -1,3 +1,2 @@
-@TODO: Add Timezone, e.g. +1.00 to Appconfiguration. Needed e.g. for RSS, DublinCore.
 @TODO: Snip with list version of all external libs, like Lucene, ORO, xml parser, ...
 @TODO: markup/highlighting for snipsnap macros

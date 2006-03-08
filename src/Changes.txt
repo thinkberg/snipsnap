@@ -1,4 +1,12 @@
-0.5.2 
+1.0
+
+- more componentization
+- extracted JDBC storage plugin
+- extracted RSS feed plugin
+- extracted search engine plugin
+- extracted launcher code
+
+0.5.2
 
 - Improvement: Dropped mocking classes for jMock
 - Created new sub project Gabriel for security with ACLs and interceptors

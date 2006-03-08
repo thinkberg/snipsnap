@@ -24,8 +24,12 @@
  */
 package org.snipsnap.server;
 
+import org.apache.xmlrpc.DefaultXmlRpcTransport;
 import org.apache.xmlrpc.XmlRpcClient;
+import org.apache.xmlrpc.XmlRpcClientRequest;
 import org.apache.xmlrpc.XmlRpcException;
+import org.apache.xmlrpc.XmlRpcRequest;
+import org.apache.xmlrpc.XmlRpcTransport;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -35,6 +39,7 @@ import java.util.Vector;
 
 public class AdminXmlRpcClient {
   protected XmlRpcClient xmlRpcClient = null;
+  private DefaultXmlRpcTransport xmlRpcTransport = null;
 
   public AdminXmlRpcClient(String url, String user, String password) throws MalformedURLException {
     this(new URL(url), user, password);
@@ -43,11 +48,12 @@ public class AdminXmlRpcClient {
   public AdminXmlRpcClient(URL url, String user, String password) throws MalformedURLException  {
     URL xmlRpcUrl = new URL(url, "RPC2");
     xmlRpcClient = new XmlRpcClient(xmlRpcUrl);
-    xmlRpcClient.setBasicAuthentication(user != null ? user : "admin", password != null ? password : "");
+    xmlRpcTransport = new DefaultXmlRpcTransport(xmlRpcUrl);
+    xmlRpcTransport.setBasicAuthentication(user != null ? user : "admin", password != null ? password : "");
   }
 
   public Object execute(String method, Vector args) throws XmlRpcException, IOException {
-    return xmlRpcClient.execute(method, args);
+    return xmlRpcClient.execute(new XmlRpcRequest(method, args), xmlRpcTransport);
   }
 
   public Hashtable getApplications() throws XmlRpcException, IOException {

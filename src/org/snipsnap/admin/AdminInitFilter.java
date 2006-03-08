@@ -25,18 +25,12 @@
 package org.snipsnap.admin;
 
 import org.apache.xmlrpc.XmlRpcException;
-import snipsnap.api.config.Configuration;
 import org.snipsnap.config.ServerConfiguration;
 import org.snipsnap.net.filter.EncRequestWrapper;
 import org.snipsnap.server.AdminXmlRpcClient;
+import snipsnap.api.config.Configuration;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -46,7 +40,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.prefs.Preferences;
 
 public class AdminInitFilter implements Filter {
 
@@ -62,24 +55,15 @@ public class AdminInitFilter implements Filter {
   protected final static String PARAM_INSTALL = "install";
   protected final static String PARAM_EXPERT = "expert";
 
-  protected Properties serverPrefsDefaults = new Properties();
+  protected Properties serverConf = new Properties();
   protected AdminXmlRpcClient adminClient;
 
   public void init(FilterConfig config) throws ServletException {
-    // load defaults (should not be necessary ...)
+    serverConf = (Properties) config.getServletContext().getAttribute("server.config");
     try {
-      serverPrefsDefaults.load(AdminInitFilter.class.getResourceAsStream("/conf/snipsnap.conf"));
-    } catch (IOException e) {
-      System.err.println("AdminInitFilter: Unable to read server defaults: " + e.getMessage());
-      e.printStackTrace();
-    }
-
-    Preferences serverPrefs = Preferences.userNodeForPackage(ServerConfiguration.class);
-    try {
-      String url = serverPrefs.get(ServerConfiguration.ADMIN_URL,
-                                   serverPrefsDefaults.getProperty(ServerConfiguration.ADMIN_URL));
-      String user = serverPrefs.get(ServerConfiguration.ADMIN_USER, "admin");
-      String pass = serverPrefs.get(ServerConfiguration.ADMIN_PASS, null);
+      String url = (String) serverConf.get("snipsnap.server.admin.rpc.url");
+      String user = (String) serverConf.get("snipsnap.server.admin.user");
+      String pass = (String) serverConf.get("snipsnap.server.admin.password");
       adminClient = new AdminXmlRpcClient(url, user, pass);
     } catch (Exception e) {
       System.out.println("!! Unable to create XML-RPC client, check system preferences:");
@@ -123,14 +107,13 @@ public class AdminInitFilter implements Filter {
 
       // check authentication and verify session
       if (!"true".equals(session.getAttribute(ATT_AUTHENTICATED))) {
-        Preferences serverPrefs = Preferences.userNodeForPackage(ServerConfiguration.class);
-        String serverPass = serverPrefs.get(ServerConfiguration.ADMIN_PASS, "");
+        String serverPass = (String) serverConf.get(ServerConfiguration.ADMIN_PASS);
         String installPass = path;
-        if (installPass == null || "".equals(installPass) || "/".equals(installPass)) {
+        if ("".equals(installPass) || "/".equals(installPass)) {
           installPass = "/" + request.getParameter("password");
         }
 
-        if (installPass == null || "".equals(installPass) || !serverPass.equals(installPass.substring(1))) {
+        if ("".equals(installPass) || !serverPass.equals(installPass.substring(1))) {
           step = "login";
         } else {
           session.setAttribute(ATT_AUTHENTICATED, "true");
@@ -171,14 +154,14 @@ public class AdminInitFilter implements Filter {
         }
 
         if (null != request.getParameter(PARAM_EXPERT) ||
-            (null == request.getParameter(PARAM_INSTALL) && (applications != null && applications.size() > 0))) {
+                (null == request.getParameter(PARAM_INSTALL) && (applications != null && applications.size() > 0))) {
           step = "install";
         } else {
-          URL url = null;
+          URL url;
           try {
             url = install(config.getProperty(Configuration.APP_HOST),
-                          config.getProperty(Configuration.APP_PORT),
-                          config.getProperty(Configuration.APP_PATH));
+                    config.getProperty(Configuration.APP_PORT),
+                    config.getProperty(Configuration.APP_PATH));
             if (url != null) {
               ((HttpServletResponse) response).sendRedirect(url.toString());
               session.removeAttribute(ATT_CONFIG);

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ** @author Matthias L. Jugel
+  ** @version $Id$
+  -->
+<project basedir="." default="bundle" name="SnipSnap.launcher">
+  <description>
+    Bundle SnipSnap with Application Server launcher.
+  </description>
+
+  <property file="conf/build.properties"/>
+  <property file="conf/libs.properties"/>
+
+  <target name="bundle"
+          description="bundles ${appname}.war and database libs with the launcher">
+    <mkdir dir="${dir.build}"/>
+    <copy file="${dir.libs.snipsnap}/${launcher.jar}" tofile="${dir.build}/${appname}.jar" overwrite="true"/>
+    <jar destfile="${dir.build}/${appname}.jar"  excludes="**/CVS,**/.svn" update="true">
+      <fileset dir="${dir.build}" includes="${appname}-installer.war"/>
+      <fileset dir="${dir.build}" includes="${appname}.war"/>
+      <fileset dir="${dir.libs}" includes="${mckoidb.jar}"/>
+    </jar>
+  </target>
+
+</project>
+
