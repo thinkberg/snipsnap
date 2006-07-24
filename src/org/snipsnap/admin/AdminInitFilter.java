@@ -30,7 +30,13 @@ import org.snipsnap.net.filter.EncRequestWrapper;
 import org.snipsnap.server.AdminXmlRpcClient;
 import snipsnap.api.config.Configuration;
 
-import javax.servlet.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -40,6 +46,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.prefs.Preferences;
 
 public class AdminInitFilter implements Filter {
 
@@ -55,18 +62,18 @@ public class AdminInitFilter implements Filter {
   protected final static String PARAM_INSTALL = "install";
   protected final static String PARAM_EXPERT = "expert";
 
-  protected Properties serverConf = new Properties();
+  protected Preferences serverConf = null;
   protected AdminXmlRpcClient adminClient;
 
   public void init(FilterConfig config) throws ServletException {
-    serverConf = (Properties) config.getServletContext().getAttribute("server.config");
+    serverConf = (Preferences) config.getServletContext().getAttribute("server.config");
     try {
-      String url = (String) serverConf.get("snipsnap.server.admin.rpc.url");
-      String user = (String) serverConf.get("snipsnap.server.admin.user");
-      String pass = (String) serverConf.get("snipsnap.server.admin.password");
+      String url = serverConf.get(ServerConfiguration.ADMIN_URL, null);
+      String user = serverConf.get(ServerConfiguration.ADMIN_USER, null);
+      String pass = serverConf.get(ServerConfiguration.ADMIN_PASS, null);
       adminClient = new AdminXmlRpcClient(url, user, pass);
     } catch (Exception e) {
-      System.out.println("!! Unable to create XML-RPC client, check system preferences:");
+      System.out.println("!! Unable to create XML-RPC client, check system preferences: " + serverConf);
       throw new ServletException(e);
     }
   }
@@ -160,8 +167,8 @@ public class AdminInitFilter implements Filter {
           URL url;
           try {
             url = install(config.getProperty(Configuration.APP_HOST),
-                    config.getProperty(Configuration.APP_PORT),
-                    config.getProperty(Configuration.APP_PATH));
+                          config.getProperty(Configuration.APP_PORT),
+                          config.getProperty(Configuration.APP_PATH));
             if (url != null) {
               ((HttpServletResponse) response).sendRedirect(url.toString());
               session.removeAttribute(ATT_CONFIG);

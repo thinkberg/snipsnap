@@ -28,12 +28,20 @@ import org.apache.xmlrpc.WebServer;
 import org.jdesktop.jdic.desktop.Desktop;
 import org.mortbay.http.HttpListener;
 import org.mortbay.jetty.Server;
+import org.mortbay.jetty.servlet.WebApplicationContext;
 import org.mortbay.util.InetAddrPort;
 import org.mortbay.util.MultiException;
 import org.snipsnap.config.ServerConfiguration;
 import org.snipsnap.user.Digest;
 
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
@@ -83,7 +91,9 @@ public class AppServer {
     // start jetty server and install web application
     try {
       jettyServer = new Server(getResource("/conf/jetty.conf", "./conf/jetty.conf"));
-      jettyServer.addWebApplication("/install", AppServer.class.getResource("/snipsnap-installer.war").toString());
+      WebApplicationContext installContext =
+              jettyServer.addWebApplication("/install", AppServer.class.getResource("/snipsnap-installer.war").toString());
+      installContext.setAttribute("server.config", serverPrefs);
       jettyServer.start();
     } catch (IOException e) {
       System.err.println("AppServer: warning: admin server configuration not found: " + e);
@@ -277,7 +287,11 @@ public class AppServer {
     } catch (IOException e) {
       // ignore io exception here ...
     } finally {
-      try { in.close(); } catch (Throwable ignore) { };
+      try {
+        in.close();
+      } catch (Throwable ignore) {
+      }
+      ;
     }
   }
 
